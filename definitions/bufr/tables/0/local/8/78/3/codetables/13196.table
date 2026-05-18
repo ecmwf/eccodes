@@ -1,0 +1,8 @@
+0 0 No precipitation
+1 1 Light rain (<0.5 mm/hr)
+2 2 Moderate rain (0.5 to 4.0 mm/hr)
+3 3 Heavy rain (>4.0 mm/hr)
+4 4 Light snow (<0.5 cm/hr)
+5 5 Moderate snow (0.5 to 4.0 cm/hr)
+6 6 Heavy snow (>4.0 cm/hr)
+7 7 Missing value

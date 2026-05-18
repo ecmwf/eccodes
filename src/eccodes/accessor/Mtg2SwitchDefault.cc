@@ -10,8 +10,7 @@
 
 #include "Mtg2SwitchDefault.h"
 
-eccodes::accessor::Mtg2SwitchDefault _grib_accessor_mtg2_switch_default;
-eccodes::Accessor* grib_accessor_mtg2_switch_default = &_grib_accessor_mtg2_switch_default;
+eccodes::AccessorBuilder<eccodes::accessor::Mtg2SwitchDefault> _grib_accessor_mtg2_switch_default_builder{};
 
 namespace eccodes::accessor
 {
@@ -27,7 +26,7 @@ void Mtg2SwitchDefault::init(const long len, grib_arguments* arg)
         const int numExpectedArgs = 4;
         if (numActualArgs != numExpectedArgs) {
             grib_context_log(context_, GRIB_LOG_FATAL, "Accessor %s (key %s): %d arguments provided but expected %d",
-                             class_name_, name_, numActualArgs, numExpectedArgs);
+                             accessor_type().c_str(), name_, numActualArgs, numExpectedArgs);
         }
     }
 
@@ -83,7 +82,10 @@ int Mtg2SwitchDefault::unpack_long(long* val, size_t* len)
         else {
             // For certain classes post MTG2 we always want the param + chem split (value 2)
             // For TIGGE, marsClass is not defined in the empty local Section 2, but is defined later on.
-            if ( marsClassExists && (STR_EQUAL(marsClass, "mc") || STR_EQUAL(marsClass, "cr") || STR_EQUAL(marsClass, "a5")) ) {
+            if ( marsClassExists && (STR_EQUAL(marsClass, "a5") ||
+                                     STR_EQUAL(marsClass, "cr") ||
+                                     STR_EQUAL(marsClass, "mc") ||
+                                     STR_EQUAL(marsClass, "gg")) ) {
                 *val = 2;
             }
             else {

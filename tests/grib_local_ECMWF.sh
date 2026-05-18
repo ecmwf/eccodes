@@ -235,6 +235,11 @@ ${tools_dir}/grib_set -s paramId=210251,setLocalDefinition=1,localDefinitionNumb
 ${tools_dir}/grib_set -s localDefinitionNumber=11 $sample_g1 $temp
 grib_check_key_equals $temp "classOfAnalysis,typeOfAnalysis,streamOfAnalysis,originatingCentreOfAnalysis" "1 2 1025 98"
 
+# ECC-2215: GRIB2: Segmentation fault setting localDefinitionNumber=0
+infile=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
+${tools_dir}/grib_set -s localDefinitionNumber=0 $infile $temp
+cmp $infile $temp
+
 
 # Clean up
 rm -f $temp $temp.1 $temp.2 $temp.3

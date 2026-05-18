@@ -379,6 +379,20 @@ int codes_count_in_filename(codes_context* c, const char* filename, int* n);
 codes_handle* codes_handle_new_from_file(codes_context* c, FILE* f, ProductKind product, int* error);
 
 /**
+ *  Create a handle from a stream.
+ *  The stream is read until a message is found. A handle of the appropriate type is then created and the message is copied.
+ *  Remember always to delete the handle when it is not needed anymore to avoid
+ *  memory leaks.
+ *
+ * @param c               : the context from which the handle will be created (NULL for default context)
+ * @param stream_data    : pointer to user defined stream data
+ * @param stream_proc    : pointer to user defined stream read function
+ * @param error          : error code set if the returned handle is NULL and the end of file is not reached
+ * @return                the new handle, NULL if the resource is invalid or a problem is encountered
+ */
+codes_handle* codes_handle_new_from_stream(codes_context* c, void* stream_data, long (*stream_proc)(void*, void* buffer, long len), int* error);
+
+/**
  *  Create a GRIB handle from a file resource.
  *  The file is read until a GRIB message is found. The message is then copied.
  *  Remember always to delete the handle when it is not needed anymore to avoid
@@ -403,7 +417,6 @@ codes_handle* codes_grib_handle_new_from_file(codes_context* c, FILE* f, int* er
  * @return            the new handle, NULL if the resource is invalid or a problem is encountered
  */
 codes_handle* codes_bufr_handle_new_from_file(codes_context* c, FILE* f, int* error);
-
 
 /**
  *  Write a coded message to a file.
@@ -452,7 +465,6 @@ codes_handle* codes_grib_handle_new_from_multi_message(codes_context* c, void** 
  * @return            the new handle, NULL if the message is invalid or a problem is encountered
  */
 codes_handle* codes_handle_new_from_message_copy(codes_context* c, const void* data, size_t data_len);
-
 
 /**
  *  Create a handle from a GRIB message contained in the samples directory.
@@ -746,11 +758,14 @@ int codes_get_size(const codes_handle* h, const char* key, size_t* size);
 
 /**
  *  Get the length of the string representation of the key, if several keys of the same name are present, the maximum length is returned
+ *  If a key has a native type CODES_TYPE_BYTES, this call returns the number of bytes (@see codes_get_bytes).
  *
  * @param h           : the handle to get the data from
  * @param key         : the key to be searched
  * @param length        : the address of a size_t where the length will be set
  * @return            0 if OK, integer value on error
+ * @see codes_get_bytes
+ * @see codes_get_string
  */
 int codes_get_length(const codes_handle* h, const char* key, size_t* length);
 
@@ -812,6 +827,7 @@ int codes_get_float_elements(const codes_handle* h, const char* key, const int* 
  * @param length    : the address of a size_t that contains allocated length of the string on input,
  *                    and that contains the actual length of the string on output
  * @return          0 if OK, integer value on error
+ * @see             codes_get_length
  */
 int codes_get_string(const codes_handle* h, const char* key, char* value, size_t* length);
 
@@ -836,8 +852,11 @@ int codes_get_string_array(const codes_handle* h, const char* key, char** vals, 
  * @param key       : the key to be searched
  * @param bytes     : the address of a byte array where the data will be retrieved
  * @param length    : the address of a size_t that contains allocated length of the byte array on input,
- *                    and that contains the actual length of the byte array on output
+ *                    and that contains the actual length of the byte array on output.
+ *                    The length can be determined by codes_get_length, similar to strings. 
+ *                    This is different to other calls array retrieving calls.
  * @return          0 if OK, integer value on error
+ * @see             codes_get_length
  */
 int codes_get_bytes(const codes_handle* h, const char* key, unsigned char* bytes, size_t* length);
 
@@ -1175,6 +1194,7 @@ void codes_context_set_samples_path(codes_context* c, const char* path);
 
 void codes_context_set_debug(codes_context* c, int mode);
 void codes_context_set_data_quality_checks(codes_context* c, int val);
+int codes_context_get_data_quality_checks(const codes_context* c);
 
 /**
  *  Sets the context printing procedure used for user interaction

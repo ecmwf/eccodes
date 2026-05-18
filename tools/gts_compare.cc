@@ -14,7 +14,6 @@ grib_option grib_options[] = {
     /*  {id, args, help}, on, command_line, value*/
     /*{"r",0,"Compare files in which the messages are not in the same order. This option is time expensive.\n",0,1,0},*/
     { "b:", 0, 0, 0, 1, 0 },
-    { "d", 0, "Write different messages on files\n", 0, 1, 0 },
     { "T:", 0, 0, 1, 0, "T" }, /* GTS */
     { "c:", 0, 0, 0, 1, 0 },
     { "a", 0, "-c option modifier. The keys listed with the option -c will be added to the list of keys compared without -c.\n", 0, 1, 0 },
@@ -80,47 +79,9 @@ int morein2             = 0;
 int listFromCommandLine = 0;
 int verbose             = 0;
 double tolerance_factor = 1;
-static int write_error  = 0;
-static int write_count  = 0;
 
 grib_handle* global_handle = NULL;
 int counter                = 0;
-
-static void write_message(grib_handle* h, const char* str)
-{
-    const void* m;
-    size_t s;
-    char fname[1024] = {0,};
-    FILE* fh = NULL;
-
-    grib_get_message(h, &m, &s);
-    snprintf(fname, 1024, "%s_%d.gts", str, write_count);
-
-    fh = fopen(fname, "w");
-    if (!fh) {
-        grib_context_log(h->context, (GRIB_LOG_ERROR) | (GRIB_LOG_PERROR),
-                         "Error opening %s", fname);
-        exit(GRIB_IO_PROBLEM);
-    }
-
-    if (fwrite(m, 1, s, fh) != s) {
-        grib_context_log(h->context, (GRIB_LOG_ERROR) | (GRIB_LOG_PERROR),
-                         "Error writing to %s", fname);
-        exit(GRIB_IO_PROBLEM);
-    }
-
-    fclose(fh);
-}
-
-static void write_messages(grib_handle* h1, grib_handle* h2)
-{
-    if (!write_error)
-        return;
-    write_count++;
-
-    write_message(h1, "error1");
-    write_message(h2, "error2");
-}
 
 static int blocklisted(const char* name)
 {
@@ -155,11 +116,6 @@ int grib_tool_init(grib_runtime_options* options)
         force = 1;
     else
         force = 0;
-
-    if (grib_options_on("d"))
-        write_error = 1;
-    else
-        write_error = 0;
 
     verbose = grib_options_on("v");
 
@@ -566,7 +522,6 @@ static int compare_all_dump_keys(grib_handle* h1, grib_handle* h2, grib_runtime_
             continue;
         if (compare_values(options, h1, h2, name, GRIB_TYPE_UNDEFINED)) {
             (*pErr)++;
-            write_messages(h1, h2);
             ret = 1;
         }
     }
@@ -599,7 +554,6 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
                         continue;
                     if (compare_values(options, h1, h2, name, GRIB_TYPE_UNDEFINED)) {
                         err++;
-                        write_messages(h1, h2);
                     }
                 }
                 grib_keys_iterator_delete(iter);
@@ -607,7 +561,6 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
             else {
                 if (compare_values(options, h1, h2, options->compare[i].name, options->compare[i].type))
                     err++;
-                write_messages(h1, h2);
             }
         }
     }
@@ -638,7 +591,6 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
                             continue;
                         if (compare_values(options, h1, h2, name, GRIB_TYPE_UNDEFINED)) {
                             err++;
-                            write_messages(h1, h2);
                             if (compare_all_dump_keys(h1, h2, options, &err)) {
                                 err++;
                             }
@@ -649,7 +601,6 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
                 else {
                     if (compare_values(options, h1, h2, options->compare[i].name, options->compare[i].type)) {
                         err++;
-                        write_messages(h1, h2);
                         if (compare_all_dump_keys(h1, h2, options, &err)) {
                             err++;
                         }

@@ -1,0 +1,11 @@
+0 0 Automatically acquired data
+1 1 Manually acquired data
+2 2 Controlling measurements
+3 3 Alternative measurements
+4 4 Reference measurements
+5 5 ""Nebenamtliche"" measurement
+6 6 Meteorological reports and alarms
+7 7 High-resolution measurements calculated by Message and Product Generator (MPG)
+8 8 Additional measurements for continuous weather history
+9 9 Urban climatology station
+15 15 Missing value

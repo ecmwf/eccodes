@@ -42,7 +42,7 @@ long grib_get_binary_scale_fact(double max, double min, long bpval, int* error)
         return 0;
     }
     const double dmaxint = codes_power<double>(bpval, 2) - 1;
-    maxint = (unsigned long)dmaxint; /* Now it's safe to cast */
+    maxint = static_cast<unsigned long>(codes_power<double>(bpval, 2)) - 1; /* Now it's safe to cast */
 
     *error = 0;
     if (bpval < 1) {

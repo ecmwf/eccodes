@@ -12,7 +12,6 @@
 
 # Define a common label for all the tmp files
 label="bufr_split_by_rdbSubtype"
-temp=$label.temp
 fRules=${label}.filter
 
 # Do all the work in a temporary directory

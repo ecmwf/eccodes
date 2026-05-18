@@ -104,6 +104,11 @@ grib_check_key_equals $outfile 'typeOfProcessedData:i' '255' # set to default
 input=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
 ${tools_dir}/grib_set -s GDSPresent=1 $input $outfile
 
+${tools_dir}/grib_set -s gridDescriptionSectionPresent=0 $input $outfile
+grib_check_key_equals $outfile GDSPresent 0
+grib_check_key_equals $outfile isGridded  1
+
+
 # ECC-2018: Option "-p" does not print requested keys
 # ----------------------------------------------------
 input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl

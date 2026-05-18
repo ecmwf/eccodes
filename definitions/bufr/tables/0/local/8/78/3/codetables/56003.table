@@ -1,0 +1,11 @@
+0 0 No change
+1 1 Marked wind shift
+2 2 Beginning or ending of marked turbulence
+3 3 Marked temperature change (not with altitude)
+4 4 Precipitation begins or ends
+5 5 Change in cloud forms
+6 6 For or ice fog bank begins or ends
+7 7 Warm front
+8 8 Cold front
+9 9 Front, type not specified
+15 15 Missing value

@@ -239,3 +239,29 @@ void string_remove_char(char* str, char c)
         }
     }
 }
+
+
+size_t levenshteinDistance(const char* a, const char* b)
+{
+    const size_t m = strlen(a);
+    const size_t n = strlen(b);
+
+    // Use a single-row approach: prev holds the previous row, curr the current
+    std::vector<size_t> prev(n + 1);
+    std::vector<size_t> curr(n + 1);
+
+    for (size_t j = 0; j <= n; ++j)
+        prev[j] = j;
+
+    for (size_t i = 1; i <= m; ++i) {
+        curr[0] = i;
+        for (size_t j = 1; j <= n; ++j) {
+            size_t cost = (a[i - 1] == b[j - 1]) ? 0 : 1;
+            curr[j] = std::min({prev[j] + 1, curr[j - 1] + 1, prev[j - 1] + cost});
+        }
+        std::swap(prev, curr);
+    }
+    return prev[n];
+}
+
+

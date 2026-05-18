@@ -61,7 +61,6 @@ list( APPEND eccodes_src_files
     codes_memfs.cc
 
     accessor/grib_accessors_list.cc
-    grib_accessor_class.cc
 
     accessor/Accessor.cc
     accessor/G1FcPeriod.cc
@@ -307,7 +306,6 @@ list( APPEND eccodes_src_files
     grib_filepool.cc
     geo/grib_geography.cc
     grib_handle.cc
-    grib_hash_keys.cc
     grib_io.cc
     grib_trie.cc
     grib_trie_with_rank.cc
@@ -374,10 +372,9 @@ list( APPEND eccodes_src_files
     bufr_util.cc
     string_util.cc
     functions.cc
-    grib_accessor_class.h
-    grib_accessor_factory.h
     grib_api_internal.h
     eccodes_prototypes.h
+    grib_accessor_factory.cc
     grib_dumper_factory.cc
     grib_iterator_factory.cc
     grib_nearest_factory.cc
@@ -387,7 +384,9 @@ list( APPEND eccodes_src_files
     grib_optimize_decimal_factor.cc
     eccodes_windef.h
     # We ship our own generated lex/yacc C files
-    grib_yacc.cc  grib_lex.cc )
+    grib_yacc.cc  grib_lex.cc
+
+    Spec.h )
 
 list( APPEND eccodes_extra_src_files
     grib_bits_fast_big_endian.cc grib_bits_any_endian.cc
@@ -438,23 +437,30 @@ if( eccodes_HAVE_GEOGRAPHY AND eccodes_HAVE_ECKIT_GEO )
     list( APPEND ECCODES_EXTRA_LIBRARIES eckit_geo )
 endif()
 
-ecbuild_add_library( TARGET    eccodes
-                     SOURCES   ${CMAKE_CURRENT_BINARY_DIR}/grib_api_version.cc
-                              # griby.cc gribl.cc
-                              ${eccodes_src_files}
-                     #PRIVATE_LIBS      ${ECCODES_EXTRA_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${CMATH_LIBRARIES}
-                     PRIVATE_INCLUDES "${AEC_INCLUDE_DIRS}" "${PNG_INCLUDE_DIRS}"
-                     PRIVATE_LIBS ${ECCODES_EXTRA_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${AEC_LIBRARIES} ${PNG_LIBRARIES}
-                     PUBLIC_LIBS  ${CMATH_LIBRARIES} ${THREADS_LIBRARIES}
-                     TEMPLATES ${eccodes_extra_src_files}
-                     INSTALL_HEADERS_LIST
-                              grib_api.h
-                              eccodes.h
-                              eccodes_windef.h
-                              ${CMAKE_CURRENT_BINARY_DIR}/eccodes_version.h
-                              ${PROJECT_BINARY_DIR}/eccodes_config.h
-                    PUBLIC_INCLUDES
-                              $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/src/eccodes>
-                              $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src/eccodes>
-                              $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/src>
-                              $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src> )
+ecbuild_add_library(
+    TARGET    eccodes
+    SOURCES   
+        ${CMAKE_CURRENT_BINARY_DIR}/grib_api_version.cc
+        ${eccodes_src_files}
+    PRIVATE_INCLUDES "${PNG_INCLUDE_DIRS}"
+    PRIVATE_LIBS
+       ${ECCODES_EXTRA_LIBRARIES}
+       ${CMAKE_THREAD_LIBS_INIT}
+       ${PNG_LIBRARIES}
+       $<$<BOOL:${libaec_FOUND}>:libaec::aec>
+    PUBLIC_LIBS 
+        ${CMATH_LIBRARIES}
+        ${THREADS_LIBRARIES}
+    TEMPLATES ${eccodes_extra_src_files}
+    INSTALL_HEADERS_LIST
+        grib_api.h
+        eccodes.h
+        eccodes_windef.h
+        ${CMAKE_CURRENT_BINARY_DIR}/eccodes_version.h
+        ${PROJECT_BINARY_DIR}/eccodes_config.h
+    PUBLIC_INCLUDES
+        $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/src/eccodes>
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src/eccodes>
+        $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/src>
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
+)

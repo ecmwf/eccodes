@@ -16,3 +16,6 @@ set -e
 
 # create defs for is_mtg2_switch_2 (table grib_encoding)
 ./create_defs.grib2.chemsplit.pl
+
+# chemIds
+./create_chemdefs.py

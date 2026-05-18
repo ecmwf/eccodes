@@ -9,6 +9,7 @@
  */
 
 #include "grib_api_internal.h"
+#include "sync/Mutex.h"
 
 #if HAVE_LIBJASPER
 /* Remove compiler warnings re macros being redefined */
@@ -22,33 +23,7 @@
 
 // The number of active jasper initialisation actions which have not been cleaned up
 static int ecc_jasper_active_inits = 0;
-
-#if GRIB_PTHREADS
-static pthread_once_t once    = PTHREAD_ONCE_INIT;
-static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-static void init()
-{
-    pthread_mutexattr_t attr;
-    pthread_mutexattr_init(&attr);
-    pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
-    pthread_mutex_init(&mutex, &attr);
-    pthread_mutexattr_destroy(&attr);
-}
-#elif GRIB_OMP_THREADS
-static int once = 0;
-static omp_nest_lock_t mutex;
-static void init()
-{
-    GRIB_OMP_CRITICAL(lock_grib_jasper_c)
-    {
-        if (once == 0) {
-            omp_init_nest_lock(&mutex);
-            once = 1;
-        }
-    }
-}
-#endif
-
+static eccodes::sync::Mutex mutex;
 
 static int ecc_jasper_initialise()
 {
@@ -119,10 +94,10 @@ int grib_jasper_decode(grib_context* c, unsigned char* buf, const size_t* buflen
     int i, j, k;
     int jaserr = 0; /* 0 means success */
 
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
-    GRIB_MUTEX_LOCK(&mutex);
-    jaserr = ecc_jasper_initialise();
-    GRIB_MUTEX_UNLOCK(&mutex);
+    {
+        eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
+        jaserr = ecc_jasper_initialise();
+    }
     if (jaserr) {
         grib_context_log(c, GRIB_LOG_ERROR, "grib_jasper_decode: Failed to initialize JasPer library. JasPer error %d", jaserr);
         code = GRIB_DECODING_ERROR;
@@ -179,10 +154,10 @@ cleanup:
         jas_image_destroy(image);
     if (jpeg)
         jas_stream_close(jpeg);
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
-    GRIB_MUTEX_LOCK(&mutex);
-    ecc_jasper_cleanup();
-    GRIB_MUTEX_UNLOCK(&mutex);
+    {
+        eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
+        ecc_jasper_cleanup();
+    }
 
     return code;
 }
@@ -262,10 +237,10 @@ int grib_jasper_encode(grib_context* c, j2k_encode_helper* helper)
         }
     }
 
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
-    GRIB_MUTEX_LOCK(&mutex);
-    jaserr = ecc_jasper_initialise();
-    GRIB_MUTEX_UNLOCK(&mutex);
+    {
+        eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
+        jaserr = ecc_jasper_initialise();
+    }
     if (jaserr) {
         grib_context_log(c, GRIB_LOG_ERROR, "grib_jasper_encode: Failed to initialize JasPer library. JasPer error %d", jaserr);
         code = GRIB_ENCODING_ERROR;
@@ -324,10 +299,10 @@ cleanup:
         jas_stream_close(istream);
     if (jpcstream)
         jas_stream_close(jpcstream);
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
-    GRIB_MUTEX_LOCK(&mutex);
-    ecc_jasper_cleanup();
-    GRIB_MUTEX_UNLOCK(&mutex);
+    {
+        eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
+        ecc_jasper_cleanup();
+    }
     return code;
 }
 

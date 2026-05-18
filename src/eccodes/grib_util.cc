@@ -63,6 +63,122 @@ typedef enum
         count++;                                       \
     } while (0)
 
+class FileRestorer {
+public:
+    explicit FileRestorer(FILE* f) {
+        f_ = f;
+        pos_ = ftell(f);
+        ECCODES_ASSERT(pos_ != -1);
+    }
+    ~FileRestorer() {
+        int err = fseeko(f_, pos_, SEEK_SET);
+        ECCODES_ASSERT(!err);
+    }
+private:
+    FILE* f_;
+    long pos_;
+};
+
+#define UINT3(a, b, c)    (size_t)((a << 16) + (b << 8) + c);
+#define UINT4(a, b, c, d) (size_t)((a << 24) + (b << 16) + (c << 8) + d);
+
+// Currently only for GRIB edition 2 single-field
+// It does not work for multi-field GRIB2 files!
+// and it will not work for STREAMs (because we do ftell and fseek etc)
+int grib_get_header_length(FILE* f, size_t* result)
+{
+    ECCODES_ASSERT(f);
+    FileRestorer fRestore(f);
+
+    size_t sec0len = 16; // GRIB2
+    size_t sec1len = 0;
+    size_t sec2len = 0;
+    size_t sec3len = 0;
+    size_t sec4len = 0;
+    unsigned char buf[40000]; // Large enough to contain all the above sections
+    size_t n = fread(buf, 1, sec0len, f);
+    if (n != sec0len)
+        return GRIB_INTERNAL_ERROR;
+
+    if (buf[0] != 'G' ||
+        buf[1] != 'R' ||
+        buf[2] != 'I' ||
+        buf[3] != 'B') {
+        return GRIB_INVALID_MESSAGE;
+    }
+    int edition = (int)buf[7];
+    if (edition != 2)
+        return GRIB_UNSUPPORTED_EDITION;
+
+    // Next 4 bytes encodes section1's length
+    int i = sec0len;
+    n = fread(&buf[i], 1, 4, f);
+    if (n!=4) return GRIB_INVALID_MESSAGE;
+    sec1len = UINT4(buf[i], buf[i + 1], buf[i + 2], buf[i + 3]);
+    i += 4;
+
+    // The next byte is the numberOfSection which should be 1
+    n = fread(&buf[i], 1, 1, f);
+    if (n!=1) return GRIB_INVALID_MESSAGE;
+    if ( (size_t)buf[i] != 1)
+        return GRIB_INVALID_MESSAGE;
+    i += 1;
+
+    // Read the rest of section 1. Note: We've read 5 bytes already
+    n = fread(buf + i, 1, sec1len - 5, f);
+    if (n != sec1len - 5) return GRIB_INVALID_MESSAGE;
+    i += sec1len - 5;
+
+    // Next comes Section2 (which is optional) or Section3
+    n = fread(&buf[i], 1, 4, f);
+    if (n != 4) return GRIB_INVALID_MESSAGE;
+    size_t sec2or3len = UINT4(buf[i], buf[i + 1], buf[i + 2], buf[i + 3]);
+    i += 4;
+
+    // Read the next section number: 2 or 3
+    n = fread(&buf[i], 1, 1, f);
+    if (n!=1) return GRIB_INVALID_MESSAGE;
+    size_t sec2or3Num = (size_t)buf[i];
+    ECCODES_ASSERT( sec2or3Num == 2 || sec2or3Num == 3);
+    i += 1;
+
+    // Read the rest
+    if (sec2or3Num == 2) {
+        // We have the optional section 2
+        sec2len = sec2or3len;
+        if (fread(buf + i, 1, sec2len - 5, f) != sec2len - 5)
+            return GRIB_INVALID_MESSAGE;
+        i += sec2len - 5;
+
+        // Section3
+        if (fread(&buf[i], 1, 4, f) != 4)
+            return GRIB_INVALID_MESSAGE;
+        sec3len = UINT4(buf[i], buf[i + 1], buf[i + 2], buf[i + 3]);
+        i += 4;
+
+        if (fread(buf + i, 1, sec3len - 4, f) != sec3len - 4)
+            return GRIB_INVALID_MESSAGE;
+        i += sec3len - 4;
+    } else {
+        // No section 2
+        sec3len = sec2or3len;
+        n = fread(buf + i, 1, sec3len - 5, f);
+        if (n != sec3len - 5)
+            return GRIB_INVALID_MESSAGE;
+        i += sec3len - 5;
+    }
+
+    // Section 4
+    n = fread(&buf[i], 1, 4, f);
+    if (n != 4)
+        return GRIB_INVALID_MESSAGE;
+    sec4len = UINT4(buf[i], buf[i + 1], buf[i + 2], buf[i + 3]);
+    i += 4;
+
+    *result = sec0len + sec1len +  sec2len + sec3len + sec4len;
+
+    return GRIB_SUCCESS;
+}
 
 static void set_total_length(unsigned char* buffer, long* section_length, const long* section_offset, int edition, size_t totalLength)
 {
@@ -170,7 +286,7 @@ static grib_handle* grib_sections_copy_internal(grib_handle* hfrom, grib_handle*
     h = grib_handle_new_from_message(hfrom->context, buffer, totalLength);
 
     // to allow freeing of buffer
-    h->buffer->property = CODES_MY_BUFFER;
+    h->buffer->deleter = default_deleter;
 
     switch (edition) {
         case 1:
@@ -916,9 +1032,9 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
     char input_grid_type[100];
     char input_packing_type[100] = {0,};
     long editionNumber = 0;
-    size_t count = 0, len = 100, slen = 20, input_grid_type_len = 100;
+    size_t count = 0, len = 100, input_grid_type_len = 100;
     double laplacianOperator;
-    int i = 0, packingTypeIsSet = 0, setJpegPacking = 0;
+    int i = 0, packingTypeIsSet = 0;
     bool convertEditionEarlier     = false; // For cases when we cannot set some keys without converting
     bool grib1_high_resolution_fix = false; // See GRIB-863
 
@@ -1257,25 +1373,6 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
         }
     }
 
-    // GRIB-857: Set "pl" array if provided (For reduced Gaussian grids)
-    ECCODES_ASSERT(spec->pl_size >= 0);
-    if (spec->pl && spec->pl_size == 0) {
-        grib_context_log(c, GRIB_LOG_ERROR, "%s: pl array not NULL but pl_size == 0!", __func__);
-        return GRIB_WRONG_GRID;
-    }
-    if (spec->pl_size > 0 && spec->pl == NULL) {
-        grib_context_log(c, GRIB_LOG_ERROR, "%s: pl_size not zero but pl array == NULL!", __func__);
-        return GRIB_WRONG_GRID;
-    }
-
-    if (spec->pl_size != 0 && (spec->grid_type == GRIB_UTIL_GRID_SPEC_REDUCED_GG || spec->grid_type == GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG)) {
-        err = grib_set_long_array(h, "pl", spec->pl, spec->pl_size);
-        if (err) {
-            grib_context_log(c, GRIB_LOG_ERROR, "%s: Cannot set pl: %s", __func__, grib_get_error_message(err));
-            return err;
-        }
-    }
-
     if (h->context->debug == -1) {
         print_values(h->context, __func__, spec, packing_spec, input_packing_type, NULL, 0, values, count);
     }
@@ -1307,6 +1404,33 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
     if ((err = grib_set_values(h, values, count)) != 0) {
         grib_context_log(c, GRIB_LOG_ERROR, "%s: Cannot set key values: %s", __func__, grib_get_error_message(err));
         return err;
+    }
+
+    // GRIB-857: Set "pl" array if provided (For reduced Gaussian grids)
+    // Note: We must set the PL array after we've submitted the key/values and gridType
+    ECCODES_ASSERT(spec->pl_size >= 0);
+    if (spec->pl && spec->pl_size == 0) {
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: pl array not NULL but pl_size == 0!", __func__);
+        return GRIB_WRONG_GRID;
+    }
+    if (spec->pl_size > 0 && spec->pl == NULL) {
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: pl_size not zero but pl array == NULL!", __func__);
+        return GRIB_WRONG_GRID;
+    }
+
+    if (spec->pl_size != 0 && (spec->grid_type == GRIB_UTIL_GRID_SPEC_REDUCED_GG || spec->grid_type == GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG || spec->grid_type == GRIB_UTIL_GRID_SPEC_REDUCED_LL)) {
+        err = grib_set_long_array(h, "pl", spec->pl, spec->pl_size);
+        if (err) {
+            grib_context_log(c, GRIB_LOG_ERROR, "%s: Cannot set pl: %s", __func__, grib_get_error_message(err));
+            return err;
+        }
+        if (editionNumber != 1) {
+            err = grib_set_long(h, "interpretationOfNumberOfPoints", 1); // See Code Table 3.11
+            if (err) {
+                grib_context_log(c, GRIB_LOG_ERROR, "%s: Cannot set key: %s", __func__, grib_get_error_message(err));
+                return err;
+            }
+        }
     }
 
     if (grib1_high_resolution_fix) {
@@ -1365,6 +1489,8 @@ static grib_handle* grib_util_set_spec_(grib_handle* h,
     int i = 0, packingTypeIsSet = 0, setSecondOrder = 0, setJpegPacking = 0, setCcsdsPacking = 0;
     bool convertEditionEarlier     = false; // For cases when we cannot set some keys without converting
     bool grib1_high_resolution_fix = false; // See GRIB-863
+    long shapeOfTheEarth = 0;
+    long numberOfGridInReference = -1, numberOfGridUsed=-1; // unstructured grids
 
     // ECC-625: Request is for expansion of bounding box (sub-area).
     //          This is also called the "snap-out" policy
@@ -1556,7 +1682,6 @@ static grib_handle* grib_util_set_spec_(grib_handle* h,
         case GRIB_UTIL_GRID_SPEC_UNSTRUCTURED:
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
-            // TODO(masn): Other keys
             break;
         case GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL:
             COPY_SPEC_LONG(bitmapPresent);
@@ -1856,6 +1981,24 @@ static grib_handle* grib_util_set_spec_(grib_handle* h,
             write_out_error_data_file(data_values, data_values_count);
             if (c->write_on_fail) grib_write_message(h_out, "error.grib", "w");
             goto cleanup;
+        }
+    }
+
+    // Shape of the earth must be preserved
+    if (grib_get_long(h, "shapeOfTheEarth", &shapeOfTheEarth) == GRIB_SUCCESS) {
+        *err = grib_set_long(h_out, "shapeOfTheEarth", shapeOfTheEarth);
+        if (*err) goto cleanup;
+    }
+
+    // ECC-2154: Unstructured grids (GRIB2 only)
+    if (spec->grid_type == GRIB_UTIL_GRID_SPEC_UNSTRUCTURED) {
+        if (grib_get_long(h, "numberOfGridInReference", &numberOfGridInReference) == GRIB_SUCCESS) {
+            *err = grib_set_long(h_out, "numberOfGridInReference", numberOfGridInReference);
+            if (*err) goto cleanup;
+        }
+        if (grib_get_long(h, "numberOfGridUsed", &numberOfGridUsed) == GRIB_SUCCESS) {
+            *err = grib_set_long(h_out, "numberOfGridUsed", numberOfGridUsed);
+            if (*err) goto cleanup;
         }
     }
 
@@ -2594,7 +2737,8 @@ int grib_check_data_values_minmax(grib_handle* h, const double min_val, const do
     }
 
     // Data Quality checks
-    if (ctx->grib_data_quality_checks) {
+    const int quality_checks_enabled = grib_context_get_data_quality_checks(ctx);
+    if (quality_checks_enabled) {
         result = grib_util_grib_data_quality_check(h, min_val, max_val);
     }
 

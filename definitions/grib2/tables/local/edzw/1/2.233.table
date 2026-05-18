@@ -10,5 +10,24 @@
 # 2*(Code figure) Meaning
 #
 0 0  Unused
+#
+# 1 - 1000 Reserved for supplements to the 'generatingProcessIdentifier'
+#          ('generatingProcessIdentifier' + 'localProductionContext' should support the allocation of products to database categories)
+#
+# 1 - 500 Reserved for machine-learning-based (inference) models.
+#
+# 1 - 300 Reserved for AICON
+#
+001 acXgl acXgl (AICON global)
+#
 255 255  Conforms to Missing
+#
+# 301 - 320 Reserved for PANGU
+#
+301 paXgl paXgl (PANGU global)
+#
+# 321 - 340 Reserved for KANGU
+#
+321 kaXgl kaXgl (KANGU global)
+#
 65535 65535  Missing

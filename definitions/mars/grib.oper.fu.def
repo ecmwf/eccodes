@@ -1,0 +1,8 @@
+alias mars.anoffset=anoffset;
+
+if (edition == 2) {
+ if (grib2LocalSectionNumber == 44){
+  alias mars.anoffset=offsetToStartOfForecastFillupInHours;
+ }
+}
+

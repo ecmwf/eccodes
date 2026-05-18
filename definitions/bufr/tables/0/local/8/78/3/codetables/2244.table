@@ -1,0 +1,22 @@
+0 0 free track without further information
+1 1 free track, embankment
+2 2 free track, flat relative to surroundings
+3 3 free track, water basin(s) in vicinity
+4 4 free track, forest
+5 5 free track, cleft
+6 6 free track on hilltop
+7 7 free track on hilltop, forest
+8 8 free track in valley
+9 9 free track in valley, forest
+10 10 free track, north inclination
+11 11 free track, north inclination, forest
+12 12 free track, south inclination
+13 13 free track, south inclination, forest
+20 20 bridge without further information
+21 21 bridge across a valley in a urban area
+22 22 bridge across a valley with forest/meadows/fielde
+23 23 bridge across street/track
+24 24 bridge across big river/canal
+25 25 bridge across river/canal of medium size
+26 26 bridge across a small stream/loading canal
+31 31 missing value

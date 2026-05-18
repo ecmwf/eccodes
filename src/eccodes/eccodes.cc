@@ -198,6 +198,12 @@ grib_handle* codes_handle_new_from_partial_message(codes_context* c, const void*
 {
     return grib_handle_new_from_partial_message(c, data, buflen);
 }
+
+grib_handle* codes_handle_new_from_stream(codes_context* c, void* stream_data, long (*stream_proc)(void*, void* buffer, long len), int* error)
+{
+    return grib_handle_new_from_stream(c, stream_data, stream_proc, error);
+}
+
 int codes_get_message(const grib_handle* h, const void** message, size_t* message_length)
 {
     return grib_get_message(h, message, message_length);
@@ -591,6 +597,10 @@ void codes_context_set_debug(codes_context* c, int mode)
 void codes_context_set_data_quality_checks(codes_context* c, int val)
 {
     grib_context_set_data_quality_checks(c, val);
+}
+int codes_context_get_data_quality_checks(const codes_context* c)
+{
+    return grib_context_get_data_quality_checks(c);
 }
 
 void codes_context_set_print_proc(codes_context* c, grib_print_proc p_print)

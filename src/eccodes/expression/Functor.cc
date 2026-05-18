@@ -55,6 +55,66 @@ int Functor::evaluate_long(grib_handle* h, long* lres) const
         return GRIB_SUCCESS;
     }
 
+    if (STR_EQUAL(name_, "defined")) {
+        const char* keyName = args_ ? args_->get_name(h, 0) : nullptr;
+        if (keyName) {
+            const grib_accessor* a = grib_find_accessor(h, keyName);
+            *lres = a != NULL ? 1 : 0;
+            return GRIB_SUCCESS;
+        }
+        *lres = 0;
+        return GRIB_SUCCESS;
+    }
+
+    if (STR_EQUAL(name_, "changed")) {
+        *lres = 1;
+        return GRIB_SUCCESS;
+    }
+
+    if (STR_EQUAL(name_, "missing")) {
+        const char* keyName = args_ ? args_->get_name(h, 0) : nullptr;
+        if (keyName) {
+            long val = 0;
+            int err  = 0;
+            if (h->product_kind == PRODUCT_BUFR) {
+                int ismiss = grib_is_missing(h, keyName, &err);
+                if (err) return err;
+                *lres = ismiss;
+                return GRIB_SUCCESS;
+            }
+            err = grib_get_long_internal(h, keyName, &val);
+            if (err) return err;
+            // Note: This does not cope with keys like typeOfSecondFixedSurface
+            // which are codetable entries with values like 255: this value is
+            // not classed as 'missing'!
+            // (See ECC-594)
+            *lres = (val == GRIB_MISSING_LONG);
+            return GRIB_SUCCESS;
+        }
+        else {
+            // No arguments means return the actual integer missing value
+            *lres = GRIB_MISSING_LONG;
+        }
+        return GRIB_SUCCESS;
+    }
+
+    if (STR_EQUAL(name_, "max") || STR_EQUAL(name_, "min")) {
+        // For now, only two arguments are supported
+        const grib_expression* exp1 = args_ ? args_->get_expression(h, 0) : nullptr;
+        const grib_expression* exp2 = args_ ? args_->get_expression(h, 1) : nullptr;
+        if (exp1 && exp2) {
+            long lval1 = 0, lval2 = 0;
+            int ret = exp1->evaluate_long(h, &lval1);
+            if (ret == GRIB_SUCCESS)
+                ret = exp2->evaluate_long(h, &lval2);
+            *lres = lval1;
+            if (STR_EQUAL(name_, "max") && lval2 > lval1) *lres = lval2;
+            if (STR_EQUAL(name_, "min") && lval2 < lval1) *lres = lval2;
+            return ret;
+        }
+        return GRIB_INVALID_ARGUMENT;
+    }
+
     if (STR_EQUAL(name_, "abs")) {
         const grib_expression* exp = args_ ? args_->get_expression(h, 0) : nullptr;
         if (exp) {
@@ -135,44 +195,6 @@ int Functor::evaluate_long(grib_handle* h, long* lres) const
         }
     }
 
-    if (STR_EQUAL(name_, "missing")) {
-        const char* keyName = args_ ? args_->get_name(h, 0) : nullptr;
-        if (keyName) {
-            long val = 0;
-            int err  = 0;
-            if (h->product_kind == PRODUCT_BUFR) {
-                int ismiss = grib_is_missing(h, keyName, &err);
-                if (err) return err;
-                *lres = ismiss;
-                return GRIB_SUCCESS;
-            }
-            err = grib_get_long_internal(h, keyName, &val);
-            if (err) return err;
-            // Note: This does not cope with keys like typeOfSecondFixedSurface
-            // which are codetable entries with values like 255: this value is
-            // not classed as 'missing'!
-            // (See ECC-594)
-            *lres = (val == GRIB_MISSING_LONG);
-            return GRIB_SUCCESS;
-        }
-        else {
-            // No arguments means return the actual integer missing value
-            *lres = GRIB_MISSING_LONG;
-        }
-        return GRIB_SUCCESS;
-    }
-
-    if (STR_EQUAL(name_, "defined")) {
-        const char* keyName = args_ ? args_->get_name(h, 0) : nullptr;
-        if (keyName) {
-            const grib_accessor* a = grib_find_accessor(h, keyName);
-            *lres = a != NULL ? 1 : 0;
-            return GRIB_SUCCESS;
-        }
-        *lres = 0;
-        return GRIB_SUCCESS;
-    }
-
     if (STR_EQUAL(name_, "environment_variable")) {
         // ECC-1520: This implementation has some limitations:
         // 1. Cannot distinguish between environment variable NOT SET
@@ -190,11 +212,6 @@ int Functor::evaluate_long(grib_handle* h, long* lres) const
             }
         }
         *lres = 0;
-        return GRIB_SUCCESS;
-    }
-
-    if (STR_EQUAL(name_, "changed")) {
-        *lres = 1;
         return GRIB_SUCCESS;
     }
 

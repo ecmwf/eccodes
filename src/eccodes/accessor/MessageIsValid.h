@@ -19,8 +19,8 @@ class MessageIsValid : public Long
 {
 public:
     MessageIsValid() :
-        Long() { class_name_ = "message_is_valid"; }
-    grib_accessor* create_empty_accessor() override { return new MessageIsValid{}; }
+        Long() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int unpack_long(long* val, size_t* len) override;
     int pack_string(const char* sval, size_t* len) override;
     void init(const long, grib_arguments*) override;
@@ -31,12 +31,14 @@ private:
     int check_date();
     int check_spectral();
     int check_grid_and_packing_type();
+    int check_pv_array();
     int check_field_values();
     int check_grid_pl_array();
     int check_grid_increments();
     int check_geoiterator();
     int check_surface_keys();
     int check_steps();
+    int check_deprecation();
     int check_section_numbers(const int* sec_nums, size_t N);
     int check_namespace_keys();
     int check_parameter();
@@ -46,6 +48,9 @@ private:
     const char* product_ = nullptr;
     grib_handle* handle_ = nullptr;
     long edition_ = 0;
+
+public:
+    static inline const AccessorType accessor_type_{"message_is_valid"};
 
     // bitwise OR of GRIB_SECTION_PRODUCT, GRIB_SECTION_GRID, GRIB_SECTION_DATA etc
     unsigned int enabledChecks_ = 0;

@@ -1,0 +1,14 @@
+# Local definition 45: Model error fourier coefficients
+
+unsigned[1] fourierCoefficientIndex : dump;
+unsigned[1] numberOfFourierCoefficients  : dump;
+unsigned[1] modelErrorType  : dump;
+
+# Hours
+unsigned[2] offsetToEndOf4DvarWindow : dump;
+unsigned[2] lengthOf4DvarWindow : dump;
+
+alias anoffset=offsetToEndOf4DvarWindow;
+
+# Add some padding just in case we want more keys in the future
+pad padding_loc45(32);

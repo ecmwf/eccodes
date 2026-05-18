@@ -21,38 +21,6 @@
 
 #define GRIB_KEY_UNDEF "undef"
 
-/* #if GRIB_PTHREADS */
-// static pthread_once_t once  = PTHREAD_ONCE_INIT;
-// static pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
-// static pthread_mutex_t mutex2 = PTHREAD_MUTEX_INITIALIZER;
-
-// static void init() {
-//     pthread_mutexattr_t attr;
-//     pthread_mutexattr_init(&attr);
-//     pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE);
-//     pthread_mutex_init(&mutex1,&attr);
-//     pthread_mutex_init(&mutex2,&attr);
-//     pthread_mutexattr_destroy(&attr);
-
-// }
-// /* #elif GRIB_OMP_THREADS */
-// static int once = 0;
-// static omp_nest_lock_t mutex1;
-// static omp_nest_lock_t mutex2;
-
-// static void init()
-// {
-//     GRIB_OMP_CRITICAL(lock_grib_index_c)
-//     {
-//         if (once == 0)
-//         {
-//             omp_init_nest_lock(&mutex1);
-//             omp_init_nest_lock(&mutex2);
-//             once = 1;
-//         }
-//     }
-// }
-
 static const char* mars_keys =
     "mars.date,mars.time,mars.expver,mars.stream,mars.class,mars.type,mars.channel,mars.generation,"
     "mars.step,mars.param,mars.levtype,mars.levelist,mars.number,mars.iteration,"

@@ -570,7 +570,7 @@ rm -f $fBufrTmp
 # Test: set unexpandedDescriptors no create new data
 #-----------------------------------------------------------
 f="syno_1.bufr"
-testScript="set_unexpandedDescriptors_test.sh"
+# testScript="set_unexpandedDescriptors_test.sh"
 echo "Test: set unexpandedDescriptors no create new data" >> $fLog
 echo "file: $f" >> $fLog
 

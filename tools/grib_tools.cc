@@ -688,7 +688,7 @@ static int process(grib_context* c, grib_runtime_options* options, const char* p
 static int grib_tool_onlyfiles(grib_runtime_options* options)
 {
     grib_context* c         = grib_context_get_default();
-    grib_tools_file* infile = options->infile;
+    const grib_tools_file* infile = options->infile;
     int err = 0;
 
     while (infile != NULL && infile->name != NULL) {
@@ -805,18 +805,15 @@ static void grib_tools_set_print_keys(grib_runtime_options* options, grib_handle
             const char* all_namespace_vals[1024] = {NULL,}; // sorted array containing all namespaces
             printf("ERROR: namespace \"%s\" does not contain any key.\n", ns);
             printf("Here are the available namespaces in this message:\n");
-            for (i = 0; i < ACCESSORS_ARRAY_SIZE; i++) {
-                grib_accessor* anAccessor = h->accessors[i];
-                if (anAccessor) {
-                    for (j = 0; j < MAX_ACCESSOR_NAMES; j++) {
-                        const char* a_namespace = anAccessor->all_name_spaces_[j];
-                        if (a_namespace) {
-                            all_namespace_vals[k++] = a_namespace;
-                            ns_count++;
-                        }
+            h->accessor_store.for_each([&](grib_accessor* anAccessor) {
+                for (j = 0; j < MAX_ACCESSOR_NAMES; j++) {
+                    const char* a_namespace = anAccessor->all_name_spaces_[j];
+                    if (a_namespace) {
+                        all_namespace_vals[k++] = a_namespace;
+                        ns_count++;
                     }
                 }
-            }
+            });
             qsort(&all_namespace_vals, ns_count, sizeof(char*), cmpstringp);
             for (i = 0; i < ns_count; ++i) {
                 if (all_namespace_vals[i]) {

@@ -20,14 +20,17 @@ class Iterator : public Gen
 {
 public:
     Iterator() :
-        Gen() { class_name_ = "iterator"; }
-    grib_accessor* create_empty_accessor() override { return new Iterator{}; }
+        Gen() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     void init(const long l, grib_arguments* args) override;
     void dump(eccodes::Dumper* dumper) override;
 
 private:
     grib_arguments* args_ = nullptr;
     friend eccodes::geo_iterator::Iterator* eccodes::geo_iterator::gribIteratorNew(const grib_handle*, unsigned long, int*);
+
+public:
+    static inline const AccessorType accessor_type_{"iterator"};
 };
 
 }  // namespace eccodes::accessor

@@ -1,0 +1,9 @@
+1 1 Excellent (within 3 metres)
+2 2 Good (within 10 metres)
+3 3 Fair (within 20 metres)
+4 4 Poor (more than 20 metres)
+5 5 Excellent (within 3 feet)
+6 6 Good (within 10 feet)
+7 7 Fair (within 20 feet)
+8 8 Poor (more than 20 feet)
+15 15 Missing value

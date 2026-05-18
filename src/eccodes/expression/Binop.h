@@ -33,6 +33,8 @@ private:
     BinopLongProc long_func_ = nullptr;
     BinopDoubleProc double_func_ = nullptr;
     // BinopStringProc string_func_ = nullptr;
+
+    void print_error(grib_handle* h) const;
 };
 
 }  // namespace eccodes::expression

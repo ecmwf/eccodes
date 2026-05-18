@@ -763,12 +763,15 @@ void BufrEncodeC::header(const grib_handle* h) const
     grib_get_long(h, "bufrHeaderCentre", &bufrHeaderCentre);
     grib_get_long(h, "edition", &edition);
 
-    if (localSectionPresent && bufrHeaderCentre == 98) {
-        grib_get_long(h, "isSatellite", &isSatellite);
-        if (isSatellite)
-            snprintf(sampleName, sizeof(sampleName), "BUFR%ld_local_satellite", edition);
-        else
-            snprintf(sampleName, sizeof(sampleName), "BUFR%ld_local", edition);
+    if (localSectionPresent) {
+        if (bufrHeaderCentre == 98) {
+            grib_get_long(h, "isSatellite", &isSatellite);
+            if (isSatellite) snprintf(sampleName, sizeof(sampleName), "BUFR%ld_local_satellite", edition);
+            else             snprintf(sampleName, sizeof(sampleName), "BUFR%ld_local", edition);
+        } else {
+            fprintf(stderr, "ECCODES WARNING :  Cannot generate code for section 2 (Only ECMWF local section is supported)\n");
+            snprintf(sampleName, sizeof(sampleName), "BUFR%ld", edition);
+        }
     }
     else {
         snprintf(sampleName, sizeof(sampleName), "BUFR%ld", edition);
@@ -780,7 +783,7 @@ void BufrEncodeC::header(const grib_handle* h) const
         grib_print_api_version(out_);
         fprintf(out_, " */\n\n");
         fprintf(out_, "#include \"eccodes.h\"\n");
-        fprintf(out_, "int main()\n");
+        fprintf(out_, "int main(void)\n");
         fprintf(out_, "{\n");
         fprintf(out_, "  size_t         size=0;\n");
         fprintf(out_, "  const void*    buffer = NULL;\n");

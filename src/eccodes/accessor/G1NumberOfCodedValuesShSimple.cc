@@ -10,8 +10,7 @@
 
 #include "G1NumberOfCodedValuesShSimple.h"
 
-eccodes::accessor::G1NumberOfCodedValuesShSimple _grib_accessor_g1number_of_coded_values_sh_simple;
-eccodes::Accessor* grib_accessor_g1number_of_coded_values_sh_simple = &_grib_accessor_g1number_of_coded_values_sh_simple;
+eccodes::AccessorBuilder<eccodes::accessor::G1NumberOfCodedValuesShSimple> _grib_accessor_g1number_of_coded_values_sh_simple_builder{};
 
 namespace eccodes::accessor
 {

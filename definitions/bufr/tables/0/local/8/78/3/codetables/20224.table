@@ -1,0 +1,10 @@
+0 0 Dry
+1 1 Wet
+2 2 Flooded
+3 3 Slush
+4 4 Ice patches
+5 5 Glazed ice
+6 6 Snow depth 0 - 19 cm
+7 7 Snow dipth 20 cm or more
+8 8 Snow drift
+15 15 Missing value

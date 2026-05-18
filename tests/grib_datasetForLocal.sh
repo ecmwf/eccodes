@@ -41,7 +41,7 @@ test_ds()
     grib_check_key_equals $tempGrib datasetForLocal $_result
 }
 
-for c in ce ul; do
+for c in ef eh gf gh ; do
     ${tools_dir}/grib_set -s class=$c $sample $tempGrib
     grib_check_key_equals $tempGrib datasetForLocal hydro
 done

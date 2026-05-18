@@ -10,8 +10,7 @@
 
 #include "LocalDefinition.h"
 
-eccodes::accessor::LocalDefinition _grib_accessor_local_definition;
-eccodes::Accessor* grib_accessor_local_definition = &_grib_accessor_local_definition;
+eccodes::AccessorBuilder<eccodes::accessor::LocalDefinition> _grib_accessor_local_definition_builder{};
 
 namespace eccodes::accessor
 {
@@ -231,7 +230,9 @@ int LocalDefinition::pack_long(const long* val, size_t* len)
     if (derivedForecast >= 0)
         grib_set_long(hand, derivedForecast_, derivedForecast);
 
-    grib_set_long(hand, grib2LocalSectionNumber_, *val);
+    if (*val > 0) { // ECC-2215
+        grib_set_long(hand, grib2LocalSectionNumber_, *val);
+    }
 
     return 0;
 }

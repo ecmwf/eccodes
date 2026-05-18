@@ -108,9 +108,8 @@ program index
    call codes_index_write(idx, index_file)
 
    call codes_index_read(idx1, index_file)
-
-   call codes_index_release(idx)
    call codes_index_release(idx1)
+   call codes_index_release(idx)
 
    deallocate (level)
    deallocate (shortName)

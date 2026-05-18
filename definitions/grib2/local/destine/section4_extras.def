@@ -1,0 +1,9 @@
+# (C) Copyright 2005- ECMWF.
+
+concept modelName(unknown, "modelNameConcept.def", conceptsDir2, conceptsLocalDirAll): no_copy, dump;
+
+if (modelName isnot "unknown") {
+
+   concept modelVersion(unknown, "modelVersionConcept.[modelName].def", conceptsDir2, conceptsLocalDirAll): no_copy, dump, read_only;
+
+}

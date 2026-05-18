@@ -1,0 +1,11 @@
+0 0 No significant weather
+1 1 Smoke or haze
+2 2 Fog in valley
+3 3 Sandstorm, duststorm or blowing snow
+4 4 Fog
+5 5 Drizzle
+6 6 Rain
+7 7 Snow or rain and snow mixed
+8 8 Shower(s)
+9 9 Thunderstorm(s) with or without precipitation
+15 15 Missing value

@@ -39,7 +39,7 @@ input_complex=$ECCODES_SAMPLES_PATH/sh_ml_grib1.tmpl
 ${tools_dir}/grib_set  -s Nassigned=1 $input_complex $tempGrib
 
 # Encode a spectral sample starting from GRIB2.tmpl
-sample2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+inputs="$ECCODES_SAMPLES_PATH/GRIB2.tmpl $ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl"
 cat > $tempFilt <<EOF
     set numberOfDataPoints = 6;
     set numberOfValues = 6;
@@ -56,16 +56,22 @@ cat > $tempFilt <<EOF
     set spectralType = 1;
     set spectralMode = 1;
 
+    # Need these two keys set to 0 so it works from reduced_gg too
+    set numberOfOctectsForNumberOfPoints = 0;
+    set interpretationOfNumberOfPoints = 0;
+
     set dataRepresentationTemplateNumber=51;
     write;
 EOF
-${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample2
-if [ $HAVE_GEOGRAPHY -eq 1 ]; then
-    ${tools_dir}/grib_get_data $tempGrib
-fi
-${tools_dir}/grib_dump $tempGrib
-grib_check_key_equals $tempGrib packingType spectral_complex
-grib_check_key_equals $tempGrib gridType sh
+for s in $inputs; do
+    ${tools_dir}/grib_filter -o $tempGrib $tempFilt $s
+    if [ $HAVE_GEOGRAPHY -eq 1 ]; then
+        ${tools_dir}/grib_get_data $tempGrib
+    fi
+    ${tools_dir}/grib_dump $tempGrib
+    grib_check_key_equals $tempGrib packingType spectral_complex
+    grib_check_key_equals $tempGrib gridType sh
+done
 
 
 # Minimal spectral

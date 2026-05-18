@@ -22,33 +22,38 @@ transient neitherPresent = 0;
 # }
 
 concept datasetForLocal(unknown) {
-  "tigge"       = {productionStatusOfProcessedData=4;}
-  "tigge"       = {productionStatusOfProcessedData=5;}
-  "s2s"         = {productionStatusOfProcessedData=6;}
-  "s2s"         = {productionStatusOfProcessedData=7;}
-  "cerise"      = {marsClass=50;}
+  "tigge"        = {productionStatusOfProcessedData=4;}
+  "tigge"        = {productionStatusOfProcessedData=5;}
+  "s2s"          = {productionStatusOfProcessedData=6;}
+  "s2s"          = {productionStatusOfProcessedData=7;}
+  "cerise"       = {marsClass=50;}
   "era6"        = {marsClass=40;} # for ERA6 parameters with constituentType
-  "hydro"       = {marsClass=35;} # EFAS/GLOFAS
-  "hydro"       = {marsClass=38;} # ULYSSES
-  "fire"        = {marsClass=39;} # Global Wildfire awareness system
-  "uerra"       = {productionStatusOfProcessedData=8;} # UERRA
-  "uerra"       = {productionStatusOfProcessedData=9;}
-  "uerra"       = {productionStatusOfProcessedData=10;} # CARRA/CERRA
-  "uerra"       = {productionStatusOfProcessedData=11;}
-  "destine"     = {productionStatusOfProcessedData=12;} # Destination Earth
-  "destine"     = {productionStatusOfProcessedData=13;}
-  "destinegen1" = {productionStatusOfProcessedData=12;generation=1;} # DestinE ClimateDT Generation 1
-  "destinegen1" = {productionStatusOfProcessedData=13;generation=1;}
-  "era"         = {marsClass=22;}
-  "era"         = {marsClass=5;}
-  "era"         = {marsClass=23;}
-  "era"         = {marsClass=14;}
-  "era"         = {marsClass=21;}
-  "era"         = {marsClass=24;}
-  "era"         = {marsClass=3;}
-  "era"         = {marsClass=30;}
-  "era"         = {marsClass=33;}
-  "nextgems"    = {marsClass=53;}
+  "hydro_legacy" = {marsClass=35;} # EFAS/GLOFAS
+  "hydro_legacy" = {marsClass=38;} # ULYSSES
+  "hydro"        = {marsClass=42;} # EFAS
+  "hydro"        = {marsClass=43;} # GLOFAS
+  "hydro"        = {marsClass=48;} # C3S European hydrology
+  "hydro"        = {marsClass=49;} # C3S Global hydrology
+  "fire"         = {marsClass=39;} # Global Wildfire awareness system
+  "uerra"        = {productionStatusOfProcessedData=8;} # UERRA
+  "uerra"        = {productionStatusOfProcessedData=9;}
+  "uerra"        = {productionStatusOfProcessedData=10;} # CARRA/CERRA
+  "uerra"        = {productionStatusOfProcessedData=11;}
+  "destine"      = {productionStatusOfProcessedData=12;} # Destination Earth
+  "destine"      = {productionStatusOfProcessedData=13;}
+  "destinegen1"  = {productionStatusOfProcessedData=12;generation=1;} # DestinE ClimateDT Generation 1
+  "destinegen1"  = {productionStatusOfProcessedData=13;generation=1;}
+  "era"          = {marsClass=22;}
+  "era"          = {marsClass=5;}
+  "era"          = {marsClass=23;}
+  "era"          = {marsClass=14;}
+  "era"          = {marsClass=21;}
+  "era"          = {marsClass=24;}
+  "era"          = {marsClass=3;}
+  "era"          = {marsClass=30;}
+  "era"          = {marsClass=33;}
+  "nextgems"     = {marsClass=53;}
+  "unknown"      = { dummy=1; }
 }
 
 # MTG2Switch logic defined here
@@ -57,7 +62,7 @@ concept datasetForLocal(unknown) {
 # 2 = post-MTG2 encoding with paramId + chemId used
 
 # By default centres will use post MTG2 parameter concepts (= 1) to retain the status quo.
-# The default can then be modified based on the below tablesVersion, according to the
+# The default can then be modified based on the below tablesVersion, according to the
 # conditions defined in the MTG2SwitchViaTablesVersion concept at the top level or in the
 # concept at the centre/pseudocentre level
 
@@ -66,7 +71,7 @@ concept MTG2SwitchViaTablesVersion(false, "MTG2SwitchViaTablesVersionConcept.def
 # Then the logic for the MTG2 switch default value in these cases is
 # applied in the below function - cf. the mtg2_switch_default accessor
 # This is as follows:
-#     tablesVersion <= tablesVersionMTG2Switch, then MTG2SwitchDefault=0., i.e. we are pre-MTG2
+#     tablesVersion <= tablesVersionMTG2Switch, then MTG2SwitchDefault=0., i.e. we are pre-MTG2
 #     tablesVersion > tablesVersionMTG2Switch, and class=mc/cr  then MTG2SwitchDefault=2., i.e. we are post-MTG2 with param-chem split.
 #     tablesVersion > tablesVersionMTG2Switch  in all other cases then MTG2SwitchDefault=1., i.e. we are post-MTG2.
 
@@ -105,7 +110,14 @@ concept productDefinitionTemplateName(unknown, "productDefinitionTemplateConcept
 template parameters "grib2/parameters.def";
 
 # Hook for local extras
-template_nofail extras "grib2/local/[centre]/section4_extras.def";
+# pseudo-centres are defined via datasetForLocal, see concept defined in this file
+# while centres are using the standard centre keys
+# if not distinguished, for pseudo-centres it will load the centre specific section4_extras.def instead
+if ( defined(datasetForLocal) && datasetForLocal isnot "unknown" ) {
+ template_nofail extras "grib2/local/[datasetForLocal]/section4_extras.def";
+} else {
+ template_nofail extras "grib2/local/[centre]/section4_extras.def";
+}
 
 # Detect if this is for Generalized Vertical Height Coordinates
 if (defined(typeOfFirstFixedSurface)) {
@@ -145,7 +157,14 @@ else {
 
 if (MTG2Switch > 0) {
    concept paramtype(unknown, "paramtypeConcept.def", conceptsDir2, conceptsDir1): hidden, read_only;
-   concept timeSpan (unknown, "timespanConcept.def", conceptsDir2, conceptsDir1) : read_only;
+
+   if (defined(stream) && is_one_of(stream,"sttd","stte","ldst","ldsb","sfmd","shmd")){
+    concept statType (unknown,"stattypeConcept.def",conceptsDir2,conceptsDir1) : read_only;
+    alias mars.stattype = statType;
+   }
+
+   concept timeSpan (unknown,"timespanConcept.def",conceptsDir2,conceptsDir1) : read_only;
+
    # we use an abbreviation for fromstart -> fs
    if (timeSpan is "fromstart") {
       constant timeSpanfs = "fs" ;

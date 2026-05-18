@@ -4,7 +4,6 @@
 configure_file( include.ctest.sh.in  include.ctest.sh @ONLY )
 
 execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/utils.sh   ${CMAKE_CURRENT_BINARY_DIR} )
-execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/number_compare.pl ${CMAKE_CURRENT_BINARY_DIR} )
 
 # Build the executables used by test scripts
 ################################################
@@ -13,6 +12,7 @@ list(APPEND test_c_bins
     wmo_read_bufr_from_file
     wmo_read_gts_from_file
     wmo_read_any_from_file
+    wmo_read_any_from_file_with_offset
     wmo_read_any_from_stream
     grib_bpv_limit
     grib_double_cmp
@@ -42,6 +42,8 @@ list(APPEND test_c_bins
     grib_set_force
     grib_run_length_packing
     grib_partial_message
+    grib_codedValues_as_bytes
+    grib_get_header_length
     grib_ecc-1467
     grib_ecc-1431
     grib_ecc-1433
@@ -50,9 +52,11 @@ list(APPEND test_c_bins
     grib_ecc-2019
     grib_ecc-2034
     grib_ecc-2045
+    grib_ecc-2188
     bufr_ecc-517
     bufr_ecc-1288
     bufr_ecc-2011
+    bufr_edition0
     bufr_get_element
     bufr_extract_headers
     bufr_check_descriptors
@@ -114,7 +118,6 @@ if( HAVE_BUILD_TOOLS )
         grib_ecpoint
         grib_s2s
         grib_fire
-        grib_mtg2_switch
         grib_generalised_tiles
         # grib_true_imagery
         grib2_wave_spectra
@@ -150,9 +153,12 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1654
         grib_ecc-1671
         grib_ecc-1708
+        grib_ecc-1734
         grib_ecc-1766
         grib_ecc-1829
+        grib_ecc-2140
         bufr_ecc-1028
+        bufr_ecc-912
         bufr_ecc-1195
         bufr_ecc-1259
         bufr_ecc-1290
@@ -164,11 +170,11 @@ if( HAVE_BUILD_TOOLS )
         bufr_ecc-359
         bufr_ecc-517
         bufr_ecc-2011
+        bufr_ecc-2153
         grib_efas
         grib_sh_imag
         grib_spectral
         grib_levtype
-        grib_typeOfLevel
         grib2_product_templates
         grib_grid_unstructured
         grib_grid_lambert_conformal
@@ -177,14 +183,25 @@ if( HAVE_BUILD_TOOLS )
         grib_g1day_of_the_year_date
         grib_paramid_chemid_split
         grib_cmp_paramtype
-        grib_timeSpanConcept
         grib_cmp_timeSpan
+        grib_stattype
+        grib_ecc-2221
+        grib_ecc-2218
+        grib_ecc-2240
+        grib_ecc-2242
+        grib_ecc-2248
+        grib_ecc-2254
+        grib_ecc-2264
+        grib_ecc-2265
     )
 
     # These tests require data downloads
     # and/or take much longer
     list(APPEND tests_extra
         error_codes
+        grib_typeOfLevel
+        grib_mtg2_switch
+        grib_timeSpanConcept
         grib_datasetForLocal
         grib_isGridded_isSpectral
         grib_data_quality_checks
@@ -193,6 +210,7 @@ if( HAVE_BUILD_TOOLS )
         grib_units_bias_factor
         grib_set_large_message_fail
         grib_g1monthlydate
+        grib_get_header_length
         grib_g1fcperiod
         grib_bpv_limit
         grib_complex
@@ -201,9 +219,11 @@ if( HAVE_BUILD_TOOLS )
         grib_element
         grib_change_packing
         grib_complex_spatial_differencing
+        grib_codedValues_as_bytes
         grib_run_length_packing
         grib_grid_space_view
         grib_partial_message
+        grib_partial_geometry
         grib_true_imagery
         grib_headers_only
         grib_uerra
@@ -214,7 +234,9 @@ if( HAVE_BUILD_TOOLS )
         wmo_read_bufr_from_file
         wmo_read_gts_from_file
         wmo_read_any_from_file
+        wmo_read_any_from_file_with_offset
         wmo_read_any_from_stream
+        bufr_edition0
         bufr_templates
         bufr_rdbSubTypes
         bufr_dump_data
@@ -284,6 +306,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_ecc-2030
         bufr_ecc-2037
         bufr_ecc-2100
+        bufr_ecc-2189
         grib_488
         grib_ecc-490
         grib_ecc-756
@@ -317,6 +340,10 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-2045
         grib_ecc-2050
         grib_ecc-2052
+        grib_ecc-2137
+        grib_ecc-2188
+        grib_ecc-2230
+        grib_ecc-2268
         grib_modelName
         grib_sub_hourly
         grib_set_bytes
@@ -325,6 +352,7 @@ if( HAVE_BUILD_TOOLS )
         codes_assert
         codes_ecc-1698
         codes_ecc-1929
+        codes_ecc-2192
         codes_get_string
         codes_codetable
         gts_get
@@ -336,11 +364,6 @@ if( HAVE_BUILD_TOOLS )
         hdf5
         taf
         pseudo_diag
-        metar_ls
-        metar_filter
-        metar_get
-        metar_dump
-        metar_compare
         bufr_set
         grib_ieee
         grib1_gds_not_present
@@ -414,6 +437,9 @@ if( HAVE_BUILD_TOOLS )
     if( HAVE_AEC AND ENABLE_EXTRA_TESTS )
         list(APPEND tests_extra grib_ecc-1431)
         list(APPEND tests_extra grib_ecc-1433)
+    endif()
+    if( ECCODES_INSTALL_EXTRA_TOOLS AND ENABLE_EXTRA_TESTS )
+        list(APPEND tests_extra metar_ls metar_filter metar_get metar_dump metar_compare)
     endif()
     if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
         list(APPEND tests_extra bufr_dump_encode_fortran)
@@ -502,35 +528,39 @@ if( HAVE_BUILD_TOOLS )
                       TEST_DEPENDS eccodes_download_bufrs eccodes_download_bufr_refs )
 
 
-    if( ENABLE_EXTRA_TESTS AND HAVE_ECCODES_THREADS )
-        ecbuild_add_executable( TARGET    grib_encode_pthreads
+    if( ENABLE_EXTRA_TESTS AND (HAVE_ECCODES_THREADS OR HAVE_ECCODES_OMP_THREADS) )
+        ecbuild_add_executable( TARGET    grib_encode_threads
                                 NOINSTALL
-                                SOURCES   grib_encode_pthreads.cc
+                                SOURCES   grib_encode_threads.cc
                                 LIBS      eccodes ${CMAKE_THREAD_LIBS_INIT} )
-        ecbuild_add_test( TARGET eccodes_t_grib_encode_pthreads
+        ecbuild_add_test( TARGET eccodes_t_grib_encode_threads
                           TYPE SCRIPT
-                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_encode_pthreads.sh )
+                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_encode_threads.sh )
 
-        foreach( test grib_encode_pthreads2 grib_threads_ecc-604-encode bufr_encode_pthreads )
+        foreach( test grib_encode_threads2 grib_threads_ecc-604-encode bufr_encode_threads )
             ecbuild_add_executable( TARGET    ${test}
                                     NOINSTALL
                                     SOURCES   ${test}.cc
                                     LIBS      eccodes ${CMAKE_THREAD_LIBS_INIT} )
         endforeach()
-        ecbuild_add_test( TARGET eccodes_t_grib_encode_pthreads2
+        ecbuild_add_test( TARGET eccodes_t_grib_encode_threads2
                           TYPE SCRIPT
                           TEST_DEPENDS eccodes_download_gribs
-                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_encode_pthreads2.sh )
-        ecbuild_add_test( TARGET eccodes_t_bufr_encode_pthreads
+                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_encode_threads2.sh )
+        ecbuild_add_test( TARGET eccodes_t_bufr_encode_threads
                           TYPE SCRIPT
                           TEST_DEPENDS eccodes_download_bufrs
-                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/bufr_encode_pthreads.sh )
+                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/bufr_encode_threads.sh )
     endif()
 
     if( NOT ECCODES_ON_WINDOWS )
         ecbuild_add_executable( TARGET    extract_offsets
                                 NOINSTALL
                                 SOURCES   extract_offsets.cc
+                                LIBS      eccodes )
+        ecbuild_add_executable( TARGET    grib_partial_geometry
+                                NOINSTALL
+                                SOURCES   grib_partial_geometry.cc
                                 LIBS      eccodes )
     endif()
 
@@ -562,6 +592,11 @@ if( HAVE_BUILD_TOOLS )
                       TYPE SCRIPT
                       CONDITION ENABLE_EXTRA_TESTS
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_check_param_concepts.sh )
+
+    ecbuild_add_test( TARGET eccodes_t_grib_check_concept_keys
+                      TYPE SCRIPT
+                      CONDITION ENABLE_EXTRA_TESTS
+                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_check_concept_keys.sh )
 
     ecbuild_add_test( TARGET eccodes_t_bufr_split_by_rdbSubtype
                       TYPE SCRIPT
@@ -602,9 +637,11 @@ endif()
 
 if( eccodes_HAVE_ECKIT_GEO AND eccodes_HAVE_GEOGRAPHY )
     foreach( test
-            grib_from_gridspec )
-        ecbuild_add_test( TARGET  eccodes_t_${test}
+            grib_from_gridspec
+            grib_to_gridspec )
+        ecbuild_add_test( TARGET eccodes_t_${test}
                           SOURCES ${test}.cc
-                          LIBS    eccodes eckit_geo )
+                          LIBS eccodes eckit_geo
+                          WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} )
     endforeach()
 endif()

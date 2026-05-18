@@ -246,7 +246,6 @@ int gribNearestDelete(eccodes::geo_nearest::Nearest* i)
     if (i) {
         i->destroy();
         delete i;
-        i = nullptr;
     }
     return GRIB_SUCCESS;
 }
@@ -494,7 +493,7 @@ static grib_nearest* grib_nearest_new_(const grib_handle* ch, int* error)
     return i;
 }
 #else
-grib_nearest* grib_nearest_new(const grib_handle* ch, int* error)
+static grib_nearest* grib_nearest_new_(const grib_handle* ch, int* error)
 {
     *error = GRIB_FUNCTIONALITY_NOT_ENABLED;
     grib_context_log(ch->context, GRIB_LOG_ERROR,

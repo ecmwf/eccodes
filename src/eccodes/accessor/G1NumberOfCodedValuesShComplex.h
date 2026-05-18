@@ -19,8 +19,8 @@ class G1NumberOfCodedValuesShComplex : public Long
 {
 public:
     G1NumberOfCodedValuesShComplex() :
-        Long() { class_name_ = "g1number_of_coded_values_sh_complex"; }
-    grib_accessor* create_empty_accessor() override { return new G1NumberOfCodedValuesShComplex{}; }
+        Long() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
 
@@ -33,6 +33,9 @@ private:
     const char* JS_ = nullptr;
     const char* KS_ = nullptr;
     const char* MS_ = nullptr;
+
+public:
+    static inline const AccessorType accessor_type_{"g1number_of_coded_values_sh_complex"};
 };
 
 }  // namespace eccodes::accessor

@@ -19,12 +19,14 @@ class Position : public Gen
 {
 public:
     Position() :
-        Gen() { class_name_ = "position"; }
-    grib_accessor* create_empty_accessor() override { return new Position{}; }
+        Gen() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     long get_native_type() override;
     int unpack_long(long* val, size_t* len) override;
     void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;
+
+    static inline const AccessorType accessor_type_{"position"};
 };
 
 }  // namespace eccodes::accessor

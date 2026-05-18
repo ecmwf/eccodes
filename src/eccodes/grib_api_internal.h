@@ -13,8 +13,7 @@
     ecCodes, not seen by the user of the API
   */
 
-#ifndef grib_api_internal_H
-#define grib_api_internal_H
+#pragma once
 
 /* cmake config header */
 #ifdef HAVE_ECCODES_CONFIG_H
@@ -27,7 +26,10 @@
 
 
 #ifdef __cplusplus
+#include "AccessorStore.h"
 extern "C" {
+#else
+#include <stdint.h>
 #endif
 
 #ifndef GRIB_INLINE
@@ -123,38 +125,12 @@ extern int pthread_mutexattr_settype(pthread_mutexattr_t* attr, int type);
 #endif
 */
 
-#if GRIB_PTHREADS
-    #include <pthread.h>
-    #define GRIB_MUTEX_INIT_ONCE(a, b) pthread_once(a, b);
-    #define GRIB_MUTEX_LOCK(a)         pthread_mutex_lock(a);
-    #define GRIB_MUTEX_UNLOCK(a)       pthread_mutex_unlock(a);
-/*
- #define GRIB_MUTEX_LOCK(a) {pthread_mutex_lock(a); printf("MUTEX LOCK %p %s line %d\n",(void*)a,__FILE__,__LINE__);}
- #define GRIB_MUTEX_UNLOCK(a) {pthread_mutex_unlock(a);printf("MUTEX UNLOCK %p %s line %d\n",(void*)a,__FILE__,__LINE__);}
- */
-#elif GRIB_OMP_THREADS
-    #ifdef _MSC_VER
-        #define GRIB_OMP_CRITICAL(a) __pragma(omp critical(a))
-    #else
-        #define GRIB_OMP_STR(a)      #a
-        #define GRIB_OMP_XSTR(a)     GRIB_OMP_STR(a)
-        #define GRIB_OMP_CRITICAL(a) _Pragma(GRIB_OMP_XSTR(omp critical(a)))
-    #endif
-    #define GRIB_MUTEX_INIT_ONCE(a, b) (*(b))();
-    #define GRIB_MUTEX_LOCK(a)         omp_set_nest_lock(a);
-    #define GRIB_MUTEX_UNLOCK(a)       omp_unset_nest_lock(a);
-#else
-    #define GRIB_MUTEX_INIT_ONCE(a, b)
-    #define GRIB_MUTEX_LOCK(a)
-    #define GRIB_MUTEX_UNLOCK(a)
-#endif
-
-#if GRIB_LINUX_PTHREADS
-    /* Note: in newer pthreads PTHREAD_MUTEX_RECURSIVE and PTHREAD_MUTEX_RECURSIVE_NP are enums */
-    #if !defined(PTHREAD_MUTEX_RECURSIVE)
-        #define PTHREAD_MUTEX_RECURSIVE PTHREAD_MUTEX_RECURSIVE_NP
-    #endif
-#endif
+// #if GRIB_LINUX_PTHREADS
+//     /* Note: in newer pthreads PTHREAD_MUTEX_RECURSIVE and PTHREAD_MUTEX_RECURSIVE_NP are enums */
+//     #if !defined(PTHREAD_MUTEX_RECURSIVE)
+//         #define PTHREAD_MUTEX_RECURSIVE PTHREAD_MUTEX_RECURSIVE_NP
+//     #endif
+// #endif
 
 
 #ifndef HAVE_FSEEKO
@@ -190,15 +166,11 @@ extern int pthread_mutexattr_settype(pthread_mutexattr_t* attr, int type);
 
 #define MAX_ACCESSOR_ATTRIBUTES     20
 #define MAX_FILE_HANDLES_WITH_MULTI 10
-#define ACCESSORS_ARRAY_SIZE        5000
 #define MAX_NUM_CONCEPTS            2000
 #define MAX_NUM_HASH_ARRAY          2000
 
 #define CODES_NAMESPACE   10
 #define MAX_NAMESPACE_LEN 64
-
-#define CODES_MY_BUFFER   0
-#define CODES_USER_BUFFER 1
 
 #define CODES_REAL_MODE8 8
 
@@ -328,7 +300,7 @@ struct grib_loader
  */
 struct grib_buffer
 {
-    int property;        /** < property parameter of buffer */
+    void (*deleter)(void*);
     int validity;        /** < validity parameter of buffer */
     int growable;        /** < buffer can be grown */
     size_t length;       /** < Buffer length */
@@ -516,7 +488,6 @@ struct bufr_descriptor
     long reference;
     long width;
     int nokey; /* set if descriptor does not have an associated key */
-    grib_accessor* a;
 };
 
 struct bufr_descriptors_array
@@ -575,9 +546,17 @@ struct grib_handle
     int header_mode;                           /** Header not jet complete */
     char* gts_header;
     size_t gts_header_len;
-    int use_trie;
     int trie_invalid;
-    grib_accessor* accessors[ACCESSORS_ARRAY_SIZE];
+#ifdef __cplusplus
+    eccodes::AccessorStore accessor_store;
+#else
+    /* Layout-compatible C view of eccodes::AccessorStore (POD layout). */
+    struct {
+        uint64_t hash;
+        void*    value;
+    } accessor_store_slots_[1024];
+    size_t accessor_store_size_;
+#endif
     char* section_offset[MAX_NUM_SECTIONS];
     char* section_length[MAX_NUM_SECTIONS];
     int sections_count;
@@ -703,8 +682,6 @@ struct grib_context
     int gts_header_on;
     int gribex_mode_on;
     int large_constant_fields;
-    grib_itrie* keys;
-    int keys_count;
     grib_itrie* concepts_index;
     int concepts_count;
     grib_concept_value* concepts[MAX_NUM_CONCEPTS];
@@ -726,11 +703,6 @@ struct grib_context
     grib_trie* lists;
     grib_trie* expanded_descriptors;
     int file_pool_max_opened_files;
-#if GRIB_PTHREADS
-    pthread_mutex_t mutex;
-#elif GRIB_OMP_THREADS
-    omp_nest_lock_t mutex;
-#endif
 };
 
 /* expression*/
@@ -957,17 +929,17 @@ struct grib_math
     int arity;
 };
 
-typedef double (*mathproc)(void);
-typedef int (*funcproc)(grib_math*, mathproc);
+typedef double (*grib_mathproc)(void);
+typedef int (*grib_funcproc)(grib_math*, grib_mathproc);
 
-typedef struct func
+typedef struct grib_func
 {
     char* name;
-    funcproc addr;
-    mathproc proc;
+    grib_funcproc addr;
+    grib_mathproc proc;
     int arity;
     char* info;
-} func;
+} grib_func;
 
 /* action file */
 struct grib_action_file
@@ -1115,6 +1087,4 @@ typedef struct j2k_encode_helper
     #include "geo/nearest/Nearest.h"
     #include "expression/Expression.h"
     #include "grib_arguments.h"
-#endif
-
 #endif

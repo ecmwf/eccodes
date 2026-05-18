@@ -10,8 +10,7 @@
 
 #include "UnsignedBits.h"
 
-eccodes::accessor::UnsignedBits _grib_accessor_unsigned_bits;
-eccodes::Accessor* grib_accessor_unsigned_bits = &_grib_accessor_unsigned_bits;
+eccodes::AccessorBuilder<eccodes::accessor::UnsignedBits> _grib_accessor_unsigned_bits_builder{};
 
 namespace eccodes::accessor
 {

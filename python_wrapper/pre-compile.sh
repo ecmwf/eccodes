@@ -18,6 +18,9 @@ mkdir -p python_wrapper/src/copying
 mkdir -p /tmp/eccodes/target/eccodes/include/
 mkdir -p /tmp/eccodes/target/eccodes/cmake/
 
+GIT_OPENJPEG=https://github.com/uclouvain/openjpeg
+OPENJPEG_VERSION=v2.5.2
+
 if [ "$(uname)" != "Darwin" ] ; then
     echo "installing and copying deps for platform $(uname)"
     mkdir -p /tmp/eccodes/target/eccodes/lib64/
@@ -31,63 +34,69 @@ if [ "$(uname)" != "Darwin" ] ; then
 
     ## buildable prereqs
     ### openjpg
-    GIT_OPENJPEG=https://github.com/uclouvain/openjpeg
-    OPENJPEG_VERSION=v2.5.2
-
     git clone --branch $OPENJPEG_VERSION --depth=1 $GIT_OPENJPEG /src/openjpeg
-
     mkdir -p /tmp/openjpeg/build
-    cd /tmp/openjpeg/build
-    cmake /src/openjpeg/ -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_INSTALL_PREFIX=/tmp/openjpeg/target
+    pushd /tmp/openjpeg/build
+    cmake /src/openjpeg/ -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_INSTALL_PREFIX=/tmp/openjpeg/target -DBUILD_CODEC=OFF
     cmake --build . --target install
-
-    cd -
-    cd /src/openjpeg && echo "$(git remote -v | head -1 | awk '{print $2;}') $(git rev-parse HEAD)" > /tmp/openjpeg/version.txt
-    cd -
-    cat /tmp/openjpeg/version.txt >> python_wrapper/src/versions.txt
+    popd
 
     ### libaec
-    # NOTE we need at least 1.1.1 due to gribjump, thats why no dnf install atm
-    mkdir -p /tmp/libaec/build
-    wget https://gitlab.dkrz.de/k202009/libaec/-/archive/v1.1.3/libaec-v1.1.3.tar.gz -O /tmp/libaec.tar.gz
-    tar -xzf /tmp/libaec.tar.gz -C /tmp
-    mkdir /tmp/libaec-v1.1.3/build && cd /tmp/libaec-v1.1.3/build
-    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/tmp/libaec ..
-    make install
-    cd -
-    echo "libaec v1.1.3" >> python_wrapper/src/versions.txt
+    # comes from cxx-deps
 
     # copy the libs, instead of having auditwheel done it later. This is a bit risky because cmake will later write in this
     # very directory... but it works
+    # png
     cp /lib64/libpng16.so.16 /tmp/eccodes/target/eccodes/lib64/libpng16.so.16
+    # openjpeg
     cp /tmp/openjpeg/target/lib64/libopenjp2.so.7 /tmp/eccodes/target/eccodes/lib64/libopenjp2.so.7
-    cp /tmp/libaec/lib64/libaec.so* /tmp/eccodes/target/eccodes/lib64
-    cp /tmp/libaec/include/libaec.h /tmp/eccodes/target/eccodes/include
-    cp /tmp/libaec/cmake/* /tmp/eccodes/target/eccodes/cmake
+
+    # aec -- needs headers and cmake due to dependent on by eg gribjump
+    cp /cxx-deps/lib64/libaec.so* /tmp/eccodes/target/eccodes/lib64
+    cp /cxx-deps/include/libaec.h /tmp/eccodes/target/eccodes/include
+    cp /cxx-deps/lib64/cmake/libaec/* /tmp/eccodes/target/eccodes/cmake
 
 
 else
-    echo "copying deps for platform $(uname)"
+    echo "building deps for platform $(uname)"
     mkdir -p /tmp/eccodes/target/eccodes/lib/
 
-    BREWBASE="$(brew --cellar)" # "/opt/homebrew/Cellar" or "/usr/local/Cellar"
-    LIBAEC="$(ls -d $BREWBASE/libaec/* | head -n1)"
-    LIBOPENJP="$(ls -d $BREWBASE/openjpeg/* | head -n1)"
-    LIBPNG="$(ls -d $BREWBASE/libpng/* | head -n1)"
+    # NOTE we cant use brew installs due to macos compatibility targets
 
-    for lib in $LIBAEC $LIBOPENJP $LIBPNG ; do
-        echo "will copy from $lib/lib with contents $(ls $lib/lib/*dylib)"
-        cp $lib/lib/*dylib /tmp/eccodes/target/eccodes/lib
-        echo "will copy from $lib/include with contents $(ls $lib/include)"
-        cp -R $lib/include/* /tmp/eccodes/target/eccodes/include
-    done
-    rm /tmp/eccodes/target/eccodes/lib/libsz* # comes from the openjp, but we dont need it
+    # openjpg -- not in cxxdeps currently
+    mkdir -p /tmp/openjpeg/build /tmp/openjpeg/src
+    git clone --branch $OPENJPEG_VERSION --depth=1 $GIT_OPENJPEG /tmp/openjpeg/src
+    pushd /tmp/openjpeg/build
+    cmake /tmp/openjpeg/src -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_INSTALL_PREFIX=/tmp/openjpeg/target -DBUILD_CODEC=OFF
+    cmake --build . --target install
+    popd
+    cp /tmp/openjpeg/target/lib/libopenjp2*dylib /tmp/eccodes/target/eccodes/lib/
+
+    # libpng -- not in cxxdeps currently
+    mkdir -p /tmp/libpng/build /tmp/libpng/src
+    LIBPNG_VERSION=v1.6.55
+    git clone --branch $LIBPNG_VERSION https://github.com/pnggroup/libpng /tmp/libpng/src
+    pushd /tmp/libpng/build
+    cmake /tmp/libpng/src -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_INSTALL_PREFIX=/tmp/libpng/target
+    cmake --build . --target install
+    popd
+    cp /tmp/libpng/target/lib/libpng*dylib /tmp/eccodes/target/eccodes/lib
+
+
+    # aec -- needs headers and cmake due to dependent on by eg gribjump
+    cp /tmp/cxx-deps/lib/libaec*dylib /tmp/eccodes/target/eccodes/lib
+    cp /tmp/cxx-deps/include/libaec.h /tmp/eccodes/target/eccodes/include
+    cp /tmp/cxx-deps/lib/cmake/libaec/* /tmp/eccodes/target/eccodes/cmake
 
 fi
 
+
+echo "libaec v1.1.4" >> python_wrapper/src/versions.txt # TODO read from somewhere... there aint any VERSION file, needs to parse
+echo $OPENJPEG_VERSION >> python_wrapper/src/versions.txt
+
 echo "license setup"
 
-## licenses
+# TODO switch licenses to the checked out by cxxdeps / build process
 wget https://raw.githubusercontent.com/glennrp/libpng/libpng16/LICENSE -O python_wrapper/src/copying/libpng.txt
 wget https://raw.githubusercontent.com/uclouvain/openjpeg/master/LICENSE -O python_wrapper/src/copying/libopenjpeg.txt
 wget https://raw.githubusercontent.com/MathisRosenhauer/libaec/master/LICENSE.txt -O python_wrapper/src/copying/libaec.txt

@@ -2,6 +2,13 @@
 
 set -eax
 
+# ThreadSanitizer suppression file for known false positives (e.g. libgfortran)
+tsan_supp="@PROJECT_SOURCE_DIR@/cmake/tsan_suppressions.txt"
+if [ -f "$tsan_supp" ]; then
+    TSAN_OPTIONS="${TSAN_OPTIONS:-} suppressions=$tsan_supp"
+    export TSAN_OPTIONS
+fi
+
 data_dir=@PROJECT_BINARY_DIR@/data
 HAVE_PRODUCT_BUFR=@HAVE_PRODUCT_BUFR@
 HAVE_PRODUCT_GRIB=@HAVE_PRODUCT_GRIB@

@@ -10,12 +10,6 @@
 
 #include "grib_api.h"
 
-static void usage(const char* prog)
-{
-    printf("usage: %s infile\n", prog);
-    exit(1);
-}
-
 int main(int argc, char* argv[])
 {
     grib_index* index = NULL;
@@ -29,7 +23,7 @@ int main(int argc, char* argv[])
     size_t lenshortName = 200;
     int ret = 0, count = 0;
 
-    if (argc != 2) usage(argv[0]);
+    if (argc != 2) return 1;
 
     printf("indexing...\n");
 

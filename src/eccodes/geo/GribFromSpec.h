@@ -17,6 +17,7 @@
 
 #include "eccodes/geo/BasicAngle.h"
 #include "eccodes/geo/Geo.h"
+#include "eccodes/Spec.h"
 
 
 namespace eccodes::geo

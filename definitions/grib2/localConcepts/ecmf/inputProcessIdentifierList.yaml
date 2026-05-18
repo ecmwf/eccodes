@@ -1,0 +1,80 @@
+# YAML file to create inputModelNameConcept.def and inputModelVersionConcept.def
+#
+# - extra_keys: to include for an entry extra grib keys, blockwise or element-wise
+# - override_id: overwrites the id by the defined one
+# - skip: if a version was skipped an the id should jump, use skip
+# - null: if no version none, takes only the model name as version entry
+#
+# -- EXAMPLE
+#
+#models:
+#  - name: XY
+#    start: 1
+#    extra_keys:
+#      class: od              # block-level extra keys, applied to all versions unless overridden
+#    versions:
+#      - version: v1.0.0      # id=1
+#        extra_keys:
+#          centre: 98         # per-version extra key
+#      - version: v2.0.0
+#        override_id: 20     # special ID override -> id=20
+#      - version: skipped
+#        skip: true            # this version is skipped, not assigned, included in increment counter
+#      - null                   # version omitted → uses model name -> id=3
+
+models:
+  - name: ifs
+    start: 1
+    versions:
+      - version: cy41r2
+      - version: cy43r1
+      - version: cy43r3
+      - version: cy45r1
+      - version: cy46r1
+      - version: cy47r1
+      - version: cy47r2
+      - version: cy47r3
+      - version: cy48r1
+      - version: cy48r2
+      - version: climatedt
+      - version: cy48r3
+      - version: cy49r1
+      - version: cy49r2
+      - version: cy49r3
+      - version: cy50r1
+      - version: cy50r2
+      - version: cy50r3
+
+  - name: aifs
+    start: 500
+    versions:
+      - version: single-mse-v0.2.0
+      - version: single-mse-v0.2.1
+      - version: single-mse-v1.0
+      - version: single-mse-v1.1
+      - version: single-mse-v2.0
+
+  - name: cosmo
+    start: 1000
+    versions:
+      - version: null
+
+  - name: icon
+    start: 1500
+    versions:
+      - version: null
+
+  - name: era5-land
+    start: 65532
+    versions:
+      - version: null
+
+  - name: era5
+    start: 65533
+    versions:
+      - version: null
+
+  - name: obs
+    start: 65534
+    versions:
+      - version: null

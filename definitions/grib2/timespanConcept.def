@@ -1,7 +1,6 @@
 ## Statistical window overall concept based on official low-level GRIB2 keys only
-## Instananeous
 #'none'    = {stepType='instant';}
-# all instantaeous templates
+# all instantaneous templates
  'none' = {productDefinitionTemplateNumber=0;}
  'none' = {productDefinitionTemplateNumber=1;}
  'none' = {productDefinitionTemplateNumber=2;}
@@ -76,6 +75,8 @@
  'none' = {productDefinitionTemplateNumber=146;}
  'none' = {productDefinitionTemplateNumber=148;}
  'none' = {productDefinitionTemplateNumber=150;}
+ 'none' = {productDefinitionTemplateNumber=152;}
+ 'none' = {productDefinitionTemplateNumber=154;}
  'none' = {productDefinitionTemplateNumber=160;}
  'none' = {productDefinitionTemplateNumber=162;}
  'none' = {productDefinitionTemplateNumber=164;}
@@ -102,27 +103,35 @@
  'none' = {productDefinitionTemplateNumber=1000;}
  'none' = {productDefinitionTemplateNumber=1002;}
  'none' = {productDefinitionTemplateNumber=1100;}
-# some exceptions for non point-in-time templates
- 'none' = {productDefinitionTemplateNumber=8; lengthOfTimeRange=0;}
- 'none' = {productDefinitionTemplateNumber=11; lengthOfTimeRange=0;}
- 'none' = {typeOfStatisticalProcessing=10; lengthOfTimeRange=0;}
-# End instantaneous
-##
-### Accumulations ###
-# we need to do this dataset dependent, in some datasets we might have
-# hourly rolling accumulations and we don't want to have the first in a different bucket
-## since start accumulation must have forecastTime=0
-# specific rules are in the centre's own definitions
-# hourly
- 'fromstart'  = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitForTimeRange=1;}
-# minutes
- 'fromstart'  = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitForTimeRange=0;}
-# 24 hourly time unit
- 'fromstart'  = {typeOfStatisticalProcessing=1; forecastTime=0; indicatorOfUnitForTimeRange=2;}
-### end Accumulations ###
-### mean/min/max/stdev ###
+ # some exceptions for non point-in-time templates
+ 'none'    = {productDefinitionTemplateNumber=8; lengthOfTimeRange=0;}
+ 'none'    = {productDefinitionTemplateNumber=11; lengthOfTimeRange=0;}
+ 'none'    = {typeOfStatisticalProcessing=10; lengthOfTimeRange=0;}
+ # End instantaneous
+ ##
+ ### Accumulations ###
+ # we need to do this dataset dependent, in some datasets we might have
+ # hourly rolling accumulations and we don't want to have the first in a different bucket
+ ## since start accumulation must have forecastTime=0
+ # specific rules are in the centre's own definitions
+ # minutes / hours / day / seconds
+ 'fromstart'    = {typeOfStatisticalProcessing=1; forecastTime=0; true=is_one_of(indicatorOfUnitForTimeRange,0,1,2,13); numberOfTimeRanges=1;}
+ 'none' = {typeOfStatisticalProcessing=1; forecastTime=0; stattype="daac"; numberOfTimeRanges=1;}
+ '1h' = {typeOfStatisticalProcessing=1; forecastTime=0; stattype="daac"; numberOfTimeRanges=2; indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 1;}
+ ### end Accumulations ###
+ #
+ ### mean/min/max/stdev ###
+ '10m'   = {indicatorOfUnitForTimeRange=0; lengthOfTimeRange = 10;}
+ '10m'   = {indicatorOfUnitForTimeRange=13; lengthOfTimeRange = 600;}
+ '15m'   = {indicatorOfUnitForTimeRange=0; lengthOfTimeRange = 15;}
+ '15m'   = {indicatorOfUnitForTimeRange=13; lengthOfTimeRange = 900;}
+ '20m'   = {indicatorOfUnitForTimeRange=0; lengthOfTimeRange = 20;}
+ '20m'   = {indicatorOfUnitForTimeRange=13; lengthOfTimeRange = 1200;}
  '30m'   = {indicatorOfUnitForTimeRange=0; lengthOfTimeRange = 30;}
+ '30m'   = {indicatorOfUnitForTimeRange=13; lengthOfTimeRange = 1800;}
  '1h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 1;}
+ '1h'   = {indicatorOfUnitForTimeRange=0; lengthOfTimeRange = 60;}
+ '1h'   = {indicatorOfUnitForTimeRange=13; lengthOfTimeRange = 3600;}
  '3h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 3;}
  '3h'   = {indicatorOfUnitForTimeRange=10; lengthOfTimeRange = 1;}
  '6h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 6;}
@@ -139,14 +148,8 @@
  '240h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 240;}
  '360h'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 360;}
 #'7 days'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 168;}
-# 28 days
- 'month'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 672;}
-# 29 days
- 'month'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 696;}
-# 30 days
- 'month'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 720;}
-# 31 days
- 'month'   = {indicatorOfUnitForTimeRange=1; lengthOfTimeRange = 744;}
+# 28/29/30/31 days
+ 'month'   = {indicatorOfUnitForTimeRange=1; true=is_one_of(lengthOfTimeRange,672,696,720,744);}
 # time unit month
  'month'   = {indicatorOfUnitForTimeRange=3; lengthOfTimeRange = 1;}
 ### end mean/min/max/stdev ###

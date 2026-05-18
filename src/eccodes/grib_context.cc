@@ -10,9 +10,11 @@
 
 #include "grib_api_internal.h"
 #include "ExceptionHandler.h"
+#include "sync/Mutex.h"
 #include <errno.h>
 #include <stdarg.h>
 #include <stdlib.h>
+
 #ifndef ECCODES_ON_WINDOWS
  #include <unistd.h>
 #else
@@ -36,43 +38,13 @@ grib_string_list grib_file_not_found;
  #define ECC_PATH_DELIMITER_STR ":"
 #endif
 
-#if GRIB_PTHREADS
-static pthread_once_t once = PTHREAD_ONCE_INIT;
-
-static pthread_mutex_t mutex_mem = PTHREAD_MUTEX_INITIALIZER;
-static pthread_mutex_t mutex_c   = PTHREAD_MUTEX_INITIALIZER;
-
-static void init_mutex()
-{
-    pthread_mutexattr_t attr;
-    pthread_mutexattr_init(&attr);
-    pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
-    pthread_mutex_init(&mutex_c, &attr);
-    pthread_mutex_init(&mutex_mem, &attr);
-    pthread_mutexattr_destroy(&attr);
-}
-#elif GRIB_OMP_THREADS
-static int once = 0;
-static omp_nest_lock_t mutex_mem;
-static omp_nest_lock_t mutex_c;
-
-static void init_mutex()
-{
-    GRIB_OMP_CRITICAL(lock_grib_context_c)
-    {
-        if (once == 0) {
-            omp_init_nest_lock(&mutex_mem);
-            omp_init_nest_lock(&mutex_c);
-            once = 1;
-        }
-    }
-}
-#endif
-
+static eccodes::sync::Mutex mutex;
 
 #if MANAGE_MEM
 
 #else
+
+static eccodes::sync::Mutex mutex_c;
 
 static void default_long_lasting_free(const grib_context* c, void* p)
 {
@@ -227,7 +199,6 @@ static void default_print(const grib_context* c, void* descriptor, const char* m
     fprintf((FILE*)descriptor, "%s", mess);
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 void grib_context_set_print_proc(grib_context* c, grib_print_proc p)
 {
     c = c ? c : grib_context_get_default();
@@ -235,7 +206,6 @@ void grib_context_set_print_proc(grib_context* c, grib_print_proc p)
     c->print = (p ? p : &default_print);
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 void grib_context_set_data_quality_checks(grib_context* c, int val)
 {
     c = c ? c : grib_context_get_default();
@@ -244,17 +214,21 @@ void grib_context_set_data_quality_checks(grib_context* c, int val)
     // If val == 2, failure results in a warning
     ECCODES_ASSERT(val == 0 || val == 1 || val == 2);
 
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex_c);
     c->grib_data_quality_checks = val;
 }
+int grib_context_get_data_quality_checks(const grib_context* c)
+{
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex_c);
+    return c->grib_data_quality_checks;
+}
 
-// C-API: Ensure all exceptions are converted to error codes
 void grib_context_set_debug(grib_context* c, int mode)
 {
     c = c ? c : grib_context_get_default();
     c->debug = mode;
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 void grib_context_set_logging_proc(grib_context* c, grib_log_proc p)
 {
     c = c ? c : grib_context_get_default();
@@ -262,7 +236,6 @@ void grib_context_set_logging_proc(grib_context* c, grib_log_proc p)
     c->output_log = (p ? p : &default_log);
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 // f can be stderr, stdout or a file like /dev/null
 void grib_context_set_logging_file(grib_context* c, FILE* f)
 {
@@ -271,13 +244,11 @@ void grib_context_set_logging_file(grib_context* c, FILE* f)
     c->log_stream = f;
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 long grib_get_api_version()
 {
     return ECCODES_VERSION;
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 void grib_print_api_version(FILE* out)
 {
     fprintf(out, "%d.%d.%d",
@@ -288,7 +259,6 @@ void grib_print_api_version(FILE* out)
     //fprintf(out, "%s", " PRE-RELEASE");
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 const char* grib_get_package_name()
 {
     return "ecCodes";
@@ -360,8 +330,6 @@ static grib_context default_grib_context = {
     0,              /* gts_header_on              */
     0,              /* gribex_mode_on             */
     0,              /* large_constant_fields      */
-    0,              /* keys                       */
-    0,              /* keys_count                 */
     0,              /* concepts_index             */
     0,              /* concepts_count             */
     {0,},           /* concepts                   */
@@ -383,10 +351,6 @@ static grib_context default_grib_context = {
     0,              /* lists                      */
     0,              /* expanded_descriptors       */
     DEFAULT_FILE_POOL_MAX_OPENED_FILES /* file_pool_max_opened_files */
-#if GRIB_PTHREADS
-    ,
-    PTHREAD_MUTEX_INITIALIZER /* mutex */
-#endif
 };
 
 /* Hopefully big enough. Note: Definitions and samples path environment variables can contain SEVERAL colon-separated directories */
@@ -394,8 +358,7 @@ static grib_context default_grib_context = {
 
 static grib_context* grib_context_get_default_()
 {
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex_c);
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
 
     if (!default_grib_context.inited) {
         const char* write_on_fail                       = NULL;
@@ -565,9 +528,6 @@ static grib_context* grib_context_get_default_()
             fprintf(stderr, "ECCODES DEBUG Definitions path: %s\n", default_grib_context.grib_definition_files_path);
             fprintf(stderr, "ECCODES DEBUG Samples path:     %s\n", default_grib_context.grib_samples_path);
         }
-        default_grib_context.keys_count = 0;
-        default_grib_context.keys       = grib_hash_keys_new(&(default_grib_context), &(default_grib_context.keys_count));
-
         default_grib_context.concepts_index = grib_itrie_new(&(default_grib_context), &(default_grib_context.concepts_count));
         default_grib_context.hash_array_index = grib_itrie_new(&(default_grib_context), &(default_grib_context.hash_array_count));
         default_grib_context.def_files = grib_trie_new(&(default_grib_context));
@@ -583,7 +543,6 @@ static grib_context* grib_context_get_default_()
         default_grib_context.file_pool_max_opened_files = file_pool_max_opened_files ? atoi(file_pool_max_opened_files) : DEFAULT_FILE_POOL_MAX_OPENED_FILES;
     }
 
-    GRIB_MUTEX_UNLOCK(&mutex_c);
     return &default_grib_context;
 }
 
@@ -604,8 +563,7 @@ grib_context* grib_context_get_default()
 
 //     if (!parent) parent=grib_context_get_default();
 
-//     GRIB_MUTEX_INIT_ONCE(&once,&init_mutex);
-//     GRIB_MUTEX_LOCK(&(parent->mutex));
+//     eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
 
 //     c = (grib_context*)grib_context_malloc_clear_persistent(&default_grib_context,sizeof(grib_context));
 
@@ -630,13 +588,6 @@ grib_context* grib_context_get_default()
 //     c->def_files           = default_grib_context.def_files;
 //     c->lists               = default_grib_context.lists;
 
-// #if GRIB_PTHREADS
-//     pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE);
-//     pthread_mutex_init(&mutex_c,&attr);
-//     pthread_mutexattr_destroy(&attr);
-// #endif
-
-//     GRIB_MUTEX_UNLOCK(&(parent->mutex));
 //     return c;
 // }
 
@@ -680,8 +631,7 @@ static int init_definition_files_dir(grib_context* c)
     strncpy(path, c->grib_definition_files_path, ECC_PATH_MAXLEN-1);
     path[ ECC_PATH_MAXLEN - 1 ] = '\0';
 
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex_c);
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
 
     p = path;
 
@@ -711,8 +661,6 @@ static int init_definition_files_dir(grib_context* c)
         }
     }
 
-    GRIB_MUTEX_UNLOCK(&mutex_c);
-
     return err;
 }
 
@@ -724,15 +672,14 @@ char* grib_context_full_defs_path(grib_context* c, const char* basename)
     grib_string_list* fullpath = 0;
     if (!c) c = grib_context_get_default();
 
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-
     if (*basename == '/' || *basename == '.') {
         return (char*)basename;
     }
     else {
-        GRIB_MUTEX_LOCK(&mutex_c); /* See ECC-604 */
-        fullpath = (grib_string_list*)grib_trie_get(c->def_files, basename);
-        GRIB_MUTEX_UNLOCK(&mutex_c);
+        {
+            eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
+            fullpath = (grib_string_list*)grib_trie_get(c->def_files, basename);
+        }
         if (fullpath != NULL) {
             return fullpath->value;
         }
@@ -754,10 +701,11 @@ char* grib_context_full_defs_path(grib_context* c, const char* basename)
                 fullpath = (grib_string_list*)grib_context_malloc_clear_persistent(c, sizeof(grib_string_list));
                 ECCODES_ASSERT(fullpath);
                 fullpath->value = grib_context_strdup(c, full);
-                GRIB_MUTEX_LOCK(&mutex_c);
-                grib_trie_insert(c->def_files, basename, fullpath);
-                grib_context_log(c, GRIB_LOG_DEBUG, "Found def file %s", full);
-                GRIB_MUTEX_UNLOCK(&mutex_c);
+                {
+                  eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
+                  grib_trie_insert(c->def_files, basename, fullpath);
+                  grib_context_log(c, GRIB_LOG_DEBUG, "Found def file %s", full);
+                }
                 return fullpath->value;
             } else {
                 grib_context_log(c, GRIB_LOG_DEBUG, "Nonexistent def file %s", full);
@@ -766,23 +714,22 @@ char* grib_context_full_defs_path(grib_context* c, const char* basename)
         }
     }
 
-    GRIB_MUTEX_LOCK(&mutex_c);
-    /* Store missing files so we don't check for them again and again */
-    grib_trie_insert(c->def_files, basename, &grib_file_not_found);
-    /*grib_context_log(c,GRIB_LOG_ERROR,"Def file \"%s\" not found",basename);*/
-    GRIB_MUTEX_UNLOCK(&mutex_c);
+    {
+        eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
+        /* Store missing files so we don't check for them again and again */
+        grib_trie_insert(c->def_files, basename, &grib_file_not_found);
+        /*grib_context_log(c,GRIB_LOG_ERROR,"Def file \"%s\" not found",basename);*/
+    }
     full[0] = 0;
     return NULL;
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 char* grib_samples_path(const grib_context* c)
 {
     if (!c) c = grib_context_get_default();
     return c->grib_samples_path;
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 char* grib_definition_path(const grib_context* c)
 {
     if (!c) c = grib_context_get_default();
@@ -871,7 +818,6 @@ static void grib_context_delete_(grib_context* c)
 {
     if (!c) c = grib_context_get_default();
 
-    grib_hash_keys_delete(c->keys);
     /* grib_trie_delete(c->def_files);  TODO:masn */
 
     grib_context_reset(c);
@@ -897,14 +843,12 @@ void grib_context_delete(grib_context* c)
     return eccodes::logErrorAndReturnValue(result);
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 void codes_bufr_multi_element_constant_arrays_on(grib_context* c)
 {
     if (!c) c = grib_context_get_default();
     c->bufr_multi_element_constant_arrays = 1;
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 void codes_bufr_multi_element_constant_arrays_off(grib_context* c)
 {
     if (!c) c = grib_context_get_default();
@@ -915,14 +859,13 @@ void codes_bufr_multi_element_constant_arrays_off(grib_context* c)
 
 static void grib_context_set_definitions_path_(grib_context* c, const char* path)
 {
-    if (!c) c = grib_context_get_default();
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex_c);
-
-    c->grib_definition_files_path = strdup(path);
-    grib_context_log(c, GRIB_LOG_DEBUG, "Definitions path changed to: %s", c->grib_definition_files_path);
-
-    GRIB_MUTEX_UNLOCK(&mutex_c);
+    if (!c)
+        c = grib_context_get_default();
+    {
+        eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
+        c->grib_definition_files_path = strdup(path);
+        grib_context_log(c, GRIB_LOG_DEBUG, "Definitions path changed to: %s", c->grib_definition_files_path);
+    }
 }
 
 // C-API: Ensure all exceptions are converted to error codes
@@ -934,14 +877,14 @@ void grib_context_set_definitions_path(grib_context* c, const char* path)
 
 static void grib_context_set_samples_path_(grib_context* c, const char* path)
 {
-    if (!c) c = grib_context_get_default();
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex_c);
+    if (!c)
+        c = grib_context_get_default();
 
-    c->grib_samples_path = strdup(path);
-    grib_context_log(c, GRIB_LOG_DEBUG, "Samples path changed to: %s", c->grib_samples_path);
-
-    GRIB_MUTEX_UNLOCK(&mutex_c);
+    {
+        eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
+        c->grib_samples_path = strdup(path);
+        grib_context_log(c, GRIB_LOG_DEBUG, "Samples path changed to: %s", c->grib_samples_path);
+    }
 }
 
 // C-API: Ensure all exceptions are converted to error codes
@@ -1120,57 +1063,47 @@ void grib_context_print(const grib_context* c, void* descriptor, const char* fmt
 
 int grib_context_get_handle_file_count(grib_context* c)
 {
-    int r = 0;
-    if (!c) c = grib_context_get_default();
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex_c);
-    r = c->handle_file_count;
-    GRIB_MUTEX_UNLOCK(&mutex_c);
-    return r;
+    if (!c)
+        c = grib_context_get_default();
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
+    return c->handle_file_count;
 }
 int grib_context_get_handle_total_count(grib_context* c)
 {
-    int r = 0;
-    if (!c) c = grib_context_get_default();
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex_c);
-    r = c->handle_total_count;
-    GRIB_MUTEX_UNLOCK(&mutex_c);
-    return r;
+    if (!c)
+        c = grib_context_get_default();
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
+    return c->handle_total_count;
 }
 
 void grib_context_set_handle_file_count(grib_context* c, int new_count)
 {
-    if (!c) c = grib_context_get_default();
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex_c);
+    if (!c)
+        c = grib_context_get_default();
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
     c->handle_file_count = new_count;
-    GRIB_MUTEX_UNLOCK(&mutex_c);
 }
 void grib_context_set_handle_total_count(grib_context* c, int new_count)
 {
-    if (!c) c = grib_context_get_default();
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex_c);
+    if (!c)
+        c = grib_context_get_default();
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
     c->handle_total_count = new_count;
-    GRIB_MUTEX_UNLOCK(&mutex_c);
 }
 
 void grib_context_increment_handle_file_count(grib_context* c)
 {
-    if (!c) c = grib_context_get_default();
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex_c);
+    if (!c)
+        c = grib_context_get_default();
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
     c->handle_file_count++;
-    GRIB_MUTEX_UNLOCK(&mutex_c);
 }
 void grib_context_increment_handle_total_count(grib_context* c)
 {
-    if (!c) c = grib_context_get_default();
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex_c);
+    if (!c)
+        c = grib_context_get_default();
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
     c->handle_total_count++;
-    GRIB_MUTEX_UNLOCK(&mutex_c);
 }
 
 bufr_descriptors_array* grib_context_expanded_descriptors_list_get(grib_context* c, const char* key, long* u, size_t size)
@@ -1178,16 +1111,12 @@ bufr_descriptors_array* grib_context_expanded_descriptors_list_get(grib_context*
     bufr_descriptors_map_list* expandedUnexpandedMapList;
     size_t i  = 0;
     int found = 0;
-    bufr_descriptors_array* result = NULL;
     if (!c) c = grib_context_get_default();
 
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex_c);
-
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
     if (!c->expanded_descriptors) {
         c->expanded_descriptors = (grib_trie*)grib_trie_new(c);
-        result                  = NULL;
-        goto the_end;
+        return NULL;
     }
     expandedUnexpandedMapList = (bufr_descriptors_map_list*)grib_trie_get(c->expanded_descriptors, key);
     found                     = 0;
@@ -1202,14 +1131,11 @@ bufr_descriptors_array* grib_context_expanded_descriptors_list_get(grib_context*
             }
         }
         if (found) {
-            result = expandedUnexpandedMapList->expanded;
-            goto the_end;
+            return expandedUnexpandedMapList->expanded;
         }
         expandedUnexpandedMapList = expandedUnexpandedMapList->next;
     }
-the_end:
-    GRIB_MUTEX_UNLOCK(&mutex_c);
-    return result;
+    return NULL;
 }
 
 void grib_context_expanded_descriptors_list_push(grib_context* c,
@@ -1220,8 +1146,7 @@ void grib_context_expanded_descriptors_list_push(grib_context* c,
     bufr_descriptors_map_list* newdescriptorsList = NULL;
     if (!c) c = grib_context_get_default();
 
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex_c);
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
 
     newdescriptorsList             = (bufr_descriptors_map_list*)grib_context_malloc_clear(c, sizeof(bufr_descriptors_map_list));
     newdescriptorsList->expanded   = expanded;
@@ -1238,7 +1163,6 @@ void grib_context_expanded_descriptors_list_push(grib_context* c,
     else {
         grib_trie_insert(c->expanded_descriptors, key, newdescriptorsList);
     }
-    GRIB_MUTEX_UNLOCK(&mutex_c);
 }
 
 static codes_assertion_failed_proc assertion = NULL;
@@ -1266,49 +1190,42 @@ void codes_assertion_failed(const char* message, const char* file, int line)
     }
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 int grib_get_gribex_mode(const grib_context* c)
 {
     if (!c) c = grib_context_get_default();
     return c->gribex_mode_on;
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 void grib_gribex_mode_on(grib_context* c)
 {
     if (!c) c = grib_context_get_default();
     c->gribex_mode_on = 1;
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 void grib_gribex_mode_off(grib_context* c)
 {
     if (!c) c = grib_context_get_default();
     c->gribex_mode_on = 0;
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 void grib_gts_header_on(grib_context* c)
 {
     if (!c) c = grib_context_get_default();
     c->gts_header_on = 1;
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 void grib_gts_header_off(grib_context* c)
 {
     if (!c) c = grib_context_get_default();
     c->gts_header_on = 0;
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 void grib_multi_support_on(grib_context* c)
 {
     if (!c) c = grib_context_get_default();
     c->multi_support_on = 1;
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 void grib_multi_support_off(grib_context* c)
 {
     if (!c) c = grib_context_get_default();

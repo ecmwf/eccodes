@@ -10,8 +10,7 @@
 
 #include "PadTo.h"
 
-eccodes::accessor::PadTo _grib_accessor_padto;
-eccodes::Accessor* grib_accessor_padto = &_grib_accessor_padto;
+eccodes::AccessorBuilder<eccodes::accessor::PadTo> _grib_accessor_padto_builder{};
 
 namespace eccodes::accessor
 {

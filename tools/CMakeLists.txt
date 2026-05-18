@@ -36,10 +36,10 @@ list( APPEND ecc_tools_binaries
              grib_compare codes_parser grib_index_build bufr_index_build
              bufr_ls bufr_dump bufr_set bufr_get
              bufr_copy bufr_compare
-             gts_get gts_compare gts_copy gts_dump gts_filter gts_ls
-             metar_dump metar_ls metar_compare metar_get metar_filter metar_copy )
+             gts_get gts_compare gts_copy gts_dump gts_filter gts_ls )
 
 list( APPEND ecc_tools_binaries_extra
+             metar_dump metar_ls metar_compare metar_get metar_filter metar_copy
              grib_repair
              grib_to_json
              grib_check_gaussian_grid

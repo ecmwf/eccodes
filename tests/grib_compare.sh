@@ -14,7 +14,8 @@ label="grib_compare_test"
 REDIRECT=/dev/null
 
 outfile=temp.$label.grib
-rm -f $outfile
+tempLog=temp.$label.log
+rm -f $outfile $tempLog
 
 # Use of -a/-c
 set +e
@@ -157,18 +158,18 @@ ${tools_dir}/grib_compare -b referenceValue -A 3.2  $infile $temp1
 
 # Invalid value
 set +e
-${tools_dir}/grib_compare -A badnum $infile $temp1 >$outfile 2>&1
+${tools_dir}/grib_compare -A badnum $infile $temp1 >$tempLog 2>&1
 status=$?
 set -e
 [ $status -eq 1 ]
-grep -q "Invalid absolute error" $outfile
+grep -q "Invalid absolute error" $tempLog
 
 set +e
-${tools_dir}/grib_compare -A badnum -R 88 $infile $temp1 >$outfile 2>&1
+${tools_dir}/grib_compare -A badnum -R 88 $infile $temp1 >$tempLog 2>&1
 status=$?
 set -e
 [ $status -eq 1 ]
-grep -q "Invalid absolute error" $outfile
+grep -q "Invalid absolute error" $tempLog
 
 
 # ----------------------------------------
@@ -198,11 +199,11 @@ ${tools_dir}/grib_compare -T5 ${data_dir}/tigge_cf_ecmwf.grib2 ${data_dir}/tigge
 # Summary mode (-f)
 # ----------------------------------------
 set +e
-${tools_dir}/grib_compare -f ${data_dir}/tigge_cf_ecmwf.grib2 ${data_dir}/tigge_pf_ecmwf.grib2 > $outfile 2>&1
+${tools_dir}/grib_compare -f ${data_dir}/tigge_cf_ecmwf.grib2 ${data_dir}/tigge_pf_ecmwf.grib2 > $tempLog 2>&1
 status=$?
 set -e
 [ $status -eq 1 ]
-grep -q "indicatorOfUnitForTimeIncrement . 7 different" $outfile
+grep -q "indicatorOfUnitForTimeIncrement . 7 different" $tempLog
 
 
 # ----------------------------------------
@@ -213,7 +214,7 @@ temp_nold=$temp1
 ${tools_dir}/grib_set -s deleteLocalDefinition=1 $sample_g1 $temp_nold
 # Now the sample has a local definition but $temp_nold does not
 set +e
-${tools_dir}/grib_compare $temp_nold $sample_g1 > $outfile
+${tools_dir}/grib_compare $temp_nold $sample_g1 > $tempLog
 status=$?
 set -e
 [ $status -eq 1 ]
@@ -226,11 +227,11 @@ long [section1Length]: [28] != [52]
 long [section4Length]: [12] != [11]
 EOF
 
-diff $reffile $outfile
+diff $reffile $tempLog
 
 # Two-way mode enabled
 set +e
-${tools_dir}/grib_compare -2 $temp_nold $sample_g1 > $outfile
+${tools_dir}/grib_compare -2 $temp_nold $sample_g1 > $tempLog
 status=$?
 set -e
 [ $status -eq 1 ]
@@ -251,7 +252,7 @@ long [section4Length]: [12] != [11]
 [padding_local1_1] not found in 1st field
 EOF
 
-diff $reffile $outfile
+diff $reffile $tempLog
 rm -f $reffile
 
 sample_g2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
@@ -261,20 +262,20 @@ sample_g2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 # --------------------------------------------
 ${tools_dir}/grib_set -s scaleFactorOfFirstFixedSurface=1 $sample_g2 $temp1
 set +e
-${tools_dir}/grib_compare -v $sample_g2 $temp1 > $outfile
+${tools_dir}/grib_compare -v $sample_g2 $temp1 > $tempLog
 status=$?
 set -e
 [ $status -eq 1 ]
-grep -q "scaleFactorOfFirstFixedSurface is set to missing in 1st field but is not missing in 2nd field" $outfile
+grep -q "scaleFactorOfFirstFixedSurface is set to missing in 1st field but is not missing in 2nd field" $tempLog
 
 set +e
-${tools_dir}/grib_compare -v $temp1 $sample_g2 > $outfile
+${tools_dir}/grib_compare -v $temp1 $sample_g2 > $tempLog
 status=$?
 set -e
 [ $status -eq 1 ]
-grep -q "scaleFactorOfFirstFixedSurface is set to missing in 2nd field but is not missing in 1st field" $outfile
+grep -q "scaleFactorOfFirstFixedSurface is set to missing in 2nd field but is not missing in 1st field" $tempLog
 
-${tools_dir}/grib_compare -b scaleFactorOfFirstFixedSurface $sample_g2 $temp1 > $outfile
+${tools_dir}/grib_compare -b scaleFactorOfFirstFixedSurface $sample_g2 $temp1 > $tempLog
 
 
 # ----------------------------------------
@@ -287,10 +288,12 @@ ${tools_dir}/grib_compare $temp1 $temp2
 
 # Use relative error of 0 for all keys. Now comparison detects the difference
 set +e
-${tools_dir}/grib_compare -Rall=0 $temp1 $temp2 2>$outfile
+${tools_dir}/grib_compare -Rall=0 $temp1 $temp2 >$tempLog 2>&1
 status=$?
 set -e
 [ $status -eq 1 ]
+cat $tempLog
+grep -q referenceValue $tempLog
 
 # Now use relative error of 0 for the referenceValue only
 set +e
@@ -334,42 +337,55 @@ set -e
 # Comparing computed keys of type double (longitudeOfFirstGridPointInDegrees)
 $tools_dir/grib_compare -c geography:n $temp1 $temp2
 
-
 # -----------------
 # Failing cases
 # -----------------
+
+# Cannot get type of...
+infile1=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
+infile2=$ECCODES_SAMPLES_PATH/reduced_gg_pl_48_grib2.tmpl
 set +e
-${tools_dir}/grib_compare -Rxxxx $temp1 $temp2 > $outfile 2>&1
+${tools_dir}/grib_compare -c xxxx $infile1 $infile2  > $tempLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+cat $tempLog
+grep -q "Error.*cannot get type of" $tempLog
+
+# Bad -R argument
+set +e
+${tools_dir}/grib_compare -Rxxxx $temp1 $temp2 > $tempLog 2>&1
 status=$?
 set -e
 [ $status -eq 1 ]
-grep "Invalid argument" $outfile
+grep "Invalid argument" $tempLog
+
+# Bad options
+set +e
+${tools_dir}/grib_compare -H -c data:n $temp1 $temp2 > $tempLog 2>&1
+status=$?
+set -e
+[ $status -eq 1 ]
+grep -q "options are incompatible" $tempLog
 
 set +e
-${tools_dir}/grib_compare -H -c data:n $temp1 $temp2 > $outfile 2>&1
+${tools_dir}/grib_compare -a $temp1 $temp2 > $tempLog 2>&1
 status=$?
 set -e
 [ $status -eq 1 ]
-grep -q "options are incompatible" $outfile
-
-set +e
-${tools_dir}/grib_compare -a $temp1 $temp2 > $outfile 2>&1
-status=$?
-set -e
-[ $status -eq 1 ]
-grep -q "a option requires -c option" $outfile
+grep -q "a option requires -c option" $tempLog
 
 
 echo GRIB > $temp1
 echo GRIB > $temp2
 set +e
-${tools_dir}/grib_compare $temp1 $temp2 > $outfile 2>&1
+${tools_dir}/grib_compare $temp1 $temp2 > $tempLog 2>&1
 status=$?
 set -e
 [ $status -ne 0 ]
-grep "unreadable message" $outfile
+grep "unreadable message" $tempLog
 
 # Clean up
 # ---------
 rm -f $temp1 $temp2
-rm -f $outfile
+rm -f $outfile $tempLog

@@ -15,8 +15,6 @@
 # Computed key typicalDate doesn't always update properly
 # ---------------------------------------------------------
 
-REDIRECT=/dev/null
-
 label="bufr_ecc-2037_test"
 
 tempBufr=temp.$label.bufr

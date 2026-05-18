@@ -10,8 +10,7 @@
 
 #include "DataSecondaryBitmap.h"
 
-eccodes::accessor::DataSecondaryBitmap _grib_accessor_data_secondary_bitmap;
-eccodes::Accessor* grib_accessor_data_secondary_bitmap = &_grib_accessor_data_secondary_bitmap;
+eccodes::AccessorBuilder<eccodes::accessor::DataSecondaryBitmap> _grib_accessor_data_secondary_bitmap_builder{};
 
 namespace eccodes::accessor
 {
