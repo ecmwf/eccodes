@@ -50,13 +50,11 @@
     typeOfFirstFixedSurface=36;    scaleFactorOfFirstFixedSurface=missing();  scaledValueOfFirstFixedSurface=missing();
     typeOfSecondFixedSurface=255; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();
 }
-'stratopause' = {typeOfFirstFixedSurface=36;   typeOfSecondFixedSurface=255;}
 
 'hygropause' = {
     typeOfFirstFixedSurface=37;    scaleFactorOfFirstFixedSurface=missing();  scaledValueOfFirstFixedSurface=missing();
     typeOfSecondFixedSurface=255; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();
 }
-'hygropause' = {typeOfFirstFixedSurface=37;   typeOfSecondFixedSurface=255;}
 
 'stratosphere' = {
     typeOfFirstFixedSurface=7;   scaleFactorOfFirstFixedSurface=missing();  scaledValueOfFirstFixedSurface=missing();
@@ -89,6 +87,18 @@
     typeOfSecondFixedSurface=255; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();
 }
 'mixedLayerParcel' = {typeOfFirstFixedSurface=18;  typeOfSecondFixedSurface=255;}
+
+'Effective inflow layer base' = {
+    typeOfFirstFixedSurface=28;    scaleFactorOfFirstFixedSurface=missing();  scaledValueOfFirstFixedSurface=missing();
+    typeOfSecondFixedSurface=255; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();
+
+'Effective inflow layer top' = {
+    typeOfFirstFixedSurface=29;    scaleFactorOfFirstFixedSurface=missing();  scaledValueOfFirstFixedSurface=missing();
+    typeOfSecondFixedSurface=255; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();
+
+'Effective inflow layer' = {
+    typeOfFirstFixedSurface=28;    scaleFactorOfFirstFixedSurface=missing();  scaledValueOfFirstFixedSurface=missing();
+    typeOfSecondFixedSurface=29; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();
 
 'lowestLevelOfCloudCoverExceedance' = {typeOfFirstFixedSurface=19; typeOfSecondFixedSurface=255;}
 'isothermal'                   = {typeOfFirstFixedSurface=20;  typeOfSecondFixedSurface=255;}
