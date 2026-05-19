@@ -76,19 +76,8 @@ if( HAVE_FORTRAN )
                                          $<INSTALL_INTERFACE:${INSTALL_INCLUDE_DIR}>
                          PRIVATE_LIBS    eccodes ${ECCODES_PTHREADS_LIBRARIES} )
 
-    set(_eccodes_mod_candidates eccodes.mod ECCODES.mod grib_api.mod GRIB_API.mod)
-
-    file( GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/eccodes_f90_copy_mod.cmake
-          CONTENT  "file( MAKE_DIRECTORY \${MOD_DESTINATION} )
-                    foreach( _mod_candidate IN ITEMS ${_eccodes_mod_candidates} )
-                        if( EXISTS \"${CMAKE_Fortran_MODULE_DIRECTORY}/${CMAKE_CFG_INTDIR}/\${_mod_candidate}\" )
-                            file( COPY \"${CMAKE_Fortran_MODULE_DIRECTORY}/${CMAKE_CFG_INTDIR}/\${_mod_candidate}\"
-                                DESTINATION \"\${MOD_DESTINATION}\" )
-                        endif()
-                    endforeach()")
-
     add_custom_command( TARGET     eccodes_f90 POST_BUILD
-                        COMMAND ${CMAKE_COMMAND} -D MOD_DESTINATION=${CMAKE_BINARY_DIR}/include -P ${CMAKE_CURRENT_BINARY_DIR}/eccodes_f90_copy_mod.cmake )
+                        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_Fortran_MODULE_DIRECTORY} ${CMAKE_BINARY_DIR}/include )
 
     ecbuild_add_resources( TARGET fortran_resources
                            PACK
