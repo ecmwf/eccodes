@@ -16,6 +16,8 @@ tempTextA=temp.A.$label.txt
 tempTextB=temp.B.$label.txt
 tempFilt=temp.$label.filt
 
+# Note: only works for GRIB edition 2
+#       It does NOT work for multi-field GRIB2 files! only SINGLE-field
 inputs="
   sample.grib2
   jpeg.grib2
