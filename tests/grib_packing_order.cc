@@ -24777,13 +24777,6 @@ const double values[] = {
     0.0000028036, 0.0000028071, 0.0000028152, 0.0000028178, 0.0000028148
 };
 
-static void usage(const char* prog)
-{
-    printf("Usage: %s packingType packingStage outfile\n", prog);
-    printf("packingStage: either packing_type_before_values or values_before_packing_type\n");
-    exit(1);
-}
-
 typedef enum
 {
     PACKING_TYPE_BEFORE_VALUES,
@@ -24793,6 +24786,8 @@ typedef enum
 
 #define EPSILON 1e-5
 
+// Usage: prog packingType packingStage outfile
+// packingStage: either packing_type_before_values or values_before_packing_type
 int main(int argc, char** argv)
 {
     size_t values_len           = sizeof(values) / sizeof(values[0]);
@@ -24804,7 +24799,7 @@ int main(int argc, char** argv)
     char* outfile_name;
     int check = 1;
 
-    if (argc != 4) usage(argv[0]);
+    if (argc != 4) return 1;
 
     packing_type = argv[1];
     if (strcmp(argv[2], "packing_type_before_values") == 0)
@@ -24812,7 +24807,7 @@ int main(int argc, char** argv)
     else if (strcmp(argv[2], "values_before_packing_type") == 0)
         packing_stage = VALUES_BEFORE_PACKING_TYPE;
     else
-        exit(1);
+        return 1;
 
     outfile_name = argv[3];
 

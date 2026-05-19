@@ -129,7 +129,7 @@ void do_stuff(void* arg)
     int i;
 
     for (i = 0; i < FILES_PER_ITERATION; i++) {
-        snprintf(output_file, 50, "temp.grib_encode_pthreads_test.out_%d-%d.grib", (int)number, i);
+        snprintf(output_file, 50, "temp.grib_encode_threads_test.out_%d-%d.grib", (int)number, i);
         encode_file(INPUT_FILE, output_file);
     }
 }

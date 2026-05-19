@@ -109,10 +109,10 @@ private:
     int get_descriptors();
     int decode_string_array(grib_context*, unsigned char*, long*, bufr_descriptor*);
     int encode_string_array(grib_context*, grib_buffer*, long*, bufr_descriptor*, grib_sarray*);
-    int encode_double_array(grib_context*, grib_buffer*, long*, bufr_descriptor*, grib_darray*);
-    int encode_double_value(grib_context*, grib_buffer*, long*, bufr_descriptor*, double);
+    int encode_numeric_array(grib_context*, grib_buffer*, long*, bufr_descriptor*, grib_darray*);
+    int encode_numeric_value(grib_context*, grib_buffer*, long*, bufr_descriptor*, double);
     char* decode_string_value(grib_context*, unsigned char*, long*, bufr_descriptor*, int*);
-    double decode_double_value(grib_context*, unsigned char*, long*, bufr_descriptor*, int, int*);
+    double decode_numeric_value(grib_context*, unsigned char*, long*, bufr_descriptor*, int, int*);
     int encode_new_bitmap(grib_context*, grib_buffer*, long*, int);
     int encode_overridden_reference_value(grib_context*, grib_buffer*, long*, bufr_descriptor*);
     int build_bitmap(unsigned char*, long*, int, grib_iarray*, int);
@@ -130,7 +130,7 @@ private:
     void set_input_bitmap(grib_handle*);
     int process_elements(int, long, long, long);
     void self_clear();
-    grib_darray* decode_double_array(grib_context* c, unsigned char* data, long* pos, bufr_descriptor* bd, int canBeMissing, int*);
+    grib_darray* decode_numeric_array(grib_context* c, unsigned char* data, long* pos, bufr_descriptor* bd, int canBeMissing, int*);
 
     friend int check_end_data(grib_context*, bufr_descriptor*, BufrDataArray*, int);
     friend int decode_element(grib_context*, BufrDataArray*, int, grib_buffer*, unsigned char*, long*, int, bufr_descriptor*, long, grib_darray*, grib_sarray*);

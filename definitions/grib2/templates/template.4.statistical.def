@@ -51,11 +51,15 @@ statisticalProcessesList list(numberOfTimeRanges)
 }
 
 # See GRIB-488. We only support maximum of 2 time ranges
+# ECC-1734: avgd has the undesirable behaviour of removing the endStep and stepRange, which is incorrect.
+#           We contain this undesirable behaviour to pre-mtg2 data only to keep backwards compatibility
+#           but have post-mtg2 interpreted correctly.
+
 if (numberOfTimeRanges == 1 || numberOfTimeRanges == 2) {
   concept stepTypeInternal {
     "instant" = {typeOfStatisticalProcessing=255;}
     "avg"     = {typeOfStatisticalProcessing=0;}
-    "avgd"    = {typeOfStatisticalProcessing=0;typeOfTimeIncrement=1;}
+    "avgd"    = {MTG2Switch=0;typeOfStatisticalProcessing=0;typeOfTimeIncrement=1;}
     "accum"   = {typeOfStatisticalProcessing=1;}
     "max"     = {typeOfStatisticalProcessing=2;}
     "min"     = {typeOfStatisticalProcessing=3;}

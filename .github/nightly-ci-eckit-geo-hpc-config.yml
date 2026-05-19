@@ -2,7 +2,7 @@ build:
   modules:
     - ecbuild/new
     - ninja
-    - aec
+    - aec/1.1.4
     - netcdf4
   parallel: 64
   dependencies:

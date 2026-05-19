@@ -117,7 +117,6 @@ if( HAVE_BUILD_TOOLS )
         grib_ecpoint
         grib_s2s
         grib_fire
-        grib_mtg2_switch
         grib_generalised_tiles
         # grib_true_imagery
         grib2_wave_spectra
@@ -153,10 +152,12 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1654
         grib_ecc-1671
         grib_ecc-1708
+        grib_ecc-1734
         grib_ecc-1766
         grib_ecc-1829
         grib_ecc-2140
         bufr_ecc-1028
+        bufr_ecc-912
         bufr_ecc-1195
         bufr_ecc-1259
         bufr_ecc-1290
@@ -173,7 +174,6 @@ if( HAVE_BUILD_TOOLS )
         grib_sh_imag
         grib_spectral
         grib_levtype
-        grib_typeOfLevel
         grib2_product_templates
         grib_grid_unstructured
         grib_grid_lambert_conformal
@@ -182,19 +182,23 @@ if( HAVE_BUILD_TOOLS )
         grib_g1day_of_the_year_date
         grib_paramid_chemid_split
         grib_cmp_paramtype
-        grib_timeSpanConcept
         grib_cmp_timeSpan
         grib_stattype
         grib_ecc-2221
         grib_ecc-2218
         grib_ecc-2240
         grib_ecc-2242
+        grib_ecc-2248
+        grib_ecc-2254
     )
 
     # These tests require data downloads
     # and/or take much longer
     list(APPEND tests_extra
         error_codes
+        grib_typeOfLevel
+        grib_mtg2_switch
+        grib_timeSpanConcept
         grib_datasetForLocal
         grib_isGridded_isSpectral
         grib_data_quality_checks
@@ -333,6 +337,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-2052
         grib_ecc-2137
         grib_ecc-2188
+        grib_ecc-2230
         grib_modelName
         grib_sub_hourly
         grib_set_bytes
@@ -518,28 +523,28 @@ if( HAVE_BUILD_TOOLS )
 
 
     if( ENABLE_EXTRA_TESTS AND (HAVE_ECCODES_THREADS OR HAVE_ECCODES_OMP_THREADS) )
-        ecbuild_add_executable( TARGET    grib_encode_pthreads
+        ecbuild_add_executable( TARGET    grib_encode_threads
                                 NOINSTALL
-                                SOURCES   grib_encode_pthreads.cc
+                                SOURCES   grib_encode_threads.cc
                                 LIBS      eccodes ${CMAKE_THREAD_LIBS_INIT} )
-        ecbuild_add_test( TARGET eccodes_t_grib_encode_pthreads
+        ecbuild_add_test( TARGET eccodes_t_grib_encode_threads
                           TYPE SCRIPT
-                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_encode_pthreads.sh )
+                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_encode_threads.sh )
 
-        foreach( test grib_encode_pthreads2 grib_threads_ecc-604-encode bufr_encode_pthreads )
+        foreach( test grib_encode_threads2 grib_threads_ecc-604-encode bufr_encode_threads )
             ecbuild_add_executable( TARGET    ${test}
                                     NOINSTALL
                                     SOURCES   ${test}.cc
                                     LIBS      eccodes ${CMAKE_THREAD_LIBS_INIT} )
         endforeach()
-        ecbuild_add_test( TARGET eccodes_t_grib_encode_pthreads2
+        ecbuild_add_test( TARGET eccodes_t_grib_encode_threads2
                           TYPE SCRIPT
                           TEST_DEPENDS eccodes_download_gribs
-                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_encode_pthreads2.sh )
-        ecbuild_add_test( TARGET eccodes_t_bufr_encode_pthreads
+                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_encode_threads2.sh )
+        ecbuild_add_test( TARGET eccodes_t_bufr_encode_threads
                           TYPE SCRIPT
                           TEST_DEPENDS eccodes_download_bufrs
-                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/bufr_encode_pthreads.sh )
+                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/bufr_encode_threads.sh )
     endif()
 
     if( NOT ECCODES_ON_WINDOWS )
