@@ -88,17 +88,17 @@
 }
 'mixedLayerParcel' = {typeOfFirstFixedSurface=18;  typeOfSecondFixedSurface=255;}
 
-'Effective inflow layer base' = {
+'EffectiveInflowLayerBase' = {
     typeOfFirstFixedSurface=28;    scaleFactorOfFirstFixedSurface=missing();  scaledValueOfFirstFixedSurface=missing();
-    typeOfSecondFixedSurface=255; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();
+    typeOfSecondFixedSurface=255; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();}
 
-'Effective inflow layer top' = {
+'EffectiveInflowLayerTop' = {
     typeOfFirstFixedSurface=29;    scaleFactorOfFirstFixedSurface=missing();  scaledValueOfFirstFixedSurface=missing();
-    typeOfSecondFixedSurface=255; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();
+    typeOfSecondFixedSurface=255; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();}
 
-'Effective inflow layer' = {
+'EffectiveInflowLayer' = {
     typeOfFirstFixedSurface=28;    scaleFactorOfFirstFixedSurface=missing();  scaledValueOfFirstFixedSurface=missing();
-    typeOfSecondFixedSurface=29; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();
+    typeOfSecondFixedSurface=29; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();}
 
 'lowestLevelOfCloudCoverExceedance' = {typeOfFirstFixedSurface=19; typeOfSecondFixedSurface=255;}
 'isothermal'                   = {typeOfFirstFixedSurface=20;  typeOfSecondFixedSurface=255;}
