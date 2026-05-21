@@ -10,7 +10,7 @@ build:
     - -DENABLE_PNG=1
     - -DENABLE_NETCDF=1
   force_build: true
-  post_script: .github/ci-nightly-test.sh testing
+  post_script: .github/ci-nightly-test.sh performance
   env:
     - GH_TOKEN=${GH_TOKEN}
   compiler_cc: gcc
