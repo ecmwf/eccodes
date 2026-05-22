@@ -19,7 +19,7 @@ jobs:
           github_token: ${{ secrets.GH_REPO_READ_TOKEN }}
           troika_user: ${{ secrets.HPC_CI_SSH_USER }}
           repository: ecmwf/eccodes@${{ github.event.pull_request.head.sha || github.sha }}
-          build_config: .github/nightly-ci-hpc-benchmark-config.yml
+          build_config: .github/nightly-ci-hpc-benchmarks-config.yml
 
   notify:
     runs-on: ubuntu-latest
