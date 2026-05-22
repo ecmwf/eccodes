@@ -1,0 +1,35 @@
+name: nightly-benchmarks
+
+on:
+  workflow_dispatch: ~
+
+  # Run at 20:00 UTC every day (on default branch)
+  schedule:
+    - cron: "0 20 * * *"
+
+jobs:
+  benchmark-hpc:
+    runs-on: [self-hosted, linux, hpc]
+    env:
+      GH_TOKEN: ${{ secrets.GH_REPO_READ_TOKEN }}
+    steps:
+      - uses: ecmwf/reusable-workflows/ci-hpc@v2
+        with:
+          github_user: ${{ secrets.BUILD_PACKAGE_HPC_GITHUB_USER }}
+          github_token: ${{ secrets.GH_REPO_READ_TOKEN }}
+          troika_user: ${{ secrets.HPC_CI_SSH_USER }}
+          repository: ecmwf/eccodes@${{ github.event.pull_request.head.sha || github.sha }}
+          build_config: .github/nightly-ci-hpc-benchmark-config.yml
+
+  notify:
+    runs-on: ubuntu-latest
+    needs:
+      - benchmark-hpc
+    if: always()
+    steps:
+      - name: Trigger Teams notification
+        uses: ecmwf/notify-teams@v1
+        with:
+          incoming_webhook: ${{ secrets.MS_TEAMS_INCOMING_WEBHOOK }}
+          needs_context: ${{ toJSON(needs) }}
+          workflow_id: nightly-benchmarks.yml
