@@ -25,7 +25,8 @@ res=`${tools_dir}/grib_get -p decimalScaleFactor,bitsPerValue ${data_dir}/gfs.c2
 
 # All undefined values
 cat >$tempFilt<<EOF
-    set values={9999,9999,9999,9999};
+    set missingValue = 999999;
+    set values={999999, 999999, 999999, 999999};
     write;
 EOF
 infile=${data_dir}/gfs.complex.mvmu.grib2
