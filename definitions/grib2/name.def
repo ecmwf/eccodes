@@ -18823,6 +18823,42 @@
 	 parameterNumber = 63 ;
 	 typeOfFirstFixedSurface = 1 ;
 	}
+#Storm relative helicity - right moving storm
+'Storm relative helicity - right moving storm' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 23 ;
+	}
+#Storm relative helicity - left moving storm
+'Storm relative helicity - left moving storm' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 24 ;
+	}
+#Effective storm relative helicity - mean flow
+'Effective storm relative helicity - mean flow' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 25 ;
+	 typeOfFirstFixedSurface = 28 ;
+	 typeOfSecondFixedSurface = 29 ;
+	}
+#Effective storm relative helicity - right moving storm
+'Effective storm relative helicity - right moving storm' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 26 ;
+	 typeOfFirstFixedSurface = 28 ;
+	 typeOfSecondFixedSurface = 29 ;
+	}
+#Effective storm relative helicity - left moving storm
+'Effective storm relative helicity - left moving storm' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 27 ;
+	 typeOfFirstFixedSurface = 28 ;
+	 typeOfSecondFixedSurface = 29 ;
+	}
 #Universal thermal climate index
 'Universal thermal climate index' = {
 	 discipline = 20 ;
