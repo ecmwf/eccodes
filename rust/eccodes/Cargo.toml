@@ -1,0 +1,12 @@
+[package]
+name = "eccodes"
+version = "0.1.0"
+edition = "2021"
+description = "Modern, idiomatic Rust API for the ecCodes library (GRIB/BUFR)"
+
+[features]
+default = []
+advanced = ["eccodes-sys/advanced"]
+
+[dependencies]
+eccodes-sys = { path = "../eccodes-sys" }

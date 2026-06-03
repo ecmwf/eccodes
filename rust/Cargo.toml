@@ -1,0 +1,6 @@
+[workspace]
+members = [
+    "eccodes-sys",
+    "eccodes",
+]
+resolver = "2"
