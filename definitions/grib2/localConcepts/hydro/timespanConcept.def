@@ -4,4 +4,4 @@
 '6h'  = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange=6; forecastTime=0;}
 '24h'  = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange=24; forecastTime=0;}
 
-'none' = {stream=1220; numberOfTimeRanges=1; true=is_one_of(class,'eh','gh');}
+'none' = {stream=1221; numberOfTimeRanges=1; true=is_one_of(class,'eh','gh');}
