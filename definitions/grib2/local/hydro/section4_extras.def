@@ -16,13 +16,16 @@ if (modelName isnot "unknown") {
 }
 
 if (defined(class) && is_one_of(class,"gh","eh")){
- concept statType (unknown,"stattypeConcept.def",conceptsDir2,conceptsDir1) : read_only;
- alias mars.stattype = statType;
- if (defined(stream) && stream is "mmsf" && stattype is "moav"){
-  meta marsForecastMonth g1forecastmonth(dataDate, forecastTime): read_only;
-  alias forecastMonth = marsForecastMonth;
-  unalias mars.step;
+ if (defined(stream) && stream is "msmm"){
+  concept statType (unknown,"stattypeConcept.def",conceptsDir2,conceptsDir1) : read_only;
+  alias mars.stattype = statType;
+  if ( not is_one_of(grib2LocalSectionNumber,12,16) ){
+       # already calculated in grib2LocalSectionNumbers 12 and 16
+       meta marsForecastMonth g1forecastmonth(dataDate, forecastTime): read_only;
+       alias forecastMonth = marsForecastMonth;
+  }
   alias mars.fcmonth = marsForecastMonth;
+  unalias mars.step;
  }
 }
 
