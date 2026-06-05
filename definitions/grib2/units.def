@@ -18823,6 +18823,66 @@
 	 parameterNumber = 63 ;
 	 typeOfFirstFixedSurface = 1 ;
 	}
+#Storm relative helicity - right moving storm
+'m**2 s**-2' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 23 ;
+	}
+#Storm relative helicity - left moving storm
+'m**2 s**-2' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 24 ;
+	}
+#Effective storm relative helicity - mean flow
+'m**2 s**-2' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 25 ;
+	 typeOfFirstFixedSurface = 28 ;
+	 typeOfSecondFixedSurface = 29 ;
+	}
+#Effective storm relative helicity - right moving storm
+'m**2 s**-2' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 26 ;
+	 typeOfFirstFixedSurface = 28 ;
+	 typeOfSecondFixedSurface = 29 ;
+	}
+#Effective storm relative helicity - left moving storm
+'m**2 s**-2' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 27 ;
+	 typeOfFirstFixedSurface = 28 ;
+	 typeOfSecondFixedSurface = 29 ;
+	}
+#Hot-Dry Windy Index
+'Pa m s**-2' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 45 ;
+	}
+#Continuous Haines Index
+'Numeric' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 46 ;
+	}
+#Fire combustion rate per unit area
+'kg s**-1 m**-2' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 47 ;
+	}
+#Fire radiative power density
+'W m**-2' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 48 ;
+	}
 #Universal thermal climate index
 'K' = {
 	 discipline = 20 ;

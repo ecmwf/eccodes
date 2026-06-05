@@ -16685,6 +16685,30 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 70 ;
 	}
+#Hot-Dry Windy Index
+'hdwi' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 45 ;
+	}
+#Continuous Haines Index
+'chi' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 46 ;
+	}
+#Fire combustion rate per unit area
+'fcrua' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 47 ;
+	}
+#Fire radiative power density
+'frpd' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 48 ;
+	}
 #Universal thermal climate index
 'utci' = {
 	 discipline = 20 ;

@@ -845,3 +845,39 @@
 'Sea salt wet at 80% relative humidity' = {
 	constituentType = 62037 ;
 	}
+#Brown carbon hydrophilic dry
+'Brown carbon hydrophilic dry' = {
+	constituentType = 62038 ;
+	}
+#Brown carbon hydrophobic dry
+'Brown carbon hydrophobic dry' = {
+	constituentType = 62039 ;
+	}
+#Organic carbon dry
+'Organic carbon dry' = {
+	constituentType = 62040 ;
+	}
+#Organic carbon hydrophilic dry
+'Organic carbon hydrophilic dry' = {
+	constituentType = 62041 ;
+	}
+#Organic carbon hydrophobic dry
+'Organic carbon hydrophobic dry' = {
+	constituentType = 62042 ;
+	}
+#Total carbon dry
+'Total carbon dry' = {
+	constituentType = 62043 ;
+	}
+#Total carbon hydrophilic dry
+'Total carbon hydrophilic dry' = {
+	constituentType = 62044 ;
+	}
+#Total carbon hydrophobic dry
+'Total carbon hydrophobic dry' = {
+	constituentType = 62045 ;
+	}
+#Burnt carbon as sum of carbon in all carbon species (CO, CO2, OC, BC, Ch4)
+'Burnt carbon as sum of carbon in all carbon species (CO, CO2, OC, BC, Ch4)' = {
+	constituentType = 62046 ;
+	}

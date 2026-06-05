@@ -16685,6 +16685,30 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 70 ;
 	}
+#Hot-Dry Windy Index
+'260701' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 45 ;
+	}
+#Continuous Haines Index
+'260702' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 46 ;
+	}
+#Fire combustion rate per unit area
+'260703' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 47 ;
+	}
+#Fire radiative power density
+'260704' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 48 ;
+	}
 #Universal thermal climate index
 '261001' = {
 	 discipline = 20 ;

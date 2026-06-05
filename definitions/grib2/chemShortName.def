@@ -845,3 +845,39 @@
 'aer_seasalt_wet80p' = {
 	constituentType = 62037 ;
 	}
+#Brown carbon hydrophilic dry
+'aer_bchpd' = {
+	constituentType = 62038 ;
+	}
+#Brown carbon hydrophobic dry
+'aer_bchobd' = {
+	constituentType = 62039 ;
+	}
+#Organic carbon dry
+'aer_ocd' = {
+	constituentType = 62040 ;
+	}
+#Organic carbon hydrophilic dry
+'aer_ochpd' = {
+	constituentType = 62041 ;
+	}
+#Organic carbon hydrophobic dry
+'aer_ochobd' = {
+	constituentType = 62042 ;
+	}
+#Total carbon dry
+'aer_tcd' = {
+	constituentType = 62043 ;
+	}
+#Total carbon hydrophilic dry
+'aer_tchpd' = {
+	constituentType = 62044 ;
+	}
+#Total carbon hydrophobic dry
+'aer_tchobd' = {
+	constituentType = 62045 ;
+	}
+#Burnt carbon as sum of carbon in all carbon species (CO, CO2, OC, BC, Ch4)
+'aer_burntc' = {
+	constituentType = 62046 ;
+	}
