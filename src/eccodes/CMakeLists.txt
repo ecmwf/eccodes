@@ -447,7 +447,7 @@ ecbuild_add_library(
        ${ECCODES_EXTRA_LIBRARIES}
        ${CMAKE_THREAD_LIBS_INIT}
        ${PNG_LIBRARIES}
-       $<$<BOOL:${libaec_FOUND}>:libaec::aec>
+       ${SZIP_LIBRARIES} # AEC
     PUBLIC_LIBS 
         ${CMATH_LIBRARIES}
         ${THREADS_LIBRARIES}

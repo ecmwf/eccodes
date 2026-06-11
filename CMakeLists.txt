@@ -159,23 +159,25 @@ ecbuild_add_option( FEATURE USE_SHARED_LIB_AEC
     DESCRIPTION "Link against shared libaec library (dynamic linking)"
     DEFAULT ON )
 
+
 if ( ENABLE_USE_SHARED_LIB_AEC )
     set( libaec_USE_STATIC_LIBS OFF )
 else()
     set( libaec_USE_STATIC_LIBS ON )
 endif()
 
-find_package( libaec 1.1.4 )
-if(NOT DEFINED ENABLE_AEC AND NOT libaec_FOUND)
-  ecbuild_critical("AEC library was not found.\n"
-                   "AEC (Adaptive Entropy Coding) provides the WMO GRIB CCSDS compression and decompression of data. "
-                   "This is highly recommended from ecCodes >= 2.25.0"
-                   "\nTo force the build without it, use -DENABLE_AEC=OFF")
-endif()
+set (AEC_FAIL_MSG
+    "AEC library was not found.\n"
+    "AEC (Adaptive Entropy Coding) provides the WMO GRIB CCSDS compression and decompression of data. "
+    "This is highly recommended from ecCodes >= 2.25.0"
+    "\nTo force the build without it, use -DENABLE_AEC=OFF"
+)
+
 ecbuild_add_option( FEATURE AEC
     DESCRIPTION "Support for Adaptive Entropy Coding (WMO GRIB CCSDS)"
     DEFAULT ON
-    CONDITION libaec_FOUND )
+    REQUIRED_PACKAGES "NAME libaec VERSION 1.1.4 REQUIRED FAILURE_MSG AEC_FAIL_MSG"
+)
 
 ecbuild_find_python( VERSION 3.6 NO_LIBS )
 # find_package( NumPy )
