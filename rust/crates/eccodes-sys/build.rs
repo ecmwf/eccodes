@@ -354,9 +354,7 @@ fn build_vendored(_out_dir: &Path) {
     unreachable!("build_vendored called without vendored feature");
 }
 
-// Curated API surface — mirrors the maintainer's reference at
-// ecmwf/eccodes#feature/rust_api:rust/eccodes-sys/src/lib.rs
-// Keep these lists in lockstep with that file when bumping eccodes.
+// Curated API surface
 
 const ALLOWED_FUNCTIONS: &[&str] = &[
     // -- libc stdio (used by codes_handle_new_from_file etc.) --
