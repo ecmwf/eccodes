@@ -1,0 +1,21 @@
+# (C) Copyright 2005- ECMWF.
+
+# WMO Lead Centre for Global Climate Re-Analyses (LC-GCR)
+if (!defined(class)) {
+  constant marsClass = 'lr';
+}
+
+alias mars.class  = marsClass;
+alias mars.stream = marsStream;
+alias mars.type   = marsType;
+alias mars.param = paramId;
+alias mars.expver = marsExpver;
+alias mars.origin = centre;
+
+alias parameter=paramId;
+alias parameter.paramId=paramId;
+alias parameter.shortName=shortName;
+alias parameter.units=units;
+alias parameter.name=name;
+
+unalias mars.domain;
