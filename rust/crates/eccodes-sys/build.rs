@@ -11,10 +11,19 @@ fn main() {
     println!("cargo:rerun-if-changed=build.rs");
     println!("cargo:rerun-if-env-changed=ECCODES_DIR");
     println!("cargo:rerun-if-env-changed=CMAKE_PREFIX_PATH");
-
-    bindman_utils::validate_build_mode(cfg!(feature = "system"), cfg!(feature = "vendored"));
+    println!("cargo:rerun-if-env-changed=DOCS_RS");
 
     let out_dir = PathBuf::from(env::var("OUT_DIR").expect("OUT_DIR not set"));
+
+    // docs.rs: no C toolchain available. Emit an empty bindings.rs so the
+    // `include!` in lib.rs still resolves; the crate documents as empty.
+    if bindman_utils::is_docs_rs() {
+        std::fs::write(out_dir.join("bindings.rs"), "")
+            .expect("Failed to write empty bindings.rs for docs.rs");
+        return;
+    }
+
+    bindman_utils::validate_build_mode(cfg!(feature = "system"), cfg!(feature = "vendored"));
 
     if cfg!(feature = "system") {
         build_system(&out_dir);
@@ -186,8 +195,17 @@ fn build_eccodes_impl(
         bindman_utils::on_off(cfg!(feature = "eccodes-omp-threads"))
     ));
 
+    // Install names / RPATH: the dylib's install path is `@rpath/libeccodes.dylib`
+    // on macOS and `$ORIGIN:$ORIGIN/../lib` on Linux. The leaf binary then sets
+    // rpaths via bindman_utils::emit_rpaths() so it can find libeccodes + libeckit.
     #[cfg(target_os = "macos")]
     cmd.arg("-DCMAKE_INSTALL_NAME_DIR=@rpath");
+
+    #[cfg(target_os = "linux")]
+    {
+        cmd.arg("-DCMAKE_INSTALL_RPATH=$ORIGIN:$ORIGIN/../lib");
+        cmd.arg("-DCMAKE_BUILD_WITH_INSTALL_RPATH=ON");
+    }
 
     bindman_utils::run_command(&mut cmd, "ecbuild configure eccodes");
 
@@ -208,20 +226,25 @@ fn build_eccodes_impl(
     eccodes_install_dir
 }
 
-/// Emit link directives pointing to the target directory where libs are copied.
+/// Emit link directives pointing at the install dirs. The dylibs were built
+/// with `CMAKE_INSTALL_NAME_DIR=@rpath` (macOS) / `CMAKE_INSTALL_RPATH=$ORIGIN`
+/// (Linux) so the loader resolves them via rpath at runtime. The leaf binary
+/// is responsible for adding the rpath entries via `bindman_utils::emit_rpaths()`.
 #[cfg(feature = "vendored")]
-fn emit_link_directives(
-    libs_dest: &Path,
-    eccodes_install_dir: &Path,
-    aec_install_dir: Option<&Path>,
-) {
-    println!("cargo:rustc-link-search=native={}", libs_dest.display());
+fn emit_link_directives(eccodes_install_dir: &Path, aec_install_dir: Option<&Path>) {
+    let eccodes_lib_dir = bindman_utils::resolve_lib_dir(eccodes_install_dir);
+    println!(
+        "cargo:rustc-link-search=native={}",
+        eccodes_lib_dir.display()
+    );
     println!("cargo:rustc-link-lib=dylib=eccodes");
-    if aec_install_dir.is_some() {
+    if let Some(p) = aec_install_dir {
+        let aec_lib_dir = bindman_utils::resolve_lib_dir(p);
+        println!("cargo:rustc-link-search=native={}", aec_lib_dir.display());
         println!("cargo:rustc-link-lib=dylib=aec");
     }
 
-    // Export for downstream crates (still point to install dir for headers)
+    // Export for downstream crates
     println!("cargo:root={}", eccodes_install_dir.display());
     println!(
         "cargo:include={}",
@@ -232,66 +255,36 @@ fn emit_link_directives(
     }
 }
 
-/// Copy resources (definitions, samples, libs) to target directory for portable binaries.
-/// Returns the path to the libs directory where libraries were copied.
+/// Copy eccodes runtime resources (definitions, samples) to the target dir
+/// so the leaf binary can find them via `ECCODES_RESOURCES_DIR`. With `memfs`
+/// feature these are baked into `libeccodes` and we skip the copy.
 #[cfg(feature = "vendored")]
-fn copy_resources_to_output(eccodes_install_dir: &Path, aec_install_dir: Option<&Path>) -> PathBuf {
-    #[cfg(not(feature = "memfs"))]
-    use fs_extra::dir::{CopyOptions, copy};
-
-    let target_dir = bindman_utils::target_profile_dir();
-
-    let eccodes_lib_dir = bindman_utils::resolve_lib_dir(eccodes_install_dir);
-    let aec_lib_dir = aec_install_dir.map(bindman_utils::resolve_lib_dir);
-
-    // Copy definitions and samples to target directory.
-    // With `feature = "memfs"` the tables are baked into `libeccodes` itself.
+fn copy_resources_to_output(eccodes_install_dir: &Path) {
     #[cfg(not(feature = "memfs"))]
     {
+        use fs_extra::dir::{CopyOptions, copy};
+
+        let target_dir = bindman_utils::target_profile_dir();
         let share_dir = eccodes_install_dir.join("share/eccodes");
         let resources_dest = target_dir.join("eccodes_resources");
         if share_dir.exists() {
             let options = CopyOptions::new().overwrite(true);
             let _ = std::fs::create_dir_all(&resources_dest);
 
-            let definitions_src = share_dir.join("definitions");
-            if definitions_src.exists() {
-                if let Err(e) = copy(&definitions_src, &resources_dest, &options) {
-                    eprintln!("Warning: Failed to copy definitions: {e}");
-                } else {
-                    eprintln!(
-                        "Copied eccodes definitions to {}",
-                        resources_dest.join("definitions").display()
-                    );
+            for sub in ["definitions", "samples"] {
+                let src = share_dir.join(sub);
+                if !src.exists() {
+                    continue;
                 }
-            }
-
-            let samples_src = share_dir.join("samples");
-            if samples_src.exists() {
-                if let Err(e) = copy(&samples_src, &resources_dest, &options) {
-                    eprintln!("Warning: Failed to copy samples: {e}");
-                } else {
-                    eprintln!(
-                        "Copied eccodes samples to {}",
-                        resources_dest.join("samples").display()
-                    );
+                if let Err(e) = copy(&src, &resources_dest, &options) {
+                    eprintln!("Warning: Failed to copy {sub}: {e}");
                 }
             }
         }
+        println!("cargo:rustc-env=ECCODES_RESOURCES_DIR=eccodes_resources");
     }
-
-    // Copy dynamic libraries to target directory
-    let libs_dest = target_dir.join("eccodes_libs");
-    bindman_utils::copy_shared_libs(&eccodes_lib_dir, &libs_dest, "eccodes");
-    if let Some(aec_lib_dir) = aec_lib_dir.as_ref() {
-        bindman_utils::copy_shared_libs(aec_lib_dir, &libs_dest, "libaec");
-    }
-
-    #[cfg(not(feature = "memfs"))]
-    println!("cargo:rustc-env=ECCODES_RESOURCES_DIR=eccodes_resources");
-    println!("cargo:rustc-env=ECCODES_LIBS_DIR=eccodes_libs");
-
-    libs_dest
+    #[cfg(feature = "memfs")]
+    let _ = eccodes_install_dir;
 }
 
 /// Build eccodes from source using ecbuild
@@ -336,14 +329,13 @@ fn build_vendored(out_dir: &Path) {
         &num_jobs,
     );
 
-    // IMPORTANT: Copy resources FIRST, then link against the copied location.
-    let libs_dest = copy_resources_to_output(&eccodes_install_dir, aec_install_dir.as_deref());
+    // Copy eccodes runtime resources (definitions/samples) — needed by libeccodes at runtime.
+    copy_resources_to_output(&eccodes_install_dir);
 
-    // Link against the copied location in target directory
-    emit_link_directives(&libs_dest, &eccodes_install_dir, aec_install_dir.as_deref());
-
-    // Emit RPATH flags for runtime library discovery
-    bindman_utils::emit_rpath_flags(&["eccodes_libs"]);
+    // Link directly against the install dir. The dylibs were built with
+    // `@rpath` install names (macOS) / `$ORIGIN` rpath (Linux), so the leaf
+    // binary's `bindman_utils::emit_rpaths()` is what resolves them at runtime.
+    emit_link_directives(&eccodes_install_dir, aec_install_dir.as_deref());
 
     // Generate bindings
     generate_bindings(out_dir, &eccodes_install_dir.join("include"));
