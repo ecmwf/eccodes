@@ -623,7 +623,51 @@ fn generate_bindings(out_dir: &Path, include_dir: &Path) {
 
     let bindings = builder.generate().expect("Failed to generate bindings");
 
+    let bindings_path = out_dir.join("bindings.rs");
     bindings
-        .write_to_file(out_dir.join("bindings.rs"))
+        .write_to_file(&bindings_path)
         .expect("Failed to write bindings");
+
+    verify_coverage(&bindings_path);
+}
+
+/// Detect API drift: assert every allowlisted symbol made it into the
+/// generated bindings. Bindgen silently drops allowlist entries that
+/// don't match any symbol in `eccodes.h`, so without this check a
+/// renamed/removed function would vanish from the bindings without
+/// any build error.
+fn verify_coverage(bindings_path: &Path) {
+    let generated =
+        std::fs::read_to_string(bindings_path).expect("Failed to read generated bindings");
+
+    let mut missing: Vec<&str> = Vec::new();
+
+    // Bindgen may add whitespace before `(`, `:`, or after type/struct keywords —
+    // match on the declaring keyword + name, which is stable across formatting.
+    for name in ALLOWED_FUNCTIONS {
+        if !generated.contains(&format!("fn {name}")) {
+            missing.push(name);
+        }
+    }
+    for name in ALLOWED_TYPES {
+        let as_struct = format!("struct {name}");
+        let as_enum = format!("enum {name}");
+        let as_type = format!("type {name}");
+        if !generated.contains(&as_struct)
+            && !generated.contains(&as_enum)
+            && !generated.contains(&as_type)
+        {
+            missing.push(name);
+        }
+    }
+    for name in ALLOWED_VARS {
+        if !generated.contains(&format!("pub const {name}")) {
+            missing.push(name);
+        }
+    }
+
+    assert!(
+        missing.is_empty(),
+        "Allowlisted symbols missing from generated bindings (API drift in eccodes.h?): {missing:?}",
+    );
 }
