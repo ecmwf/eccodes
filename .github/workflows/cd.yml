@@ -19,4 +19,34 @@ jobs:
       confluence_space: ${{ vars.TARBALL_CONFLUENCE_SPACE }}
   conda:
     uses: ecmwf/reusable-workflows/.github/workflows/cd-conda.yml@v2
-    secrets: inherit      
+    secrets: inherit
+  debian-11:
+    uses: ecmwf/reusable-workflows/.github/workflows/cd-system-package.yml@v2
+    secrets: inherit
+    with:
+      os: debian-11
+  debian-12:
+    uses: ecmwf/reusable-workflows/.github/workflows/cd-system-package.yml@v2
+    secrets: inherit
+    with:
+      os: debian-12
+  debian-13:
+    uses: ecmwf/reusable-workflows/.github/workflows/cd-system-package.yml@v2
+    secrets: inherit
+    with:
+      os: debian-13
+  rocky-8:
+    uses: ecmwf/reusable-workflows/.github/workflows/cd-system-package.yml@v2
+    secrets: inherit
+    with:
+      os: rocky-8
+  rocky-9:
+    uses: ecmwf/reusable-workflows/.github/workflows/cd-system-package.yml@v2
+    secrets: inherit
+    with:
+      os: rocky-9
+  rocky-10:
+    uses: ecmwf/reusable-workflows/.github/workflows/cd-system-package.yml@v2
+    secrets: inherit
+    with:
+      os: rocky-10
