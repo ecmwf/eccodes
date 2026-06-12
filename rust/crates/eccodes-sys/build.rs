@@ -636,35 +636,58 @@ fn generate_bindings(out_dir: &Path, include_dir: &Path) {
 /// don't match any symbol in `eccodes.h`, so without this check a
 /// renamed/removed function would vanish from the bindings without
 /// any build error.
+///
+/// Parses the generated `bindings.rs` with `syn` and walks the AST so the
+/// check is immune to comment/whitespace noise and category confusion.
 fn verify_coverage(bindings_path: &Path) {
-    let generated =
-        std::fs::read_to_string(bindings_path).expect("Failed to read generated bindings");
+    use std::collections::HashSet;
+    use syn::{File, ForeignItem, Item};
 
-    let mut missing: Vec<&str> = Vec::new();
+    let src = std::fs::read_to_string(bindings_path).expect("Failed to read generated bindings");
+    let ast: File = syn::parse_file(&src).expect("Failed to parse bindings.rs");
 
-    // Bindgen may add whitespace before `(`, `:`, or after type/struct keywords —
-    // match on the declaring keyword + name, which is stable across formatting.
-    for name in ALLOWED_FUNCTIONS {
-        if !generated.contains(&format!("fn {name}")) {
-            missing.push(name);
+    let mut fns: HashSet<String> = HashSet::new();
+    let mut types: HashSet<String> = HashSet::new();
+    let mut vars: HashSet<String> = HashSet::new();
+
+    for item in &ast.items {
+        match item {
+            Item::Const(c) => {
+                vars.insert(c.ident.to_string());
+            }
+            Item::Static(s) => {
+                vars.insert(s.ident.to_string());
+            }
+            Item::Struct(s) => {
+                types.insert(s.ident.to_string());
+            }
+            Item::Enum(e) => {
+                types.insert(e.ident.to_string());
+            }
+            Item::Type(t) => {
+                types.insert(t.ident.to_string());
+            }
+            Item::Union(u) => {
+                types.insert(u.ident.to_string());
+            }
+            Item::ForeignMod(fm) => {
+                for fi in &fm.items {
+                    if let ForeignItem::Fn(f) = fi {
+                        fns.insert(f.sig.ident.to_string());
+                    }
+                }
+            }
+            _ => {}
         }
     }
-    for name in ALLOWED_TYPES {
-        let as_struct = format!("struct {name}");
-        let as_enum = format!("enum {name}");
-        let as_type = format!("type {name}");
-        if !generated.contains(&as_struct)
-            && !generated.contains(&as_enum)
-            && !generated.contains(&as_type)
-        {
-            missing.push(name);
-        }
-    }
-    for name in ALLOWED_VARS {
-        if !generated.contains(&format!("pub const {name}")) {
-            missing.push(name);
-        }
-    }
+
+    let missing: Vec<&str> = ALLOWED_FUNCTIONS
+        .iter()
+        .filter(|n| !fns.contains(**n))
+        .chain(ALLOWED_TYPES.iter().filter(|n| !types.contains(**n)))
+        .chain(ALLOWED_VARS.iter().filter(|n| !vars.contains(**n)))
+        .copied()
+        .collect();
 
     assert!(
         missing.is_empty(),

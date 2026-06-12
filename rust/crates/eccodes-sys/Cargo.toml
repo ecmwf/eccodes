@@ -45,3 +45,4 @@ eckit-sys.workspace = true
 bindman-utils.workspace = true
 bindgen  = "0.72"
 fs_extra = "1.3"
+syn      = { version = "2", features = ["full"] }
