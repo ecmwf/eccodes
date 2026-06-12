@@ -12,3 +12,8 @@ jobs:
   wheel:
     uses: ./.github/workflows/build-wheel-wrapper.yml
     secrets: inherit    
+  tarball:
+    uses: ecmwf/reusable-workflows/.github/workflows/cd-tarball.yml@v2
+    secrets: inherit
+    with:
+      confluence_space: ${{ vars.TARBALL_CONFLUENCE_SPACE }}
