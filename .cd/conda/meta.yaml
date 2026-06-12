@@ -25,6 +25,7 @@ requirements:
   host:
     - jasper  # [not win]
     - openjpeg   # [win]
+    - zlib
     - libpng
     - libnetcdf
     - libaec  # [not win]
