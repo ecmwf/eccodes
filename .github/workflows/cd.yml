@@ -17,3 +17,6 @@ jobs:
     secrets: inherit
     with:
       confluence_space: ${{ vars.TARBALL_CONFLUENCE_SPACE }}
+  conda:
+    uses: ecmwf/reusable-workflows/.github/workflows/cd-conda.yml@v2
+    secrets: inherit      

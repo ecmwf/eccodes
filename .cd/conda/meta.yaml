@@ -1,0 +1,64 @@
+{% set name = "eccodes" %}
+{% set git_tag = environ.get('GIT_DESCRIBE_TAG', '0.0.0').lstrip('v') %}
+{% set version = git_tag.replace('-', '') | lower %}
+
+package:
+  name: eccodes
+  version: {{ version }}
+
+source:
+  path: ../..
+
+build:
+  number: 0
+  skip: true  # [win and vc<14]
+  detect_binary_files_with_prefix: true
+
+requirements:
+  build:
+    - {{ compiler('fortran') }}  # [not win]
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+    - cmake
+    - make
+    - ecbuild
+  host:
+    - jasper  # [not win]
+    - openjpeg   # [win]
+    - libpng
+    - libnetcdf
+    - libaec  # [not win]
+  run:
+    - jasper  # [not win]
+    - openjpeg   # [win]
+    - libpng
+    - libnetcdf
+    - libaec  # [not win]
+
+test:
+  requires:
+    - perl  # [not win]
+    - m2-bash  # [win]
+    - m2-findutils  # [win]
+    - m2-coreutils  # [win]
+    - m2-grep  # [win]
+    - m2-sed  # [win]
+    - m2-gawk  # [win]
+    - m2-diffutils  # [win]
+    - m2-perl  # [win]
+  commands:
+    - codes_info
+   # - ls $(codes_info -s)  # [not win]
+   # - ls $(codes_info -d)  # [not win]
+
+about:
+  home: https://software.ecmwf.int/wiki/display/ECC/ecCodes+Home
+  license: Apache-2.0
+  license_file: LICENSE
+  license_family: APACHE
+  summary: ECMWF ecCodes Copyright 2005- ECMWF.
+
+extra:
+  recipe-maintainers:
+    - iainrussell
+
