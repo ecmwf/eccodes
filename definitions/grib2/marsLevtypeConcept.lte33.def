@@ -11,6 +11,16 @@
 'sfc' = {typeOfFirstFixedSurface=19; typeOfSecondFixedSurface=255;}
 'o2d' = {discipline=10; typeOfFirstFixedSurface=20; typeOfSecondFixedSurface=255;}
 'sfc' = {typeOfFirstFixedSurface=20; typeOfSecondFixedSurface=255;}
+'sfc' = {typeOfFirstFixedSurface=28;    scaleFactorOfFirstFixedSurface=missing();  scaledValueOfFirstFixedSurface=missing();
+         typeOfSecondFixedSurface=255; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();}
+'sfc' = {typeOfFirstFixedSurface=29;    scaleFactorOfFirstFixedSurface=missing();  scaledValueOfFirstFixedSurface=missing();
+         typeOfSecondFixedSurface=255; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();}
+'sfc' = {typeOfFirstFixedSurface=28;    scaleFactorOfFirstFixedSurface=missing();  scaledValueOfFirstFixedSurface=missing();
+         typeOfSecondFixedSurface=29; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();}
+'sfc' = {typeOfFirstFixedSurface=36;    scaleFactorOfFirstFixedSurface=missing();  scaledValueOfFirstFixedSurface=missing();
+         typeOfSecondFixedSurface=255; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();}
+'sfc' = {typeOfFirstFixedSurface=37;    scaleFactorOfFirstFixedSurface=missing();  scaledValueOfFirstFixedSurface=missing();
+         typeOfSecondFixedSurface=255; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();}
 'pl'  = {typeOfFirstFixedSurface=100; typeOfSecondFixedSurface=255;}
 'pl'  = {typeOfFirstFixedSurface=100; typeOfSecondFixedSurface=100;}
 'sfc' = {typeOfFirstFixedSurface=1; typeOfSecondFixedSurface=100;
