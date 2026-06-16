@@ -606,6 +606,54 @@
 'Octane' = {
 	constituentType = 10068 ;
 	}
+#Calcite
+'Calcite' = {
+	constituentType = 62400 ;
+	}
+#Chlorite
+'Chlorite' = {
+	constituentType = 62401 ;
+	}
+#Dolomite
+'Dolomite' = {
+	constituentType = 62402 ;
+	}
+#Feldspar
+'Feldspar' = {
+	constituentType = 62403 ;
+	}
+#Goethite
+'Goethite' = {
+	constituentType = 62404 ;
+	}
+#Gypsum
+'Gypsum' = {
+	constituentType = 62405 ;
+	}
+#Hematite
+'Hematite' = {
+	constituentType = 62406 ;
+	}
+#Illite
+'Illite' = {
+	constituentType = 62407 ;
+	}
+#Kaolinite
+'Kaolinite' = {
+	constituentType = 62408 ;
+	}
+#Montmorillonite
+'Montmorillonite' = {
+	constituentType = 62409 ;
+	}
+#Quartz
+'Quartz' = {
+	constituentType = 62410 ;
+	}
+#Vermiculite
+'Vermiculite' = {
+	constituentType = 62411 ;
+	}
 #Nitrate
 'Nitrate' = {
 	constituentType = 62004 ;

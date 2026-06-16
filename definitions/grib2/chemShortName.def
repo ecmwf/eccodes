@@ -606,6 +606,54 @@
 'C8H18' = {
 	constituentType = 10068 ;
 	}
+#Calcite
+'dst_calc' = {
+	constituentType = 62400 ;
+	}
+#Chlorite
+'dst_chlo' = {
+	constituentType = 62401 ;
+	}
+#Dolomite
+'dst_dolo' = {
+	constituentType = 62402 ;
+	}
+#Feldspar
+'dst_fsp' = {
+	constituentType = 62403 ;
+	}
+#Goethite
+'dst_gth' = {
+	constituentType = 62404 ;
+	}
+#Gypsum
+'dst_gyp' = {
+	constituentType = 62405 ;
+	}
+#Hematite
+'dst_hem' = {
+	constituentType = 62406 ;
+	}
+#Illite
+'dst_ill' = {
+	constituentType = 62407 ;
+	}
+#Kaolinite
+'dst_kao' = {
+	constituentType = 62408 ;
+	}
+#Montmorillonite
+'dst_mont' = {
+	constituentType = 62409 ;
+	}
+#Quartz
+'dst_qtz' = {
+	constituentType = 62410 ;
+	}
+#Vermiculite
+'dst_verm' = {
+	constituentType = 62411 ;
+	}
 #Nitrate
 'aer_NO3' = {
 	constituentType = 62004 ;
