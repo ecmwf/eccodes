@@ -444,6 +444,24 @@ int MessageIsValid::check_grid_increments()
     return GRIB_SUCCESS;
 }
 
+int MessageIsValid::check_grid_flags() {
+    // ECC-2288
+    char gridType[128] = {0,};
+    size_t len = sizeof(gridType);
+    int err = grib_get_string_internal(handle_, "gridType", gridType, &len);
+    long resolutionAndComponentFlags = 0;
+
+    if (STR_EQUAL(gridType, "reduced_gg")) {
+        if (grib_get_long(handle_, "resolutionAndComponentFlags", &resolutionAndComponentFlags) == GRIB_SUCCESS) {
+            if (resolutionAndComponentFlags != 0) {
+                grib_context_log(handle_->context, GRIB_LOG_ERROR, "%s: For gridType=reduced_gg, resolutionAndComponentFlags should be 0 but is %ld", TITLE, resolutionAndComponentFlags);
+                return GRIB_WRONG_GRID;
+            }
+        }
+    }
+    return GRIB_SUCCESS;
+}
+
 int MessageIsValid::check_geoiterator()
 {
     if (!grid_enabled()) {
@@ -734,12 +752,14 @@ int MessageIsValid::unpack_long(long* val, size_t* len)
         &MessageIsValid::check_number_of_missing,
         &MessageIsValid::check_grid_pl_array,
         &MessageIsValid::check_grid_increments,
+        &MessageIsValid::check_grid_flags,
         &MessageIsValid::check_geoiterator,
         &MessageIsValid::check_surface_keys,
         &MessageIsValid::check_steps,
         &MessageIsValid::check_deprecation,
         &MessageIsValid::check_namespace_keys,
         &MessageIsValid::check_parameter,
+
     };
 
     int err = 0;
