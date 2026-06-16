@@ -453,7 +453,7 @@ int MessageIsValid::check_grid_flags() {
 
     if (STR_EQUAL(gridType, "reduced_gg")) {
         if (grib_get_long(handle_, "resolutionAndComponentFlags", &resolutionAndComponentFlags) == GRIB_SUCCESS) {
-            if (resolutionAndComponentFlags != 0) {
+            if (resolutionAndComponentFlags == 16) {
                 grib_context_log(handle_->context, GRIB_LOG_ERROR, "%s: For gridType=reduced_gg, resolutionAndComponentFlags should be 0 but is %ld", TITLE, resolutionAndComponentFlags);
                 return GRIB_WRONG_GRID;
             }
