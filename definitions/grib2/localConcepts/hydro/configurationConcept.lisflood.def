@@ -4,10 +4,12 @@
 'v3.5' = { generatingProcessIdentifier = 3 ; }
 'v4' = { generatingProcessIdentifier = 4; }
 'v5' = { generatingProcessIdentifier = 5; }
+'v6' = { generatingProcessIdentifier = 6; }
 
 #40-79 keep the numbers for Glofas
 'v3.1' = { generatingProcessIdentifier = 40; }
 'v4.0' = { generatingProcessIdentifier = 41; }
+'v5.0' = { generatingProcessIdentifier = 42; }
 
 #80-119 keep the numbers for c3s europe
 'v1' = { generatingProcessIdentifier = 80; }
