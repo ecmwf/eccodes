@@ -606,6 +606,14 @@
 'C8H18' = {
 	constituentType = 10068 ;
 	}
+#Lumped pollen
+'bio_pol' = {
+	constituentType = 62298 ;
+	}
+#Lumped fungal spores
+'bio_spo' = {
+	constituentType = 62299 ;
+	}
 #Calcite
 'CaCO3' = {
 	constituentType = 62400 ;
