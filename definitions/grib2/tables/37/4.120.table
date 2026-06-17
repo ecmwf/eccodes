@@ -1,0 +1,18 @@
+# Code table 4.120 - Verification scores
+0 0 Mean error
+1 1 Root mean squared error
+2 2 Continuous ranked probability score (CRPS)
+3 3 Fair continuous ranked probability score
+4 4 Continuous logarithmic ignorance score
+5 5 Fair continuous logarithmic ignorance score
+6 6 Ranked probability score
+# 7-99 Reserved for future use
+100 100 Contingency Table (deterministic) - hits
+101 101 Contingency Table (deterministic) - false alarms
+102 102 Contingency Table (deterministic) - misses
+103 103 Contingency Table (deterministic) - correct negatives
+104 104 Contingency Table (probabilistic) - Forecast-by-n-members and observed
+105 105 Contingency Table (probabilistic) - Forecast-by-n-members and not observed
+# 106-62999 Reserved
+# 63000-65534 Reserved for local use
+65535 65535 Missing
