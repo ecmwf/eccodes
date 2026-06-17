@@ -606,6 +606,14 @@
 '447' = {
 	constituentType = 10068 ;
 	}
+#Lumped pollen
+'800' = {
+	constituentType = 62298 ;
+	}
+#Lumped fungal spores
+'801' = {
+	constituentType = 62299 ;
+	}
 #Calcite
 '802' = {
 	constituentType = 62400 ;
