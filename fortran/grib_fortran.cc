@@ -1726,6 +1726,31 @@ int grib_f_index_add_file_(int* index_id, char* file, int lfile)
 }
 
 /*****************************************************************************/
+int grib_f_index_add_message_(int* index_id, int* grib_id, char* file, int64_t* offset, int lfile)
+{
+    grib_index*  idx = get_index(*index_id);
+    if (!idx) return GRIB_INVALID_INDEX;
+
+    grib_handle* h   = get_handle(*grib_id);
+    if (!h)   return GRIB_INVALID_GRIB;
+
+    char buf[1024];
+
+    return codes_index_add_message(idx, h, cast_char(buf, file, lfile), (off_t)*offset);
+}
+
+/*****************************************************************************/
+int grib_f_index_new_(int* gid, char* keys, int lkeys)
+{
+    char buf[1024];
+    int err = 0;
+    grib_index* i = grib_index_new(grib_context_get_default(),
+                                   cast_char(buf, keys, lkeys), &err);
+    if (err) { *gid = -1; return err; }
+    push_index(i, gid);
+    return GRIB_SUCCESS;
+}
+/*****************************************************************************/
 int grib_f_index_read_(char* file, int* gid, int lfile)
 {
     int err = 0;
@@ -2706,7 +2731,7 @@ int grib_f_set_string_(int* gid, char* key, char* val, int len, int len2)
     size_t lsize = len2;
 
     if(!h) return GRIB_INVALID_GRIB;
-    
+
     /* For BUFR, the value may contain spaces e.g. stationOrSiteName='CAMPO NOVO' */
     /* So do not use cast_char. cast_char_no_cut does not stop at first space */
     val_str = cast_char_no_cut(buf2,val,len2);
