@@ -606,6 +606,14 @@
 'Octane' = {
 	constituentType = 10068 ;
 	}
+#Lumped pollen
+'Lumped pollen' = {
+	constituentType = 62298 ;
+	}
+#Lumped fungal spores
+'Lumped fungal spores' = {
+	constituentType = 62299 ;
+	}
 #Calcite
 'Calcite' = {
 	constituentType = 62400 ;
