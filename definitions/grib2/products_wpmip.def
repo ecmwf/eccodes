@@ -1,0 +1,21 @@
+# (C) Copyright 2005- ECMWF.
+
+# Weather Prediction Model Intercomparison Project (WPMIP)
+
+alias mars.class  = marsClass;
+alias mars.stream = marsStream;
+alias mars.type   = marsType;
+alias mars.param = paramId;
+alias mars.expver = marsExpver;
+alias mars.origin = centre;
+
+alias parameter=paramId;
+alias parameter.paramId=paramId;
+alias parameter.shortName=shortName;
+alias parameter.units=units;
+alias parameter.name=name;
+
+if(typeOfFirstFixedSurface == 10) {
+    constant levTypeName = 'sfc';
+    alias mars.levtype = levTypeName;
+}
