@@ -969,6 +969,36 @@
 	 scaleFactorOfLowerLimit = 0 ;
 	 probabilityType = 3 ;
 	}
+#Hail of at least 2 cm diameter
+'%' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 134 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 scaledValueOfLowerLimit = 1 ;
+	 scaleFactorOfLowerLimit = 2 ;
+	 probabilityType = 3 ;
+	}
+#Hail of at least 5 cm diameter
+'%' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 134 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 scaledValueOfLowerLimit = 25 ;
+	 scaleFactorOfLowerLimit = 3 ;
+	 probabilityType = 3 ;
+	}
+#Thunderstorm in vicinity (lightning-based)
+'%' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 4 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 scaledValueOfLowerLimit = 0 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
+	}
 #Convective available potential energy shear index
 'Numeric' = {
 	 discipline = 0 ;
