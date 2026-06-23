@@ -94,9 +94,9 @@ int GridSpec::unpack_string(char* v, size_t* len)
     ECCODES_ASSERT(h);
 
     if (!eccodes::geo::eckit_geo_use_for_gridspec(h)) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "GridSpec::unpack_string not available");
-        return GRIB_NOT_IMPLEMENTED;
+        return GRIB_MISSING_KEY;
     }
+
     ECCODES_ASSERT(0 < *len);
     ECCODES_ASSERT(v);
 
