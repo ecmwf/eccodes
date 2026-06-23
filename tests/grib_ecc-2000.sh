@@ -11,13 +11,14 @@
 . ./include.ctest.sh
 
 # ---------------------------------------------------------
-# This is the test for JIRA issue ECC-XXXX
-# < Add issue summary here >
+# This is the test for JIRA issue ECC-2000
+# It checks if mars.quantile gets correct values for 
+# SOT GRIB2 encodings
 # ---------------------------------------------------------
 
 REDIRECT=/dev/null
 
-label="prod_ecc-2000_test"  # Change prod to bufr or grib etc
+label="grib_ecc-2000_test"  # Change prod to bufr or grib etc
 tempGrib1=temp1.$label.grib
 tempGrib2=temp2.$label.grib
 tempFilt=temp.$label.filt
