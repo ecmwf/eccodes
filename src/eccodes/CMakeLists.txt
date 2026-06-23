@@ -444,10 +444,10 @@ ecbuild_add_library(
         ${eccodes_src_files}
     PRIVATE_INCLUDES "${PNG_INCLUDE_DIRS}"
     PRIVATE_LIBS
-       ${ECCODES_EXTRA_LIBRARIES}
-       ${CMAKE_THREAD_LIBS_INIT}
-       ${PNG_LIBRARIES}
-       $<$<BOOL:${libaec_FOUND}>:libaec::aec>
+        ${ECCODES_EXTRA_LIBRARIES}
+        ${CMAKE_THREAD_LIBS_INIT}
+        ${PNG_LIBRARIES}
+        $<$<BOOL:${libaec_FOUND}>:libaec::aec>
     PUBLIC_LIBS
         ${CMATH_LIBRARIES}
         ${THREADS_LIBRARIES}

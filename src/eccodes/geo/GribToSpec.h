@@ -56,6 +56,8 @@ private:
     mutable cache_type cache_;
     codes_handle* handle_;
 
+    void pl_expand_to_global(std::vector<long>&) const;
+
     void json(eckit::JSON&) const final;
 };
 

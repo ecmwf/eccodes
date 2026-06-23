@@ -163,11 +163,17 @@ public:
 */
 
 
+void wrongly_encoded_grib_error(const std::string& msg)
+{
+    grib_context_log(nullptr, GRIB_LOG_ERROR, "%s", msg.c_str());
+    throw eckit::geo::exception::GridError(msg, Here());
+}
+
+
 void wrongly_encoded_grib(const std::string& msg)
 {
     if (static bool do_abort = codes_getenv("ECCODES_GRIB_GEO_STRICT") != nullptr; do_abort) {
-        grib_context_log(nullptr, GRIB_LOG_ERROR, "%s", msg.c_str());
-        throw eckit::geo::exception::GridError(msg, Here());
+        wrongly_encoded_grib_error(msg);
     }
 
     grib_context_log(nullptr, GRIB_LOG_WARNING, "%s", msg.c_str());
@@ -758,7 +764,8 @@ class lock_type
 
 
 template <typename T>
-bool cache_get(const GribToSpec::cache_type& cache, const std::string& name, T& value) {
+bool cache_get(const GribToSpec::cache_type& cache, const std::string& name, T& value)
+{
     if (auto it = cache.find(name); it != cache.end()) {
         if (std::holds_alternative<T>(it->second)) {
             value = std::get<T>(it->second);
@@ -770,8 +777,9 @@ bool cache_get(const GribToSpec::cache_type& cache, const std::string& name, T& 
 
 
 template <typename T>
-void cache_set(GribToSpec::cache_type& cache, const std::string& name, const T& value) {
-    cache.insert_or_assign(name, eckit::spec::Custom::value_type{std::in_place_type<T>, value});
+void cache_set(GribToSpec::cache_type& cache, const std::string& name, const T& value)
+{
+    cache.insert_or_assign(name, eckit::spec::Custom::value_type{ std::in_place_type<T>, value });
 }
 
 
@@ -1049,25 +1057,17 @@ bool GribToSpec::get(const std::string& name, std::vector<long>& value) const
     }
 
     size_t count = 0;
-    int err      = codes_get_size(handle_, key, &count);
-    CHECK_ERROR(err, key);
+    CHECK_CALL(codes_get_size(handle_, key, &count));
+    ASSERT(count > 0);
 
     size_t size = count;
-
-    value.resize(count);
-
+    value.resize(size);
     CHECK_CALL(codes_get_long_array(handle_, key, value.data(), &size));
     ASSERT(count == size);
 
-    ASSERT(!value.empty());
-
-    if (name == "pl") {
-        // pl array must not contain zeros for reduced grids (except reduced_ll)
-        if (std::find(value.rbegin(), value.rend(), 0) != value.rend()) {
-            if (std::string gridType; get("gridType", gridType) && (gridType != "reduced_ll")) {
-                wrongly_encoded_grib("GribToSpec: pl array contains zeros");
-            }
-        }
+    // gridType=reduced_ll pl is (assumed) regional, otherwise assumed global
+    if (name == "pl" && get_string("gridType") != "reduced_ll") {
+        pl_expand_to_global(value);
     }
 
     cache_set(cache_, name, value);
@@ -1170,6 +1170,32 @@ bool GribToSpec::get(const std::string& /*name*/, std::vector<std::string>& /*va
     return false;
 }
 
+
+void GribToSpec::pl_expand_to_global(std::vector<long>& pl) const
+{
+    auto N = get_long("N");
+    if (pl.size() == 2 * N) {
+        return;
+    }
+
+    const auto lat1 = get_double("latitudeOfFirstGridPointInDegrees");
+    const auto lat2 = get_double("latitudeOfLastGridPointInDegrees");
+
+    const auto increasing = lat1 < lat2;
+    const auto& lats(eckit::geo::util::gaussian_latitudes(N, increasing));
+    const auto eps = std::max(eckit::geo::PointLonLat::EPS, get_double("angular_precision"));
+
+    auto approx              = [=](double a, double b) { return increasing ? a + eps < b : a - eps > b; };
+    const auto j             = std::distance(lats.begin(), std::lower_bound(lats.begin(), lats.end(), lat1, approx));
+    const auto lat2_expected = lats[j + pl.size() - 1];
+    if (j + pl.size() > 2 * N || !eckit::types::is_approximately_equal<double>(lat2, lat2_expected, eps)) {
+        wrongly_encoded_grib_error("GribToSpec: cropped 'pl' doesn't align to global latitudes: start=" + std::to_string(j) + " + #pl=" + std::to_string(pl.size()) + " <= #lats=" + std::to_string(lats.size()));
+    }
+
+    std::vector<long> pl_global(2 * N, 0);
+    std::copy(pl.begin(), pl.end(), pl_global.begin() + j);
+    pl.swap(pl_global);
+}
 
 void GribToSpec::json(eckit::JSON& j) const
 {

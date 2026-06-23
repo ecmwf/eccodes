@@ -31,6 +31,7 @@ list(APPEND test_c_bins
     grib_keys_iter
     grib_keys_iter_skip
     grib_geo_iter
+    grib_geo_iterator
     grib_nearest_test
     grib_util_set_spec
     grib_util_set_spec2
@@ -271,6 +272,7 @@ if( HAVE_BUILD_TOOLS )
         grib_keys_iter
         grib_keys_iter_skip
         grib_geo_iter
+        grib_geo_iterator
         grib_to_json
         grib_to_ppm
         grib_list_keys
@@ -638,6 +640,8 @@ endif()
 
 
 if( eccodes_HAVE_ECKIT_GEO AND eccodes_HAVE_GEOGRAPHY )
+    target_link_libraries(grib_geo_iterator eckit_geo)
+
     foreach( test
             grib_from_gridspec
             grib_to_gridspec )
