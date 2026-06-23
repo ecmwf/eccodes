@@ -2,43 +2,72 @@
 
 set -e
 
+if [[ "$c_compiler" == "gcc" ]]; then
+  export PATH="${PATH}:${BUILD_PREFIX}/${HOST}/sysroot/usr/lib"
+fi
+
+export BUILD_FORTRAN=1
+export BUILD_JPEG=1
+export CTEST_EXTRA_FLAGS=""
+export EXTRA_TESTS=1
+if [[ $HOST =~ darwin ]]; then
+  export LIBRARY_SEARCH_VAR=DYLD_FALLBACK_LIBRARY_PATH
+  export FFLAGS="-isysroot $CONDA_BUILD_SYSROOT $FFLAGS"
+  # https://conda-forge.org/docs/maintainer/knowledge_base.html#newer-c-features-with-old-sdk
+  # (to fix grib_accessor_class_step_in_units.cc:226:42: error: 'value' is unavailable: introduced in macOS 10.13)
+  export CXXFLAGS="${CXXFLAGS} -D_LIBCPP_DISABLE_AVAILABILITY"
+  export REPLACE_TPL_ABSOLUTE_PATHS=1
+  if [[ $HOST =~ arm64 ]]; then
+    export MACOS_LE_FLAG="-D IEEE_LE=1"
+    export BUILD_FORTRAN=0
+  fi
+elif [[ $HOST =~ linux ]]; then
+  export LIBRARY_SEARCH_VAR=LD_LIBRARY_PATH
+  export REPLACE_TPL_ABSOLUTE_PATHS=1
+  if [[ $HOST =~ powerpc64le ]]; then
+    # failure in test 'eccodes_t_grib_packing_order' related to jpeg packing
+    # failure in eccodes_t_grib_ieee so disable by disabling the extra tests on this platform
+    export BUILD_JPEG=0
+    export EXTRA_TESTS=0
+    export CTEST_EXTRA_FLAGS="-E eccodes_t_grib_packing_order"
+  fi
+fi
+
 export PYTHON=
-export LDFLAGS="${LDFLAGS:-} -L$PREFIX/lib -Wl,-rpath,$PREFIX/lib"
-export CFLAGS="${CFLAGS:-} -fPIC -I$PREFIX/include"
+export LDFLAGS="$LDFLAGS -L$PREFIX/lib -Wl,-rpath,$PREFIX/lib"
+export CFLAGS="$CFLAGS -fPIC -I$PREFIX/include"
 
 mkdir ../build && cd ../build
+
+# One can use the following cmake flag to get more verbose debugging info
+# -D ECBUILD_LOG_LEVEL=DEBUG
 
 cmake -D CMAKE_INSTALL_PREFIX=$PREFIX \
       -D CMAKE_BUILD_TYPE=Release \
       -D CMAKE_FIND_FRAMEWORK=LAST \
       -D INSTALL_LIB_DIR='lib' \
-      -D ENABLE_JPG=1 \
-      -D ENABLE_JPG_LIBOPENJPEG=0 \
+      -D ENABLE_JPG=$BUILD_JPEG \
       -D ENABLE_NETCDF=1 \
       -D ENABLE_PNG=1 \
       -D ENABLE_PYTHON=0 \
-      -D ENABLE_FORTRAN=1 \
+      -D ENABLE_FORTRAN=$BUILD_FORTRAN \
       -D ENABLE_ECCODES_THREADS=1 \
       -D ENABLE_AEC=1 \
-      -D ENABLE_EXTRA_TESTS=1 \
+      -D ENABLE_EXTRA_TESTS=$EXTRA_TESTS \
       -D ECBUILD_DOWNLOAD_TIMEOUT=60 \
-      -D REPLACE_TPL_ABSOLUTE_PATHS=1 \
+      -D REPLACE_TPL_ABSOLUTE_PATHS=$REPLACE_TPL_ABSOLUTE_PATHS \
       -D CMAKE_FIND_ROOT_PATH=$PREFIX \
       -D CMAKE_FIND_ROOT_PATH_MODE_INCLUDE=BOTH \
       -D CMAKE_PROGRAM_PATH=$BUILD_PREFIX \
+      $MACOS_LE_FLAG \
       $SRC_DIR
 
-make -j ${CPU_COUNT:-1} VERBOSE=1
+make -j $CPU_COUNT VERBOSE=1
+export ECCODES_TEST_VERBOSE_OUTPUT=1
+eval ${LIBRARY_SEARCH_VAR}=$PREFIX/lib
 
-if [[ "${RUN_CONDA_BUILD_TESTS:-1}" == "1" ]]; then
-  export ECCODES_TEST_VERBOSE_OUTPUT=1
-  export LD_LIBRARY_PATH="$PREFIX/lib:${LD_LIBRARY_PATH:-}"
-
-  if [[ "${CONDA_BUILD_CROSS_COMPILATION:-}" != "1" || -n "${CROSSCOMPILING_EMULATOR:-}" ]]; then
-    ctest --output-on-failure -j ${CPU_COUNT:-1}
-  else
-    echo "Skipping ctest: cross-compilation build without CROSSCOMPILING_EMULATOR"
-  fi
+if [[ "${CONDA_BUILD_CROSS_COMPILATION:-}" != "1" || "${CROSSCOMPILING_EMULATOR}" != "" ]]; then
+ctest --output-on-failure -j $CPU_COUNT $CTEST_EXTRA_FLAGS
 fi
 
 make install

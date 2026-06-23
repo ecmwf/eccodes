@@ -1,4 +1,3 @@
-{% set name = "eccodes" %}
 {% set git_tag = environ.get('GIT_DESCRIBE_TAG', '0.0.0').lstrip('v') %}
 {% set version = git_tag.replace('-', '') | lower %}
 
@@ -11,55 +10,42 @@ source:
 
 build:
   number: 0
-  skip: true  # [win and vc<14]
+  skip: true  # [win]
   detect_binary_files_with_prefix: true
 
 requirements:
   build:
-    - {{ compiler('fortran') }}  # [not win]
+    - {{ compiler('fortran') }}
     - {{ compiler('c') }}
+    - {{ stdlib("c") }}
     - {{ compiler('cxx') }}
     - cmake
+    - diffutils
     - make
-    - ecbuild
   host:
-    - jasper  # [not win]
-    - openjpeg   # [win]
+    - jasper    # [not ppc64le]
+    - openjpeg  # [ppc64le]
     - zlib
     - libpng
     - libnetcdf
-    - libaec  # [not win]
-  run:
-    - jasper  # [not win]
-    - openjpeg   # [win]
-    - libpng
-    - libnetcdf
-    - libaec  # [not win]
+    - libaec
+    - hdf5
 
 test:
   requires:
-    - perl  # [not win]
-    - m2-bash  # [win]
-    - m2-findutils  # [win]
-    - m2-coreutils  # [win]
-    - m2-grep  # [win]
-    - m2-sed  # [win]
-    - m2-gawk  # [win]
-    - m2-diffutils  # [win]
-    - m2-perl  # [win]
+    - perl
   commands:
     - codes_info
-   # - ls $(codes_info -s)  # [not win]
-   # - ls $(codes_info -d)  # [not win]
+    - ls $(codes_info -s)
+    - ls $(codes_info -d)
 
 about:
-  home: https://software.ecmwf.int/wiki/display/ECC/ecCodes+Home
+  home: https://confluence.ecmwf.int/display/ECC/ecCodes+Home
   license: Apache-2.0
   license_file: LICENSE
-  license_family: APACHE
+  license_family: Apache
   summary: ECMWF ecCodes Copyright 2005- ECMWF.
 
 extra:
   recipe-maintainers:
     - iainrussell
-
