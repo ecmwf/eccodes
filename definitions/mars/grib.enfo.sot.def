@@ -8,10 +8,10 @@ if (edition == 2) {
  alias mars.timespan = timeSpan;
 
  # these additional keys contain the percentiles used for SOT
- meta scaleFactorOfAdditionalParameterForReferencePeriod0 element(scaleFactorOfAdditionalParameterForReferencePeriod, 0);
- meta scaledValueOfAdditionalParameterForReferencePeriod0 element(scaledValueOfAdditionalParameterForReferencePeriod, 0);
- meta scaleFactorOfAdditionalParameterForReferencePeriod1 element(scaleFactorOfAdditionalParameterForReferencePeriod, 1);
- meta scaledValueOfAdditionalParameterForReferencePeriod1 element(scaledValueOfAdditionalParameterForReferencePeriod, 1);
+ meta scaleFactorOfAdditionalParameterForReferencePeriod0 element(scaleFactorOfAdditionalParameterForReferencePeriod, 0) : hidden;
+ meta scaledValueOfAdditionalParameterForReferencePeriod0 element(scaledValueOfAdditionalParameterForReferencePeriod, 0) : hidden;
+ meta scaleFactorOfAdditionalParameterForReferencePeriod1 element(scaleFactorOfAdditionalParameterForReferencePeriod, 1) : hidden;
+ meta scaledValueOfAdditionalParameterForReferencePeriod1 element(scaledValueOfAdditionalParameterForReferencePeriod, 1) : hidden;
 
  meta firstPercentile from_scale_factor_scaled_value(scaleFactorOfAdditionalParameterForReferencePeriod0,scaledValueOfAdditionalParameterForReferencePeriod0);
  meta secondPercentile from_scale_factor_scaled_value(scaleFactorOfAdditionalParameterForReferencePeriod1,scaledValueOfAdditionalParameterForReferencePeriod1);
@@ -34,13 +34,13 @@ if (edition == 2) {
  } else {
      if (quantileDenominator0 < quantileDenominator1){
          meta quantileDenominatorFactor evaluate(quantileDenominator1/quantileDenominator0) : hidden;
-         transient quantileDenominator = quantileDenominator1;
+         transient quantileDenominator = quantileDenominator1 : hidden;
          meta scaledValue0 evaluate(scaledValueOfAdditionalParameterForReferencePeriod0*quantileDenominatorFactor) : hidden;
          transient scaledValue1 = scaledValueOfAdditionalParameterForReferencePeriod1 : hidden;
      } else {
          # quantileDenominator0 > quantileDenominator1
          meta quantileDenominatorFactor evaluate(quantileDenominator0/quantileDenominator1) : hidden;
-         transient quantileDenominator = quantileDenominator0;
+         transient quantileDenominator = quantileDenominator0 : hidden;
          meta scaledValue1 evaluate(scaledValueOfAdditionalParameterForReferencePeriod1*quantileDenominatorFactor) : hidden;
          transient scaledValue0 = scaledValueOfAdditionalParameterForReferencePeriod0 : hidden;
      }
