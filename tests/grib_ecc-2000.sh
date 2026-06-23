@@ -11,13 +11,14 @@
 . ./include.ctest.sh
 
 # ---------------------------------------------------------
-# This is the test for JIRA issue ECC-XXXX
-# < Add issue summary here >
+# This is the test for JIRA issue ECC-2000
+# mars.quantile for SOT: ensure the two percentile values are sorted
+# so that the smaller value always appears first
 # ---------------------------------------------------------
 
 REDIRECT=/dev/null
 
-label="prod_ecc-2000_test"  # Change prod to bufr or grib etc
+label="grib_ecc-2000_test"
 tempGrib1=temp1.$label.grib
 tempGrib2=temp2.$label.grib
 tempFilt=temp.$label.filt
@@ -66,7 +67,7 @@ EOF
 
 ${tools_dir}/grib_filter -o $tempGrib2 $tempFilt $tempGrib1
 
-grib_check_key_equals $tempGrib2  "mars.quantile" "10-1:100"
+grib_check_key_equals $tempGrib2  "mars.quantile" "1-10:100"
 
 
 # SOT case with percentiles 90 and 99.5
@@ -88,8 +89,6 @@ EOF
 ${tools_dir}/grib_filter -o $tempGrib2 $tempFilt $tempGrib1
 
 grib_check_key_equals $tempGrib2  "mars.quantile" "900-995:1000"
-
-
 
 # Clean up
 rm -f $tempGrib1 $tempGrib2  $tempFilt
