@@ -19,8 +19,8 @@ class Dictionary : public Gen
 {
 public:
     Dictionary() :
-        Gen() { class_name_ = "dictionary"; }
-    grib_accessor* create_empty_accessor() override { return new Dictionary{}; }
+        Gen() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     long get_native_type() override;
     int unpack_double(double* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
@@ -37,6 +37,9 @@ private:
     const char* localDir_ = nullptr;
 
     grib_trie* load_dictionary(int* err);
+
+public:
+    static inline const AccessorType accessor_type_{"dictionary"};
 };
 
 }  // namespace eccodes::accessor

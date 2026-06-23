@@ -19,14 +19,17 @@ class G2Lon : public Double
 {
 public:
     G2Lon() :
-        Double() { class_name_ = "g2lon"; }
-    grib_accessor* create_empty_accessor() override { return new G2Lon{}; }
+        Double() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
 
 private:
     const char* longitude_ = nullptr;
+
+public:
+    static inline const AccessorType accessor_type_{"g2lon"};
 };
 
 }  // namespace eccodes::accessor

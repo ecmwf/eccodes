@@ -19,14 +19,17 @@ class G2BitmapPresent : public Long
 {
 public:
     G2BitmapPresent() :
-        Long() { class_name_ = "g2bitmap_present"; }
-    grib_accessor* create_empty_accessor() override { return new G2BitmapPresent{}; }
+        Long() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
 
 private:
     const char* bitmapIndicator_ = nullptr;
+
+public:
+    static inline const AccessorType accessor_type_{"g2bitmap_present"};
 };
 
 }  // namespace eccodes::accessor

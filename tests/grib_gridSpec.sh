@@ -42,7 +42,7 @@ set -u
 # ----------------
 infile=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 ${tools_dir}/grib_get -p gridSpec $infile
-grib_check_key_equals $infile gridSpec '{"east":30,"grid":[2,2],"north":60,"south":0,"west":0}'
+grib_check_key_equals $infile gridSpec '{"area":[60,0,0,30],"grid":[2,2]}'
 
 infile=$ECCODES_SAMPLES_PATH/gg_sfc_grib2.tmpl
 ${tools_dir}/grib_get -p gridSpec $infile

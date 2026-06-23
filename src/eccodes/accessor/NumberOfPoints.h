@@ -19,8 +19,8 @@ class NumberOfPoints : public Long
 {
 public:
     NumberOfPoints() :
-        Long() { class_name_ = "number_of_points"; }
-    grib_accessor* create_empty_accessor() override { return new NumberOfPoints{}; }
+        Long() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
 
@@ -29,6 +29,9 @@ private:
     const char* nj_ = nullptr;
     const char* plpresent_ = nullptr;
     const char* pl_ = nullptr;
+
+public:
+    static inline const AccessorType accessor_type_{"number_of_points"};
 };
 
 }  // namespace eccodes::accessor

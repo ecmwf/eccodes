@@ -504,13 +504,6 @@
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 101 ;
 	}
-#Logarithm of surface pressure
-'lnsp' = {
-	 discipline = 0 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 25 ;
-	 typeOfFirstFixedSurface = 1 ;
-	}
 #Divergence
 'd' = {
 	 discipline = 0 ;
@@ -908,6 +901,27 @@
 	 parameterCategory = 6 ;
 	 parameterNumber = 5 ;
 	}
+#Probability of a tropical storm
+'pts' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 6 ;
+	 probabilityType = 9 ;
+	}
+#Probability of a hurricane
+'ph' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 5 ;
+	 probabilityType = 9 ;
+	}
+#Probability of a tropical depression
+'ptd' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 7 ;
+	 probabilityType = 9 ;
+	}
 #Total precipitation of at least 25 mm
 'tpg25' = {
 	 discipline = 0 ;
@@ -952,6 +966,36 @@
 	 scaledValueOfFirstFixedSurface = 10 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfLowerLimit = 25 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
+	}
+#Hail of at least 2 cm diameter
+'hlg2' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 134 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 scaledValueOfLowerLimit = 1 ;
+	 scaleFactorOfLowerLimit = 2 ;
+	 probabilityType = 3 ;
+	}
+#Hail of at least 5 cm diameter
+'hlg5' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 134 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 scaledValueOfLowerLimit = 25 ;
+	 scaleFactorOfLowerLimit = 3 ;
+	 probabilityType = 3 ;
+	}
+#Thunderstorm in vicinity (lightning-based)
+'tsprb' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 4 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 scaledValueOfLowerLimit = 0 ;
 	 scaleFactorOfLowerLimit = 0 ;
 	 probabilityType = 3 ;
 	}
@@ -8891,14 +8935,6 @@
 	 typeOfFirstFixedSurface = 101 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean logarithm of surface pressure
-'avg_lnsp' = {
-	 discipline = 0 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 25 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfStatisticalProcessing = 0 ;
-	}
 #Time-mean divergence
 'avg_d' = {
 	 discipline = 0 ;
@@ -10963,14 +10999,6 @@
 	 typeOfFirstFixedSurface = 101 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
-#Time-maximum logarithm of surface pressure
-'max_lnsp' = {
-	 discipline = 0 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 25 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfStatisticalProcessing = 2 ;
-	}
 #Time-maximum divergence
 'max_d' = {
 	 discipline = 0 ;
@@ -12862,14 +12890,6 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 101 ;
-	 typeOfStatisticalProcessing = 3 ;
-	}
-#Time-minimum logarithm of surface pressure
-'min_lnsp' = {
-	 discipline = 0 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 25 ;
-	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
 #Time-minimum divergence
@@ -14789,14 +14809,6 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 101 ;
-	 typeOfStatisticalProcessing = 6 ;
-	}
-#Time-standard-deviation logarithm of surface pressure
-'std_lnsp' = {
-	 discipline = 0 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 25 ;
-	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Time-standard-deviation divergence
@@ -18356,6 +18368,42 @@
 	 parameterNumber = 63 ;
 	 typeOfFirstFixedSurface = 1 ;
 	}
+#Storm relative helicity - right moving storm
+'hlcr' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 23 ;
+	}
+#Storm relative helicity - left moving storm
+'hlcl' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 24 ;
+	}
+#Effective storm relative helicity - mean flow
+'ehlm' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 25 ;
+	 typeOfFirstFixedSurface = 28 ;
+	 typeOfSecondFixedSurface = 29 ;
+	}
+#Effective storm relative helicity - right moving storm
+'ehlr' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 26 ;
+	 typeOfFirstFixedSurface = 28 ;
+	 typeOfSecondFixedSurface = 29 ;
+	}
+#Effective storm relative helicity - left moving storm
+'ehll' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 27 ;
+	 typeOfFirstFixedSurface = 28 ;
+	 typeOfSecondFixedSurface = 29 ;
+	}
 #Universal thermal climate index
 'utci' = {
 	 discipline = 20 ;
@@ -21341,6 +21389,42 @@
 	 scaledValueOfLowerLimit = 27315 ;
 	 scaleFactorOfLowerLimit = 2 ;
 	 probabilityType = 0 ;
+	}
+#Significant wave height of at least 2 m
+'swhg2' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 scaledValueOfLowerLimit = 2 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
+	}
+#Significant wave height of at least 4 m
+'swhg4' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 scaledValueOfLowerLimit = 4 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
+	}
+#Significant wave height of at least 6 m
+'swhg6' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 scaledValueOfLowerLimit = 6 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
+	}
+#Significant wave height of at least 8 m
+'swhg8' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 scaledValueOfLowerLimit = 8 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
 	}
 #10 metre wind gust index
 '10fgi' = {

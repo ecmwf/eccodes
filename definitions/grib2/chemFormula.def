@@ -366,6 +366,10 @@
 'Ox' = {
 	constituentType = 60027 ;
 	}
+#Bromine oxides
+'BrOx' = {
+	constituentType = 60008 ;
+	}
 #Hoch2c(ooh)(ch3)ch=ch2
 'ISOPOOH' = {
 	constituentType = 60032 ;
@@ -601,6 +605,62 @@
 #Octane
 'C8H18' = {
 	constituentType = 10068 ;
+	}
+#Lumped pollen
+'bio_pol' = {
+	constituentType = 62298 ;
+	}
+#Lumped fungal spores
+'bio_spo' = {
+	constituentType = 62299 ;
+	}
+#Calcite
+'CaCO3' = {
+	constituentType = 62400 ;
+	}
+#Chlorite
+'Mg6FeAl4Si4O10OH8' = {
+	constituentType = 62401 ;
+	}
+#Dolomite
+'CaMgC2O6' = {
+	constituentType = 62402 ;
+	}
+#Feldspar
+'XAlSi3O8' = {
+	constituentType = 62403 ;
+	}
+#Goethite
+'FeOOH' = {
+	constituentType = 62404 ;
+	}
+#Gypsum
+'CaSO4H4O2' = {
+	constituentType = 62405 ;
+	}
+#Hematite
+'Fe2O3' = {
+	constituentType = 62406 ;
+	}
+#Illite
+'KAl2Si3AlO10OH2' = {
+	constituentType = 62407 ;
+	}
+#Kaolinite
+'Al2Si2O5OH4' = {
+	constituentType = 62408 ;
+	}
+#Montmorillonite
+'Al2Si4O10OH2' = {
+	constituentType = 62409 ;
+	}
+#Quartz
+'SiO2' = {
+	constituentType = 62410 ;
+	}
+#Vermiculite
+'Mg3Al3Si4O10OH2' = {
+	constituentType = 62411 ;
 	}
 #Nitrate
 'aer_NO3' = {

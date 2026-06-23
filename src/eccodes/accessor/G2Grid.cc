@@ -10,8 +10,7 @@
 
 #include "G2Grid.h"
 
-eccodes::accessor::G2Grid _grib_accessor_g2grid;
-eccodes::Accessor* grib_accessor_g2grid = &_grib_accessor_g2grid;
+eccodes::AccessorBuilder<eccodes::accessor::G2Grid> _grib_accessor_g2grid_builder{};
 
 namespace eccodes::accessor
 {
@@ -118,10 +117,9 @@ static long lcm(long a, long b)
 
 static int is_ok(const double* val, long v[6], double basic_angle, double sub_division)
 {
-    int i;
     int ok = 1;
 
-    for (i = 0; i < 6; i++) {
+    for (int i = 0; i < 6; i++) {
         if (val[i] == GRIB_MISSING_DOUBLE)
             v[i] = GRIB_MISSING_LONG;
         else {

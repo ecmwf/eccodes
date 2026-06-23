@@ -1,0 +1,13 @@
+# Local definition 51: CURV diagnostic
+
+signed[4] curvRadiusInMetres = 0 : dump;
+
+signed[1] scaleFactorOfCurvTolerance = missing() : can_be_missing,dump;
+signed[4] scaledValueOfCurvTolerance = missing() : can_be_missing,dump;
+meta curvTolerance from_scale_factor_scaled_value(scaleFactorOfCurvTolerance, scaledValueOfCurvTolerance);
+
+signed[1] scaleFactorOfCurvBearing = 0 : dump;
+signed[4] scaledValueOfCurvBearing = 0 : dump;
+meta curvBearing from_scale_factor_scaled_value(scaleFactorOfCurvBearing,scaledValueOfCurvBearing);
+
+codetable[1] curvConfiguration "grib2/tables/local/ecmf/1/curv.config.table" : dump; 

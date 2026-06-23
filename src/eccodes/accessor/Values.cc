@@ -10,8 +10,7 @@
 
 #include "Values.h"
 
-eccodes::accessor::Values _grib_accessor_values;
-eccodes::Accessor* grib_accessor_values = &_grib_accessor_values;
+eccodes::AccessorBuilder<eccodes::accessor::Values> _grib_accessor_values_builder{};
 
 namespace eccodes::accessor
 {

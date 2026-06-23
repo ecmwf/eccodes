@@ -10,8 +10,7 @@
 
 #include "OffsetValues.h"
 
-eccodes::accessor::OffsetValues _grib_accessor_offset_values;
-eccodes::Accessor* grib_accessor_offset_values = &_grib_accessor_offset_values;
+eccodes::AccessorBuilder<eccodes::accessor::OffsetValues> _grib_accessor_offset_values_builder{};
 
 namespace eccodes::accessor
 {
@@ -57,6 +56,12 @@ int OffsetValues::pack_double(const double* val, size_t* len)
 
     if ((ret = grib_get_size(h, values_, &size)) != GRIB_SUCCESS)
         return ret;
+
+    // ECC-2202
+    if (size == 0) {
+        grib_context_log(context_, GRIB_LOG_ERROR, "OffsetValues: Cannot offset field with no values");
+        return GRIB_DECODING_ERROR;
+    }
 
     values = (double*)grib_context_malloc(c, size * sizeof(double));
     if (!values)

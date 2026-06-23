@@ -60,7 +60,7 @@ int main(int argc, char** argv)
 
     // CODES_CHECK(codes_get_length(h, "codedValues", &klen), 0); // no good, always 1025!
     CODES_CHECK(codes_get_long(h, "section7Length", &sec7Len), 0); //grib2 only
-    printf("1. codes_get_length of sec7 = %zu\n", sec7Len);
+    printf("1. codes_get_length of sec7 = %ld\n", sec7Len);
 
     blen     = sec7Len;
     byte_val = (unsigned char*)malloc(blen * sizeof(unsigned char));

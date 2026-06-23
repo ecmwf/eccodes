@@ -12,8 +12,7 @@
 #include "grib_scaling.h"
 #include <algorithm>
 
-eccodes::accessor::DataG2BifourierPacking _grib_accessor_data_g2bifourier_packing;
-eccodes::Accessor* grib_accessor_data_g2bifourier_packing = &_grib_accessor_data_g2bifourier_packing;
+eccodes::AccessorBuilder<eccodes::accessor::DataG2BifourierPacking> _grib_accessor_data_g2bifourier_packing_builder{};
 
 namespace eccodes::accessor
 {
@@ -231,6 +230,8 @@ static double laplam(bif_trunc_t* bt, const double val[])
      */
     znorm = (double*)calloc(lmax, sizeof(double));
     zw    = (double*)malloc(sizeof(double) * lmax);
+    if (!zw || !znorm)
+        return GRIB_OUT_OF_MEMORY;
 
     /*
      * Compute norms of input field, gathered by values of i**2+j**2; we have to
@@ -661,6 +662,8 @@ int DataG2BifourierPacking::pack_double(const double* val, size_t* len)
     buflen = hsize + lsize;
 
     buf = (unsigned char*)grib_context_malloc(gh->context, buflen);
+    if (!buf)
+        return GRIB_OUT_OF_MEMORY;
 
     hres = buf;
     lres = buf + hsize;
@@ -716,7 +719,7 @@ int DataG2BifourierPacking::pack_double(const double* val, size_t* len)
         grib_get_double_internal(gh, reference_value_, &ref);
         if (ref != bt->reference_value) {
             grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: %s (ref=%.10e != reference_value=%.10e)",
-                             class_name_, __func__, reference_value_, ref, bt->reference_value);
+                             accessor_type().c_str(), __func__, reference_value_, ref, bt->reference_value);
             return GRIB_INTERNAL_ERROR;
         }
     }

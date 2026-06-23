@@ -430,6 +430,20 @@ int grib_count_in_filename(grib_context* c, const char* filename, int* n);
 grib_handle* grib_handle_new_from_file(grib_context* c, FILE* f, int* error);
 
 /**
+ *  Create a handle from a stream.
+ *  The stream is read until a message is found. A handle of the appropriate type is then created and the message is copied.
+ *  Remember always to delete the handle when it is not needed anymore to avoid
+ *  memory leaks.
+ *
+ * @param c               : the context from which the handle will be created (NULL for default context)
+ * @param stream_data    : pointer to user defined stream data
+ * @param stream_proc    : pointer to user defined stream read function
+ * @param error          : error code set if the returned handle is NULL and the end of file is not reached
+ * @return                the new handle, NULL if the resource is invalid or a problem is encountered
+ */
+grib_handle* grib_handle_new_from_stream(grib_context* c, void* stream_data, long (*stream_proc)(void*, void* buffer, long len), int* error);
+
+/**
  *  Write a coded message in a file.
  *
  * @param h           : grib_handle to be written
@@ -1356,6 +1370,7 @@ int wmo_read_gts_from_file(FILE* f, void* buffer, size_t* len);
 /* otherwise, it accumulates the position across a series of calls */
 int wmo_read_any_from_file_with_offset(FILE* f, void* buffer, size_t* len, off_t* offset);
 int wmo_read_any_from_stream(void* stream_data, long (*stream_proc)(void*, void* buffer, long len), void* buffer, size_t* len);
+int grib_handle_from_stream(void* stream_data, long (*stream_proc)(void*, void* buffer, long len), grib_handle** h);
 
 /* These functions allocate memory for the result so the user is responsible for freeing it */
 void* wmo_read_any_from_stream_malloc(void* stream_data, long (*stream_proc)(void*, void* buffer, long len), size_t* size, int* err);

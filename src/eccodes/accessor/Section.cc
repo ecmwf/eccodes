@@ -10,8 +10,7 @@
 
 #include "Section.h"
 
-eccodes::accessor::Section _grib_accessor_section;
-eccodes::Accessor* grib_accessor_section = &_grib_accessor_section;
+eccodes::AccessorBuilder<eccodes::accessor::Section> _grib_accessor_section_builder{};
 
 namespace eccodes::accessor
 {

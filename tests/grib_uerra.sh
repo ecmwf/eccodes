@@ -130,9 +130,9 @@ result=$(${tools_dir}/grib_get -fp mars.time,mars.step $temp1)
 # types em/es for class=rr and expver=prod/test (and suiteName=se-al-ec though it works generally)
 for pspd in 10 11 ; do
   if [ $pspd -eq 10 ]; then
-    expver=prod
+    expver='prod'
   else
-    expver=test
+    expver='test'
   fi
   for type in em es ; do
     # Param 228228 (accum)

@@ -15,16 +15,18 @@
 namespace eccodes::accessor
 {
 
-class Sexagesimal2decimal : public ToDouble
+class Sexagesimal2Decimal : public ToDouble
 {
 public:
-    Sexagesimal2decimal() :
-        ToDouble() { class_name_ = "sexagesimal2decimal"; }
-    grib_accessor* create_empty_accessor() override { return new Sexagesimal2decimal{}; }
+    Sexagesimal2Decimal() :
+        ToDouble() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     long get_native_type() override;
     int unpack_string(char*, size_t* len) override;
     void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;
+
+    static inline const AccessorType accessor_type_{"sexagesimal2decimal"};
 };
 
 }  // namespace eccodes::accessor

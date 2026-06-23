@@ -27,12 +27,12 @@ int main(int argc, char** argv)
     double pv[4]  = { 1, 2, 3, 4 };
     size_t pvsize = 4;
 
-    FILE* in           = NULL;
-    char* infile       = NULL;
-    FILE* out          = NULL;
-    char* outfile      = NULL;
-    codes_handle* h    = NULL;
-    const void* buffer = NULL;
+    FILE* in            = NULL;
+    const char* infile  = NULL;
+    FILE* out           = NULL;
+    const char* outfile = NULL;
+    codes_handle* h     = NULL;
+    const void* buffer  = NULL;
 
     if (argc != 3) return 1;
     infile  = argv[1];

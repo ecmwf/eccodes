@@ -14,16 +14,22 @@
 #include "grib_api_internal.h"
 #include "ExceptionHandler.h"
 
+void default_deleter(void* data)
+{
+    grib_context* c = grib_context_get_default();
+    grib_context_free(c, data);
+}
+
 static void grib_get_buffer_ownership(const grib_context* c, grib_buffer* b)
 {
     unsigned char* newdata = NULL;
-    if (b->property == CODES_MY_BUFFER)
+    if (b->deleter != NULL)
         return;
 
     newdata = (unsigned char*)grib_context_malloc(c, b->length);
     memcpy(newdata, b->data, b->length);
     b->data     = newdata;
-    b->property = CODES_MY_BUFFER;
+    b->deleter  = default_deleter;
 }
 
 grib_buffer* grib_create_growable_buffer(const grib_context* c)
@@ -35,7 +41,7 @@ grib_buffer* grib_create_growable_buffer(const grib_context* c)
         return NULL;
     }
 
-    b->property = CODES_MY_BUFFER;
+    b->deleter  = default_deleter;
     b->length   = 10240;
     b->ulength  = 0;
     b->data     = (unsigned char*)grib_context_malloc_clear(c, b->length);
@@ -59,7 +65,7 @@ grib_buffer* grib_new_buffer(const grib_context* c, const unsigned char* data, s
         return NULL;
     }
 
-    b->property     = CODES_USER_BUFFER;
+    b->deleter      = NULL;
     b->length       = buflen;
     b->ulength      = buflen;
     b->ulength_bits = buflen * 8;
@@ -70,8 +76,8 @@ grib_buffer* grib_new_buffer(const grib_context* c, const unsigned char* data, s
 
 void grib_buffer_delete(const grib_context* c, grib_buffer* b)
 {
-    if (b->property == CODES_MY_BUFFER)
-        grib_context_free(c, b->data);
+    if (b->deleter)
+        b->deleter(b->data);
     b->length  = 0;
     b->ulength = 0;
     grib_context_free(c, b);

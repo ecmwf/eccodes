@@ -15,21 +15,13 @@
 #include "eccodes.h"
 #define NUM_THREADS 3
 
-/*static int DBL_EQUAL(double d1, double d2, double tolerance)
-{
-    return fabs(d1-d2) <= tolerance;
-}*/
-
 static void* process_bufr(void* arg)
 {
-    FILE* fin       = (FILE*)arg;
-    int err         = 0;
-    codes_handle* h = NULL;
+    codes_handle* h = (codes_handle*)arg;
     long numSubsets = 0, lVal = 0;
     size_t size = 0, i = 0;
     double* dValues = NULL;
-    /* Each thread gets a different message handle */
-    h = codes_handle_new_from_file(NULL, fin, PRODUCT_BUFR, &err);
+
     assert(h);
 
     /* Check expected values for this BUFR file */
@@ -62,29 +54,28 @@ static void* process_bufr(void* arg)
 
 int main(int argc, char** argv)
 {
-    pthread_t thread1, thread2, thread3;
-    int err          = 0;
-    FILE* fin        = 0;
-    codes_handle* h1 = 0;
-    codes_handle* h2 = 0;
-    fin              = fopen("../../data/bufr/syno_multi.bufr", "rb");
+    pthread_t threads[NUM_THREADS];
+    codes_handle* handles[NUM_THREADS];
+    int err = 0, i = 0;
+    FILE* fin = fopen("../../data/bufr/syno_multi.bufr", "rb");
     assert(fin);
 
-    err = pthread_create(&thread1, NULL, process_bufr, (void*)fin);
-    if (err) return 1;
-
-    err = pthread_create(&thread2, NULL, process_bufr, (void*)fin);
-    if (err) return 1;
-
-    err = pthread_create(&thread3, NULL, process_bufr, (void*)fin);
-    if (err) return 1;
-
-    pthread_join(thread1, NULL);
-    pthread_join(thread2, NULL);
-    pthread_join(thread3, NULL);
-
+    /* Read all messages sequentially (FILE* is not thread-safe) */
+    for (i = 0; i < NUM_THREADS; i++) {
+        handles[i] = codes_handle_new_from_file(NULL, fin, PRODUCT_BUFR, &err);
+        assert(handles[i]);
+    }
     fclose(fin);
-    codes_handle_delete(h1);
-    codes_handle_delete(h2);
+
+    /* Process each message in its own thread */
+    for (i = 0; i < NUM_THREADS; i++) {
+        err = pthread_create(&threads[i], NULL, process_bufr, (void*)handles[i]);
+        if (err) return 1;
+    }
+
+    for (i = 0; i < NUM_THREADS; i++) {
+        pthread_join(threads[i], NULL);
+    }
+
     return 0;
 }

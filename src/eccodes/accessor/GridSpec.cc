@@ -26,8 +26,7 @@
 #endif
 
 
-eccodes::accessor::GridSpec _grib_accessor_grid_spec;
-eccodes::Accessor* grib_accessor_grid_spec = &_grib_accessor_grid_spec;
+eccodes::AccessorBuilder<eccodes::accessor::GridSpec> _grib_accessor_grid_spec_builder{};
 
 namespace eccodes::accessor
 {
@@ -72,6 +71,15 @@ static bool eckit_can_handle_it(const grib_handle* h, std::string& reason)
         reason = key + "=1: Scanning mode not supported";
         return false;
     }
+
+    char gridType[128] = {0,};
+    size_t gtlen = sizeof(gridType);
+    int err = grib_get_string(h, "gridType", gridType, &gtlen);
+    if (!err && STR_EQUAL(gridType, "rotated_ll")) {
+        reason = "gridType=rotated_ll: Not supported yet";
+        return false;
+    }
+
     return true;
 }
 #endif
@@ -79,9 +87,6 @@ static bool eckit_can_handle_it(const grib_handle* h, std::string& reason)
 int GridSpec::pack_string(const char* v, size_t* len)
 {
 #if defined(HAVE_GEOGRAPHY) && defined(HAVE_ECKIT_GEO)
-    if (context_->eckit_geo == 0) {  // check env. variable too
-        return GRIB_NOT_IMPLEMENTED;
-    }
 
     auto* h = get_enclosing_handle();
     ECCODES_ASSERT(h);
@@ -126,9 +131,7 @@ int GridSpec::pack_string(const char* v, size_t* len)
 int GridSpec::unpack_string(char* v, size_t* len)
 {
 #if defined(HAVE_GEOGRAPHY) && defined(HAVE_ECKIT_GEO)
-    if (context_->eckit_geo == 0) {  // check env. variable too
-        return GRIB_NOT_IMPLEMENTED;
-    }
+
     auto* h = get_enclosing_handle();
     ECCODES_ASSERT(h);
 
@@ -145,7 +148,7 @@ int GridSpec::unpack_string(char* v, size_t* len)
     try {
         eccodes::geo::eckit_main_init();
 
-        std::unique_ptr<const eckit::geo::Spec> spec(new eccodes::geo::GribToSpec(h));
+        std::unique_ptr<const Spec> spec(new eccodes::geo::GribToSpec(h));
         ASSERT(spec);
 
         std::unique_ptr<const eckit::geo::Grid> grid(eckit::geo::GridFactory::build(*spec));
@@ -167,7 +170,7 @@ int GridSpec::unpack_string(char* v, size_t* len)
     if (*len < length + 1) {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
-                         class_name_, name_, length, *len);
+                         accessor_type().c_str(), name_, length, *len);
         return GRIB_BUFFER_TOO_SMALL;
     }
 

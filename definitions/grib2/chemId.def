@@ -366,6 +366,10 @@
 '155' = {
 	constituentType = 60027 ;
 	}
+#Bromine oxides
+'159' = {
+	constituentType = 60008 ;
+	}
 #Hoch2c(ooh)(ch3)ch=ch2
 '161' = {
 	constituentType = 60032 ;
@@ -601,6 +605,62 @@
 #Octane
 '447' = {
 	constituentType = 10068 ;
+	}
+#Lumped pollen
+'800' = {
+	constituentType = 62298 ;
+	}
+#Lumped fungal spores
+'801' = {
+	constituentType = 62299 ;
+	}
+#Calcite
+'802' = {
+	constituentType = 62400 ;
+	}
+#Chlorite
+'803' = {
+	constituentType = 62401 ;
+	}
+#Dolomite
+'804' = {
+	constituentType = 62402 ;
+	}
+#Feldspar
+'805' = {
+	constituentType = 62403 ;
+	}
+#Goethite
+'806' = {
+	constituentType = 62404 ;
+	}
+#Gypsum
+'807' = {
+	constituentType = 62405 ;
+	}
+#Hematite
+'808' = {
+	constituentType = 62406 ;
+	}
+#Illite
+'809' = {
+	constituentType = 62407 ;
+	}
+#Kaolinite
+'810' = {
+	constituentType = 62408 ;
+	}
+#Montmorillonite
+'811' = {
+	constituentType = 62409 ;
+	}
+#Quartz
+'812' = {
+	constituentType = 62410 ;
+	}
+#Vermiculite
+'813' = {
+	constituentType = 62411 ;
 	}
 #Nitrate
 '900' = {

@@ -1,0 +1,6 @@
+#assert(edition == 2);
+#assert(grib2LocalSectionNumber == 45);
+
+include "mars/xwda.def";
+alias mars.number = perturbationNumber;
+alias mars.coeffindex = fourierCoefficientIndex;

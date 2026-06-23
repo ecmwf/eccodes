@@ -470,13 +470,6 @@
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 101 ;
 	}
-#Logarithm of surface pressure
-'152' = {
-	 discipline = 0 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 25 ;
-	 typeOfFirstFixedSurface = 1 ;
-	}
 #Divergence
 '155' = {
 	 discipline = 0 ;
@@ -854,6 +847,27 @@
 	 parameterCategory = 6 ;
 	 parameterNumber = 5 ;
 	}
+#Probability of a tropical storm
+'131089' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 6 ;
+	 probabilityType = 9 ;
+	}
+#Probability of a hurricane
+'131090' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 5 ;
+	 probabilityType = 9 ;
+	}
+#Probability of a tropical depression
+'131091' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 7 ;
+	 probabilityType = 9 ;
+	}
 #Total precipitation of at least 25 mm
 '131098' = {
 	 discipline = 0 ;
@@ -898,6 +912,36 @@
 	 scaledValueOfFirstFixedSurface = 10 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfLowerLimit = 25 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
+	}
+#Hail of at least 2 cm diameter
+'131257' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 134 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 scaledValueOfLowerLimit = 1 ;
+	 scaleFactorOfLowerLimit = 2 ;
+	 probabilityType = 3 ;
+	}
+#Hail of at least 5 cm diameter
+'131258' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 134 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 scaledValueOfLowerLimit = 25 ;
+	 scaleFactorOfLowerLimit = 3 ;
+	 probabilityType = 3 ;
+	}
+#Thunderstorm in vicinity (lightning-based)
+'131259' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 4 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 scaledValueOfLowerLimit = 0 ;
 	 scaleFactorOfLowerLimit = 0 ;
 	 probabilityType = 3 ;
 	}
@@ -9029,14 +9073,6 @@
 	 typeOfFirstFixedSurface = 101 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean logarithm of surface pressure
-'235152' = {
-	 discipline = 0 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 25 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfStatisticalProcessing = 0 ;
-	}
 #Time-mean divergence
 '235155' = {
 	 discipline = 0 ;
@@ -10412,6 +10448,13 @@
 	 parameterNumber = 24 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean Wind speed threshold for wind erosion
+'235416' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 70 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-integrated land surface heat net flux
 '236386' = {
 	 discipline = 2 ;
@@ -11200,14 +11243,6 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 101 ;
-	 typeOfStatisticalProcessing = 2 ;
-	}
-#Time-maximum logarithm of surface pressure
-'237152' = {
-	 discipline = 0 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 25 ;
-	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
 #Time-maximum divergence
@@ -12470,6 +12505,13 @@
 	 parameterNumber = 0 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
+#Time-maximum Wind speed threshold for wind erosion
+'237416' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 70 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
 #Time-minimum temperature tendency due to short-wave radiation
 '238001' = {
 	 discipline = 0 ;
@@ -13242,14 +13284,6 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 101 ;
-	 typeOfStatisticalProcessing = 3 ;
-	}
-#Time-minimum logarithm of surface pressure
-'238152' = {
-	 discipline = 0 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 25 ;
-	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
 #Time-minimum divergence
@@ -14492,6 +14526,13 @@
 	 parameterNumber = 0 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
+#Time-minimum Wind speed threshold for wind erosion
+'238416' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 70 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
 #Time-standard-deviation temperature tendency due to short-wave radiation
 '239001' = {
 	 discipline = 0 ;
@@ -15254,14 +15295,6 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 101 ;
-	 typeOfStatisticalProcessing = 6 ;
-	}
-#Time-standard-deviation logarithm of surface pressure
-'239152' = {
-	 discipline = 0 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 25 ;
-	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Time-standard-deviation divergence
@@ -16495,6 +16528,13 @@
 	 discipline = 2 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 0 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation Wind speed threshold for wind erosion
+'239416' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 70 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Cross sectional area of flow in channel
@@ -18812,6 +18852,42 @@
 	 parameterCategory = 4 ;
 	 parameterNumber = 63 ;
 	 typeOfFirstFixedSurface = 1 ;
+	}
+#Storm relative helicity - right moving storm
+'260696' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 23 ;
+	}
+#Storm relative helicity - left moving storm
+'260697' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 24 ;
+	}
+#Effective storm relative helicity - mean flow
+'260698' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 25 ;
+	 typeOfFirstFixedSurface = 28 ;
+	 typeOfSecondFixedSurface = 29 ;
+	}
+#Effective storm relative helicity - right moving storm
+'260699' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 26 ;
+	 typeOfFirstFixedSurface = 28 ;
+	 typeOfSecondFixedSurface = 29 ;
+	}
+#Effective storm relative helicity - left moving storm
+'260700' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 27 ;
+	 typeOfFirstFixedSurface = 28 ;
+	 typeOfSecondFixedSurface = 29 ;
 	}
 #Universal thermal climate index
 '261001' = {
@@ -25419,6 +25495,42 @@
 	 scaledValueOfLowerLimit = 27315 ;
 	 scaleFactorOfLowerLimit = 2 ;
 	 probabilityType = 0 ;
+	}
+#Significant wave height of at least 2 m
+'131074' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 scaledValueOfLowerLimit = 2 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
+	}
+#Significant wave height of at least 4 m
+'131075' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 scaledValueOfLowerLimit = 4 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
+	}
+#Significant wave height of at least 6 m
+'131076' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 scaledValueOfLowerLimit = 6 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
+	}
+#Significant wave height of at least 8 m
+'131077' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 scaledValueOfLowerLimit = 8 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
 	}
 #10 metre wind gust index
 '132049' = {

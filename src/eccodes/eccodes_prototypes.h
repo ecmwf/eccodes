@@ -94,7 +94,7 @@ void grib_viarray_delete_content(grib_viarray* v);
 
 /* grib_accessor_class.cc */
 grib_section* grib_create_root_section(const grib_context* context, grib_handle* h);
-grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator, const long len, grib_arguments* params);
+/* grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator, const long len, grib_arguments* params); */
 void grib_push_accessor(grib_accessor* a, grib_block_of_accessors* l);
 void grib_section_post_init(grib_section* s);
 int grib_section_adjust_sizes(grib_section* s, int update, int depth);
@@ -240,6 +240,7 @@ void grib_permanent_free(const grib_context* c, void* p);
 void* grib_buffer_malloc(const grib_context* c, size_t s);
 void grib_buffer_free(const grib_context* c, void* p);
 void* grib_buffer_realloc(const grib_context* c, void* p, size_t s);
+void default_deleter(void* data);
 
 /* grib_buffer.cc */
 grib_buffer* grib_create_growable_buffer(const grib_context* c);
@@ -397,13 +398,7 @@ grib_action* grib_action_from_filter(const char* filter);
 int grib_handle_apply_action(grib_handle* h, grib_action* a);
 void grib_multi_support_reset_file(grib_context* c, FILE* f);
 void grib_multi_support_reset(grib_context* c);
-
-/* grib_hash_keys.cc */
-const struct grib_keys_hash* grib_keys_hash_get(const char* str, size_t len);
-grib_itrie* grib_hash_keys_new(grib_context* c, int* count);
-void grib_hash_keys_delete(grib_itrie* t);
-int grib_hash_keys_get_id(grib_itrie* t, const char* key);
-int grib_hash_keys_get_size(grib_itrie* t);
+int codes_handle_change_buffer_ownership(grib_handle* h, void (*deleter)(void*));
 
 /* grib_io.cc */
 off_t stdio_tell(void* data);
@@ -650,9 +645,6 @@ grib_expression* new_sub_string_expression(grib_context* c, const char* value, s
 /* grib_iterator.cc */
 int grib_get_data(const grib_handle* h, double* lats, double* lons, double* values);
 
-/* grib_iterator_class.cc */
-eccodes::geo_iterator::Iterator* grib_iterator_factory(grib_handle* h, grib_arguments* args, unsigned long flags, int* error);
-
 /* grib_iterator_class_gen.cc */
 int transform_iterator_data(grib_context* c, double* data, long iScansNegatively, long jScansPositively, long jPointsAreConsecutive, long alternativeRowScanning, size_t numPoints, long nx, long ny);
 
@@ -679,6 +671,7 @@ int codes_key_is_computed(const grib_handle* h, const char* key, int* err);
 /* grib_util.cc */
 int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* grid_spec, const grib_util_packing_spec* packing_spec);
 
+int grib_get_header_length(FILE* f, size_t* result);
 grib_handle* grib_util_sections_copy(grib_handle* hfrom, grib_handle* hto, int what, int* err);
 grib_handle* grib_util_set_spec(grib_handle* h, const grib_util_grid_spec* spec, const grib_util_packing_spec* packing_spec, int flags, const double* data_values, size_t data_values_count, int* err);
 int parse_keyval_string(const char* grib_tool, char* arg, int values_required, int default_type, grib_values values[], int* count);
@@ -721,6 +714,7 @@ const char* codes_get_product_name(ProductKind product);
 const char* grib_get_type_name(int type);
 char* string_replace_char(char* str, char oldc, char newc);
 void string_remove_char(char* str, char c);
+size_t levenshteinDistance(const char* a, const char* b);
 
 /* functions.cc */
 long grib_op_eq(long a, long b);

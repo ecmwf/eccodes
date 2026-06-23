@@ -1,0 +1,20 @@
+# Override this file to add your own additional definitions.
+# e.g., check for ecCodes library version compatibility
+
+# meta ecmwfLibraryVersion library_version() : string_type, hidden, read_only;
+# 
+# concept isCompatible(unknown) {
+#     'yes' = { true=is_one_of(ecmwfLibraryVersion, '2.45.0', '2.44.0' ); }
+#     'no' = { ecmwfLibraryVersion = '2.43.0'; }
+# } : string_type, hidden, read_only;
+# 
+# if (isCompatible is 'unknown') {
+#     print("/dev/stderr") "WARNING: ecCodes [ecmwfLibraryVersion] compatibility could not be determined. Please make sure ECCODES_DEFINITION_PATH environment variable is set correctly.";
+# }
+# 
+# if (isCompatible is 'no') {
+#     print("/dev/stderr") "ERROR: ecCodes [ecmwfLibraryVersion] is NOT compatible with loaded definitions. Please make sure ECCODES_DEFINITION_PATH environment variable is set correctly.";
+#     assert(0 && "Quitting ...");
+# }
+#
+# Please note: print("/dev/stderr") "..." may not work on Windows systems. Please use print "..." instead.

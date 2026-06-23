@@ -749,12 +749,15 @@ void BufrEncodePython::header(const grib_handle* h) const
     grib_get_long(h, "bufrHeaderCentre", &bufrHeaderCentre);
     grib_get_long(h, "edition", &edition);
 
-    if (localSectionPresent && bufrHeaderCentre == 98) {
-        grib_get_long(h, "isSatellite", &isSatellite);
-        if (isSatellite)
-            snprintf(sampleName, sizeof(sampleName), "BUFR%ld_local_satellite", edition);
-        else
-            snprintf(sampleName, sizeof(sampleName), "BUFR%ld_local", edition);
+    if (localSectionPresent) {
+        if (bufrHeaderCentre == 98) {
+            grib_get_long(h, "isSatellite", &isSatellite);
+            if (isSatellite) snprintf(sampleName, sizeof(sampleName), "BUFR%ld_local_satellite", edition);
+            else             snprintf(sampleName, sizeof(sampleName), "BUFR%ld_local", edition);
+        } else {
+            fprintf(stderr, "ECCODES WARNING :  Cannot generate code for section 2 (Only ECMWF local section is supported)\n");
+            snprintf(sampleName, sizeof(sampleName), "BUFR%ld", edition);
+        }
     }
     else {
         snprintf(sampleName, sizeof(sampleName), "BUFR%ld", edition);

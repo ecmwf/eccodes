@@ -10,8 +10,7 @@
 
 #include "DataG22OrderPacking.h"
 
-eccodes::accessor::DataG22OrderPacking _grib_accessor_data_g22order_packing;
-eccodes::Accessor* grib_accessor_data_g22order_packing = &_grib_accessor_data_g22order_packing;
+eccodes::AccessorBuilder<eccodes::accessor::DataG22OrderPacking> _grib_accessor_data_g22order_packing_builder{};
 
 namespace eccodes::accessor
 {
@@ -48,16 +47,6 @@ void DataG22OrderPacking::init(const long v, grib_arguments* args)
 }
 
 #define ONES (~(int)0)
-
-// #define UNDEFINED 9.999e20
-// #define UNDEFINED_LOW 9.9989e20
-// #define UNDEFINED_HIGH 9.9991e20
-#define UNDEFINED        9999.0
-#define UNDEFINED_LOW    9998.9
-#define UNDEFINED_HIGH   9999.1
-#define UNDEFINED_VAL(x) ((x) >= UNDEFINED_LOW && (x) <= UNDEFINED_HIGH)
-#define DEFINED_VAL(x)   ((x) < UNDEFINED_LOW || (x) > UNDEFINED_HIGH)
-#define UNDEFINED_ANGLE  999.0
 
 struct bitstream_context
 {
@@ -193,7 +182,7 @@ static double Int_Power(double x, int y)
     return value;
 }
 
-static int min_max_array(double* data, unsigned int n, double* min, double* max)
+static int min_max_array(double* data, unsigned int n, double* min, double* max, double missingValue)
 {
     unsigned int first;
     double mn, mx;
@@ -204,7 +193,7 @@ static int min_max_array(double* data, unsigned int n, double* min, double* max)
     }
 
     for (first = 0; first < n; first++) {
-        if (DEFINED_VAL(data[first])) break;
+        if (data[first] != missingValue) break;
     }
     if (first >= n) {
         *min = *max = 0.0;
@@ -219,7 +208,7 @@ static int min_max_array(double* data, unsigned int n, double* min, double* max)
         min_val = max_val = data[first];
 
         for (unsigned int i = first + 1; i < n; i++) {
-            if (DEFINED_VAL(data[i])) {
+            if (data[i] != missingValue) {
                 min_val = (min_val > data[i]) ? data[i] : min_val;
                 max_val = (max_val < data[i]) ? data[i] : max_val;
             }
@@ -819,6 +808,10 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
         bits_per_value = 23;
     }
 
+    double missingValue = 0;
+    if ((err = grib_get_double_internal(gh, "missingValue", &missingValue)) != GRIB_SUCCESS)
+        return err;
+
     if ((err = grib_get_long_internal(gh, decimal_scale_factor_, &decimal_scale_factor)) != GRIB_SUCCESS)
         return err;
 
@@ -871,7 +864,7 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
     }
     else {
         grib_context_log(context_, GRIB_LOG_ERROR, "%s: Unsupported orderOfSpatialDifferencing=%ld (dataRepresentationTemplateNumber=%ld)",
-                         class_name_, orderOfSpatialDifferencing, dataRepresentationTemplateNumber);
+                         accessor_type().c_str(), orderOfSpatialDifferencing, dataRepresentationTemplateNumber);
         return GRIB_INVALID_ARGUMENT;
     }
 
@@ -879,7 +872,7 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
     wanted_bits = bits_per_value;
 
     for (i = 0; i < *len; i++) {
-        if (DEFINED_VAL(val[i])) {
+        if (val[i] != missingValue) {
             ndef = ndef + 1;
         }
     }
@@ -936,7 +929,7 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
     size_t ndata = *len;
     double* data = reinterpret_cast<double*>(grib_context_malloc_clear(context_, ndata * sizeof(double)));
     if (data == NULL) {
-        grib_context_log(context_, GRIB_LOG_ERROR, "%s packing: unable to allocate %zu bytes", class_name_, ndata * sizeof(double));
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s packing: unable to allocate %zu bytes", accessor_type().c_str(), ndata * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
     memcpy(data, val, sizeof(*data) * ndata);
@@ -956,11 +949,11 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
 
     v = reinterpret_cast<int*>(grib_context_malloc(context_, nndata * sizeof(int)));
     if (v == NULL) {
-        grib_context_log(context_, GRIB_LOG_ERROR, "%s packing: unable to allocate %zu bytes", class_name_, nndata * sizeof(int));
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s packing: unable to allocate %zu bytes", accessor_type().c_str(), nndata * sizeof(int));
         return GRIB_OUT_OF_MEMORY;
     }
-    if (min_max_array(data, ndata, &mn, &mx) != GRIB_SUCCESS) {
-        grib_context_log(context_, GRIB_LOG_ERROR, "%s packing: failed to get min max of data", class_name_);
+    if (min_max_array(data, ndata, &mn, &mx, missingValue) != GRIB_SUCCESS) {
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s packing: failed to get min max of data", accessor_type().c_str());
         return GRIB_ENCODING_ERROR;
     }
     min_val = mn;
@@ -993,7 +986,7 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
             max_val *= dec_factor;
             if (has_undef) {
                 for (i = 0; i < nndata; i++) {
-                    if (DEFINED_VAL(data[i])) data[i] *= dec_factor;
+                    if (data[i] != missingValue) data[i] *= dec_factor;
                 }
             }
             else {
@@ -1017,7 +1010,7 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
         scale = ldexp(1.0, -binary_scale);
         if (has_undef) {
             for (i = 0; i < nndata; i++) {
-                if (DEFINED_VAL(data[i])) {
+                if (data[i] != missingValue) {
                     v[i] = floor((data[i] - ref) * scale + 0.5);
                     v[i] = v[i] >= 0 ? v[i] : 0;
                 }
@@ -1036,7 +1029,7 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
         // scale = 1.0;
         if (has_undef) {
             for (i = 0; i < nndata; i++) {
-                if (DEFINED_VAL(data[i])) {
+                if (data[i] != missingValue) {
                     v[i] = floor(data[i] - ref + 0.5);
                     v[i] = v[i] >= 0 ? v[i] : 0;
                 }
@@ -1139,7 +1132,7 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
 
     list = reinterpret_cast<section*>(grib_context_malloc_clear(context_, nstruct * sizeof(section)));
     if (list == NULL) {
-        grib_context_log(context_, GRIB_LOG_ERROR, "%s packing: memory allocation of list failed", class_name_);
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s packing: memory allocation of list failed", accessor_type().c_str());
         return GRIB_OUT_OF_MEMORY;
     }
 
@@ -1169,7 +1162,7 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
     start.tail    = &list[0];
 
     if (nstruct != ii + 1) {
-        grib_context_log(context_, GRIB_LOG_ERROR, "%s packing: nstruct=%zu wanted %zu", class_name_, nstruct, ii + 1);
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s packing: nstruct=%zu wanted %zu", accessor_type().c_str(), nstruct, ii + 1);
         return GRIB_ENCODING_ERROR;
     }
     for (i = 1; i < nstruct; i++) {
@@ -1197,7 +1190,7 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
 
     list_backup = reinterpret_cast<section*>(grib_context_malloc(context_, nstruct * sizeof(section)));
     if (list_backup == NULL) {
-        grib_context_log(context_, GRIB_LOG_ERROR, "%s packing: memory allocation of list_backup failed", class_name_);
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s packing: memory allocation of list_backup failed", accessor_type().c_str());
         return GRIB_OUT_OF_MEMORY;
     }
 
@@ -1277,7 +1270,7 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
     itmp2  = reinterpret_cast<int*>(grib_context_malloc(context_, ngroups * sizeof(int)));
 
     if (lens == NULL || widths == NULL || refs == NULL || itmp == NULL || itmp2 == NULL) {
-        grib_context_log(context_, GRIB_LOG_ERROR, "%s packing: memory alloc of lens/widths/refs/itmp/itmp2 failed", class_name_);
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s packing: memory alloc of lens/widths/refs/itmp/itmp2 failed", accessor_type().c_str());
         return GRIB_OUT_OF_MEMORY;
     }
 
@@ -1412,7 +1405,7 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
 
     unsigned char* sec7 = reinterpret_cast<unsigned char*>(grib_context_malloc(context_, size_sec7));
     if (sec7 == NULL) {
-        grib_context_log(context_, GRIB_LOG_ERROR, "%s: Unable to allocate %d bytes", class_name_, size_sec7);
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s: Unable to allocate %d bytes", accessor_type().c_str(), size_sec7);
         return GRIB_OUT_OF_MEMORY;
     }
 
@@ -1605,7 +1598,7 @@ int DataG22OrderPacking::unpack(T* val, size_t* len)
         // For Complex packing and spatial differencing, order == 1 or 2 (code table 5.6)
         if (orderOfSpatialDifferencing != 1 && orderOfSpatialDifferencing != 2) {
             grib_context_log(context_, GRIB_LOG_ERROR,
-                             "%s: Unsupported orderOfSpatialDifferencing=%ld", class_name_, orderOfSpatialDifferencing);
+                             "%s: Unsupported orderOfSpatialDifferencing=%ld", accessor_type().c_str(), orderOfSpatialDifferencing);
             return GRIB_INVALID_ARGUMENT;
         }
     }
@@ -1724,7 +1717,11 @@ int DataG22OrderPacking::unpack(T* val, size_t* len)
 
         // For Complex packing, order == 0
         // For Complex packing and spatial differencing, order == 1 or 2 (code table 5.6)
-        ECCODES_ASSERT(orderOfSpatialDifferencing == 1 || orderOfSpatialDifferencing == 2);
+        if (orderOfSpatialDifferencing != 1 && orderOfSpatialDifferencing != 2) {
+            grib_context_log(context_, GRIB_LOG_ERROR,
+                             "%s unpacking: Unsupported order of spatial differencing %ld", accessor_type().c_str(), orderOfSpatialDifferencing);
+            return GRIB_INTERNAL_ERROR;
+        }
 
         for (i = 0; i < orderOfSpatialDifferencing; i++) {
             extras[i] = grib_decode_unsigned_long(buf_ref, &ref_p, numberOfOctetsExtraDescriptors * 8);

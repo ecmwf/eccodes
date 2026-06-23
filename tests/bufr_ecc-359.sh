@@ -16,7 +16,6 @@
 # ---------------------------------------------------------
 label="bufr_ecc-359_test"
 
-tempOut=temp.${label}.out
 BufrFile=$ECCODES_SAMPLES_PATH/BUFR4.tmpl
 
 # This should exit with status 0 and issue an error but not crash
