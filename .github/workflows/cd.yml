@@ -17,8 +17,13 @@ jobs:
     with:
       confluence_space: ${{ vars.TARBALL_CONFLUENCE_SPACE }}
   conda:
-    uses: ecmwf/reusable-workflows/.github/workflows/cd-conda.yml@v2
+    uses: ecmwf/reusable-workflows/.github/workflows/cd-conda.yml@cd-conda-multi-platform
     secrets: inherit
+    with:
+      platforms: |
+        linux-64
+        linux-aarch64
+        osx-arm64
   system-package:
     strategy:
       fail-fast: false
