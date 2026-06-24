@@ -638,14 +638,9 @@ ProcessingT<double>* grid_increment(const char* inc_key, const char* incgiven_ke
             long sign = 0;
             CHECK_CALL(codes_get_long(h, sign_key, &sign));
 
-            // For longitudes, x1 can be numerically less than x0
-            if (STR_EQUAL(n_key, "Ni")) {
-                if (sign != 0 && x1 < x0) {
-                    x1 += 360.;
-                }
-                else if (sign == 0 && x1 > x0) {
-                    x1 -= 360.;
-                }
+            // For longitudes, adjust x1 to respect positive/negative increment
+            if (STR_EQUAL(n_key, "Ni") && (sign == 0 ? x0 < x1 : x1 < x0)) {
+                x1 += sign == 0 ? -360. : 360.;
             }
 
             if (auto value_calculated = (x1 - x0) / static_cast<double>(sign != 0 ? (n - 1) : (1 - n)); given) {
