@@ -823,6 +823,19 @@ GribToSpec::GribToSpec(codes_handle* h) :
             cache_ = fix->second;
         }
     };
+
+    std::string gridType;
+    ASSERT(get("gridType", gridType));
+
+    if (gridType == "healpix") {
+        // ECC-2162
+        double l = 0;
+        ASSERT(get("longitudeOfFirstGridPointInDegrees", l));
+
+        if (!eckit::types::is_approximately_equal(l, 45.)) {
+            wrongly_encoded_grib("GribToSpec: gridType=" + gridType + ", longitudeOfFirstGridPointInDegrees should be 45.");
+        }
+    }
 }
 
 

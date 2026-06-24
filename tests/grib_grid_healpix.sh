@@ -158,7 +158,7 @@ ${tools_dir}/grib_set -s \
   gridType=healpix,longitudeOfFirstGridPointInDegrees=0,Nside=1,orderingConvention=nested,numberOfDataPoints=12,numberOfValues=12 \
   $input $tempGrib
 set +e
-${tools_dir}/grib_get_data $tempGrib > $tempLog 2>&1
+ECCODES_GRIB_GEO_STRICT=1 ${tools_dir}/grib_get_data $tempGrib > $tempLog 2>&1
 status=$?
 set -e
 [ $status -ne 0 ]
