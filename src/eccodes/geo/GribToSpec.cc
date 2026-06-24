@@ -247,6 +247,8 @@ const char* get_key(const std::string& name, codes_handle* h)
         { "west_east_increment", "iDirectionIncrementInDegrees" },
         { "south_north_increment", "jDirectionIncrementInDegrees" },
 
+        { "west", "longitudeOfLastGridPointInDegrees", is("iScansNegatively", 1L) },
+        { "east", "longitudeOfFirstGridPointInDegrees", is("iScansNegatively", 1L) },
         { "west", "longitudeOfFirstGridPointInDegrees" },
         { "east", "longitudeOfLastGridPointInDegrees_fix_for_global_reduced_grids", is("gridType", "reduced_gg") },
         { "east", "longitudeOfLastGridPointInDegrees" },
@@ -610,7 +612,7 @@ ProcessingT<double>* grid_increment(const char* inc_key, const char* incgiven_ke
     return new ProcessingT<double>([=](codes_handle* h, double& value) {
         bool given = false;
         if (long incgiven = 0; codes_is_well_defined(h, inc_key) && (codes_get_long(h, incgiven_key, &incgiven) == CODES_SUCCESS) && (incgiven != 0)) {
-            codes_get_double(h, inc_key, &value);
+            CHECK_CALL(codes_get_double(h, inc_key, &value));
             given = true;
         }
 
@@ -834,6 +836,30 @@ GribToSpec::GribToSpec(codes_handle* h) :
 
         if (!eckit::types::is_approximately_equal(l, 45.)) {
             wrongly_encoded_grib("GribToSpec: gridType=" + gridType + ", longitudeOfFirstGridPointInDegrees should be 45.");
+        }
+    }
+
+    // ECC-1642:
+    // - Validate regular grid consistency
+    // - Validate Ni*Nj == numberOfDataPoints for grids with both Ni and Nj
+
+    long Ni = 0;
+    long Nj = 0;
+    long Nv = 0;
+    int err = 0;
+
+    if (
+        !(codes_is_missing(handle_, "Ni", &err) != 0 && err == CODES_SUCCESS) && //
+        !(codes_is_missing(handle_, "Nj", &err) != 0 && err == CODES_SUCCESS) && //
+        codes_get_long(handle_, "Ni", &Ni) == CODES_SUCCESS && //
+        codes_get_long(handle_, "Nj", &Nj) == CODES_SUCCESS && //
+        codes_get_long(handle_, "numberOfDataPoints", &Nv) == CODES_SUCCESS)
+    {
+        if (Ni * Nj != Nv) {
+            wrongly_encoded_grib_error(
+                    "GribToSpec: Ni*Nj!=numberOfDataPoints (" +
+                    std::to_string(Ni) + "*" + std::to_string(Nj) + "!=" +
+                    std::to_string(Nv) + ")");
         }
     }
 }
