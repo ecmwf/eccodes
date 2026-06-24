@@ -4,8 +4,12 @@ if (edition == 1) {
 }
 
 if (edition == 2) {
- alias mars.step   = endStep;
- alias mars.timespan = timeSpan;
+ if (MTG2Switch > 0) {
+  alias mars.step   = endStep;
+  alias mars.timespan = timeSpan;
+ } else {
+  alias mars.step   = stepRange;
+ }
 
  # these additional keys contain the percentiles used for SOT
  meta scaleFactorOfAdditionalParameterForReferencePeriod0 element(scaleFactorOfAdditionalParameterForReferencePeriod, 0) : hidden;
