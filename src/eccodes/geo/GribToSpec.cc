@@ -613,7 +613,7 @@ ProcessingT<double>* grid_increment(const char* inc_key, const char* incgiven_ke
         bool given = false;
         if (long incgiven = 0; codes_is_well_defined(h, inc_key) && (codes_get_long(h, incgiven_key, &incgiven) == CODES_SUCCESS) && (incgiven != 0)) {
             CHECK_CALL(codes_get_double(h, inc_key, &value));
-            given = true;
+            given = value != CODES_MISSING_DOUBLE;
         }
 
         if (codes_is_well_defined(h, x0_key) && codes_is_well_defined(h, x1_key) && codes_is_well_defined(h, n_key) && codes_is_well_defined(h, sign_key)) {
