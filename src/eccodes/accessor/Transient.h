@@ -20,8 +20,10 @@ class Transient : public Variable
 public:
     void init(const long l, grib_arguments* args) override;
     Transient() :
-        Variable() { class_name_ = "transient"; }
-    grib_accessor* create_empty_accessor() override { return new Transient{}; }
+        Variable() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+
+    static inline const AccessorType accessor_type_{"transient"};
 };
 
 }  // namespace eccodes::accessor

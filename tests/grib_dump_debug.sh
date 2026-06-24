@@ -47,7 +47,7 @@ spherical_pressure_level.grib1
 reduced_gaussian_model_level.grib2
 reduced_gaussian_pressure_level.grib2
 reduced_gaussian_pressure_level_constant.grib2
-reduced_gaussian_sub_area.grib2
+reduced_gaussian_sub_area.grib1
 reduced_gaussian_surface.grib2
 regular_gaussian_model_level.grib2
 regular_gaussian_pressure_level.grib2

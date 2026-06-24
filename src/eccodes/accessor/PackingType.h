@@ -19,8 +19,8 @@ class PackingType : public Gen
 {
 public:
     PackingType() :
-        Gen() { class_name_ = "packing_type"; }
-    grib_accessor* create_empty_accessor() override { return new PackingType{}; }
+        Gen() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     long get_native_type() override;
     int pack_string(const char*, size_t* len) override;
     int unpack_string(char*, size_t* len) override;
@@ -30,6 +30,9 @@ public:
 private:
     const char* values_ = nullptr;
     const char* packing_type_ = nullptr;
+
+public:
+    static inline const AccessorType accessor_type_{"packing_type"};
 };
 
 }  // namespace eccodes::accessor

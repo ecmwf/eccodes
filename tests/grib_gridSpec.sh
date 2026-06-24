@@ -3,7 +3,7 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
+#
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
@@ -31,9 +31,9 @@ if [ $HAVE_ECKIT_GEO -ne 1 ]; then
 fi
 
 # Check env. variable too
-set +u
-if test "x$ECCODES_ECKIT_GEO" = "x"; then
-    echo "$0: This test is disabled (env. variable ECCODES_ECKIT_GEO is not set)"
+if [ "${ECCODES_ECKIT_GEO:-0}" -eq 0 ]
+then
+    echo "$0: This test is disabled (env. variable ECCODES_ECKIT_GEO=0)"
     exit 0
 fi
 set -u

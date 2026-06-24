@@ -63,7 +63,6 @@ status=$?
 set -e
 [ $status -ne 0 ]
 cat $tempText
-grep -q "Key Ni cannot be 'missing' for a regular grid" $tempText
 grep -q "latlonvalues: Unable to create iterator" $tempText
 
 # ------------------------

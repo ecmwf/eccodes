@@ -19,11 +19,13 @@ class G1DayOfTheYearDate : public G1Date
 {
 public:
     G1DayOfTheYearDate() :
-        G1Date() { class_name_ = "g1day_of_the_year_date"; }
-    grib_accessor* create_empty_accessor() override { return new G1DayOfTheYearDate{}; }
+        G1Date() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int unpack_string(char*, size_t* len) override;
     void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;
+
+    static inline const AccessorType accessor_type_{"g1day_of_the_year_date"};
 };
 
 }  // namespace eccodes::accessor

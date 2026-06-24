@@ -10,8 +10,7 @@
 
 #include "DataApplyBoustrophedonicBitmap.h"
 
-eccodes::accessor::DataApplyBoustrophedonicBitmap _grib_accessor_data_apply_boustrophedonic_bitmap;
-eccodes::Accessor* grib_accessor_data_apply_boustrophedonic_bitmap = &_grib_accessor_data_apply_boustrophedonic_bitmap;
+eccodes::AccessorBuilder<eccodes::accessor::DataApplyBoustrophedonicBitmap> _grib_accessor_data_apply_boustrophedonic_bitmap_builder{};
 
 namespace eccodes::accessor
 {
