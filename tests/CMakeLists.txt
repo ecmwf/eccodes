@@ -31,7 +31,6 @@ list(APPEND test_c_bins
     grib_keys_iter
     grib_keys_iter_skip
     grib_geo_iter
-    grib_geo_iterator
     grib_nearest_test
     grib_util_set_spec
     grib_util_set_spec2
@@ -80,6 +79,12 @@ list(APPEND test_c_bins
     grib_lam_bf
     grib_lam_gp)
 
+if( eccodes_HAVE_ECKIT_GEO AND eccodes_HAVE_GEOGRAPHY )
+    foreach( tool
+        grib_geo_iterator)
+        list(APPEND test_c_bins ${tool})
+    endforeach()
+endif()
 
 foreach( tool ${test_c_bins} )
     # here we use the fact that each tool has only one C file that matches its name
@@ -272,7 +277,6 @@ if( HAVE_BUILD_TOOLS )
         grib_keys_iter
         grib_keys_iter_skip
         grib_geo_iter
-        grib_geo_iterator
         grib_to_json
         grib_to_ppm
         grib_list_keys
@@ -438,17 +442,24 @@ if( HAVE_BUILD_TOOLS )
         grib_mars_keys1
         grib_mars_keys2)
 
+    if( eccodes_HAVE_ECKIT_GEO AND eccodes_HAVE_GEOGRAPHY )
+        list(APPEND tests_extra grib_geo_iterator)
+    endif()
+
     if( HAVE_AEC AND ENABLE_EXTRA_TESTS )
         list(APPEND tests_extra grib_ecc-1431)
         list(APPEND tests_extra grib_ecc-1433)
     endif()
+
     if( ECCODES_INSTALL_EXTRA_TOOLS AND ENABLE_EXTRA_TESTS )
         list(APPEND tests_extra metar_ls metar_filter metar_get metar_dump metar_compare)
     endif()
+
     if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
         list(APPEND tests_extra bufr_dump_encode_fortran)
         list(APPEND tests_extra bufr_dump_decode_fortran)
     endif()
+
     if( ENABLE_EXTRA_TESTS )
         list(APPEND tests_extra grib_util_set_spec)
         list(APPEND tests_extra grib_util_set_spec2)
