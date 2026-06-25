@@ -14,10 +14,11 @@
 
 #include "eccodes_config.h"
 
+#include "eccodes/geo/eckit.h"
+
 #if defined(HAVE_ECKIT_GEO)
     #include "eckit/geo/Exceptions.h"
 
-    #include "geo/EckitMainInit.h"
     #include "geo/GeoIterator.h"
 
     // eccodes macros conflict with eckit
@@ -154,35 +155,8 @@ static grib_iterator* grib_iterator_new_(const grib_handle* ch, unsigned long fl
     grib_iterator* i = (grib_iterator*)grib_context_malloc_clear(ch->context, sizeof(grib_iterator));
 
     #if defined(HAVE_ECKIT_GEO)
-
-//// TODO(maee)
-//// TEMPORARY! Remove when eckit geo can handle all grid types
-////
-    bool do_process_with_eckit = false; // ideally should always be true
-    char gridType[128] = {0,};
-    size_t gtlen = sizeof(gridType);
-    err = grib_get_string(ch, "gridType", gridType, &gtlen);
-    if (!err &&
-        STR_EQUAL(gridType, "unstructured_grid") ||
-        STR_EQUAL(gridType, "healpix") ||
-        STR_EQUAL(gridType, "regular_ll"))
-    {
-        do_process_with_eckit = true;
-
-        if (STR_EQUAL(gridType, "regular_ll")) {
-            long numberOfDataPoints = 0;
-            if (grib_get_long(ch, "numberOfDataPoints", &numberOfDataPoints) == GRIB_SUCCESS &&
-                numberOfDataPoints == 1)
-            {
-                do_process_with_eckit = false;
-            }
-        }
-    }
-
-    const int eckit_geo = ch->context->eckit_geo;  // check environment variable
-    if (eckit_geo != 0 && do_process_with_eckit) {
+    if (eccodes::geo::eckit_geo_use_for_iterator(ch)) {
         eccodes::geo::eckit_main_init();
-        grib_context_log(ch->context, GRIB_LOG_DEBUG, "Geoiterator: using eckit/geo");
         try {
             if (i->iterator = new eccodes::geo_iterator::GeoIterator(const_cast<grib_handle*>(ch), flags);
                 i->iterator != nullptr) {
