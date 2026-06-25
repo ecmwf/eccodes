@@ -24,6 +24,7 @@ jobs:
         linux-64
         linux-aarch64
         osx-arm64
+      use_nexus_channel: false
   system-package:
     strategy:
       fail-fast: false
