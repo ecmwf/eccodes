@@ -10,8 +10,7 @@
 
 #include "Bit.h"
 
-eccodes::accessor::Bit _grib_accessor_bit;
-eccodes::Accessor* grib_accessor_bit = &_grib_accessor_bit;
+eccodes::AccessorBuilder<eccodes::accessor::Bit> _grib_accessor_bit_builder{};
 
 namespace eccodes::accessor
 {

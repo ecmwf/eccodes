@@ -1,4 +1,4 @@
-name: nightly
+name: nightly-testing
 
 on:
   workflow_dispatch: ~
@@ -19,7 +19,7 @@ jobs:
           github_token: ${{ secrets.GH_REPO_READ_TOKEN }}
           troika_user: ${{ secrets.HPC_CI_SSH_USER }}
           repository: ecmwf/eccodes@${{ github.event.pull_request.head.sha || github.sha }}
-          build_config: .github/nightly-ci-hpc-config.yml
+          build_config: .github/nightly-ci-hpc-testing-config.yml
 
   test-macos:
     strategy:
@@ -87,4 +87,4 @@ jobs:
         with:
           incoming_webhook: ${{ secrets.MS_TEAMS_INCOMING_WEBHOOK }}
           needs_context: ${{ toJSON(needs) }}
-          workflow_id: nightly.yml
+          workflow_id: nightly-testing.yml

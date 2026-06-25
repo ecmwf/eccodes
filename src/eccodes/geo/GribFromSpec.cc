@@ -35,8 +35,8 @@
 #include "eckit/geo/util/mutex.h"
 #include "eckit/types/FloatCompare.h"
 
-#include "eccodes/geo/EckitMainInit.h"
 #include "eccodes/Spec.h"
+#include "eccodes/geo/eckit.h"
 
 #include "grib_api_internal.h"
 
@@ -576,31 +576,31 @@ codes_handle* GribFromSpec::set(const codes_handle* h, const Spec& spec, const s
 
     grib_info info;
 
-    if (const auto g = grid->type(), p = grid->projection().type(); g == "regular-ll") {
+    if (const auto g = grid->type(), p = grid->projection().type(); g == "regular_ll") {
         set_grid_type_regular_ll(info, *grid, basic_angle);
     }
-    else if (g == "regular-xy" && p == "laea") {
+    else if (g == "regular_xy" && p == "laea") {
         set_grid_type_lambert_azimuthal_equal_area(info, *grid);
     }
-    else if (g == "regular-xy" && p == "lcc") {
+    else if (g == "regular_xy" && p == "lcc") {
         set_grid_type_grid_type_lambert(info, *grid);
     }
-    else if (g == "regular-xy" && p == "polar-stereographic") {
+    else if (g == "regular_xy" && p == "polar_stereographic") {
         set_grid_type_polar_stereographic(info, *grid);
     }
-    else if (g == "reduced-ll") {
+    else if (g == "reduced_ll") {
         set_grid_type_reduced_ll(info, *grid);
     }
-    else if (g == "regular-gg") {
+    else if (g == "regular_gg") {
         set_grid_type_regular_gg(info, *grid);
     }
-    else if (g == "reduced-gg") {
+    else if (g == "reduced_gg") {
         set_grid_type_reduced_gg(info, *grid);
     }
-    else if (g == "healpix") {
+    else if (g == "HEALPix") {
         set_grid_type_healpix(info, *grid);
     }
-    else if (g == "unstructured" || g == "fesom" || g == "icon" || g == "orca") {
+    else if (g == "unstructured_ll" || g == "FESOM" || g == "ICON" || g == "ORCA") {
         set_grid_type_unstructured(info, *grid);
     }
     else if (g == "sh") {

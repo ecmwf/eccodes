@@ -31,6 +31,7 @@ list(APPEND test_c_bins
     grib_keys_iter
     grib_keys_iter_skip
     grib_geo_iter
+    grib_geo_iterator
     grib_nearest_test
     grib_util_set_spec
     grib_util_set_spec2
@@ -43,6 +44,7 @@ list(APPEND test_c_bins
     grib_run_length_packing
     grib_partial_message
     grib_codedValues_as_bytes
+    grib_get_header_length
     grib_ecc-1467
     grib_ecc-1431
     grib_ecc-1433
@@ -52,6 +54,7 @@ list(APPEND test_c_bins
     grib_ecc-2034
     grib_ecc-2045
     grib_ecc-2188
+    grib_ecc-2191
     bufr_ecc-517
     bufr_ecc-1288
     bufr_ecc-2011
@@ -209,6 +212,7 @@ if( HAVE_BUILD_TOOLS )
         grib_units_bias_factor
         grib_set_large_message_fail
         grib_g1monthlydate
+        grib_get_header_length
         grib_g1fcperiod
         grib_bpv_limit
         grib_complex
@@ -221,6 +225,7 @@ if( HAVE_BUILD_TOOLS )
         grib_run_length_packing
         grib_grid_space_view
         grib_partial_message
+        grib_partial_geometry
         grib_true_imagery
         grib_headers_only
         grib_uerra
@@ -267,6 +272,7 @@ if( HAVE_BUILD_TOOLS )
         grib_keys_iter
         grib_keys_iter_skip
         grib_geo_iter
+        grib_geo_iterator
         grib_to_json
         grib_to_ppm
         grib_list_keys
@@ -339,7 +345,9 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-2052
         grib_ecc-2137
         grib_ecc-2188
+        grib_ecc-2191
         grib_ecc-2230
+        grib_ecc-2268
         grib_modelName
         grib_sub_hourly
         grib_set_bytes
@@ -554,6 +562,10 @@ if( HAVE_BUILD_TOOLS )
                                 NOINSTALL
                                 SOURCES   extract_offsets.cc
                                 LIBS      eccodes )
+        ecbuild_add_executable( TARGET    grib_partial_geometry
+                                NOINSTALL
+                                SOURCES   grib_partial_geometry.cc
+                                LIBS      eccodes )
     endif()
 
     ecbuild_add_test( TARGET eccodes_t_grib_to_netcdf
@@ -628,6 +640,8 @@ endif()
 
 
 if( eccodes_HAVE_ECKIT_GEO AND eccodes_HAVE_GEOGRAPHY )
+    target_link_libraries(grib_geo_iterator eckit_geo)
+
     foreach( test
             grib_from_gridspec
             grib_to_gridspec )

@@ -19,8 +19,8 @@ class Unsigned : public Long
 {
 public:
     Unsigned() :
-        Long() { class_name_ = "None"; }
-    grib_accessor* create_empty_accessor() override { return new Unsigned{}; }
+        Long() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     void init(const long len, grib_arguments* arg) override;
     void dump(eccodes::Dumper* dumper) override;
     int unpack_long(long* val, size_t* len) override;
@@ -41,6 +41,9 @@ protected:
 private:
     grib_arguments* arg_ = nullptr;
 
+
+public:
+    static inline const AccessorType accessor_type_{"unsigned"};
 };
 
 }  // namespace eccodes::accessor

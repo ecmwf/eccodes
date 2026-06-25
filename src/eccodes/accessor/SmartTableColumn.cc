@@ -11,8 +11,7 @@
 #include "SmartTableColumn.h"
 #include "SmartTable.h"
 
-eccodes::accessor::SmartTableColumn _grib_accessor_smart_table_column;
-eccodes::Accessor* grib_accessor_smart_table_column = &_grib_accessor_smart_table_column;
+eccodes::AccessorBuilder<eccodes::accessor::SmartTableColumn> _grib_accessor_smart_table_column_builder{};
 
 namespace eccodes::accessor
 {

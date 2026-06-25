@@ -10,8 +10,7 @@
 
 #include "DataG1SecondOrderRowByRowPacking.h"
 
-eccodes::accessor::DataG1SecondOrderRowByRowPacking _grib_accessor_data_g1second_order_row_by_row_packing;
-eccodes::Accessor* grib_accessor_data_g1second_order_row_by_row_packing = &_grib_accessor_data_g1second_order_row_by_row_packing;
+eccodes::AccessorBuilder<eccodes::accessor::DataG1SecondOrderRowByRowPacking> _grib_accessor_data_g1second_order_row_by_row_packing_builder{};
 
 namespace eccodes::accessor
 {

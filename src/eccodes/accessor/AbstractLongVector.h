@@ -19,14 +19,16 @@ class AbstractLongVector : public Gen
 {
 public:
     AbstractLongVector() :
-        Gen() { class_name_ = "abstract_long_vector"; }
-    // grib_accessor* create_empty_accessor() override { return new AbstractLongVector{}; }
+        Gen() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
 
 public:
     // TODO(maee): make private
     long* v_ = nullptr;
     long pack_index_ = 0;
     int number_of_elements_ = 0;
+
+    static inline const AccessorType accessor_type_{"abstract_long_vector"};
 };
 
 }  // namespace eccodes::accessor

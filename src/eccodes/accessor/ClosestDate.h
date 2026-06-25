@@ -19,8 +19,8 @@ class ClosestDate : public Double
 {
 public:
     ClosestDate() :
-        Double() { class_name_ = "closest_date"; }
-    grib_accessor* create_empty_accessor() override { return new ClosestDate{}; }
+        Double() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int unpack_double(double* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     void dump(eccodes::Dumper*) override;
@@ -36,6 +36,9 @@ private:
     const char* hour_ = nullptr;
     const char* minute_ = nullptr;
     const char* second_ = nullptr;
+
+public:
+    static inline const AccessorType accessor_type_{"closest_date"};
 };
 
 }  // namespace eccodes::accessor

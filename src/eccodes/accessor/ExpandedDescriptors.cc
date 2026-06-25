@@ -11,8 +11,7 @@
 #include "ExpandedDescriptors.h"
 #include "grib_scaling.h"
 
-eccodes::accessor::ExpandedDescriptors _grib_accessor_expanded_descriptors;
-eccodes::Accessor* grib_accessor_expanded_descriptors = &_grib_accessor_expanded_descriptors;
+eccodes::AccessorBuilder<eccodes::accessor::ExpandedDescriptors> _grib_accessor_expanded_descriptors_builder{};
 
 namespace eccodes::accessor
 {

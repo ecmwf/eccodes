@@ -15,18 +15,21 @@
 namespace eccodes::accessor
 {
 
-class LatLonvalues : public Double
+class LatLonValues : public Double
 {
 public:
-    LatLonvalues() :
-        Double() { class_name_ = "latlonvalues"; }
-    grib_accessor* create_empty_accessor() override { return new LatLonvalues{}; }
+    LatLonValues() :
+        Double() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int unpack_double(double* val, size_t* len) override;
     int value_count(long*) override;
     void init(const long, grib_arguments*) override;
 
 private:
     const char* values_ = nullptr;
+
+public:
+    static inline const AccessorType accessor_type_{"latlonvalues"};
 };
 
 }  // namespace eccodes::accessor
