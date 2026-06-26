@@ -1,0 +1,5 @@
+'MODIS' = { modelVersion = '1.2';}
+'MODIS' = { modelVersion = '1.4-a';}
+'MODIS,VIIRS' = { modelVersion = '1.4-b';}
+'MODIS' = { modelVersion = '1.5-a';}
+'MODIS,VIIRS' = { modelVersion = '1.5-b';}

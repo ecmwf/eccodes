@@ -14,3 +14,9 @@ if (modelName isnot "unknown") {
       }
    }
 }
+
+if ( defined(marsStream) && marsStream == 1252) {
+ concept gfasSatelliteList(unknown, "gfasSatelliteList.def", conceptsDir2, conceptsLocalDirAll): no_copy, dump;
+ alias configuration = modelVersion;
+ alias mars.configuration = modelVersion;
+}
