@@ -19,6 +19,13 @@
 #include <algorithm>
 #include <limits>
 
+/* Windows uses semicolons as path delimiter; Linux/macOS use colons */
+#ifdef ECCODES_ON_WINDOWS
+ #define ECC_PATH_DELIMITER_CHAR ';'
+#else
+ #define ECC_PATH_DELIMITER_CHAR ':'
+#endif
+
 typedef enum
 {
     eROUND_ANGLE_UP,
