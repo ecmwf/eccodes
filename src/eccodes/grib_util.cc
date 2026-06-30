@@ -2699,7 +2699,11 @@ static bool parse_long_relaxed(const std::string& s, long* v)
 
 static bool looks_like_index_column_name(const std::string& s)
 {
-    return (s.find("Unnamed:") == 0 || s == "index");
+    return (
+        s.find("Unnamed:") == 0 ||
+        s == "index" ||
+        s == "pdtn" ||
+        s == "productDefinitionTemplateNumber");
 }
 
 static std::string first_definition_path(const grib_context* c)
