@@ -2849,7 +2849,7 @@ int grib2_matrix_select_PDTN_for_key(grib_handle* h, const char* key, long* sele
 
     if (matrix_enabled < 0) {
         const char* env_enable = codes_getenv("ECCODES_PDTN_MATRIX_ENABLE");
-        matrix_enabled = (env_enable && strcmp(env_enable, "0") != 0) ? 1 : 0;
+        matrix_enabled = (!env_enable || strcmp(env_enable, "0") != 0) ? 1 : 0;
     }
     if (!matrix_enabled) return GRIB_NOT_FOUND;
 
