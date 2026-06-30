@@ -201,6 +201,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-2264
         grib_ecc-2265
         grib_ecc-2301
+        grib_pdtn_matrix_all_templates
     )
 
     # These tests require data downloads
