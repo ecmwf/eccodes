@@ -18,6 +18,7 @@
 #include <set>
 #include <algorithm>
 #include <limits>
+#include <mutex>
 
 /* Windows uses semicolons as path delimiter; Linux/macOS use colons */
 #ifdef ECCODES_ON_WINDOWS
@@ -2824,19 +2825,16 @@ static int row_index_for_pdtn(const PdtnMatrix& m, long pdtn)
 int grib2_matrix_select_PDTN_for_key(grib_handle* h, const char* key, long* selected_pdtn)
 {
     static PdtnMatrix matrix;
-    static bool tried_load = false;
-    static int matrix_enabled = -1;
+    static std::once_flag matrix_init_once;
+    static bool matrix_enabled = false;
 
     if (!h || !key || !selected_pdtn) return GRIB_INVALID_ARGUMENT;
 
-    if (matrix_enabled < 0) {
+    std::call_once(matrix_init_once, [h]() {
         const char* env_enable = codes_getenv("ECCODES_PDTN_MATRIX_ENABLE");
-        matrix_enabled = (!env_enable || strcmp(env_enable, "0") != 0) ? 1 : 0;
-    }
-    if (!matrix_enabled) return GRIB_NOT_FOUND;
+        matrix_enabled = (!env_enable || strcmp(env_enable, "0") != 0);
+        if (!matrix_enabled) return;
 
-    if (!tried_load) {
-        tried_load = true;
         const char* csv = codes_getenv("ECCODES_PDTN_MATRIX_CSV");
 
         std::vector<std::string> csv_candidates;
@@ -2907,7 +2905,9 @@ int grib2_matrix_select_PDTN_for_key(grib_handle* h, const char* key, long* sele
                 }
             }
         }
-    }
+    });
+
+    if (!matrix_enabled) return GRIB_NOT_FOUND;
     if (!matrix.loaded) return GRIB_NOT_FOUND;
 
     const int kidx = key_index(matrix, key);
