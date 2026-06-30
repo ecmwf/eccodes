@@ -76,6 +76,16 @@ static void print_error_no_accessor(const grib_context* c, const char* name)
     }
 }
 
+// Matrix-based PDTN fallback should only run for top-level user set calls.
+// Nested internal set calls (e.g. packing conversions) must not trigger PDTN changes.
+static thread_local int g_set_call_depth = 0;
+
+class SetCallDepthGuard {
+public:
+    SetCallDepthGuard() { ++g_set_call_depth; }
+    ~SetCallDepthGuard() { --g_set_call_depth; }
+};
+
 int grib_set_expression(grib_handle* h, const char* name, grib_expression* e)
 {
     grib_accessor* a = grib_find_accessor(h, name);
@@ -124,6 +134,7 @@ int grib_set_long_internal(grib_handle* h, const char* name, long val)
 
 static int grib_set_long_(grib_handle* h, const char* name, long val)
 {
+    SetCallDepthGuard depth_guard;
     int ret          = GRIB_SUCCESS;
     grib_accessor* a = NULL;
     size_t l         = 1;
@@ -148,7 +159,7 @@ static int grib_set_long_(grib_handle* h, const char* name, long val)
         return ret;
     }
 
-    if (!STR_EQUAL(name, "productDefinitionTemplateNumber")) {
+    if (!STR_EQUAL(name, "productDefinitionTemplateNumber") && g_set_call_depth == 1) {
         long pdtn_new = -1;
         if (grib2_matrix_select_PDTN_for_key(h, name, &pdtn_new) == GRIB_SUCCESS) {
             long pdtn_cur = -1;
@@ -391,6 +402,7 @@ int grib_copy_namespace(grib_handle* dest, const char* name, grib_handle* src)
 
 static int grib_set_double_(grib_handle* h, const char* name, double val)
 {
+    SetCallDepthGuard depth_guard;
     int ret          = GRIB_SUCCESS;
     grib_accessor* a = NULL;
     size_t l         = 1;
@@ -414,7 +426,7 @@ static int grib_set_double_(grib_handle* h, const char* name, double val)
 
         return ret;
     }
-    if (!STR_EQUAL(name, "productDefinitionTemplateNumber")) {
+    if (!STR_EQUAL(name, "productDefinitionTemplateNumber") && g_set_call_depth == 1) {
         long pdtn_new = -1;
         if (grib2_matrix_select_PDTN_for_key(h, name, &pdtn_new) == GRIB_SUCCESS) {
             long pdtn_cur = -1;
@@ -567,6 +579,7 @@ static void postprocess_packingType_change(grib_handle* h, const char* keyname, 
 
 static int grib_set_string_(grib_handle* h, const char* name, const char* val, size_t* length)
 {
+    SetCallDepthGuard depth_guard;
     int ret = GRIB_SUCCESS;
     grib_accessor* a = NULL;
     bool add_bitmap = false;
@@ -616,7 +629,7 @@ static int grib_set_string_(grib_handle* h, const char* name, const char* val, s
         return ret;
     }
 
-    if (!STR_EQUAL(name, "productDefinitionTemplateNumber")) {
+    if (!STR_EQUAL(name, "productDefinitionTemplateNumber") && g_set_call_depth == 1) {
         long pdtn_new = -1;
         if (grib2_matrix_select_PDTN_for_key(h, name, &pdtn_new) == GRIB_SUCCESS) {
             long pdtn_cur = -1;
