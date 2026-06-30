@@ -43,6 +43,7 @@ list(APPEND test_c_bins
     grib_run_length_packing
     grib_partial_message
     grib_codedValues_as_bytes
+    grib_get_header_length
     grib_ecc-1467
     grib_ecc-1431
     grib_ecc-1433
@@ -52,6 +53,7 @@ list(APPEND test_c_bins
     grib_ecc-2034
     grib_ecc-2045
     grib_ecc-2188
+    grib_ecc-2191
     bufr_ecc-517
     bufr_ecc-1288
     bufr_ecc-2011
@@ -77,6 +79,12 @@ list(APPEND test_c_bins
     grib_lam_bf
     grib_lam_gp)
 
+if( eccodes_HAVE_ECKIT_GEO AND eccodes_HAVE_GEOGRAPHY )
+    foreach( tool
+        grib_geo_iterator)
+        list(APPEND test_c_bins ${tool})
+    endforeach()
+endif()
 
 foreach( tool ${test_c_bins} )
     # here we use the fact that each tool has only one C file that matches its name
@@ -190,6 +198,8 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-2242
         grib_ecc-2248
         grib_ecc-2254
+        grib_ecc-2264
+        grib_ecc-2265
     )
 
     # These tests require data downloads
@@ -207,6 +217,7 @@ if( HAVE_BUILD_TOOLS )
         grib_units_bias_factor
         grib_set_large_message_fail
         grib_g1monthlydate
+        grib_get_header_length
         grib_g1fcperiod
         grib_bpv_limit
         grib_complex
@@ -338,7 +349,9 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-2052
         grib_ecc-2137
         grib_ecc-2188
+        grib_ecc-2191
         grib_ecc-2230
+        grib_ecc-2268
         grib_modelName
         grib_sub_hourly
         grib_set_bytes
@@ -429,17 +442,24 @@ if( HAVE_BUILD_TOOLS )
         grib_mars_keys1
         grib_mars_keys2)
 
+    if( eccodes_HAVE_ECKIT_GEO AND eccodes_HAVE_GEOGRAPHY )
+        list(APPEND tests_extra grib_geo_iterator)
+    endif()
+
     if( HAVE_AEC AND ENABLE_EXTRA_TESTS )
         list(APPEND tests_extra grib_ecc-1431)
         list(APPEND tests_extra grib_ecc-1433)
     endif()
+
     if( ECCODES_INSTALL_EXTRA_TOOLS AND ENABLE_EXTRA_TESTS )
         list(APPEND tests_extra metar_ls metar_filter metar_get metar_dump metar_compare)
     endif()
+
     if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
         list(APPEND tests_extra bufr_dump_encode_fortran)
         list(APPEND tests_extra bufr_dump_decode_fortran)
     endif()
+
     if( ENABLE_EXTRA_TESTS )
         list(APPEND tests_extra grib_util_set_spec)
         list(APPEND tests_extra grib_util_set_spec2)
@@ -631,6 +651,8 @@ endif()
 
 
 if( eccodes_HAVE_ECKIT_GEO AND eccodes_HAVE_GEOGRAPHY )
+    target_link_libraries(grib_geo_iterator eckit_geo)
+
     foreach( test
             grib_from_gridspec
             grib_to_gridspec )

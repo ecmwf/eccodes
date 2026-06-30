@@ -78,4 +78,7 @@ HAVE_EXTRA_TESTS=@HAVE_EXTRA_TESTS@
 HAVE_MEMFS=@HAVE_MEMFS@
 ECCODES_ON_WINDOWS=@ECCODES_ON_WINDOWS@
 
+# eccodes handles eckit error messages directly
+export ECKIT_EXCEPTION_IS_SILENT=1
+
 echo "Current directory: `pwd`"

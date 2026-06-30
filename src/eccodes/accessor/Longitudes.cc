@@ -10,8 +10,7 @@
 
 #include "Longitudes.h"
 
-eccodes::accessor::Longitudes _grib_accessor_longitudes;
-eccodes::Accessor* grib_accessor_longitudes = &_grib_accessor_longitudes;
+eccodes::AccessorBuilder<eccodes::accessor::Longitudes> _grib_accessor_longitudes_builder{};
 
 namespace eccodes::accessor
 {
@@ -70,6 +69,7 @@ int Longitudes::unpack_double(double* val, size_t* len)
     if (ret != GRIB_SUCCESS) {
         *len = 0;
         grib_iterator_delete(iter);
+        *len = 0;
         grib_context_log(context_, GRIB_LOG_ERROR, "longitudes: Unable to create iterator");
         return ret;
     }

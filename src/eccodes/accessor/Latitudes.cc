@@ -10,8 +10,7 @@
 
 #include "Latitudes.h"
 
-eccodes::accessor::Latitudes _grib_accessor_latitudes;
-eccodes::Accessor* grib_accessor_latitudes = &_grib_accessor_latitudes;
+eccodes::AccessorBuilder<eccodes::accessor::Latitudes> _grib_accessor_latitudes_builder{};
 
 namespace eccodes::accessor
 {

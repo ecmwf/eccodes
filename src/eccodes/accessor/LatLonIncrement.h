@@ -19,8 +19,8 @@ class LatLonIncrement : public Double
 {
 public:
     LatLonIncrement() :
-        Double() { class_name_ = "latlon_increment"; }
-    grib_accessor* create_empty_accessor() override { return new LatLonIncrement{}; }
+        Double() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int is_missing() override;
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
@@ -36,6 +36,9 @@ private:
     const char* angleMultiplier_ = nullptr;
     const char* angleDivisor_ = nullptr;
     long isLongitude_ = 0;
+
+public:
+    static inline const AccessorType accessor_type_{"latlon_increment"};
 };
 
 }  // namespace eccodes::accessor

@@ -49,7 +49,7 @@ int GeoIterator::init(grib_handle* h, grib_arguments*)
     }
 
     if ((flags_ & GRIB_GEOITERATOR_NO_VALUES) == 0) {
-        //printf("GeoIterator::init WE WANT values - numberOfPoints=%ld nv_=%zu\n", numberOfPoints , nv_);
+        // printf("GeoIterator::init WE WANT values - numberOfPoints=%ld nv_=%zu\n", numberOfPoints , nv_);
         if (static_cast<size_t>(numberOfPoints) != nv_) {
             grib_context_log(h_->context, GRIB_LOG_ERROR, "Geoiterator: numberOfPoints != size(values) (%ld!=%ld)",
                              numberOfPoints, nv_);
@@ -65,8 +65,9 @@ int GeoIterator::init(grib_handle* h, grib_arguments*)
         if (int err = codes_get_double_array(h_, "values", data_, &size); err) {
             return err;
         }
-    } else {
-        //printf("GeoIterator::init we do NOT want values\n");
+    }
+    else {
+        // printf("GeoIterator::init we do NOT want values\n");
         nv_ = numberOfPoints;
     }
 
@@ -105,9 +106,32 @@ int GeoIterator::next(double* lat, double* lon, double* val) const
     return 0;  // (false)
 }
 
-int GeoIterator::previous(double*, double*, double*) const
+int GeoIterator::previous(double* lat, double* lon, double* val) const
 {
-    return GRIB_NOT_IMPLEMENTED;
+    try {
+        if (iter_->index() > 0 && --iter_) {
+            const auto p = *iter_;
+            const auto& q(std::get<eckit::geo::PointLonLat>(p));
+
+            *lat = q.lat();
+            *lon = q.lon();
+            if (val != nullptr && data_ != nullptr) {
+                if (const size_t i = iter_->index(); i < nv_) {
+                    *val = data_[i];
+                }
+            }
+
+            return 1;  // (true)
+        }
+    }
+    catch (eckit::geo::Exception& e) {
+        grib_context_log(h_->context, GRIB_LOG_FATAL, "GeoIterator::previous: geo::Exception thrown (%s)", e.what());
+    }
+    catch (std::exception& e) {
+        grib_context_log(h_->context, GRIB_LOG_FATAL, "GeoIterator::previous: Exception thrown (%s)", e.what());
+    }
+
+    return 0;  // (false)
 }
 
 int GeoIterator::reset()
@@ -124,8 +148,7 @@ int GeoIterator::destroy()
 
 bool GeoIterator::has_next() const
 {
-    auto it = iter_;
-    return ++it;
+    return bool(iter_);
 }
 
 Iterator* GeoIterator::create() const

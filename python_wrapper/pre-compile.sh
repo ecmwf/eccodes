@@ -23,6 +23,8 @@ OPENJPEG_VERSION=v2.5.2
 
 if [ "$(uname)" != "Darwin" ] ; then
     echo "installing and copying deps for platform $(uname)"
+    # TODO how to determine this dynamically?
+    CXX_ROOT=/cxx-deps
     mkdir -p /tmp/eccodes/target/eccodes/lib64/
 
     ## yum-available prereqs -- assumed to be installed in the base due to privileges here
@@ -52,12 +54,21 @@ if [ "$(uname)" != "Darwin" ] ; then
     cp /tmp/openjpeg/target/lib64/libopenjp2.so.7 /tmp/eccodes/target/eccodes/lib64/libopenjp2.so.7
 
     # aec -- needs headers and cmake due to dependent on by eg gribjump
-    cp /cxx-deps/lib64/libaec.so* /tmp/eccodes/target/eccodes/lib64
-    cp /cxx-deps/include/libaec.h /tmp/eccodes/target/eccodes/include
-    cp /cxx-deps/lib64/cmake/libaec/* /tmp/eccodes/target/eccodes/cmake
+    cp $CXX_ROOT/lib64/libaec.so* /tmp/eccodes/target/eccodes/lib64
+    cp $CXX_ROOT/include/libaec.h /tmp/eccodes/target/eccodes/include
+    cp $CXX_ROOT/lib64/cmake/libaec/* /tmp/eccodes/target/eccodes/cmake
 
 
 else
+    # TODO how to determine this dynamically?
+    if [ -d /tmp/cxx-deps ] ; then
+        CXX_ROOT=/tmp/cxx-deps
+    elif [ -d /opt/ecmwf/stack-deps ] ; then
+        CXX_ROOT=/opt/ecmwf/stack-deps
+    else
+        echo "no idea where cxx-deps can be found, crashing"
+        exit 1
+    fi
     echo "building deps for platform $(uname)"
     mkdir -p /tmp/eccodes/target/eccodes/lib/
 
@@ -84,9 +95,9 @@ else
 
 
     # aec -- needs headers and cmake due to dependent on by eg gribjump
-    cp /tmp/cxx-deps/lib/libaec*dylib /tmp/eccodes/target/eccodes/lib
-    cp /tmp/cxx-deps/include/libaec.h /tmp/eccodes/target/eccodes/include
-    cp /tmp/cxx-deps/lib/cmake/libaec/* /tmp/eccodes/target/eccodes/cmake
+    cp $CXX_ROOT/lib/libaec*dylib /tmp/eccodes/target/eccodes/lib
+    cp $CXX_ROOT/include/libaec.h /tmp/eccodes/target/eccodes/include
+    cp $CXX_ROOT/lib/cmake/libaec/* /tmp/eccodes/target/eccodes/cmake
 
 fi
 

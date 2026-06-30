@@ -19,8 +19,8 @@ class G2EndStep : public Long
 {
 public:
     G2EndStep() :
-        Long() { class_name_ = "g2end_step"; }
-    grib_accessor* create_empty_accessor() override { return new G2EndStep{}; }
+        Long() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     long get_native_type() override;
     int pack_long(const long* val, size_t* len) override;
     int pack_string(const char*, size_t* len) override;
@@ -55,6 +55,9 @@ private:
     int unpack_multiple_time_ranges_long_(long* val, size_t* len);
     int unpack_multiple_time_ranges_double_(double* val, size_t* len);
     int pack_long_(const long end_step_value, const long end_step_unit);
+
+public:
+    static inline const AccessorType accessor_type_{"g2end_step"};
 };
 
 }  // namespace eccodes::accessor

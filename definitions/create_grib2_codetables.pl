@@ -49,6 +49,10 @@ while (<>) {
     s/°C/degree C/;
     s/f\(n\) = C2 × f\(n-1\)/f(n) = C2 * f(n-1)/;
     s/\(see separate doc or pdf file\)/see separate doc or pdf file/;
+    # s/α/alpha/;
+    # s/#alpha;/alpha/;
+    # s/ρ/rho/;
+    # s/σ/sigma/;
 
     my ($title, $subtitle, $codeFlag, $value, $meaning, $note, $noteID, $unit, $status) = split(/\t/);
 

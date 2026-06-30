@@ -10,8 +10,7 @@
 
 #include "BufrGroup.h"
 
-eccodes::accessor::BufrGroup _grib_accessor_bufr_group;
-eccodes::Accessor* grib_accessor_bufr_group = &_grib_accessor_bufr_group;
+eccodes::AccessorBuilder<eccodes::accessor::BufrGroup> _grib_accessor_bufr_group_builder{};
 
 namespace eccodes::accessor
 {

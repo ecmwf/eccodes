@@ -61,7 +61,6 @@ list( APPEND eccodes_src_files
     codes_memfs.cc
 
     accessor/grib_accessors_list.cc
-    grib_accessor_class.cc
 
     accessor/Accessor.cc
     accessor/G1FcPeriod.cc
@@ -307,7 +306,6 @@ list( APPEND eccodes_src_files
     grib_filepool.cc
     geo/grib_geography.cc
     grib_handle.cc
-    grib_hash_keys.cc
     grib_io.cc
     grib_trie.cc
     grib_trie_with_rank.cc
@@ -374,10 +372,9 @@ list( APPEND eccodes_src_files
     bufr_util.cc
     string_util.cc
     functions.cc
-    grib_accessor_class.h
-    grib_accessor_factory.h
     grib_api_internal.h
     eccodes_prototypes.h
+    grib_accessor_factory.cc
     grib_dumper_factory.cc
     grib_iterator_factory.cc
     grib_nearest_factory.cc
@@ -427,8 +424,6 @@ if( eccodes_HAVE_GEOGRAPHY AND eccodes_HAVE_ECKIT_GEO )
 
         geo/BasicAngle.cc
         geo/BasicAngle.h
-        geo/EckitMainInit.cc
-        geo/EckitMainInit.h
         geo/Geo.cc
         geo/Geo.h
         geo/GeoIterator.cc
@@ -436,22 +431,24 @@ if( eccodes_HAVE_GEOGRAPHY AND eccodes_HAVE_ECKIT_GEO )
         geo/GribFromSpec.cc
         geo/GribFromSpec.h
         geo/GribToSpec.cc
-        geo/GribToSpec.h )
+        geo/GribToSpec.h
+        geo/eckit.cc
+        geo/eckit.h )
     list( APPEND ECCODES_EXTRA_LIBRARIES eckit_geo )
 endif()
 
 ecbuild_add_library(
     TARGET    eccodes
-    SOURCES   
+    SOURCES
         ${CMAKE_CURRENT_BINARY_DIR}/grib_api_version.cc
         ${eccodes_src_files}
     PRIVATE_INCLUDES "${PNG_INCLUDE_DIRS}"
     PRIVATE_LIBS
-       ${ECCODES_EXTRA_LIBRARIES}
-       ${CMAKE_THREAD_LIBS_INIT}
-       ${PNG_LIBRARIES}
-       $<$<BOOL:${libaec_FOUND}>:libaec::aec>
-    PUBLIC_LIBS 
+        ${ECCODES_EXTRA_LIBRARIES}
+        ${CMAKE_THREAD_LIBS_INIT}
+        ${PNG_LIBRARIES}
+        $<$<BOOL:${libaec_FOUND}>:libaec::aec>
+    PUBLIC_LIBS
         ${CMATH_LIBRARIES}
         ${THREADS_LIBRARIES}
     TEMPLATES ${eccodes_extra_src_files}
