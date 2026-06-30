@@ -40,6 +40,12 @@ if ( addEmptySection2 == 0 ) {
             template  destineSection "grib2/local.destine.[destineLocalVersion:l].def";
         }
 
+        if(productionStatusOfProcessedData == 14 || productionStatusOfProcessedData == 15) {
+            # lcgcr = LC-GCR  Lead Centre for Global Climate Re-Analyses
+            codetable[2] lcgcrLocalVersion 'grib2/lcgcrLocalVersion.table' = 1 : dump;
+            template  lcgcrSection "grib2/local.lcgcr.[lcgcrLocalVersion:l].def";
+        }
+
         codetable[2] grib2LocalSectionNumber 'grib2/grib2LocalSectionNumber.[centreForLocal:l].table' = 1 : dump;
 
         if (grib2LocalSectionNumber!=0) {
