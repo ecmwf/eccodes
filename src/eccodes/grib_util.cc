@@ -2695,6 +2695,28 @@ static bool looks_like_index_column_name(const std::string& s)
     return (s.find("Unnamed:") == 0 || s == "index");
 }
 
+static std::string first_definition_path(const grib_context* c)
+{
+    const char* defs_path = c ? c->grib_definition_files_path : nullptr;
+    if (!defs_path || !defs_path[0]) {
+        defs_path = codes_getenv("ECCODES_DEFINITION_PATH");
+    }
+    if (!defs_path || !defs_path[0]) return std::string();
+
+    const char* p = defs_path;
+    while (*p != '\0' && *p != ECC_PATH_DELIMITER_CHAR) {
+        ++p;
+    }
+    return std::string(defs_path, p - defs_path);
+}
+
+static std::string default_matrix_path(const grib_context* c, const char* filename)
+{
+    const std::string defs_dir = first_definition_path(c);
+    if (defs_dir.empty()) return std::string(filename);
+    return defs_dir + "/grib2/" + filename;
+}
+
 static bool load_pdtn_matrix_csv(const char* path, PdtnMatrix* m)
 {
     FILE* f = fopen(path, "r");
@@ -2820,10 +2842,12 @@ int grib2_matrix_select_PDTN_for_key(grib_handle* h, const char* key, long* sele
     if (!tried_load) {
         tried_load = true;
         const char* csv = codes_getenv("ECCODES_PDTN_MATRIX_CSV");
-        if (!csv) csv = "keys_in_PDTNS.csv";
+        const std::string csv_default = default_matrix_path(h->context, "keys_in_PDTNS.csv");
+        if (!csv) csv = csv_default.c_str();
         if (load_pdtn_matrix_csv(csv, &matrix)) {
             const char* idx_file = codes_getenv("ECCODES_PDTN_MATRIX_INDEX");
-            if (!idx_file) idx_file = "keys_in_PDTNS_pdtns.txt";
+            const std::string idx_default = default_matrix_path(h->context, "keys_in_PDTNS_pdtns.txt");
+            if (!idx_file) idx_file = idx_default.c_str();
             load_pdtn_index_file(idx_file, &matrix);
         }
     }

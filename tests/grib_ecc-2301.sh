@@ -26,10 +26,6 @@ tempGribC=temp.$label.C.grib
 
 sample_grib2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
-# Use matrix files from the parent workspace (outside eccodes/)
-export ECCODES_PDTN_MATRIX_CSV="${proj_dir}/../keys_in_PDTNS.csv"
-export ECCODES_PDTN_MATRIX_INDEX="${proj_dir}/../keys_in_PDTNS_pdtns.txt"
-
 # Sanity: start at PDTN 0
 grib_check_key_equals $sample_grib2 productDefinitionTemplateNumber 0
 
