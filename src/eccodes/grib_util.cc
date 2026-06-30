@@ -2838,17 +2838,74 @@ int grib2_matrix_select_PDTN_for_key(grib_handle* h, const char* key, long* sele
     if (!tried_load) {
         tried_load = true;
         const char* csv = codes_getenv("ECCODES_PDTN_MATRIX_CSV");
-        if (!csv) {
-            csv = grib_context_full_defs_path(h->context, "grib2/keys_in_PDTNS.csv");
-            if (!csv) csv = "keys_in_PDTNS.csv";
+
+        std::vector<std::string> csv_candidates;
+        if (csv) {
+            csv_candidates.push_back(csv);
         }
-        if (load_pdtn_matrix_csv(csv, &matrix)) {
-            const char* idx_file = codes_getenv("ECCODES_PDTN_MATRIX_INDEX");
-            if (!idx_file) {
-                idx_file = grib_context_full_defs_path(h->context, "grib2/keys_in_PDTNS_pdtns.txt");
-                if (!idx_file) idx_file = "keys_in_PDTNS_pdtns.txt";
+        else {
+            const char* csv_defs = grib_context_full_defs_path(h->context, "grib2/keys_in_PDTNS.csv");
+            if (csv_defs) csv_candidates.push_back(csv_defs);
+            csv_candidates.push_back("/MEMFS/definitions/grib2/keys_in_PDTNS.csv");
+            csv_candidates.push_back("keys_in_PDTNS.csv");
+        }
+
+        bool loaded = false;
+        std::string selected_csv;
+        for (const auto& cand : csv_candidates) {
+            if (load_pdtn_matrix_csv(cand.c_str(), &matrix)) {
+                loaded = true;
+                selected_csv = cand;
+                break;
             }
-            load_pdtn_index_file(idx_file, &matrix);
+        }
+
+        if (h->context->debug) {
+            if (loaded) {
+                grib_context_log(h->context, GRIB_LOG_DEBUG,
+                                 "Matrix PDTN: loaded CSV from %s",
+                                 selected_csv.c_str());
+            }
+            else {
+                grib_context_log(h->context, GRIB_LOG_DEBUG,
+                                 "Matrix PDTN: failed to load CSV from all candidates");
+            }
+        }
+
+        if (loaded) {
+            const char* idx_file = codes_getenv("ECCODES_PDTN_MATRIX_INDEX");
+            std::vector<std::string> idx_candidates;
+            if (idx_file) {
+                idx_candidates.push_back(idx_file);
+            }
+            else {
+                const char* idx_defs = grib_context_full_defs_path(h->context, "grib2/keys_in_PDTNS_pdtns.txt");
+                if (idx_defs) idx_candidates.push_back(idx_defs);
+                idx_candidates.push_back("/MEMFS/definitions/grib2/keys_in_PDTNS_pdtns.txt");
+                idx_candidates.push_back("keys_in_PDTNS_pdtns.txt");
+            }
+
+            bool idx_loaded = false;
+            std::string selected_idx;
+            for (const auto& cand : idx_candidates) {
+                if (load_pdtn_index_file(cand.c_str(), &matrix)) {
+                    idx_loaded = true;
+                    selected_idx = cand;
+                    break;
+                }
+            }
+
+            if (h->context->debug) {
+                if (idx_loaded) {
+                    grib_context_log(h->context, GRIB_LOG_DEBUG,
+                                     "Matrix PDTN: loaded index from %s",
+                                     selected_idx.c_str());
+                }
+                else {
+                    grib_context_log(h->context, GRIB_LOG_DEBUG,
+                                     "Matrix PDTN: index file not loaded, using CSV row numbering or embedded pdtn column");
+                }
+            }
         }
     }
     if (!matrix.loaded) return GRIB_NOT_FOUND;

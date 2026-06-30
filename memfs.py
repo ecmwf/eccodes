@@ -125,7 +125,7 @@ for directory in dirs:
 
             full = "%s/%s" % (dirpath, name)
             _, ext = os.path.splitext(full)
-            if ext not in [".def", ".table", ".tmpl", ".list", ".txt"]:
+            if ext not in [".def", ".table", ".tmpl", ".list", ".txt", ".csv"]:
                 continue
             if name == "CMakeLists.txt":
                 continue
