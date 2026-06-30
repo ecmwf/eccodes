@@ -14,6 +14,10 @@
 #include <float.h>
 #include <string>
 #include <sstream>
+#include <vector>
+#include <set>
+#include <algorithm>
+#include <limits>
 
 typedef enum
 {
@@ -2646,6 +2650,270 @@ int grib2_select_PDTN(int is_eps, int is_instant,
         else
             return 8;
     }
+}
+
+namespace {
+
+struct PdtnMatrix {
+    std::vector<std::string> keys;
+    std::vector<long> pdt_numbers;
+    std::vector<std::vector<unsigned char> > has_key;
+    bool loaded = false;
+};
+
+static std::vector<std::string> split_csv_line_simple(const std::string& line)
+{
+    std::vector<std::string> out;
+    std::string cur;
+    cur.reserve(line.size());
+    for (size_t i = 0; i < line.size(); ++i) {
+        const char c = line[i];
+        if (c == ',') {
+            out.push_back(cur);
+            cur.clear();
+        }
+        else {
+            cur.push_back(c);
+        }
+    }
+    out.push_back(cur);
+    return out;
+}
+
+static bool parse_long_relaxed(const std::string& s, long* v)
+{
+    if (s.empty()) return false;
+    char* end = nullptr;
+    const long x = strtol(s.c_str(), &end, 10);
+    if (end == s.c_str() || (end && *end != '\0')) return false;
+    *v = x;
+    return true;
+}
+
+static bool looks_like_index_column_name(const std::string& s)
+{
+    return (s.find("Unnamed:") == 0 || s == "index");
+}
+
+static bool load_pdtn_matrix_csv(const char* path, PdtnMatrix* m)
+{
+    FILE* f = fopen(path, "r");
+    if (!f) return false;
+
+    char linebuf[65536] = {0,};
+    if (!fgets(linebuf, sizeof(linebuf), f)) {
+        fclose(f);
+        return false;
+    }
+
+    std::string header(linebuf);
+    header.erase(std::remove(header.begin(), header.end(), '\r'), header.end());
+    if (!header.empty() && header.back() == '\n') header.pop_back();
+    std::vector<std::string> cols = split_csv_line_simple(header);
+    if (cols.empty()) {
+        fclose(f);
+        return false;
+    }
+
+    size_t key_col0 = 0;
+    const bool has_explicit_index = looks_like_index_column_name(cols[0]);
+    if (has_explicit_index) key_col0 = 1;
+    if (key_col0 >= cols.size()) {
+        fclose(f);
+        return false;
+    }
+
+    m->keys.assign(cols.begin() + static_cast<long>(key_col0), cols.end());
+    m->pdt_numbers.clear();
+    m->has_key.clear();
+
+    long implicit_pdtn = 0;
+    while (fgets(linebuf, sizeof(linebuf), f)) {
+        std::string line(linebuf);
+        line.erase(std::remove(line.begin(), line.end(), '\r'), line.end());
+        if (!line.empty() && line.back() == '\n') line.pop_back();
+        if (line.empty()) continue;
+
+        std::vector<std::string> fields = split_csv_line_simple(line);
+        if (fields.size() < key_col0 + 1) continue;
+
+        long pdtn = implicit_pdtn;
+        if (has_explicit_index) {
+            long idx = 0;
+            if (parse_long_relaxed(fields[0], &idx)) {
+                pdtn = idx;
+            }
+        }
+        implicit_pdtn++;
+
+        std::vector<unsigned char> row;
+        row.reserve(m->keys.size());
+        for (size_t c = key_col0; c < cols.size(); ++c) {
+            unsigned char present = 0;
+            if (c < fields.size()) {
+                const std::string& s = fields[c];
+                present = (!s.empty() && s != "0") ? 1 : 0;
+            }
+            row.push_back(present);
+        }
+
+        m->pdt_numbers.push_back(pdtn);
+        m->has_key.push_back(std::move(row));
+    }
+
+    fclose(f);
+    m->loaded = (!m->keys.empty() && !m->pdt_numbers.empty() && m->pdt_numbers.size() == m->has_key.size());
+    return m->loaded;
+}
+
+static bool load_pdtn_index_file(const char* path, PdtnMatrix* m)
+{
+    if (!path || !m || m->has_key.empty()) return false;
+    FILE* f = fopen(path, "r");
+    if (!f) return false;
+
+    std::vector<long> idx;
+    char linebuf[4096] = {0,};
+    while (fgets(linebuf, sizeof(linebuf), f)) {
+        std::string line(linebuf);
+        line.erase(std::remove(line.begin(), line.end(), '\r'), line.end());
+        if (!line.empty() && line.back() == '\n') line.pop_back();
+        if (line.empty() || line[0] == '#') continue;
+
+        long val = 0;
+        if (parse_long_relaxed(line, &val)) {
+            idx.push_back(val);
+        }
+    }
+    fclose(f);
+
+    if (idx.size() != m->has_key.size()) return false;
+    m->pdt_numbers = std::move(idx);
+    return true;
+}
+
+static int key_index(const PdtnMatrix& m, const char* key)
+{
+    for (size_t i = 0; i < m.keys.size(); ++i) {
+        if (m.keys[i] == key) return (int)i;
+    }
+    return -1;
+}
+
+static int row_index_for_pdtn(const PdtnMatrix& m, long pdtn)
+{
+    for (size_t i = 0; i < m.pdt_numbers.size(); ++i) {
+        if (m.pdt_numbers[i] == pdtn) return (int)i;
+    }
+    return -1;
+}
+
+} // namespace
+
+int grib2_matrix_select_PDTN_for_key(grib_handle* h, const char* key, long* selected_pdtn)
+{
+    static PdtnMatrix matrix;
+    static bool tried_load = false;
+
+    if (!h || !key || !selected_pdtn) return GRIB_INVALID_ARGUMENT;
+
+    if (!tried_load) {
+        tried_load = true;
+        const char* csv = codes_getenv("ECCODES_PDTN_MATRIX_CSV");
+        if (!csv) csv = "keys_in_PDTNS.csv";
+        if (load_pdtn_matrix_csv(csv, &matrix)) {
+            const char* idx_file = codes_getenv("ECCODES_PDTN_MATRIX_INDEX");
+            if (!idx_file) idx_file = "keys_in_PDTNS_pdtns.txt";
+            load_pdtn_index_file(idx_file, &matrix);
+        }
+    }
+    if (!matrix.loaded) return GRIB_NOT_FOUND;
+
+    const int kidx = key_index(matrix, key);
+    if (kidx < 0) return GRIB_NOT_FOUND;
+
+    long current_pdtn = -1;
+    int err = grib_get_long(h, "productDefinitionTemplateNumber", &current_pdtn);
+    if (err != GRIB_SUCCESS) return err;
+
+    const int ridx = row_index_for_pdtn(matrix, current_pdtn);
+    if (ridx < 0) return GRIB_NOT_FOUND;
+
+    if (matrix.has_key[ridx][kidx]) {
+        *selected_pdtn = current_pdtn;
+        return GRIB_SUCCESS;
+    }
+
+    std::set<int> required;
+    for (size_t j = 0; j < matrix.keys.size(); ++j) {
+        if (matrix.has_key[ridx][j]) required.insert((int)j);
+    }
+    required.insert(kidx);
+
+    bool found = false;
+    long best_pdtn = current_pdtn;
+    int best_extra = std::numeric_limits<int>::max();
+    int best_total = std::numeric_limits<int>::max();
+
+    for (size_t r = 0; r < matrix.has_key.size(); ++r) {
+        const std::vector<unsigned char>& row = matrix.has_key[r];
+        bool is_superset = true;
+        int total = 0;
+        int extra = 0;
+
+        for (size_t j = 0; j < row.size(); ++j) {
+            if (row[j]) total++;
+            const bool req = (required.find((int)j) != required.end());
+            if (req && !row[j]) {
+                is_superset = false;
+                break;
+            }
+            if (!req && row[j]) extra++;
+        }
+        if (!is_superset) continue;
+        if (!found || extra < best_extra || (extra == best_extra && total < best_total)) {
+            found = true;
+            best_extra = extra;
+            best_total = total;
+            best_pdtn = matrix.pdt_numbers[r];
+        }
+    }
+
+    if (!found) {
+        int best_overlap = -1;
+        best_extra = std::numeric_limits<int>::max();
+        best_total = std::numeric_limits<int>::max();
+
+        for (size_t r = 0; r < matrix.has_key.size(); ++r) {
+            const std::vector<unsigned char>& row = matrix.has_key[r];
+            if (!row[kidx]) continue;
+
+            int overlap = 0;
+            int extra = 0;
+            int total = 0;
+            for (size_t j = 0; j < row.size(); ++j) {
+                const bool req = (required.find((int)j) != required.end());
+                if (row[j]) total++;
+                if (req && row[j]) overlap++;
+                if (!req && row[j]) extra++;
+            }
+
+            if (overlap > best_overlap ||
+                (overlap == best_overlap && extra < best_extra) ||
+                (overlap == best_overlap && extra == best_extra && total < best_total)) {
+                best_overlap = overlap;
+                best_extra = extra;
+                best_total = total;
+                best_pdtn = matrix.pdt_numbers[r];
+                found = true;
+            }
+        }
+    }
+
+    if (!found) return GRIB_NOT_FOUND;
+
+    *selected_pdtn = best_pdtn;
+    return GRIB_SUCCESS;
 }
 
 // Input argument must be an entry in Code Table 4.5 (Fixed surface types and units)

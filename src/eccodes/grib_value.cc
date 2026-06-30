@@ -148,6 +148,27 @@ static int grib_set_long_(grib_handle* h, const char* name, long val)
         return ret;
     }
 
+    if (!STR_EQUAL(name, "productDefinitionTemplateNumber")) {
+        long pdtn_new = -1;
+        if (grib2_matrix_select_PDTN_for_key(h, name, &pdtn_new) == GRIB_SUCCESS) {
+            long pdtn_cur = -1;
+            if (grib_get_long(h, "productDefinitionTemplateNumber", &pdtn_cur) == GRIB_SUCCESS && pdtn_new != pdtn_cur) {
+                if (h->context->debug) {
+                    fprintf(stderr, "ECCODES DEBUG grib_set_long fallback: key=%s, switching PDTN %ld -> %ld\n", name, pdtn_cur, pdtn_new);
+                }
+                if (grib_set_long(h, "productDefinitionTemplateNumber", pdtn_new) == GRIB_SUCCESS) {
+                    a = grib_find_accessor(h, name);
+                    if (a) {
+                        ret = a->pack_long(&val, &l);
+                        if (ret == GRIB_SUCCESS)
+                            return grib_dependency_notify_change(a);
+                        return ret;
+                    }
+                }
+            }
+        }
+    }
+
     if (h->context->debug) {
         fprintf(stderr, "ECCODES DEBUG grib_set_long h=%p %s=%ld (Key not found)\n", (void*)h, name, val);
     }
@@ -393,6 +414,26 @@ static int grib_set_double_(grib_handle* h, const char* name, double val)
 
         return ret;
     }
+    if (!STR_EQUAL(name, "productDefinitionTemplateNumber")) {
+        long pdtn_new = -1;
+        if (grib2_matrix_select_PDTN_for_key(h, name, &pdtn_new) == GRIB_SUCCESS) {
+            long pdtn_cur = -1;
+            if (grib_get_long(h, "productDefinitionTemplateNumber", &pdtn_cur) == GRIB_SUCCESS && pdtn_new != pdtn_cur) {
+                if (h->context->debug) {
+                    fprintf(stderr, "ECCODES DEBUG grib_set_double fallback: key=%s, switching PDTN %ld -> %ld\n", name, pdtn_cur, pdtn_new);
+                }
+                if (grib_set_long(h, "productDefinitionTemplateNumber", pdtn_new) == GRIB_SUCCESS) {
+                    a = grib_find_accessor(h, name);
+                    if (a) {
+                        ret = a->pack_double(&val, &l);
+                        if (ret == GRIB_SUCCESS)
+                            return grib_dependency_notify_change(a);
+                        return ret;
+                    }
+                }
+            }
+        }
+    }
     return GRIB_NOT_FOUND;
 }
 
@@ -573,6 +614,36 @@ static int grib_set_string_(grib_handle* h, const char* name, const char* val, s
             return ret;
         }
         return ret;
+    }
+
+    if (!STR_EQUAL(name, "productDefinitionTemplateNumber")) {
+        long pdtn_new = -1;
+        if (grib2_matrix_select_PDTN_for_key(h, name, &pdtn_new) == GRIB_SUCCESS) {
+            long pdtn_cur = -1;
+            if (grib_get_long(h, "productDefinitionTemplateNumber", &pdtn_cur) == GRIB_SUCCESS && pdtn_new != pdtn_cur) {
+                if (h->context->debug) {
+                    fprintf(stderr, "ECCODES DEBUG grib_set_string fallback: key=%s, switching PDTN %ld -> %ld\n", name, pdtn_cur, pdtn_new);
+                }
+                if (grib_set_long(h, "productDefinitionTemplateNumber", pdtn_new) == GRIB_SUCCESS) {
+                    a = grib_find_accessor(h, name);
+                    if (a) {
+                        ret = a->pack_string(val, length);
+                        if (ret == GRIB_SUCCESS) {
+                            postprocess_packingType_change(h, name, val);
+                            if (add_bitmap) {
+                                grib_set_long(h, "bitmapPresent", 1);
+                            }
+                            ret = grib_dependency_notify_change(a);
+                            if (changing_packing_type) {
+                                grib_context_set_data_quality_checks(ctx, quality_checks_saved);
+                            }
+                            return ret;
+                        }
+                        return ret;
+                    }
+                }
+            }
+        }
     }
 
     if (h->context->debug) {
