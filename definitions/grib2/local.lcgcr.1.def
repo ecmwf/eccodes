@@ -1,0 +1,4 @@
+# LC-GCR local
+
+codetable[2] suiteName "grib2/lcgcr_suiteName.table" : dump;
+alias lcgcrSuiteID = suiteName;

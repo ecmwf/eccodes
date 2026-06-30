@@ -12,6 +12,12 @@ alias mars.param = paramId;
 alias mars.expver = marsExpver;
 alias mars.origin = centre;
 
+if (section2Used == 1) {
+    alias mars.origin = lcgcrSuiteID; # origin is the suiteName
+    unalias mars.domain;
+    unalias mars.model;
+}
+
 alias parameter=paramId;
 alias parameter.paramId=paramId;
 alias parameter.shortName=shortName;
