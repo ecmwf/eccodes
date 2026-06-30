@@ -79,11 +79,28 @@ static void print_error_no_accessor(const grib_context* c, const char* name)
 // Matrix-based PDTN fallback should only run for top-level user set calls.
 // Nested internal set calls (e.g. packing conversions) must not trigger PDTN changes.
 static thread_local int g_set_call_depth = 0;
+// Concept application uses grib_set_values_silent(..., silent=1).
+// Track this so matrix fallback can also apply to direct concept key assignments.
+static thread_local int g_concept_apply_depth = 0;
 
 class SetCallDepthGuard {
 public:
     SetCallDepthGuard() { ++g_set_call_depth; }
     ~SetCallDepthGuard() { --g_set_call_depth; }
+};
+
+class ConceptApplyGuard {
+public:
+    explicit ConceptApplyGuard(bool active) : active_(active)
+    {
+        if (active_) ++g_concept_apply_depth;
+    }
+    ~ConceptApplyGuard()
+    {
+        if (active_) --g_concept_apply_depth;
+    }
+private:
+    bool active_;
 };
 
 int grib_set_expression(grib_handle* h, const char* name, grib_expression* e)
@@ -159,7 +176,9 @@ static int grib_set_long_(grib_handle* h, const char* name, long val)
         return ret;
     }
 
-    if (!STR_EQUAL(name, "productDefinitionTemplateNumber") && g_set_call_depth == 1) {
+    const bool allow_matrix_fallback = (g_set_call_depth == 1) ||
+                                       (g_concept_apply_depth > 0 && g_set_call_depth == 2);
+    if (!STR_EQUAL(name, "productDefinitionTemplateNumber") && allow_matrix_fallback) {
         long pdtn_new = -1;
         if (grib2_matrix_select_PDTN_for_key(h, name, &pdtn_new) == GRIB_SUCCESS) {
             long pdtn_cur = -1;
@@ -426,7 +445,9 @@ static int grib_set_double_(grib_handle* h, const char* name, double val)
 
         return ret;
     }
-    if (!STR_EQUAL(name, "productDefinitionTemplateNumber") && g_set_call_depth == 1) {
+    const bool allow_matrix_fallback = (g_set_call_depth == 1) ||
+                                       (g_concept_apply_depth > 0 && g_set_call_depth == 2);
+    if (!STR_EQUAL(name, "productDefinitionTemplateNumber") && allow_matrix_fallback) {
         long pdtn_new = -1;
         if (grib2_matrix_select_PDTN_for_key(h, name, &pdtn_new) == GRIB_SUCCESS) {
             long pdtn_cur = -1;
@@ -629,7 +650,9 @@ static int grib_set_string_(grib_handle* h, const char* name, const char* val, s
         return ret;
     }
 
-    if (!STR_EQUAL(name, "productDefinitionTemplateNumber") && g_set_call_depth == 1) {
+    const bool allow_matrix_fallback = (g_set_call_depth == 1) ||
+                                       (g_concept_apply_depth > 0 && g_set_call_depth == 2);
+    if (!STR_EQUAL(name, "productDefinitionTemplateNumber") && allow_matrix_fallback) {
         long pdtn_new = -1;
         if (grib2_matrix_select_PDTN_for_key(h, name, &pdtn_new) == GRIB_SUCCESS) {
             long pdtn_cur = -1;
@@ -2155,6 +2178,7 @@ int grib_set_values(grib_handle* h, grib_values* args, size_t count)
 
 int grib_set_values_silent(grib_handle* h, grib_values* args, size_t count, int silent)
 {
+    ConceptApplyGuard concept_apply_guard(silent != 0);
     int i, error = 0;
     int err = 0;
     size_t len;
