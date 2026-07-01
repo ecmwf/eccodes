@@ -24,7 +24,8 @@ jobs:
         linux-64
         linux-aarch64-public
         osx-arm64
-      use_nexus_channel: false
+      channels: |
+        conda-forge
   system-package:
     strategy:
       fail-fast: false
@@ -38,3 +39,4 @@ jobs:
         ecmwf/ecbuild
         MathisRosenhauer/libaec@refs/tags/v1.1.4
       dependency_branch: develop
+
