@@ -195,6 +195,30 @@
           true = (element(typeOfStatisticalProcessing,0) == 6) ; }
 
 ############################################
+## Weekly STATTYPES with 1 or 2 time loop ##
+############################################
+# Mean - 168 hours
+'weav' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 168) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 0) ; }
+# Max - 168 hours
+'wemx' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 168) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 2) ; }
+# Min - 168 hours
+'wemn' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 168) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 3) ; }
+# Stdev - 168 hours
+'wesd' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 168) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 6) ; }
+
+############################################
 ## Daily STATTYPES with 1 or 2 time loops ##
 ############################################
 # Mean - 24 hours
