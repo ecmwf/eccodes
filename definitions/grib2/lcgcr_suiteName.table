@@ -1,6 +1,6 @@
 # LC-GCR table of suite names
 0 unknown Unknown
-1 cma_cra-40 CRA-40 reanalysis produced by CMA
-1 ecmwf_era5 ERA5 reanalysis produced by ECMWF
-3 jma_jra-3q JRA-3Q reanalysis produced by JMA
-4 nasa_merra-2 MERRA-2 reanalysis produced by NASA
+1 CRA-40 CRA-40 reanalysis produced by CMA
+2 ERA5 ERA5 reanalysis produced by ECMWF
+3 JRA-3Q JRA-3Q reanalysis produced by JMA
+4 MERRA-2 MERRA-2 reanalysis produced by NASA

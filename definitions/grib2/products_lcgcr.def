@@ -13,9 +13,9 @@ alias mars.expver = marsExpver;
 alias mars.origin = centre;
 
 if (section2Used == 1) {
-    alias mars.origin = lcgcrSuiteID; # origin is the suiteName
+    alias mars.model = lcgcrSuiteID;
     unalias mars.domain;
-    unalias mars.model;
+#   unalias mars.model;
 }
 
 alias parameter=paramId;
