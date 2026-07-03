@@ -16,6 +16,7 @@
 #include <sstream>
 #include <vector>
 #include <set>
+#include <map>
 #include <algorithm>
 #include <limits>
 #include <mutex>
@@ -2666,6 +2667,7 @@ struct PdtnMatrix {
     std::vector<std::string> keys;
     std::vector<long> pdt_numbers;
     std::vector<std::vector<unsigned char> > has_key;
+    std::map<std::string, std::string> aliases;
     bool loaded = false;
 };
 
@@ -2705,6 +2707,28 @@ static bool looks_like_index_column_name(const std::string& s)
         s == "index" ||
         s == "pdtn" ||
         s == "productDefinitionTemplateNumber");
+}
+
+static std::string first_definition_path(const grib_context* c)
+{
+    const char* defs_path = c ? c->grib_definition_files_path : nullptr;
+    if (!defs_path || !defs_path[0]) {
+        defs_path = codes_getenv("ECCODES_DEFINITION_PATH");
+    }
+    if (!defs_path || !defs_path[0]) return std::string();
+
+    const char* p = defs_path;
+    while (*p != '\0' && *p != ECC_PATH_DELIMITER_CHAR) {
+        ++p;
+    }
+    return std::string(defs_path, p - defs_path);
+}
+
+static std::string default_matrix_path(const grib_context* c, const char* filename)
+{
+    const std::string defs_dir = first_definition_path(c);
+    if (defs_dir.empty()) return std::string(filename);
+    return defs_dir + "/grib2/" + filename;
 }
 
 static bool load_pdtn_matrix_csv(const char* path, PdtnMatrix* m)
@@ -2812,6 +2836,99 @@ static int key_index(const PdtnMatrix& m, const char* key)
     return -1;
 }
 
+// Resolve aliases: given a key name that may itself be an alias, walk the
+// accessor's all_names_[] array and return the first name present in the matrix.
+// If not found in accessor names, check CSV aliases mapping.
+// Returns -1 if neither the key nor any of its aliases match a matrix column.
+static int key_index_with_aliases(const PdtnMatrix& m, const grib_accessor* a, const char* requested_key)
+{
+    if (!requested_key) return -1;
+
+    // First try accessor's all_names_ if accessor is available.
+    if (a) {
+        for (int ni = 0; ni < MAX_ACCESSOR_NAMES; ++ni) {
+            const char* n = a->all_names_[ni];
+            if (!n) break;
+            const int idx = key_index(m, n);
+            if (idx >= 0) return idx;
+        }
+    }
+
+    // Fall back to CSV aliases: if requested_key is in the aliases map,
+    // resolve it to its canonical form and check if that's in the matrix.
+    const auto it = m.aliases.find(requested_key);
+    if (it != m.aliases.end()) {
+        const int idx = key_index(m, it->second.c_str());
+        if (idx >= 0) return idx;
+    }
+
+    // Finally, try the key directly against the matrix.
+    return key_index(m, requested_key);
+}
+
+// Load aliases from CSV: reads alias,canonical pairs and skips comments/header.
+static bool load_aliases_csv(const char* csv_path, PdtnMatrix* m)
+{
+    if (!csv_path || !m) return false;
+
+    FILE* f = codes_fopen(csv_path, "r");
+    if (!f) return false;
+
+    char line[1024];
+    bool seen_header = false;
+
+    while (fgets(line, sizeof(line), f)) {
+        // Strip newline and leading/trailing whitespace
+        size_t len = strlen(line);
+        while (len > 0 && (line[len - 1] == '\n' || line[len - 1] == '\r')) {
+            line[--len] = '\0';
+        }
+
+        // Trim leading whitespace
+        char* start = line;
+        while (*start && (*start == ' ' || *start == '\t')) start++;
+
+        // Skip empty lines and comments
+        if (!*start || *start == '#') continue;
+
+        // Skip header line
+        if (!seen_header && (strstr(start, "alias") && strstr(start, "canonical"))) {
+            seen_header = true;
+            continue;
+        }
+        seen_header = true;
+
+        // Parse CSV line: alias,canonical
+        std::vector<std::string> parts = split_csv_line_simple(start);
+        if (parts.size() < 2) continue;
+
+        std::string alias = parts[0];
+        std::string canonical = parts[1];
+
+        // Trim whitespace from fields
+        size_t p = 0;
+        while (p < alias.size() && (alias[p] == ' ' || alias[p] == '\t')) p++;
+        alias = alias.substr(p);
+        p = alias.size();
+        while (p > 0 && (alias[p - 1] == ' ' || alias[p - 1] == '\t')) p--;
+        alias = alias.substr(0, p);
+
+        p = 0;
+        while (p < canonical.size() && (canonical[p] == ' ' || canonical[p] == '\t')) p++;
+        canonical = canonical.substr(p);
+        p = canonical.size();
+        while (p > 0 && (canonical[p - 1] == ' ' || canonical[p - 1] == '\t')) p--;
+        canonical = canonical.substr(0, p);
+
+        if (!alias.empty() && !canonical.empty()) {
+            m->aliases[alias] = canonical;
+        }
+    }
+
+    fclose(f);
+    return true;
+}
+
 static int row_index_for_pdtn(const PdtnMatrix& m, long pdtn)
 {
     for (size_t i = 0; i < m.pdt_numbers.size(); ++i) {
@@ -2904,13 +3021,49 @@ int grib2_matrix_select_PDTN_for_key(grib_handle* h, const char* key, long* sele
                                      "Matrix PDTN: index file not loaded, using CSV row numbering or embedded pdtn column");
                 }
             }
+
+            // Load aliases CSV for key resolution fallback.
+            const char* aliases_csv = codes_getenv("ECCODES_PDTN_ALIASES_CSV");
+            std::vector<std::string> aliases_candidates;
+            if (aliases_csv) {
+                aliases_candidates.push_back(aliases_csv);
+            }
+            else {
+                const std::string aliases_default = default_matrix_path(h->context, "keys_in_PDTNS_aliases.csv");
+                aliases_candidates.push_back(aliases_default);
+                aliases_candidates.push_back("/MEMFS/definitions/grib2/keys_in_PDTNS_aliases.csv");
+                aliases_candidates.push_back("keys_in_PDTNS_aliases.csv");
+            }
+
+            bool aliases_loaded = false;
+            std::string selected_aliases;
+            for (const auto& cand : aliases_candidates) {
+                if (load_aliases_csv(cand.c_str(), &matrix)) {
+                    aliases_loaded = true;
+                    selected_aliases = cand;
+                    if (!matrix.aliases.empty()) break;
+                }
+            }
+
+            if (h->context->debug) {
+                if (aliases_loaded && !matrix.aliases.empty()) {
+                    grib_context_log(h->context, GRIB_LOG_DEBUG,
+                                     "Matrix PDTN: loaded %lu aliases from %s",
+                                     (unsigned long)matrix.aliases.size(),
+                                     selected_aliases.c_str());
+                }
+            }
         }
     });
 
     if (!matrix_enabled) return GRIB_NOT_FOUND;
     if (!matrix.loaded) return GRIB_NOT_FOUND;
 
-    const int kidx = key_index(matrix, key);
+    // Resolve the key through aliases: find its accessor and check all_names_[].
+    // If not found via accessor, fall back to CSV aliases.
+    // This allows both canonical names and alias names to match matrix columns.
+    const grib_accessor* key_acc = grib_find_accessor(h, key);
+    const int kidx = key_index_with_aliases(matrix, key_acc, key);
     if (kidx < 0) return GRIB_NOT_FOUND;
 
     long current_pdtn = -1;

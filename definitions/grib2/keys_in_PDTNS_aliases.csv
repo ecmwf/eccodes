@@ -1,0 +1,6 @@
+# Alias map for PDTN matrix key lookup.
+# Format: alias,canonical
+# Each row tells the matrix selector that <alias> should be treated as <canonical>
+# when the alias is not yet defined in the current product template.
+#
+number,perturbationNumber

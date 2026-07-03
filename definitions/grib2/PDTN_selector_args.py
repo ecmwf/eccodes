@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+import csv
 import glob
 import os
 import sys
@@ -33,6 +34,13 @@ def parse_args():
         help=(
             "Optional pickle file with PDTN index (default: keys_in_PDTNS.pickle). "
             "If present and shape-compatible, its index is used as PDTN list."
+        )
+    )
+    parser.add_argument(
+        "--aliases-csv", dest="aliases_csv", default="keys_in_PDTNS_aliases.csv",
+        help=(
+            "Optional alias mapping CSV with columns alias,canonical "
+            "(default: keys_in_PDTNS_aliases.csv)."
         )
     )
     return parser.parse_args()
@@ -83,6 +91,55 @@ def parse_keys(raw_keys):
             parts = [x.strip() for x in item.split(",") if x.strip()]
             out.extend(parts)
     return out
+
+
+def load_aliases(aliases_csv):
+    aliases = {}
+    if not aliases_csv:
+        return aliases
+
+    if not os.path.exists(aliases_csv):
+        return aliases
+
+    try:
+        with open(aliases_csv, newline="", encoding="utf-8") as handle:
+            reader = csv.reader(handle)
+            for row in reader:
+                if not row:
+                    continue
+                first = row[0].strip() if len(row) > 0 else ""
+                if not first or first.startswith("#"):
+                    continue
+                if len(row) < 2:
+                    continue
+                alias = row[0].strip()
+                canonical = row[1].strip()
+                if alias == "alias" and canonical == "canonical":
+                    continue
+                if alias and canonical:
+                    aliases[alias] = canonical
+    except OSError:
+        return {}
+
+    return aliases
+
+
+def resolve_lookup_key(df, current_pdtn, requested_key, aliases):
+    current_keys = template_keyset(df, current_pdtn)
+
+    # Prefer exact key when present in the current template.
+    if requested_key in current_keys:
+        return requested_key, None
+
+    # Then prefer exact key if the matrix can route on it.
+    if requested_key in df.columns:
+        return requested_key, None
+
+    canonical = aliases.get(requested_key)
+    if canonical and canonical in df.columns:
+        return canonical, canonical
+
+    return requested_key, None
 
 
 def template_keyset(df, pdtn):
@@ -173,6 +230,7 @@ def main():
     args = parse_args()
     df = read_matrix(args.matrix_csv, args.matrix_pickle)
     keys = parse_keys(args.keys)
+    aliases = load_aliases(args.aliases_csv)
     pdtn_names = load_pdtn_names()
 
     if args.start_pdtn not in df.index:
@@ -182,7 +240,7 @@ def main():
             f"First templates: {available}"
         )
 
-    unknown_keys = [k for k in keys if k not in df.columns]
+    unknown_keys = [k for k in keys if k not in df.columns and aliases.get(k) not in df.columns]
     if unknown_keys:
         sys.exit("Key(s) not defined in matrix: " + ", ".join(unknown_keys))
 
@@ -190,15 +248,28 @@ def main():
     print(f"Start PDTN: {current_pdtn}")
 
     for key in keys:
-        next_pdtns, reason = choose_next_templates(df, current_pdtn, key)
+        lookup_key, alias_used = resolve_lookup_key(df, current_pdtn, key, aliases)
+        next_pdtns, reason = choose_next_templates(df, current_pdtn, lookup_key)
         if not next_pdtns:
             print(f"{key}: no template contains this key. Keep PDTN {current_pdtn}")
             continue
 
         if next_pdtns == [current_pdtn]:
-            print(f"{key}: already available in PDTN {current_pdtn}")
+            if alias_used:
+                print(
+                    f"{key}: already available in PDTN {current_pdtn} "
+                    f"(resolved via alias {alias_used})"
+                )
+            else:
+                print(f"{key}: already available in PDTN {current_pdtn}")
         else:
-            print(f"{key}: PDTN {current_pdtn} -> {','.join(str(p) for p in next_pdtns)} ({reason})")
+            if alias_used:
+                print(
+                    f"{key}: PDTN {current_pdtn} -> {','.join(str(p) for p in next_pdtns)} "
+                    f"({reason}; resolved via alias {alias_used})"
+                )
+            else:
+                print(f"{key}: PDTN {current_pdtn} -> {','.join(str(p) for p in next_pdtns)} ({reason})")
             for pdtn in next_pdtns:
                 label = pdtn_names.get(pdtn, "")
                 if label:
