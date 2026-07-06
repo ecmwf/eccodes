@@ -43,7 +43,7 @@
 'GFDL-AI_SHiELD' = {
     backgroundProcess = 26;
 }
-'IMD-IMDGFS' = {
+'IMD-GFS' = {
     backgroundProcess = 12;
 }
 'IMD-NCUM' = {
