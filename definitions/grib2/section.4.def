@@ -43,6 +43,8 @@ concept datasetForLocal(unknown) {
   "destine"      = {productionStatusOfProcessedData=13;}
   "destinegen1"  = {productionStatusOfProcessedData=12;generation=1;} # DestinE ClimateDT Generation 1
   "destinegen1"  = {productionStatusOfProcessedData=13;generation=1;}
+  "lcgcr"        = {productionStatusOfProcessedData=14;} # LC-GCR
+  "lcgcr"        = {productionStatusOfProcessedData=15;}
   "era"          = {marsClass=22;}
   "era"          = {marsClass=5;}
   "era"          = {marsClass=23;}

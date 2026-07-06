@@ -12,10 +12,12 @@ alias mars.param = paramId;
 alias mars.expver = marsExpver;
 alias mars.origin = centre;
 
-if (section2Used == 1) {
-    alias mars.model = lcgcrSuiteID;
-    unalias mars.domain;
-#   unalias mars.model;
+
+concept modelName(unknown, "modelNameConcept.def", conceptsDir2, conceptsLocalDirAll): no_copy, dump;
+if (modelName isnot "unknown") {
+    concept modelVersion(unknown, "modelVersionConcept.[modelName].def", conceptsDir2, conceptsLocalDirAll): no_copy, dump, read_only;
+    alias ls.model = modelName;
+    alias mars.model = modelName;
 }
 
 alias parameter=paramId;
