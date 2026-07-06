@@ -45,6 +45,8 @@ concept datasetForLocal(unknown) {
   "destinegen1"  = {productionStatusOfProcessedData=13;generation=1;}
   "lcgcr"        = {productionStatusOfProcessedData=14;} # LC-GCR
   "lcgcr"        = {productionStatusOfProcessedData=15;}
+  "wpmip"        = {productionStatusOfProcessedData=16;} # WPMIP
+  "wpmip"        = {productionStatusOfProcessedData=17;}
   "era"          = {marsClass=22;}
   "era"          = {marsClass=5;}
   "era"          = {marsClass=23;}

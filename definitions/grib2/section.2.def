@@ -46,6 +46,12 @@ if ( addEmptySection2 == 0 ) {
             template  lcgcrSection "grib2/local.lcgcr.[lcgcrLocalVersion:l].def";
         }
 
+        if(productionStatusOfProcessedData == 16 || productionStatusOfProcessedData == 17) {
+            # wpmip = WPMIP Weather Prediction Model Intercomparison Project
+            codetable[2] wpmipLocalVersion 'grib2/wpmipLocalVersion.table' = 1 : dump;
+            template  wpmipSection "grib2/local.wpmip.[wpmipLocalVersion:l].def";
+        }
+
         codetable[2] grib2LocalSectionNumber 'grib2/grib2LocalSectionNumber.[centreForLocal:l].table' = 1 : dump;
 
         if (grib2LocalSectionNumber!=0) {
