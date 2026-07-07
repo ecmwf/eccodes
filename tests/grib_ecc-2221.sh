@@ -35,7 +35,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 ${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample_grib2
-grib_check_key_equals $tempGrib model,configuration,forcing,timespan "lisflood v5 ecmf-ifs 6h"
+grib_check_key_equals $tempGrib model,configuration,forcing,timespan "lisflood v5.0 ecmf-ifs 6h"
 
 # Clean up
 rm -f $tempGrib $tempFilt
