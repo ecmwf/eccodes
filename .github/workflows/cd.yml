@@ -6,9 +6,35 @@ on:
       - '[0-9]+.[0-9]+.[0-9]+'
 
 jobs:
-  deploy:
-    uses: ecmwf/reusable-workflows/.github/workflows/create-package.yml@v2
-    secrets: inherit
   wheel:
     uses: ./.github/workflows/build-wheel-wrapper.yml
-    secrets: inherit    
+    secrets: inherit
+  tarball:
+    uses: ecmwf/reusable-workflows/.github/workflows/cd-tarball.yml@v2
+    secrets: inherit
+    with:
+      confluence_space: ${{ vars.TARBALL_CONFLUENCE_SPACE }}
+  conda:
+    uses: ecmwf/reusable-workflows/.github/workflows/cd-conda.yml@v2
+    secrets: inherit
+    with:
+      platforms: |
+        linux-64
+        linux-aarch64-public
+        osx-arm64
+      channels: |
+        conda-forge
+  system-package:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [debian-11, debian-12, debian-13, rocky-8, rocky-9, rocky-10]
+    uses: ecmwf/reusable-workflows/.github/workflows/cd-system-package.yml@v2
+    secrets: inherit
+    with:
+      os: ${{ matrix.os }}
+      dependencies: |
+        ecmwf/ecbuild
+        MathisRosenhauer/libaec@refs/tags/v1.1.4
+      dependency_branch: develop
+
