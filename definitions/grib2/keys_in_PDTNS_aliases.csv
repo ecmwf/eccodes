@@ -3,4 +3,37 @@
 # Each row tells the matrix selector that <alias> should be treated as <canonical>
 # when the alias is not yet defined in the current product template.
 #
+aerosolType,constituentType
+backgroundGeneratingProcessIdentifier,backgroundProcess
+directionNumber,waveDirectionNumber
+frequencyNumber,waveFrequencyNumber
+hoursAfterReferenceTimeOfDataCutoff,hoursAfterDataCutoff
+ident,satelliteNumber
+indicatorOfUnitOfTimeRange,indicatorOfUnitForForecastTime
+instrument,instrumentType
+minutesAfterReferenceTimeOfDataCutoff,minutesAfterDataCutoff
 number,perturbationNumber
+numberOfContributingSpectralBands,NB
+numberOfDirections,totalNumberOfWaveDirections
+numberOfFrequencies,totalNumberOfWaveFrequencies
+numberOfTimeRange,numberOfTimeRanges
+scaleFactorOfFirstLimit,scaleFactorOfLowerLimit
+scaledValueOfFirstLimit,scaledValueOfLowerLimit
+scaleFactorOfSecondLimit,scaleFactorOfUpperLimit
+scaledValueOfSecondLimit,scaledValueOfUpperLimit
+totalNumber,numberOfForecastsInEnsemble
+totalNumberOfDataValuesMissingInStatisticalProcess,
+numberOfMissingInStatisticalProcess
+typeOfTimeIncrementBetweenSuccessiveFieldsUsedInTheStatisticalProcessing,typeOfTimeIncrement
+#
+# This are meta-keys which do calculations and set several keys together
+# we need only one representative key to choose the correct PDTN
+#
+firstSize,scaledValueOfFirstSize
+firstWavelength,scaledValueOfFirstWavelength
+lowerLimit,scaledValueOfLowerLimit
+secondSize,scaledValueOfSecondSize
+secondWavelength,scaledValueOfSecondWavelength
+startDateOfReferencePeriod,yearOfStartOfReferencePeriod
+upperLimit,scaledValueOfUpperLimit
+
