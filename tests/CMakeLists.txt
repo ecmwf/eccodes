@@ -178,6 +178,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_ecc-517
         bufr_ecc-2011
         bufr_ecc-2153
+        bufr_ecc-2300
         grib_efas
         grib_sh_imag
         grib_spectral
