@@ -10,6 +10,12 @@
 
 . ./include.ctest.sh
 
+# This test requires PDTN matrix selection to be enabled
+if [ "${ECCODES_PDTN_MATRIX_ENABLE:-1}" = "0" ]; then
+    echo "Skipping: ECCODES_PDTN_MATRIX_ENABLE=0"
+    exit 0
+fi
+
 # ---------------------------------------------------------
 # Regression test for matrix-driven sequential PDTN selection
 #
