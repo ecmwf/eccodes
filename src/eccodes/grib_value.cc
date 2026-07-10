@@ -2197,7 +2197,7 @@ int grib_set_values_silent(grib_handle* h, grib_values* args, size_t count, int 
     int stack = h->values_stack++;
     int has_explicit_pdtn = 0;
     int oneshot_tried = 0;
-    int enable_oneshot = (count > 1) ? 1 : 0;
+    int enable_oneshot = (count > 1 && grib2_matrix_is_enabled()) ? 1 : 0;
 
     ECCODES_ASSERT(h->values_stack < MAX_SET_VALUES - 1);
 
