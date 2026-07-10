@@ -193,6 +193,7 @@ if( HAVE_BUILD_TOOLS )
         grib_cmp_paramtype
         grib_cmp_timeSpan
         grib_stattype
+        grib_ecc-2000
         grib_ecc-2221
         grib_ecc-2218
         grib_ecc-2240
