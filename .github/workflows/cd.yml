@@ -37,4 +37,4 @@ jobs:
         ecmwf/ecbuild
         MathisRosenhauer/libaec@refs/tags/v1.1.4
       dependency_branch: develop
-
+      cmake_options: -DENABLE_MEMFS=1
