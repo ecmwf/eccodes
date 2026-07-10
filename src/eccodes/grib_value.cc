@@ -79,6 +79,9 @@ static void print_error_no_accessor(const grib_context* c, const char* name)
 // Matrix-based PDTN fallback should only run for top-level user set calls.
 // Nested internal set calls (e.g. packing conversions) must not trigger PDTN changes.
 static thread_local int g_set_call_depth = 0;
+// During batch grib_set_values processing, suppress per-key matrix fallback.
+// A one-shot template switch (if needed) is handled by grib_set_values_silent.
+static thread_local int g_disable_matrix_fallback_in_batch = 0;
 // Concept application uses grib_set_values_silent(..., silent=1).
 // Track this so matrix fallback can also apply to direct concept key assignments.
 static thread_local int g_concept_apply_depth = 0;
@@ -178,7 +181,9 @@ static int grib_set_long_(grib_handle* h, const char* name, long val)
 
     const bool allow_matrix_fallback = (g_set_call_depth == 1) ||
                                        (g_concept_apply_depth > 0 && g_set_call_depth == 2);
-    if (!STR_EQUAL(name, "productDefinitionTemplateNumber") && allow_matrix_fallback) {
+    if (!STR_EQUAL(name, "productDefinitionTemplateNumber") &&
+        allow_matrix_fallback &&
+        g_disable_matrix_fallback_in_batch == 0) {
         long pdtn_new = -1;
         if (grib2_matrix_select_PDTN_for_key(h, name, &pdtn_new) == GRIB_SUCCESS) {
             long pdtn_cur = -1;
@@ -447,7 +452,9 @@ static int grib_set_double_(grib_handle* h, const char* name, double val)
     }
     const bool allow_matrix_fallback = (g_set_call_depth == 1) ||
                                        (g_concept_apply_depth > 0 && g_set_call_depth == 2);
-    if (!STR_EQUAL(name, "productDefinitionTemplateNumber") && allow_matrix_fallback) {
+    if (!STR_EQUAL(name, "productDefinitionTemplateNumber") &&
+        allow_matrix_fallback &&
+        g_disable_matrix_fallback_in_batch == 0) {
         long pdtn_new = -1;
         if (grib2_matrix_select_PDTN_for_key(h, name, &pdtn_new) == GRIB_SUCCESS) {
             long pdtn_cur = -1;
@@ -652,7 +659,9 @@ static int grib_set_string_(grib_handle* h, const char* name, const char* val, s
 
     const bool allow_matrix_fallback = (g_set_call_depth == 1) ||
                                        (g_concept_apply_depth > 0 && g_set_call_depth == 2);
-    if (!STR_EQUAL(name, "productDefinitionTemplateNumber") && allow_matrix_fallback) {
+    if (!STR_EQUAL(name, "productDefinitionTemplateNumber") &&
+        allow_matrix_fallback &&
+        g_disable_matrix_fallback_in_batch == 0) {
         long pdtn_new = -1;
         if (grib2_matrix_select_PDTN_for_key(h, name, &pdtn_new) == GRIB_SUCCESS) {
             long pdtn_cur = -1;
@@ -2184,6 +2193,9 @@ int grib_set_values_silent(grib_handle* h, grib_values* args, size_t count, int 
     size_t len;
     int more  = 1;
     int stack = h->values_stack++;
+    int has_explicit_pdtn = 0;
+    int oneshot_tried = 0;
+    int enable_oneshot = (count > 1) ? 1 : 0;
 
     ECCODES_ASSERT(h->values_stack < MAX_SET_VALUES - 1);
 
@@ -2196,10 +2208,30 @@ int grib_set_values_silent(grib_handle* h, grib_values* args, size_t count, int 
         }
     }
 
+    if (enable_oneshot) {
+        for (i = 0; i < count; i++) {
+            if (args[i].name && STR_EQUAL(args[i].name, "productDefinitionTemplateNumber")) {
+                has_explicit_pdtn = 1;
+                break;
+            }
+        }
+        if (has_explicit_pdtn) {
+            enable_oneshot = 0;
+            if (h->context->debug) {
+                fprintf(stderr, "ECCODES DEBUG grib_set_values oneshot: disabled due to explicit productDefinitionTemplateNumber in input\n");
+            }
+        }
+    }
+
     for (i = 0; i < count; i++)
         args[i].error = GRIB_NOT_FOUND;
 
+    if (enable_oneshot) {
+        ++g_disable_matrix_fallback_in_batch;
+    }
+
     while (more) {
+        int has_not_found = 0;
         more = 0;
         for (i = 0; i < count; i++) {
             if (args[i].error != GRIB_NOT_FOUND)
@@ -2240,7 +2272,53 @@ int grib_set_values_silent(grib_handle* h, grib_values* args, size_t count, int 
             }
             // if (args[i].error != GRIB_SUCCESS)
             //   grib_context_log(h->context,GRIB_LOG_ERROR,"Unable to set %s (%s)",args[i].name,grib_get_error_message(args[i].error));
+            if (args[i].error == GRIB_NOT_FOUND) {
+                has_not_found = 1;
+                // If oneshot is enabled and not yet attempted, no need to keep
+                // trying the remaining unresolved keys on the old template.
+                if (enable_oneshot && !oneshot_tried) {
+                    break;
+                }
+            }
         }
+
+        if (enable_oneshot && !oneshot_tried && has_not_found) {
+            oneshot_tried = 1;
+            if (h->context->debug) {
+                fprintf(stderr, "ECCODES DEBUG grib_set_values oneshot: triggered after GRIB_NOT_FOUND\n");
+            }
+            long pdtn_cur = -1;
+            if (grib_get_long(h, "productDefinitionTemplateNumber", &pdtn_cur) == GRIB_SUCCESS) {
+                long pdtn_plan = pdtn_cur;
+                for (i = 0; i < count; i++) {
+                    if (!args[i].name || STR_EQUAL(args[i].name, "productDefinitionTemplateNumber"))
+                        continue;
+
+                    long pdtn_next = -1;
+                    if (grib2_matrix_select_PDTN_for_key_with_current(h, args[i].name, pdtn_plan, &pdtn_next) == GRIB_SUCCESS) {
+                        pdtn_plan = pdtn_next;
+                    }
+                }
+
+                if (pdtn_plan != pdtn_cur) {
+                    if (h->context->debug) {
+                        fprintf(stderr, "ECCODES DEBUG grib_set_values oneshot: switching PDTN %ld -> %ld\n", pdtn_cur, pdtn_plan);
+                    }
+                    if (grib_set_long(h, "productDefinitionTemplateNumber", pdtn_plan) == GRIB_SUCCESS) {
+                        // Re-run unresolved keys after a single template switch.
+                        more = 1;
+                    }
+                }
+            }
+        }
+    }
+
+    if (h->context->debug && enable_oneshot && !oneshot_tried) {
+        fprintf(stderr, "ECCODES DEBUG grib_set_values oneshot: not triggered (no GRIB_NOT_FOUND in batch pass)\n");
+    }
+
+    if (enable_oneshot) {
+        --g_disable_matrix_fallback_in_batch;
     }
 
     h->values[stack]       = NULL;

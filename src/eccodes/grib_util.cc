@@ -17,6 +17,7 @@
 #include <vector>
 #include <set>
 #include <map>
+#include <unordered_map>
 #include <algorithm>
 #include <limits>
 #include <mutex>
@@ -2663,11 +2664,33 @@ int grib2_select_PDTN(int is_eps, int is_instant,
 
 namespace {
 
+struct PdtnSelectCacheKey {
+    long pdtn;
+    int kidx;
+
+    bool operator==(const PdtnSelectCacheKey& other) const
+    {
+        return pdtn == other.pdtn && kidx == other.kidx;
+    }
+};
+
+struct PdtnSelectCacheKeyHash {
+    size_t operator()(const PdtnSelectCacheKey& k) const
+    {
+        const size_t h1 = std::hash<long>()(k.pdtn);
+        const size_t h2 = std::hash<int>()(k.kidx);
+        return h1 ^ (h2 << 1);
+    }
+};
+
 struct PdtnMatrix {
     std::vector<std::string> keys;
+    std::unordered_map<std::string, int> key_to_index;
     std::vector<long> pdt_numbers;
     std::vector<std::vector<unsigned char> > has_key;
     std::map<std::string, std::string> aliases;
+    std::unordered_map<PdtnSelectCacheKey, long, PdtnSelectCacheKeyHash> selection_cache;
+    std::mutex selection_cache_mutex;
     bool loaded = false;
 };
 
@@ -2760,6 +2783,10 @@ static bool load_pdtn_matrix_csv(const char* path, PdtnMatrix* m)
     }
 
     m->keys.assign(cols.begin() + static_cast<long>(key_col0), cols.end());
+    m->key_to_index.clear();
+    for (size_t i = 0; i < m->keys.size(); ++i) {
+        m->key_to_index[m->keys[i]] = static_cast<int>(i);
+    }
     m->pdt_numbers.clear();
     m->has_key.clear();
 
@@ -2830,9 +2857,9 @@ static bool load_pdtn_index_file(const char* path, PdtnMatrix* m)
 
 static int key_index(const PdtnMatrix& m, const char* key)
 {
-    for (size_t i = 0; i < m.keys.size(); ++i) {
-        if (m.keys[i] == key) return (int)i;
-    }
+    if (!key) return -1;
+    const auto it = m.key_to_index.find(key);
+    if (it != m.key_to_index.end()) return it->second;
     return -1;
 }
 
@@ -2939,7 +2966,7 @@ static int row_index_for_pdtn(const PdtnMatrix& m, long pdtn)
 
 } // namespace
 
-int grib2_matrix_select_PDTN_for_key(grib_handle* h, const char* key, long* selected_pdtn)
+int grib2_matrix_select_PDTN_for_key_with_current(grib_handle* h, const char* key, long current_pdtn, long* selected_pdtn)
 {
     static PdtnMatrix matrix;
     static std::once_flag matrix_init_once;
@@ -3066,16 +3093,24 @@ int grib2_matrix_select_PDTN_for_key(grib_handle* h, const char* key, long* sele
     const int kidx = key_index_with_aliases(matrix, key_acc, key);
     if (kidx < 0) return GRIB_NOT_FOUND;
 
-    long current_pdtn = -1;
-    int err = grib_get_long(h, "productDefinitionTemplateNumber", &current_pdtn);
-    if (err != GRIB_SUCCESS) return err;
-
     const int ridx = row_index_for_pdtn(matrix, current_pdtn);
     if (ridx < 0) return GRIB_NOT_FOUND;
 
     if (matrix.has_key[ridx][kidx]) {
         *selected_pdtn = current_pdtn;
         return GRIB_SUCCESS;
+    }
+
+    const long cache_not_found = std::numeric_limits<long>::min();
+    const PdtnSelectCacheKey cache_key = {current_pdtn, kidx};
+    {
+        std::lock_guard<std::mutex> lock(matrix.selection_cache_mutex);
+        const auto it = matrix.selection_cache.find(cache_key);
+        if (it != matrix.selection_cache.end()) {
+            if (it->second == cache_not_found) return GRIB_NOT_FOUND;
+            *selected_pdtn = it->second;
+            return GRIB_SUCCESS;
+        }
     }
 
     std::set<int> required;
@@ -3144,10 +3179,27 @@ int grib2_matrix_select_PDTN_for_key(grib_handle* h, const char* key, long* sele
         }
     }
 
-    if (!found) return GRIB_NOT_FOUND;
+    if (!found) {
+        std::lock_guard<std::mutex> lock(matrix.selection_cache_mutex);
+        matrix.selection_cache[cache_key] = cache_not_found;
+        return GRIB_NOT_FOUND;
+    }
+
+    {
+        std::lock_guard<std::mutex> lock(matrix.selection_cache_mutex);
+        matrix.selection_cache[cache_key] = best_pdtn;
+    }
 
     *selected_pdtn = best_pdtn;
     return GRIB_SUCCESS;
+}
+
+int grib2_matrix_select_PDTN_for_key(grib_handle* h, const char* key, long* selected_pdtn)
+{
+    long current_pdtn = -1;
+    int err = grib_get_long(h, "productDefinitionTemplateNumber", &current_pdtn);
+    if (err != GRIB_SUCCESS) return err;
+    return grib2_matrix_select_PDTN_for_key_with_current(h, key, current_pdtn, selected_pdtn);
 }
 
 // Input argument must be an entry in Code Table 4.5 (Fixed surface types and units)
