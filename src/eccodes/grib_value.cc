@@ -15,7 +15,9 @@
 #include "grib_value.h"
 //#include "grib_accessor.h"
 #include <float.h>
+#include <algorithm>
 #include <limits>
+#include <string>
 #include <type_traits>
 #include <vector>
 #include "ExceptionHandler.h"
@@ -2272,14 +2274,8 @@ int grib_set_values_silent(grib_handle* h, grib_values* args, size_t count, int 
             }
             // if (args[i].error != GRIB_SUCCESS)
             //   grib_context_log(h->context,GRIB_LOG_ERROR,"Unable to set %s (%s)",args[i].name,grib_get_error_message(args[i].error));
-            if (args[i].error == GRIB_NOT_FOUND) {
+            if (args[i].error == GRIB_NOT_FOUND)
                 has_not_found = 1;
-                // If oneshot is enabled and not yet attempted, no need to keep
-                // trying the remaining unresolved keys on the old template.
-                if (enable_oneshot && !oneshot_tried) {
-                    break;
-                }
-            }
         }
 
         if (enable_oneshot && !oneshot_tried && has_not_found) {
@@ -2290,12 +2286,18 @@ int grib_set_values_silent(grib_handle* h, grib_values* args, size_t count, int 
             long pdtn_cur = -1;
             if (grib_get_long(h, "productDefinitionTemplateNumber", &pdtn_cur) == GRIB_SUCCESS) {
                 long pdtn_plan = pdtn_cur;
+                std::vector<std::string> plan_keys;
+                plan_keys.reserve(count);
                 for (i = 0; i < count; i++) {
                     if (!args[i].name || STR_EQUAL(args[i].name, "productDefinitionTemplateNumber"))
                         continue;
+                    plan_keys.emplace_back(args[i].name);
+                }
+                std::sort(plan_keys.begin(), plan_keys.end());
 
+                for (const auto& key_name : plan_keys) {
                     long pdtn_next = -1;
-                    if (grib2_matrix_select_PDTN_for_key_with_current(h, args[i].name, pdtn_plan, &pdtn_next) == GRIB_SUCCESS) {
+                    if (grib2_matrix_select_PDTN_for_key_with_current(h, key_name.c_str(), pdtn_plan, &pdtn_next) == GRIB_SUCCESS) {
                         pdtn_plan = pdtn_next;
                     }
                 }
