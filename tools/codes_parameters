@@ -328,7 +328,36 @@ def export_definition(exporter: str, resource_path: str, target_path: Path) -> b
     return result.returncode == 0
 
 
-def materialize_memfs_definitions(exporter: str) -> Path | None:
+def discover_local_concept_centres(hint_roots: Iterable[Path], edition: str) -> List[str]:
+    centres: List[str] = []
+    for root in hint_roots:
+        local_concepts = root / edition / "localConcepts"
+        if not local_concepts.is_dir():
+            continue
+        for child in local_concepts.iterdir():
+            if child.is_dir():
+                centres.append(child.name)
+    return uniq(centres)
+
+
+def local_concept_seed_paths(hint_roots: Iterable[Path]) -> List[str]:
+    seeds: List[str] = []
+    concepts = ("paramId", "shortName", "name", "units")
+
+    for centre in discover_local_concept_centres(hint_roots, "grib1"):
+        for concept in concepts:
+            seeds.append(f"grib1/localConcepts/{centre}/{concept}.def")
+
+    for centre in discover_local_concept_centres(hint_roots, "grib2"):
+        for concept in concepts:
+            seeds.append(f"grib2/localConcepts/{centre}/{concept}.def")
+            seeds.append(f"grib2/localConcepts/{centre}/{concept}.lte33.def")
+            seeds.append(f"grib2/localConcepts/{centre}/{concept}.chemsplit.def")
+
+    return uniq(seeds)
+
+
+def materialize_memfs_definitions(exporter: str, hint_roots: Iterable[Path]) -> Path | None:
     temp_root = Path(tempfile.mkdtemp(prefix="codes_parameters_memfs_"))
     definitions_root = temp_root / "definitions"
 
@@ -351,6 +380,8 @@ def materialize_memfs_definitions(exporter: str) -> Path | None:
         "grib2/name.chemsplit.def",
         "grib2/units.chemsplit.def",
     ]
+    queue.extend(local_concept_seed_paths(hint_roots))
+    queue = uniq(queue)
     seen: Set[str] = set()
     exported_any = False
 
@@ -750,7 +781,7 @@ def main() -> int:
                 file=sys.stderr,
             )
         else:
-            memfs_root = materialize_memfs_definitions(exporter)
+            memfs_root = materialize_memfs_definitions(exporter, fallback_filesystem_roots)
             if memfs_root is None:
                 print("WARNING: Failed to materialize definitions from MEMFS.", file=sys.stderr)
                 # Use discovered filesystem roots as a last resort if MEMFS
