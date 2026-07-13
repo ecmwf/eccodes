@@ -522,6 +522,22 @@
 'Ozone' = {
 	constituentType = 0 ;
 	}
+#Methyl ethyl ketone / 2-butanone
+'Methyl ethyl ketone / 2-butanone' = {
+	constituentType = 10069 ;
+	}
+#Trichloromethane / chloroform
+'Trichloromethane / chloroform' = {
+	constituentType = 10070 ;
+	}
+#Methyl iodide / iodomethane
+'Methyl iodide / iodomethane' = {
+	constituentType = 10071 ;
+	}
+#Methacrolein and methyl vinyl ketone
+'Methacrolein and methyl vinyl ketone' = {
+	constituentType = 10072 ;
+	}
 #Olefins
 'Olefins' = {
 	constituentType = 60010 ;
@@ -533,6 +549,14 @@
 #Biomass burning volatile organic compounds
 'Biomass burning volatile organic compounds' = {
 	constituentType = 60034 ;
+	}
+#Gaseous Non-Methane Organic Compounds
+'Gaseous Non-Methane Organic Compounds' = {
+	constituentType = 60036 ;
+	}
+#Non-Methane Hydrocarbons
+'Non-Methane Hydrocarbons' = {
+	constituentType = 60037 ;
 	}
 #Water vapour
 'Water vapour' = {

@@ -522,6 +522,22 @@
 'O3' = {
 	constituentType = 0 ;
 	}
+#Methyl ethyl ketone / 2-butanone
+'CH3COCH2CH3' = {
+	constituentType = 10069 ;
+	}
+#Trichloromethane / chloroform
+'CHCl3' = {
+	constituentType = 10070 ;
+	}
+#Methyl iodide / iodomethane
+'CH3I' = {
+	constituentType = 10071 ;
+	}
+#Methacrolein and methyl vinyl ketone
+'MACR_MVK' = {
+	constituentType = 10072 ;
+	}
 #Olefins
 'ole' = {
 	constituentType = 60010 ;
@@ -533,6 +549,14 @@
 #Biomass burning volatile organic compounds
 'bbVOC' = {
 	constituentType = 60034 ;
+	}
+#Gaseous Non-Methane Organic Compounds
+'NMOC_g' = {
+	constituentType = 60036 ;
+	}
+#Non-Methane Hydrocarbons
+'NMHC_g' = {
+	constituentType = 60037 ;
 	}
 #Water vapour
 'H2O' = {
