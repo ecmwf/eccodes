@@ -185,6 +185,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_ecc-2011
         bufr_ecc-2153
         bufr_ecc-2300
+        bufr_delayed_replication
         grib_efas
         grib_sh_imag
         grib_spectral
