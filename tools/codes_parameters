@@ -12,13 +12,17 @@ import fnmatch
 import os
 import re
 import shutil
+import subprocess
 import sys
+import tempfile
 from collections import defaultdict
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Dict, Iterable, List, Tuple
+from typing import Dict, Iterable, List, Set, Tuple
 
 CONCEPTS = {"paramId", "shortName", "name", "units"}
+DEFINITION_FILE_RE = re.compile(r'"([^"\\]+\.(?:def|table|tmpl|list|txt))"')
+DEFAULT_DEFINITION_PATH_RE = re.compile(r"definition files path is used:\s*(\S+)", re.IGNORECASE)
 
 ENTRY_RE = re.compile(r"^'((?:\\'|[^'])*)'\s*=\s*\{\s*$")
 ATTR_RE = re.compile(r"^([A-Za-z0-9_]+)\s*=\s*(.*?)\s*;\s*$")
@@ -147,6 +151,233 @@ def scan_definitions(definitions_root: Path) -> Dict[RecordKey, Record]:
                         rec.sources.append(rel_source)
 
     return records
+
+
+def merge_records(target: Dict[RecordKey, Record], source: Dict[RecordKey, Record]) -> None:
+    for key, src in source.items():
+        if key not in target:
+            target[key] = Record(
+                edition=src.edition,
+                switch=src.switch,
+                scope=src.scope,
+                attrs=dict(src.attrs),
+            )
+        dst = target[key]
+        for concept, values in src.values.items():
+            for value in values:
+                if value not in dst.values[concept]:
+                    dst.values[concept].append(value)
+        for item in src.sources:
+            if item not in dst.sources:
+                dst.sources.append(item)
+
+
+def split_paths(value: str) -> List[str]:
+    return [item.strip() for item in value.split(os.pathsep) if item.strip()]
+
+
+def uniq(values: Iterable[str]) -> List[str]:
+    result: List[str] = []
+    seen: Set[str] = set()
+    for value in values:
+        if value not in seen:
+            seen.add(value)
+            result.append(value)
+    return result
+
+
+def script_default_roots() -> List[str]:
+    script_dir = Path(__file__).resolve().parent
+    prefix = script_dir.parent
+
+    # Support both source-tree and installed layouts.
+    candidates = [
+        prefix / "definitions",
+        prefix / "share" / "eccodes" / "definitions",
+        prefix / "share" / "definitions",
+        prefix.parent / "share" / "eccodes" / "definitions",
+        Path("definitions"),
+    ]
+    return uniq(str(p) for p in candidates)
+
+
+def explicit_roots_from_args_env(args: argparse.Namespace) -> List[str]:
+    if args.definitions_root:
+        return split_paths(args.definitions_root)
+
+    roots: List[str] = []
+
+    if os.getenv("ECCODES_EXTRA_DEFINITION_PATH"):
+        roots.extend(split_paths(os.getenv("ECCODES_EXTRA_DEFINITION_PATH", "")))
+    if os.getenv("ECCODES_EXTRA_DEFINITIONS"):
+        roots.extend(split_paths(os.getenv("ECCODES_EXTRA_DEFINITIONS", "")))
+    if os.getenv("ECCODES_EXTRA_DEFINITONS"):
+        roots.extend(split_paths(os.getenv("ECCODES_EXTRA_DEFINITONS", "")))
+    if os.getenv("ECCODES_DEFINITION_PATH"):
+        roots.extend(split_paths(os.getenv("ECCODES_DEFINITION_PATH", "")))
+
+    return uniq(roots)
+
+
+def candidate_roots(args: argparse.Namespace) -> List[str]:
+    explicit = explicit_roots_from_args_env(args)
+    if explicit:
+        return explicit
+    return script_default_roots()
+
+
+def resolve_roots(args: argparse.Namespace) -> Tuple[List[Path], List[str], List[str]]:
+    filesystem_roots: List[Path] = []
+    memfs_roots: List[str] = []
+    warnings: List[str] = []
+    explicit_roots = set(explicit_roots_from_args_env(args))
+
+    for root in candidate_roots(args):
+        if root.startswith("/MEMFS"):
+            memfs_roots.append(root)
+            continue
+        p = Path(root)
+        if p.is_dir():
+            filesystem_roots.append(p)
+        else:
+            if root in explicit_roots:
+                warnings.append(f"Ignoring non-directory definitions root: {root}")
+
+    return filesystem_roots, uniq(memfs_roots), warnings
+
+
+def locate_codes_export_resource() -> str | None:
+    env_bin = os.getenv("ECCODES_EXPORT_RESOURCE")
+    if env_bin and Path(env_bin).is_file():
+        return env_bin
+
+    # Prefer the exporter from the same installation as codes_info so MEMFS
+    # resources are resolved by a consistent runtime.
+    codes_info = locate_codes_info()
+    if codes_info:
+        sibling = Path(codes_info).resolve().parent / "codes_export_resource"
+        if sibling.is_file() and os.access(sibling, os.X_OK):
+            return str(sibling)
+
+    path_bin = shutil.which("codes_export_resource")
+    if path_bin:
+        return path_bin
+
+    script_dir = Path(__file__).resolve().parent
+    candidates = [
+        script_dir / "codes_export_resource",
+        script_dir.parent / "bin" / "codes_export_resource",
+    ]
+    for candidate in candidates:
+        if candidate.is_file() and os.access(candidate, os.X_OK):
+            return str(candidate)
+    return None
+
+
+def locate_codes_info() -> str | None:
+    env_bin = os.getenv("ECCODES_INFO")
+    if env_bin and Path(env_bin).is_file():
+        return env_bin
+
+    path_bin = shutil.which("codes_info")
+    if path_bin:
+        return path_bin
+
+    script_dir = Path(__file__).resolve().parent
+    candidates = [
+        script_dir / "codes_info",
+        script_dir.parent / "bin" / "codes_info",
+    ]
+    for candidate in candidates:
+        if candidate.is_file() and os.access(candidate, os.X_OK):
+            return str(candidate)
+    return None
+
+
+def detect_default_definition_path_from_codes_info() -> str | None:
+    codes_info = locate_codes_info()
+    if not codes_info:
+        return None
+
+    result = subprocess.run(
+        [codes_info],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        check=False,
+    )
+    if result.returncode != 0:
+        return None
+
+    for line in result.stdout.splitlines():
+        m = DEFAULT_DEFINITION_PATH_RE.search(line)
+        if m:
+            return m.group(1)
+    return None
+
+
+def find_referenced_definition_paths(text: str) -> List[str]:
+    # Keep this broad: template/include/reference statements consistently quote file paths.
+    return uniq(match.group(1) for match in DEFINITION_FILE_RE.finditer(text))
+
+
+def export_definition(exporter: str, resource_path: str, target_path: Path) -> bool:
+    target_path.parent.mkdir(parents=True, exist_ok=True)
+    cmd = [exporter, "-d", resource_path, str(target_path)]
+    result = subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=False)
+    return result.returncode == 0
+
+
+def materialize_memfs_definitions(exporter: str) -> Path | None:
+    temp_root = Path(tempfile.mkdtemp(prefix="codes_parameters_memfs_"))
+    definitions_root = temp_root / "definitions"
+
+    # Start from concept files used by this tool, then follow includes/references.
+    queue: List[str] = [
+        "grib1/paramId.def",
+        "grib1/shortName.def",
+        "grib1/name.def",
+        "grib1/units.def",
+        "grib2/paramId.def",
+        "grib2/shortName.def",
+        "grib2/name.def",
+        "grib2/units.def",
+        "grib2/paramId.lte33.def",
+        "grib2/shortName.lte33.def",
+        "grib2/name.lte33.def",
+        "grib2/units.lte33.def",
+        "grib2/paramId.chemsplit.def",
+        "grib2/shortName.chemsplit.def",
+        "grib2/name.chemsplit.def",
+        "grib2/units.chemsplit.def",
+    ]
+    seen: Set[str] = set()
+    exported_any = False
+
+    while queue:
+        resource = queue.pop(0)
+        if resource in seen:
+            continue
+        seen.add(resource)
+
+        out_file = definitions_root / resource
+        if not export_definition(exporter, resource, out_file):
+            continue
+
+        exported_any = True
+        try:
+            text = out_file.read_text(encoding="utf-8", errors="ignore")
+        except OSError:
+            continue
+
+        for ref in find_referenced_definition_paths(text):
+            if ref not in seen:
+                queue.append(ref)
+
+    if not exported_any:
+        shutil.rmtree(temp_root, ignore_errors=True)
+        return None
+    return definitions_root
 
 
 def matches_any(values: Iterable[str], pattern: str | None) -> bool:
@@ -378,8 +609,21 @@ def make_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--definitions-root",
-        default="definitions",
-        help="Path to the definitions directory (default: ./definitions)",
+        default=None,
+        help=(
+            "Definitions root directory. Accepts multiple paths separated by path separator. "
+            "If omitted, resolution order is: --definitions-root; "
+            "ECCODES_EXTRA_DEFINITION_PATH (plus aliases ECCODES_EXTRA_DEFINITIONS and "
+            "ECCODES_EXTRA_DEFINITONS); ECCODES_DEFINITION_PATH; then defaults "
+            "<prefix>/definitions, <prefix>/share/eccodes/definitions, "
+            "<prefix>/share/definitions, <prefix>/../share/eccodes/definitions, ./definitions. "
+            "If none exist and no explicit roots were provided, MEMFS is tried automatically."
+        ),
+    )
+    parser.add_argument(
+        "--debug-path-resolution",
+        action="store_true",
+        help="Print resolved definitions path candidates and selected roots to stderr",
     )
     parser.add_argument("--name", help="Wildcard pattern for name, e.g. '*precipitation*'")
     parser.add_argument("--shortName", help="Wildcard pattern for shortName, e.g. '10m*'")
@@ -430,11 +674,114 @@ def main() -> int:
     parser = make_parser()
     args = parser.parse_args()
 
-    definitions_root = Path(args.definitions_root)
-    if not definitions_root.is_dir():
-        parser.error(f"definitions directory not found: {definitions_root}")
+    explicit_roots = explicit_roots_from_args_env(args)
+    candidates = candidate_roots(args)
+    filesystem_roots, memfs_roots, warnings = resolve_roots(args)
+    fallback_filesystem_roots = list(filesystem_roots)
+    records_by_key: Dict[RecordKey, Record] = {}
+    detected_default_definition_path = None
+    auto_memfs = False
+    used_filesystem_backend = False
+    used_memfs_backend = False
 
-    records_by_key = scan_definitions(definitions_root)
+    # When no explicit roots are provided, mirror the runtime default path used
+    # by other ecCodes binaries (as reported by codes_info).
+    if not explicit_roots:
+        detected_default_definition_path = detect_default_definition_path_from_codes_info()
+        if detected_default_definition_path and detected_default_definition_path.startswith("/MEMFS"):
+            memfs_roots = uniq([detected_default_definition_path] + memfs_roots)
+            # Keep behavior consistent with codes_info default path semantics.
+            filesystem_roots = []
+
+    # Mirror typical ecCodes runtime behavior: if defaults do not resolve to
+    # real directories, automatically try MEMFS-backed definitions.
+    if not explicit_roots and not filesystem_roots and not memfs_roots:
+        memfs_roots.append("/MEMFS/definitions")
+        auto_memfs = True
+
+    if args.debug_path_resolution:
+        print("DEBUG: explicit roots:", file=sys.stderr)
+        if explicit_roots:
+            for root in explicit_roots:
+                print(f"DEBUG:   {root}", file=sys.stderr)
+        else:
+            print("DEBUG:   <none>", file=sys.stderr)
+
+        print("DEBUG: candidate roots:", file=sys.stderr)
+        for root in candidates:
+            print(f"DEBUG:   {root}", file=sys.stderr)
+
+        print("DEBUG: filesystem roots:", file=sys.stderr)
+        if filesystem_roots:
+            for root in filesystem_roots:
+                print(f"DEBUG:   {root}", file=sys.stderr)
+        else:
+            print("DEBUG:   <none>", file=sys.stderr)
+
+        print("DEBUG: memfs roots:", file=sys.stderr)
+        if memfs_roots:
+            for root in memfs_roots:
+                print(f"DEBUG:   {root}", file=sys.stderr)
+        else:
+            print("DEBUG:   <none>", file=sys.stderr)
+        print(
+            "DEBUG: codes_info default definitions path: "
+            f"{detected_default_definition_path or '<unavailable>'}",
+            file=sys.stderr,
+        )
+        if auto_memfs:
+            print("DEBUG: auto memfs fallback enabled", file=sys.stderr)
+
+    for warning in warnings:
+        print(f"WARNING: {warning}", file=sys.stderr)
+
+    for root in filesystem_roots:
+        used_filesystem_backend = True
+        merge_records(records_by_key, scan_definitions(root))
+
+    if memfs_roots:
+        exporter = locate_codes_export_resource()
+        if args.debug_path_resolution:
+            print(f"DEBUG: codes_export_resource={exporter or '<not found>'}", file=sys.stderr)
+        if not exporter:
+            print(
+                "WARNING: MEMFS path requested but codes_export_resource was not found. "
+                "Skipping MEMFS definitions.",
+                file=sys.stderr,
+            )
+        else:
+            memfs_root = materialize_memfs_definitions(exporter)
+            if memfs_root is None:
+                print("WARNING: Failed to materialize definitions from MEMFS.", file=sys.stderr)
+                # Use discovered filesystem roots as a last resort if MEMFS
+                # export fails at runtime.
+                if fallback_filesystem_roots:
+                    used_filesystem_backend = True
+                    for root in fallback_filesystem_roots:
+                        merge_records(records_by_key, scan_definitions(root))
+            else:
+                used_memfs_backend = True
+                merge_records(records_by_key, scan_definitions(memfs_root))
+
+    if used_memfs_backend and used_filesystem_backend:
+        effective_backend = "mixed"
+    elif used_memfs_backend:
+        effective_backend = "memfs"
+    elif used_filesystem_backend:
+        effective_backend = "filesystem"
+    else:
+        effective_backend = "none"
+
+    if args.debug_path_resolution:
+        print(f"DEBUG: effective backend: {effective_backend}", file=sys.stderr)
+
+    if not records_by_key:
+        parser.error(
+            "No valid definitions roots were found. Provide --definitions-root, "
+            "set ECCODES_DEFINITION_PATH/ECCODES_EXTRA_DEFINITION_PATH, "
+            "or ensure MEMFS export is available."
+        )
+
     records = list(records_by_key.values())
     filtered = filter_records(records, args)
     filtered = dedupe_display_records(filtered, keep_attrs=(args.show_attrs or args.show_encoding))
