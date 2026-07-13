@@ -1,0 +1,467 @@
+#!/usr/bin/env python3
+"""Query parameter concepts from ecCodes definitions.
+
+This tool scans definitions under grib1 and grib2, parses paramId/shortName/name/units
+concept files, and joins records using identical matching conditions.
+"""
+
+from __future__ import annotations
+
+import argparse
+import fnmatch
+import os
+import re
+import shutil
+import sys
+from collections import defaultdict
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Dict, Iterable, List, Tuple
+
+CONCEPTS = {"paramId", "shortName", "name", "units"}
+
+ENTRY_RE = re.compile(r"^'((?:\\'|[^'])*)'\s*=\s*\{\s*$")
+ATTR_RE = re.compile(r"^([A-Za-z0-9_]+)\s*=\s*(.*?)\s*;\s*$")
+
+
+@dataclass(frozen=True)
+class RecordKey:
+    edition: int
+    switch: int | None
+    scope: str
+    attrs: Tuple[Tuple[str, str], ...]
+
+
+@dataclass
+class Record:
+    edition: int
+    switch: int | None
+    scope: str
+    attrs: Dict[str, str]
+    values: Dict[str, List[str]] = field(default_factory=lambda: defaultdict(list))
+    sources: List[str] = field(default_factory=list)
+
+
+def infer_switch(filename: str) -> int | None:
+    if filename.endswith(".lte33.def"):
+        return 0
+    if filename.endswith(".chemsplit.def"):
+        return 2
+    if filename.endswith(".def") and not filename.endswith(".legacy.def"):
+        return 1
+    return None
+
+
+def infer_concept(filename: str) -> str | None:
+    base = filename.split(".", 1)[0]
+    return base if base in CONCEPTS else None
+
+
+def unquote(value: str) -> str:
+    value = value.strip()
+    if len(value) >= 2 and value[0] == "'" and value[-1] == "'":
+        return value[1:-1].replace("\\'", "'")
+    return value
+
+
+def parse_def_file(path: Path) -> Iterable[Tuple[str, Dict[str, str]]]:
+    current_value = None
+    current_attrs: Dict[str, str] = {}
+
+    with path.open("r", encoding="utf-8") as handle:
+        for raw_line in handle:
+            line = raw_line.strip()
+            if not line or line.startswith("#"):
+                continue
+
+            if current_value is None:
+                m = ENTRY_RE.match(line)
+                if m:
+                    current_value = m.group(1).replace("\\'", "'")
+                    current_attrs = {}
+                continue
+
+            if line.startswith("}"):
+                yield current_value, current_attrs
+                current_value = None
+                current_attrs = {}
+                continue
+
+            m_attr = ATTR_RE.match(line)
+            if m_attr:
+                current_attrs[m_attr.group(1)] = unquote(m_attr.group(2))
+
+
+def make_record_key(edition: int, switch: int | None, scope: str, attrs: Dict[str, str]) -> RecordKey:
+    return RecordKey(
+        edition=edition,
+        switch=switch,
+        scope=scope,
+        attrs=tuple(sorted(attrs.items())),
+    )
+
+
+def scan_definitions(definitions_root: Path) -> Dict[RecordKey, Record]:
+    records: Dict[RecordKey, Record] = {}
+
+    for edition_dirname in ("grib1", "grib2"):
+        edition_dir = definitions_root / edition_dirname
+        if not edition_dir.is_dir():
+            continue
+
+        edition = 1 if edition_dirname == "grib1" else 2
+
+        for root, _, files in os.walk(edition_dir):
+            root_path = Path(root)
+            for filename in files:
+                concept = infer_concept(filename)
+                if concept is None:
+                    continue
+
+                switch = infer_switch(filename)
+                if edition == 1:
+                    if not filename.endswith(".def") or filename.endswith(".legacy.def"):
+                        continue
+                    switch = None
+                elif switch is None:
+                    continue
+
+                file_path = root_path / filename
+                scope = str(root_path.relative_to(definitions_root))
+
+                for value, attrs in parse_def_file(file_path):
+                    key = make_record_key(edition, switch, scope, attrs)
+                    if key not in records:
+                        records[key] = Record(
+                            edition=edition,
+                            switch=switch,
+                            scope=scope,
+                            attrs=dict(attrs),
+                        )
+
+                    rec = records[key]
+                    if value not in rec.values[concept]:
+                        rec.values[concept].append(value)
+                    rel_source = str(file_path.relative_to(definitions_root))
+                    if rel_source not in rec.sources:
+                        rec.sources.append(rel_source)
+
+    return records
+
+
+def matches_any(values: Iterable[str], pattern: str | None) -> bool:
+    if pattern is None:
+        return True
+    pattern_low = pattern.lower()
+    return any(fnmatch.fnmatch(v.lower(), pattern_low) for v in values)
+
+
+def values_for(rec: Record, concept: str) -> List[str]:
+    return rec.values.get(concept, [])
+
+
+def filter_records(records: Iterable[Record], args: argparse.Namespace) -> List[Record]:
+    result = []
+    for rec in records:
+        if args.is_mtg2_switch is not None:
+            if rec.switch is None or rec.switch != args.is_mtg2_switch:
+                continue
+
+        if args.edition is not None and rec.edition != args.edition:
+            continue
+
+        if not matches_any(values_for(rec, "name"), args.name):
+            continue
+        if not matches_any(values_for(rec, "shortName"), args.shortName):
+            continue
+        if not matches_any(values_for(rec, "paramId"), args.paramId):
+            continue
+        if not matches_any(values_for(rec, "units"), args.units):
+            continue
+
+        result.append(rec)
+
+    result.sort(key=lambda r: (r.edition, r.switch if r.switch is not None else -1, r.scope, values_for(r, "paramId")[:1]))
+    return result
+
+
+def format_values(values: List[str]) -> str:
+    if not values:
+        return "-"
+    if len(values) == 1:
+        return values[0]
+    return "[" + ", ".join(values) + "]"
+
+
+def merge_values(values: Iterable[List[str]]) -> List[str]:
+    merged: List[str] = []
+    for group in values:
+        for item in group:
+            if item not in merged:
+                merged.append(item)
+    return merged
+
+
+def dedupe_display_records(records: List[Record], keep_attrs: bool) -> List[Record]:
+    if keep_attrs:
+        return records
+
+    grouped: Dict[Tuple[int, int | None, str, str, str, str, str], List[Record]] = defaultdict(list)
+    for rec in records:
+        key = (
+            rec.edition,
+            rec.switch,
+            rec.scope,
+            format_values(values_for(rec, "paramId")),
+            format_values(values_for(rec, "shortName")),
+            format_values(values_for(rec, "name")),
+            format_values(values_for(rec, "units")),
+        )
+        grouped[key].append(rec)
+
+    deduped: List[Record] = []
+    for group in grouped.values():
+        if len(group) == 1:
+            deduped.append(group[0])
+            continue
+
+        first = group[0]
+        deduped.append(
+            Record(
+                edition=first.edition,
+                switch=first.switch,
+                scope=first.scope,
+                attrs={},
+                values={
+                    "paramId": merge_values(values_for(r, "paramId") for r in group),
+                    "shortName": merge_values(values_for(r, "shortName") for r in group),
+                    "name": merge_values(values_for(r, "name") for r in group),
+                    "units": merge_values(values_for(r, "units") for r in group),
+                },
+                sources=merge_values(r.sources for r in group),
+            )
+        )
+
+    deduped.sort(key=lambda r: (r.edition, r.switch if r.switch is not None else -1, r.scope, values_for(r, "paramId")[:1]))
+    return deduped
+
+
+def print_records_line(records: List[Record], show_attrs: bool, show_encoding: bool, show_sources: bool) -> None:
+    for rec in records:
+        if rec.switch is None:
+            print(
+                f"edition={rec.edition} scope={rec.scope} "
+                f"paramId={format_values(values_for(rec, 'paramId'))} "
+                f"shortName={format_values(values_for(rec, 'shortName'))} "
+                f"name={format_values(values_for(rec, 'name'))} "
+                f"units={format_values(values_for(rec, 'units'))}"
+            )
+        else:
+            print(
+                f"edition={rec.edition} is_mtg2_switch={rec.switch} scope={rec.scope} "
+                f"paramId={format_values(values_for(rec, 'paramId'))} "
+                f"shortName={format_values(values_for(rec, 'shortName'))} "
+                f"name={format_values(values_for(rec, 'name'))} "
+                f"units={format_values(values_for(rec, 'units'))}"
+            )
+        if show_attrs and rec.attrs:
+            attrs_str = ", ".join(f"{k}={v}" for k, v in sorted(rec.attrs.items()))
+            print(f"  attrs: {attrs_str}")
+        if show_encoding and rec.attrs:
+            encoding_str = ", ".join(f"{k}={v}" for k, v in sorted(rec.attrs.items()))
+            print(f"  encoding: {encoding_str}")
+        if show_sources:
+            print(f"  sources: {', '.join(sorted(rec.sources))}")
+
+
+def truncate(text: str, width: int) -> str:
+    if width < 4:
+        return text[:width]
+    if len(text) <= width:
+        return text
+    return text[: width - 3] + "..."
+
+
+def table_value(rec: Record, key: str) -> str:
+    if key == "edition":
+        return str(rec.edition)
+    if key == "is_mtg2_switch":
+        return "-" if rec.switch is None else str(rec.switch)
+    if key == "scope":
+        return rec.scope
+    if key == "paramId":
+        return format_values(values_for(rec, "paramId"))
+    if key == "shortName":
+        return format_values(values_for(rec, "shortName"))
+    if key == "name":
+        return format_values(values_for(rec, "name"))
+    if key == "units":
+        return format_values(values_for(rec, "units"))
+    if key == "encoding":
+        return ", ".join(f"{k}={v}" for k, v in sorted(rec.attrs.items())) if rec.attrs else "-"
+    if key == "sources":
+        return ", ".join(sorted(rec.sources)) if rec.sources else "-"
+    return "-"
+
+
+def print_records_table(records: List[Record], show_encoding: bool, show_sources: bool, truncate_cells: bool) -> None:
+    include_switch = any(rec.switch is not None for rec in records)
+    columns: List[Tuple[str, str]] = [
+        ("edition", "edition"),
+        ("scope", "scope"),
+        ("paramId", "paramId"),
+        ("shortName", "shortName"),
+        ("name", "name"),
+        ("units", "units"),
+    ]
+    if include_switch:
+        columns.insert(1, ("is_mtg2_switch", "is_mtg2_switch"))
+    if show_encoding:
+        columns.append(("encoding", "encoding"))
+    if show_sources:
+        columns.append(("sources", "sources"))
+
+    rows: List[List[str]] = []
+    for rec in records:
+        rows.append([table_value(rec, key) for key, _ in columns])
+
+    widths = [len(label) for _, label in columns]
+    for row in rows:
+        for i, cell in enumerate(row):
+            widths[i] = max(widths[i], len(cell))
+
+    if truncate_cells:
+        max_width_by_col = {
+            "edition": 7,
+            "is_mtg2_switch": 14,
+            "scope": 28,
+            "paramId": 12,
+            "shortName": 16,
+            "name": 48,
+            "units": 20,
+            "encoding": 60,
+            "sources": 60,
+        }
+        for i, (key, _) in enumerate(columns):
+            widths[i] = min(widths[i], max_width_by_col.get(key, widths[i]))
+
+        terminal_width = shutil.get_terminal_size((140, 24)).columns
+        total_width = sum(widths) + (3 * (len(widths) - 1))
+        if total_width > terminal_width:
+            for shrink_key in ("name", "scope", "encoding", "sources"):
+                if total_width <= terminal_width:
+                    break
+                for i, (key, _) in enumerate(columns):
+                    if key == shrink_key and widths[i] > 12:
+                        delta = min(widths[i] - 12, total_width - terminal_width)
+                        widths[i] -= delta
+                        total_width -= delta
+                        if total_width <= terminal_width:
+                            break
+
+    header = " | ".join(label.ljust(widths[i]) for i, (_, label) in enumerate(columns))
+    divider = "-+-".join("-" * widths[i] for i in range(len(widths)))
+    print(header)
+    print(divider)
+
+    for row in rows:
+        if truncate_cells:
+            print(" | ".join(truncate(cell, widths[i]).ljust(widths[i]) for i, cell in enumerate(row)))
+        else:
+            print(" | ".join(cell.ljust(widths[i]) for i, cell in enumerate(row)))
+
+
+def make_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        prog="codes_parameters",
+        description="Query parameter definitions in ecCodes concept files.",
+    )
+    parser.add_argument(
+        "--definitions-root",
+        default="definitions",
+        help="Path to the definitions directory (default: ./definitions)",
+    )
+    parser.add_argument("--name", help="Wildcard pattern for name, e.g. '*precipitation*'")
+    parser.add_argument("--shortName", help="Wildcard pattern for shortName, e.g. '10m*'")
+    parser.add_argument("--paramId", help="Wildcard pattern for paramId")
+    parser.add_argument("--units", help="Wildcard pattern for units")
+    parser.add_argument(
+        "--is_mtg2_switch",
+        type=int,
+        choices=[0, 1, 2],
+        help="Restrict GRIB2 to lte33=0, def=1, chemsplit=2",
+    )
+    parser.add_argument(
+        "--edition",
+        type=int,
+        choices=[1, 2],
+        help="Restrict to GRIB edition 1 or 2",
+    )
+    parser.add_argument(
+        "--show-attrs",
+        action="store_true",
+        help="Show the condition attributes used to match the parameter",
+    )
+    parser.add_argument(
+        "--show-encoding",
+        action="store_true",
+        help="Show the GRIB encoding constraints (same key/value conditions)",
+    )
+    parser.add_argument(
+        "--show-sources",
+        action="store_true",
+        help="Show source definition files contributing to each result",
+    )
+    parser.add_argument(
+        "--format",
+        choices=["line", "table"],
+        default="line",
+        help="Output format: line (default) or table",
+    )
+    parser.add_argument(
+        "--no-truncate",
+        action="store_true",
+        help="With --format table, do not truncate cells to terminal width",
+    )
+    return parser
+
+
+def main() -> int:
+    parser = make_parser()
+    args = parser.parse_args()
+
+    definitions_root = Path(args.definitions_root)
+    if not definitions_root.is_dir():
+        parser.error(f"definitions directory not found: {definitions_root}")
+
+    records_by_key = scan_definitions(definitions_root)
+    records = list(records_by_key.values())
+    filtered = filter_records(records, args)
+    filtered = dedupe_display_records(filtered, keep_attrs=(args.show_attrs or args.show_encoding))
+
+    if not filtered:
+        print("No matching parameters found.")
+        return 1
+
+    try:
+        if args.format == "table":
+            print_records_table(
+                filtered,
+                show_encoding=args.show_encoding,
+                show_sources=args.show_sources,
+                truncate_cells=(not args.no_truncate),
+            )
+        else:
+            print_records_line(
+                filtered,
+                show_attrs=args.show_attrs,
+                show_encoding=args.show_encoding,
+                show_sources=args.show_sources,
+            )
+    except BrokenPipeError:
+        return 0
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

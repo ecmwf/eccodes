@@ -130,3 +130,15 @@ install( FILES ${CMAKE_CURRENT_SOURCE_DIR}/bufr_filter
                      GROUP_EXECUTE GROUP_READ
                      WORLD_EXECUTE WORLD_READ )
 
+
+# codes_parameters concept query helper
+execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    ${PROJECT_SOURCE_DIR}/tools/codes_parameters
+    ${CMAKE_BINARY_DIR}/bin/ )
+
+install( FILES ${CMAKE_CURRENT_SOURCE_DIR}/codes_parameters
+         DESTINATION ${INSTALL_BIN_DIR}
+         PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ
+                     GROUP_EXECUTE GROUP_READ
+                     WORLD_EXECUTE WORLD_READ )
+
