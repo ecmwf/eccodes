@@ -2685,8 +2685,7 @@ static int set_to_missing_if_out_of_range(grib_handle* h)
 int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset, long endSubset)
 {
     int err = 0;
-    long d, innr, ir, dPrev;
-    long nElems[MAX_NESTED_REPLICATIONS] = {0,};
+    long d;
     long nReps[MAX_NESTED_REPLICATIONS] = {0,};
     long numberOfElementsToRepeat[MAX_NESTED_REPLICATIONS] = {0,};
     long numberOfRepetitions[MAX_NESTED_REPLICATIONS] = {0,};
@@ -2898,63 +2897,28 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
                     d = depth;
                     depth++;
                     DEBUG_ASSERT(depth <= MAX_NESTED_REPLICATIONS);
-                    numberOfElementsToRepeat[d] = descriptors[i]->X;  // Y  = number of repetitions
-                    nElems[d]                   = numberOfElementsToRepeat[d];
+                    numberOfElementsToRepeat[d] = descriptors[i]->X;  // X = number of descriptors in the repeated block
                     i++;
 
                     data = buffer->data; /* ECC-517 */
                     err  = codec_replication(c, this, iss, buffer, data, &pos, i, elementIndex, dval, &(numberOfRepetitions[d]));
                     if (err) return err;
 
-                    startRepetition[d] = i;
+                    startRepetition[d] = i;  // index of the replication factor descriptor (031xxx)
                     nReps[d]           = numberOfRepetitions[d];
                     if (flag != PROCESS_ENCODE)
                         grib_iarray_push(elementsDescriptorsIndex, i);
                     elementIndex++;
 
                     if (numberOfRepetitions[d] == 0) {
-                        i += numberOfElementsToRepeat[d];
-
-                        if (d > 0) {
-                            // If it's the last element(s) of the nested repetition(s)
-                            dPrev = d - 1;
-
-                            // ECC-2153: fix handling of empty nested replications
-                            if (dPrev >= 1 && nReps[dPrev] == 1 && nReps[d] == 0 && nReps[0] > 1) {
-                                for (long ii = dPrev; ii >= 0; ii--) {
-                                    if (nReps[ii]) {
-                                        nElems[ii] = numberOfElementsToRepeat[ii];
-                                        nReps[ii]--;
-                                        if (nReps[ii]) {
-                                            i = startRepetition[ii];
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-
-                            nElems[dPrev] -= numberOfElementsToRepeat[d] + 2;
-                            /* if the empty nested repetition is at the end of the nesting repetition
-                               we need to re-point to the start of the nesting repetition */
-                            while (dPrev >= 0 && nElems[dPrev] == 0) {
-                                nReps[dPrev]--;
-                                if (nReps[dPrev] <= 0) {
-                                    while (nReps[dPrev] <= 0 && dPrev > 0) {
-                                        i = startRepetition[dPrev] + numberOfElementsToRepeat[dPrev];
-                                        dPrev--;
-                                    }
-                                    depth--;
-                                }
-                                else {
-                                    nElems[dPrev] = numberOfElementsToRepeat[dPrev];
-                                    i     = startRepetition[dPrev];
-                                }
-                                dPrev--;
-                            }
-                        }
+                        // ECC-2300: Empty (zero) delayed replication.
+                        i += numberOfElementsToRepeat[d];  // i now points at the last descriptor of the skipped block
                         depth--;
+                        break; /* fall through to the shared "Delayed repetition check" after the switch */
                     }
-                    continue;
+                    else {
+                        continue;
+                    }
                 case 2:
                     /* Operator */
                     switch (descriptors[i]->X) {
@@ -3203,39 +3167,19 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
                     return err;
             } /* switch F */
 
-            /* Delayed repetition check */
-            innr = depth - 1;
-            for (ir = innr; ir >= 0; ir--) {
-                if (nReps[ir]) {
-                    if (nElems[ir] > 1) {
-                        nElems[ir]--;
-                        break;
-                    }
-                    else {
-                        nElems[ir] = numberOfElementsToRepeat[ir];
-                        nReps[ir]--;
-                        if (nReps[ir]) {
-                            i = startRepetition[ir];
-                            break;
-                        }
-                        else {
-                            if (ir > 0) {
-                                nElems[ir - 1] -= numberOfElementsToRepeat[ir] + 1;
-                            }
-                            i = startRepetition[ir] + numberOfElementsToRepeat[ir];
-                            depth--;
-                        }
-                    }
+            // Delayed repetition check.
+            while (depth > 0) {
+                const long dd           = depth - 1;
+                const long blockLastIdx = startRepetition[dd] + numberOfElementsToRepeat[dd];
+                if (i != blockLastIdx)
+                    break; /* still inside the current repeated block */
+                if (nReps[dd] > 1) {
+                    nReps[dd]--;
+                    i = startRepetition[dd]; /* restart block; loop's i++ -> first block descriptor */
+                    break;
                 }
-                else {
-                    if (ir == 0) {
-                        i = startRepetition[ir] + numberOfElementsToRepeat[ir] + 1;
-                        depth = 0;
-                    }
-                    else {
-                        depth--;
-                    }
-                }
+                /* Last repetition of this level is complete: pop and re-check the parent */
+                depth--;
             }
         } /* for all descriptors */
 
