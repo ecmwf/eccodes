@@ -28,6 +28,18 @@ except ImportError:
 CONCEPTS = {"paramId", "shortName", "name", "units"}
 DEFINITION_FILE_RE = re.compile(r'"([^"\\]+\.(?:def|table|tmpl|list|txt))"')
 DEFAULT_DEFINITION_PATH_RE = re.compile(r"definition files path is used:\s*(\S+)", re.IGNORECASE)
+VALID_COLUMNS = (
+    "edition",
+    "is_mtg2_switch",
+    "scope",
+    "paramId",
+    "shortName",
+    "name",
+    "units",
+    "attrs",
+    "encoding",
+    "sources",
+)
 
 ENTRY_RE = re.compile(r"^'((?:\\'|[^'])*)'\s*=\s*\{\s*$")
 ATTR_RE = re.compile(r"^([A-Za-z0-9_]+)\s*=\s*(.*?)\s*;\s*$")
@@ -481,6 +493,22 @@ def values_for(rec: Record, concept: str) -> List[str]:
     return rec.values.get(concept, [])
 
 
+def parse_columns_arg(columns_text: str | None) -> List[str] | None:
+    if columns_text is None:
+        return None
+
+    columns = [item.strip() for item in columns_text.split(",") if item.strip()]
+    if not columns:
+        raise ValueError("--columns must contain at least one column name")
+
+    invalid = [item for item in columns if item not in VALID_COLUMNS]
+    if invalid:
+        valid = ", ".join(VALID_COLUMNS)
+        raise ValueError(f"Invalid column name(s): {', '.join(invalid)}. Valid columns: {valid}")
+
+    return uniq(columns)
+
+
 def filter_records(records: Iterable[Record], args: argparse.Namespace, matchers: Dict[str, FieldMatcher]) -> List[Record]:
     result = []
     for rec in records:
@@ -567,7 +595,19 @@ def dedupe_display_records(records: List[Record], keep_attrs: bool) -> List[Reco
     return deduped
 
 
-def print_records_line(records: List[Record], show_attrs: bool, show_encoding: bool, show_sources: bool) -> None:
+def print_records_line(
+    records: List[Record],
+    selected_columns: List[str] | None,
+    show_attrs: bool,
+    show_encoding: bool,
+    show_sources: bool,
+) -> None:
+    if selected_columns is not None:
+        for rec in records:
+            parts = [f"{column}={table_value(rec, column)}" for column in selected_columns]
+            print(" ".join(parts))
+        return
+
     for rec in records:
         if rec.switch is None:
             print(
@@ -618,6 +658,8 @@ def table_value(rec: Record, key: str) -> str:
         return format_values(values_for(rec, "name"))
     if key == "units":
         return format_values(values_for(rec, "units"))
+    if key == "attrs":
+        return ", ".join(f"{k}={v}" for k, v in sorted(rec.attrs.items())) if rec.attrs else "-"
     if key == "encoding":
         return ", ".join(f"{k}={v}" for k, v in sorted(rec.attrs.items())) if rec.attrs else "-"
     if key == "sources":
@@ -625,7 +667,7 @@ def table_value(rec: Record, key: str) -> str:
     return "-"
 
 
-def print_records_table(records: List[Record], show_encoding: bool, show_sources: bool, truncate_cells: bool) -> None:
+def default_table_columns(records: List[Record], show_encoding: bool, show_sources: bool) -> List[Tuple[str, str]]:
     include_switch = any(rec.switch is not None for rec in records)
     columns: List[Tuple[str, str]] = [
         ("edition", "edition"),
@@ -641,6 +683,21 @@ def print_records_table(records: List[Record], show_encoding: bool, show_sources
         columns.append(("encoding", "encoding"))
     if show_sources:
         columns.append(("sources", "sources"))
+    return columns
+
+
+def print_records_table(
+    records: List[Record],
+    selected_columns: List[str] | None,
+    show_encoding: bool,
+    show_sources: bool,
+    truncate_cells: bool,
+) -> None:
+    columns = (
+        [(column, column) for column in selected_columns]
+        if selected_columns is not None
+        else default_table_columns(records, show_encoding, show_sources)
+    )
 
     rows: List[List[str]] = []
     for rec in records:
@@ -660,6 +717,7 @@ def print_records_table(records: List[Record], show_encoding: bool, show_sources
             "shortName": 16,
             "name": 48,
             "units": 20,
+            "attrs": 60,
             "encoding": 60,
             "sources": 60,
         }
@@ -714,6 +772,13 @@ def make_parser() -> argparse.ArgumentParser:
         "--debug-path-resolution",
         action="store_true",
         help="Print resolved definitions path candidates and selected roots to stderr",
+    )
+    parser.add_argument(
+        "--columns",
+        help=(
+            "Comma-separated list of output columns to show. "
+            "Valid columns: edition,is_mtg2_switch,scope,paramId,shortName,name,units,attrs,encoding,sources"
+        ),
     )
     parser.add_argument("--name", help="Wildcard pattern for name, e.g. '*precipitation*'")
     parser.add_argument("--name-regex", help="PCRE2-style regex for name")
@@ -775,6 +840,7 @@ def main() -> int:
 
     try:
         matchers = build_matchers(args)
+        selected_columns = parse_columns_arg(args.columns)
     except ValueError as exc:
         parser.error(str(exc))
 
@@ -888,7 +954,12 @@ def main() -> int:
 
     records = list(records_by_key.values())
     filtered = filter_records(records, args, matchers)
-    filtered = dedupe_display_records(filtered, keep_attrs=(args.show_attrs or args.show_encoding))
+    keep_attrs = (
+        args.show_attrs
+        or args.show_encoding
+        or (selected_columns is not None and ("attrs" in selected_columns or "encoding" in selected_columns))
+    )
+    filtered = dedupe_display_records(filtered, keep_attrs=keep_attrs)
 
     if not filtered:
         print("No matching parameters found.")
@@ -898,6 +969,7 @@ def main() -> int:
         if args.format == "table":
             print_records_table(
                 filtered,
+                selected_columns,
                 show_encoding=args.show_encoding,
                 show_sources=args.show_sources,
                 truncate_cells=(not args.no_truncate),
@@ -905,6 +977,7 @@ def main() -> int:
         else:
             print_records_line(
                 filtered,
+                selected_columns,
                 show_attrs=args.show_attrs,
                 show_encoding=args.show_encoding,
                 show_sources=args.show_sources,
