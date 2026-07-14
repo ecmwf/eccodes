@@ -243,8 +243,8 @@ def script_default_roots() -> List[str]:
 
     # Support both source-tree and installed layouts.
     candidates = [
-        prefix / "definitions",
         prefix / "share" / "eccodes" / "definitions",
+        prefix / "definitions",
         prefix / "share" / "definitions",
         prefix.parent / "share" / "eccodes" / "definitions",
         Path("definitions"),
@@ -845,7 +845,7 @@ def make_parser() -> argparse.ArgumentParser:
             "If omitted, resolution order is: --definitions-root; "
             "ECCODES_EXTRA_DEFINITION_PATH (plus aliases ECCODES_EXTRA_DEFINITIONS and "
             "ECCODES_EXTRA_DEFINITONS); ECCODES_DEFINITION_PATH; then defaults "
-            "<prefix>/definitions, <prefix>/share/eccodes/definitions, "
+            "<prefix>/share/eccodes/definitions, <prefix>/definitions, "
             "<prefix>/share/definitions, <prefix>/../share/eccodes/definitions, ./definitions. "
             "If none exist and no explicit roots were provided, MEMFS is tried automatically."
         ),
