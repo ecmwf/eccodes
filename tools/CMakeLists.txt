@@ -30,7 +30,7 @@ endif()
 
 # tools binaries
 list( APPEND ecc_tools_binaries
-             codes_info codes_count codes_split_file codes_export_resource
+             codes_info codes_count codes_split_file codes_export_resource codes_parameters
              grib_histogram grib_filter grib_ls grib_dump
              grib2ppm grib_set grib_get grib_get_data grib_copy
              grib_compare codes_parser grib_index_build bufr_index_build
@@ -131,14 +131,4 @@ install( FILES ${CMAKE_CURRENT_SOURCE_DIR}/bufr_filter
                      WORLD_EXECUTE WORLD_READ )
 
 
-# codes_parameters concept query helper
-execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    ${PROJECT_SOURCE_DIR}/tools/codes_parameters
-    ${CMAKE_BINARY_DIR}/bin/ )
-
-install( FILES ${CMAKE_CURRENT_SOURCE_DIR}/codes_parameters
-         DESTINATION ${INSTALL_BIN_DIR}
-         PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ
-                     GROUP_EXECUTE GROUP_READ
-                     WORLD_EXECUTE WORLD_READ )
 

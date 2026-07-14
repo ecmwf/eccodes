@@ -1,0 +1,73 @@
+/*!  \page codes_parameters codes_parameters
+\section DESCRIPTION
+ Query parameter definitions in ecCodes concept files (grib1/grib2)
+ and print matching entries with parameter metadata and optional encoding constraints.
+
+\section USAGE
+ codes_parameters
+ [options]
+
+\section OPTIONS
+-h, --help  \n
+        Show this help text and exit.
+ \n \n --definitions-root path \n
+        Definitions root directory. Multiple paths can be supplied using the
+        platform path separator (':' on Unix, ';' on Windows).
+        If omitted, defaults and environment variables are used.
+ \n \n --debug-path-resolution \n
+        Print resolved path candidates, selected roots and backend information to stderr.
+ \n \n --columns col1,col2,... \n
+        Output only selected columns.
+        Valid columns: edition,is_mtg2_switch,scope,paramId,shortName,name,units,encoding,sources
+ \n \n --name pattern \n
+        Wildcard filter for name (case-insensitive).
+ \n \n --name-regex regex \n
+        Regex filter for name.
+ \n \n --shortName pattern \n
+        Wildcard filter for shortName (case-insensitive).
+ \n \n --shortName-regex regex \n
+        Regex filter for shortName.
+ \n \n --paramId pattern \n
+        Wildcard filter for paramId (case-insensitive).
+ \n \n --paramId-regex regex \n
+        Regex filter for paramId.
+ \n \n --units pattern \n
+        Wildcard filter for units (case-insensitive).
+ \n \n --units-regex regex \n
+        Regex filter for units.
+ \n \n --regex-case-sensitive \n
+        Make regex filters case-sensitive.
+ \n \n --attr key=value,key=value,... \n
+        Filter by encoding attributes.
+        A record matches when it contains at least the listed key/value pairs.
+ \n \n --attr-strict \n
+        With --attr, require exact attribute set match.
+ \n \n --is_mtg2_switch 0|1|2 \n
+        Restrict GRIB2 records to lte33=0, def=1, chemsplit=2.
+ \n \n --edition 1|2 \n
+        Restrict to GRIB edition 1 or 2.
+ \n \n --show-encoding \n
+        Print encoding key/value constraints for each result.
+ \n \n --show-sources \n
+        Print source definition files contributing to each result.
+ \n \n --format line|table \n
+        Output format. Default is line.
+ \n \n --no-truncate \n
+        With --format table, do not truncate columns to terminal width.
+ \n \n
+\section codes_parameters_examples codes_parameters examples
+-# List all entries for paramId 130:\n
+\verbatim
+codes_parameters --paramId 130
+\endverbatim
+
+-# Show encoding constraints for exact WMO temperature triplet in GRIB2:\n
+\verbatim
+codes_parameters --edition 2 --attr discipline=0,parameterCategory=0,parameterNumber=0 --attr-strict --show-encoding
+\endverbatim
+
+-# Show only selected columns in table format:\n
+\verbatim
+codes_parameters --name '*temperature*' --columns edition,scope,paramId,shortName,encoding --format table
+\endverbatim
+*/

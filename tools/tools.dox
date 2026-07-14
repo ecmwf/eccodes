@@ -24,4 +24,5 @@ comparing data with a given precision.
 - \ref grib_get_data
 - \ref grib_keys
 - \ref grib_index_build
+- \ref codes_parameters
 */
