@@ -18,7 +18,12 @@ import tempfile
 from collections import defaultdict
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Dict, Iterable, List, Set, Tuple
+from typing import Any, Dict, Iterable, List, Set, Tuple
+
+try:
+    import regex as pcre_regex
+except ImportError:
+    pcre_regex = None
 
 CONCEPTS = {"paramId", "shortName", "name", "units"}
 DEFINITION_FILE_RE = re.compile(r'"([^"\\]+\.(?:def|table|tmpl|list|txt))"')
@@ -44,6 +49,13 @@ class Record:
     attrs: Dict[str, str]
     values: Dict[str, List[str]] = field(default_factory=lambda: defaultdict(list))
     sources: List[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class FieldMatcher:
+    wildcard: str | None = None
+    regex_text: str | None = None
+    regex_compiled: Any = None
 
 
 def infer_switch(filename: str) -> int | None:
@@ -411,18 +423,65 @@ def materialize_memfs_definitions(exporter: str, hint_roots: Iterable[Path]) -> 
     return definitions_root
 
 
-def matches_any(values: Iterable[str], pattern: str | None) -> bool:
-    if pattern is None:
+def compile_regex(pattern: str, option_name: str, case_sensitive: bool) -> Any:
+    if pcre_regex is None:
+        raise ValueError(
+            f"{option_name} requires the Python 'regex' module for PCRE2-style matching"
+        )
+
+    flags = 0 if case_sensitive else pcre_regex.IGNORECASE
+    try:
+        return pcre_regex.compile(pattern, flags)
+    except pcre_regex.error as exc:
+        raise ValueError(f"Invalid pattern for {option_name}: {exc}") from exc
+
+
+def build_field_matcher(
+    wildcard: str | None,
+    regex_text: str | None,
+    option_name: str,
+    case_sensitive: bool,
+) -> FieldMatcher:
+    if wildcard and regex_text:
+        raise ValueError(f"Use either {option_name} or {option_name}-regex, not both")
+
+    if regex_text is None:
+        return FieldMatcher(wildcard=wildcard)
+
+    compiled = compile_regex(regex_text, f"{option_name}-regex", case_sensitive)
+    return FieldMatcher(regex_text=regex_text, regex_compiled=compiled)
+
+
+def build_matchers(args: argparse.Namespace) -> Dict[str, FieldMatcher]:
+    return {
+        "name": build_field_matcher(args.name, args.name_regex, "--name", args.regex_case_sensitive),
+        "shortName": build_field_matcher(
+            args.shortName,
+            args.shortName_regex,
+            "--shortName",
+            args.regex_case_sensitive,
+        ),
+        "paramId": build_field_matcher(args.paramId, args.paramId_regex, "--paramId", args.regex_case_sensitive),
+        "units": build_field_matcher(args.units, args.units_regex, "--units", args.regex_case_sensitive),
+    }
+
+
+def matches_any(values: Iterable[str], matcher: FieldMatcher) -> bool:
+    if matcher.wildcard is None and matcher.regex_compiled is None:
         return True
-    pattern_low = pattern.lower()
-    return any(fnmatch.fnmatch(v.lower(), pattern_low) for v in values)
+
+    if matcher.wildcard is not None:
+        pattern_low = matcher.wildcard.lower()
+        return any(fnmatch.fnmatch(v.lower(), pattern_low) for v in values)
+
+    return any(matcher.regex_compiled.search(v) is not None for v in values)
 
 
 def values_for(rec: Record, concept: str) -> List[str]:
     return rec.values.get(concept, [])
 
 
-def filter_records(records: Iterable[Record], args: argparse.Namespace) -> List[Record]:
+def filter_records(records: Iterable[Record], args: argparse.Namespace, matchers: Dict[str, FieldMatcher]) -> List[Record]:
     result = []
     for rec in records:
         if args.is_mtg2_switch is not None:
@@ -432,13 +491,13 @@ def filter_records(records: Iterable[Record], args: argparse.Namespace) -> List[
         if args.edition is not None and rec.edition != args.edition:
             continue
 
-        if not matches_any(values_for(rec, "name"), args.name):
+        if not matches_any(values_for(rec, "name"), matchers["name"]):
             continue
-        if not matches_any(values_for(rec, "shortName"), args.shortName):
+        if not matches_any(values_for(rec, "shortName"), matchers["shortName"]):
             continue
-        if not matches_any(values_for(rec, "paramId"), args.paramId):
+        if not matches_any(values_for(rec, "paramId"), matchers["paramId"]):
             continue
-        if not matches_any(values_for(rec, "units"), args.units):
+        if not matches_any(values_for(rec, "units"), matchers["units"]):
             continue
 
         result.append(rec)
@@ -657,9 +716,18 @@ def make_parser() -> argparse.ArgumentParser:
         help="Print resolved definitions path candidates and selected roots to stderr",
     )
     parser.add_argument("--name", help="Wildcard pattern for name, e.g. '*precipitation*'")
+    parser.add_argument("--name-regex", help="PCRE2-style regex for name")
     parser.add_argument("--shortName", help="Wildcard pattern for shortName, e.g. '10m*'")
+    parser.add_argument("--shortName-regex", help="PCRE2-style regex for shortName")
     parser.add_argument("--paramId", help="Wildcard pattern for paramId")
+    parser.add_argument("--paramId-regex", help="PCRE2-style regex for paramId")
     parser.add_argument("--units", help="Wildcard pattern for units")
+    parser.add_argument("--units-regex", help="PCRE2-style regex for units")
+    parser.add_argument(
+        "--regex-case-sensitive",
+        action="store_true",
+        help="Make regex searches case-sensitive. By default regex searches are case-insensitive",
+    )
     parser.add_argument(
         "--is_mtg2_switch",
         type=int,
@@ -704,6 +772,11 @@ def make_parser() -> argparse.ArgumentParser:
 def main() -> int:
     parser = make_parser()
     args = parser.parse_args()
+
+    try:
+        matchers = build_matchers(args)
+    except ValueError as exc:
+        parser.error(str(exc))
 
     explicit_roots = explicit_roots_from_args_env(args)
     candidates = candidate_roots(args)
@@ -814,7 +887,7 @@ def main() -> int:
         )
 
     records = list(records_by_key.values())
-    filtered = filter_records(records, args)
+    filtered = filter_records(records, args, matchers)
     filtered = dedupe_display_records(filtered, keep_attrs=(args.show_attrs or args.show_encoding))
 
     if not filtered:
