@@ -36,7 +36,6 @@ VALID_COLUMNS = (
     "shortName",
     "name",
     "units",
-    "attrs",
     "encoding",
     "sources",
 )
@@ -625,7 +624,6 @@ def dedupe_display_records(records: List[Record], keep_attrs: bool) -> List[Reco
 def print_records_line(
     records: List[Record],
     selected_columns: List[str] | None,
-    show_attrs: bool,
     show_encoding: bool,
     show_sources: bool,
 ) -> None:
@@ -652,9 +650,6 @@ def print_records_line(
                 f"name={format_values(values_for(rec, 'name'))} "
                 f"units={format_values(values_for(rec, 'units'))}"
             )
-        if show_attrs and rec.attrs:
-            attrs_str = ", ".join(f"{k}={v}" for k, v in sorted(rec.attrs.items()))
-            print(f"  attrs: {attrs_str}")
         if show_encoding and rec.attrs:
             encoding_str = ", ".join(f"{k}={v}" for k, v in sorted(rec.attrs.items()))
             print(f"  encoding: {encoding_str}")
@@ -685,8 +680,6 @@ def table_value(rec: Record, key: str) -> str:
         return format_values(values_for(rec, "name"))
     if key == "units":
         return format_values(values_for(rec, "units"))
-    if key == "attrs":
-        return ", ".join(f"{k}={v}" for k, v in sorted(rec.attrs.items())) if rec.attrs else "-"
     if key == "encoding":
         return ", ".join(f"{k}={v}" for k, v in sorted(rec.attrs.items())) if rec.attrs else "-"
     if key == "sources":
@@ -744,7 +737,6 @@ def print_records_table(
             "shortName": 16,
             "name": 48,
             "units": 20,
-            "attrs": 60,
             "encoding": 60,
             "sources": 60,
         }
@@ -804,7 +796,7 @@ def make_parser() -> argparse.ArgumentParser:
         "--columns",
         help=(
             "Comma-separated list of output columns to show. "
-            "Valid columns: edition,is_mtg2_switch,scope,paramId,shortName,name,units,attrs,encoding,sources"
+            "Valid columns: edition,is_mtg2_switch,scope,paramId,shortName,name,units,encoding,sources"
         ),
     )
     parser.add_argument("--name", help="Wildcard pattern for name, e.g. '*precipitation*'")
@@ -831,11 +823,6 @@ def make_parser() -> argparse.ArgumentParser:
         type=int,
         choices=[1, 2],
         help="Restrict to GRIB edition 1 or 2",
-    )
-    parser.add_argument(
-        "--show-attrs",
-        action="store_true",
-        help="Show the condition attributes used to match the parameter",
     )
     parser.add_argument(
         "--show-encoding",
@@ -982,9 +969,8 @@ def main() -> int:
     records = list(records_by_key.values())
     filtered = filter_records(records, args, matchers)
     keep_attrs = (
-        args.show_attrs
-        or args.show_encoding
-        or (selected_columns is not None and ("attrs" in selected_columns or "encoding" in selected_columns))
+        args.show_encoding
+        or (selected_columns is not None and "encoding" in selected_columns)
     )
     filtered = dedupe_display_records(filtered, keep_attrs=keep_attrs)
 
@@ -1005,7 +991,6 @@ def main() -> int:
             print_records_line(
                 filtered,
                 selected_columns,
-                show_attrs=args.show_attrs,
                 show_encoding=args.show_encoding,
                 show_sources=args.show_sources,
             )
