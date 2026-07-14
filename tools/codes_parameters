@@ -44,6 +44,16 @@ VALID_COLUMNS = (
 ENTRY_RE = re.compile(r"^'((?:\\'|[^'])*)'\s*=\s*\{\s*$")
 ATTR_RE = re.compile(r"^([A-Za-z0-9_]+)\s*=\s*(.*?)\s*;\s*$")
 
+# Build set of concept filenames to match: paramId.def, shortName.def, etc., with variants
+CONCEPT_FILENAMES = set()
+for concept in CONCEPTS:
+    CONCEPT_FILENAMES.add(f"{concept}.def")
+    CONCEPT_FILENAMES.add(f"{concept}.lte33.def")
+    CONCEPT_FILENAMES.add(f"{concept}.chemsplit.def")
+
+# Cache scan results by definitions_root to avoid re-parsing
+_scan_cache: Dict[str, Dict[str, Any]] = {}
+
 
 @dataclass(frozen=True)
 class RecordKey:
@@ -130,7 +140,14 @@ def make_record_key(edition: int, switch: int | None, scope: str, attrs: Dict[st
 
 
 def scan_definitions(definitions_root: Path) -> Dict[RecordKey, Record]:
+    # Check cache first to avoid re-parsing the same root
+    cache_key = str(definitions_root.resolve())
+    if cache_key in _scan_cache:
+        cached = _scan_cache[cache_key]
+        return dict(cached["records"])
+
     records: Dict[RecordKey, Record] = {}
+    root_str = str(definitions_root)
 
     for edition_dirname in ("grib1", "grib2"):
         edition_dir = definitions_root / edition_dirname
@@ -138,26 +155,35 @@ def scan_definitions(definitions_root: Path) -> Dict[RecordKey, Record]:
             continue
 
         edition = 1 if edition_dirname == "grib1" else 2
+        edition_dir_str = os.path.join(root_str, edition_dirname)
 
-        for root, _, files in os.walk(edition_dir):
-            root_path = Path(root)
+        for root, _, files in os.walk(edition_dir_str):
+            # Calculate relative path to scope once per directory
+            rel_from_root = os.path.relpath(root, edition_dir_str)
+            if rel_from_root == ".":
+                scope = edition_dirname
+            else:
+                scope = (edition_dirname + "/" + rel_from_root).replace(os.sep, "/")
+
             for filename in files:
+                # Fast reject: only process concept filenames
+                if filename not in CONCEPT_FILENAMES:
+                    continue
+
                 concept = infer_concept(filename)
                 if concept is None:
                     continue
 
                 switch = infer_switch(filename)
                 if edition == 1:
-                    if not filename.endswith(".def") or filename.endswith(".legacy.def"):
-                        continue
                     switch = None
                 elif switch is None:
                     continue
 
-                file_path = root_path / filename
-                scope = str(root_path.relative_to(definitions_root))
+                file_path_str = os.path.join(root, filename)
+                rel_source = (scope + "/" + filename).replace("\\", "/")
 
-                for value, attrs in parse_def_file(file_path):
+                for value, attrs in parse_def_file(Path(file_path_str)):
                     key = make_record_key(edition, switch, scope, attrs)
                     if key not in records:
                         records[key] = Record(
@@ -170,10 +196,11 @@ def scan_definitions(definitions_root: Path) -> Dict[RecordKey, Record]:
                     rec = records[key]
                     if value not in rec.values[concept]:
                         rec.values[concept].append(value)
-                    rel_source = str(file_path.relative_to(definitions_root))
                     if rel_source not in rec.sources:
                         rec.sources.append(rel_source)
 
+    # Cache the results
+    _scan_cache[cache_key] = {"records": records}
     return records
 
 
