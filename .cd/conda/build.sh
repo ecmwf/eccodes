@@ -37,7 +37,7 @@ export PYTHON=
 export LDFLAGS="$LDFLAGS -L$PREFIX/lib -Wl,-rpath,$PREFIX/lib"
 export CFLAGS="$CFLAGS -fPIC -I$PREFIX/include"
 
-mkdir ../build && cd ../build
+mkdir -p ../build && cd ../build
 
 # One can use the following cmake flag to get more verbose debugging info
 # -D ECBUILD_LOG_LEVEL=DEBUG
