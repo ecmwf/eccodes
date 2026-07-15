@@ -21,6 +21,7 @@ grep -q -- "--chemFormula CHEMFORMULA" $tempA
 grep -q -- "--chemFormula-regex CHEMFORMULA_REGEX" $tempA
 grep -q -- "--nattrkey NATTRKEY" $tempA
 grep -q -- "--nattr NATTR" $tempA
+grep -q -- "--attrkey ATTRKEY" $tempA
 
 # chemFormula filter
 ${tools_dir}/codes_chems --chemFormula O3 > $tempA
@@ -55,6 +56,19 @@ status=$?
 set -e
 [ $status -ne 0 ]
 grep -q "Invalid pattern for" $tempErr
+
+# attrkey filter: include only records that have a key (any value)
+${tools_dir}/codes_chems --show-encoding --attrkey constituentType > $tempA
+[ -s $tempA ]
+grep -q "constituentType" $tempA
+
+# attrkey must fail when given a key containing '='
+set +e
+${tools_dir}/codes_chems --attrkey constituentType=0 > $tempA 2> $tempErr
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q -- "Keys must not contain '='" $tempErr
 
 # Invalid nattrkey containing '=' must fail
 set +e

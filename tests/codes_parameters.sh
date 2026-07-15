@@ -20,6 +20,7 @@ ${tools_dir}/codes_parameters --help > $tempA
 grep -q -- "--scope SCOPE" $tempA
 grep -q -- "--nattrkey NATTRKEY" $tempA
 grep -q -- "--nattr NATTR" $tempA
+grep -q -- "--attrkey ATTRKEY" $tempA
 
 # Scope filter: single localConcept scope
 ${tools_dir}/codes_parameters --paramId 167 --scope grib2/localConcepts/tigge > $tempA
@@ -120,6 +121,33 @@ status=$?
 set -e
 [ $status -ne 0 ]
 grep -q -- "--scope must contain at least one non-empty scope" $tempErr
+
+# attrkey filter: include only records that have a key (any value)
+${tools_dir}/codes_parameters --edition 2 --paramId 167 --show-encoding --attrkey typeOfStatisticalProcessing > $tempA
+[ -s $tempA ]
+grep -q "typeOfStatisticalProcessing" $tempA
+# All returned lines should have the encoding key present
+if grep -v "typeOfStatisticalProcessing" $tempA | grep -q "encoding:"; then
+    echo "Record without --attrkey key slipped through"
+    exit 1
+fi
+
+# attrkey must fail when given a key containing '='
+set +e
+${tools_dir}/codes_parameters --attrkey typeOfStatisticalProcessing=0 > $tempA 2> $tempErr
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q -- "Keys must not contain '='" $tempErr
+
+# attr-strict + attrkey should allow strict match on known key/values plus key presence
+${tools_dir}/codes_parameters --attr discipline=10,parameterCategory=0,parameterNumber=3 --is_mtg2_switch 1 --attr-strict --scope grib2 --attrkey typeOfStatisticalProcessing > $tempA
+[ -s $tempA ]
+grep -q "paramId=132216" $tempA
+grep -q "paramId=141229" $tempA
+grep -q "paramId=143229" $tempA
+grep -q "paramId=144229" $tempA
+grep -q "paramId=145229" $tempA
 
 # Invalid nattrkey containing '=' must fail
 set +e

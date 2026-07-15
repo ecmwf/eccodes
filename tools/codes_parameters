@@ -560,6 +560,27 @@ def parse_attr_arg(attr_text: str | None) -> Dict[str, str] | None:
     return result
 
 
+def parse_attrkey_arg(attrkey_text: str | None) -> Set[str] | None:
+    if attrkey_text is None:
+        return None
+
+    keys = [item.strip() for item in attrkey_text.split(",") if item.strip()]
+    if not keys:
+        raise ValueError("--attrkey must contain at least one key")
+
+    result: Set[str] = set()
+    for key in keys:
+        if not key:
+            raise ValueError("Invalid --attrkey: empty key")
+        if "=" in key:
+            raise ValueError(f"Invalid --attrkey key '{key}'. Keys must not contain '='")
+        if key in result:
+            raise ValueError(f"Duplicate key '{key}' in --attrkey")
+        result.add(key)
+
+    return result
+
+
 def parse_nattrkey_arg(nattrkey_text: str | None) -> Set[str] | None:
     if nattrkey_text is None:
         return None
@@ -645,6 +666,7 @@ def filter_records(
     args: argparse.Namespace,
     matchers: Dict[str, FieldMatcher],
     attr_filter: Dict[str, str] | None,
+    attrkey_filter: Set[str] | None,
     nattrkey_filter: Set[str] | None,
     nattr_filter: Dict[str, str] | None,
     scope_filter: Set[str] | None,
@@ -672,11 +694,19 @@ def filter_records(
 
         if attr_filter is not None:
             if args.attr_strict:
-                if rec.attrs != attr_filter:
+                expected_keys = set(attr_filter.keys())
+                if attrkey_filter is not None:
+                    expected_keys.update(attrkey_filter)
+                if set(rec.attrs.keys()) != expected_keys:
+                    continue
+                if not all(rec.attrs.get(key) == value for key, value in attr_filter.items()):
                     continue
             else:
                 if not all(rec.attrs.get(key) == value for key, value in attr_filter.items()):
                     continue
+
+        if not args.attr_strict and attrkey_filter is not None and not all(key in rec.attrs for key in attrkey_filter):
+            continue
 
         if nattrkey_filter is not None and any(key in rec.attrs for key in nattrkey_filter):
             continue
@@ -952,6 +982,10 @@ def make_parser() -> argparse.ArgumentParser:
         help="With --attr, require an exact attribute set match (same keys and values)",
     )
     parser.add_argument(
+        "--attrkey",
+        help="Filter by attribute key presence (comma-separated). Keeps only parameters that have all specified keys",
+    )
+    parser.add_argument(
         "--nattrkey",
         help="Exclude parameters with specific attribute keys (comma-separated list)",
     )
@@ -1013,6 +1047,7 @@ def main() -> int:
         attr_filter = parse_attr_arg(args.attr)
         nattrkey_filter = parse_nattrkey_arg(args.nattrkey)
         nattr_filter = parse_nattr_arg(args.nattr)
+        attrkey_filter = parse_attrkey_arg(args.attrkey)
         scope_filter = parse_scope_arg(args.scope)
     except ValueError as exc:
         parser.error(str(exc))
@@ -1135,7 +1170,7 @@ def main() -> int:
         print(f"{parser.prog}: error: {exc}", file=sys.stderr)
         return 2
 
-    filtered = filter_records(records, args, matchers, attr_filter, nattrkey_filter, nattr_filter, scope_filter)
+    filtered = filter_records(records, args, matchers, attr_filter, attrkey_filter, nattrkey_filter, nattr_filter, scope_filter)
     keep_attrs = (
         args.show_encoding
         or attr_filter is not None

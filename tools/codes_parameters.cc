@@ -49,6 +49,7 @@ struct Options {
     int edition = 0;
     std::string attr;
     bool attr_strict = false;
+    std::string attrkey;
     std::string nattrkey;
     std::string nattr;
     bool show_encoding = false;
@@ -727,6 +728,36 @@ static int parse_attr_filter(const std::string& text, std::map<std::string, std:
     return 0;
 }
 
+static int parse_attrkey_filter(const std::string& text, std::set<std::string>& out, std::string& err)
+{
+    out.clear();
+    if (text.empty()) return 0;
+
+    std::vector<std::string> keys = split(text, ',');
+    if (keys.empty()) {
+        err = "--attrkey must contain at least one key";
+        return -1;
+    }
+
+    for (size_t i = 0; i < keys.size(); ++i) {
+        std::string k = keys[i];
+        if (k.empty()) {
+            err = "Invalid --attrkey: empty key";
+            return -1;
+        }
+        if (k.find('=') != std::string::npos) {
+            err = "Invalid --attrkey key '" + k + "'. Keys must not contain '='";
+            return -1;
+        }
+        if (out.count(k)) {
+            err = "Duplicate key '" + k + "' in --attrkey";
+            return -1;
+        }
+        out.insert(k);
+    }
+    return 0;
+}
+
 static int parse_nattrkey_filter(const std::string& text, std::set<std::string>& out, std::string& err)
 {
     out.clear();
@@ -801,7 +832,7 @@ static std::string short_usage_text(const char* prog)
       << "                        [--shortName-regex SHORTNAME_REGEX]\n"
       << "                        [--paramId PARAMID] [--paramId-regex PARAMID_REGEX]\n"
       << "                        [--units UNITS] [--units-regex UNITS_REGEX]\n"
-      << "                        [--attr ATTR] [--attr-strict] [--nattrkey NATTRKEY]\n"
+    << "                        [--attr ATTR] [--attr-strict] [--attrkey ATTRKEY] [--nattrkey NATTRKEY]\n"
       << "                        [--nattr NATTR] [--regex-case-sensitive]\n"
       << "                        [--is_mtg2_switch {0,1,2}] [--edition {1,2}]\n"
       << "                        [--show-encoding] [--show-sources]\n"
@@ -820,7 +851,7 @@ static std::string usage_text(const char* prog)
       << "                        [--shortName-regex SHORTNAME_REGEX]\n"
       << "                        [--paramId PARAMID] [--paramId-regex PARAMID_REGEX]\n"
       << "                        [--units UNITS] [--units-regex UNITS_REGEX]\n"
-      << "                        [--attr ATTR] [--attr-strict] [--nattrkey NATTRKEY]\n"
+    << "                        [--attr ATTR] [--attr-strict] [--attrkey ATTRKEY] [--nattrkey NATTRKEY]\n"
       << "                        [--nattr NATTR] [--regex-case-sensitive]\n"
       << "                        [--is_mtg2_switch {0,1,2}] [--edition {1,2}]\n"
       << "                        [--show-encoding] [--show-sources]\n"
@@ -870,6 +901,8 @@ static std::string usage_text(const char* prog)
       << "                        containing at least these pairs\n"
       << "  --attr-strict         With --attr, require an exact attribute set match\n"
       << "                        (same keys and values)\n"
+      << "  --attrkey ATTRKEY     Filter by attribute key presence (comma-separated).\n"
+      << "                        Keeps only parameters that have all specified keys\n"
       << "  --nattrkey NATTRKEY   Exclude parameters with specific attribute keys\n"
       << "                        (comma-separated list)\n"
       << "  --nattr NATTR         Exclude parameters with specific attribute key/value\n"
@@ -972,6 +1005,10 @@ static int parse_args(int argc, char** argv, Options& opt, std::string& err)
         }
         else if (key == "--attr-strict") {
             opt.attr_strict = true;
+        }
+        else if (key == "--attrkey") {
+            if (!need_value("--attrkey")) return -1;
+            opt.attrkey = val;
         }
         else if (key == "--nattrkey") {
             if (!need_value("--nattrkey")) return -1;
@@ -1156,6 +1193,15 @@ int main(int argc, char** argv)
     if (!opt.attr.empty()) {
         std::string e;
         if (parse_attr_filter(opt.attr, attr_filter, e) != 0) {
+            errorf("%s", e.c_str());
+            return 2;
+        }
+    }
+
+    std::set<std::string> attrkey_filter;
+    if (!opt.attrkey.empty()) {
+        std::string e;
+        if (parse_attrkey_filter(opt.attrkey, attrkey_filter, e) != 0) {
             errorf("%s", e.c_str());
             return 2;
         }
@@ -1369,7 +1415,35 @@ int main(int argc, char** argv)
 
         if (!attr_filter.empty()) {
             if (opt.attr_strict) {
-                if (rec.attrs != attr_filter) continue;
+                std::set<std::string> expected_keys;
+                for (std::map<std::string, std::string>::const_iterator a = attr_filter.begin(); a != attr_filter.end(); ++a) {
+                    expected_keys.insert(a->first);
+                }
+                for (std::set<std::string>::const_iterator k = attrkey_filter.begin(); k != attrkey_filter.end(); ++k) {
+                    expected_keys.insert(*k);
+                }
+
+                if (rec.attrs.size() != expected_keys.size()) continue;
+
+                bool keys_ok = true;
+                for (std::set<std::string>::const_iterator k = expected_keys.begin(); k != expected_keys.end(); ++k) {
+                    std::map<std::string, std::string>::const_iterator it = rec.attrs.find(*k);
+                    if (it == rec.attrs.end()) {
+                        keys_ok = false;
+                        break;
+                    }
+                }
+                if (!keys_ok) continue;
+
+                bool values_ok = true;
+                for (std::map<std::string, std::string>::const_iterator a = attr_filter.begin(); a != attr_filter.end(); ++a) {
+                    std::map<std::string, std::string>::const_iterator it = rec.attrs.find(a->first);
+                    if (it == rec.attrs.end() || it->second != a->second) {
+                        values_ok = false;
+                        break;
+                    }
+                }
+                if (!values_ok) continue;
             }
             else {
                 bool ok = true;
@@ -1382,6 +1456,19 @@ int main(int argc, char** argv)
                 }
                 if (!ok) continue;
             }
+        }
+
+        // Include only records that have all keys in attrkey_filter
+        if (!opt.attr_strict && !attrkey_filter.empty()) {
+            bool all_present = true;
+            for (std::set<std::string>::const_iterator k = attrkey_filter.begin(); k != attrkey_filter.end(); ++k) {
+                std::map<std::string, std::string>::const_iterator it = rec.attrs.find(*k);
+                if (it == rec.attrs.end()) {
+                    all_present = false;
+                    break;
+                }
+            }
+            if (!all_present) continue;
         }
 
         // Exclude records matching nattrkey_filter (records that have any of the excluded keys)
