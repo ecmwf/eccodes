@@ -108,7 +108,7 @@ static bool starts_with(const std::string& s, const std::string& prefix)
 
 static bool ends_with(const std::string& s, const std::string& suffix)
 {
-    return s.size() >= suffix.size() && s.compare(s.size() - suffix.size(), suffix.size(), suffix) == 0;
+    return string_ends_with(s.c_str(), suffix.c_str());
 }
 
 static std::vector<std::string> split(const std::string& s, char delim)
@@ -147,16 +147,12 @@ static void uniq(std::vector<std::string>& vals)
 
 static bool is_dir(const std::string& path)
 {
-    struct stat st;
-    if (stat(path.c_str(), &st) != 0) return false;
-    return S_ISDIR(st.st_mode);
+    return path_is_directory(path.c_str());
 }
 
 static bool is_file(const std::string& path)
 {
-    struct stat st;
-    if (stat(path.c_str(), &st) != 0) return false;
-    return S_ISREG(st.st_mode);
+    return path_is_regular_file(path.c_str());
 }
 
 static bool is_executable_file(const std::string& path)
@@ -197,32 +193,12 @@ static std::string to_lower(std::string s)
     return s;
 }
 
-static int levenshtein(const std::string& a, const std::string& b)
-{
-    const size_t n = a.size();
-    const size_t m = b.size();
-    std::vector<int> prev(m + 1), curr(m + 1);
-    for (size_t j = 0; j <= m; ++j) prev[j] = static_cast<int>(j);
-    for (size_t i = 1; i <= n; ++i) {
-        curr[0] = static_cast<int>(i);
-        for (size_t j = 1; j <= m; ++j) {
-            int cost = (a[i - 1] == b[j - 1]) ? 0 : 1;
-            int v1 = prev[j] + 1;
-            int v2 = curr[j - 1] + 1;
-            int v3 = prev[j - 1] + cost;
-            curr[j] = std::min(v1, std::min(v2, v3));
-        }
-        prev.swap(curr);
-    }
-    return prev[m];
-}
-
 static std::string best_suggestion(const std::string& key, const std::set<std::string>& known)
 {
     int best_dist = INT_MAX;
     std::string best;
     for (std::set<std::string>::const_iterator it = known.begin(); it != known.end(); ++it) {
-        int d = levenshtein(key, *it);
+        int d = static_cast<int>(levenshteinDistance(key.c_str(), it->c_str()));
         if (d < best_dist) {
             best_dist = d;
             best = *it;
