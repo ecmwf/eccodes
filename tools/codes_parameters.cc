@@ -744,6 +744,10 @@ static int parse_nattrkey_filter(const std::string& text, std::set<std::string>&
             err = "Invalid --nattrkey: empty key";
             return -1;
         }
+        if (k.find('=') != std::string::npos) {
+            err = "Invalid --nattrkey key '" + k + "'. Keys must not contain '='";
+            return -1;
+        }
         if (out.count(k)) {
             err = "Duplicate key '" + k + "' in --nattrkey";
             return -1;

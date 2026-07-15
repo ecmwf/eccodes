@@ -121,6 +121,14 @@ set -e
 [ $status -ne 0 ]
 grep -q -- "--scope must contain at least one non-empty scope" $tempErr
 
+# Invalid nattrkey containing '=' must fail
+set +e
+${tools_dir}/codes_parameters --nattrkey typeOfStatisticalProcessing=0 > $tempA 2> $tempErr
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q -- "Keys must not contain '='" $tempErr
+
 # nattrkey filter: exclude records containing a key
 ${tools_dir}/codes_parameters --edition 2 --paramId 167 --show-encoding --nattrkey typeOfStatisticalProcessing > $tempA
 [ -s $tempA ]

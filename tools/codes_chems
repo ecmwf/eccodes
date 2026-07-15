@@ -571,6 +571,8 @@ def parse_nattrkey_arg(nattrkey_text: str | None) -> Set[str] | None:
     for key in keys:
         if not key:
             raise ValueError("Invalid --nattrkey: empty key")
+        if "=" in key:
+            raise ValueError(f"Invalid --nattrkey key '{key}'. Keys must not contain '='")
         if key in result:
             raise ValueError(f"Duplicate key '{key}' in --nattrkey")
         result.add(key)

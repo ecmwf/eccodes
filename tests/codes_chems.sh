@@ -56,6 +56,14 @@ set -e
 [ $status -ne 0 ]
 grep -q "Invalid pattern for" $tempErr
 
+# Invalid nattrkey containing '=' must fail
+set +e
+${tools_dir}/codes_chems --nattrkey constituentType=0 > $tempB 2> $tempErr
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q -- "Keys must not contain '='" $tempErr
+
 # nattrkey filter: exclude records containing a key
 ${tools_dir}/codes_chems --chemFormula O3 --show-encoding --nattrkey constituentType > $tempA
 if [ -s $tempA ]; then
