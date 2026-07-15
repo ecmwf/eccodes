@@ -103,6 +103,7 @@ if( HAVE_BUILD_TOOLS )
     # and are generally quick
     list(APPEND tests_basic
         codes_info
+        codes_parameters
         codes_deprecated
         unit_tests
         julian
