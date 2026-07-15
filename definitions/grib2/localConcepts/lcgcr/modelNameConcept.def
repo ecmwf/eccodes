@@ -1,0 +1,12 @@
+'ERA5' = {
+    backgroundProcess = 255;
+}
+'CRA-40' = {
+    backgroundProcess = 1;
+}
+'JRA-3Q' = {
+    backgroundProcess = 2;
+}
+'MERRA-2' = {
+    backgroundProcess = 3;
+}

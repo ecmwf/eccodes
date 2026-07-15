@@ -119,9 +119,9 @@ int LocalDefinition::pack_long(const long* val, size_t* len)
                 else if (type == 18) {
                     productDefinitionTemplateNumberNew = 2;
                     derivedForecast                    = 4;
-                    // eps or enda or elda or ewla
+                    // eps or enda or elda or ewla or xwda
                 }
-                else if (eps == 1 || stream == 1030 || stream == 1249 || stream == 1250) {
+                else if (eps == 1 || stream == 1030 || stream == 1249 || stream == 1250 || stream == 1259) {
                     productDefinitionTemplateNumberNew = 1;
                 }
                 else {
@@ -137,9 +137,9 @@ int LocalDefinition::pack_long(const long* val, size_t* len)
                 else if (type == 18) {
                     productDefinitionTemplateNumberNew = 12;
                     derivedForecast                    = 4;
-                    // eps or enda or elda or ewla
+                    // eps or enda or elda or ewla or xwda
                 }
-                else if (eps == 1 || stream == 1030 || stream == 1249 || stream == 1250) {
+                else if (eps == 1 || stream == 1030 || stream == 1249 || stream == 1250 || stream == 1259) {
                     productDefinitionTemplateNumberNew = 11;
                 }
                 else {

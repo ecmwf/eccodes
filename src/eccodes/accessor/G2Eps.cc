@@ -76,8 +76,8 @@ int G2Eps::pack_long(const long* val, size_t* len)
         return GRIB_ENCODING_ERROR;
     }
 
-    // eps or stream=(enda or elda or ewla)
-    if (eps || stream == 1030 || stream == 1249 || stream == 1250) {
+    // eps or stream=(enda or elda or ewla or xwda)
+    if (eps || stream == 1030 || stream == 1249 || stream == 1250 || stream == 1259) {
         if (isInstant) {
             // type=em || type=es
             if (type == 17) {

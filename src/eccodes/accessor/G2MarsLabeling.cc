@@ -268,6 +268,7 @@ int G2MarsLabeling::extra_set(long val)
                 case 1030:      /* enda */
                 case 1249:      /* elda */
                 case 1250:      /* ewla */
+                case 1259:      /* xwda */
                     is_eps = 1; /* These streams are all for ensembles */
                     grib_get_string(hand, stepType_, stepType, &stepTypelen);
                     is_instant                         = (strcmp(stepType, "instant") == 0);
