@@ -19,6 +19,8 @@ tempErr=temp.$label.err
 ${tools_dir}/codes_chems --help > $tempA
 grep -q -- "--chemFormula CHEMFORMULA" $tempA
 grep -q -- "--chemFormula-regex CHEMFORMULA_REGEX" $tempA
+grep -q -- "--nattrkey NATTRKEY" $tempA
+grep -q -- "--nattr NATTR" $tempA
 
 # chemFormula filter
 ${tools_dir}/codes_chems --chemFormula O3 > $tempA
@@ -53,6 +55,20 @@ status=$?
 set -e
 [ $status -ne 0 ]
 grep -q "Invalid pattern for" $tempErr
+
+# nattrkey filter: exclude records containing a key
+${tools_dir}/codes_chems --chemFormula O3 --show-encoding --nattrkey constituentType > $tempA
+if [ -s $tempA ]; then
+    echo "Expected no output for --nattrkey constituentType"
+    exit 1
+fi
+
+# nattr filter: exclude records containing a specific key/value pair
+${tools_dir}/codes_chems --chemFormula O3 --show-encoding --nattr constituentType=0 > $tempA
+if [ -s $tempA ]; then
+    echo "Expected no output for --nattr constituentType=0"
+    exit 1
+fi
 
 # Clean up
 rm -f $tempA $tempB $tempErr

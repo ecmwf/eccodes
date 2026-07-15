@@ -18,6 +18,8 @@ tempErr=temp.$label.err
 # Help output should advertise the scope option
 ${tools_dir}/codes_parameters --help > $tempA
 grep -q -- "--scope SCOPE" $tempA
+grep -q -- "--nattrkey NATTRKEY" $tempA
+grep -q -- "--nattr NATTR" $tempA
 
 # Scope filter: single localConcept scope
 ${tools_dir}/codes_parameters --paramId 167 --scope grib2/localConcepts/tigge > $tempA
@@ -118,6 +120,22 @@ status=$?
 set -e
 [ $status -ne 0 ]
 grep -q -- "--scope must contain at least one non-empty scope" $tempErr
+
+# nattrkey filter: exclude records containing a key
+${tools_dir}/codes_parameters --edition 2 --paramId 167 --show-encoding --nattrkey typeOfStatisticalProcessing > $tempA
+[ -s $tempA ]
+if grep -q "typeOfStatisticalProcessing" $tempA; then
+    echo "Unexpected excluded key in --nattrkey filtered output"
+    exit 1
+fi
+
+# nattr filter: exclude records containing a specific key/value pair
+${tools_dir}/codes_parameters --edition 2 --paramId 167 --show-encoding --nattr typeOfStatisticalProcessing=0 > $tempA
+[ -s $tempA ]
+if grep -q "typeOfStatisticalProcessing=0" $tempA; then
+    echo "Unexpected excluded key/value in --nattr filtered output"
+    exit 1
+fi
 
 # Clean up
 rm -f $tempA $tempB $tempErr
