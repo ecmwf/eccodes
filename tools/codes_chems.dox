@@ -1,0 +1,51 @@
+/*!  \page codes_chems codes_chems
+\section DESCRIPTION
+ Query chemical constituent definitions in ecCodes concept files and print matching entries.
+ The tool scans chemical concepts from:
+ - chemId.def
+ - chemName.def
+ - chemShortName.def
+ - chemFormula.def
+
+\section USAGE
+ codes_chems
+ [options]
+
+\section OPTIONS
+-h, --help  \n
+        Show this help text and exit.
+ \n \n --definitions-root path \n
+        Definitions root directory.
+ \n \n --columns col1,col2,... \n
+        Output only selected columns.
+       Valid columns: edition,scope,chemId,chemShortName,chemName,chemFormula,encoding,sources
+ \n \n --chemId pattern \n
+        Wildcard filter for chemId.
+ \n \n --chemId-regex regex \n
+        Regex filter for chemId.
+ \n \n --chemShortName pattern \n
+        Wildcard filter for chemShortName.
+ \n \n --chemShortName-regex regex \n
+        Regex filter for chemShortName.
+ \n \n --chemName pattern \n
+        Wildcard filter for chemName.
+ \n \n --chemName-regex regex \n
+        Regex filter for chemName.
+ \n \n --chemFormula pattern \n
+        Wildcard filter for chemFormula (from chemFormula.def).
+ \n \n --chemFormula-regex regex \n
+        Regex filter for chemFormula.
+ \n \n --scope list \n
+        Comma-separated list of exact scopes to include.
+
+\section codes_chems_examples codes_chems examples
+-# Show entries for a formula:
+\verbatim
+codes_chems --chemFormula O3
+\endverbatim
+
+-# Filter by chemId regex:
+\verbatim
+codes_chems --chemId-regex '^1[0-9]+$'
+\endverbatim
+*/
