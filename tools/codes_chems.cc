@@ -45,6 +45,8 @@ struct Options {
     bool regex_case_sensitive = false;
     std::string attr;
     bool attr_strict = false;
+    std::string nattrkey;
+    std::string nattr;
     bool show_encoding = false;
     bool show_sources = false;
     std::string format = "line";
@@ -721,6 +723,65 @@ static int parse_attr_filter(const std::string& text, std::map<std::string, std:
     return 0;
 }
 
+static int parse_nattrkey_filter(const std::string& text, std::set<std::string>& out, std::string& err)
+{
+    out.clear();
+    if (text.empty()) return 0;
+
+    std::vector<std::string> keys = split(text, ',');
+    if (keys.empty()) {
+        err = "--nattrkey must contain at least one key";
+        return -1;
+    }
+
+    for (size_t i = 0; i < keys.size(); ++i) {
+        std::string k = keys[i];
+        if (k.empty()) {
+            err = "Invalid --nattrkey: empty key";
+            return -1;
+        }
+        if (out.count(k)) {
+            err = "Duplicate key '" + k + "' in --nattrkey";
+            return -1;
+        }
+        out.insert(k);
+    }
+    return 0;
+}
+
+static int parse_nattr_filter(const std::string& text, std::map<std::string, std::string>& out, std::string& err)
+{
+    out.clear();
+    if (text.empty()) return 0;
+
+    std::vector<std::string> pairs = split(text, ',');
+    if (pairs.empty()) {
+        err = "--nattr must contain at least one key=value pair";
+        return -1;
+    }
+
+    for (size_t i = 0; i < pairs.size(); ++i) {
+        std::string p = pairs[i];
+        size_t eq = p.find('=');
+        if (eq == std::string::npos) {
+            err = "Invalid --nattr pair '" + p + "'. Expected key=value";
+            return -1;
+        }
+        std::string k = trim(p.substr(0, eq));
+        std::string v = trim(p.substr(eq + 1));
+        if (k.empty()) {
+            err = "Invalid --nattr pair '" + p + "'. Key cannot be empty";
+            return -1;
+        }
+        if (out.count(k)) {
+            err = "Duplicate key '" + k + "' in --nattr";
+            return -1;
+        }
+        out[k] = v;
+    }
+    return 0;
+}
+
 static std::string short_usage_text(const char* prog)
 {
     std::ostringstream o;
@@ -732,7 +793,8 @@ static std::string short_usage_text(const char* prog)
       << "                        [--chemShortName-regex SHORTNAME_REGEX]\n"
       << "                        [--chemId PARAMID] [--chemId-regex PARAMID_REGEX]\n"
             << "                        [--chemFormula CHEMFORMULA] [--chemFormula-regex CHEMFORMULA_REGEX]\n"
-      << "                        [--attr ATTR] [--attr-strict] [--regex-case-sensitive]\n"
+      << "                        [--attr ATTR] [--attr-strict] [--nattrkey NATTRKEY]\n"
+      << "                        [--nattr NATTR] [--regex-case-sensitive]\n"
       << "                        [--show-encoding] [--show-sources]\n"
       << "                        [--format {line,table}] [--no-truncate]\n";
     return o.str();
@@ -749,7 +811,8 @@ static std::string usage_text(const char* prog)
       << "                        [--chemShortName-regex SHORTNAME_REGEX]\n"
       << "                        [--chemId PARAMID] [--chemId-regex PARAMID_REGEX]\n"
             << "                        [--chemFormula CHEMFORMULA] [--chemFormula-regex CHEMFORMULA_REGEX]\n"
-      << "                        [--attr ATTR] [--attr-strict] [--regex-case-sensitive]\n"
+      << "                        [--attr ATTR] [--attr-strict] [--nattrkey NATTRKEY]\n"
+      << "                        [--nattr NATTR] [--regex-case-sensitive]\n"
       << "                        [--show-encoding] [--show-sources]\n"
       << "                        [--format {line,table}] [--no-truncate]\n"
       << "\n"
@@ -796,6 +859,10 @@ static std::string usage_text(const char* prog)
       << "                        containing at least these pairs\n"
       << "  --attr-strict         With --attr, require an exact attribute set match\n"
       << "                        (same keys and values)\n"
+      << "  --nattrkey NATTRKEY   Exclude parameters with specific attribute keys\n"
+      << "                        (comma-separated list)\n"
+      << "  --nattr NATTR         Exclude parameters with specific attribute key/value\n"
+      << "                        pairs as key=value,key=value\n"
       << "  --regex-case-sensitive\n"
       << "                        Make regex searches case-sensitive. By default regex\n"
       << "                        searches are case-insensitive\n"
@@ -891,6 +958,14 @@ static int parse_args(int argc, char** argv, Options& opt, std::string& err)
         }
         else if (key == "--attr-strict") {
             opt.attr_strict = true;
+        }
+        else if (key == "--nattrkey") {
+            if (!need_value("--nattrkey")) return -1;
+            opt.nattrkey = val;
+        }
+        else if (key == "--nattr") {
+            if (!need_value("--nattr")) return -1;
+            opt.nattr = val;
         }
         else if (key == "--regex-case-sensitive") {
             opt.regex_case_sensitive = true;
@@ -1049,6 +1124,24 @@ int main(int argc, char** argv)
     if (!opt.attr.empty()) {
         std::string e;
         if (parse_attr_filter(opt.attr, attr_filter, e) != 0) {
+            errorf("%s", e.c_str());
+            return 2;
+        }
+    }
+
+    std::set<std::string> nattrkey_filter;
+    if (!opt.nattrkey.empty()) {
+        std::string e;
+        if (parse_nattrkey_filter(opt.nattrkey, nattrkey_filter, e) != 0) {
+            errorf("%s", e.c_str());
+            return 2;
+        }
+    }
+
+    std::map<std::string, std::string> nattr_filter;
+    if (!opt.nattr.empty()) {
+        std::string e;
+        if (parse_nattr_filter(opt.nattr, nattr_filter, e) != 0) {
             errorf("%s", e.c_str());
             return 2;
         }
@@ -1253,6 +1346,31 @@ int main(int argc, char** argv)
                 }
                 if (!ok) continue;
             }
+        }
+
+        // Exclude records matching nattrkey_filter (records that have any of the excluded keys)
+        if (!nattrkey_filter.empty()) {
+            bool has_excluded_key = false;
+            for (std::set<std::string>::const_iterator k = nattrkey_filter.begin(); k != nattrkey_filter.end(); ++k) {
+                if (rec.attrs.count(*k)) {
+                    has_excluded_key = true;
+                    break;
+                }
+            }
+            if (has_excluded_key) continue;
+        }
+
+        // Exclude records matching nattr_filter (records that have any of the excluded key=value pairs)
+        if (!nattr_filter.empty()) {
+            bool has_excluded_pair = false;
+            for (std::map<std::string, std::string>::const_iterator a = nattr_filter.begin(); a != nattr_filter.end(); ++a) {
+                std::map<std::string, std::string>::const_iterator it = rec.attrs.find(a->first);
+                if (it != rec.attrs.end() && it->second == a->second) {
+                    has_excluded_pair = true;
+                    break;
+                }
+            }
+            if (has_excluded_pair) continue;
         }
 
         filtered.push_back(rec);
