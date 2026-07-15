@@ -33,6 +33,7 @@ struct Options {
     std::string definitions_root;
     bool debug_path_resolution = false;
     std::string columns;
+    std::string scope;
     std::string name;
     std::string name_regex;
     std::string shortName;
@@ -753,6 +754,7 @@ static std::string short_usage_text(const char* prog)
     std::ostringstream o;
     o << "usage: " << prog << " [-h] [--definitions-root DEFINITIONS_ROOT]\n"
       << "                        [--debug-path-resolution] [--columns COLUMNS]\n"
+    << "                        [--scope SCOPE]\n"
       << "                        [--name NAME] [--name-regex NAME_REGEX]\n"
       << "                        [--shortName SHORTNAME]\n"
       << "                        [--shortName-regex SHORTNAME_REGEX]\n"
@@ -770,6 +772,7 @@ static std::string usage_text(const char* prog)
     std::ostringstream o;
     o << "usage: " << prog << " [-h] [--definitions-root DEFINITIONS_ROOT]\n"
       << "                        [--debug-path-resolution] [--columns COLUMNS]\n"
+    << "                        [--scope SCOPE]\n"
       << "                        [--name NAME] [--name-regex NAME_REGEX]\n"
       << "                        [--shortName SHORTNAME]\n"
       << "                        [--shortName-regex SHORTNAME_REGEX]\n"
@@ -802,6 +805,8 @@ static std::string usage_text(const char* prog)
       << "  --columns COLUMNS     Comma-separated list of output columns to show. Valid\n"
       << "                        columns: edition,is_mtg2_switch,scope,paramId,shortName,\n"
       << "                        name,units,encoding,sources\n"
+    << "  --scope SCOPE         Comma-separated list of exact scopes to include,\n"
+    << "                        e.g. 'grib2,grib2/localConcepts/ecmf'\n"
       << "  --name NAME           Wildcard pattern for name, e.g. '*precipitation*'\n"
       << "  --name-regex NAME_REGEX\n"
       << "                        PCRE2-style regex for name\n"
@@ -875,6 +880,10 @@ static int parse_args(int argc, char** argv, Options& opt, std::string& err)
         else if (key == "--columns") {
             if (!need_value("--columns")) return -1;
             opt.columns = val;
+        }
+        else if (key == "--scope") {
+            if (!need_value("--scope")) return -1;
+            opt.scope = val;
         }
         else if (key == "--name") {
             if (!need_value("--name")) return -1;
@@ -1253,9 +1262,20 @@ int main(int argc, char** argv)
     if (!build_matcher(opt.paramId, opt.paramId_regex, "paramId")) return 2;
     if (!build_matcher(opt.units, opt.units_regex, "units")) return 2;
 
+    std::set<std::string> scope_filter;
+    if (!opt.scope.empty()) {
+        std::vector<std::string> scope_items = split(opt.scope, ',');
+        if (scope_items.empty()) {
+            errorf("--scope must contain at least one non-empty scope");
+            return 2;
+        }
+        for (size_t i = 0; i < scope_items.size(); ++i) scope_filter.insert(scope_items[i]);
+    }
+
     std::vector<Record> filtered;
     for (size_t i = 0; i < records.size(); ++i) {
         const Record& rec = records[i];
+        if (!scope_filter.empty() && !scope_filter.count(rec.scope)) continue;
         if (opt.has_is_mtg2_switch) {
             if (rec.sw < 0 || rec.sw != opt.is_mtg2_switch) continue;
         }
