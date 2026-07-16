@@ -1363,6 +1363,38 @@ int main(int argc, char** argv)
             return 2;
         }
         for (size_t i = 0; i < scope_items.size(); ++i) scope_filter.insert(scope_items[i]);
+
+        std::set<std::string> known_scopes;
+        for (size_t i = 0; i < records.size(); ++i) known_scopes.insert(records[i].scope);
+
+        auto scopes_preview = [&](const std::set<std::string>& scopes) -> std::string {
+            std::string out;
+            int count = 0;
+            for (std::set<std::string>::const_iterator it = scopes.begin(); it != scopes.end(); ++it) {
+                if (count == 12) {
+                    out += ", ...";
+                    break;
+                }
+                if (!out.empty()) out += ", ";
+                out += *it;
+                count++;
+            }
+            return out;
+        };
+        const std::string known_scopes_text = scopes_preview(known_scopes);
+
+        for (std::set<std::string>::const_iterator s = scope_filter.begin(); s != scope_filter.end(); ++s) {
+            if (!known_scopes.count(*s)) {
+                std::string suggestion = best_suggestion(*s, known_scopes);
+                if (!suggestion.empty()) {
+                    errorf("Scope '%s' is not defined. Did you mean '%s'? Available scopes: %s", s->c_str(), suggestion.c_str(), known_scopes_text.c_str());
+                }
+                else {
+                    errorf("Scope '%s' is not defined. Available scopes: %s", s->c_str(), known_scopes_text.c_str());
+                }
+                return 2;
+            }
+        }
     }
 
     std::vector<Record> filtered;

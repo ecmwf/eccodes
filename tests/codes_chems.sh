@@ -57,6 +57,15 @@ set -e
 [ $status -ne 0 ]
 grep -q "Invalid pattern for" $tempErr
 
+# Unknown scope must fail with explicit message
+set +e
+${tools_dir}/codes_chems --scope xyz > $tempB 2> $tempErr
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q -- "Scope 'xyz' is not defined" $tempErr
+grep -q -- "Available scopes:" $tempErr
+
 # attrkey filter: include only records that have a key (any value)
 ${tools_dir}/codes_chems --show-encoding --attrkey constituentType > $tempA
 [ -s $tempA ]
@@ -78,19 +87,21 @@ set -e
 [ $status -ne 0 ]
 grep -q -- "Keys must not contain '='" $tempErr
 
-# nattrkey filter: exclude records containing a key
-${tools_dir}/codes_chems --chemFormula O3 --show-encoding --nattrkey constituentType > $tempA
-if [ -s $tempA ]; then
-    echo "Expected no output for --nattrkey constituentType"
+# nattrkey filter: exclude records containing a selective key
+${tools_dir}/codes_chems --show-encoding --nattrkey typeOfSizeInterval > $tempA
+[ -s $tempA ]
+if grep -q "typeOfSizeInterval" $tempA; then
+    echo "Unexpected excluded key in --nattrkey filtered output"
     exit 1
 fi
 
 # nattr filter: exclude records containing a specific key/value pair
-${tools_dir}/codes_chems --chemFormula O3 --show-encoding --nattr constituentType=0 > $tempA
-if [ -s $tempA ]; then
-    echo "Expected no output for --nattr constituentType=0"
-    exit 1
-fi
+set +e
+${tools_dir}/codes_chems --chemFormula O3 --show-encoding --nattr constituentType=0 > $tempA 2> $tempErr
+status=$?
+set -e
+[ $status -eq 1 ]
+grep -q "No matching parameters found." $tempA
 
 # Clean up
 rm -f $tempA $tempB $tempErr

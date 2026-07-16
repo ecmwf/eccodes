@@ -660,6 +660,31 @@ def validate_attr_keys(attr_filter: Dict[str, str] | None, records: Iterable[Rec
     raise ValueError(" ".join(errors))
 
 
+def validate_scope_values(scope_filter: Set[str] | None, records: Iterable[Record]) -> None:
+    if scope_filter is None:
+        return
+
+    known_scopes: Set[str] = set()
+    for rec in records:
+        known_scopes.add(rec.scope)
+
+    unknown = [scope for scope in scope_filter if scope not in known_scopes]
+    if not unknown:
+        return
+
+    known_sorted = sorted(known_scopes)
+    known_preview = ", ".join(known_sorted[:12]) + (", ..." if len(known_sorted) > 12 else "")
+    errors: List[str] = []
+    for scope in unknown:
+        suggestion = ""
+        close = difflib.get_close_matches(scope, known_sorted, n=1, cutoff=0.75)
+        if close:
+            suggestion = f" Did you mean '{close[0]}'?"
+        errors.append(f"Scope '{scope}' is not defined.{suggestion} Available scopes: {known_preview}")
+
+    raise ValueError(" ".join(errors))
+
+
 def filter_records(
     records: Iterable[Record],
     args: argparse.Namespace,
@@ -1131,6 +1156,7 @@ def main() -> int:
     records = list(records_by_key.values())
     try:
         validate_attr_keys(attr_filter, records)
+        validate_scope_values(scope_filter, records)
     except ValueError as exc:
         print(f"{parser.prog}: error: {exc}", file=sys.stderr)
         return 2

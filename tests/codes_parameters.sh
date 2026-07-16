@@ -122,6 +122,15 @@ set -e
 [ $status -ne 0 ]
 grep -q -- "--scope must contain at least one non-empty scope" $tempErr
 
+# Unknown scope must fail with explicit message
+set +e
+${tools_dir}/codes_parameters --paramId 167 --scope xyz > $tempA 2> $tempErr
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q -- "Scope 'xyz' is not defined" $tempErr
+grep -q -- "Available scopes:" $tempErr
+
 # attrkey filter: include only records that have a key (any value)
 ${tools_dir}/codes_parameters --edition 2 --paramId 167 --show-encoding --attrkey typeOfStatisticalProcessing > $tempA
 [ -s $tempA ]
