@@ -717,18 +717,19 @@ def filter_records(
         if not matches_any(values_for(rec, "units"), matchers["units"]):
             continue
 
-        if attr_filter is not None:
-            if args.attr_strict:
-                expected_keys = set(attr_filter.keys())
-                if attrkey_filter is not None:
-                    expected_keys.update(attrkey_filter)
-                if set(rec.attrs.keys()) != expected_keys:
-                    continue
-                if not all(rec.attrs.get(key) == value for key, value in attr_filter.items()):
-                    continue
-            else:
-                if not all(rec.attrs.get(key) == value for key, value in attr_filter.items()):
-                    continue
+        if args.attr_strict and (attr_filter is not None or attrkey_filter is not None):
+            expected_keys = set()
+            if attr_filter is not None:
+                expected_keys.update(attr_filter.keys())
+            if attrkey_filter is not None:
+                expected_keys.update(attrkey_filter)
+            if set(rec.attrs.keys()) != expected_keys:
+                continue
+            if attr_filter is not None and not all(rec.attrs.get(key) == value for key, value in attr_filter.items()):
+                continue
+        elif attr_filter is not None:
+            if not all(rec.attrs.get(key) == value for key, value in attr_filter.items()):
+                continue
 
         if not args.attr_strict and attrkey_filter is not None and not all(key in rec.attrs for key in attrkey_filter):
             continue
@@ -1004,7 +1005,7 @@ def make_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--attr-strict",
         action="store_true",
-        help="With --attr, require an exact attribute set match (same keys and values)",
+        help="With --attr and/or --attrkey, require an exact attribute set match (same keys and values)",
     )
     parser.add_argument(
         "--attrkey",
@@ -1077,8 +1078,8 @@ def main() -> int:
     except ValueError as exc:
         parser.error(str(exc))
 
-    if args.attr_strict and attr_filter is None:
-        parser.error("--attr-strict requires --attr")
+    if args.attr_strict and attr_filter is None and attrkey_filter is None:
+        parser.error("--attr-strict requires --attr and/or --attrkey")
 
     explicit_roots = explicit_roots_from_args_env(args)
     candidates = candidate_roots(args)

@@ -114,6 +114,12 @@ if grep -q "paramId=167" $tempA; then
     exit 1
 fi
 
+# Numeric ordering of paramId in table output
+${tools_dir}/codes_parameters --paramId-regex '^[0-9]{1,3}$' --scope grib2 --columns paramId --is_mtg2_switch 1 --format table > $tempA
+[ -s $tempA ]
+awk 'NR>2 {gsub(/ /,""); if ($1!="") print $1}' $tempA | \
+awk 'NR==1{p=$1;next} {if ($1+0 < p+0) exit 1; p=$1} END{exit 0}'
+
 # Invalid scope argument must fail
 set +e
 ${tools_dir}/codes_parameters --paramId 167 --scope , > $tempA 2> $tempErr
@@ -157,6 +163,25 @@ grep -q "paramId=141229" $tempA
 grep -q "paramId=143229" $tempA
 grep -q "paramId=144229" $tempA
 grep -q "paramId=145229" $tempA
+
+# attr-strict + attrkey only: should be accepted (may legitimately return no matches)
+set +e
+${tools_dir}/codes_parameters --attr-strict --attrkey typeOfStatisticalProcessing --scope grib2 > $tempA 2> $tempErr
+status=$?
+set -e
+[ $status -ne 2 ]
+if grep -q -- "--attr-strict requires --attr" $tempErr; then
+    echo "Unexpected parser rejection for --attr-strict with --attrkey only"
+    exit 1
+fi
+
+# attr-strict with neither --attr nor --attrkey must fail
+set +e
+${tools_dir}/codes_parameters --attr-strict > $tempA 2> $tempErr
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q -- "--attr-strict requires --attr and/or --attrkey" $tempErr
 
 # Invalid nattrkey containing '=' must fail
 set +e

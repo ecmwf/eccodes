@@ -892,7 +892,7 @@ static std::string usage_text(const char* prog)
       << "  --attr ATTR           Filter by attribute key/value pairs as\n"
       << "                        key=value,key=value. Non-strict mode matches entries\n"
       << "                        containing at least these pairs\n"
-      << "  --attr-strict         With --attr, require an exact attribute set match\n"
+    << "  --attr-strict         With --attr and/or --attrkey, require an exact\n"
       << "                        (same keys and values)\n"
       << "  --attrkey ATTRKEY     Filter by attribute key presence (comma-separated).\n"
       << "                        Keeps only parameters that have all specified keys\n"
@@ -1034,8 +1034,8 @@ static int parse_args(int argc, char** argv, Options& opt, std::string& err)
         }
     }
 
-    if (opt.attr_strict && opt.attr.empty()) {
-        err = "--attr-strict requires --attr";
+    if (opt.attr_strict && opt.attr.empty() && opt.attrkey.empty()) {
+        err = "--attr-strict requires --attr and/or --attrkey";
         return -1;
     }
 
@@ -1413,49 +1413,47 @@ int main(int argc, char** argv)
         if (!match_any(pids, matchers["chemId"])) continue;
         if (!match_any(chemFormula, matchers["chemFormula"])) continue;
 
-        if (!attr_filter.empty()) {
-            if (opt.attr_strict) {
-                std::set<std::string> expected_keys;
-                for (std::map<std::string, std::string>::const_iterator a = attr_filter.begin(); a != attr_filter.end(); ++a) {
-                    expected_keys.insert(a->first);
-                }
-                for (std::set<std::string>::const_iterator k = attrkey_filter.begin(); k != attrkey_filter.end(); ++k) {
-                    expected_keys.insert(*k);
-                }
-
-                if (rec.attrs.size() != expected_keys.size()) continue;
-
-                bool keys_ok = true;
-                for (std::set<std::string>::const_iterator k = expected_keys.begin(); k != expected_keys.end(); ++k) {
-                    std::map<std::string, std::string>::const_iterator it = rec.attrs.find(*k);
-                    if (it == rec.attrs.end()) {
-                        keys_ok = false;
-                        break;
-                    }
-                }
-                if (!keys_ok) continue;
-
-                bool values_ok = true;
-                for (std::map<std::string, std::string>::const_iterator a = attr_filter.begin(); a != attr_filter.end(); ++a) {
-                    std::map<std::string, std::string>::const_iterator it = rec.attrs.find(a->first);
-                    if (it == rec.attrs.end() || it->second != a->second) {
-                        values_ok = false;
-                        break;
-                    }
-                }
-                if (!values_ok) continue;
+        if (opt.attr_strict && (!attr_filter.empty() || !attrkey_filter.empty())) {
+            std::set<std::string> expected_keys;
+            for (std::map<std::string, std::string>::const_iterator a = attr_filter.begin(); a != attr_filter.end(); ++a) {
+                expected_keys.insert(a->first);
             }
-            else {
-                bool ok = true;
-                for (std::map<std::string, std::string>::const_iterator a = attr_filter.begin(); a != attr_filter.end(); ++a) {
-                    std::map<std::string, std::string>::const_iterator it = rec.attrs.find(a->first);
-                    if (it == rec.attrs.end() || it->second != a->second) {
-                        ok = false;
-                        break;
-                    }
-                }
-                if (!ok) continue;
+            for (std::set<std::string>::const_iterator k = attrkey_filter.begin(); k != attrkey_filter.end(); ++k) {
+                expected_keys.insert(*k);
             }
+
+            if (rec.attrs.size() != expected_keys.size()) continue;
+
+            bool keys_ok = true;
+            for (std::set<std::string>::const_iterator k = expected_keys.begin(); k != expected_keys.end(); ++k) {
+                std::map<std::string, std::string>::const_iterator it = rec.attrs.find(*k);
+                if (it == rec.attrs.end()) {
+                    keys_ok = false;
+                    break;
+                }
+            }
+            if (!keys_ok) continue;
+
+            bool values_ok = true;
+            for (std::map<std::string, std::string>::const_iterator a = attr_filter.begin(); a != attr_filter.end(); ++a) {
+                std::map<std::string, std::string>::const_iterator it = rec.attrs.find(a->first);
+                if (it == rec.attrs.end() || it->second != a->second) {
+                    values_ok = false;
+                    break;
+                }
+            }
+            if (!values_ok) continue;
+        }
+        else if (!attr_filter.empty()) {
+            bool ok = true;
+            for (std::map<std::string, std::string>::const_iterator a = attr_filter.begin(); a != attr_filter.end(); ++a) {
+                std::map<std::string, std::string>::const_iterator it = rec.attrs.find(a->first);
+                if (it == rec.attrs.end() || it->second != a->second) {
+                    ok = false;
+                    break;
+                }
+            }
+            if (!ok) continue;
         }
 
         // Include only records that have all keys in attrkey_filter
@@ -1550,6 +1548,15 @@ int main(int argc, char** argv)
             deduped.push_back(out);
         }
         filtered.swap(deduped);
+
+        std::sort(filtered.begin(), filtered.end(), [&parse_id](const Record& a, const Record& b) {
+            if (a.edition != b.edition) return a.edition < b.edition;
+            if (a.sw != b.sw) return a.sw < b.sw;
+            if (a.scope != b.scope) return a.scope < b.scope;
+            std::string as = a.values.count("chemId") && !a.values.find("chemId")->second.empty() ? a.values.find("chemId")->second[0] : "";
+            std::string bs = b.values.count("chemId") && !b.values.find("chemId")->second.empty() ? b.values.find("chemId")->second[0] : "";
+            return parse_id(as) < parse_id(bs);
+        });
     }
 
     if (filtered.empty()) {

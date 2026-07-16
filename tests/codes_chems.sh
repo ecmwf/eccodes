@@ -71,6 +71,25 @@ ${tools_dir}/codes_chems --show-encoding --attrkey constituentType > $tempA
 [ -s $tempA ]
 grep -q "constituentType" $tempA
 
+# attr-strict + attrkey only: should be accepted (may legitimately return no matches)
+set +e
+${tools_dir}/codes_chems --attr-strict --attrkey constituentType > $tempA 2> $tempErr
+status=$?
+set -e
+[ $status -ne 2 ]
+if grep -q -- "--attr-strict requires --attr" $tempErr; then
+    echo "Unexpected parser rejection for --attr-strict with --attrkey only"
+    exit 1
+fi
+
+# attr-strict with neither --attr nor --attrkey must fail
+set +e
+${tools_dir}/codes_chems --attr-strict > $tempA 2> $tempErr
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q -- "--attr-strict requires --attr and/or --attrkey" $tempErr
+
 # attrkey must fail when given a key containing '='
 set +e
 ${tools_dir}/codes_chems --attrkey constituentType=0 > $tempA 2> $tempErr
