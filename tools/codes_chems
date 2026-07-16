@@ -708,7 +708,7 @@ def filter_records(
 
         result.append(rec)
 
-    result.sort(key=lambda r: (r.edition, r.switch if r.switch is not None else -1, r.scope, values_for(r, "chemId")[:1]))
+    result.sort(key=lambda r: (r.edition, r.switch if r.switch is not None else -1, r.scope, int(values_for(r, "chemId")[0]) if values_for(r, "chemId") and values_for(r, "chemId")[0].lstrip("-").isdigit() else float("-inf")))
     return result
 
 
@@ -769,7 +769,7 @@ def dedupe_display_records(records: List[Record], keep_attrs: bool) -> List[Reco
             )
         )
 
-    deduped.sort(key=lambda r: (r.edition, r.switch if r.switch is not None else -1, r.scope, values_for(r, "chemId")[:1]))
+    deduped.sort(key=lambda r: (r.edition, r.switch if r.switch is not None else -1, r.scope, int(values_for(r, "chemId")[0]) if values_for(r, "chemId") and values_for(r, "chemId")[0].lstrip("-").isdigit() else float("-inf")))
     return deduped
 
 

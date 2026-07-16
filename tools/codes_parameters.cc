@@ -1499,13 +1499,19 @@ int main(int argc, char** argv)
         filtered.push_back(rec);
     }
 
-    std::sort(filtered.begin(), filtered.end(), [](const Record& a, const Record& b) {
+    auto parse_id = [](const std::string& s) -> long long {
+        if (s.empty()) return LLONG_MIN;
+        char* end;
+        long long v = strtoll(s.c_str(), &end, 10);
+        return (end != s.c_str()) ? v : LLONG_MIN;
+    };
+    std::sort(filtered.begin(), filtered.end(), [&parse_id](const Record& a, const Record& b) {
         if (a.edition != b.edition) return a.edition < b.edition;
         if (a.sw != b.sw) return a.sw < b.sw;
         if (a.scope != b.scope) return a.scope < b.scope;
-        std::string ap = a.values.count("paramId") && !a.values.find("paramId")->second.empty() ? a.values.find("paramId")->second[0] : "";
-        std::string bp = b.values.count("paramId") && !b.values.find("paramId")->second.empty() ? b.values.find("paramId")->second[0] : "";
-        return ap < bp;
+        std::string as = a.values.count("paramId") && !a.values.find("paramId")->second.empty() ? a.values.find("paramId")->second[0] : "";
+        std::string bs = b.values.count("paramId") && !b.values.find("paramId")->second.empty() ? b.values.find("paramId")->second[0] : "";
+        return parse_id(as) < parse_id(bs);
     });
 
     bool keep_attrs = opt.show_encoding || !attr_filter.empty() || (!selected_columns.empty() && std::find(selected_columns.begin(), selected_columns.end(), "encoding") != selected_columns.end());
