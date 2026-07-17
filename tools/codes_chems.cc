@@ -423,10 +423,15 @@ static int scan_definitions(const std::string& definitions_root, std::map<std::s
     std::vector<std::string> files;
     scan_dir_recursive(definitions_root, files);
 
+    std::string root_prefix = definitions_root;
+    while (root_prefix.size() > 1 && root_prefix[root_prefix.size() - 1] == '/') {
+        root_prefix.erase(root_prefix.size() - 1);
+    }
+
     for (size_t i = 0; i < files.size(); ++i) {
         std::string file_path = files[i];
         std::string rel = file_path;
-        if (starts_with(rel, definitions_root + "/")) rel = rel.substr(definitions_root.size() + 1);
+        if (starts_with(rel, root_prefix + "/")) rel = rel.substr(root_prefix.size() + 1);
 
         if (!(starts_with(rel, "grib1/") || starts_with(rel, "grib2/"))) continue;
         std::string filename = rel.substr(rel.find_last_of('/') + 1);

@@ -24,6 +24,13 @@ grep -q -- "--attrkey ATTRKEY" $tempA
 grep -q -- "--order {asc,desc}" $tempA
 grep -q -- "--order-by FIELD" $tempA
 
+# Trailing slash in ECCODES_DEFINITION_PATH should be accepted
+saved_def_path=$ECCODES_DEFINITION_PATH
+export ECCODES_DEFINITION_PATH="${saved_def_path}/"
+${tools_dir}/codes_parameters --paramId 167 > $tempA
+[ -s $tempA ]
+export ECCODES_DEFINITION_PATH=$saved_def_path
+
 # Scope filter: single localConcept scope
 ${tools_dir}/codes_parameters --paramId 167 --scope grib2/localConcepts/tigge > $tempA
 [ -s $tempA ]
