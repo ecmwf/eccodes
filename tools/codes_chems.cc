@@ -51,6 +51,8 @@ struct Options {
     bool show_encoding = false;
     bool show_sources = false;
     std::string format = "line";
+    std::string order = "asc";
+    std::vector<std::string> order_by_fields;
     bool no_truncate = false;
 };
 
@@ -831,7 +833,7 @@ static std::string short_usage_text(const char* prog)
     << "                        [--attr ATTR] [--attr-strict] [--attrkey ATTRKEY] [--nattrkey NATTRKEY]\n"
       << "                        [--nattr NATTR] [--regex-case-sensitive]\n"
       << "                        [--show-encoding] [--show-sources]\n"
-      << "                        [--format {line,table}] [--no-truncate]\n";
+    << "                        [--format {line,table}] [--order {asc,desc}] [--order-by FIELD] [--no-truncate]\n";
     return o.str();
 }
 
@@ -849,7 +851,7 @@ static std::string usage_text(const char* prog)
     << "                        [--attr ATTR] [--attr-strict] [--attrkey ATTRKEY] [--nattrkey NATTRKEY]\n"
       << "                        [--nattr NATTR] [--regex-case-sensitive]\n"
       << "                        [--show-encoding] [--show-sources]\n"
-      << "                        [--format {line,table}] [--no-truncate]\n"
+    << "                        [--format {line,table}] [--order {asc,desc}] [--order-by FIELD] [--no-truncate]\n"
       << "\n"
       << "Query parameter definitions in ecCodes concept files.\n"
       << "\n"
@@ -909,6 +911,11 @@ static std::string usage_text(const char* prog)
       << "                        result\n"
       << "  --format {line,table}\n"
       << "                        Output format: line (default) or table\n"
+    << "  --order {asc,desc}   Sort order for results by edition/switch/scope/id\n"
+    << "                        ascending (default) or descending\n"
+            << "  --order-by FIELD      Primary sort fields (comma-separated, in priority\n"
+            << "                        order). Valid: edition,scope,chemId,\n"
+            << "                        chemShortName,chemName,chemFormula\n"
       << "  --no-truncate         With --format table, do not truncate cells to\n"
       << "                        terminal width\n";
     return o.str();
@@ -1024,6 +1031,32 @@ static int parse_args(int argc, char** argv, Options& opt, std::string& err)
                 err = "--format must be one of: line, table";
                 return -1;
             }
+        }
+        else if (key == "--order") {
+            if (!need_value("--order")) return -1;
+            opt.order = val;
+            if (!(opt.order == "asc" || opt.order == "desc")) {
+                err = "--order must be one of: asc, desc";
+                return -1;
+            }
+        }
+        else if (key == "--order-by") {
+            if (!need_value("--order-by")) return -1;
+            static const std::set<std::string> valid_order_by = {
+                "edition", "scope", "chemId", "chemShortName", "chemName", "chemFormula"
+            };
+            std::vector<std::string> fields = split(val, ',');
+            if (fields.empty()) {
+                err = "--order-by must contain at least one field";
+                return -1;
+            }
+            for (size_t j = 0; j < fields.size(); ++j) {
+                if (!valid_order_by.count(fields[j])) {
+                    err = "--order-by must contain only: edition, scope, chemId, chemShortName, chemName, chemFormula";
+                    return -1;
+                }
+            }
+            opt.order_by_fields = fields;
         }
         else if (key == "--no-truncate") {
             opt.no_truncate = true;
@@ -1503,14 +1536,53 @@ int main(int argc, char** argv)
         long long v = strtoll(s.c_str(), &end, 10);
         return (end != s.c_str()) ? v : LLONG_MIN;
     };
-    std::sort(filtered.begin(), filtered.end(), [&parse_id](const Record& a, const Record& b) {
-        if (a.edition != b.edition) return a.edition < b.edition;
-        if (a.sw != b.sw) return a.sw < b.sw;
-        if (a.scope != b.scope) return a.scope < b.scope;
-        std::string as = a.values.count("chemId") && !a.values.find("chemId")->second.empty() ? a.values.find("chemId")->second[0] : "";
-        std::string bs = b.values.count("chemId") && !b.values.find("chemId")->second.empty() ? b.values.find("chemId")->second[0] : "";
-        return parse_id(as) < parse_id(bs);
-    });
+    auto first_value = [](const Record& r, const std::string& key) -> std::string {
+        std::map<std::string, std::vector<std::string> >::const_iterator it = r.values.find(key);
+        if (it == r.values.end() || it->second.empty()) return "";
+        return it->second[0];
+    };
+
+    auto cmp_ll = [](long long x, long long y) -> int {
+        if (x < y) return -1;
+        if (x > y) return 1;
+        return 0;
+    };
+    auto cmp_str = [](const std::string& x, const std::string& y) -> int {
+        if (x < y) return -1;
+        if (x > y) return 1;
+        return 0;
+    };
+
+    auto cmp_default = [&](const Record& a, const Record& b) -> int {
+        int c = cmp_ll(a.edition, b.edition);
+        if (c) return c;
+        c = cmp_ll(a.sw, b.sw);
+        if (c) return c;
+        c = cmp_str(a.scope, b.scope);
+        if (c) return c;
+        return cmp_ll(parse_id(first_value(a, "chemId")), parse_id(first_value(b, "chemId")));
+    };
+
+    auto cmp_records = [&](const Record& a, const Record& b) -> int {
+        int c = 0;
+        for (size_t i = 0; i < opt.order_by_fields.size(); ++i) {
+            const std::string& field = opt.order_by_fields[i];
+            if (field == "edition") c = cmp_ll(a.edition, b.edition);
+            else if (field == "scope") c = cmp_str(a.scope, b.scope);
+            else if (field == "chemId") c = cmp_ll(parse_id(first_value(a, "chemId")), parse_id(first_value(b, "chemId")));
+            else if (field == "chemShortName") c = cmp_str(first_value(a, "chemShortName"), first_value(b, "chemShortName"));
+            else if (field == "chemName") c = cmp_str(first_value(a, "chemName"), first_value(b, "chemName"));
+            else if (field == "chemFormula") c = cmp_str(first_value(a, "chemFormula"), first_value(b, "chemFormula"));
+            if (c) return c;
+        }
+        return cmp_default(a, b);
+    };
+
+    auto record_before = [&cmp_records, &opt](const Record& a, const Record& b) {
+        int c = cmp_records(a, b);
+        return (opt.order == "desc") ? (c > 0) : (c < 0);
+    };
+    std::sort(filtered.begin(), filtered.end(), record_before);
 
     bool keep_attrs = opt.show_encoding || !attr_filter.empty() || (!selected_columns.empty() && std::find(selected_columns.begin(), selected_columns.end(), "encoding") != selected_columns.end());
     if (!keep_attrs) {
@@ -1549,14 +1621,7 @@ int main(int argc, char** argv)
         }
         filtered.swap(deduped);
 
-        std::sort(filtered.begin(), filtered.end(), [&parse_id](const Record& a, const Record& b) {
-            if (a.edition != b.edition) return a.edition < b.edition;
-            if (a.sw != b.sw) return a.sw < b.sw;
-            if (a.scope != b.scope) return a.scope < b.scope;
-            std::string as = a.values.count("chemId") && !a.values.find("chemId")->second.empty() ? a.values.find("chemId")->second[0] : "";
-            std::string bs = b.values.count("chemId") && !b.values.find("chemId")->second.empty() ? b.values.find("chemId")->second[0] : "";
-            return parse_id(as) < parse_id(bs);
-        });
+        std::sort(filtered.begin(), filtered.end(), record_before);
     }
 
     if (filtered.empty()) {

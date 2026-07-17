@@ -520,6 +520,54 @@ def values_for(rec: Record, concept: str) -> List[str]:
     return rec.values.get(concept, [])
 
 
+def parse_numeric_or_min(value: str) -> int:
+    return int(value) if value.lstrip("-").isdigit() else -(10**18)
+
+
+def first_value_for(rec: Record, concept: str) -> str:
+    values = values_for(rec, concept)
+    return values[0] if values else ""
+
+
+def default_sort_key(rec: Record) -> Tuple[int, int, str, int]:
+    return (
+        rec.edition,
+        rec.switch if rec.switch is not None else -1,
+        rec.scope,
+        parse_numeric_or_min(first_value_for(rec, "paramId")),
+    )
+
+
+def order_by_key(rec: Record, order_by: str | None) -> Any:
+    if order_by is None:
+        return None
+    if order_by == "edition":
+        return rec.edition
+    if order_by == "is_mtg2_switch":
+        return rec.switch if rec.switch is not None else -1
+    if order_by == "scope":
+        return rec.scope
+    if order_by == "paramId":
+        return parse_numeric_or_min(first_value_for(rec, "paramId"))
+    if order_by == "shortName":
+        return first_value_for(rec, "shortName")
+    if order_by == "name":
+        return first_value_for(rec, "name")
+    if order_by == "units":
+        return first_value_for(rec, "units")
+    return None
+
+
+def sort_records(records: List[Record], order: str, order_by_fields: List[str] | None) -> None:
+    if order_by_fields is None:
+        records.sort(key=default_sort_key, reverse=(order == "desc"))
+    else:
+        records.sort(
+            key=lambda r: tuple(order_by_key(r, field) for field in order_by_fields) + default_sort_key(r),
+            reverse=(order == "desc"),
+        )
+
+
 def parse_columns_arg(columns_text: str | None) -> List[str] | None:
     if columns_text is None:
         return None
@@ -637,6 +685,22 @@ def parse_scope_arg(scope_text: str | None) -> Set[str] | None:
     return set(scopes)
 
 
+def parse_order_by_arg(order_by_text: str | None) -> List[str] | None:
+    if order_by_text is None:
+        return None
+
+    fields = [item.strip() for item in order_by_text.split(",") if item.strip()]
+    if not fields:
+        raise ValueError("--order-by must contain at least one field")
+
+    valid_fields = {"edition", "is_mtg2_switch", "scope", "paramId", "shortName", "name", "units"}
+    invalid = [f for f in fields if f not in valid_fields]
+    if invalid:
+        raise ValueError("--order-by must contain only: edition, is_mtg2_switch, scope, paramId, shortName, name, units")
+
+    return fields
+
+
 def validate_attr_keys(attr_filter: Dict[str, str] | None, records: Iterable[Record]) -> None:
     if attr_filter is None:
         return
@@ -742,7 +806,7 @@ def filter_records(
 
         result.append(rec)
 
-    result.sort(key=lambda r: (r.edition, r.switch if r.switch is not None else -1, r.scope, int(values_for(r, "paramId")[0]) if values_for(r, "paramId") and values_for(r, "paramId")[0].lstrip("-").isdigit() else float("-inf")))
+    sort_records(result, args.order, args.order_by_fields)
     return result
 
 
@@ -763,7 +827,7 @@ def merge_values(values: Iterable[List[str]]) -> List[str]:
     return merged
 
 
-def dedupe_display_records(records: List[Record], keep_attrs: bool) -> List[Record]:
+def dedupe_display_records(records: List[Record], keep_attrs: bool, order: str, order_by_fields: List[str] | None) -> List[Record]:
     if keep_attrs:
         return records
 
@@ -803,7 +867,7 @@ def dedupe_display_records(records: List[Record], keep_attrs: bool) -> List[Reco
             )
         )
 
-    deduped.sort(key=lambda r: (r.edition, r.switch if r.switch is not None else -1, r.scope, int(values_for(r, "paramId")[0]) if values_for(r, "paramId") and values_for(r, "paramId")[0].lstrip("-").isdigit() else float("-inf")))
+    sort_records(deduped, order, order_by_fields)
     return deduped
 
 
@@ -1053,6 +1117,17 @@ def make_parser() -> argparse.ArgumentParser:
         help="Output format: line (default) or table",
     )
     parser.add_argument(
+        "--order",
+        choices=["asc", "desc"],
+        default="asc",
+        help="Sort order for results by edition/switch/scope/id: asc (default) or desc",
+    )
+    parser.add_argument(
+        "--order-by",
+        default=None,
+        help="Primary sort field(s), comma-separated, combined with --order. Default sort is edition,is_mtg2_switch,scope,paramId",
+    )
+    parser.add_argument(
         "--no-truncate",
         action="store_true",
         help="With --format table, do not truncate cells to terminal width",
@@ -1075,6 +1150,7 @@ def main() -> int:
         nattr_filter = parse_nattr_arg(args.nattr)
         attrkey_filter = parse_attrkey_arg(args.attrkey)
         scope_filter = parse_scope_arg(args.scope)
+        args.order_by_fields = parse_order_by_arg(args.order_by)
     except ValueError as exc:
         parser.error(str(exc))
 
@@ -1203,7 +1279,7 @@ def main() -> int:
         or attr_filter is not None
         or (selected_columns is not None and "encoding" in selected_columns)
     )
-    filtered = dedupe_display_records(filtered, keep_attrs=keep_attrs)
+    filtered = dedupe_display_records(filtered, keep_attrs=keep_attrs, order=args.order, order_by_fields=args.order_by_fields)
 
     if not filtered:
         print("No matching parameters found.")

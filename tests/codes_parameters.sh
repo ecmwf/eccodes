@@ -21,6 +21,8 @@ grep -q -- "--scope SCOPE" $tempA
 grep -q -- "--nattrkey NATTRKEY" $tempA
 grep -q -- "--nattr NATTR" $tempA
 grep -q -- "--attrkey ATTRKEY" $tempA
+grep -q -- "--order {asc,desc}" $tempA
+grep -q -- "--order-by FIELD" $tempA
 
 # Scope filter: single localConcept scope
 ${tools_dir}/codes_parameters --paramId 167 --scope grib2/localConcepts/tigge > $tempA
@@ -119,6 +121,35 @@ ${tools_dir}/codes_parameters --paramId-regex '^[0-9]{1,3}$' --scope grib2 --col
 [ -s $tempA ]
 awk 'NR>2 {gsub(/ /,""); if ($1!="") print $1}' $tempA | \
 awk 'NR==1{p=$1;next} {if ($1+0 < p+0) exit 1; p=$1} END{exit 0}'
+
+# Descending numeric ordering with --order desc
+${tools_dir}/codes_parameters --paramId-regex '^[0-9]{1,3}$' --scope grib2 --columns paramId --is_mtg2_switch 1 --format table --order desc > $tempA
+[ -s $tempA ]
+awk 'NR>2 {gsub(/ /,""); if ($1!="") print $1}' $tempA | \
+awk 'NR==1{p=$1;next} {if ($1+0 > p+0) exit 1; p=$1} END{exit 0}'
+
+# Field-specific ordering: shortName descending
+${tools_dir}/codes_parameters --paramId-regex '^[0-9]{1,3}$' --scope grib2 --columns shortName --is_mtg2_switch 1 --format table --order-by shortName --order desc > $tempA
+[ -s $tempA ]
+awk 'NR>2 {gsub(/ /,""); if ($1!="") print $1}' $tempA | \
+awk 'NR==1{p=$1;next} {if ($1 > p) exit 1; p=$1} END{exit 0}'
+
+# Multi-field ordering: scope then paramId ascending
+${tools_dir}/codes_parameters --paramId-regex '^[0-9]{1,3}$' --columns scope,paramId --format table --order-by scope,paramId --order asc > $tempA
+[ -s $tempA ]
+awk -F'\|' '
+function trim(s){gsub(/^ +| +$/, "", s); return s}
+NR>2 {
+    scope=trim($1); id=trim($2);
+    if (scope=="" || id=="") next;
+    if (seen) {
+        if (scope < pscope) exit 1;
+        if (scope == pscope && id+0 < pid+0) exit 1;
+    }
+    pscope=scope; pid=id; seen=1;
+}
+END {exit 0}
+' $tempA
 
 # Invalid scope argument must fail
 set +e

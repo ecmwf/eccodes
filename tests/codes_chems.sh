@@ -22,6 +22,8 @@ grep -q -- "--chemFormula-regex CHEMFORMULA_REGEX" $tempA
 grep -q -- "--nattrkey NATTRKEY" $tempA
 grep -q -- "--nattr NATTR" $tempA
 grep -q -- "--attrkey ATTRKEY" $tempA
+grep -q -- "--order {asc,desc}" $tempA
+grep -q -- "--order-by FIELD" $tempA
 
 # chemFormula filter
 ${tools_dir}/codes_chems --chemFormula O3 > $tempA
@@ -48,6 +50,35 @@ if grep -E -v "chemId=16[56]( |$)" $tempA >/dev/null; then
     echo "Unexpected chemId in --chemId-regex filtered output"
     exit 1
 fi
+
+# Descending numeric ordering with --order desc
+${tools_dir}/codes_chems --chemId-regex '^[0-9]{1,3}$' --scope grib2 --columns chemId --format table --order desc > $tempA
+[ -s $tempA ]
+awk 'NR>2 {gsub(/ /,""); if ($1!="") print $1}' $tempA | \
+awk 'NR==1{p=$1;next} {if ($1+0 > p+0) exit 1; p=$1} END{exit 0}'
+
+# Field-specific ordering: chemShortName descending
+${tools_dir}/codes_chems --chemId-regex '^[0-9]{1,3}$' --scope grib2 --columns chemShortName --format table --order-by chemShortName --order desc > $tempA
+[ -s $tempA ]
+awk 'NR>2 {gsub(/ /,""); if ($1!="") print $1}' $tempA | \
+awk 'NR==1{p=$1;next} {if ($1 > p) exit 1; p=$1} END{exit 0}'
+
+# Multi-field ordering: scope then chemId ascending
+${tools_dir}/codes_chems --chemId-regex '^[0-9]{1,3}$' --columns scope,chemId --format table --order-by scope,chemId --order asc > $tempA
+[ -s $tempA ]
+awk -F'\|' '
+function trim(s){gsub(/^ +| +$/, "", s); return s}
+NR>2 {
+    scope=trim($1); id=trim($2);
+    if (scope=="" || id=="") next;
+    if (seen) {
+        if (scope < pscope) exit 1;
+        if (scope == pscope && id+0 < pid+0) exit 1;
+    }
+    pscope=scope; pid=id; seen=1;
+}
+END {exit 0}
+' $tempA
 
 # Invalid chemFormula regex must fail
 set +e
