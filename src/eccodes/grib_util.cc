@@ -2976,7 +2976,7 @@ int grib2_matrix_select_PDTN_for_key_with_current(grib_handle* h, const char* ke
 
     std::call_once(matrix_init_once, [h]() {
         const char* env_enable = codes_getenv("ECCODES_PDTN_MATRIX_ENABLE");
-        matrix_enabled = (!env_enable || strcmp(env_enable, "0") != 0);
+        matrix_enabled = (env_enable && strcmp(env_enable, "0") != 0);
         if (!matrix_enabled) return;
 
         const char* csv = codes_getenv("ECCODES_PDTN_MATRIX_CSV");
@@ -3202,13 +3202,14 @@ int grib2_matrix_select_PDTN_for_key(grib_handle* h, const char* key, long* sele
     return grib2_matrix_select_PDTN_for_key_with_current(h, key, current_pdtn, selected_pdtn);
 }
 
-// Check if PDTN matrix selection is enabled (without actually loading the matrix)
+// Check if PDTN matrix selection is enabled (without actually loading the matrix).
+// Disabled by default; set ECCODES_PDTN_MATRIX_ENABLE=1 to enable.
 int grib2_matrix_is_enabled()
 {
     static int is_enabled = -1;  // Cache: -1 = not checked, 0 = disabled, 1 = enabled
     if (is_enabled == -1) {
         const char* env_enable = codes_getenv("ECCODES_PDTN_MATRIX_ENABLE");
-        is_enabled = (!env_enable || strcmp(env_enable, "0") != 0) ? 1 : 0;
+        is_enabled = (env_enable && strcmp(env_enable, "0") != 0) ? 1 : 0;
     }
     return is_enabled;
 }
