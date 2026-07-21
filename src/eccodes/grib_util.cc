@@ -21,6 +21,7 @@
 #include <algorithm>
 #include <limits>
 #include <mutex>
+#include <cstdarg>
 
 /* Windows uses semicolons as path delimiter; Linux/macOS use colons */
 #ifdef ECCODES_ON_WINDOWS
@@ -2964,6 +2965,23 @@ static int row_index_for_pdtn(const PdtnMatrix& m, long pdtn)
     return -1;
 }
 
+static void log_matrix_fallback_warning(const grib_context* c, const char* fmt, ...)
+{
+    char msg[1024] = {0,};
+    va_list args;
+    va_start(args, fmt);
+    vsnprintf(msg, sizeof(msg), fmt, args);
+    va_end(args);
+
+    if (c && c->enable_warnings) {
+        grib_context_log(c, GRIB_LOG_WARNING, "%s", msg);
+        return;
+    }
+
+    FILE* stream = (c && c->log_stream) ? c->log_stream : stderr;
+    fprintf(stream, "ECCODES WARNING :  %s\n", msg);
+}
+
 } // namespace
 
 int grib2_matrix_select_PDTN_for_key_with_current(grib_handle* h, const char* key, long current_pdtn, long* selected_pdtn)
@@ -3177,12 +3195,40 @@ int grib2_matrix_select_PDTN_for_key_with_current(grib_handle* h, const char* ke
                 found = true;
             }
         }
+
     }
 
     if (!found) {
         std::lock_guard<std::mutex> lock(matrix.selection_cache_mutex);
         matrix.selection_cache[cache_key] = cache_not_found;
         return GRIB_NOT_FOUND;
+    }
+
+    {
+        const int selected_ridx = row_index_for_pdtn(matrix, best_pdtn);
+        if (selected_ridx >= 0 && selected_ridx != ridx) {
+            int missing_from_selected = 0;
+            int overlap = 0;
+            int extra = 0;
+            int total = 0;
+            const std::vector<unsigned char>& selected_row = matrix.has_key[selected_ridx];
+            for (size_t j = 0; j < selected_row.size(); ++j) {
+                const bool in_current = matrix.has_key[ridx][j] != 0;
+                const bool in_selected = selected_row[j] != 0;
+                if (in_selected) total++;
+                if (in_current && in_selected) overlap++;
+                if (in_current && !in_selected) missing_from_selected++;
+                if (!in_current && in_selected) extra++;
+            }
+            if (missing_from_selected > 0) {
+                log_matrix_fallback_warning(h->context,
+                                            "Matrix PDTN: fallback for key '%s' drops keys (PDTN %ld -> %ld). "
+                                            "Overlap=%d/%d, missing=%d, extra=%d, total=%d. Some previously available keys may not be present in the selected template, and an exact matching template may not exist.",
+                                            key, current_pdtn, best_pdtn,
+                                            overlap, overlap + missing_from_selected,
+                                            missing_from_selected, extra, total);
+            }
+        }
     }
 
     {
