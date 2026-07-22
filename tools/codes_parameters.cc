@@ -688,11 +688,6 @@ static std::vector<std::string> explicit_roots_from_args_env(const Options& opt)
         std::vector<std::string> v = split(e, sep);
         roots.insert(roots.end(), v.begin(), v.end());
     }
-    e = getenv("ECCODES_EXTRA_DEFINITONS");
-    if (e) {
-        std::vector<std::string> v = split(e, sep);
-        roots.insert(roots.end(), v.begin(), v.end());
-    }
     e = getenv("ECCODES_DEFINITION_PATH");
     if (e) {
         std::vector<std::string> v = split(e, sep);
@@ -873,8 +868,8 @@ static std::string usage_text(const char* prog)
       << "                        separated by path separator. If omitted, resolution\n"
       << "                        order is: --definitions-root;\n"
       << "                        ECCODES_EXTRA_DEFINITION_PATH (plus aliases\n"
-      << "                        ECCODES_EXTRA_DEFINITIONS and\n"
-      << "                        ECCODES_EXTRA_DEFINITONS); ECCODES_DEFINITION_PATH;\n"
+      << "                        ECCODES_EXTRA_DEFINITIONS);\n"
+      << "                        ECCODES_DEFINITION_PATH;\n"
       << "                        then defaults <prefix>/share/eccodes/definitions,\n"
       << "                        <prefix>/definitions, <prefix>/share/definitions,\n"
       << "                        <prefix>/../share/eccodes/definitions, ./definitions.\n"
