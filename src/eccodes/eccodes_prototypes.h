@@ -686,6 +686,7 @@ int grib2_choose_PDTN(int current_PDTN, bool is_det, bool is_instant);
 int grib2_select_PDTN(int is_eps, int is_instant, int is_chem, int is_chem_srcsink, int is_chem_distfn, int is_aerosol, int is_aerosol_optical);
 int grib2_matrix_select_PDTN_for_key(grib_handle* h, const char* key, long* selected_pdtn);
 int grib2_matrix_select_PDTN_for_key_with_current(grib_handle* h, const char* key, long current_pdtn, long* selected_pdtn);
+void grib2_matrix_set_planning_context(int active, int step, int total);
 int grib2_matrix_is_enabled();
 int codes_grib_surface_type_requires_value(int edition, int type_of_surface_code, int* err);
 size_t sum_of_pl_array(const long* pl, size_t plsize);

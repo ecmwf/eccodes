@@ -2695,6 +2695,14 @@ struct PdtnMatrix {
     bool loaded = false;
 };
 
+struct MatrixPlanningContext {
+    bool active = false;
+    int step = 0;
+    int total = 0;
+};
+
+static thread_local MatrixPlanningContext g_matrix_planning_context;
+
 static std::vector<std::string> split_csv_line_simple(const std::string& line)
 {
     std::vector<std::string> out;
@@ -2984,6 +2992,13 @@ static void log_matrix_fallback_warning(const grib_context* c, const char* fmt, 
 
 } // namespace
 
+void grib2_matrix_set_planning_context(int active, int step, int total)
+{
+    g_matrix_planning_context.active = (active != 0);
+    g_matrix_planning_context.step = step;
+    g_matrix_planning_context.total = total;
+}
+
 int grib2_matrix_select_PDTN_for_key_with_current(grib_handle* h, const char* key, long current_pdtn, long* selected_pdtn)
 {
     static PdtnMatrix matrix;
@@ -3221,12 +3236,25 @@ int grib2_matrix_select_PDTN_for_key_with_current(grib_handle* h, const char* ke
                 if (!in_current && in_selected) extra++;
             }
             if (missing_from_selected > 0) {
-                log_matrix_fallback_warning(h->context,
-                                            "Matrix PDTN: fallback for key '%s' drops keys (PDTN %ld -> %ld). "
-                                            "Overlap=%d/%d, missing=%d, extra=%d, total=%d. Some previously available keys may not be present in the selected template, and an exact matching template may not exist.",
-                                            key, current_pdtn, best_pdtn,
-                                            overlap, overlap + missing_from_selected,
-                                            missing_from_selected, extra, total);
+                if (g_matrix_planning_context.active &&
+                    g_matrix_planning_context.step > 0 &&
+                    g_matrix_planning_context.total > 0) {
+                    log_matrix_fallback_warning(h->context,
+                                                "Matrix PDTN oneshot step %d/%d: key='%s' intermediate fallback drops keys (PDTN %ld -> %ld). "
+                                                "Overlap=%d/%d, missing=%d, extra=%d, total=%d. Some previously available keys may not be present in the selected template, and an exact matching template may not exist. Final oneshot PDTN may differ.",
+                                                g_matrix_planning_context.step, g_matrix_planning_context.total,
+                                                key, current_pdtn, best_pdtn,
+                                                overlap, overlap + missing_from_selected,
+                                                missing_from_selected, extra, total);
+                }
+                else {
+                    log_matrix_fallback_warning(h->context,
+                                                "Matrix PDTN: fallback for key '%s' drops keys (PDTN %ld -> %ld). "
+                                                "Overlap=%d/%d, missing=%d, extra=%d, total=%d. Some previously available keys may not be present in the selected template, and an exact matching template may not exist.",
+                                                key, current_pdtn, best_pdtn,
+                                                overlap, overlap + missing_from_selected,
+                                                missing_from_selected, extra, total);
+                }
             }
         }
     }

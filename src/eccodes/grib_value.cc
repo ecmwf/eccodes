@@ -2295,11 +2295,43 @@ int grib_set_values_silent(grib_handle* h, grib_values* args, size_t count, int 
                 }
                 std::sort(plan_keys.begin(), plan_keys.end());
 
-                for (const auto& key_name : plan_keys) {
+                if (h->context->debug == -1) {
+                    fprintf(stderr, "ECCODES DEBUG grib_set_values oneshot: planning start PDTN=%ld keys=[", pdtn_cur);
+                    for (size_t ki = 0; ki < plan_keys.size(); ++ki) {
+                        if (ki) fprintf(stderr, ",");
+                        fprintf(stderr, "%s", plan_keys[ki].c_str());
+                    }
+                    fprintf(stderr, "]\n");
+                }
+                else if (h->context->debug > 0) {
+                    fprintf(stderr, "ECCODES DEBUG grib_set_values oneshot: planning PDTN from %ld with %lu keys\n",
+                            pdtn_cur, (unsigned long)plan_keys.size());
+                }
+
+                for (size_t step_i = 0; step_i < plan_keys.size(); ++step_i) {
+                    const auto& key_name = plan_keys[step_i];
+                    const long pdtn_before = pdtn_plan;
+                    grib2_matrix_set_planning_context(1, (int)step_i + 1, (int)plan_keys.size());
                     long pdtn_next = -1;
                     if (grib2_matrix_select_PDTN_for_key_with_current(h, key_name.c_str(), pdtn_plan, &pdtn_next) == GRIB_SUCCESS) {
+                        if (h->context->debug == -1) {
+                            fprintf(stderr, "ECCODES DEBUG grib_set_values oneshot step %lu/%lu: key='%s' plan %ld -> %ld\n",
+                                    (unsigned long)step_i + 1, (unsigned long)plan_keys.size(),
+                                    key_name.c_str(), pdtn_before, pdtn_next);
+                        }
                         pdtn_plan = pdtn_next;
                     }
+                    else if (h->context->debug == -1) {
+                        fprintf(stderr, "ECCODES DEBUG grib_set_values oneshot step %lu/%lu: key='%s' no matrix candidate from PDTN %ld\n",
+                                (unsigned long)step_i + 1, (unsigned long)plan_keys.size(),
+                                key_name.c_str(), pdtn_before);
+                    }
+                }
+                grib2_matrix_set_planning_context(0, 0, 0);
+
+                if (h->context->debug == -1) {
+                    fprintf(stderr, "ECCODES DEBUG grib_set_values oneshot summary: start=%ld, final=%ld, steps=%lu\n",
+                            pdtn_cur, pdtn_plan, (unsigned long)plan_keys.size());
                 }
 
                 if (pdtn_plan != pdtn_cur) {
