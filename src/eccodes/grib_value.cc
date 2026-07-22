@@ -123,6 +123,32 @@ int grib_set_expression(grib_handle* h, const char* name, grib_expression* e)
         }
         return ret;
     }
+
+    // Accessor not found: evaluate the expression to its native type and
+    // delegate to the corresponding typed setter, which has the matrix PDTN
+    // fallback logic and will switch productDefinitionTemplateNumber if needed.
+    {
+        const int type = e->native_type(h);
+        if (type == GRIB_TYPE_LONG) {
+            long lval = 0;
+            if (e->evaluate_long(h, &lval) == GRIB_SUCCESS)
+                return grib_set_long(h, name, lval);
+        }
+        else if (type == GRIB_TYPE_DOUBLE) {
+            double dval = 0;
+            if (e->evaluate_double(h, &dval) == GRIB_SUCCESS)
+                return grib_set_double(h, name, dval);
+        }
+        else {
+            char buf[512] = {0,};
+            size_t len = sizeof(buf);
+            int err = 0;
+            const char* sval = e->evaluate_string(h, buf, &len, &err);
+            if (sval && err == GRIB_SUCCESS)
+                return grib_set_string(h, name, sval, &len);
+        }
+    }
+
     return GRIB_NOT_FOUND;
 }
 
