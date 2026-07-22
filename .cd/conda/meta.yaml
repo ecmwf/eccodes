@@ -1,0 +1,51 @@
+{% set git_tag = environ.get('GIT_DESCRIBE_TAG', '0.0.0').lstrip('v') %}
+{% set version = git_tag.replace('-', '') | lower %}
+
+package:
+  name: eccodes
+  version: {{ version }}
+
+source:
+  path: ../..
+
+build:
+  number: 0
+  skip: true  # [win]
+  detect_binary_files_with_prefix: true
+
+requirements:
+  build:
+    - {{ compiler('fortran') }}
+    - {{ compiler('c') }}
+    - {{ stdlib("c") }}
+    - {{ compiler('cxx') }}
+    - cmake
+    - diffutils
+    - make
+  host:
+    - jasper    # [not ppc64le]
+    - openjpeg  # [ppc64le]
+    - zlib
+    - libpng
+    - libnetcdf
+    - libaec
+    - hdf5
+
+test:
+  requires:
+    - perl
+  commands:
+    - codes_info
+    - ls $(codes_info -s)
+    - ls $(codes_info -d)
+
+about:
+  home: https://confluence.ecmwf.int/display/ECC/ecCodes+Home
+  license: Apache-2.0
+  license_file: LICENSE
+  license_family: Apache
+  summary: ECMWF ecCodes Copyright 2005- ECMWF.
+
+extra:
+  recipe-maintainers:
+    - iainrussell

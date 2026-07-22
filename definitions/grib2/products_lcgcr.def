@@ -12,6 +12,13 @@ alias mars.param = paramId;
 alias mars.expver = marsExpver;
 alias mars.origin = centre;
 
+concept modelName(unknown, "modelNameConcept.def", conceptsDir2, conceptsLocalDirAll): no_copy, dump;
+if (modelName isnot "unknown") {
+    concept modelVersion(unknown, "modelVersionConcept.[modelName].def", conceptsDir2, conceptsLocalDirAll): no_copy, dump, read_only;
+    alias ls.model = modelName;
+    alias mars.model = modelName;
+}
+
 alias parameter=paramId;
 alias parameter.paramId=paramId;
 alias parameter.shortName=shortName;
