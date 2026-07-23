@@ -38,6 +38,7 @@ if( HAVE_INSTALL_ECCODES_DEFINITIONS )
            PATTERN "*.txt"
            PATTERN "*.list"
            PATTERN "*.table"
+           PATTERN "*.csv"
            PATTERN "4.2.192.*.table" EXCLUDE
            PERMISSIONS OWNER_WRITE OWNER_READ GROUP_READ WORLD_READ )
 endif()
