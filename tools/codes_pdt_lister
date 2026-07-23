@@ -1,0 +1,585 @@
+#!/usr/bin/env python3
+#
+# (C) Copyright 2005- ECMWF.
+#
+# This software is licensed under the terms of the Apache Licence Version 2.0
+# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+#
+# In applying this licence, ECMWF does not waive the privileges and immunities
+# granted to it by virtue of its status as an intergovernmental organisation
+# nor does it submit to any jurisdiction.
+#
+
+# Description: List GRIB2 Product Definition Templates (PDTs) that contain
+#   (or do not contain) specified keys, using the keys_in_PDTNS.csv matrix
+#   and the WMO 4.0.table from the highest official tablesVersion.
+#
+# Usage:
+#   codes_pdt_lister -k key1,key2 [-n key3,key4] [--definitions-path /path/to/defs]
+#
+
+import os
+import sys
+import argparse
+import re
+import fnmatch
+
+COLOR_START = "\033[1;31m"
+COLOR_END = "\033[0m"
+
+try:
+    import pandas as pd
+except ImportError:
+    print("Error: the 'pandas' package is required. Install it with: pip install pandas", file=sys.stderr)
+    sys.exit(1)
+
+
+# ---------------------------------------------------------------------------
+# Path discovery
+# ---------------------------------------------------------------------------
+
+def _find_grib2_defs_dir(user_path=None):
+    """Return the path to the grib2 definitions directory.
+
+    Search order (first match wins):
+      1. --definitions-path argument
+      2. ECCODES_DEFINITION_PATH environment variable (colon-separated)
+        3. Installation layout: <prefix>/share/eccodes/definitions
+            (script lives at <prefix>/bin/codes_pdt_lister)
+        4. Source-tree layout: <script>/../definitions
+            (script lives at eccodes/tools/codes_pdt_lister)
+      5. Paths reported by the eccodes Python library (last-resort fallback)
+    """
+    candidates = []
+
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+
+    # 1. Explicit --definitions-path argument (highest priority)
+    if user_path:
+        candidates.append(user_path)
+
+    # 2. ECCODES_DEFINITION_PATH env var (colon-separated list)
+    env_path = os.environ.get("ECCODES_DEFINITION_PATH", "")
+    for p in env_path.split(":"):
+        if p:
+            candidates.append(p)
+
+    # 3. Installation layout: <prefix>/bin/ -> <prefix>/share/eccodes/definitions
+    candidates.append(os.path.normpath(os.path.join(script_dir, "..", "share", "eccodes", "definitions")))
+
+    # 4. Source-tree layout: eccodes/tools/ -> eccodes/definitions
+    candidates.append(os.path.normpath(os.path.join(script_dir, "..", "definitions")))
+
+    # 5. Paths reported by the eccodes Python library (last-resort fallback)
+    try:
+        import eccodes as _ecc
+        for p in _ecc.codes_definition_path().split(":"):
+            if p:
+                candidates.append(p)
+    except Exception:
+        pass
+
+    # Return the first candidate that actually contains grib2/keys_in_PDTNS.csv
+    for p in candidates:
+        csv_path = os.path.join(p, "grib2", "keys_in_PDTNS.csv")
+        if os.path.isfile(csv_path):
+            return os.path.join(p, "grib2")
+
+    return None
+
+
+def _latest_tables_version(grib2_dir):
+    """Return the path to the highest numeric tables sub-directory."""
+    tables_root = os.path.join(grib2_dir, "tables")
+    if not os.path.isdir(tables_root):
+        return None
+    versions = []
+    for name in os.listdir(tables_root):
+        if name.isdigit():
+            versions.append(int(name))
+    if not versions:
+        return None
+    return os.path.join(tables_root, str(max(versions)))
+
+
+# ---------------------------------------------------------------------------
+# Argument parsing
+# ---------------------------------------------------------------------------
+
+def parse_args():
+    parser = argparse.ArgumentParser(
+        allow_abbrev=False,
+        description=(
+            "List GRIB2 Product Definition Templates (PDTs) that contain "
+            "(or do not contain) specified keys.\n\n"
+            "The PDT/key matrix is read from the eccodes definitions file\n"
+            "  grib2/keys_in_PDTNS.csv\n"
+            "and template names from the highest WMO tablesVersion\n"
+            "  grib2/tables/<N>/4.0.table"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument(
+        "-k", "--k", "--addkeys",
+        dest="addkeys",
+        default=None,
+        help="Comma-separated list of keys that MUST be present in the PDT.",
+    )
+    parser.add_argument(
+        "-n", "--n", "--notInPDT",
+        dest="notInPDT",
+        default=None,
+        help="Comma-separated list of keys that must NOT be present in the PDT.",
+    )
+    parser.add_argument(
+        "--definitions-path",
+        default=None,
+        metavar="PATH",
+        help=(
+            "Path to the eccodes definitions directory (the directory that "
+            "contains 'grib2/'). Overrides ECCODES_DEFINITION_PATH."
+        ),
+    )
+    parser.add_argument(
+        "--list-keys",
+        action="store_true",
+        help="Print all available key names and exit.",
+    )
+    parser.add_argument(
+        "--show-csv",
+        action="store_true",
+        help="Print the absolute path to the keys_in_PDTNS.csv file in use and exit.",
+    )
+    parser.add_argument(
+        "--order-by",
+        choices=["id", "name", "key"],
+        default=None,
+        help=(
+            "Sort output by template id, template name or key name. "
+            "Default is id for template listing and key for --list-keys."
+        ),
+    )
+    parser.add_argument(
+        "--order",
+        choices=["asc", "desc"],
+        default="asc",
+        help="Sort order ascending or descending (default: asc).",
+    )
+    parser.add_argument(
+        "--name-regex",
+        default=None,
+        metavar="REGEX",
+        help=(
+            "Keep only templates whose names match REGEX. "
+            "Uses Python regular expressions (PCRE-like), e.g. 'point.*in.*time'."
+        ),
+    )
+    parser.add_argument(
+        "--name",
+        default=None,
+        metavar="GLOB",
+        help=(
+            "Keep only templates whose names match shell-style wildcard GLOB, "
+            "e.g. 'point*in*time'."
+        ),
+    )
+    parser.add_argument(
+        "--keys",
+        default=None,
+        metavar="KEYS",
+        help=(
+            "Comma-separated list of key-name glob patterns to print. "
+            "Examples: 'forecastTime' or '*radar*'."
+        ),
+    )
+    parser.add_argument(
+        "--keys-regex",
+        default=None,
+        metavar="REGEX",
+        help=(
+            "Keep only key names matching REGEX. "
+            "Can be used with or without --list-keys."
+        ),
+    )
+    parser.add_argument(
+        "--regex-case-sensitive",
+        action="store_true",
+        help=(
+            "Make --name-regex and --keys-regex case-sensitive. "
+            "By default, regex matching is case-insensitive."
+        ),
+    )
+    parser.add_argument(
+        "--colour-highlight",
+        choices=["0", "1"],
+        default="0",
+        help=(
+            "Highlight matched parts for --name/--name-regex/--keys/--keys-regex output. "
+            "0=off (default), 1=on."
+        ),
+    )
+    return parser.parse_args()
+
+
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
+
+def _split_keys(keys_str):
+    """Return a sorted, deduplicated list from a comma-separated string."""
+    return sorted(set(k.strip() for k in keys_str.split(",") if k.strip())) if keys_str else []
+
+
+def _load_csv(grib2_dir):
+    csv_path = os.path.join(grib2_dir, "keys_in_PDTNS.csv")
+    df = pd.read_csv(csv_path, index_col=0)
+    return df
+
+
+def _load_alias_map(grib2_dir, user_path=None):
+    """Parse keys_in_PDTNS_aliases.csv and return {alias: canonical}."""
+    alias_candidates = [os.path.join(grib2_dir, "keys_in_PDTNS_aliases.csv")]
+
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+
+    if user_path:
+        alias_candidates.append(os.path.join(user_path, "grib2", "keys_in_PDTNS_aliases.csv"))
+
+    env_path = os.environ.get("ECCODES_DEFINITION_PATH", "")
+    for p in env_path.split(":"):
+        if p:
+            alias_candidates.append(os.path.join(p, "grib2", "keys_in_PDTNS_aliases.csv"))
+
+    # Source-tree fallback when running from a workspace checkout
+    alias_candidates.append(
+        os.path.normpath(os.path.join(script_dir, "..", "definitions", "grib2", "keys_in_PDTNS_aliases.csv"))
+    )
+    alias_candidates.append(
+        os.path.normpath(os.path.join(script_dir, "..", "eccodes", "definitions", "grib2", "keys_in_PDTNS_aliases.csv"))
+    )
+
+    try:
+        import eccodes as _ecc
+        for p in _ecc.codes_definition_path().split(":"):
+            if p:
+                alias_candidates.append(os.path.join(p, "grib2", "keys_in_PDTNS_aliases.csv"))
+    except Exception:
+        pass
+
+    alias_file = None
+    for candidate in alias_candidates:
+        if os.path.isfile(candidate):
+            alias_file = candidate
+            break
+
+    if alias_file is None:
+        return {}
+
+    aliases = {}
+    pending_alias = None
+    with open(alias_file, "r") as fh:
+        for raw in fh:
+            line = raw.strip()
+            if not line or line.startswith("#"):
+                continue
+
+            if pending_alias is not None:
+                # Handle wrapped entries like:
+                # totalNumberOfDataValuesMissingInStatisticalProcess,
+                # numberOfMissingInStatisticalProcess
+                aliases[pending_alias] = line
+                pending_alias = None
+                continue
+
+            parts = [p.strip() for p in line.split(",", 1)]
+            if len(parts) != 2:
+                continue
+
+            alias, canonical = parts
+            if not alias:
+                continue
+            if canonical:
+                aliases[alias] = canonical
+            else:
+                pending_alias = alias
+
+    return aliases
+
+
+def _resolve_aliases(keys, alias_map):
+    return [alias_map.get(k, k) for k in keys]
+
+
+def _load_pdt_names(tables_dir):
+    """Parse 4.0.table and return {pdtn_int: name_string}."""
+    table_file = os.path.join(tables_dir, "4.0.table")
+    names = {}
+    with open(table_file, "r") as fh:
+        for line in fh:
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+            parts = line.split(None, 2)  # split on whitespace, max 3 parts
+            if len(parts) >= 2 and parts[0].isdigit():
+                pdtn = int(parts[0])
+                name = parts[2].strip() if len(parts) == 3 else ""
+                names[pdtn] = name
+    return names
+
+
+def _validate_keys(keys, all_columns):
+    if "discipline" in keys:
+        sys.exit("Error: do not specify 'discipline'; it is not part of section 4.")
+    unknown = sorted(set(keys) - set(all_columns))
+    if unknown:
+        sys.exit("Error: unknown key(s): " + ", ".join(unknown))
+
+
+def _use_color(mode):
+    return mode == "1"
+
+
+def _merge_spans(spans):
+    if not spans:
+        return []
+    spans = sorted(spans)
+    merged = [spans[0]]
+    for start, end in spans[1:]:
+        last_start, last_end = merged[-1]
+        if start <= last_end:
+            merged[-1] = (last_start, max(last_end, end))
+        else:
+            merged.append((start, end))
+    return merged
+
+
+def _highlight_spans(text, spans, enabled):
+    if not enabled or not spans:
+        return text
+    spans = _merge_spans(spans)
+    out = []
+    pos = 0
+    for start, end in spans:
+        if start < pos:
+            continue
+        out.append(text[pos:start])
+        out.append(COLOR_START)
+        out.append(text[start:end])
+        out.append(COLOR_END)
+        pos = end
+    out.append(text[pos:])
+    return "".join(out)
+
+
+def _regex_spans(text, regex_obj):
+    return [(m.start(), m.end()) for m in regex_obj.finditer(text) if m.end() > m.start()]
+
+
+def _glob_literal_chunks(pattern):
+    chunks = []
+    buf = []
+    in_class = False
+    for ch in pattern:
+        if in_class:
+            if ch == "]":
+                in_class = False
+            continue
+        if ch in "*?":
+            if buf:
+                chunks.append("".join(buf))
+                buf = []
+            continue
+        if ch == "[":
+            if buf:
+                chunks.append("".join(buf))
+                buf = []
+            in_class = True
+            continue
+        buf.append(ch)
+    if buf:
+        chunks.append("".join(buf))
+    return [c for c in chunks if c]
+
+
+def _glob_spans(text, pattern, case_sensitive=False):
+    spans = []
+    chunks = _glob_literal_chunks(pattern)
+    if not chunks:
+        return spans
+
+    text_cmp = text if case_sensitive else text.lower()
+    for chunk in chunks:
+        chunk_cmp = chunk if case_sensitive else chunk.lower()
+        start = 0
+        while True:
+            pos = text_cmp.find(chunk_cmp, start)
+            if pos < 0:
+                break
+            spans.append((pos, pos + len(chunk)))
+            start = pos + len(chunk)
+    return spans
+
+
+# ---------------------------------------------------------------------------
+# Main
+# ---------------------------------------------------------------------------
+
+def main():
+    args = parse_args()
+
+    # Locate definitions
+    grib2_dir = _find_grib2_defs_dir(args.definitions_path)
+    if grib2_dir is None:
+        sys.exit(
+            "Error: could not find 'grib2/keys_in_PDTNS.csv' in any definitions "
+            "directory.\nSet ECCODES_DEFINITION_PATH or use --definitions-path."
+        )
+
+    tables_dir = _latest_tables_version(grib2_dir)
+    if tables_dir is None:
+        sys.exit(f"Error: no numeric version directories found under {grib2_dir}/tables/")
+
+    # Load data
+    df = _load_csv(grib2_dir)
+    alias_map = _load_alias_map(grib2_dir, args.definitions_path)
+    pdt_names = _load_pdt_names(tables_dir)
+    regex_flags = 0 if args.regex_case_sensitive else re.IGNORECASE
+    color_enabled = _use_color(args.colour_highlight)
+
+    # --show-csv shortcut
+    if args.show_csv:
+        print(os.path.join(grib2_dir, "keys_in_PDTNS.csv"))
+        return
+
+    list_keys_mode = args.list_keys or ((args.keys or args.keys_regex) and not args.addkeys)
+
+    if args.order_by == "key" and not list_keys_mode:
+        sys.exit("Error: --order-by key can only be used together with key listing mode.")
+
+    if (args.keys or args.keys_regex) and args.addkeys and not args.list_keys:
+        sys.exit("Error: --keys/--keys-regex are for key listing. Use them without -k/--addkeys, or add --list-keys.")
+
+    # key listing mode shortcut
+    if list_keys_mode:
+        if args.order_by in ("id", "name"):
+            sys.exit("Error: with --list-keys, --order-by can only be omitted or set to key.")
+
+        keys_out = list(df.columns)
+        keys_glob_patterns = []
+        keys_re = None
+
+        if args.keys:
+            patterns = _split_keys(args.keys)
+            expanded_patterns = []
+            for pat in patterns:
+                if any(ch in pat for ch in "*?[]"):
+                    expanded = pat
+                else:
+                    expanded = f"*{pat}*"
+                keys_glob_patterns.append(expanded)
+                expanded_patterns.append(expanded.lower())
+            keys_out = [
+                k for k in keys_out
+                if any(fnmatch.fnmatchcase(k.lower(), pat) for pat in expanded_patterns)
+            ]
+
+        if args.keys_regex:
+            try:
+                keys_re = re.compile(args.keys_regex, regex_flags)
+            except re.error as err:
+                sys.exit(f"Error: invalid --keys-regex regex: {err}")
+            keys_out = [k for k in keys_out if keys_re.search(k)]
+
+        reverse = args.order == "desc"
+        keys_out = sorted(keys_out, reverse=reverse)
+        if not keys_out:
+            print("No matching keys found.")
+            return
+
+        for col in keys_out:
+            spans = []
+            for pat in keys_glob_patterns:
+                spans.extend(_glob_spans(col, pat, case_sensitive=False))
+            if keys_re is not None:
+                spans.extend(_regex_spans(col, keys_re))
+            print(_highlight_spans(col, spans, color_enabled))
+        return
+
+    order_by = args.order_by or "id"
+
+    has_template_filter = any([args.addkeys, args.notInPDT, args.name, args.name_regex])
+    if not has_template_filter:
+        sys.exit("Error: provide at least one template filter: -k/--addkeys, -n/--notInPDT, --name or --name-regex.")
+
+    keys_in = _split_keys(args.addkeys) if args.addkeys else []
+    keys_not_in = _split_keys(args.notInPDT) if args.notInPDT else []
+
+    if alias_map:
+        keys_in = sorted(set(_resolve_aliases(keys_in, alias_map)))
+        keys_not_in = sorted(set(_resolve_aliases(keys_not_in, alias_map)))
+
+    if keys_in or keys_not_in:
+        _validate_keys(keys_in + keys_not_in, df.columns)
+
+    if keys_in:
+        print("Searching for templates with these keys:")
+        print(" ", ", ".join(keys_in))
+    if keys_not_in:
+        print("Searching for templates without these keys:" if not keys_in else "But without these keys:")
+        print(" ", ", ".join(keys_not_in))
+    if keys_in or keys_not_in:
+        print()
+
+    # Filter: exclude rows where any key in keys_not_in is present
+    for key in keys_not_in:
+        if key in df.columns:
+            df = df[df[key].isna()]
+
+    # Filter: keep rows where all keys in keys_in are present
+    if keys_in:
+        mask = df[keys_in].notna().all(axis=1)
+        df = df[mask]
+
+    results = df.index.tolist()
+
+    if args.name:
+        # Substring-style matching, consistent with regex search() behavior.
+        glob_pattern = f"*{args.name}*"
+        results = [r for r in results if fnmatch.fnmatchcase(pdt_names.get(r, ""), glob_pattern)]
+
+    if args.name_regex:
+        try:
+            name_regex = re.compile(args.name_regex, regex_flags)
+        except re.error as err:
+            sys.exit(f"Error: invalid --name-regex regex: {err}")
+        results = [r for r in results if name_regex.search(pdt_names.get(r, ""))]
+    else:
+        name_regex = None
+
+    if not results:
+        print("No matching templates found.")
+        return
+
+    reverse = args.order == "desc"
+    if order_by == "name":
+        # Sort by template name; tie-break by numeric PDT id for stable output.
+        results = sorted(results, key=lambda r: (pdt_names.get(r, ""), int(r)), reverse=reverse)
+    else:
+        # Default sort by numeric PDT id.
+        results = sorted(results, key=lambda r: int(r), reverse=reverse)
+
+    for r in results:
+        name = pdt_names.get(r, "(name not found)")
+        spans = []
+        if args.name:
+            spans.extend(_glob_spans(name, args.name, case_sensitive=False))
+        if name_regex is not None:
+            spans.extend(_regex_spans(name, name_regex))
+        display_name = _highlight_spans(name, spans, color_enabled)
+        print(f"{r}\t{display_name}")
+
+    print()
+
+
+if __name__ == "__main__":
+    main()

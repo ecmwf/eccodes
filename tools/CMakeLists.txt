@@ -36,7 +36,8 @@ list( APPEND ecc_tools_binaries
              grib_compare codes_parser grib_index_build bufr_index_build
              bufr_ls bufr_dump bufr_set bufr_get
              bufr_copy bufr_compare
-             gts_get gts_compare gts_copy gts_dump gts_filter gts_ls )
+             gts_get gts_compare gts_copy gts_dump gts_filter gts_ls
+             codes_pdt_lister )
 
 list( APPEND ecc_tools_binaries_extra
              metar_dump metar_ls metar_compare metar_get metar_filter metar_copy
@@ -129,4 +130,5 @@ install( FILES ${CMAKE_CURRENT_SOURCE_DIR}/bufr_filter
          PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ
                      GROUP_EXECUTE GROUP_READ
                      WORLD_EXECUTE WORLD_READ )
+
 
