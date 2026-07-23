@@ -132,6 +132,12 @@ def parse_args():
         help="Comma-separated list of keys that must NOT be present in the PDT.",
     )
     parser.add_argument(
+        "-p", "--list_pdt_keys",
+        default=None,
+        metavar="PDTN",
+        help="List keys present in the specified PDT number.",
+    )
+    parser.add_argument(
         "--definitions-path",
         default=None,
         metavar="PATH",
@@ -451,13 +457,72 @@ def main():
         print(os.path.join(grib2_dir, "keys_in_PDTNS.csv"))
         return
 
-    list_keys_mode = args.list_keys or ((args.keys or args.keys_regex) and not args.addkeys)
+    list_pdt_mode = bool(args.list_pdt_keys)
+    list_keys_mode = args.list_keys or ((args.keys or args.keys_regex) and not args.addkeys and not list_pdt_mode)
 
-    if args.order_by == "key" and not list_keys_mode:
+    if list_pdt_mode and (args.list_keys or args.addkeys or args.notInPDT or args.name or args.name_regex):
+        sys.exit("Error: -p/--list_pdt_keys cannot be combined with template-listing or --list-keys modes.")
+
+    if args.order_by == "key" and not (list_keys_mode or list_pdt_mode):
         sys.exit("Error: --order-by key can only be used together with key listing mode.")
+
+    if list_pdt_mode and args.order_by in ("id", "name"):
+        sys.exit("Error: with -p/--list_pdt_keys, --order-by can only be omitted or set to key.")
 
     if (args.keys or args.keys_regex) and args.addkeys and not args.list_keys:
         sys.exit("Error: --keys/--keys-regex are for key listing. Use them without -k/--addkeys, or add --list-keys.")
+
+    if list_pdt_mode:
+        try:
+            target_pdtn = int(args.list_pdt_keys)
+        except ValueError:
+            sys.exit("Error: -p/--list_pdt_keys expects an integer PDT number.")
+
+        if target_pdtn not in df.index:
+            sys.exit(f"Error: PDT {target_pdtn} not found in keys_in_PDTNS.csv")
+
+        row = df.loc[target_pdtn]
+        keys_out = [k for k in df.columns if not pd.isna(row[k])]
+
+        keys_glob_patterns = []
+        keys_re = None
+
+        if args.keys:
+            patterns = _split_keys(args.keys)
+            expanded_patterns = []
+            for pat in patterns:
+                if any(ch in pat for ch in "*?[]"):
+                    expanded = pat
+                else:
+                    expanded = f"*{pat}*"
+                keys_glob_patterns.append(expanded)
+                expanded_patterns.append(expanded.lower())
+            keys_out = [
+                k for k in keys_out
+                if any(fnmatch.fnmatchcase(k.lower(), pat) for pat in expanded_patterns)
+            ]
+
+        if args.keys_regex:
+            try:
+                keys_re = re.compile(args.keys_regex, regex_flags)
+            except re.error as err:
+                sys.exit(f"Error: invalid --keys-regex regex: {err}")
+            keys_out = [k for k in keys_out if keys_re.search(k)]
+
+        reverse = args.order == "desc"
+        keys_out = sorted(keys_out, reverse=reverse)
+        if not keys_out:
+            print("No matching keys found.")
+            return
+
+        for col in keys_out:
+            spans = []
+            for pat in keys_glob_patterns:
+                spans.extend(_glob_spans(col, pat, case_sensitive=False))
+            if keys_re is not None:
+                spans.extend(_regex_spans(col, keys_re))
+            print(_highlight_spans(col, spans, color_enabled))
+        return
 
     # key listing mode shortcut
     if list_keys_mode:

@@ -31,6 +31,7 @@ static const char* COLOR_END   = "\033[0m";
 struct Options {
     std::string addkeys;
     std::string notInPDT;
+    std::string list_pdt_keys;
     std::string definitions_path;
     bool list_keys = false;
     bool show_csv = false;
@@ -62,6 +63,7 @@ static void usage(const char* prog)
             "      --name-regex REGEX             Filter template names by regex\n\n"
             "Key listing mode:\n"
             "      --list-keys                    List all known matrix keys\n"
+            "  -p, --list_pdt_keys PDTN           List keys present in a specific PDT\n"
             "      --keys KEYS                    Comma-separated key-name glob patterns\n"
             "      --keys-regex REGEX             Regex filter on key names\n\n"
             "Common options:\n"
@@ -435,6 +437,7 @@ static int parse_options(int argc, char** argv, Options& o)
         {"addkeys", required_argument, 0, 'k'},
         {"n", required_argument, 0, 'n'},
         {"notInPDT", required_argument, 0, 'n'},
+        {"list_pdt_keys", required_argument, 0, 'p'},
         {"definitions-path", required_argument, 0, 1000},
         {"list-keys", no_argument, 0, 1001},
         {"show-csv", no_argument, 0, 1002},
@@ -451,7 +454,7 @@ static int parse_options(int argc, char** argv, Options& o)
 
     int c = 0;
     int idx = 0;
-    while ((c = getopt_long(argc, argv, "hk:n:", long_opts, &idx)) != -1) {
+    while ((c = getopt_long(argc, argv, "hk:n:p:", long_opts, &idx)) != -1) {
         switch (c) {
             case 'h':
                 usage(argv[0]);
@@ -461,6 +464,9 @@ static int parse_options(int argc, char** argv, Options& o)
                 break;
             case 'n':
                 o.notInPDT = optarg ? optarg : "";
+                break;
+            case 'p':
+                o.list_pdt_keys = optarg ? optarg : "";
                 break;
             case 1000:
                 o.definitions_path = optarg ? optarg : "";
@@ -549,10 +555,22 @@ int main(int argc, char** argv)
 
     bool color_enabled = (opt.colour_highlight == "1");
 
-    bool list_keys_mode = opt.list_keys || ((!opt.keys.empty() || !opt.keys_regex.empty()) && opt.addkeys.empty());
+    bool list_keys_mode = opt.list_keys || ((!opt.keys.empty() || !opt.keys_regex.empty()) && opt.addkeys.empty() && opt.list_pdt_keys.empty());
+
+    if (!opt.list_pdt_keys.empty() && (opt.list_keys || !opt.addkeys.empty() || !opt.notInPDT.empty() || !opt.name_glob.empty() || !opt.name_regex.empty())) {
+        fprintf(stderr, "Error: -p/--list_pdt_keys cannot be combined with template-listing or --list-keys modes.\n");
+        return 1;
+    }
 
     if (!opt.order_by.empty() && opt.order_by == "key" && !list_keys_mode) {
-        fprintf(stderr, "Error: --order-by key can only be used together with key listing mode.\n");
+        if (opt.list_pdt_keys.empty()) {
+            fprintf(stderr, "Error: --order-by key can only be used together with key listing mode.\n");
+            return 1;
+        }
+    }
+
+    if (!opt.list_pdt_keys.empty() && !opt.order_by.empty() && opt.order_by != "key") {
+        fprintf(stderr, "Error: with -p/--list_pdt_keys, --order-by can only be omitted or set to key.\n");
         return 1;
     }
 
@@ -561,6 +579,101 @@ int main(int argc, char** argv)
                 "Error: --keys/--keys-regex are for key listing. "
                 "Use them without -k/--addkeys, or add --list-keys.\n");
         return 1;
+    }
+
+    if (!opt.list_pdt_keys.empty()) {
+        int target_pdtn = 0;
+        if (!parse_int(trim(opt.list_pdt_keys), &target_pdtn)) {
+            fprintf(stderr, "Error: -p/--list_pdt_keys expects an integer PDT number.\n");
+            return 1;
+        }
+
+        int row_index = -1;
+        for (size_t i = 0; i < matrix.pdt_ids.size(); ++i) {
+            if (matrix.pdt_ids[i] == target_pdtn) {
+                row_index = static_cast<int>(i);
+                break;
+            }
+        }
+        if (row_index < 0) {
+            fprintf(stderr, "Error: PDT %d not found in keys_in_PDTNS.csv\n", target_pdtn);
+            return 1;
+        }
+
+        std::vector<std::string> keys_out;
+        for (size_t i = 0; i < matrix.keys.size(); ++i) {
+            if (matrix.present[row_index][i]) keys_out.push_back(matrix.keys[i]);
+        }
+
+        std::vector<std::string> key_glob_patterns;
+        if (!opt.keys.empty()) {
+            std::vector<std::string> patterns = split_list_unique_sorted(opt.keys);
+            std::vector<std::string> patterns_lower;
+            for (const auto& p : patterns) {
+                std::string expanded = has_glob_chars(p) ? p : ("*" + p + "*");
+                key_glob_patterns.push_back(expanded);
+                patterns_lower.push_back(to_lower(expanded));
+            }
+
+            std::vector<std::string> filtered;
+            for (const auto& key : keys_out) {
+                std::string k = to_lower(key);
+                bool ok       = false;
+                for (const auto& p : patterns_lower) {
+                    if (fnmatch(p.c_str(), k.c_str(), 0) == 0) {
+                        ok = true;
+                        break;
+                    }
+                }
+                if (ok) filtered.push_back(key);
+            }
+            keys_out.swap(filtered);
+        }
+
+        std::regex key_regex;
+        bool key_regex_valid = false;
+        if (!opt.keys_regex.empty()) {
+            try {
+                auto flags = std::regex_constants::ECMAScript;
+                if (!opt.regex_case_sensitive) flags |= std::regex_constants::icase;
+                key_regex       = std::regex(opt.keys_regex, flags);
+                key_regex_valid = true;
+            }
+            catch (const std::regex_error& e) {
+                fprintf(stderr, "Error: invalid --keys-regex regex: %s\n", e.what());
+                return 1;
+            }
+
+            std::vector<std::string> filtered;
+            for (const auto& key : keys_out) {
+                if (std::regex_search(key, key_regex)) filtered.push_back(key);
+            }
+            keys_out.swap(filtered);
+        }
+
+        std::sort(keys_out.begin(), keys_out.end());
+        if (opt.order == "desc") std::reverse(keys_out.begin(), keys_out.end());
+
+        if (keys_out.empty()) {
+            printf("No matching keys found.\n");
+            return 0;
+        }
+
+        for (const auto& key : keys_out) {
+            std::vector<std::pair<size_t, size_t> > spans;
+            for (const auto& p : key_glob_patterns) {
+                auto s = find_glob_spans(key, p, false);
+                spans.insert(spans.end(), s.begin(), s.end());
+            }
+            if (key_regex_valid) {
+                auto s = find_regex_spans(key, key_regex);
+                spans.insert(spans.end(), s.begin(), s.end());
+            }
+
+            std::string out = highlight_spans(key, spans, color_enabled);
+            printf("%s\n", out.c_str());
+        }
+        return 0;
     }
 
     if (list_keys_mode) {
