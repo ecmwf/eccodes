@@ -29,7 +29,7 @@ sample_grib2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 # This regression explicitly validates matrix-driven PDTN selection,
 # so force-enable it regardless of the parent test environment.
 # ----------------------------------
-#export ECCODES_PDTN_MATRIX_ENABLE=1
+export ECCODES_PDTN_MATRIX_ENABLE=1
 # ----------------------------------
 
 # Sanity: start at PDTN 0
