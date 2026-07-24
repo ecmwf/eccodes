@@ -132,10 +132,16 @@ def parse_args():
         help="Comma-separated list of keys that must NOT be present in the PDT.",
     )
     parser.add_argument(
-        "-p", "--list_pdt_keys",
+        "-l", "--list_pdt_keys",
         default=None,
         metavar="PDTN",
         help="List keys present in the specified PDT number.",
+    )
+    parser.add_argument(
+        "-p", "--print_pdt_name",
+        default=None,
+        metavar="PDTN",
+        help="Print only the name of the specified PDT number.",
     )
     parser.add_argument(
         "--definitions-path",
@@ -458,25 +464,45 @@ def main():
         return
 
     list_pdt_mode = bool(args.list_pdt_keys)
+    print_name_mode = bool(args.print_pdt_name)
     list_keys_mode = args.list_keys or ((args.keys or args.keys_regex) and not args.addkeys and not list_pdt_mode)
 
+    if print_name_mode and (list_pdt_mode or args.list_keys or args.addkeys or args.notInPDT or args.name or args.name_regex or args.keys or args.keys_regex):
+        sys.exit("Error: -p/--print_pdt_name cannot be combined with other listing/filter modes.")
+
     if list_pdt_mode and (args.list_keys or args.addkeys or args.notInPDT or args.name or args.name_regex):
-        sys.exit("Error: -p/--list_pdt_keys cannot be combined with template-listing or --list-keys modes.")
+        sys.exit("Error: -l/--list_pdt_keys cannot be combined with template-listing or --list-keys modes.")
 
     if args.order_by == "key" and not (list_keys_mode or list_pdt_mode):
         sys.exit("Error: --order-by key can only be used together with key listing mode.")
 
     if list_pdt_mode and args.order_by in ("id", "name"):
-        sys.exit("Error: with -p/--list_pdt_keys, --order-by can only be omitted or set to key.")
+        sys.exit("Error: with -l/--list_pdt_keys, --order-by can only be omitted or set to key.")
+
+    if print_name_mode and args.order_by:
+        sys.exit("Error: --order-by is not applicable with -p/--print_pdt_name.")
 
     if (args.keys or args.keys_regex) and args.addkeys and not args.list_keys:
         sys.exit("Error: --keys/--keys-regex are for key listing. Use them without -k/--addkeys, or add --list-keys.")
+
+    if print_name_mode:
+        try:
+            target_pdtn = int(args.print_pdt_name)
+        except ValueError:
+            sys.exit("Error: -p/--print_pdt_name expects an integer PDT number.")
+
+        name = pdt_names.get(target_pdtn, "")
+        if not name:
+            sys.exit(f"Error: name for PDT {target_pdtn} not found in 4.0.table")
+
+        print(name)
+        return
 
     if list_pdt_mode:
         try:
             target_pdtn = int(args.list_pdt_keys)
         except ValueError:
-            sys.exit("Error: -p/--list_pdt_keys expects an integer PDT number.")
+            sys.exit("Error: -l/--list_pdt_keys expects an integer PDT number.")
 
         if target_pdtn not in df.index:
             sys.exit(f"Error: PDT {target_pdtn} not found in keys_in_PDTNS.csv")

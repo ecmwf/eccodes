@@ -32,6 +32,7 @@ struct Options {
     std::string addkeys;
     std::string notInPDT;
     std::string list_pdt_keys;
+    std::string print_pdt_name;
     std::string definitions_path;
     bool list_keys = false;
     bool show_csv = false;
@@ -63,7 +64,8 @@ static void usage(const char* prog)
             "      --name-regex REGEX             Filter template names by regex\n\n"
             "Key listing mode:\n"
             "      --list-keys                    List all known matrix keys\n"
-            "  -p, --list_pdt_keys PDTN           List keys present in a specific PDT\n"
+            "  -l, --list_pdt_keys PDTN           List keys present in a specific PDT\n"
+            "  -p, --print_pdt_name PDTN          Print only the name of a specific PDT\n"
             "      --keys KEYS                    Comma-separated key-name glob patterns\n"
             "      --keys-regex REGEX             Regex filter on key names\n\n"
             "Common options:\n"
@@ -437,7 +439,9 @@ static int parse_options(int argc, char** argv, Options& o)
         {"addkeys", required_argument, 0, 'k'},
         {"n", required_argument, 0, 'n'},
         {"notInPDT", required_argument, 0, 'n'},
-        {"list_pdt_keys", required_argument, 0, 'p'},
+        {"list_pdt_keys", required_argument, 0, 'l'},
+        {"print_pdt_name", required_argument, 0, 'p'},
+        {"print-pdt-name", required_argument, 0, 'p'},
         {"definitions-path", required_argument, 0, 1000},
         {"list-keys", no_argument, 0, 1001},
         {"show-csv", no_argument, 0, 1002},
@@ -454,7 +458,7 @@ static int parse_options(int argc, char** argv, Options& o)
 
     int c = 0;
     int idx = 0;
-    while ((c = getopt_long(argc, argv, "hk:n:p:", long_opts, &idx)) != -1) {
+    while ((c = getopt_long(argc, argv, "hk:n:l:p:", long_opts, &idx)) != -1) {
         switch (c) {
             case 'h':
                 usage(argv[0]);
@@ -465,8 +469,11 @@ static int parse_options(int argc, char** argv, Options& o)
             case 'n':
                 o.notInPDT = optarg ? optarg : "";
                 break;
-            case 'p':
+            case 'l':
                 o.list_pdt_keys = optarg ? optarg : "";
+                break;
+            case 'p':
+                o.print_pdt_name = optarg ? optarg : "";
                 break;
             case 1000:
                 o.definitions_path = optarg ? optarg : "";
@@ -555,22 +562,34 @@ int main(int argc, char** argv)
 
     bool color_enabled = (opt.colour_highlight == "1");
 
-    bool list_keys_mode = opt.list_keys || ((!opt.keys.empty() || !opt.keys_regex.empty()) && opt.addkeys.empty() && opt.list_pdt_keys.empty());
+    bool list_pdt_mode   = !opt.list_pdt_keys.empty();
+    bool print_name_mode = !opt.print_pdt_name.empty();
+    bool list_keys_mode  = opt.list_keys || ((!opt.keys.empty() || !opt.keys_regex.empty()) && opt.addkeys.empty() && opt.list_pdt_keys.empty());
 
-    if (!opt.list_pdt_keys.empty() && (opt.list_keys || !opt.addkeys.empty() || !opt.notInPDT.empty() || !opt.name_glob.empty() || !opt.name_regex.empty())) {
-        fprintf(stderr, "Error: -p/--list_pdt_keys cannot be combined with template-listing or --list-keys modes.\n");
+    if (print_name_mode && (list_pdt_mode || opt.list_keys || !opt.addkeys.empty() || !opt.notInPDT.empty() || !opt.name_glob.empty() || !opt.name_regex.empty() || !opt.keys.empty() || !opt.keys_regex.empty())) {
+        fprintf(stderr, "Error: -p/--print_pdt_name cannot be combined with other listing/filter modes.\n");
+        return 1;
+    }
+
+    if (list_pdt_mode && (opt.list_keys || !opt.addkeys.empty() || !opt.notInPDT.empty() || !opt.name_glob.empty() || !opt.name_regex.empty())) {
+        fprintf(stderr, "Error: -l/--list_pdt_keys cannot be combined with template-listing or --list-keys modes.\n");
         return 1;
     }
 
     if (!opt.order_by.empty() && opt.order_by == "key" && !list_keys_mode) {
-        if (opt.list_pdt_keys.empty()) {
+        if (!list_pdt_mode) {
             fprintf(stderr, "Error: --order-by key can only be used together with key listing mode.\n");
             return 1;
         }
     }
 
-    if (!opt.list_pdt_keys.empty() && !opt.order_by.empty() && opt.order_by != "key") {
-        fprintf(stderr, "Error: with -p/--list_pdt_keys, --order-by can only be omitted or set to key.\n");
+    if (list_pdt_mode && !opt.order_by.empty() && opt.order_by != "key") {
+        fprintf(stderr, "Error: with -l/--list_pdt_keys, --order-by can only be omitted or set to key.\n");
+        return 1;
+    }
+
+    if (print_name_mode && !opt.order_by.empty()) {
+        fprintf(stderr, "Error: --order-by is not applicable with -p/--print_pdt_name.\n");
         return 1;
     }
 
@@ -581,10 +600,27 @@ int main(int argc, char** argv)
         return 1;
     }
 
-    if (!opt.list_pdt_keys.empty()) {
+    if (print_name_mode) {
+        int target_pdtn = 0;
+        if (!parse_int(trim(opt.print_pdt_name), &target_pdtn)) {
+            fprintf(stderr, "Error: -p/--print_pdt_name expects an integer PDT number.\n");
+            return 1;
+        }
+
+        auto it = pdt_names.find(target_pdtn);
+        if (it == pdt_names.end() || it->second.empty()) {
+            fprintf(stderr, "Error: name for PDT %d not found in 4.0.table\n", target_pdtn);
+            return 1;
+        }
+
+        printf("%s\n", it->second.c_str());
+        return 0;
+    }
+
+    if (list_pdt_mode) {
         int target_pdtn = 0;
         if (!parse_int(trim(opt.list_pdt_keys), &target_pdtn)) {
-            fprintf(stderr, "Error: -p/--list_pdt_keys expects an integer PDT number.\n");
+            fprintf(stderr, "Error: -l/--list_pdt_keys expects an integer PDT number.\n");
             return 1;
         }
 
