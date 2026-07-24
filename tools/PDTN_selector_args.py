@@ -9,6 +9,23 @@ import sys
 import pandas as pd
 
 
+def defs_grib2_dir():
+    return os.path.normpath(os.path.join(os.path.dirname(__file__), "..", "definitions", "grib2"))
+
+
+def resolve_data_path(path_value, default_name):
+    if path_value:
+        if os.path.isabs(path_value):
+            return path_value
+        if os.path.exists(path_value):
+            return path_value
+        candidate = os.path.join(os.path.dirname(__file__), path_value)
+        if os.path.exists(candidate):
+            return candidate
+        return os.path.join(defs_grib2_dir(), path_value)
+    return os.path.join(defs_grib2_dir(), default_name)
+
+
 def parse_args():
     parser = argparse.ArgumentParser(
         description=(
@@ -52,6 +69,9 @@ def normalise_presence_matrix(df):
 
 
 def read_matrix(matrix_csv, matrix_pickle):
+    matrix_csv = resolve_data_path(matrix_csv, "keys_in_PDTNS.csv")
+    matrix_pickle = resolve_data_path(matrix_pickle, "keys_in_PDTNS.pickle")
+
     if not os.path.exists(matrix_csv):
         sys.exit(f"Matrix CSV not found: {matrix_csv}")
 
@@ -94,6 +114,8 @@ def parse_keys(raw_keys):
 
 
 def load_aliases(aliases_csv):
+    aliases_csv = resolve_data_path(aliases_csv, "keys_in_PDTNS_aliases.csv") if aliases_csv else aliases_csv
+
     aliases = {}
     if not aliases_csv:
         return aliases
@@ -148,7 +170,7 @@ def template_keyset(df, pdtn):
 
 def load_pdtn_names():
     names = {}
-    base_dir = os.path.join(os.path.dirname(__file__), "eccodes", "definitions", "grib2", "tables")
+    base_dir = os.path.join(defs_grib2_dir(), "tables")
     table_paths = sorted(glob.glob(os.path.join(base_dir, "*", "4.0.table")))
 
     for path in table_paths:
