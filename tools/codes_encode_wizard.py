@@ -45,6 +45,14 @@ SCENARIOS = {
             "Run codes_pdt_guard.py to enforce missing-key limits.",
         ],
     },
+    "satellite": {
+        "description": "Satellite product",
+        "keys": ["satelliteNumber"],
+        "notes": [
+            "satelliteNumber drives satellite template selection.",
+            "Add instrument/channel metadata after PDT switch when needed.",
+        ],
+    },
     "chemistry": {
         "description": "Atmospheric chemistry constituent",
         "keys": ["constituentType"],
@@ -82,19 +90,21 @@ SCENARIOS = {
     },
     "wave-spectra": {
         "description": "Wave 2D spectra with explicit frequencies and directions",
-        "keys": ["numberOfWaveDirections", "numberOfWaveFrequencies"],
+        "keys": ["numberOfWaveDirections"],
         "notes": [
             "For this recommended key set, key order does not change the target template.",
             "This key set targets wave 2D spectra templates (typically PDT 99).",
+            "numberOfWaveFrequencies is an equivalent alternative trigger.",
             "Set direction/frequency arrays consistently after template switch.",
         ],
     },
     "wave-spectra-ensemble": {
         "description": "Ensemble wave 2D spectra with explicit frequencies and directions",
-        "keys": ["perturbationNumber", "numberOfWaveDirections", "numberOfWaveFrequencies"],
+        "keys": ["perturbationNumber", "numberOfWaveDirections"],
         "notes": [
             "For this recommended key set, key order does not change the target template.",
             "This commonly routes to PDT 100 for ensemble wave 2D spectra.",
+            "numberOfWaveFrequencies is an equivalent alternative trigger to numberOfWaveDirections.",
         ],
     },
     "waves": {
@@ -109,6 +119,8 @@ SCENARIOS = {
 
 
 def parse_args():
+    scenario_names = list(SCENARIOS.keys())
+
     parser = argparse.ArgumentParser(
         description=(
             "Interactive/non-interactive wizard that maps encoding intent to a "
@@ -117,7 +129,7 @@ def parse_args():
     )
     parser.add_argument(
         "--scenario",
-        choices=sorted(SCENARIOS.keys()),
+        choices=scenario_names,
         help="Scenario name. If omitted, interactive selection is used.",
     )
     parser.add_argument(
@@ -135,7 +147,7 @@ def parse_args():
 
 
 def choose_interactive():
-    names = sorted(SCENARIOS.keys())
+    names = list(SCENARIOS.keys())
     print("Select an encoding scenario:")
     for idx, name in enumerate(names, start=1):
         print(f"  {idx}. {name} - {SCENARIOS[name]['description']}")

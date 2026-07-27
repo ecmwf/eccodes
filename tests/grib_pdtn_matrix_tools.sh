@@ -20,6 +20,7 @@ out_wizard_wave_json="${label}.wizard.wave.json"
 out_wizard_aerosol_json="${label}.wizard.aerosol.json"
 out_wizard_chemical_optical_json="${label}.wizard.chemical_optical.json"
 out_wizard_chemical_srcsink_json="${label}.wizard.chemical_srcsink.json"
+out_wizard_satellite_json="${label}.wizard.satellite.json"
 
 script_dir="${proj_dir}/tools"
 trace_py="${script_dir}/codes_pdt_trace.py"
@@ -75,6 +76,18 @@ assert "numberOfRadarSitesUsed" in doc["recommended_keys"]
 assert "commands" in doc and "guard" in doc["commands"]
 PY
 
+python3 "$wizard_py" --scenario satellite --json > "$out_wizard_satellite_json"
+python3 - "$out_wizard_satellite_json" <<'PY'
+import json
+import sys
+
+with open(sys.argv[1], encoding="utf-8") as handle:
+    doc = json.load(handle)
+
+assert doc["scenario"] == "satellite"
+assert "satelliteNumber" in doc["recommended_keys"]
+PY
+
 python3 "$wizard_py" --scenario wave-spectra --json > "$out_wizard_wave_json"
 python3 - "$out_wizard_wave_json" <<'PY'
 import json
@@ -84,8 +97,10 @@ with open(sys.argv[1], encoding="utf-8") as handle:
     doc = json.load(handle)
 
 assert doc["scenario"] == "wave-spectra"
-assert "numberOfWaveDirections" in doc["recommended_keys"]
-assert "numberOfWaveFrequencies" in doc["recommended_keys"]
+assert (
+    "numberOfWaveDirections" in doc["recommended_keys"] or
+    "numberOfWaveFrequencies" in doc["recommended_keys"]
+)
 PY
 
 python3 "$wizard_py" --scenario aerosol --json > "$out_wizard_aerosol_json"
@@ -127,5 +142,5 @@ assert "constituentType" in doc["recommended_keys"]
 assert "sourceSinkChemicalPhysicalProcess" in doc["recommended_keys"]
 PY
 
-rm -f "$out_trace" "$out_diff" "$out_preflight" "$out_wizard" "$out_wizard_json" "$out_wizard_wave_json" "$out_wizard_aerosol_json" "$out_wizard_chemical_optical_json" "$out_wizard_chemical_srcsink_json"
+rm -f "$out_trace" "$out_diff" "$out_preflight" "$out_wizard" "$out_wizard_json" "$out_wizard_wave_json" "$out_wizard_aerosol_json" "$out_wizard_chemical_optical_json" "$out_wizard_chemical_srcsink_json" "$out_wizard_satellite_json"
 exit 0
