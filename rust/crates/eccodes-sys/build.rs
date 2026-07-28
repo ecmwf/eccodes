@@ -464,6 +464,7 @@ const ALLOWED_FUNCTIONS: &[&str] = &[
     "codes_bufr_handle_new_from_file",
     "codes_handle_new_from_message",
     "codes_handle_new_from_message_copy",
+    "codes_grib_handle_new_from_multi_message",
     "codes_handle_new_from_samples",
     "codes_grib_handle_new_from_samples",
     "codes_bufr_handle_new_from_samples",
