@@ -12,5 +12,6 @@
 #![allow(clippy::unreadable_literal)]
 #![allow(clippy::pub_underscore_fields)]
 #![allow(clippy::items_after_statements)]
+#![allow(clippy::use_self)]
 
 include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
