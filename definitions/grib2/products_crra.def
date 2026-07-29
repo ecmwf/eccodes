@@ -91,10 +91,12 @@ concept marsType(unknown) {
    }
 }
 
-# get the values from the 1st most outer loop which matter
-meta outerLoopLengthOfTimeRange element(lengthOfTimeRange, 0);
-meta outerLoopTypeOfStatisticalProcessing element(typeOfStatisticalProcessing, 0);
-meta outerLoopTypeOfTimeIncrement element(typeOfTimeIncrement, 0);
+if (defined(lengthOfTimeRange)) {
+  # get the values from the 1st most outer loop which matter for moda/dame
+  meta outerLoopLengthOfTimeRange element(lengthOfTimeRange, 0);
+  meta outerLoopTypeOfStatisticalProcessing element(typeOfStatisticalProcessing, 0);
+  meta outerLoopTypeOfTimeIncrement element(typeOfTimeIncrement, 0);
+}
 
 # See GRIB-205 re no_copy
 # Cannot use typeOfProcessedData for stream. See GRIB-911
