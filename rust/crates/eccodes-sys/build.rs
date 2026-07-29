@@ -60,11 +60,11 @@ fn build_libaec_if_enabled(
     install_dir: &Path,
     num_jobs: &str,
 ) -> Option<PathBuf> {
+    const AEC_REPO: &str = "https://gitlab.dkrz.de/k202009/libaec.git";
+    const AEC_TAG: &str = "v1.1.4";
     if !cfg!(feature = "aec") {
         return None;
     }
-    const AEC_REPO: &str = "https://gitlab.dkrz.de/k202009/libaec.git";
-    const AEC_TAG: &str = "v1.1.4";
     let aec_src = bindman_utils::git_clone(AEC_REPO, AEC_TAG, &src_dir.join("libaec"));
     Some(build_libaec(build_dir, install_dir, &aec_src, num_jobs))
 }
