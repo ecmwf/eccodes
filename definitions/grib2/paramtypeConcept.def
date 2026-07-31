@@ -193,6 +193,146 @@
 'chemical' = {productDefinitionTemplateNumber=153;}
 'base' = {productDefinitionTemplateNumber=154;}
 'base' = {productDefinitionTemplateNumber=155;}
+'optical' = {productDefinitionTemplateNumber=156; MTG2Switch=1;}
+'chemical_optical' = {productDefinitionTemplateNumber=156; MTG2Switch=2;}
+'optical' = {productDefinitionTemplateNumber=157; MTG2Switch=1;}
+'chemical_optical' = {productDefinitionTemplateNumber=157; MTG2Switch=2;}
+'optical' = {productDefinitionTemplateNumber=158; MTG2Switch=1;}
+'chemical_optical' = {productDefinitionTemplateNumber=158; MTG2Switch=2;}
+'optical' = {productDefinitionTemplateNumber=159; MTG2Switch=1;}
+'chemical_optical' = {productDefinitionTemplateNumber=159; MTG2Switch=2;}
+'wave' = {productDefinitionTemplateNumber=160; MTG2Switch=1;}
+'wave' = {productDefinitionTemplateNumber=160; MTG2Switch=2;}
+'wave' = {productDefinitionTemplateNumber=161; MTG2Switch=1;}
+'wave' = {productDefinitionTemplateNumber=161; MTG2Switch=2;}
+'wave' = {productDefinitionTemplateNumber=162; MTG2Switch=1;}
+'wave' = {productDefinitionTemplateNumber=162; MTG2Switch=2;}
+'wave' = {productDefinitionTemplateNumber=163; MTG2Switch=1;}
+'wave' = {productDefinitionTemplateNumber=163; MTG2Switch=2;}
+'wave' = {productDefinitionTemplateNumber=164; MTG2Switch=1;}
+'wave' = {productDefinitionTemplateNumber=164; MTG2Switch=2;}
+'wave' = {productDefinitionTemplateNumber=165; MTG2Switch=1;}
+'wave' = {productDefinitionTemplateNumber=165; MTG2Switch=2;}
+'base' = {productDefinitionTemplateNumber=166; MTG2Switch=1;}
+'chemical' = {productDefinitionTemplateNumber=166; MTG2Switch=2;}
+'base' = {productDefinitionTemplateNumber=167; MTG2Switch=1;}
+'chemical' = {productDefinitionTemplateNumber=167; MTG2Switch=2;}
+'base' = {productDefinitionTemplateNumber=168; MTG2Switch=1;}
+'chemical' = {productDefinitionTemplateNumber=168; MTG2Switch=2;}
+'optical' = {productDefinitionTemplateNumber=169; MTG2Switch=1;}
+'chemical_optical' = {productDefinitionTemplateNumber=169; MTG2Switch=2;}
+'base' = {productDefinitionTemplateNumber=170; MTG2Switch=1;}
+'chemical' = {productDefinitionTemplateNumber=170; MTG2Switch=2;}
+'base' = {productDefinitionTemplateNumber=171; MTG2Switch=1;}
+'chemical' = {productDefinitionTemplateNumber=171; MTG2Switch=2;}
+'optical' = {productDefinitionTemplateNumber=172; MTG2Switch=1;}
+'chemical_optical' = {productDefinitionTemplateNumber=172; MTG2Switch=2;}
+'base' = {productDefinitionTemplateNumber=173; MTG2Switch=1;}
+'chemical' = {productDefinitionTemplateNumber=173; MTG2Switch=2;}
+'base' = {productDefinitionTemplateNumber=174; MTG2Switch=1;}
+'chemical' = {productDefinitionTemplateNumber=174; MTG2Switch=2;}
+'optical' = {productDefinitionTemplateNumber=175; MTG2Switch=1;}
+'chemical_optical' = {productDefinitionTemplateNumber=175; MTG2Switch=2;}
+'optical' = {productDefinitionTemplateNumber=176; MTG2Switch=1;}
+'chemical_optical' = {productDefinitionTemplateNumber=176; MTG2Switch=2;}
+'base' = {productDefinitionTemplateNumber=177; MTG2Switch=1;}
+'chemical' = {productDefinitionTemplateNumber=177; MTG2Switch=2;}
+'base' = {productDefinitionTemplateNumber=178; MTG2Switch=1;}
+'chemical' = {productDefinitionTemplateNumber=178; MTG2Switch=2;}
+'base' = {productDefinitionTemplateNumber=179; MTG2Switch=1;}
+'chemical' = {productDefinitionTemplateNumber=179; MTG2Switch=2;}
+'optical' = {productDefinitionTemplateNumber=180; MTG2Switch=1;}
+'chemical_optical' = {productDefinitionTemplateNumber=180; MTG2Switch=2;}
+'base' = {productDefinitionTemplateNumber=181; MTG2Switch=1;}
+'chemical' = {productDefinitionTemplateNumber=181; MTG2Switch=2;}
+'base' = {productDefinitionTemplateNumber=182; MTG2Switch=1;}
+'chemical' = {productDefinitionTemplateNumber=182; MTG2Switch=2;}
+'optical' = {productDefinitionTemplateNumber=183; MTG2Switch=1;}
+'chemical_optical' = {productDefinitionTemplateNumber=183; MTG2Switch=2;}
+'base' = {productDefinitionTemplateNumber=184; MTG2Switch=1;}
+'chemical' = {productDefinitionTemplateNumber=184; MTG2Switch=2;}
+'base' = {productDefinitionTemplateNumber=185; MTG2Switch=1;}
+'chemical' = {productDefinitionTemplateNumber=185; MTG2Switch=2;}
+'optical' = {productDefinitionTemplateNumber=186; MTG2Switch=1;}
+'chemical_optical' = {productDefinitionTemplateNumber=186; MTG2Switch=2;}
+'optical' = {productDefinitionTemplateNumber=187; MTG2Switch=1;}
+'chemical_optical' = {productDefinitionTemplateNumber=187; MTG2Switch=2;}
+'base' = {productDefinitionTemplateNumber=188; MTG2Switch=1;}
+'chemical' = {productDefinitionTemplateNumber=188; MTG2Switch=2;}
+'base' = {productDefinitionTemplateNumber=189; MTG2Switch=1;}
+'chemical' = {productDefinitionTemplateNumber=189; MTG2Switch=2;}
+'base' = {productDefinitionTemplateNumber=190; MTG2Switch=1;}
+'chemical' = {productDefinitionTemplateNumber=190; MTG2Switch=2;}
+'optical' = {productDefinitionTemplateNumber=191; MTG2Switch=1;}
+'chemical_optical' = {productDefinitionTemplateNumber=191; MTG2Switch=2;}
+'base' = {productDefinitionTemplateNumber=192; MTG2Switch=1;}
+'chemical' = {productDefinitionTemplateNumber=192; MTG2Switch=2;}
+'base' = {productDefinitionTemplateNumber=193; MTG2Switch=1;}
+'chemical' = {productDefinitionTemplateNumber=193; MTG2Switch=2;}
+'optical' = {productDefinitionTemplateNumber=194; MTG2Switch=1;}
+'chemical_optical' = {productDefinitionTemplateNumber=194; MTG2Switch=2;}
+'base' = {productDefinitionTemplateNumber=195; MTG2Switch=1;}
+'chemical' = {productDefinitionTemplateNumber=195; MTG2Switch=2;}
+'base' = {productDefinitionTemplateNumber=196; MTG2Switch=1;}
+'chemical' = {productDefinitionTemplateNumber=196; MTG2Switch=2;}
+'optical' = {productDefinitionTemplateNumber=197; MTG2Switch=1;}
+'chemical_optical' = {productDefinitionTemplateNumber=197; MTG2Switch=2;}
+'optical' = {productDefinitionTemplateNumber=198; MTG2Switch=1;}
+'chemical_optical' = {productDefinitionTemplateNumber=198; MTG2Switch=2;}
+# Derived products of post-processed forecasts
+'base' = {productDefinitionTemplateNumber=199;}
+'base' = {productDefinitionTemplateNumber=200;}
+'base' = {productDefinitionTemplateNumber=201;}
+'base' = {productDefinitionTemplateNumber=202;}
+# Satellite product with channel, bandwidth and polarisation
+'satellite' = {productDefinitionTemplateNumber=203;}
+'satellite' = {productDefinitionTemplateNumber=204;}
+'satellite' = {productDefinitionTemplateNumber=205;}
+'satellite' = {productDefinitionTemplateNumber=206;}
+'satellite' = {productDefinitionTemplateNumber=207;}
+#
+'base' = {productDefinitionTemplateNumber=208;}
+'base' = {productDefinitionTemplateNumber=209;}
+#
+'base' = {productDefinitionTemplateNumber=210; MTG2Switch=1;}
+'chemical' = {productDefinitionTemplateNumber=210; MTG2Switch=2;}
+'base' = {productDefinitionTemplateNumber=211; MTG2Switch=1;}
+'chemical' = {productDefinitionTemplateNumber=211; MTG2Switch=2;}
+'base' = {productDefinitionTemplateNumber=212; MTG2Switch=1;}
+'chemical' = {productDefinitionTemplateNumber=212; MTG2Switch=2;}
+'base' = {productDefinitionTemplateNumber=213; MTG2Switch=1;}
+'chemical' = {productDefinitionTemplateNumber=213; MTG2Switch=2;}
+'base' = {productDefinitionTemplateNumber=214; MTG2Switch=1;}
+'chemical' = {productDefinitionTemplateNumber=214; MTG2Switch=2;}
+'base' = {productDefinitionTemplateNumber=215; MTG2Switch=1;}
+'chemical' = {productDefinitionTemplateNumber=215; MTG2Switch=2;}
+'base' = {productDefinitionTemplateNumber=216; MTG2Switch=1;}
+'chemical' = {productDefinitionTemplateNumber=216; MTG2Switch=2;}
+'base' = {productDefinitionTemplateNumber=217; MTG2Switch=1;}
+'chemical' = {productDefinitionTemplateNumber=217; MTG2Switch=2;}
+'base' = {productDefinitionTemplateNumber=218; MTG2Switch=1;}
+'chemical' = {productDefinitionTemplateNumber=218; MTG2Switch=2;}
+'base' = {productDefinitionTemplateNumber=219; MTG2Switch=1;}
+'chemical' = {productDefinitionTemplateNumber=219; MTG2Switch=2;}
+'base' = {productDefinitionTemplateNumber=220; MTG2Switch=1;}
+'chemical' = {productDefinitionTemplateNumber=220; MTG2Switch=2;}
+'base' = {productDefinitionTemplateNumber=221; MTG2Switch=1;}
+'chemical' = {productDefinitionTemplateNumber=221; MTG2Switch=2;}
+#
+'base' = {productDefinitionTemplateNumber=222;}
+'base' = {productDefinitionTemplateNumber=223;}
+#
+'base' = {productDefinitionTemplateNumber=224; MTG2Switch=1;}
+'chemical' = {productDefinitionTemplateNumber=224; MTG2Switch=2;}
+'base' = {productDefinitionTemplateNumber=225; MTG2Switch=1;}
+'chemical' = {productDefinitionTemplateNumber=225; MTG2Switch=2;}
+'base' = {productDefinitionTemplateNumber=226; MTG2Switch=1;}
+'chemical' = {productDefinitionTemplateNumber=226; MTG2Switch=2;}
+'base' = {productDefinitionTemplateNumber=227; MTG2Switch=1;}
+'chemical' = {productDefinitionTemplateNumber=227; MTG2Switch=2;}
+'base' = {productDefinitionTemplateNumber=228; MTG2Switch=1;}
+'chemical' = {productDefinitionTemplateNumber=228; MTG2Switch=2;}
+#
 'base' = {productDefinitionTemplateNumber=254;}
 'base' = {productDefinitionTemplateNumber=311;}
 'base' = {productDefinitionTemplateNumber=1000;}
