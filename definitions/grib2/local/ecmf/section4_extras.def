@@ -14,3 +14,8 @@ if (modelName isnot "unknown") {
       }
    }
 }
+
+if ( defined(marsStream) && (marsStream == 1252 || marsStream == 1255)) {
+ alias configuration = modelVersion;
+ alias mars.configuration = modelVersion;
+}
