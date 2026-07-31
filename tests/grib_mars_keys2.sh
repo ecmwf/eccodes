@@ -31,7 +31,7 @@ grib_check_key_equals $tempGrib marsClass:i,marsType:i,marsStream:i '18 17 1029'
 
 # Check unalias
 # -----------------
-${tools_dir}/grib_set -s stream=gfas,type=ga $grib2_sample $tempGrib
+${tools_dir}/grib_set -s stream=gfas,type=ga,backgroundProcess=144,generatingProcessIdentifier=1 $grib2_sample $tempGrib
 ${tools_dir}/grib_ls -jm $tempGrib > $tempOut
 cat > $tempRef << EOF
 { "messages" : [ 
@@ -46,14 +46,15 @@ cat > $tempRef << EOF
     "step": 0,
     "levelist": 1000,
     "levtype": "pl",
-    "param": 130
+    "param": 130,
+    "configuration": 1.2
   }
 ]}
 EOF
 diff $tempRef $tempOut
 
 # This combo unaliases mars.levelist and mars.step
-${tools_dir}/grib_set -s stream=gfas,type=gsd $grib2_sample $tempGrib
+${tools_dir}/grib_set -s stream=gfas,type=gsd,backgroundProcess=144,generatingProcessIdentifier=1 $grib2_sample $tempGrib
 ${tools_dir}/grib_ls -jm $tempGrib > $tempOut
 cat > $tempRef << EOF
 { "messages" : [ 
@@ -65,7 +66,8 @@ cat > $tempRef << EOF
     "class": "od",
     "type": "gsd",
     "stream": "gfas",
-    "param": 130
+    "param": 130,
+    "configuration": 1.2
   }
 ]}
 EOF
