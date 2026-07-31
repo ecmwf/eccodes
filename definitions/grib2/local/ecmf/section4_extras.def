@@ -15,6 +15,7 @@ if (modelName isnot "unknown") {
    }
 }
 
+# 1252 gfas / 1255 / gfra
 if ( defined(marsStream) && (marsStream == 1252 || marsStream == 1255)) {
  alias configuration = modelVersion;
  alias mars.configuration = modelVersion;
