@@ -36,9 +36,9 @@
 # 1122 eefo    #
 ################
 #'none'  = {marsStream=1122; numberOfTimeRanges=1; true=is_one_of(marsType,47,48,80,81,82,83);}
-'none'  = {marsStream=1120; numberOfTimeRanges=1; true=is_one_of(type,'fcmean','fcmax','fcmin','fcstdev','taem','taes','fc','es','em');}
-'none'  = {marsStream=1121; numberOfTimeRanges=1; true=is_one_of(type,'fcmean','fcmax','fcmin','fcstdev','taem','taes','fc','es','em');}
-'none'  = {marsStream=1122; numberOfTimeRanges=1; true=is_one_of(type,'fcmean','fcmax','fcmin','fcstdev','taem','taes','fc','es','em');}
+'none'  = {marsStream=1120; numberOfTimeRanges=1; true=is_one_of(type,'fcmean','fcmax','fcmin','fcstdev','taem','taes');}
+'none'  = {marsStream=1121; numberOfTimeRanges=1; true=is_one_of(type,'fcmean','fcmax','fcmin','fcstdev','taem','taes');}
+'none'  = {marsStream=1122; numberOfTimeRanges=1; true=is_one_of(type,'fcmean','fcmax','fcmin','fcstdev','taem','taes');}
 ## accumulations
 # 24 hourly time unit
 '24h'  = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange=24; class=1; stream=1035; type=30;}
