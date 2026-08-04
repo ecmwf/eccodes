@@ -1,1 +1,7 @@
-alias mars.step   = stepRange;
+if ( !defined(MTG2Switch) || MTG2Switch == 0 ){
+ alias mars.step = stepRange;
+}
+else {
+ alias mars.step = endStep;
+}
+

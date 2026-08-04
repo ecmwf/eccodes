@@ -1,5 +1,10 @@
 #assert(local=30)
-alias mars.step   = stepRange;
+if ( !defined(MTG2Switch) || MTG2Switch == 0 ){
+ alias mars.step = stepRange;
+}
+else {
+ alias mars.step = endStep;
+}
 alias mars.date   = referenceDate;
 alias mars.hdate  = dataDate;
 alias mars.number = perturbationNumber;
