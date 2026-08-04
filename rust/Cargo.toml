@@ -9,6 +9,6 @@ repository   = "https://github.com/ecmwf/eccodes"
 rust-version = "1.90"
 
 [workspace.dependencies]
-bindman-utils = { git = "ssh://git@github.com/ecmwf/bindman.git", rev = "47edf68" }
+bindman-utils = { git = "ssh://git@github.com/ecmwf/bindman.git", rev = "11c6a7e" }
 
 eckit-sys = { git = "ssh://git@github.com/ecmwf/eckit.git", branch = "rust-bindings", default-features = false }
