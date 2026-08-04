@@ -35,6 +35,8 @@ fn main() {
 /// Build using system-installed eccodes via `CMake` `find_package`
 #[cfg(feature = "system")]
 fn build_system(out_dir: &Path) {
+    // Minimum supported system version, independent of the crate version
+    // (which tracks the vendored eccodes release).
     let (root, include, lib_dir) = bindman_utils::cmake_find_package("eccodes", "2.20.0");
 
     println!("cargo:rustc-link-search=native={}", lib_dir.display());
@@ -296,7 +298,7 @@ fn build_vendored(out_dir: &Path) {
     const ECBUILD_TAG: &str = "3.13.1";
 
     const ECCODES_REPO: &str = "https://github.com/ecmwf/eccodes.git";
-    const ECCODES_TAG: &str = "2.47.0";
+    const ECCODES_TAG: &str = env!("CARGO_PKG_VERSION");
 
     let src_dir = out_dir.join("src");
     let build_dir = out_dir.join("build");
