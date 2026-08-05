@@ -14,27 +14,27 @@ constant isGridded = true;
 unsigned[4] numberOfHorizontalPoints : dump ;
 
 # Basic angle of the initial production domain
-unsigned[4] basicAngleOfTheInitialProductionDomain = 0;
+unsigned[4] basicAngleOfTheInitialProductionDomain = 0 : dump;
 
 # Subdivisions of basic angle used to define extreme longitudes and latitudes
-unsigned[4] subdivisionsOfBasicAngle = missing() : can_be_missing;
+unsigned[4] subdivisionsOfBasicAngle = missing() : dump,can_be_missing;
 
 # Latitude of first grid point
-signed[4] latitudeOfFirstGridPoint : edition_specific ;
+signed[4] latitudeOfFirstGridPoint : dump,edition_specific;
 alias La1 = latitudeOfFirstGridPoint;
 
 # Longitude of first grid point
-unsigned[4] longitudeOfFirstGridPoint : edition_specific;
+unsigned[4] longitudeOfFirstGridPoint : dump,edition_specific;
 alias Lo1 = longitudeOfFirstGridPoint;
 
 include "grib2/templates/template.3.scanning_mode.def"
 
 # Latitude of last grid point
-signed[4] latitudeOfLastGridPoint : edition_specific;
+signed[4] latitudeOfLastGridPoint : dump,edition_specific;
 alias La2  = latitudeOfLastGridPoint;
 
 # Longitude of last grid point
-unsigned[4] longitudeOfLastGridPoint: edition_specific ;
+unsigned[4] longitudeOfLastGridPoint: dump,edition_specific;
 alias Lo2 =  longitudeOfLastGridPoint;
 
 # Type of horizontal line

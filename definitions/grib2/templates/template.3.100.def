@@ -28,7 +28,7 @@ meta geography.longitudeOfThePolePointInDegrees g2lon(longitudeOfThePolePoint);
 unsigned[4] longitudeOfFirstDiamondCentreLine : dump ;
 meta geography.longitudeOfFirstDiamondCentreLineInDegrees g2lon(longitudeOfFirstDiamondCentreLine);
 
-codetable[1] gridPointPosition ('3.8.table',masterDir,localDir);
+codetable[1] gridPointPosition ('3.8.table',masterDir,localDir) : dump;
 
 flags[1] numberingOrderOfDiamonds 'grib2/tables/[tablesVersion]/3.9.table';
 

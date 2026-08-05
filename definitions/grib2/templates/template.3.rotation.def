@@ -1,11 +1,11 @@
 # (C) Copyright 2005- ECMWF.
 
 # Latitude of the southern pole of projection
-signed[4] latitudeOfSouthernPole : no_copy;
+signed[4] latitudeOfSouthernPole : dump,no_copy;
 alias latitudeOfTheSouthernPoleOfProjection=latitudeOfSouthernPole;
 
 # Longitude of the southern pole of projection
-unsigned[4] longitudeOfSouthernPole : no_copy;
+unsigned[4] longitudeOfSouthernPole : dump,no_copy;
 alias longitudeOfTheSouthernPoleOfProjection=longitudeOfSouthernPole;
 
 meta geography.latitudeOfSouthernPoleInDegrees   scale(latitudeOfSouthernPole,one,grib2divider,truncateDegrees) : dump;

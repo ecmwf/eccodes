@@ -19,11 +19,11 @@ alias pentagonalResolutionParameterM = M;
 alias geography.M=M;
 
 # Representation type indicating the method used to define the norm
-codetable[1] spectralType ('3.6.table',masterDir,localDir) = 1 : no_copy;
+codetable[1] spectralType ('3.6.table',masterDir,localDir) = 1 : dump,no_copy;
 alias spectralDataRepresentationType=spectralType;
 
 # Representation mode indicating the order of the coefficients
-codetable[1] spectralMode ('3.7.table',masterDir,localDir) = 1 : no_copy;
+codetable[1] spectralMode ('3.7.table',masterDir,localDir) = 1 : dump,no_copy;
 alias spectralDataRepresentationMode=spectralMode;
 
 constant isGridded = false;

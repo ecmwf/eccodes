@@ -3,12 +3,12 @@
 include "grib2/templates/template.3.grid.def"
 
 # Di - i direction increment
-unsigned[4] iDirectionIncrement : can_be_missing,edition_specific;
+unsigned[4] iDirectionIncrement : dump,can_be_missing,edition_specific;
 alias Di = iDirectionIncrement;
 alias Dx = iDirectionIncrement;
 
 # Dj - j direction increment
-unsigned[4] jDirectionIncrement : can_be_missing,edition_specific;
+unsigned[4] jDirectionIncrement : dump,can_be_missing,edition_specific;
 alias Dj = jDirectionIncrement;
 alias Dy = jDirectionIncrement;
 

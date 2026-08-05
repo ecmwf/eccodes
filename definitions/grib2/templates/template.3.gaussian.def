@@ -3,7 +3,7 @@
 include "grib2/templates/template.3.grid.def"
 
 #  Di - i direction increment
-unsigned[4] iDirectionIncrement : can_be_missing;
+unsigned[4] iDirectionIncrement : dump,can_be_missing;
 alias Di = iDirectionIncrement;
 
 #  N - number of parallels between a pole and the equator

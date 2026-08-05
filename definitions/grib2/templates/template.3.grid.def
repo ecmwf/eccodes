@@ -16,7 +16,7 @@ alias geography.Ni=Ni;
 alias geography.Nj=Nj;
 
 # Basic angle of the initial production domain
-unsigned[4] basicAngleOfTheInitialProductionDomain = 0;
+unsigned[4] basicAngleOfTheInitialProductionDomain = 0 : dump;
 transient mBasicAngle=basicAngleOfTheInitialProductionDomain*oneMillionConstant;
 transient angleMultiplier  = 1;
 transient mAngleMultiplier = 1000000;
@@ -29,7 +29,7 @@ when (basicAngleOfTheInitialProductionDomain == 0) {
 }
 
 # Subdivisions of basic angle used to define extreme longitudes and latitudes, and direction increments
-unsigned[4] subdivisionsOfBasicAngle = missing() : can_be_missing;
+unsigned[4] subdivisionsOfBasicAngle = missing() : dump,can_be_missing;
 
 transient angleDivisor = 1000000;
 when (missing(subdivisionsOfBasicAngle) || subdivisionsOfBasicAngle == 0) {
@@ -39,20 +39,20 @@ when (missing(subdivisionsOfBasicAngle) || subdivisionsOfBasicAngle == 0) {
 }
 
 #  La1 - latitude of first grid point
-signed[4] latitudeOfFirstGridPoint : edition_specific ;
+signed[4] latitudeOfFirstGridPoint : dump,edition_specific;
 alias La1 = latitudeOfFirstGridPoint;
 #meta latitudeOfFirstGridPointInMicrodegrees times(latitudeOfFirstGridPoint,mAngleMultiplier,angleDivisor) : no_copy;
 
 # Lo1 - longitude of first grid point
-signed[4] longitudeOfFirstGridPoint ;
+signed[4] longitudeOfFirstGridPoint  : dump;
 alias Lo1 = longitudeOfFirstGridPoint;
 
 include "grib2/templates/template.3.resolution_flags.def"
 
 # La2 - latitude of last grid point
-signed[4] latitudeOfLastGridPoint : edition_specific;
+signed[4] latitudeOfLastGridPoint : dump,edition_specific;
 alias La2 = latitudeOfLastGridPoint;
 
 # Lo2 - longitude of last grid point
-signed[4] longitudeOfLastGridPoint : edition_specific ;
+signed[4] longitudeOfLastGridPoint : dump,edition_specific;
 alias Lo2 = longitudeOfLastGridPoint;

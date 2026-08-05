@@ -14,7 +14,7 @@ alias geography.Ni=Ni;
 alias geography.Nj=Nj;
 
 # Basic angle of the initial production domain
-unsigned[4] basicAngleOfTheInitialProductionDomain = 0;
+unsigned[4] basicAngleOfTheInitialProductionDomain = 0 : dump;
 transient mBasicAngle=basicAngleOfTheInitialProductionDomain*oneMillionConstant;
 transient angleMultiplier  = 1;
 transient mAngleMultiplier = 1000000;
@@ -27,7 +27,7 @@ when (basicAngleOfTheInitialProductionDomain == 0) {
 }
 
 # Subdivisions of basic angle used to define extreme longitudes and latitudes, and direction increments
-unsigned[4] subdivisionsOfBasicAngle = missing() : can_be_missing;
+unsigned[4] subdivisionsOfBasicAngle = missing() : dump,can_be_missing;
 
 transient angleDivisor = 1000000;
 when (missing(subdivisionsOfBasicAngle) || subdivisionsOfBasicAngle == 0) {
@@ -41,9 +41,9 @@ include "grib2/templates/template.3.resolution_flags.def"
 include "grib2/templates/template.3.scanning_mode.def"
 
 longitudesList list(Ni) {
-   unsigned[4] longitude;
+   unsigned[4] longitude : dump;
 }
 
 latitudesList list(Nj) {
-   signed[4] latitude;
+   signed[4] latitude : dump;
 }

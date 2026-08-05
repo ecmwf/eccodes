@@ -17,10 +17,10 @@ alias numberOfPointsAlongAMeridian = Nj;
 alias geography.Ny=Ny;
 
 # Lap - latitude of sub-satellite point
-signed[4] latitudeOfSubSatellitePoint;
+signed[4] latitudeOfSubSatellitePoint : dump;
 
 # Lop - longitude of sub-satellite point
-signed[4] longitudeOfSubSatellitePoint;
+signed[4] longitudeOfSubSatellitePoint : dump;
 
 meta geography.latitudeOfSubSatellitePointInDegrees   scale(latitudeOfSubSatellitePoint,one,grib2divider,truncateDegrees) : dump;
 meta geography.longitudeOfSubSatellitePointInDegrees   scale(longitudeOfSubSatellitePoint,one,grib2divider,truncateDegrees) : dump;
@@ -37,13 +37,13 @@ alias geography.dy=dy;
 
 # Xp - X-coordinate of sub-satellite point
 # (in units of 10^-3 grid length expressed as an integer)
-unsigned[4] Xp : no_copy;
+unsigned[4] Xp : dump,no_copy;
 meta geography.XpInGridLengths scale(Xp,one,thousand) : dump;
 alias xCoordinateOfSubSatellitePoint=XpInGridLengths;
 
 # Yp - Y-coordinate of sub-satellite point
 # (in units of 10^-3 grid length expressed as an integer)
-unsigned[4] Yp : no_copy;
+unsigned[4] Yp : dump,no_copy;
 meta geography.YpInGridLengths scale(Yp,one,thousand) : dump;
 alias yCoordinateOfSubSatellitePoint=YpInGridLengths;
 
@@ -51,13 +51,13 @@ include "grib2/templates/template.3.scanning_mode.def"
 
 # Orientation of the grid; i.e. the angle between the increasing Y-axis and the meridian
 # of the sub-satellite point in the direction of increasing latitude
-signed[4] orientationOfTheGrid : edition_specific;
+signed[4] orientationOfTheGrid : dump,edition_specific;
 meta geography.orientationOfTheGridInDegrees
     scale(orientationOfTheGrid,oneConstant,grib2divider,truncateDegrees) : dump;
 
 # Nr - altitude of the camera from the Earth's centre, measured in units of the Earth's
 # (equatorial) radius multiplied by a scale factor of 10^6
-unsigned[4] Nr : edition_specific,can_be_missing,no_copy;
+unsigned[4] Nr : dump,edition_specific,can_be_missing,no_copy;
 alias altitudeOfTheCameraFromTheEarthsCentreMeasuredInUnitsOfTheEarthsRadius = Nr;
 meta geography.NrInRadiusOfEarth scale(Nr,oneConstant,oneMillionConstant,truncateDegrees) : dump;
 alias NrInRadiusOfEarthScaled=NrInRadiusOfEarth;
