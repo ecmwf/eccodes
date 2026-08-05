@@ -6,39 +6,39 @@ include "grib2/templates/template.5.packing.def"
 include "grib2/templates/template.5.original_values.def"
 
 # Group splitting method used
-codetable[1] groupSplittingMethodUsed ('5.4.table',masterDir,localDir);
+codetable[1] groupSplittingMethodUsed ('5.4.table',masterDir,localDir) : dump;
 
 # Missing value management used
-codetable[1] missingValueManagementUsed ('5.5.table',masterDir,localDir);
+codetable[1] missingValueManagementUsed ('5.5.table',masterDir,localDir) : dump;
 
 # Primary missing value substitute
-unsigned[4] primaryMissingValueSubstitute ;
+unsigned[4] primaryMissingValueSubstitute : dump;
 
 # Secondary missing value substitute
-unsigned[4] secondaryMissingValueSubstitute ;
+unsigned[4] secondaryMissingValueSubstitute : dump;
 
 # NG - Number of groups of data values into which field is split
-unsigned[4] numberOfGroupsOfDataValues ;
+unsigned[4] numberOfGroupsOfDataValues : dump;
 
 alias NG = numberOfGroupsOfDataValues;
 # Reference for group widths
-unsigned[1] referenceForGroupWidths ;
+unsigned[1] referenceForGroupWidths : dump;
 
 # Number of bits used for the group widths
 # (after the reference value in octet 36 has been removed)
-unsigned[1] numberOfBitsUsedForTheGroupWidths ;
+unsigned[1] numberOfBitsUsedForTheGroupWidths : dump;
 
 # Reference for group lengths
-unsigned[4] referenceForGroupLengths ;
+unsigned[4] referenceForGroupLengths : dump;
 
 # Length increment for the group lengths
-unsigned[1] lengthIncrementForTheGroupLengths ;
+unsigned[1] lengthIncrementForTheGroupLengths : dump;
 
 # True length of last group
-unsigned[4] trueLengthOfLastGroup ;
+unsigned[4] trueLengthOfLastGroup : dump;
 
 # Number of bits used for the scaled group lengths
 # (after subtraction of the reference value given in octets 38-41 and division
 # by the length increment given in octet 42)
-unsigned[1] numberOfBitsForScaledGroupLengths ;
+unsigned[1] numberOfBitsForScaledGroupLengths : dump;
 alias numberOfBitsUsedForTheScaledGroupLengths=numberOfBitsForScaledGroupLengths;
