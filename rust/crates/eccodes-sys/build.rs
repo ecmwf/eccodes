@@ -43,6 +43,11 @@ fn build_system(out_dir: &Path) {
     println!("cargo:rustc-link-search=native={}", lib_dir.display());
     println!("cargo:rustc-link-lib=dylib=eccodes");
 
+    // Rpaths for this crate's own test binaries only — `rustc-link-arg` does
+    // not propagate downstream; leaf binaries still call `emit_rpaths()`.
+    println!("cargo:rustc-link-arg=-Wl,-rpath,{}", lib_dir.display());
+    bindman_utils::emit_rpaths();
+
     // Export for downstream crates
     println!("cargo:root={}", root.display());
     println!("cargo:include={}", include.display());
@@ -245,7 +250,16 @@ fn emit_link_directives(eccodes_install_dir: &Path, aec_install_dir: Option<&Pat
         let aec_lib_dir = bindman_utils::resolve_lib_dir(p);
         println!("cargo:rustc-link-search=native={}", aec_lib_dir.display());
         println!("cargo:rustc-link-lib=dylib=aec");
+        println!("cargo:rustc-link-arg=-Wl,-rpath,{}", aec_lib_dir.display());
     }
+
+    // Rpaths for this crate's own test binaries only — `rustc-link-arg` does
+    // not propagate downstream; leaf binaries still call `emit_rpaths()`.
+    println!(
+        "cargo:rustc-link-arg=-Wl,-rpath,{}",
+        eccodes_lib_dir.display()
+    );
+    bindman_utils::emit_rpaths();
 
     // Export for downstream crates
     println!("cargo:root={}", eccodes_install_dir.display());
