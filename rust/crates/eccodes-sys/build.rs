@@ -354,16 +354,24 @@ fn build_vendored(out_dir: &Path) {
     // binary's `bindman_utils::emit_rpaths()` is what resolves them at runtime.
     emit_link_directives(&eccodes_install_dir, aec_install_dir.as_deref());
 
-    // Optional stable home for the vendored runtime libs (eccodes + eckit +
-    // aec), so binaries installed via `cargo install` keep working after
-    // cargo deletes its temporary target dir. Opt-in; the leaf binary's
-    // `emit_rpaths()` picks the directory up via `DEP_ECCODES_SYS_LIBS_DIR`.
-    if let Ok(lib_dir) = env::var("ECCODES_SYS_LIB_DIR") {
+    // Stable home for the vendored runtime libs (eccodes + eckit + aec), so
+    // binaries installed via `cargo install` keep working after the target
+    // dir is gone. Defaults to `$CARGO_HOME/lib/eccodes-sys`;
+    // `ECCODES_SYS_LIB_DIR` overrides. The leaf binary's `emit_rpaths()`
+    // picks the directory up via `DEP_ECCODES_SYS_LIBS_DIR`. Skipped with a
+    // warning if the directory is not writable (e.g. sandboxed CI).
+    let lib_dir = env::var("ECCODES_SYS_LIB_DIR").map_or_else(|_| default_lib_dir(), PathBuf::from);
+    if std::fs::create_dir_all(&lib_dir).is_ok() {
         let mut prefixes = vec![eccodes_install_dir.as_path()];
         if let Some(p) = aec_install_dir.as_deref() {
             prefixes.push(p);
         }
-        bindman_utils::export_runtime_libs(lib_dir, &prefixes);
+        bindman_utils::export_runtime_libs(&lib_dir, &prefixes);
+    } else {
+        eprintln!(
+            "Warning: cannot create {}; runtime libs not exported, installed binaries will depend on the target dir",
+            lib_dir.display()
+        );
     }
 
     // Generate bindings
@@ -373,6 +381,21 @@ fn build_vendored(out_dir: &Path) {
 #[cfg(not(feature = "vendored"))]
 fn build_vendored(_out_dir: &Path) {
     unreachable!("build_vendored called without vendored feature");
+}
+
+/// Default export dir for the vendored runtime libs:
+/// `$CARGO_HOME/lib/eccodes-sys`, with `~/.cargo` as the `CARGO_HOME`
+/// fallback (cargo does not guarantee `CARGO_HOME` in build script envs).
+#[cfg(feature = "vendored")]
+fn default_lib_dir() -> PathBuf {
+    let cargo_home = env::var("CARGO_HOME").map_or_else(
+        |_| {
+            let home = env::var("HOME").expect("neither CARGO_HOME nor HOME is set");
+            PathBuf::from(home).join(".cargo")
+        },
+        PathBuf::from,
+    );
+    cargo_home.join("lib/eccodes-sys")
 }
 
 // Curated API surface
