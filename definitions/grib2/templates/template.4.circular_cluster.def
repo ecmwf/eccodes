@@ -31,7 +31,7 @@ unsigned[1] numberOfForecastsInTheCluster : dump;
 
 alias NC = numberOfForecastsInTheCluster;
 # Scale factor of standard deviation in the cluster
-unsigned[1] scaleFactorOfStandardDeviation : edition_specific ;
+unsigned[1] scaleFactorOfStandardDeviation : dump,edition_specific;
 alias scaleFactorOfStandardDeviationInTheCluster=scaleFactorOfStandardDeviation;
 
 # Scaled value of standard deviation in the cluster
