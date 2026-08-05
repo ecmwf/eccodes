@@ -12,7 +12,6 @@ fn main() {
     println!("cargo:rerun-if-env-changed=ECCODES_DIR");
     println!("cargo:rerun-if-env-changed=CMAKE_PREFIX_PATH");
     println!("cargo:rerun-if-env-changed=DOCS_RS");
-    println!("cargo:rerun-if-env-changed=ECCODES_SYS_LIB_DIR");
 
     let out_dir = PathBuf::from(env::var("OUT_DIR").expect("OUT_DIR not set"));
 
@@ -48,9 +47,15 @@ fn build_system(out_dir: &Path) {
     println!("cargo:rustc-link-arg=-Wl,-rpath,{}", lib_dir.display());
     bindman_utils::emit_rpaths();
 
-    // Export for downstream crates
+    // Export for downstream crates. `eckit_root` surfaces as
+    // `DEP_ECCODES_SYS_ECKIT_ROOT` so leaf apps get an rpath even for a
+    // non-standard system eckit prefix (`DEP_*` vars don't propagate past
+    // direct dependents on their own).
     println!("cargo:root={}", root.display());
     println!("cargo:include={}", include.display());
+    if let Ok(eckit_root) = env::var("DEP_ECKIT_SYS_ROOT") {
+        println!("cargo:eckit_root={eckit_root}");
+    }
 
     // Generate bindings
     generate_bindings(out_dir, &include);
@@ -261,7 +266,10 @@ fn emit_link_directives(eccodes_install_dir: &Path, aec_install_dir: Option<&Pat
     );
     bindman_utils::emit_rpaths();
 
-    // Export for downstream crates
+    // Export for downstream crates. The extra `*_root` keys surface as
+    // `DEP_ECCODES_SYS_*_ROOT`, so direct dependents' `emit_rpaths()` /
+    // `install_runtime_libs()` see the whole vendored chain — `DEP_*` vars
+    // don't propagate past direct dependents on their own.
     println!("cargo:root={}", eccodes_install_dir.display());
     println!(
         "cargo:include={}",
@@ -269,6 +277,9 @@ fn emit_link_directives(eccodes_install_dir: &Path, aec_install_dir: Option<&Pat
     );
     if let Some(p) = aec_install_dir {
         println!("cargo:aec_root={}", p.display());
+    }
+    if let Ok(eckit_root) = env::var("DEP_ECKIT_SYS_ROOT") {
+        println!("cargo:eckit_root={eckit_root}");
     }
 }
 
@@ -354,26 +365,6 @@ fn build_vendored(out_dir: &Path) {
     // binary's `bindman_utils::emit_rpaths()` is what resolves them at runtime.
     emit_link_directives(&eccodes_install_dir, aec_install_dir.as_deref());
 
-    // Stable home for the vendored runtime libs (eccodes + eckit + aec), so
-    // binaries installed via `cargo install` keep working after the target
-    // dir is gone. Defaults to `$CARGO_HOME/lib/eccodes-sys`;
-    // `ECCODES_SYS_LIB_DIR` overrides. The leaf binary's `emit_rpaths()`
-    // picks the directory up via `DEP_ECCODES_SYS_LIBS_DIR`. Skipped with a
-    // warning if the directory is not writable (e.g. sandboxed CI).
-    let lib_dir = env::var("ECCODES_SYS_LIB_DIR").map_or_else(|_| default_lib_dir(), PathBuf::from);
-    if std::fs::create_dir_all(&lib_dir).is_ok() {
-        let mut prefixes = vec![eccodes_install_dir.as_path()];
-        if let Some(p) = aec_install_dir.as_deref() {
-            prefixes.push(p);
-        }
-        bindman_utils::export_runtime_libs(&lib_dir, &prefixes);
-    } else {
-        eprintln!(
-            "Warning: cannot create {}; runtime libs not exported, installed binaries will depend on the target dir",
-            lib_dir.display()
-        );
-    }
-
     // Generate bindings
     generate_bindings(out_dir, &eccodes_install_dir.join("include"));
 }
@@ -381,21 +372,6 @@ fn build_vendored(out_dir: &Path) {
 #[cfg(not(feature = "vendored"))]
 fn build_vendored(_out_dir: &Path) {
     unreachable!("build_vendored called without vendored feature");
-}
-
-/// Default export dir for the vendored runtime libs:
-/// `$CARGO_HOME/lib/eccodes-sys`, with `~/.cargo` as the `CARGO_HOME`
-/// fallback (cargo does not guarantee `CARGO_HOME` in build script envs).
-#[cfg(feature = "vendored")]
-fn default_lib_dir() -> PathBuf {
-    let cargo_home = env::var("CARGO_HOME").map_or_else(
-        |_| {
-            let home = env::var("HOME").expect("neither CARGO_HOME nor HOME is set");
-            PathBuf::from(home).join(".cargo")
-        },
-        PathBuf::from,
-    );
-    cargo_home.join("lib/eccodes-sys")
 }
 
 // Curated API surface

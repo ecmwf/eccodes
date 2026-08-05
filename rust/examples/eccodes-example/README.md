@@ -10,10 +10,6 @@ aec) resolved at runtime.
 cargo run -p eccodes-example
 ```
 
-`build.rs` calls `bindman_utils::emit_rpaths()` so the binary finds the
-vendored libraries at runtime. Every app using `eccodes-sys` needs that one
-call in its own `build.rs`.
-
 ## Install
 
 ```sh
@@ -21,8 +17,23 @@ cargo install --path . --locked
 eccodes-example
 ```
 
-Works out of the box: every vendored build copies the shared libraries to
-`$CARGO_HOME/lib/eccodes-sys` (i.e. `~/.cargo/lib/eccodes-sys`) and the
-binary's rpaths include that directory, so installed binaries don't depend
-on the build's `target/` dir. Set `ECCODES_SYS_LIB_DIR=/some/dir` to use a
-different directory instead.
+Works out of the box. `build.rs` calls
+`bindman_utils::install_runtime_libs()`, which copies the vendored shared
+libraries to `lib/eccodes-example` under the cargo install root — next to
+the `bin/` dir the binary lands in (default: `~/.cargo/bin/eccodes-example`
++ `~/.cargo/lib/eccodes-example`). Each app gets its own lib dir, so apps
+never interfere with each other's libraries.
+
+To install elsewhere, use cargo's own mechanism:
+
+```sh
+CARGO_INSTALL_ROOT=/opt/tools cargo install --path . --locked
+# -> /opt/tools/bin/eccodes-example + /opt/tools/lib/eccodes-example
+```
+
+The binary also carries a relative `../lib/eccodes-example` rpath, so the
+whole install root can be moved afterwards and keeps working. (Use the env
+var, not `--root` — cargo doesn't expose the flag to build scripts.)
+
+Every app using `eccodes-sys` needs that one `build.rs` call (or
+`bindman_utils::emit_rpaths()` if it will only ever run via `cargo run`).
