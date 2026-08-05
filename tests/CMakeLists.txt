@@ -124,6 +124,7 @@ if( HAVE_BUILD_TOOLS )
         filter_transient_darray
         grib_ecpoint
         grib_s2s
+        grib_crra
         grib_fire
         grib_generalised_tiles
         # grib_true_imagery
