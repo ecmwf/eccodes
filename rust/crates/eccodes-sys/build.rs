@@ -142,6 +142,20 @@ fn build_eccodes_impl(
 
     let eccodes_build_dir = build_dir.join("eccodes");
     let eccodes_install_dir = install_dir.join("eccodes");
+
+    // CMakeCache.txt pins the source path the build dir was configured with;
+    // cmake hard-errors if it changes (e.g. switching between cloned and
+    // in-tree sources). Wipe the build dir when the cached path is stale.
+    if let Ok(cache) = fs::read_to_string(eccodes_build_dir.join("CMakeCache.txt")) {
+        let cached_src = cache
+            .lines()
+            .find_map(|l| l.strip_prefix("CMAKE_HOME_DIRECTORY:INTERNAL="));
+        if cached_src != eccodes_src.to_str() {
+            fs::remove_dir_all(&eccodes_build_dir)
+                .expect("Failed to remove stale eccodes build directory");
+        }
+    }
+
     fs::create_dir_all(&eccodes_build_dir).expect("Failed to create eccodes build directory");
 
     let cmake_prefix_path = aec_install_dir.as_ref().map_or_else(
@@ -315,6 +329,56 @@ fn copy_resources_to_output(eccodes_install_dir: &Path) {
     let _ = eccodes_install_dir;
 }
 
+/// Locate the eccodes C sources. When the crate lives inside the eccodes
+/// repository (path dependency, or a git dependency — cargo checks out the
+/// whole repo), the sources are three levels up from the crate and we build
+/// them directly: branch changes take effect and no tag/network is required.
+/// Cloning the release tag is the fallback for the packaged (crates.io) case,
+/// where the crate ships without the C tree.
+#[cfg(feature = "vendored")]
+fn resolve_eccodes_src(src_dir: &Path) -> PathBuf {
+    const ECCODES_REPO: &str = "https://github.com/ecmwf/eccodes.git";
+    const ECCODES_TAG: &str = env!("CARGO_PKG_VERSION");
+
+    let manifest_dir =
+        PathBuf::from(env::var("CARGO_MANIFEST_DIR").expect("CARGO_MANIFEST_DIR not set"));
+    if let Some(root) = manifest_dir.ancestors().nth(3)
+        && root.join("CMakeLists.txt").exists()
+        && root.join("VERSION").exists()
+        && root.join("definitions").is_dir()
+    {
+        eprintln!(
+            "eccodes-sys: building in-tree sources at {}",
+            root.display()
+        );
+
+        // Retrigger on C source edits. `definitions/` is deliberately not
+        // watched: thousands of files, and non-memfs builds consume them at
+        // runtime via the copied resources, not at compile time.
+        println!("cargo:rerun-if-changed={}", root.join("src").display());
+        println!(
+            "cargo:rerun-if-changed={}",
+            root.join("CMakeLists.txt").display()
+        );
+        println!("cargo:rerun-if-changed={}", root.join("VERSION").display());
+
+        // Diverging is legitimate mid-development (unreleased C changes are
+        // the point of in-tree builds), but should never go unnoticed. The
+        // crate-version test enforces equality at release time.
+        let tree_version = std::fs::read_to_string(root.join("VERSION"))
+            .map(|s| s.trim().to_string())
+            .unwrap_or_default();
+        if tree_version != ECCODES_TAG {
+            println!(
+                "cargo:warning=eccodes-sys {ECCODES_TAG} is building in-tree eccodes {tree_version} (versions differ)"
+            );
+        }
+
+        return root.to_path_buf();
+    }
+    bindman_utils::git_clone(ECCODES_REPO, ECCODES_TAG, &src_dir.join("eccodes"))
+}
+
 /// Build eccodes from source using ecbuild
 #[cfg(feature = "vendored")]
 fn build_vendored(out_dir: &Path) {
@@ -322,9 +386,6 @@ fn build_vendored(out_dir: &Path) {
 
     const ECBUILD_REPO: &str = "https://github.com/ecmwf/ecbuild.git";
     const ECBUILD_TAG: &str = "3.13.1";
-
-    const ECCODES_REPO: &str = "https://github.com/ecmwf/eccodes.git";
-    const ECCODES_TAG: &str = env!("CARGO_PKG_VERSION");
 
     let src_dir = out_dir.join("src");
     let build_dir = out_dir.join("build");
@@ -336,9 +397,10 @@ fn build_vendored(out_dir: &Path) {
     let eckit_root = env::var("DEP_ECKIT_SYS_ROOT")
         .expect("DEP_ECKIT_SYS_ROOT not set - eckit-sys must be a dependency");
 
-    // Clone sources
+    // Clone ecbuild (always external); eccodes comes from the in-tree checkout
+    // when available, falling back to a clone of the release tag.
     let ecbuild_src = bindman_utils::git_clone(ECBUILD_REPO, ECBUILD_TAG, &src_dir.join("ecbuild"));
-    let eccodes_src = bindman_utils::git_clone(ECCODES_REPO, ECCODES_TAG, &src_dir.join("eccodes"));
+    let eccodes_src = resolve_eccodes_src(&src_dir);
 
     let ecbuild_bin = ecbuild_src.join("bin/ecbuild");
     let num_jobs = bindman_utils::build_parallelism();
