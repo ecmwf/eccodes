@@ -12,4 +12,4 @@ if ( defined(MTG2Switch) && grib2LocalSectionNumber == 45 && MTG2Switch == 0) {
 if ( defined(MTG2Switch) && grib2LocalSectionNumber == 45 && MTG2Switch > 0) {
  alias mars.coeffindex = fourierCoefficientIndex;
 }
-}
+
