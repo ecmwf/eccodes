@@ -22,10 +22,12 @@ if ( defined(dataset) && dataset is "climate-dt" ) {
 }
 
 # ECC-2222: We want model in on-demand-extremes-dt
+# ECC-2304: Note that modelName/modelVersion concepts are already defined in section4_extras (as in ECMWF data).
+#           All that is needed here is to alias modelName as model to the MARS and LS namespaces
 if ( defined(dataset) && dataset is "on-demand-extremes-dt" ) {
-    concept modelName(unknown, "modelNameConcept.def", conceptsDir2, conceptsLocalDirAll): no_copy, dump;
+
     if (modelName isnot "unknown") {
-        concept modelVersion(unknown, "modelVersionConcept.[modelName].def", conceptsDir2, conceptsLocalDirAll): no_copy, dump, read_only;
+
         alias ls.model = modelName;
         alias mars.model = modelName;
 
