@@ -12,7 +12,7 @@
 #     https://wmo.int/latest-version
 constant tablesVersionLatestOfficial = 37 : edition_specific;
 # If this is different from the official version, then it is the pre-operational version
-constant tablesVersionLatest = 38 : edition_specific;
+constant tablesVersionLatest = 37 : edition_specific;
 
 constant false = 0 : hidden;
 constant true = 1 : hidden;
