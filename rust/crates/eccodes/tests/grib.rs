@@ -6,7 +6,7 @@ use std::collections::HashSet;
 use std::path::{Path, PathBuf};
 
 use eccodes::kind::Grib;
-use eccodes::{Handle, KeyFlags, MessageReader};
+use eccodes::{GeoFlags, Handle, KeyFlags, MessageReader};
 
 /// Path to an in-repo sample message.
 ///
@@ -88,7 +88,7 @@ fn set_get_round_trip() -> eccodes::Result<()> {
     let n = handle.size("values")?;
     let ni = handle.get::<i64>("Ni")?;
     let nj = handle.get::<i64>("Nj")?;
-    assert_eq!(usize::try_from(ni * nj).unwrap(), n);
+    assert_eq!(usize::try_from(ni * nj).expect("Ni*Nj is non-negative"), n);
     let lat0 = handle.get::<f64>("latitudeOfFirstGridPointInDegrees")?;
     assert!((-90.0..=90.0).contains(&lat0));
 
@@ -114,5 +114,84 @@ fn set_get_round_trip() -> eccodes::Result<()> {
     assert_eq!(reread.get::<i64>("centre")?, 80);
     assert_eq!(reread.get::<String>("shortName")?, "2t");
     assert_eq!(reread.get::<Vec<f64>>("values")?, decoded);
+    Ok(())
+}
+
+/// Port of `examples/C/grib_iterator.c`, with the bitmap built in-test
+/// the way `grib_set_bitmap.c` does — the sample has none, and the
+/// missing-value branch of the C example is the part worth covering.
+#[test]
+fn geo_iterator_grid_and_missing() -> eccodes::Result<()> {
+    let Some(path) = sample("GRIB2.tmpl") else {
+        return Ok(());
+    };
+
+    let mut handle = MessageReader::grib(path)?
+        .next()
+        .expect("GRIB2.tmpl is not empty")?;
+    assert_eq!(handle.get::<i64>("bitmapPresent")?, 0);
+
+    let n = handle.size("values")?;
+    handle.set("bitsPerValue", 24_i64)?;
+    handle.set(
+        "values",
+        (0..n)
+            .map(|i| i as f64 * 0.5)
+            .collect::<Vec<_>>()
+            .as_slice(),
+    )?;
+
+    // Full pass: as many points as the grid declares, positions in
+    // range, values identical to the values key (same coded data,
+    // same scanning order on this regular_ll grid).
+    let decoded: Vec<f64> = handle.get("values")?;
+    let points: Vec<_> = handle.geo_iter(GeoFlags::empty())?.collect();
+    assert_eq!(
+        points.len(),
+        usize::try_from(handle.get::<i64>("numberOfDataPoints")?)
+            .expect("numberOfDataPoints is non-negative")
+    );
+    for p in &points {
+        assert!((-90.0..=90.0).contains(&p.lat), "lat {}", p.lat);
+        assert!((0.0..=360.0).contains(&p.lon), "lon {}", p.lon);
+    }
+    let iter_values: Vec<f64> = points.iter().map(|p| p.value).collect();
+    assert_eq!(iter_values, decoded);
+
+    // NO_VALUES skips decoding: same geometry, values pinned to 0.
+    let fast: Vec<_> = handle.geo_iter(GeoFlags::NO_VALUES)?.collect();
+    assert_eq!(fast.len(), points.len());
+    assert!(fast.iter().all(|p| p.value == 0.0));
+    assert_eq!(fast[0].lat, points[0].lat);
+
+    // reset() restarts from the first point. Scoped: the iterator
+    // borrows the handle, which is mutated again below.
+    {
+        let mut iter = handle.geo_iter(GeoFlags::empty())?;
+        let first = iter.next().expect("grid has a first point");
+        iter.next().expect("grid has a second point");
+        iter.reset()?;
+        assert_eq!(iter.next().expect("first point after reset"), first);
+    }
+
+    // grib_set_bitmap.c: declare a missing value, enable the bitmap and
+    // re-encode with two points missing; the iterator must yield the
+    // missing value exactly at those points.
+    const MISSING: f64 = 1.0e36;
+    handle.set("missingValue", MISSING)?;
+    handle.set("bitmapPresent", 1_i64)?;
+    let mut holed: Vec<f64> = (0..n).map(|i| i as f64 * 0.5).collect();
+    holed[0] = MISSING;
+    holed[n / 2] = MISSING;
+    handle.set("values", holed.as_slice())?;
+
+    assert_eq!(handle.get::<i64>("bitmapPresent")?, 1);
+    let missing: Vec<usize> = handle
+        .geo_iter(GeoFlags::empty())?
+        .enumerate()
+        .filter(|(_, p)| p.value == MISSING)
+        .map(|(i, _)| i)
+        .collect();
+    assert_eq!(missing, [0, n / 2]);
     Ok(())
 }
