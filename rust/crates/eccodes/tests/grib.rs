@@ -7,7 +7,8 @@ use std::path::{Path, PathBuf};
 
 use eccodes::kind::{Grib, GribMulti};
 use eccodes::{
-    Context, GeoFlags, Handle, Index, KeyFlags, MessageReader, NearestFlags, count_in_file,
+    Context, Force, GeoFlags, Handle, Index, KeyFlags, Kind, MessageReader, NearestFlags,
+    count_bufr_in_file, count_grib_in_file, count_in_file,
 };
 
 /// Path to an in-repo sample message.

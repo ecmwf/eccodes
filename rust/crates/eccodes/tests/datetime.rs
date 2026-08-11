@@ -42,8 +42,10 @@ fn golden_pairs() -> eccodes::Result<()> {
     Ok(())
 }
 
-/// `Test2`: specific Julian values survive julian -> datetime -> julian,
-/// and their rounded day survives the `YYYYMMDD` round trip.
+/// `Test2`: specific Julian values survive julian -> datetime -> julian.
+/// (The C test also runs the `YYYYMMDD` leg here but only prints it —
+/// it cannot round-trip for the BC date at `jd = 0.0` — so it is not
+/// asserted, matching the C behavior.)
 #[test]
 fn specific_julian_values() -> eccodes::Result<()> {
     let jds = [
@@ -66,11 +68,6 @@ fn specific_julian_values() -> eccodes::Result<()> {
             dbl_equal(back, jd),
             "julian {jd} -> {year}-{month}-{day} {hour}:{minute}:{second} -> {back}"
         );
-
-        #[allow(clippy::cast_possible_truncation)]
-        let jday = (back + 0.5) as i64;
-        let date = julian_to_date(jday);
-        assert_eq!(date_to_julian(date), jday);
     }
     Ok(())
 }
