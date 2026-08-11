@@ -10,9 +10,16 @@ description  = "Safe Rust wrapper for ECMWF's eccodes (GRIB/BUFR)"
 [features]
 default = ["vendored"]
 
-# Build strategy (mutually exclusive) — pass-through to eccodes-sys
+# Build strategy (mutually exclusive) — pass-through to eccodes-sys.
+# `vendored` forces `threads` on: the `Send` impl on `Handle` relies on
+# libeccodes locking its global context internally.
 system   = ["eccodes-sys/system"]
-vendored = ["eccodes-sys/vendored"]
+vendored = ["eccodes-sys/vendored", "threads"]
+
+# POSIX-threads locking inside libeccodes (`ENABLE_ECCODES_THREADS`).
+# No-op for `system` builds — there it is on the user to link a library
+# built with it.
+threads = ["eccodes-sys/eccodes-threads"]
 
 [dependencies]
 eccodes-sys.workspace = true
