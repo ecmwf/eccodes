@@ -6,7 +6,7 @@ use std::collections::HashSet;
 use std::path::{Path, PathBuf};
 
 use eccodes::kind::Grib;
-use eccodes::{GeoFlags, Handle, KeyFlags, MessageReader};
+use eccodes::{GeoFlags, Handle, Index, KeyFlags, MessageReader, NearestFlags};
 
 /// Path to an in-repo sample message.
 ///
@@ -193,5 +193,227 @@ fn geo_iterator_grid_and_missing() -> eccodes::Result<()> {
         .map(|(i, _)| i)
         .collect();
     assert_eq!(missing, [0, n / 2]);
+    Ok(())
+}
+
+/// Port of `examples/C/grib_nearest.c` + `grib_nearest_multiple.c` (the
+/// fieldset part is not wrapped). Query points are taken from the grid
+/// itself, so nothing here depends on the sample's geometry.
+#[test]
+fn nearest_point_search() -> eccodes::Result<()> {
+    let Some(path) = sample("GRIB2.tmpl") else {
+        return Ok(());
+    };
+
+    let mut handle = MessageReader::grib(path)?
+        .next()
+        .expect("GRIB2.tmpl is not empty")?;
+
+    // Known values: value at grid index i is i * 0.5.
+    let n = handle.size("values")?;
+    handle.set("bitsPerValue", 24_i64)?;
+    handle.set(
+        "values",
+        (0..n)
+            .map(|i| i as f64 * 0.5)
+            .collect::<Vec<_>>()
+            .as_slice(),
+    )?;
+    let decoded: Vec<f64> = handle.get("values")?;
+
+    // A mid-grid point, slightly perturbed, must come back as the
+    // nearest of the four candidates.
+    let target = handle
+        .geo_iter(GeoFlags::empty())?
+        .nth(n / 3)
+        .expect("mid-grid point exists");
+
+    let mut nearest = handle.nearest()?;
+    let found = nearest.find(target.lat + 0.01, target.lon + 0.01, NearestFlags::empty())?;
+
+    for p in &found {
+        assert!(p.index < n, "index {} out of range", p.index);
+        assert_eq!(p.value, decoded[p.index], "value/index mismatch");
+    }
+    let best = found
+        .iter()
+        .min_by(|a, b| a.distance_km.total_cmp(&b.distance_km))
+        .expect("four candidates");
+    assert_eq!(best.index, n / 3, "perturbed query must snap back");
+    assert!(
+        best.distance_km < 5.0,
+        "0.01 deg is ~1 km, got {} km",
+        best.distance_km
+    );
+
+    // Same query with the C example's mode flags must reuse state and
+    // agree.
+    let again = nearest.find(
+        target.lat + 0.01,
+        target.lon + 0.01,
+        NearestFlags::SAME_GRID | NearestFlags::SAME_POINT,
+    )?;
+    assert_eq!(again, found);
+
+    // grib_nearest_multiple.c: exact grid coordinates snap to exactly
+    // those points with (near) zero distance.
+    let queries: Vec<_> = handle.geo_iter(GeoFlags::empty())?.take(2).collect();
+    let lats: Vec<f64> = queries.iter().map(|p| p.lat).collect();
+    let lons: Vec<f64> = queries.iter().map(|p| p.lon).collect();
+    let multi = handle.find_nearest_multiple(&lats, &lons, false)?;
+    assert_eq!(multi.len(), 2);
+    for (i, p) in multi.iter().enumerate() {
+        assert_eq!(p.index, i);
+        assert_eq!(p.value, decoded[i]);
+        assert!(p.distance_km < 1e-3, "exact hit, got {} km", p.distance_km);
+    }
+
+    // Mismatched query arrays must be rejected, not UB.
+    assert!(
+        handle
+            .find_nearest_multiple(&lats, &lons[..1], false)
+            .is_err()
+    );
+    Ok(())
+}
+
+/// Download `name` from the ECMWF test-data server into a cache under
+/// the target dir, once. `None` (with a note on stderr) when the network
+/// is not cooperating — callers skip, like the CMake suite's optional
+/// downloaded fixtures.
+fn fetch(name: &str) -> Option<PathBuf> {
+    let dir = Path::new(env!("CARGO_TARGET_TMPDIR")).join("eccodes-test-data");
+    let path = dir.join(name);
+    if path.exists() {
+        return Some(path);
+    }
+    std::fs::create_dir_all(&dir).ok()?;
+    let url = format!("https://get.ecmwf.int/repository/test-data/eccodes/data/{name}");
+    let mut response = match ureq::get(&url).call() {
+        Ok(r) => r,
+        Err(e) => {
+            eprintln!("skipping: cannot fetch {url}: {e}");
+            return None;
+        }
+    };
+    let bytes = match response.body_mut().read_to_vec() {
+        Ok(b) => b,
+        Err(e) => {
+            eprintln!("skipping: cannot read {url}: {e}");
+            return None;
+        }
+    };
+    // Parallel tests may race on the cache entry; the rename makes the
+    // final write atomic.
+    let tmp = dir.join(format!("{name}.{}.part", std::process::id()));
+    std::fs::write(&tmp, bytes).ok()?;
+    std::fs::rename(&tmp, &path).ok()?;
+    Some(path)
+}
+
+/// Port of `examples/C/grib_index.c`, hermetic variant: the input file
+/// is written in-test, so the distinct-value lists and per-selection
+/// counts are known exactly — including a combination with zero
+/// matches, which the C harness cannot assert.
+#[test]
+fn index_select_and_count() -> eccodes::Result<()> {
+    let Some(path) = sample("GRIB2.tmpl") else {
+        return Ok(());
+    };
+
+    // Three of the four (shortName, step) combinations; the fourth must
+    // select zero messages.
+    let combos = [("2t", 0_i64), ("2t", 6), ("msl", 0)];
+    let file_path = Path::new(env!("CARGO_TARGET_TMPDIR")).join("index_input.grib2");
+    {
+        let mut file = std::fs::File::create(&file_path)?;
+        for (short_name, step) in combos {
+            let mut handle = MessageReader::grib(&path)?
+                .next()
+                .expect("GRIB2.tmpl is not empty")?;
+            handle.set("shortName", short_name)?;
+            handle.set("step", step)?;
+            handle.write_to(&mut file)?;
+        }
+    }
+
+    // grib_index.c builds an empty index and adds the file to it.
+    let mut index = Index::new(&["shortName", "step"])?;
+    index.add_file(&file_path)?;
+
+    // Distinct values come back in ascending order.
+    let short_names = index.values_string("shortName")?;
+    let steps = index.values_long("step")?;
+    assert_eq!(short_names, ["2t", "msl"]);
+    assert_eq!(steps, [0, 6]);
+    assert_eq!(index.size("shortName")?, 2);
+
+    // The C example's nested select loops, counting matches per
+    // combination and checking each matched message really has the
+    // selected key values.
+    let mut counts = Vec::new();
+    for short_name in &short_names {
+        for &step in &steps {
+            index.select_string("shortName", short_name)?;
+            index.select_long("step", step)?;
+            let mut count = 0;
+            while let Some(handle) = index.next_handle()? {
+                assert_eq!(&handle.get::<String>("shortName")?, short_name);
+                assert_eq!(handle.get::<i64>("step")?, step);
+                count += 1;
+            }
+            counts.push(count);
+        }
+    }
+    // Combination order (2t,0), (2t,6), (msl,0), (msl,6) — the last
+    // was never written.
+    assert_eq!(counts, [1, 1, 1, 0]);
+
+    // Save/reload the index and select through the reloaded copy.
+    let idx_path = Path::new(env!("CARGO_TARGET_TMPDIR")).join("index_input.idx");
+    index.write(&idx_path)?;
+    let mut reread = Index::read(&idx_path)?;
+    reread.select_string("shortName", "2t")?;
+    reread.select_long("step", 6)?;
+    let matched = reread.next_handle()?.expect("(2t, 6) was written");
+    assert_eq!(matched.get::<i64>("step")?, 6);
+    assert!(reread.next_handle()?.is_none());
+    Ok(())
+}
+
+/// Port of `examples/C/grib_index.c` on its real fixture when the
+/// network allows: the harness greps for "43 messages selected" on
+/// `tigge_cf_ecmwf.grib2`.
+#[test]
+fn index_tigge_golden_count() -> eccodes::Result<()> {
+    let Some(path) = fetch("tigge_cf_ecmwf.grib2") else {
+        return Ok(());
+    };
+
+    let mut index = Index::new(&["shortName", "level", "number", "step"])?;
+    index.add_file(&path)?;
+
+    let short_names = index.values_string("shortName")?;
+    let levels = index.values_long("level")?;
+    let numbers = index.values_long("number")?;
+    let steps = index.values_long("step")?;
+
+    let mut selected = 0;
+    for short_name in &short_names {
+        for &level in &levels {
+            for &number in &numbers {
+                for &step in &steps {
+                    index.select_string("shortName", short_name)?;
+                    index.select_long("level", level)?;
+                    index.select_long("number", number)?;
+                    index.select_long("step", step)?;
+                    while index.next_handle()?.is_some() {
+                        selected += 1;
+                    }
+                }
+            }
+        }
+    }
+    assert_eq!(selected, 43, "grib_index.sh: '43 messages selected'");
     Ok(())
 }
