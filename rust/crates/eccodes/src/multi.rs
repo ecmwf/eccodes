@@ -13,6 +13,12 @@ use crate::kind::{Grib, GribMulti};
 impl Handle<GribMulti> {
     /// Create an empty multi-field GRIB message
     /// (`codes_grib_multi_handle_new`).
+    ///
+    /// Side effect inherited from the C library: this enables multi-field
+    /// support on the process-global context, as if
+    /// [`Context::grib_multi_support(true)`](crate::Context::grib_multi_support)
+    /// had been called — subsequent file reads split multi-field messages
+    /// into one handle per field until it is turned off again.
     pub fn new() -> Result<Self> {
         // SAFETY: NULL context selects the default context.
         let raw = unsafe { sys::codes_grib_multi_handle_new(ptr::null_mut()) };

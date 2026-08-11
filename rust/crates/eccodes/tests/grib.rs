@@ -5,8 +5,10 @@
 use std::collections::HashSet;
 use std::path::{Path, PathBuf};
 
-use eccodes::kind::Grib;
-use eccodes::{GeoFlags, Handle, Index, KeyFlags, MessageReader, NearestFlags};
+use eccodes::kind::{Grib, GribMulti};
+use eccodes::{
+    Context, GeoFlags, Handle, Index, KeyFlags, MessageReader, NearestFlags, count_in_file,
+};
 
 /// Path to an in-repo sample message.
 ///
@@ -415,5 +417,55 @@ fn index_tigge_golden_count() -> eccodes::Result<()> {
         }
     }
     assert_eq!(selected, 43, "grib_index.sh: '43 messages selected'");
+    Ok(())
+}
+
+/// Port of `examples/C/grib_multi_write.c` (build a multi-field GRIB2
+/// message by appending from section 4 per step) and `grib_multi.c`
+/// (read it back field by field with multi-field support on).
+#[test]
+fn multi_field_write_and_read() -> eccodes::Result<()> {
+    let Some(path) = sample("GRIB2.tmpl") else {
+        return Ok(());
+    };
+
+    let mut src = MessageReader::grib(&path)?
+        .next()
+        .expect("GRIB2.tmpl is not empty")?;
+    assert_eq!(src.get::<i64>("edition")?, 2, "multi-field needs GRIB2");
+
+    // grib_multi_write.c: one field per step, sections 4-8 repeated.
+    let steps: Vec<i64> = (12..=120).step_by(12).collect();
+    let mut multi = Handle::<GribMulti>::new()?;
+    for &step in &steps {
+        src.set("step", step)?;
+        multi.append(&src, 4)?;
+    }
+
+    let file_path = Path::new(env!("CARGO_TARGET_TMPDIR")).join("multi_step.grib2");
+    {
+        let mut file = std::fs::File::create(&file_path)?;
+        multi.write_to(&mut file)?;
+    }
+
+    // Handle::<GribMulti>::new() enabled multi-field support globally
+    // (side effect of codes_grib_multi_handle_new); turn it off to test
+    // the plain reading mode: one message, keyed by the first field.
+    Context::grib_multi_support(false);
+    let plain: Vec<_> = MessageReader::grib(&file_path)?.collect::<Result<_, _>>()?;
+    assert_eq!(plain.len(), 1);
+    assert_eq!(plain[0].get::<i64>("step")?, steps[0]);
+
+    // grib_multi.c: with support on, every field decodes as its own
+    // message and the counting function agrees.
+    Context::grib_multi_support(true);
+    let read_steps: Vec<i64> = MessageReader::grib(&file_path)?
+        .map(|h| h.and_then(|h| h.get::<i64>("step")))
+        .collect::<Result<_, _>>()?;
+    let counted = count_in_file(&file_path)?;
+    Context::grib_multi_support(false);
+
+    assert_eq!(read_steps, steps);
+    assert_eq!(counted, steps.len());
     Ok(())
 }
