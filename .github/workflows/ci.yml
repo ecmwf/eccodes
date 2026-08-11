@@ -34,6 +34,18 @@ jobs:
       codecov_upload: true
     secrets: inherit
 
+  # Run Rust CI (fmt + clippy + test) on the rust/ workspace
+  ci-rust:
+    name: ci-rust
+    if: ${{ !github.event.pull_request.head.repo.fork && github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci' }}
+    uses: ecmwf/reusable-workflows/.github/workflows/ci-rust.yml@main
+    with:
+      manifest-path: rust/Cargo.toml
+      features: --features vendored
+      run-doc: false
+    secrets:
+      private_repos_token: ${{ secrets.GH_REPO_READ_TOKEN }}
+
   # Run CI of private downstream packages on self-hosted runners
   private-downstream-ci:
     name: private-downstream-ci
@@ -83,6 +95,7 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - downstream-ci
+      - ci-rust
       - private-downstream-ci
       - downstream-ci-hpc
       - private-downstream-ci-hpc

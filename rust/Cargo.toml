@@ -1,0 +1,14 @@
+[workspace]
+resolver = "2"
+members = ["crates/eccodes-sys", "examples/eccodes-example"]
+
+[workspace.package]
+edition      = "2024"
+license      = "Apache-2.0"
+repository   = "https://github.com/ecmwf/eccodes"
+rust-version = "1.90"
+
+[workspace.dependencies]
+bindman-utils = { git = "ssh://git@github.com/ecmwf/bindman.git", rev = "34ef5ce" }
+
+eckit-sys = { git = "ssh://git@github.com/ecmwf/eckit.git", branch = "rust-bindings", default-features = false }
