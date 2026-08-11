@@ -469,3 +469,121 @@ fn multi_field_write_and_read() -> eccodes::Result<()> {
     assert_eq!(counted, steps.len());
     Ok(())
 }
+
+/// Port of `examples/C/grib_clone.c`, `grib_copy_keys.c` and
+/// `grib_copy_message.c`: clones diverge independently, namespaces copy
+/// between handles, and the zero-copy message view re-decodes.
+#[test]
+fn clone_copy_and_message_view() -> eccodes::Result<()> {
+    let Some(path) = sample("GRIB2.tmpl") else {
+        return Ok(());
+    };
+
+    let src = {
+        let mut src = MessageReader::grib(&path)?
+            .next()
+            .expect("GRIB2.tmpl is not empty")?;
+        src.set("centre", 80_i64)?;
+        src.set("shortName", "2t")?;
+        // A non-trivial data section, so the headers-only size
+        // comparison below is meaningful (the template's is ~empty).
+        let n = src.size("values")?;
+        src.set("bitsPerValue", 24_i64)?;
+        src.set(
+            "values",
+            (0..n)
+                .map(|i| i as f64 * 0.5)
+                .collect::<Vec<_>>()
+                .as_slice(),
+        )?;
+        src
+    };
+
+    // grib_clone.c: mutating the clone must not touch the original.
+    let mut clone = src.try_clone()?;
+    clone.set("shortName", "msl")?;
+    assert_eq!(clone.get::<String>("shortName")?, "msl");
+    assert_eq!(src.get::<String>("shortName")?, "2t");
+
+    // Headers-only clone keeps the metadata but drops the data section.
+    let headers = src.try_clone_headers_only()?;
+    assert_eq!(headers.get::<i64>("centre")?, 80);
+    assert!(headers.message_size()? < src.message_size()?);
+
+    // grib_copy_keys.c: pull the `ls` namespace of `src` into a fresh
+    // message with different values.
+    let mut dst = MessageReader::grib(&path)?
+        .next()
+        .expect("GRIB2.tmpl is not empty")?;
+    assert_ne!(dst.get::<i64>("centre")?, 80);
+    dst.copy_namespace(&src, "ls")?;
+    assert_eq!(dst.get::<i64>("centre")?, 80);
+    assert_eq!(dst.get::<String>("shortName")?, "2t");
+
+    // grib_copy_message.c: the borrowed message view re-decodes into an
+    // equal message.
+    let view = src.message_data()?;
+    let reread = Handle::from_message(view)?;
+    assert_eq!(reread.get::<String>("shortName")?, "2t");
+    assert_eq!(reread.message_size()?, src.message_size()?);
+    Ok(())
+}
+
+/// Port of `examples/C/grib_get_data.c`, `grib_set_missing.c`,
+/// `grib_set_pv.c` and `grib_precision.c`: the flat lat/lon/values
+/// accessor, missing surface keys, vertical-coordinate arrays and
+/// decimal-precision re-encoding.
+#[test]
+fn data_access_missing_pv_precision() -> eccodes::Result<()> {
+    let Some(path) = sample("GRIB2.tmpl") else {
+        return Ok(());
+    };
+
+    let mut handle = MessageReader::grib(&path)?
+        .next()
+        .expect("GRIB2.tmpl is not empty")?;
+    let n = handle.size("values")?;
+    handle.set("bitsPerValue", 24_i64)?;
+    handle.set(
+        "values",
+        (0..n)
+            .map(|i| i as f64 * 0.5)
+            .collect::<Vec<_>>()
+            .as_slice(),
+    )?;
+
+    // grib_get_data.c: the flat accessor agrees with the geo iterator.
+    let (lats, lons, values) = handle.grib_get_data()?;
+    assert_eq!(lats.len(), n);
+    assert_eq!(lons.len(), n);
+    let points: Vec<_> = handle.geo_iter(GeoFlags::empty())?.collect();
+    assert_eq!(lats[0], points[0].lat);
+    assert_eq!(lons[0], points[0].lon);
+    assert_eq!(values, points.iter().map(|p| p.value).collect::<Vec<_>>());
+
+    // grib_set_missing.c: surface-level scale keys can be set missing
+    // and report it.
+    handle.set("typeOfFirstFixedSurface", "sfc")?;
+    handle.set_missing("scaleFactorOfFirstFixedSurface")?;
+    handle.set_missing("scaledValueOfFirstFixedSurface")?;
+    assert!(handle.is_missing("scaleFactorOfFirstFixedSurface")?);
+    assert!(handle.is_missing("scaledValueOfFirstFixedSurface")?);
+
+    // grib_set_pv.c: vertical-coordinate array round trips through its
+    // own key.
+    let pv = [1.0_f64, 2.0, 3.0, 4.0];
+    handle.set("PVPresent", 1_i64)?;
+    handle.set("pv", &pv[..])?;
+    assert_eq!(handle.get::<Vec<f64>>("pv")?, pv);
+    assert_eq!(handle.get::<i64>("NV")?, pv.len() as i64);
+
+    // grib_precision.c: forcing 2 decimal places re-encodes the field
+    // exactly at that precision (the ramp has 1 decimal, so values
+    // survive unchanged).
+    handle.set("setDecimalPrecision", 2_i64)?;
+    let rounded: Vec<f64> = handle.get("values")?;
+    for (i, (r, p)) in rounded.iter().zip(&points).enumerate() {
+        assert!((r - p.value).abs() < 1e-9, "value {i}: {r} vs {}", p.value);
+    }
+    Ok(())
+}
