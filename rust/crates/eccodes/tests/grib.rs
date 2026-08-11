@@ -588,3 +588,87 @@ fn data_access_missing_pv_precision() -> eccodes::Result<()> {
     }
     Ok(())
 }
+
+/// Port of `tests/grib_codedValues_as_bytes.cc`: the packed data
+/// section moves between messages as raw bytes, and `Force` re-packs
+/// values through the read-only `codedValues` key.
+#[test]
+fn coded_values_bytes_and_force() -> eccodes::Result<()> {
+    let Some(path) = sample("GRIB2.tmpl") else {
+        return Ok(());
+    };
+
+    let mut src = MessageReader::grib(&path)?
+        .next()
+        .expect("GRIB2.tmpl is not empty")?;
+    let n = src.size("values")?;
+    src.set("bitsPerValue", 24_i64)?;
+    src.set(
+        "values",
+        (0..n)
+            .map(|i| i as f64 * 0.5)
+            .collect::<Vec<_>>()
+            .as_slice(),
+    )?;
+    let decoded: Vec<f64> = src.get("values")?;
+
+    // The coded data as raw bytes: 24 bits per value, within section 7.
+    let bytes: Vec<u8> = src.get("codedValues")?;
+    assert!(bytes.len() >= n * 3, "{} < {}", bytes.len(), n * 3);
+    let sec7 = usize::try_from(src.get::<i64>("section7Length")?).expect("section length fits");
+    assert!(bytes.len() <= sec7);
+
+    // Overwrite a clone's field through Force (codedValues is read-only
+    // for the plain set path), then transplant the original bytes back.
+    let mut clone = src.try_clone()?;
+    let zeros = vec![0.0_f64; n];
+    clone.set("codedValues", Force(zeros.as_slice()))?;
+    assert!(
+        clone
+            .get::<Vec<f64>>("codedValues")?
+            .iter()
+            .all(|&v| v == 0.0)
+    );
+
+    clone.set("codedValues", bytes.as_slice())?;
+    assert_eq!(clone.get::<Vec<f64>>("values")?, decoded);
+    Ok(())
+}
+
+/// Port of `tests/extract_offsets.cc` + `examples/C/get_product_kind.c`:
+/// per-product counting on a mixed GRIB/BUFR file, product kinds per
+/// message, and the GRIB-only byte-buffer reader.
+#[test]
+fn mixed_products_counting() -> eccodes::Result<()> {
+    let (Some(grib_path), Some(bufr_path)) = (sample("GRIB2.tmpl"), sample("BUFR4.tmpl")) else {
+        return Ok(());
+    };
+
+    // GRIB + BUFR + GRIB in one file.
+    let grib_bytes = std::fs::read(&grib_path)?;
+    let bufr_bytes = std::fs::read(&bufr_path)?;
+    let mixed_path = Path::new(env!("CARGO_TARGET_TMPDIR")).join("mixed_products.bin");
+    let mut mixed = grib_bytes.clone();
+    mixed.extend_from_slice(&bufr_bytes);
+    mixed.extend_from_slice(&grib_bytes);
+    std::fs::write(&mixed_path, &mixed)?;
+
+    assert_eq!(count_in_file(&mixed_path)?, 3);
+    assert_eq!(count_grib_in_file(&mixed_path)?, 2);
+    assert_eq!(count_bufr_in_file(&mixed_path)?, 1);
+
+    // get_product_kind.c: every message reports its kind.
+    let kinds: Vec<Kind> = MessageReader::any(&mixed_path)?
+        .map(|h| h.and_then(|h| h.product_kind()))
+        .collect::<Result<_, _>>()?;
+    assert_eq!(kinds, [Kind::Grib, Kind::Bufr, Kind::Grib]);
+
+    // The byte-buffer reader walks consecutive GRIB messages.
+    let mut two_gribs = grib_bytes.clone();
+    two_gribs.extend_from_slice(&grib_bytes);
+    let editions: Vec<i64> = Handle::read_from_bytes(&two_gribs)
+        .map(|h| h.and_then(|h| h.get::<i64>("edition")))
+        .collect::<Result<_, _>>()?;
+    assert_eq!(editions, [2, 2]);
+    Ok(())
+}
