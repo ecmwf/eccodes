@@ -123,14 +123,15 @@ fn gregorian_transition() -> eccodes::Result<()> {
 }
 
 /// `Test5`: an invalid date (2017-02-29) must NOT survive the round
-/// trip unchanged.
+/// trip unchanged. The C test only asserts inequality; here we pin the
+/// normalized result (2017-03-01) so the assertion cannot pass vacuously.
 #[test]
-fn invalid_date_does_not_round_trip() -> eccodes::Result<()> {
+fn invalid_date_normalizes() -> eccodes::Result<()> {
     let jd = datetime_to_julian(2017, 2, 29, 0, 0, 0)?;
-    assert_ne!(
+    assert_eq!(
         julian_to_datetime(jd)?,
-        (2017, 2, 29, 0, 0, 0),
-        "bad input should have failed checks"
+        (2017, 3, 1, 0, 0, 0),
+        "2017-02-29 should normalize to 2017-03-01"
     );
     Ok(())
 }
