@@ -1,0 +1,15 @@
+# DestinE MARS On-Demand ExtremesDT keywords
+
+# Default is lat,long 0.0,0.0 to 8 chars precision from geolib
+
+ascii[8] georef = "s0000000" : dump ;
+alias mars.georef = georef;
+
+codetable[2] configuration "grib2/local/destine/configuration.table" : dump;
+alias mars.configuration = configuration;
+
+# ECC-2222: We want model in what-if
+# Concept and aliasing into mars namespace must be done post metadata
+# otherwise the metadata for the modelName are not yet defined since
+# they come in Section 4
+# Thus we use logic in post_meta_data.hook for productionstatus 12/13
