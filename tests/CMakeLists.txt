@@ -125,6 +125,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecpoint
         grib_s2s
         grib_crra
+        grib_uerra
         grib_fire
         grib_generalised_tiles
         # grib_true_imagery
@@ -237,7 +238,6 @@ if( HAVE_BUILD_TOOLS )
         grib_partial_geometry
         grib_true_imagery
         grib_headers_only
-        grib_uerra
         grib_unpack_subarray
         grib_count
         grib_clone_headers_only
