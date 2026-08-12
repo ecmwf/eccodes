@@ -8,6 +8,7 @@ include "grib2/local.destine.base.def"
 template_nofail datasetTemplate "grib2/local.destine.[dataset:s].def";
 
 # Add keys sepecific to climate-dt
+# We do not add model here as we add it in the same way as it is added for on-demand data (post metadata)
 codetable[2] activity "grib2/destine_activity.table" : dump;
 alias mars.activity = activity;
 
@@ -16,9 +17,6 @@ alias mars.experiment = experiment;
 
 unsigned[1] generation = 255 : dump;
 alias mars.generation = generation;
-
-codetable[2] model "grib2/destine_model.table" : dump;
-alias mars.model = model;
 
 unsigned[1] realization = 255 : dump;
 alias mars.realization = realization;

@@ -23,7 +23,7 @@ if ( defined(dataset) && dataset is "climate-dt" ) {
 
 # ECC-2222: We want model in on-demand-extremes-dt
 # ECC-2310: We want model in what-if, but only when it's not climate what-if (destineLocalVersion=3) where the model is defined differently
-if ( defined(dataset) && ( dataset is "on-demand-extremes-dt" || ( dataset is "what-if" && destineLocalVersion!=3 ) ) ) {
+if ( defined(dataset) && ( dataset is "on-demand-extremes-dt" || dataset is "what-if" ) ) {
     concept modelName(unknown, "modelNameConcept.def", conceptsDir2, conceptsLocalDirAll): no_copy, dump;
     if (modelName isnot "unknown") {
         concept modelVersion(unknown, "modelVersionConcept.[modelName].def", conceptsDir2, conceptsLocalDirAll): no_copy, dump, read_only;

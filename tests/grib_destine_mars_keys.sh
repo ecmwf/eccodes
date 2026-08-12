@@ -140,16 +140,17 @@ ${tools_dir}/grib_set -s destineLocalVersion=3,dataset=6 $destine_sample $temp_g
 
 grib_check_key_exists $temp_grib_a dataset,georef,configuration,generation,activity,experiment,model,realization,resolution
 grib_check_key_equals $temp_grib_a "dataset,dataset:s,georef,mars.georef,mars.configuration,mars.configuration:s" "6 what-if s0000000 s0000000 0 unknown"
-grib_check_key_equals $temp_grib_a "generation,mars.generation,activity,mars.activity,experiment,mars.experiment,model,mars.model,realization,mars.realization,resolution,mars.resolution" "255 255 0 0 0 0 0 0 255 255 0 0"
+grib_check_key_equals $temp_grib_a "generation,mars.generation,activity,mars.activity,experiment,mars.experiment,model,mars.model,realization,mars.realization,resolution,mars.resolution" "255 255 0 0 0 0 IFS IFS 255 255 0 0"
 
 # Check an example where a few additional things are set in what-if based on climate-dt
 
-${tools_dir}/grib_set -s destineLocalVersion=3,dataset=6,georef=gcpkd2eu,configuration=1,generation=2,activity=1,experiment=1,model=2,realization=1,resolution=1 $destine_sample $temp_grib_a
+${tools_dir}/grib_set -s destineLocalVersion=3,dataset=6,georef=gcpkd2eu,configuration=1,generation=2,activity=1,experiment=1,realization=1,resolution=1 $destine_sample $temp_grib_b
+${tools_dir}/grib_set -s model=HARMONIE-AROME $temp_grib_b $temp_grib_a
 
 grib_check_key_equals $temp_grib_a "georef" "gcpkd2eu"
 grib_check_key_equals $temp_grib_a "configuration,configuration:s" "1 c0001"
-grib_check_key_equals $temp_grib_a "dataset,generation,activity,experiment,model,realization,resolution" "6 2 1 1 2 1 1"
-grib_check_key_equals $temp_grib_a "dataset:s,activity:s,experiment:s,model:s,resolution:s" "what-if CMIP6 hist IFS-NEMO standard"
+grib_check_key_equals $temp_grib_a "dataset,generation,activity,experiment,model,realization,resolution" "6 2 1 1 HARMONIE-AROME 1 1"
+grib_check_key_equals $temp_grib_a "dataset:s,activity:s,experiment:s,resolution:s" "what-if CMIP6 hist standard"
 
 # Clean up
 rm -f $temp_grib_a $temp_grib_b $destine_sample
