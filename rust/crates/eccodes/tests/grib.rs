@@ -620,15 +620,15 @@ fn coded_values_bytes_and_force() -> eccodes::Result<()> {
 
     // Overwrite a clone's field through Force (codedValues is read-only
     // for the plain set path), then transplant the original bytes back.
+    // The reversed ramp has the same min/max, so the packing parameters
+    // (reference value, scale, width) stay identical and the raw bytes
+    // remain compatible — all zeros would collapse to a 0-bit constant
+    // field.
     let mut clone = src.try_clone()?;
-    let zeros = vec![0.0_f64; n];
-    clone.set("codedValues", Force(zeros.as_slice()))?;
-    assert!(
-        clone
-            .get::<Vec<f64>>("codedValues")?
-            .iter()
-            .all(|&v| v == 0.0)
-    );
+    let reversed: Vec<f64> = decoded.iter().rev().copied().collect();
+    clone.set("codedValues", Force(reversed.as_slice()))?;
+    let forced: Vec<f64> = clone.get("values")?;
+    assert_eq!(forced, reversed);
 
     clone.set("codedValues", bytes.as_slice())?;
     assert_eq!(clone.get::<Vec<f64>>("values")?, decoded);
@@ -657,11 +657,15 @@ fn mixed_products_counting() -> eccodes::Result<()> {
     assert_eq!(count_grib_in_file(&mixed_path)?, 2);
     assert_eq!(count_bufr_in_file(&mixed_path)?, 1);
 
-    // get_product_kind.c: every message reports its kind.
-    let kinds: Vec<Kind> = MessageReader::any(&mixed_path)?
-        .map(|h| h.and_then(|h| h.product_kind()))
-        .collect::<Result<_, _>>()?;
-    assert_eq!(kinds, [Kind::Grib, Kind::Bufr, Kind::Grib]);
+    // get_product_kind.c: content kind comes from the kindOfProduct
+    // key; product_kind() only echoes the reader's kind (Any here).
+    let mut kinds = Vec::new();
+    for handle in MessageReader::any(&mixed_path)? {
+        let handle = handle?;
+        assert_eq!(handle.product_kind()?, Kind::Any);
+        kinds.push(handle.get::<String>("kindOfProduct")?);
+    }
+    assert_eq!(kinds, ["GRIB", "BUFR", "GRIB"]);
 
     // The byte-buffer reader walks consecutive GRIB messages.
     let mut two_gribs = grib_bytes.clone();

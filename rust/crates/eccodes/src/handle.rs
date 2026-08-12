@@ -149,7 +149,13 @@ impl<K: SingleKind> Handle<K> {
         Ok(w.write_all(self.message_data()?)?)
     }
 
-    /// The product kind of this message (`codes_get_product_kind`).
+    /// The product kind this handle was created as
+    /// (`codes_get_product_kind`).
+    ///
+    /// The C library stores the reader's product kind rather than
+    /// inspecting the message, so handles from
+    /// [`MessageReader::any`] report [`Kind::Any`]. To detect the
+    /// content kind, read the `kindOfProduct` string key.
     pub fn product_kind(&self) -> Result<Kind> {
         let mut product: sys::ProductKind = sys::ProductKind_PRODUCT_ANY;
         check!(sys::codes_get_product_kind(self.as_sys(), &raw mut product))?;

@@ -82,8 +82,13 @@ impl KeyGet for String {
             buf.as_mut_ptr().cast::<c_char>(),
             &raw mut len,
         ))?;
-        // `len` now counts the string including its NUL terminator.
+        // `len` now counts the string including its NUL terminator — but
+        // some accessors leave `len` at the buffer size instead (e.g.
+        // `kindOfProduct`), so also cut at the first NUL.
         buf.truncate(len.saturating_sub(1));
+        if let Some(nul) = buf.iter().position(|&b| b == 0) {
+            buf.truncate(nul);
+        }
         Ok(Self::from_utf8(buf).map_err(|e| e.utf8_error())?)
     }
 }
@@ -91,14 +96,28 @@ impl KeyGet for String {
 impl KeyGet for Vec<u8> {
     fn get_from<K: SingleKind>(handle: &Handle<K>, key: &str) -> Result<Self> {
         let ckey_ = ckey(key)?;
+        // codes_get_size counts elements, not bytes, so the first attempt
+        // can undershoot (e.g. `codedValues` packs several bytes per
+        // element). On ArrayTooSmall the library writes the required byte
+        // count back into `len` — retry once with that.
         let mut len = handle.size(key)?;
         let mut buf = vec![0_u8; len];
-        check!(sys::codes_get_bytes(
+        let mut result = check!(sys::codes_get_bytes(
             handle.as_sys(),
             ckey_.as_ptr(),
             buf.as_mut_ptr(),
             &raw mut len,
-        ))?;
+        ));
+        if matches!(result, Err(Error::ArrayTooSmall)) {
+            buf = vec![0_u8; len];
+            result = check!(sys::codes_get_bytes(
+                handle.as_sys(),
+                ckey_.as_ptr(),
+                buf.as_mut_ptr(),
+                &raw mut len,
+            ));
+        }
+        result?;
         buf.truncate(len);
         Ok(buf)
     }
