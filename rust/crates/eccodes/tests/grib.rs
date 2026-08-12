@@ -2,6 +2,14 @@
 //! several low-level calls in sequence, run against the in-repo sample
 //! messages (`samples/*.tmpl`) so no downloaded test data is needed.
 
+// Test data: loop indices cast to f64 stay far below 2^52, lengths cast
+// to i64 far below 2^63, and float assertions compare bit-for-bit copies.
+#![allow(
+    clippy::cast_precision_loss,
+    clippy::cast_possible_wrap,
+    clippy::float_cmp
+)]
+
 use std::collections::HashSet;
 use std::path::{Path, PathBuf};
 
@@ -125,6 +133,8 @@ fn set_get_round_trip() -> eccodes::Result<()> {
 /// missing-value branch of the C example is the part worth covering.
 #[test]
 fn geo_iterator_grid_and_missing() -> eccodes::Result<()> {
+    const MISSING: f64 = 1.0e36;
+
     let Some(path) = sample("GRIB2.tmpl") else {
         return Ok(());
     };
@@ -180,7 +190,6 @@ fn geo_iterator_grid_and_missing() -> eccodes::Result<()> {
     // grib_set_bitmap.c: declare a missing value, enable the bitmap and
     // re-encode with two points missing; the iterator must yield the
     // missing value exactly at those points.
-    const MISSING: f64 = 1.0e36;
     handle.set("missingValue", MISSING)?;
     handle.set("bitmapPresent", 1_i64)?;
     let mut holed: Vec<f64> = (0..n).map(|i| i as f64 * 0.5).collect();
@@ -282,7 +291,7 @@ fn nearest_point_search() -> eccodes::Result<()> {
 
 /// Download `name` from the ECMWF test-data server into a cache under
 /// the target dir, once. `None` (with a note on stderr) when the network
-/// is not cooperating — callers skip, like the CMake suite's optional
+/// is not cooperating — callers skip, like the `CMake` suite's optional
 /// downloaded fixtures.
 fn fetch(name: &str) -> Option<PathBuf> {
     let dir = Path::new(env!("CARGO_TARGET_TMPDIR")).join("eccodes-test-data");

@@ -39,9 +39,8 @@ fn header_without_unpack() -> eccodes::Result<()> {
     assert!(date.bytes().all(|b| b.is_ascii_digit()));
 
     // try_into_grib must refuse and hand the message back usable.
-    let handle = match handle.try_into_grib() {
-        Ok(_) => panic!("BUFR message retagged as GRIB"),
-        Err(handle) => handle,
+    let Err(handle) = handle.try_into_grib() else {
+        panic!("BUFR message retagged as GRIB")
     };
     assert_eq!(handle.get::<i64>("edition")?, 4);
     Ok(())
