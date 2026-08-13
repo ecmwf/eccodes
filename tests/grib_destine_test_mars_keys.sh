@@ -132,6 +132,9 @@ ${tools_dir}/grib_set -s dataset=4,georef=gcpkd2eu,model=HARMONIE-AROME $destine
 grib_check_key_equals $temp_grib_a "georef" "gcpkd2eu"
 grib_check_key_equals $temp_grib_a "model" "HARMONIE-AROME"
 
+# ECC-2304: Check the size of the model keyword. This was accidentally defined in both section4_extras and post_meta_data.hook
+grib_check_key_is_scalar $temp_grib_a "model" "HARMONIE-AROME"
+
 # ECC-2161: We replace mars.step=stepRange with mars.step=endStep (default) and mars.timespan
 # in extremes-dt. We continue to unalias timespan in climate-dt streams clte/clmn (checked above)
 ${tools_dir}/grib_set -s dataset=2,productDefinitionTemplateNumber=8,startStep=0,endStep=6 $destine_sample $temp_grib_a

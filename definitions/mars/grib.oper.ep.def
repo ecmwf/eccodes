@@ -1,3 +1,6 @@
-if (class is "ai") {
+if ( (class is "ai") && ( (!defined(MTG2Switch)) || (MTG2Switch == 0)) ){
  alias mars.step = stepRange;
+}
+else {
+ alias mars.step = endStep;
 }
