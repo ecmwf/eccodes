@@ -1,0 +1,64 @@
+if ( edition == 2 ){
+ unalias mars.date;
+ if (month == 1){
+  transient monthstr="jan";
+  transient hyphen='-';
+  meta datestr sprintf("%s%s%.2d",monthstr,hyphen,day);
+ }
+ if (month == 2){
+  transient monthstr="feb";
+  transient hyphen='-';
+  meta datestr sprintf("%s%s%.2d",monthstr,hyphen,day);
+ }
+ if (month == 3){
+  transient monthstr="mar";
+  transient hyphen='-';
+  meta datestr sprintf("%s%s%.2d",monthstr,hyphen,day);
+ }
+ if (month == 4){
+  transient monthstr="apr";
+  transient hyphen='-';
+  meta datestr sprintf("%s%s%.2d",monthstr,hyphen,day);
+ }
+ if (month == 5){
+  transient monthstr="may";
+  transient hyphen='-';
+  meta datestr sprintf("%s%s%.2d",monthstr,hyphen,day);
+ }
+ if (month == 6){
+  transient monthstr="jun";
+  transient hyphen='-';
+  meta datestr sprintf("%s%s%.2d",monthstr,hyphen,day);
+ }
+ if (month == 7){
+  transient monthstr="jul";
+  transient hyphen='-';
+  meta datestr sprintf("%s%s%.2d",monthstr,hyphen,day);
+ }
+ if (month == 8){
+  transient monthstr="aug";
+  transient hyphen='-';
+  meta datestr sprintf("%s%s%.2d",monthstr,hyphen,day);
+ }
+ if (month == 9){
+  transient monthstr="sep";
+  transient hyphen='-';
+  meta datestr sprintf("%s%s%.2d",monthstr,hyphen,day);
+ }
+ if (month == 10){
+  transient monthstr="oct";
+  transient hyphen='-';
+  meta datestr sprintf("%s%s%.2d",monthstr,hyphen,day);
+ }
+ if (month == 11){
+  transient monthstr="nov";
+  transient hyphen='-';
+  meta datestr sprintf("%s%s%.2d",monthstr,hyphen,day);
+ }
+ if (month == 12){
+  transient monthstr="dec";
+  transient hyphen='-';
+  meta datestr sprintf("%s%s%.2d",monthstr,hyphen,day);
+ }
+ alias mars.date=datestr;
+}
