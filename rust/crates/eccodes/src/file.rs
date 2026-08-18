@@ -91,7 +91,11 @@ impl<K: MessageKind> MessageFile<K> {
     }
 
     /// Read the messages of this product, in file order.
-    pub fn messages(&self) -> Result<Messages<'_, K>> {
+    ///
+    /// The reader owns its own stream, so it does not borrow this file: the
+    /// same file can be read twice at once, and
+    /// `GribFile::open(path)?.messages()?` needs no binding to keep alive.
+    pub fn messages(&self) -> Result<Messages<'static, K>> {
         Ok(Messages {
             source: Source::Stream(ffi::CFile::open(&self.path)?),
             done: false,
@@ -169,13 +173,13 @@ impl<K: MessageKind> fmt::Debug for MessageFile<K> {
     }
 }
 
-impl<'f, K: MessageKind> IntoIterator for &'f MessageFile<K> {
+impl<K: MessageKind> IntoIterator for &MessageFile<K> {
     type Item = Result<Message<K>>;
-    type IntoIter = Messages<'f, K>;
+    type IntoIter = Messages<'static, K>;
 
     /// Read the file's messages, reporting a failure to open it as the first
     /// item — see [`MessageFile::messages`] to handle that up front.
-    fn into_iter(self) -> Messages<'f, K> {
+    fn into_iter(self) -> Messages<'static, K> {
         match self.messages() {
             Ok(messages) => messages,
             Err(err) => Messages {
