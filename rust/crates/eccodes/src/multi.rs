@@ -1,48 +1,118 @@
-//! Multi-field GRIB messages — `Handle<GribMulti>`.
+//! Multi-field GRIB messages — several fields written as one message.
+//!
+//! ```no_run
+//! use eccodes::{GribFile, GribMultiField};
+//!
+//! # fn main() -> eccodes::Result<()> {
+//! let mut multi = GribMultiField::new()?;
+//! for message in &GribFile::open("fields.grib2")? {
+//!     multi.push(&message?)?;
+//! }
+//! multi.write_to(std::fs::File::create("combined.grib2")?)?;
+//! # Ok(())
+//! # }
+//! ```
+//!
+//! # Process-wide effect
+//!
+//! Creating a `GribMultiField` switches on the C library's global multi-field
+//! support, exactly as
+//! [`Library::set_grib_multi_support(true)`](crate::Library::set_grib_multi_support)
+//! would, and nothing switches it back. While it is on:
+//!
+//! - reading a GRIB file yields one message per *field* rather than per
+//!   message, and
+//! - [`MessageFile::<Grib>::count`](crate::MessageFile::count) fails with
+//!   [`Code::NotImplemented`](crate::Code::NotImplemented), because the C
+//!   counter refuses to count multi-field GRIBs.
+//!
+//! Turn it off with `Library::set_grib_multi_support(false)` once the
+//! multi-field message has been written.
 
 use std::ffi::c_int;
+use std::fmt;
 use std::io::Write;
 use std::ptr::{self, NonNull};
 
 use eccodes_sys as sys;
 
-use crate::error::{Error, Result, check};
-use crate::handle::{Handle, with_memstream};
-use crate::kind::{Grib, GribMulti};
+use crate::error::{Code, Error, Result, check};
+use crate::ffi;
+use crate::message::GribMessage;
 
-impl Handle<GribMulti> {
-    /// Create an empty multi-field GRIB message
-    /// (`codes_grib_multi_handle_new`).
+/// A multi-field GRIB message under construction.
+///
+/// Fields are appended one message at a time and written out together.
+pub struct GribMultiField {
+    raw: NonNull<sys::codes_multi_handle>,
+}
+
+/// The section a field's own data starts at: GRIB2's Product Definition
+/// Section, which is where `grib_multi_write` and the C examples start.
+const DEFAULT_START_SECTION: u8 = 4;
+
+// SAFETY: the multi-field message owns its C object exclusively and may move
+// between threads. Not `Sync`: appending mutates it.
+unsafe impl Send for GribMultiField {}
+
+impl GribMultiField {
+    /// Start an empty multi-field message.
     ///
-    /// Side effect inherited from the C library: this enables multi-field
-    /// support on the process-global context, as if
-    /// [`Context::grib_multi_support(true)`](crate::Context::grib_multi_support)
-    /// had been called — subsequent file reads split multi-field messages
-    /// into one handle per field until it is turned off again.
+    /// See the [module docs](self) for the process-wide effect this has.
     pub fn new() -> Result<Self> {
-        // SAFETY: NULL context selects the default context.
+        // SAFETY: a NULL context selects the default one.
         let raw = unsafe { sys::codes_grib_multi_handle_new(ptr::null_mut()) };
         NonNull::new(raw)
-            .map(Self::from_raw)
-            .ok_or(Error::NullHandle)
+            .map(|raw| Self { raw })
+            .ok_or_else(|| Error::from(Code::NullHandle))
     }
 
-    /// Append the sections of `src` from `start_section` onwards
-    /// (`codes_grib_multi_handle_append`).
-    pub fn append(&mut self, src: &Handle<Grib>, start_section: u32) -> Result<()> {
-        let start_section = c_int::try_from(start_section).map_err(|_| Error::InvalidArgument)?;
+    /// Append a field, taking its sections from the Product Definition
+    /// Section onwards and inheriting the earlier sections already in the
+    /// message.
+    pub fn push(&mut self, message: &GribMessage) -> Result<()> {
+        self.push_from_section(message, DEFAULT_START_SECTION)
+    }
+
+    /// Append a field, taking its sections from `section` onwards.
+    ///
+    /// Sections before `section` come from what is already in the multi-field
+    /// message, so a lower number repeats more of the field's own metadata.
+    pub fn push_from_section(&mut self, message: &GribMessage, section: u8) -> Result<()> {
         check!(sys::codes_grib_multi_handle_append(
-            src.as_sys(),
-            start_section,
-            self.as_sys(),
+            message.as_ptr(),
+            c_int::from(section),
+            self.raw.as_ptr(),
         ))
     }
 
-    /// Write the raw multi-field message to `w`
-    /// (`codes_grib_multi_handle_write`).
-    pub fn write_to(&self, w: &mut impl Write) -> Result<()> {
-        with_memstream(w, |file| {
-            check!(sys::codes_grib_multi_handle_write(self.as_sys(), file))
+    /// Write the multi-field message to `out`.
+    pub fn write_to(&self, out: impl Write) -> Result<()> {
+        ffi::with_memstream(out, |stream| {
+            check!(sys::codes_grib_multi_handle_write(
+                self.raw.as_ptr(),
+                stream
+            ))
         })
+    }
+
+    /// The multi-field message's bytes.
+    pub fn to_vec(&self) -> Result<Vec<u8>> {
+        let mut bytes = Vec::new();
+        self.write_to(&mut bytes)?;
+        Ok(bytes)
+    }
+}
+
+impl Drop for GribMultiField {
+    fn drop(&mut self) {
+        // SAFETY: a valid multi-field handle owned by us, freed exactly once.
+        unsafe { sys::codes_grib_multi_handle_delete(self.raw.as_ptr()) };
+    }
+}
+
+impl fmt::Debug for GribMultiField {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("GribMultiField").finish_non_exhaustive()
     }
 }
