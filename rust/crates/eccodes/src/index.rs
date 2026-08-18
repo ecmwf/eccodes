@@ -1,217 +1,335 @@
-//! `Index` — indexed access to the messages in a set of files.
+//! [`Index`] — selecting messages by key value, across one or more files.
+//!
+//! ```no_run
+//! use eccodes::Index;
+//!
+//! # fn main() -> eccodes::Result<()> {
+//! let mut index = Index::from_file("data.grib2", ["shortName", "step"])?;
+//!
+//! println!("{:?}", index.values::<String>("shortName")?);
+//!
+//! index.select("shortName", "2t")?.select("step", 0_i64)?;
+//! for message in index.messages() {
+//!     println!("{}", message?.get::<f64>("average")?);
+//! }
+//! # Ok(())
+//! # }
+//! ```
+//!
+//! Every key of the index must have a selected value before the messages can
+//! be read — the index is a lookup, not a filter.
 
-use std::ffi::{CStr, CString, c_char, c_long};
+use std::ffi::{c_char, c_long};
+use std::fmt;
+use std::iter::FusedIterator;
 use std::path::Path;
 use std::ptr::{self, NonNull};
 
 use eccodes_sys as sys;
 
-use crate::error::{Error, Result, check};
-use crate::handle::{Handle, ckey, cpath};
-use crate::kind::Any;
+use crate::error::{Code, Error, ErrorContext, Result, check};
+use crate::ffi;
+use crate::message::Message;
 
-/// Index over the messages in one or more files, keyed by a fixed set of
-/// keys (`codes_index`).
-///
-/// Select values with the `select_*` methods, then drain the matching
-/// messages with [`Index::next_handle`].
+/// An index of the messages in one or more files, keyed on a fixed set of
+/// keys.
 pub struct Index {
     raw: NonNull<sys::codes_index>,
 }
 
-// SAFETY: the index owns its C object exclusively; not Sync — the C index
-// carries internal iteration state.
+// SAFETY: an index owns its C object exclusively and may move between
+// threads. Not `Sync`: selection and iteration mutate state inside it.
 unsafe impl Send for Index {}
 
 impl Index {
-    /// Create an empty index on `keys` (`codes_index_new`).
-    pub fn new(keys: &[&str]) -> Result<Self> {
-        let keys = ckey(&keys.join(","))?;
-        let mut err = 0;
-        // SAFETY: NULL context selects the default context; `keys` is a valid
-        // NUL-terminated comma-separated list.
-        let raw = unsafe { sys::codes_index_new(ptr::null_mut(), keys.as_ptr(), &raw mut err) };
-        Error::from_code(err)?;
+    /// An empty index over `keys`, to be filled with
+    /// [`add_file`](Self::add_file).
+    pub fn new<I, S>(keys: I) -> Result<Self>
+    where
+        I: IntoIterator<Item = S>,
+        S: AsRef<str>,
+    {
+        let ckeys = ffi::cstring(&join_keys(keys))?;
+        let mut status = 0;
+        // SAFETY: a NULL context selects the default one; `ckeys` is a
+        // NUL-terminated comma-separated list, copied by the library.
+        let raw = unsafe { sys::codes_index_new(ptr::null_mut(), ckeys.as_ptr(), &raw mut status) };
+        Error::from_raw(status)?;
         NonNull::new(raw)
             .map(|raw| Self { raw })
-            .ok_or(Error::NullIndex)
+            .ok_or_else(|| Error::from(Code::NullIndex))
     }
 
-    /// Index the messages in the file at `path` on `keys`
-    /// (`codes_index_new_from_file`).
-    pub fn from_file(path: impl AsRef<Path>, keys: &[&str]) -> Result<Self> {
-        let path = cpath(path.as_ref())?;
-        let keys = ckey(&keys.join(","))?;
-        let mut err = 0;
-        // SAFETY: as for `new`, plus a valid NUL-terminated path.
+    /// An index over `keys`, built from the messages in `path`.
+    pub fn from_file<I, S>(path: impl AsRef<Path>, keys: I) -> Result<Self>
+    where
+        I: IntoIterator<Item = S>,
+        S: AsRef<str>,
+    {
+        let path = path.as_ref();
+        let cpath = ffi::cpath(path)?;
+        let ckeys = ffi::cstring(&join_keys(keys))?;
+        let mut status = 0;
+        // SAFETY: as for `new`, plus a NUL-terminated path that is only read.
         let raw = unsafe {
             sys::codes_index_new_from_file(
                 ptr::null_mut(),
-                path.as_ptr(),
-                keys.as_ptr(),
-                &raw mut err,
+                cpath.as_ptr(),
+                ckeys.as_ptr(),
+                &raw mut status,
             )
         };
-        Error::from_code(err)?;
+        Error::from_raw(status).with_path(path)?;
         NonNull::new(raw)
             .map(|raw| Self { raw })
-            .ok_or(Error::NullIndex)
+            .ok_or_else(|| Error::from(Code::NullIndex))
+            .with_path(path)
     }
 
-    /// Load an index previously saved with [`Index::write`]
-    /// (`codes_index_read`).
-    pub fn read(path: impl AsRef<Path>) -> Result<Self> {
-        let path = cpath(path.as_ref())?;
-        let mut err = 0;
-        // SAFETY: NULL context selects the default context; valid path.
-        let raw = unsafe { sys::codes_index_read(ptr::null_mut(), path.as_ptr(), &raw mut err) };
-        Error::from_code(err)?;
+    /// Load an index written by [`save`](Self::save).
+    pub fn open(path: impl AsRef<Path>) -> Result<Self> {
+        let path = path.as_ref();
+        let cpath = ffi::cpath(path)?;
+        let mut status = 0;
+        // SAFETY: a NULL context selects the default one; NUL-terminated path.
+        let raw =
+            unsafe { sys::codes_index_read(ptr::null_mut(), cpath.as_ptr(), &raw mut status) };
+        Error::from_raw(status).with_path(path)?;
         NonNull::new(raw)
             .map(|raw| Self { raw })
-            .ok_or(Error::NullIndex)
+            .ok_or_else(|| Error::from(Code::NullIndex))
+            .with_path(path)
     }
 
-    /// Save this index to the file at `path` (`codes_index_write`).
-    pub fn write(&self, path: impl AsRef<Path>) -> Result<()> {
-        let path = cpath(path.as_ref())?;
-        check!(sys::codes_index_write(self.raw.as_ptr(), path.as_ptr()))
+    /// Write the index to `path`, to be loaded later by [`open`](Self::open).
+    pub fn save(&self, path: impl AsRef<Path>) -> Result<()> {
+        let path = path.as_ref();
+        let cpath = ffi::cpath(path)?;
+        check!(sys::codes_index_write(self.raw.as_ptr(), cpath.as_ptr())).with_path(path)
     }
 
-    /// Index the messages of another file into this index
-    /// (`codes_index_add_file`).
+    /// Add the messages of another file to the index.
     pub fn add_file(&mut self, path: impl AsRef<Path>) -> Result<()> {
-        let path = cpath(path.as_ref())?;
-        check!(sys::codes_index_add_file(self.raw.as_ptr(), path.as_ptr()))
+        let path = path.as_ref();
+        let cpath = ffi::cpath(path)?;
+        check!(sys::codes_index_add_file(self.raw.as_ptr(), cpath.as_ptr())).with_path(path)
     }
 
-    /// Number of distinct values of `key` in the index
-    /// (`codes_index_get_size`).
-    pub fn size(&self, key: &str) -> Result<usize> {
-        let key = ckey(key)?;
-        let mut size: usize = 0;
+    /// How many distinct values of `key` the index holds.
+    pub fn value_count(&self, key: &str) -> Result<usize> {
+        let ckey = ffi::cstring(key)?;
+        let mut count: usize = 0;
         check!(sys::codes_index_get_size(
             self.raw.as_ptr(),
-            key.as_ptr(),
-            &raw mut size
-        ))?;
-        Ok(size)
-    }
-
-    /// The distinct `long` values of `key` (`codes_index_get_long`).
-    pub fn values_long(&self, key: &str) -> Result<Vec<i64>> {
-        let ckey_ = ckey(key)?;
-        let mut len = self.size(key)?;
-        let mut values = vec![0_i64; len];
-        check!(sys::codes_index_get_long(
-            self.raw.as_ptr(),
-            ckey_.as_ptr(),
-            values.as_mut_ptr().cast::<c_long>(),
-            &raw mut len,
-        ))?;
-        values.truncate(len);
-        Ok(values)
-    }
-
-    /// The distinct `double` values of `key` (`codes_index_get_double`).
-    pub fn values_double(&self, key: &str) -> Result<Vec<f64>> {
-        let ckey_ = ckey(key)?;
-        let mut len = self.size(key)?;
-        let mut values = vec![0.0_f64; len];
-        check!(sys::codes_index_get_double(
-            self.raw.as_ptr(),
-            ckey_.as_ptr(),
-            values.as_mut_ptr(),
-            &raw mut len,
-        ))?;
-        values.truncate(len);
-        Ok(values)
-    }
-
-    /// The distinct string values of `key` (`codes_index_get_string`).
-    pub fn values_string(&self, key: &str) -> Result<Vec<String>> {
-        let ckey_ = ckey(key)?;
-        let mut len = self.size(key)?;
-        let mut ptrs: Vec<*mut c_char> = vec![ptr::null_mut(); len];
-        check!(sys::codes_index_get_string(
-            self.raw.as_ptr(),
-            ckey_.as_ptr(),
-            ptrs.as_mut_ptr(),
-            &raw mut len,
-        ))?;
-        ptrs.truncate(len);
-        let mut values = Vec::with_capacity(len);
-        let mut utf8_err = None;
-        for ptr in ptrs {
-            if ptr.is_null() {
-                continue;
-            }
-            // SAFETY: non-null NUL-terminated string allocated by the library.
-            match unsafe { CStr::from_ptr(ptr) }.to_str() {
-                Ok(s) => values.push(s.to_owned()),
-                Err(e) => utf8_err = Some(e),
-            }
-            // SAFETY: allocated with malloc by the library, ownership is ours.
-            unsafe { libc::free(ptr.cast()) };
-        }
-        utf8_err.map_or(Ok(values), |e| Err(e.into()))
-    }
-
-    /// Restrict the selection to messages with `key == value`
-    /// (`codes_index_select_long`).
-    pub fn select_long(&mut self, key: &str, value: i64) -> Result<()> {
-        let key = ckey(key)?;
-        check!(sys::codes_index_select_long(
-            self.raw.as_ptr(),
-            key.as_ptr(),
-            value
+            ckey.as_ptr(),
+            &raw mut count
         ))
+        .with_key(key)?;
+        Ok(count)
     }
 
-    /// Restrict the selection to messages with `key == value`
-    /// (`codes_index_select_double`).
-    pub fn select_double(&mut self, key: &str, value: f64) -> Result<()> {
-        let key = ckey(key)?;
-        check!(sys::codes_index_select_double(
-            self.raw.as_ptr(),
-            key.as_ptr(),
-            value
-        ))
+    /// The distinct values of `key`, decoded as `T` — `i64`, `f64` or
+    /// `String`.
+    pub fn values<T: IndexValue>(&self, key: &str) -> Result<Vec<T>> {
+        T::values_from(self, key)
     }
 
-    /// Restrict the selection to messages with `key == value`
-    /// (`codes_index_select_string`).
-    pub fn select_string(&mut self, key: &str, value: &str) -> Result<()> {
-        let key = ckey(key)?;
-        let value = CString::new(value)?;
-        check!(sys::codes_index_select_string(
-            self.raw.as_ptr(),
-            key.as_ptr(),
-            value.as_ptr()
-        ))
-    }
-
-    /// The next message matching the current selection
-    /// (`codes_handle_new_from_index`). `Ok(None)` when the selection is
-    /// exhausted.
+    /// Restrict the selection to messages whose `key` equals `value`.
     ///
-    /// All keys of the index must have a selected value before calling this.
-    pub fn next_handle(&mut self) -> Result<Option<Handle<Any>>> {
-        let mut err = 0;
-        // SAFETY: valid index.
-        let raw = unsafe { sys::codes_handle_new_from_index(self.raw.as_ptr(), &raw mut err) };
-        let Some(raw) = NonNull::new(raw) else {
-            return match Error::from_code(err) {
-                Ok(()) | Err(Error::EndOfIndex) => Ok(None),
-                Err(e) => Err(e),
-            };
-        };
-        Ok(Some(Handle::from_raw(raw)))
+    /// Chainable: each call narrows the selection further, and every key of
+    /// the index must be selected before [`messages`](Self::messages).
+    pub fn select<T: IndexSelect>(&mut self, key: &str, value: T) -> Result<&mut Self> {
+        value.select_on(self, key)?;
+        Ok(self)
+    }
+
+    /// The messages matching the current selection.
+    #[must_use]
+    pub fn messages(&mut self) -> IndexMessages<'_> {
+        IndexMessages {
+            index: self,
+            done: false,
+        }
+    }
+
+    pub(crate) const fn as_ptr(&self) -> *mut sys::codes_index {
+        self.raw.as_ptr()
     }
 }
 
 impl Drop for Index {
     fn drop(&mut self) {
-        // SAFETY: `raw` is a valid index owned by us; freed exactly once.
+        // SAFETY: a valid index owned by us, freed exactly once.
         unsafe { sys::codes_index_delete(self.raw.as_ptr()) };
+    }
+}
+
+impl fmt::Debug for Index {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("Index").finish_non_exhaustive()
+    }
+}
+
+fn join_keys<I, S>(keys: I) -> String
+where
+    I: IntoIterator<Item = S>,
+    S: AsRef<str>,
+{
+    keys.into_iter()
+        .map(|key| key.as_ref().to_owned())
+        .collect::<Vec<_>>()
+        .join(",")
+}
+
+/// A type the distinct values of an index key can be read as — see
+/// [`Index::values`].
+pub trait IndexValue: Sized {
+    /// Read the distinct values of `key`.
+    fn values_from(index: &Index, key: &str) -> Result<Vec<Self>>;
+}
+
+/// A type an index selection can be made with — see [`Index::select`].
+pub trait IndexSelect {
+    /// Select messages whose `key` equals `self`.
+    fn select_on(self, index: &mut Index, key: &str) -> Result<()>;
+}
+
+impl IndexValue for i64 {
+    fn values_from(index: &Index, key: &str) -> Result<Vec<Self>> {
+        let ckey = ffi::cstring(key)?;
+        let mut len = index.value_count(key)?;
+        let mut values = vec![0_i64; len];
+        check!(sys::codes_index_get_long(
+            index.as_ptr(),
+            ckey.as_ptr(),
+            values.as_mut_ptr().cast::<c_long>(),
+            &raw mut len,
+        ))
+        .with_key(key)?;
+        values.truncate(len);
+        Ok(values)
+    }
+}
+
+impl IndexValue for f64 {
+    fn values_from(index: &Index, key: &str) -> Result<Vec<Self>> {
+        let ckey = ffi::cstring(key)?;
+        let mut len = index.value_count(key)?;
+        let mut values = vec![0.0_f64; len];
+        check!(sys::codes_index_get_double(
+            index.as_ptr(),
+            ckey.as_ptr(),
+            values.as_mut_ptr(),
+            &raw mut len,
+        ))
+        .with_key(key)?;
+        values.truncate(len);
+        Ok(values)
+    }
+}
+
+impl IndexValue for String {
+    fn values_from(index: &Index, key: &str) -> Result<Vec<Self>> {
+        let ckey = ffi::cstring(key)?;
+        let mut len = index.value_count(key)?;
+        let mut ptrs: Vec<*mut c_char> = vec![ptr::null_mut(); len];
+        check!(sys::codes_index_get_string(
+            index.as_ptr(),
+            ckey.as_ptr(),
+            ptrs.as_mut_ptr(),
+            &raw mut len,
+        ))
+        .with_key(key)?;
+        ptrs.truncate(len);
+        // SAFETY: every non-null entry is a malloc'd NUL-terminated string the
+        // library handed over and no longer tracks.
+        unsafe { ffi::take_strings(&ptrs) }.with_key(key)
+    }
+}
+
+impl IndexSelect for i64 {
+    fn select_on(self, index: &mut Index, key: &str) -> Result<()> {
+        let ckey = ffi::cstring(key)?;
+        check!(sys::codes_index_select_long(
+            index.as_ptr(),
+            ckey.as_ptr(),
+            self
+        ))
+        .with_key(key)
+    }
+}
+
+impl IndexSelect for f64 {
+    fn select_on(self, index: &mut Index, key: &str) -> Result<()> {
+        let ckey = ffi::cstring(key)?;
+        check!(sys::codes_index_select_double(
+            index.as_ptr(),
+            ckey.as_ptr(),
+            self
+        ))
+        .with_key(key)
+    }
+}
+
+impl IndexSelect for &str {
+    fn select_on(self, index: &mut Index, key: &str) -> Result<()> {
+        let ckey = ffi::cstring(key)?;
+        let value = ffi::cstring(self)?;
+        check!(sys::codes_index_select_string(
+            index.as_ptr(),
+            ckey.as_ptr(),
+            value.as_ptr()
+        ))
+        .with_key(key)
+    }
+}
+
+impl IndexSelect for &String {
+    fn select_on(self, index: &mut Index, key: &str) -> Result<()> {
+        self.as_str().select_on(index, key)
+    }
+}
+
+impl IndexSelect for String {
+    fn select_on(self, index: &mut Index, key: &str) -> Result<()> {
+        self.as_str().select_on(index, key)
+    }
+}
+
+/// The messages matching an index selection — see [`Index::messages`].
+pub struct IndexMessages<'i> {
+    index: &'i mut Index,
+    done: bool,
+}
+
+impl Iterator for IndexMessages<'_> {
+    type Item = Result<Message>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.done {
+            return None;
+        }
+        let mut status = 0;
+        // SAFETY: valid index; the status out-pointer addresses a local.
+        let raw = unsafe { sys::codes_handle_new_from_index(self.index.as_ptr(), &raw mut status) };
+        if let Some(raw) = NonNull::new(raw) {
+            return Some(Ok(Message::from_raw(raw)));
+        }
+
+        self.done = true;
+        match Error::from_raw(status) {
+            // Both spellings the library uses for "that was the last one".
+            Ok(()) => None,
+            Err(err) if err.code() == Some(Code::EndOfIndex) => None,
+            Err(err) => Some(Err(err)),
+        }
+    }
+}
+
+impl FusedIterator for IndexMessages<'_> {}
+
+impl fmt::Debug for IndexMessages<'_> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "IndexMessages {{ done: {} }}", self.done)
     }
 }
