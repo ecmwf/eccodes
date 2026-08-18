@@ -86,6 +86,13 @@ meta MTG2SwitchDefault mtg2_switch_default(tablesVersion, tablesVersionMTG2Switc
 
 concept MTG2Switch(MTG2SwitchDefault, "MTG2SwitchConcept.def", conceptsDir2,conceptsDir1): hidden, read_only, long_type;
 
+if (centre == 98) {
+    alias MTG2Encoder = MTG2Switch;
+}
+else {
+    transient MTG2Encoder = 0;
+}
+
 # ECC-2002
 # if datasetForLocal is not "unknown", we remap conceptsDir1 and conceptsDir2
 # See the g2_concept_dir accessor
