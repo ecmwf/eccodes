@@ -75,6 +75,33 @@ pub(crate) unsafe fn take_strings(ptrs: &[*mut c_char]) -> Result<Vec<String>> {
     failure.map_or(Ok(values), |err| Err(Error::from(err)))
 }
 
+/// Take ownership of an array of file offsets the library allocated with
+/// `malloc`, freeing it.
+///
+/// Always call this once the C function has returned, success or not: the
+/// library allocates before it can fail, and hands the array over either way.
+///
+/// # Safety
+///
+/// `offsets` must be NULL, or an array of at least `count` offsets allocated
+/// by the C library and not freed elsewhere; ownership moves to this call.
+pub(crate) unsafe fn take_offsets(offsets: *mut libc::off_t, count: usize) -> Result<Vec<u64>> {
+    let taken = if offsets.is_null() {
+        Ok(Vec::new())
+    } else {
+        // SAFETY: `count` offsets allocated by the library, by the caller's
+        // contract.
+        unsafe { std::slice::from_raw_parts(offsets, count) }
+            .iter()
+            .map(|&offset| u64::try_from(offset).map_err(|_| Error::from(Code::InternalError)))
+            .collect()
+    };
+    // SAFETY: allocated by the library with malloc; freed exactly once, after
+    // the last read above. `free` accepts NULL.
+    unsafe { libc::free(offsets.cast::<c_void>()) };
+    taken
+}
+
 /// An owned `FILE*`, closed on drop.
 pub(crate) struct CFile {
     raw: NonNull<sys::FILE>,
