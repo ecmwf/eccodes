@@ -192,7 +192,9 @@ pub(crate) fn with_memstream(
 /// A negative count means the library contradicted its own contract, which is
 /// [`Code::InternalError`], not something a caller can act on.
 pub(crate) fn to_usize<T: TryInto<usize>>(value: T) -> Result<usize> {
-    value.try_into().map_err(|_| Error::from(Code::InternalError))
+    value
+        .try_into()
+        .map_err(|_| Error::from(Code::InternalError))
 }
 
 /// A caller-supplied length or index, as the C `int` the API expects.
@@ -223,7 +225,10 @@ mod tests {
         let err = CFile::open(Path::new("/nonexistent/eccodes-test.grib2"))
             .err()
             .expect("open of a missing file fails");
-        assert_eq!(err.path(), Some(Path::new("/nonexistent/eccodes-test.grib2")));
+        assert_eq!(
+            err.path(),
+            Some(Path::new("/nonexistent/eccodes-test.grib2"))
+        );
         assert!(err.io_error().is_some());
     }
 

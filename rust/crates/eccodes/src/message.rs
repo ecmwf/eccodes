@@ -193,14 +193,21 @@ impl<K: MessageKind> Message<K> {
             &raw mut raw
         ))
         .with_key(key)?;
-        KeyType::from_raw(raw).ok_or(Code::InvalidType).with_key(key)
+        KeyType::from_raw(raw)
+            .ok_or(Code::InvalidType)
+            .with_key(key)
     }
 
     /// How many elements the key holds — 1 for a scalar, N for an array.
     pub fn key_len(&self, key: &str) -> Result<usize> {
         let ckey = ffi::cstring(key)?;
         let mut len: usize = 0;
-        check!(sys::codes_get_size(self.as_ptr(), ckey.as_ptr(), &raw mut len)).with_key(key)?;
+        check!(sys::codes_get_size(
+            self.as_ptr(),
+            ckey.as_ptr(),
+            &raw mut len
+        ))
+        .with_key(key)?;
         Ok(len)
     }
 
@@ -305,7 +312,10 @@ impl<K: MessageKind> Message<K> {
     pub fn file_offset(&self) -> Result<u64> {
         // Typed by the C signature (`off_t`), so this module names no libc type.
         let mut offset = 0;
-        check!(sys::codes_get_message_offset(self.as_ptr(), &raw mut offset))?;
+        check!(sys::codes_get_message_offset(
+            self.as_ptr(),
+            &raw mut offset
+        ))?;
         u64::try_from(offset).map_err(|_| Error::from(Code::InternalError))
     }
 
@@ -412,7 +422,10 @@ impl Message<Any> {
         self.retag_checked(Kind::Bufr)
     }
 
-    fn retag_checked<T: MessageKind>(self, expected: Kind) -> std::result::Result<Message<T>, WrongKind> {
+    fn retag_checked<T: MessageKind>(
+        self,
+        expected: Kind,
+    ) -> std::result::Result<Message<T>, WrongKind> {
         let actual = match self.kind() {
             Ok(kind) => kind,
             // A message whose bytes cannot be read is not the kind we want.

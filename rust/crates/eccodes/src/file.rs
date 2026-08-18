@@ -311,6 +311,11 @@ impl<K: MessageKind> fmt::Debug for Messages<'_, K> {
             Source::Bytes(_) => "bytes",
             Source::Failed(_) => "failed",
         };
-        write!(f, "Messages<{}> {{ {source}, done: {} }}", K::NAME, self.done)
+        write!(
+            f,
+            "Messages<{}> {{ {source}, done: {} }}",
+            K::NAME,
+            self.done
+        )
     }
 }

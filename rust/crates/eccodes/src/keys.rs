@@ -151,11 +151,7 @@ enum State<'m> {
 
 impl<'m> Keys<'m> {
     fn start(query: &KeysQuery<'m>) -> Result<NonNull<sys::codes_keys_iterator>> {
-        let namespace = query
-            .namespace
-            .as_deref()
-            .map(ffi::cstring)
-            .transpose()?;
+        let namespace = query.namespace.as_deref().map(ffi::cstring).transpose()?;
         // SAFETY: valid handle; a NULL namespace means "all of them", and a
         // non-NULL one is NUL-terminated and copied by the library.
         let raw = unsafe {

@@ -1,177 +1,107 @@
-//! Safe Rust wrapper for ECMWF's eccodes (GRIB/BUFR decoding and encoding).
-//!
-//! Provides:
-//! - [`Handle`] — a single GRIB/BUFR message; typed key access via
-//!   [`Handle::get`]/[`Handle::set`], compile-time product kinds via
-//!   [`kind`]
-//! - [`MessageReader`] — iteration over the messages in a file
-//! - [`Index`] — indexed access to messages across files
-//! - [`GeoIterator`]/[`Nearest`] — grid point iteration and
-//!   nearest-neighbour search on GRIB messages
-//!
-//! # Example
+//! Read and write GRIB and BUFR messages, through ECMWF's eccodes library.
 //!
 //! ```no_run
-//! use eccodes::MessageReader;
+//! use eccodes::GribFile;
 //!
 //! # fn main() -> eccodes::Result<()> {
-//! for handle in MessageReader::grib("data.grib2")? {
-//!     let handle = handle?;
-//!     let short_name: String = handle.get("shortName")?;
-//!     let values: Vec<f64> = handle.get("values")?;
-//!     println!("{short_name}: {} values", values.len());
+//! let file = GribFile::open("data.grib2")?;
+//! println!("{} messages", file.count()?);
+//!
+//! for message in &file {
+//!     let message = message?;
+//!     let name: String = message.get("shortName")?;
+//!     let values = message.values()?;
+//!     println!("{name}: {} points", values.len());
 //! }
 //! # Ok(())
 //! # }
 //! ```
+//!
+//! # The shape of the API
+//!
+//! - A [`MessageFile`] is a file of messages: [`count`](MessageFile::count)
+//!   it, [`index`](MessageFile::index) it, or iterate it. [`GribFile`] and
+//!   [`BufrFile`] fix the product; plain `MessageFile` accepts any.
+//! - A [`Message`] is one message. Keys are read and written by name, typed
+//!   by what you ask for — see [`get`](Message::get) and [`set`](Message::set).
+//!   [`GribMessage`] adds grids and nearest-point search; [`BufrMessage`]
+//!   adds [`unpack`](BufrMessage::unpack).
+//! - Products are types, not arguments: [`kind`] holds the markers, and
+//!   [`Kind`] reports what a message actually is.
+//! - [`Library`] is the C library itself — version, search paths, debug
+//!   output.
+//!
+//! # Missing values
+//!
+//! Ask for an [`Option`] and a key that is absent, or coded as missing, is
+//! `None`:
+//!
+//! ```no_run
+//! # fn main() -> eccodes::Result<()> {
+//! # let message: eccodes::Message = unimplemented!();
+//! let level: Option<i64> = message.get("levelist")?;
+//! # Ok(())
+//! # }
+//! ```
+//!
+//! Inside a `values` array, individual missing points are coded with a bitmap
+//! and a sentinel instead — see [`missing`].
+//!
+//! # Errors
+//!
+//! [`Error`] says what failed and what it was working on:
+//! `eccodes::NotFound: Key/value not found (key "shortNam")`. Match on
+//! [`Error::code`], which context never changes.
+//!
+//! # Threads
+//!
+//! Messages, files and indexes are [`Send`] but not [`Sync`]: the C library
+//! caches decoded state inside a message even when reading, so two threads
+//! must not share one. Move a message to a thread, or read it there from its
+//! own file.
+//!
+//! # Features
+//!
+//! - `vendored` (default) — build and link eccodes from source.
+//! - `system` — link an installed eccodes.
+//! - `raw` — expose [`Message::as_raw`] and re-export [`sys`], for handing a
+//!   message to another library built on eccodes.
 
-use eccodes_sys as sys;
+#![deny(missing_docs)]
 
-mod context;
 mod datetime;
 mod error;
-mod geo_iter;
-mod handle;
+mod ffi;
+mod file;
+mod grid;
 mod index;
 mod key;
-mod keys_iter;
+mod keys;
 pub mod kind;
-mod missing;
+mod library;
+mod message;
+pub mod missing;
 mod multi;
 mod nearest;
 
-pub use context::Context;
-pub use datetime::{date_to_julian, datetime_to_julian, julian_to_date, julian_to_datetime};
-pub use error::{Error, Result};
-pub use geo_iter::{GeoFlags, GeoIterator, GeoPoint};
-pub use handle::{
-    GribMessagesInBytes, Handle, MessageReader, count_bufr_in_file, count_grib_in_file,
-    count_in_file,
-};
-pub use index::Index;
-pub use key::{Force, KeyGet, KeySet};
-pub use keys_iter::{KeyFlags, KeysIterator};
-pub use missing::{MISSING_DOUBLE, MISSING_LONG, is_missing_double, is_missing_long};
-pub use nearest::{Nearest, NearestFlags, NearestPoint};
+pub use datetime::JulianDay;
+pub use error::{Code, Error, Result};
+pub use file::{BufrFile, GribFile, MessageFile, Messages};
+pub use grid::{GeoPoint, GridPoints, GridPositions, LatLon};
+pub use index::{Index, IndexMessages, IndexSelect, IndexValue};
+pub use key::{KeyElement, KeyForce, KeyGet, KeySet, KeyType};
+pub use keys::{KeyFlags, Keys, KeysQuery};
+pub use kind::{Kind, MessageKind};
+pub use library::{Library, Version};
+pub use message::{BufrMessage, GribMessage, Message, WrongKind};
+pub use multi::GribMultiField;
+pub use nearest::{Nearest, NearestPoint, Reuse};
 
-/// Product kind of a message, as reported by
-/// [`Handle::product_kind`].
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum Kind {
-    /// Undetermined.
-    Any,
-    /// GRIB.
-    Grib,
-    /// BUFR.
-    Bufr,
-    /// METAR.
-    Metar,
-    /// GTS.
-    Gts,
-    /// TAF.
-    Taf,
-}
+/// Dates and times in this crate's API are [`time`] types — re-exported so
+/// callers need not track the version themselves.
+pub use time;
 
-impl Kind {
-    pub(crate) const fn from_sys(product: sys::ProductKind) -> Option<Self> {
-        match product {
-            sys::ProductKind_PRODUCT_ANY => Some(Self::Any),
-            sys::ProductKind_PRODUCT_GRIB => Some(Self::Grib),
-            sys::ProductKind_PRODUCT_BUFR => Some(Self::Bufr),
-            sys::ProductKind_PRODUCT_METAR => Some(Self::Metar),
-            sys::ProductKind_PRODUCT_GTS => Some(Self::Gts),
-            sys::ProductKind_PRODUCT_TAF => Some(Self::Taf),
-            _ => None,
-        }
-    }
-}
-
-/// Native type of a key, as reported by
-/// [`Handle::native_type`] (`CODES_TYPE_*`).
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum NativeType {
-    /// `CODES_TYPE_UNDEFINED`
-    Undefined,
-    /// `CODES_TYPE_LONG`
-    Long,
-    /// `CODES_TYPE_DOUBLE`
-    Double,
-    /// `CODES_TYPE_STRING`
-    String,
-    /// `CODES_TYPE_BYTES`
-    Bytes,
-    /// `CODES_TYPE_SECTION`
-    Section,
-    /// `CODES_TYPE_LABEL`
-    Label,
-    /// `CODES_TYPE_MISSING`
-    Missing,
-}
-
-impl NativeType {
-    #[allow(clippy::cast_sign_loss)] // negative codes simply fail to match
-    pub(crate) const fn from_code(code: std::ffi::c_int) -> Option<Self> {
-        match code as u32 {
-            sys::CODES_TYPE_UNDEFINED => Some(Self::Undefined),
-            sys::CODES_TYPE_LONG => Some(Self::Long),
-            sys::CODES_TYPE_DOUBLE => Some(Self::Double),
-            sys::CODES_TYPE_STRING => Some(Self::String),
-            sys::CODES_TYPE_BYTES => Some(Self::Bytes),
-            sys::CODES_TYPE_SECTION => Some(Self::Section),
-            sys::CODES_TYPE_LABEL => Some(Self::Label),
-            sys::CODES_TYPE_MISSING => Some(Self::Missing),
-            _ => None,
-        }
-    }
-
-    /// The raw `CODES_TYPE_*` code.
-    #[allow(clippy::cast_possible_wrap)] // CODES_TYPE_* are tiny positives
-    pub(crate) const fn as_code(self) -> std::ffi::c_int {
-        (match self {
-            Self::Undefined => sys::CODES_TYPE_UNDEFINED,
-            Self::Long => sys::CODES_TYPE_LONG,
-            Self::Double => sys::CODES_TYPE_DOUBLE,
-            Self::String => sys::CODES_TYPE_STRING,
-            Self::Bytes => sys::CODES_TYPE_BYTES,
-            Self::Section => sys::CODES_TYPE_SECTION,
-            Self::Label => sys::CODES_TYPE_LABEL,
-            Self::Missing => sys::CODES_TYPE_MISSING,
-        }) as std::ffi::c_int
-    }
-}
-
-/// Version of the underlying eccodes C library, e.g. `24700` for 2.47.0
-/// (`codes_get_api_version`).
-#[must_use]
-pub fn version() -> i64 {
-    // SAFETY: no arguments, returns a plain integer.
-    unsafe { sys::codes_get_api_version() }
-}
-
-/// Git SHA1 of the underlying eccodes C library.
-#[must_use]
-pub fn git_sha1() -> String {
-    // SAFETY: returns a static NUL-terminated string, never NULL.
-    unsafe { std::ffi::CStr::from_ptr(sys::codes_get_git_sha1()) }
-        .to_string_lossy()
-        .into_owned()
-}
-
-/// Build date of the underlying eccodes C library.
-#[must_use]
-pub fn build_date() -> String {
-    // SAFETY: returns a static NUL-terminated string, never NULL.
-    unsafe { std::ffi::CStr::from_ptr(sys::codes_get_build_date()) }
-        .to_string_lossy()
-        .into_owned()
-}
-
-/// Name of a native key type, e.g. `"long"` (`codes_get_type_name`).
-#[must_use]
-pub fn type_name(native: NativeType) -> String {
-    // SAFETY: valid for any type code; returns a static NUL-terminated
-    // string (a fallback for unknown codes), never NULL.
-    unsafe { std::ffi::CStr::from_ptr(sys::codes_get_type_name(native.as_code())) }
-        .to_string_lossy()
-        .into_owned()
-}
+/// The raw FFI bindings, for handing a [`Message`] to another library built
+/// on eccodes. See [`Message::as_raw`].
+#[cfg(feature = "raw")]
+pub use eccodes_sys as sys;
