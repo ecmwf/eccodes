@@ -16,6 +16,10 @@ default = ["vendored"]
 system   = ["eccodes-sys/system"]
 vendored = ["eccodes-sys/vendored", "threads"]
 
+# Expose `Message::as_raw` and re-export `eccodes_sys`, for handing a message
+# to another C library built on eccodes.
+raw = []
+
 # POSIX-threads locking inside libeccodes (`ENABLE_ECCODES_THREADS`).
 # No-op for `system` builds — there it is on the user to link a library
 # built with it.

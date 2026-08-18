@@ -14,8 +14,8 @@ use std::collections::HashSet;
 use std::path::{Path, PathBuf};
 
 use eccodes::{
-    BufrFile, Code, GribFile, GribMessage, GribMultiField, Index, Kind, LatLon, Library, Message,
-    MessageFile, Messages, Reuse,
+    AnyFile, BufrFile, Code, GribFile, GribMessage, GribMultiField, Index, Kind, LatLon, Library,
+    Message, Messages, Reuse,
 };
 
 /// Path to an in-repo sample message.
@@ -397,7 +397,7 @@ fn index_select_and_count() -> eccodes::Result<()> {
     assert!(matched.next().is_none());
 
     // A file knows how to index itself.
-    let from_file = MessageFile::open(&file_path)?.index(["shortName"])?;
+    let from_file = AnyFile::open(&file_path)?.index(["shortName"])?;
     assert_eq!(from_file.value_count("shortName")?, 2);
     Ok(())
 }
@@ -478,7 +478,7 @@ fn multi_field_write_and_read() -> eccodes::Result<()> {
         .messages()?
         .map(|message| message.and_then(|message| message.get::<i64>("step")))
         .collect::<eccodes::Result<_>>()?;
-    let counted = MessageFile::open(&file_path)?.count()?;
+    let counted = AnyFile::open(&file_path)?.count()?;
     // Counting *GRIB* messages is what the C library refuses to do while
     // multi-field support is on — the wrapper reports that rather than
     // hiding it as an empty file.
@@ -660,24 +660,24 @@ fn mixed_products_counting() -> eccodes::Result<()> {
     mixed.extend_from_slice(&grib_bytes);
     std::fs::write(&mixed_path, &mixed)?;
 
-    assert_eq!(MessageFile::open(&mixed_path)?.count()?, 3);
+    assert_eq!(AnyFile::open(&mixed_path)?.count()?, 3);
     assert_eq!(GribFile::open(&mixed_path)?.count()?, 2);
     assert_eq!(BufrFile::open(&mixed_path)?.count()?, 1);
     // Counting a product the file does not hold is zero, not an error.
     assert_eq!(BufrFile::open(&grib_path)?.count()?, 0);
 
     // Every message starts where the offsets say it does.
-    let offsets = MessageFile::open(&mixed_path)?.offsets()?;
+    let offsets = AnyFile::open(&mixed_path)?.offsets()?;
     assert_eq!(offsets.len(), 3);
     assert_eq!(offsets[0], 0);
     assert_eq!(offsets[1], grib_bytes.len() as u64);
-    for (message, offset) in MessageFile::open(&mixed_path)?.messages()?.zip(&offsets) {
+    for (message, offset) in AnyFile::open(&mixed_path)?.messages()?.zip(&offsets) {
         assert_eq!(message?.file_offset()?, *offset);
     }
 
     // get_product_kind.c: each message reports the product it holds —
     // from its own framing, not from how the file was opened.
-    let kinds: Vec<Kind> = MessageFile::open(&mixed_path)?
+    let kinds: Vec<Kind> = AnyFile::open(&mixed_path)?
         .messages()?
         .map(|message| message.and_then(|message| message.kind()))
         .collect::<eccodes::Result<_>>()?;

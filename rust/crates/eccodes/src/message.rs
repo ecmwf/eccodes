@@ -249,7 +249,7 @@ impl<K: MessageKind> Message<K> {
     /// # }
     /// ```
     #[must_use]
-    pub fn keys(&self) -> KeysQuery<'_> {
+    pub const fn keys(&self) -> KeysQuery<'_> {
         KeysQuery::new(self.as_ptr())
     }
 
@@ -426,11 +426,8 @@ impl Message<Any> {
         self,
         expected: Kind,
     ) -> std::result::Result<Message<T>, WrongKind> {
-        let actual = match self.kind() {
-            Ok(kind) => kind,
-            // A message whose bytes cannot be read is not the kind we want.
-            Err(_) => Kind::Unknown,
-        };
+        // A message whose bytes cannot be read is not the kind we want.
+        let actual = self.kind().unwrap_or(Kind::Unknown);
         if actual == expected {
             Ok(self.retag())
         } else {

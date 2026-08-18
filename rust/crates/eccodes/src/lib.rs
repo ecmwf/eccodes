@@ -64,8 +64,8 @@
 //!
 //! - `vendored` (default) — build and link eccodes from source.
 //! - `system` — link an installed eccodes.
-//! - `raw` — expose [`Message::as_raw`] and re-export [`sys`], for handing a
-//!   message to another library built on eccodes.
+//! - `raw` — expose `Message::as_raw` and re-export `eccodes_sys` as `sys`,
+//!   for handing a message to another library built on eccodes.
 
 #![deny(missing_docs)]
 
@@ -86,7 +86,7 @@ mod nearest;
 
 pub use datetime::JulianDay;
 pub use error::{Code, Error, Result};
-pub use file::{BufrFile, GribFile, MessageFile, Messages};
+pub use file::{AnyFile, BufrFile, GribFile, MessageFile, Messages};
 pub use grid::{GeoPoint, GridPoints, GridPositions, LatLon};
 pub use index::{Index, IndexMessages, IndexSelect, IndexValue};
 pub use key::{KeyElement, KeyForce, KeyGet, KeySet, KeyType};

@@ -13,10 +13,10 @@
 //! from the WMO framing rather than from what the reader was asked for:
 //!
 //! ```no_run
-//! use eccodes::{Kind, MessageFile};
+//! use eccodes::{AnyFile, Kind};
 //!
 //! # fn main() -> eccodes::Result<()> {
-//! for message in &MessageFile::open("mixed.bin")? {
+//! for message in &AnyFile::open("mixed.bin")? {
 //!     let message = message?;
 //!     match message.kind()? {
 //!         Kind::Grib => println!("grib"),

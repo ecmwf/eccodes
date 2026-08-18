@@ -58,7 +58,9 @@ unsafe impl Send for GribMultiField {}
 impl GribMultiField {
     /// Start an empty multi-field message.
     ///
-    /// See the [module docs](self) for the process-wide effect this has.
+    /// This switches the C library's multi-field support on process-wide —
+    /// see [`Library::set_grib_multi_support`](crate::Library::set_grib_multi_support)
+    /// and the notes on [`GribMultiField`] for what that changes.
     pub fn new() -> Result<Self> {
         // SAFETY: a NULL context selects the default one.
         let raw = unsafe { sys::codes_grib_multi_handle_new(ptr::null_mut()) };

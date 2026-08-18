@@ -71,17 +71,16 @@ fn specific_julian_values() -> eccodes::Result<()> {
         2_305_812.5,
         2_205_512.5,
         2_026_871.8,
+        // 4713 BC, the Julian epoch itself. The C test runs it through the
+        // same round trip and only *prints* its YYYYMMDD leg, which cannot
+        // hold a BC date — that leg is not wrapped here at all.
+        0.0,
     ];
     for julian in julians.map(JulianDay) {
         let when = julian.to_datetime()?;
         let back = JulianDay::from_datetime(when)?;
         assert!(dbl_equal(back.0, julian.0), "{julian} -> {when} -> {back}");
     }
-
-    // The C test also runs `jd = 0.0`, a BC date its `YYYYMMDD` leg
-    // cannot round-trip. `time::Date` starts at year -9999, so the
-    // conversion is refused rather than producing a wrong date.
-    assert!(JulianDay(0.0).to_datetime().is_err());
     Ok(())
 }
 

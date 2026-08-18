@@ -19,7 +19,7 @@
 //! Every key of the index must have a selected value before the messages can
 //! be read — the index is a lookup, not a filter.
 
-use std::ffi::{c_char, c_long};
+use std::ffi::c_char;
 use std::fmt;
 use std::iter::FusedIterator;
 use std::path::Path;
@@ -145,7 +145,7 @@ impl Index {
 
     /// The messages matching the current selection.
     #[must_use]
-    pub fn messages(&mut self) -> IndexMessages<'_> {
+    pub const fn messages(&mut self) -> IndexMessages<'_> {
         IndexMessages {
             index: self,
             done: false,
@@ -202,7 +202,7 @@ impl IndexValue for i64 {
         check!(sys::codes_index_get_long(
             index.as_ptr(),
             ckey.as_ptr(),
-            values.as_mut_ptr().cast::<c_long>(),
+            values.as_mut_ptr(),
             &raw mut len,
         ))
         .with_key(key)?;

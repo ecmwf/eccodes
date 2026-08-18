@@ -61,8 +61,9 @@ macro_rules! codes_codes {
 
             /// The variant for a raw `CODES_*` value.
             ///
-            /// `CODES_SUCCESS` is not an error and has no variant — see
-            /// [`Error::from_raw`].
+            /// `CODES_SUCCESS` is not an error, and maps to
+            /// `Code::Unknown(0)` here; the crate never builds an [`Error`]
+            /// from it.
             #[must_use]
             pub const fn from_raw(code: i32) -> Self {
                 match code {
@@ -317,6 +318,18 @@ impl From<std::string::FromUtf8Error> for Error {
     }
 }
 
+impl From<time::error::ComponentRange> for Error {
+    /// A date or time that cannot exist is an invalid key value — the same
+    /// answer as for a message that codes one.
+    ///
+    /// This crate's API takes and returns [`time`] types, so callers build
+    /// them in the same functions that return [`Result`]; without this,
+    /// `Date::from_calendar_date(..)?` would not compile there.
+    fn from(_: time::error::ComponentRange) -> Self {
+        Self::from(Code::InvalidKeyValue)
+    }
+}
+
 impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}", self.repr.cause)?;
@@ -366,7 +379,7 @@ impl std::error::Error for Error {
 ///
 /// Crate-internal: every FFI call site says what it was working on, so users
 /// never have to reconstruct it from a bare status code.
-pub(crate) trait ErrorContext<T> {
+pub trait ErrorContext<T> {
     /// Record the key this operation was about.
     fn with_key(self, key: &str) -> Result<T>;
 

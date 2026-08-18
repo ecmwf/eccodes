@@ -26,7 +26,7 @@ use std::ptr::NonNull;
 
 use eccodes_sys as sys;
 
-use crate::error::{Code, Error, Result, check};
+use crate::error::{Code, Error, Result};
 use crate::ffi;
 
 bitflags::bitflags! {
@@ -70,7 +70,7 @@ pub struct KeysQuery<'m> {
     _message: PhantomData<&'m ()>,
 }
 
-impl<'m> KeysQuery<'m> {
+impl KeysQuery<'_> {
     pub(crate) const fn new(handle: *mut sys::codes_handle) -> Self {
         Self {
             handle,

@@ -6,7 +6,7 @@
 
 use std::path::{Path, PathBuf};
 
-use eccodes::{BufrFile, BufrMessage, Kind, MessageFile, missing};
+use eccodes::{AnyFile, BufrFile, BufrMessage, Kind, missing};
 
 /// Path to an in-repo sample message; `None` outside the repo checkout.
 fn sample(name: &str) -> Option<PathBuf> {
@@ -56,7 +56,7 @@ fn header_without_unpack() -> eccodes::Result<()> {
     // re-tagged as GRIB — handing itself back usable, and saying what it
     // actually is. (A `BufrMessage` cannot even be asked: the conversion
     // exists only on `Message<Any>`.)
-    let untagged = MessageFile::open(&path)?
+    let untagged = AnyFile::open(&path)?
         .messages()?
         .next()
         .expect("BUFR4.tmpl is not empty")?;

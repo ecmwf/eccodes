@@ -21,12 +21,12 @@ use eccodes_sys as sys;
 use crate::error::{Code, Error, ErrorContext, Result};
 
 /// A NUL-terminated copy of `text`, for the C API.
-pub(crate) fn cstring(text: &str) -> Result<CString> {
+pub fn cstring(text: &str) -> Result<CString> {
     Ok(CString::new(text)?)
 }
 
 /// A NUL-terminated copy of `path`, for the C API.
-pub(crate) fn cpath(path: &Path) -> Result<CString> {
+pub fn cpath(path: &Path) -> Result<CString> {
     CString::new(path.as_os_str().as_encoded_bytes()).map_err(Error::from)
 }
 
@@ -38,7 +38,7 @@ pub(crate) fn cpath(path: &Path) -> Result<CString> {
 /// `ptr` must be NULL or point to a NUL-terminated string that lives for the
 /// rest of the process — a string literal or a static buffer inside the C
 /// library, never something the caller has to free.
-pub(crate) unsafe fn static_str(ptr: *const c_char) -> Option<&'static str> {
+pub unsafe fn static_str(ptr: *const c_char) -> Option<&'static str> {
     if ptr.is_null() {
         return None;
     }
@@ -57,7 +57,7 @@ pub(crate) unsafe fn static_str(ptr: *const c_char) -> Option<&'static str> {
 ///
 /// Each non-null pointer in `ptrs` must be a NUL-terminated string allocated
 /// by the C library and not freed elsewhere; ownership moves to this call.
-pub(crate) unsafe fn take_strings(ptrs: &[*mut c_char]) -> Result<Vec<String>> {
+pub unsafe fn take_strings(ptrs: &[*mut c_char]) -> Result<Vec<String>> {
     let mut values = Vec::with_capacity(ptrs.len());
     let mut failure = None;
     for &ptr in ptrs {
@@ -85,7 +85,7 @@ pub(crate) unsafe fn take_strings(ptrs: &[*mut c_char]) -> Result<Vec<String>> {
 ///
 /// `offsets` must be NULL, or an array of at least `count` offsets allocated
 /// by the C library and not freed elsewhere; ownership moves to this call.
-pub(crate) unsafe fn take_offsets(offsets: *mut libc::off_t, count: usize) -> Result<Vec<u64>> {
+pub unsafe fn take_offsets(offsets: *mut libc::off_t, count: usize) -> Result<Vec<u64>> {
     let taken = if offsets.is_null() {
         Ok(Vec::new())
     } else {
@@ -103,7 +103,7 @@ pub(crate) unsafe fn take_offsets(offsets: *mut libc::off_t, count: usize) -> Re
 }
 
 /// An owned `FILE*`, closed on drop.
-pub(crate) struct CFile {
+pub struct CFile {
     raw: NonNull<sys::FILE>,
 }
 
@@ -156,7 +156,7 @@ impl Drop for CFile {
 ///
 /// For the C entry points that only write to a stream — `codes_dump_content`
 /// and `codes_grib_multi_handle_write`.
-pub(crate) fn with_memstream(
+pub fn with_memstream(
     mut out: impl Write,
     write_message: impl FnOnce(*mut sys::FILE) -> Result<()>,
 ) -> Result<()> {
@@ -191,19 +191,19 @@ pub(crate) fn with_memstream(
 ///
 /// A negative count means the library contradicted its own contract, which is
 /// [`Code::InternalError`], not something a caller can act on.
-pub(crate) fn to_usize<T: TryInto<usize>>(value: T) -> Result<usize> {
+pub fn to_usize<T: TryInto<usize>>(value: T) -> Result<usize> {
     value
         .try_into()
         .map_err(|_| Error::from(Code::InternalError))
 }
 
 /// A caller-supplied length or index, as the C `int` the API expects.
-pub(crate) fn to_c_int(value: usize) -> Result<c_int> {
+pub fn to_c_int(value: usize) -> Result<c_int> {
     c_int::try_from(value).map_err(|_| Error::from(Code::InvalidArgument))
 }
 
 /// A caller-supplied length, as the C `long` the API expects.
-pub(crate) fn to_c_long(value: usize) -> Result<c_long> {
+pub fn to_c_long(value: usize) -> Result<c_long> {
     c_long::try_from(value).map_err(|_| Error::from(Code::InvalidArgument))
 }
 

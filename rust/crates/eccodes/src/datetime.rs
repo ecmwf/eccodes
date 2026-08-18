@@ -166,9 +166,12 @@ fn build_date(year: i64, month: i64, day: i64) -> Result<Date> {
     let invalid = || Error::from(Code::InvalidKeyValue);
     let year = i32::try_from(year).map_err(|_| invalid())?;
     let month = u8::try_from(month).map_err(|_| invalid())?;
-    let month = Month::try_from(month).map_err(|_| invalid())?;
     let day = u8::try_from(day).map_err(|_| invalid())?;
-    Date::from_calendar_date(year, month, day).map_err(|_| invalid())
+    Ok(Date::from_calendar_date(
+        year,
+        Month::try_from(month)?,
+        day,
+    )?)
 }
 
 fn build_time(hour: i64, minute: i64, second: i64) -> Result<Time> {
@@ -176,7 +179,7 @@ fn build_time(hour: i64, minute: i64, second: i64) -> Result<Time> {
     let hour = u8::try_from(hour).map_err(|_| invalid())?;
     let minute = u8::try_from(minute).map_err(|_| invalid())?;
     let second = u8::try_from(second).map_err(|_| invalid())?;
-    Time::from_hms(hour, minute, second).map_err(|_| invalid())
+    Ok(Time::from_hms(hour, minute, second)?)
 }
 
 #[cfg(test)]

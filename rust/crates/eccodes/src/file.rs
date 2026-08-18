@@ -29,7 +29,7 @@ use std::ptr::{self, NonNull};
 
 use eccodes_sys as sys;
 
-use crate::error::{Code, Error, ErrorContext, Result};
+use crate::error::{Code, Error, ErrorContext, Result, check};
 use crate::ffi;
 use crate::index::Index;
 use crate::kind::{Any, Bufr, Grib, MessageKind, product_of};
@@ -43,6 +43,13 @@ pub struct MessageFile<K: MessageKind = Any> {
     path: PathBuf,
     _kind: PhantomData<K>,
 }
+
+/// A file of messages of any product.
+///
+/// The same type as a bare `MessageFile`, named so that the product is
+/// spelled out at a call site: `AnyFile::open(path)` rather than
+/// `MessageFile::<Any>::open(path)`.
+pub type AnyFile = MessageFile<Any>;
 
 /// A file of GRIB messages.
 pub type GribFile = MessageFile<Grib>;
@@ -73,12 +80,28 @@ impl<K: MessageKind> MessageFile<K> {
         &self.path
     }
 
-    /// How many messages of this product the file holds.
+    /// How many messages of this product the file holds — as many as
+    /// [`messages`](Self::messages) will yield.
     ///
     /// A file with none — a BUFR file counted as GRIB, say — is `0`, not an
     /// error.
     pub fn count(&self) -> Result<usize> {
-        Ok(self.scan()?.len())
+        if K::EXPECTED.is_some() {
+            return Ok(self.scan()?.len());
+        }
+        // Counting any product goes through the C counter rather than the
+        // offsets scan: it decodes handles when multi-field support is on, so
+        // it agrees with iteration where the raw scan would report one
+        // message for a multi-field one.
+        let cpath = ffi::cpath(&self.path)?;
+        let mut count: c_int = 0;
+        check!(sys::codes_count_in_filename(
+            ptr::null_mut(),
+            cpath.as_ptr(),
+            &raw mut count
+        ))
+        .with_path(&self.path)?;
+        ffi::to_usize(count)
     }
 
     /// Where each message of this product starts, in bytes from the start of
@@ -86,6 +109,12 @@ impl<K: MessageKind> MessageFile<K> {
     ///
     /// Useful for indexing a file you will come back to; empty when the file
     /// holds no message of this product.
+    ///
+    /// These are the messages as the file frames them. With multi-field
+    /// support on (see
+    /// [`Library::set_grib_multi_support`](crate::Library::set_grib_multi_support)),
+    /// one such message decodes into several, so there are fewer offsets than
+    /// [`count`](Self::count) reports.
     pub fn offsets(&self) -> Result<Vec<u64>> {
         self.scan()
     }
@@ -101,6 +130,16 @@ impl<K: MessageKind> MessageFile<K> {
             done: false,
             _kind: PhantomData,
         })
+    }
+
+    /// Read the messages of this product, in file order, reporting a failure
+    /// to open the file as the first item.
+    ///
+    /// The same as iterating `&file`; [`messages`](Self::messages) reports
+    /// that failure up front instead.
+    #[must_use]
+    pub fn iter(&self) -> Messages<'static, K> {
+        self.into_iter()
     }
 
     /// Index this file on `keys`, for selecting messages by value.
@@ -145,7 +184,7 @@ impl<K: MessageKind> MessageFile<K> {
         // SAFETY: `offsets` is NULL or the array the library allocated, sized
         // by `count`; a negative count means nothing was written.
         let scanned = unsafe { ffi::take_offsets(offsets, ffi::to_usize(count).unwrap_or(0)) };
-        let scanned = Error::from_raw(status).and_then(|()| scanned);
+        let scanned = Error::from_raw(status).and(scanned);
 
         match scanned {
             // A file with no message of this product is empty, not broken:
@@ -250,11 +289,11 @@ impl<K: MessageKind> Messages<'_, K> {
                 &raw mut status,
             )
         };
-        match NonNull::new(raw) {
-            Some(raw) => Some(Ok(Message::from_raw(raw))),
+        let Some(raw) = NonNull::new(raw) else {
             // NULL with a success status is the end of the file.
-            None => Error::from_raw(status).err().map(Err),
-        }
+            return Error::from_raw(status).err().map(Err);
+        };
+        Some(Ok(Message::from_raw(raw)))
     }
 
     /// The next GRIB message in a buffer, advancing `bytes` past it
