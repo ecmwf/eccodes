@@ -70,6 +70,32 @@ runs:
         esac
         echo "cmake-flags=$flags" >> "$GITHUB_OUTPUT"
 
+    # Compile caching. Lives in the build action, not the workflow, so both the
+    # push/PR path and the generated cross-repo-trigger.yml path get it — the
+    # latter calls this action directly and never sees the workflow's steps.
+    #
+    # Opt-in by presence of the bucket: sccache has no default bucket and a
+    # daemon that cannot reach one refuses to start, which would fail the build.
+    # With SCCACHE_BUCKET unset both steps below no-op and the compile runs
+    # uncached, so a repo without the secret still builds.
+    - name: Set up sccache
+      if: env.SCCACHE_BUCKET != ''
+      uses: ecmwf/ci-infrastructure/actions/setup-sccache@main
+      with:
+        cache-key-suffix: ${{ inputs.cxx-compiler }}-${{ inputs.build-type }}-${{ inputs.options }}
+
+    - name: Select compiler launcher
+      id: launcher
+      shell: bash
+      run: |
+        set -euo pipefail
+        if [ -n "${{ env.SCCACHE_BUCKET }}" ]; then
+          echo "flags=-DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache" >> "$GITHUB_OUTPUT"
+        else
+          echo "::notice::SCCACHE_BUCKET unset — compiling without sccache"
+          echo "flags=" >> "$GITHUB_OUTPUT"
+        fi
+
     - name: Configure eccodes
       shell: bash
       env:
@@ -79,6 +105,7 @@ runs:
         INSTALL_PATH: ${{ steps.set-paths.outputs.install-path }}
         BUILD_DIR: ${{ steps.set-paths.outputs.build-dir }}
         EXTRA_FLAGS: ${{ steps.opts.outputs.cmake-flags }}
+        LAUNCHER: ${{ steps.launcher.outputs.flags }}
       run: |
         set -euo pipefail
         # Word-splitting EXTRA_FLAGS is intended — it is a fixed, known set of
@@ -90,7 +117,7 @@ runs:
               -DCMAKE_CXX_COMPILER="$CXX_COMPILER" \
               -DCMAKE_INSTALL_PREFIX="$INSTALL_PATH" \
               -DCMAKE_PREFIX_PATH="$CMAKE_PREFIX_PATH_IN" \
-              $EXTRA_FLAGS
+              $EXTRA_FLAGS $LAUNCHER
 
     - name: Build and install eccodes
       shell: bash

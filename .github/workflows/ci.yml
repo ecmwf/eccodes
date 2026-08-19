@@ -13,6 +13,9 @@ env:
   ARTIFACT_POLL_INTERVAL: ${{ vars.ARTIFACT_POLL_INTERVAL || '60' }}
   ARTIFACT_S3_ENDPOINT: ${{ secrets.ARTIFACT_S3_ENDPOINT }}
   ARTIFACT_S3_BUCKET: ${{ secrets.ARTIFACT_S3_BUCKET }}
+  # sccache shares the object store's endpoint and credentials but uses its
+  # own bucket. Unset simply disables compile caching (see the build action).
+  SCCACHE_BUCKET: ${{ secrets.SCCACHE_BUCKET }}
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
