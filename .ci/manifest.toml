@@ -1,0 +1,74 @@
+# Single source of truth for eccodes' CI under ecmwf/ci-infrastructure.
+#
+# Alongside this manifest:
+#   - .github/workflows/ci.yml               push/PR build that publishes the artifact
+#   - .github/workflows/cross-repo-trigger.yml
+#                                            GENERATED entry point for upstream fan-out
+#                                            and consumer-driven rebuilds
+#   - .github/workflows/old_CI.yml           the legacy ecmwf/downstream-ci pipeline,
+#                                            still running unchanged during migration
+
+[package]
+name = "eccodes"
+prefix = "eccodes"
+repo = "ecmwf/eccodes"
+visibility = "public"
+compiler-inputs = ["cxx-compiler"]
+
+[[deps]]
+repo = "ecmwf/ecbuild"
+package = "ecbuild"
+ref = "develop"
+compiler-inputs = []
+
+[[deps]]
+repo = "ecmwf/stack-dependencies"
+package = "stack-deps"
+ref = "master"
+# libaec: FEATURE AEC is DEFAULT ON, CONDITION libaec_FOUND, so without this the
+# default build silently loses CCSDS support.
+compiler-inputs = ["cxx-compiler"]
+
+[[deps]]
+repo = "ecmwf/eckit"
+package = "eckit"
+ref = "develop"
+compiler-inputs = ["cxx-compiler"]
+# eccodes needs eckit only for FEATURE ECKIT_GEO, which is DEFAULT OFF. Scoping
+# the dep to the legs that actually enable it keeps eckit out of the plain legs'
+# cmake-prefix-path AND out of their deps-hash8 — so an eckit commit does not
+# invalidate the ordinary eccodes artifacts and force them to rebuild.
+when = { options = ["eckit-geo"] }
+
+# Plain legs: ECKIT_GEO off, eckit not a dependency at all.
+[[matrix.build.include]]
+cxx-compiler = "clang++-18"
+build-type = "Release"
+runs-on = "arc-runner-very-large"
+container = "eccr.ecmwf.int/public-playground-ci/ubuntu24.04-clang18-gfortran13:latest"
+platform = "ubuntu-24.04"
+
+[[matrix.build.include]]
+cxx-compiler = "g++-13"
+build-type = "Release"
+runs-on = "arc-runner-very-large"
+container = "eccr.ecmwf.int/public-playground-ci/ubuntu24.04-clang18-gfortran13:latest"
+platform = "ubuntu-24.04"
+
+# The one leg that builds against eckit. `options` is part of artifact identity,
+# so this publishes under an opts.eckit-geo segment and cannot collide with the
+# plain g++-13 leg above.
+[[matrix.build.include]]
+cxx-compiler = "g++-13"
+build-type = "Release"
+options = "eckit-geo"
+runs-on = "arc-runner-very-large"
+container = "eccr.ecmwf.int/public-playground-ci/ubuntu24.04-clang18-gfortran13:latest"
+platform = "ubuntu-24.04"
+
+[matrix.build]
+triggers = ["upstream-change", "rebuild-request"]
+action = "./.github/actions/build-eccodes"
+forwarded-inputs = ["cxx-compiler", "build-type", "options"]
+forwarded-deps-outputs = ["cmake-prefix-path"]
+needs = ["ecbuild/build", "stack-deps/build", "eckit/build"]

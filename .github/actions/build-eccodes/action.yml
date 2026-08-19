@@ -1,0 +1,102 @@
+name: Build eccodes from source
+description: >
+  Configures, builds and installs the already-checked-out eccodes against the
+  resolved dependency prefixes, and leaves the build tree in place so the caller
+  can run ctest against it without reconfiguring. Caller must have already run
+  actions/checkout@v6 in the same job — the action reads the source from
+  $GITHUB_WORKSPACE.
+
+inputs:
+  cmake-prefix-path:
+    description: 'Semicolon-separated prefixes of the resolved deps'
+    required: true
+  cxx-compiler:
+    description: 'C++ compiler binary including version (e.g. clang++-18, g++-13)'
+    required: true
+  build-type:
+    description: 'CMake build type (e.g. Release, Debug, RelWithDebInfo)'
+    required: true
+  options:
+    description: >
+      Named feature configuration for this leg. Empty is the default build.
+      "eckit-geo" turns on the eckit-backed geography backend, and is the only
+      configuration for which eckit is a dependency at all (see the `when`
+      predicate on the eckit [[deps]] entry in .ci/manifest.toml).
+    required: false
+    default: ''
+
+outputs:
+  install-path:
+    description: 'Absolute path where eccodes is installed'
+    value: ${{ steps.set-paths.outputs.install-path }}
+  build-dir:
+    description: 'Absolute path of the build tree, for ctest'
+    value: ${{ steps.set-paths.outputs.build-dir }}
+
+runs:
+  using: composite
+  steps:
+    - name: Get install prefix
+      id: prefix
+      uses: ecmwf/ci-infrastructure/actions/install-prefix@main
+
+    - name: Set paths
+      id: set-paths
+      shell: bash
+      run: |
+        set -euo pipefail
+        {
+          echo "install-path=${{ steps.prefix.outputs.base }}/eccodes"
+          echo "build-dir=$RUNNER_TEMP/_eccodes-build"
+        } >> "$GITHUB_OUTPUT"
+
+    - name: Map options to CMake flags
+      id: opts
+      shell: bash
+      env:
+        OPTIONS: ${{ inputs.options }}
+      # Fail loud on an unknown value: silently building the default
+      # configuration would publish it under an opts.<name> artifact name and
+      # quietly claim to be something it is not.
+      run: |
+        set -euo pipefail
+        case "$OPTIONS" in
+          '')          flags='' ;;
+          'eckit-geo') flags='-DENABLE_GEOGRAPHY=1 -DENABLE_ECKIT_GEO=1' ;;
+          *)
+            echo "::error::unknown options value '$OPTIONS' for eccodes; add it here and to .ci/manifest.toml" >&2
+            exit 1
+            ;;
+        esac
+        echo "cmake-flags=$flags" >> "$GITHUB_OUTPUT"
+
+    - name: Configure eccodes
+      shell: bash
+      env:
+        CMAKE_PREFIX_PATH_IN: ${{ inputs.cmake-prefix-path }}
+        CXX_COMPILER: ${{ inputs.cxx-compiler }}
+        BUILD_TYPE: ${{ inputs.build-type }}
+        INSTALL_PATH: ${{ steps.set-paths.outputs.install-path }}
+        BUILD_DIR: ${{ steps.set-paths.outputs.build-dir }}
+        EXTRA_FLAGS: ${{ steps.opts.outputs.cmake-flags }}
+      run: |
+        set -euo pipefail
+        # Word-splitting EXTRA_FLAGS is intended — it is a fixed, known set of
+        # flags produced by the step above, never user input.
+        # shellcheck disable=SC2086
+        cmake -S "$GITHUB_WORKSPACE" \
+              -B "$BUILD_DIR" \
+              -DCMAKE_BUILD_TYPE="$BUILD_TYPE" \
+              -DCMAKE_CXX_COMPILER="$CXX_COMPILER" \
+              -DCMAKE_INSTALL_PREFIX="$INSTALL_PATH" \
+              -DCMAKE_PREFIX_PATH="$CMAKE_PREFIX_PATH_IN" \
+              $EXTRA_FLAGS
+
+    - name: Build and install eccodes
+      shell: bash
+      env:
+        BUILD_DIR: ${{ steps.set-paths.outputs.build-dir }}
+      run: |
+        set -euo pipefail
+        cmake --build "$BUILD_DIR" --parallel "$(nproc)"
+        cmake --install "$BUILD_DIR"
