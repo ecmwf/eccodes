@@ -25,10 +25,16 @@ jobs:
   # reusable pre-commit.yml (ecmwf/ci-infrastructure#14), so each repo now
   # carries the job itself; copy the one in stack-dependencies' ci.yml.
   resolve:
-    # One batched GraphQL walk of the manifest graph — no compiler, no container.
-    # ubuntu-slim is the cheap 1-CPU ARC runner, and is what ci-infrastructure's
-    # generator picks for the identical job in cross-repo-trigger.yml.
-    runs-on: ubuntu-slim
+    # Runs in the base image on purpose. ci-infrastructure is baked into that
+    # image and advertised via CI_INFRASTRUCTURE_PYTHON, so
+    # ensure-infrastructure-present short-circuits to a true no-op. Without a
+    # container it instead builds a venv per job — with PyPI/GitHub egress —
+    # and cannot cache it: ARC's Kubernetes mode overlays _work, where
+    # RUNNER_TOOL_CACHE lives, with an ephemeral per-job volume. That costs far
+    # more than the runner size saves, so keep the container.
+    runs-on: arc-runner-normal
+    container:
+      image: eccr.ecmwf.int/public-playground-ci/ubuntu24.04-base:latest
     outputs:
       build-matrix: ${{ steps.r.outputs.matrix-build }}
     steps:
