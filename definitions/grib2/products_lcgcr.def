@@ -6,15 +6,20 @@ if (!defined(class)) {
 }
 
 alias mars.class  = marsClass;
-alias mars.stream = marsStream;
-alias mars.type   = marsType;
 alias mars.param = paramId;
 alias mars.expver = marsExpver;
 alias mars.origin = centre;
 
-concept modelName(unknown, "modelNameConcept.def", conceptsDir2, conceptsLocalDirAll): no_copy, dump;
+#concept modelName(unknown, "modelNameConcept.def", conceptsDir2, conceptsLocalDirAll): no_copy, dump;
+#if (modelName isnot "unknown") {
+#    concept modelVersion(unknown, "modelVersionConcept.[modelName].def", conceptsDir2, conceptsLocalDirAll): no_copy, dump, read_only;
+#    alias ls.model = modelName;
+#    alias mars.model = modelName;
+#}
+
+concept modelName(unknown, "modelNameConcept.def", conceptsDir2): no_copy, dump;
 if (modelName isnot "unknown") {
-    concept modelVersion(unknown, "modelVersionConcept.[modelName].def", conceptsDir2, conceptsLocalDirAll): no_copy, dump, read_only;
+    concept modelVersion(unknown, "modelVersionConcept.[modelName].def", conceptsDir2): no_copy, dump, read_only;
     alias ls.model = modelName;
     alias mars.model = modelName;
 }
@@ -26,3 +31,44 @@ alias parameter.units=units;
 alias parameter.name=name;
 
 unalias mars.domain;
+
+# https://jira.ecmwf.int/browse/DGOV-513
+#   https://confluence.ecmwf.int/spaces/DGOV/pages/514772203/Support+page+for+DGOV-513+LC-GCR
+concept marsType(unknown) {
+   fc = {
+     typeOfProcessedData = 1;
+   }
+   "9" = {
+     typeOfProcessedData = 1;
+   }
+
+   an = {
+     typeOfProcessedData = 0;
+   }
+   "2" = {
+     typeOfProcessedData = 0;
+   }
+} : no_copy,read_only;
+
+if (defined(lengthOfTimeRange) && defined(typeOfStatisticalProcessing)) {
+  # get the values from the 1st most outer loop which matter for moda/dame
+  meta outerLoopLengthOfTimeRange element(lengthOfTimeRange, 0);
+  meta outerLoopTypeOfStatisticalProcessing element(typeOfStatisticalProcessing, 0);
+  meta outerLoopTypeOfTimeIncrement element(typeOfTimeIncrement, 0);
+}
+
+concept marsStream(unknown) {
+    oper = {
+      productDefinitionTemplateNumber = 0;
+    }
+    oper = {
+      productDefinitionTemplateNumber = 8;
+    }
+    sttd = {
+      productDefinitionTemplateNumber = 8;
+      outerLoopTypeOfTimeIncrement = 1;
+    }
+} : no_copy,read_only;
+
+alias mars.stream = marsStream;
+alias mars.type   = marsType;
