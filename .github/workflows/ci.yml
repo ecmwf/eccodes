@@ -91,6 +91,7 @@ jobs:
         with:
           cmake-prefix-path: ${{ steps.deps.outputs.cmake-prefix-path }}
           cxx-compiler: ${{ matrix.cxx-compiler }}
+          fortran-compiler: ${{ matrix.fortran-compiler }}
           build-type: ${{ matrix.build-type }}
           options: ${{ matrix.options }}
 

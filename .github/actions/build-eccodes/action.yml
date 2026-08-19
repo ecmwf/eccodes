@@ -13,6 +13,13 @@ inputs:
   cxx-compiler:
     description: 'C++ compiler binary including version (e.g. clang++-18, g++-13)'
     required: true
+  fortran-compiler:
+    description: >
+      Fortran compiler binary including version (e.g. gfortran-13). eccodes
+      builds its Fortran interface by default (FEATURE FORTRAN, DEFAULT ON) and
+      the CI images ship only versioned binaries — there is no unversioned
+      `gfortran` for CMake to discover — so this must be passed explicitly.
+    required: true
   build-type:
     description: 'CMake build type (e.g. Release, Debug, RelWithDebInfo)'
     required: true
@@ -101,6 +108,7 @@ runs:
       env:
         CMAKE_PREFIX_PATH_IN: ${{ inputs.cmake-prefix-path }}
         CXX_COMPILER: ${{ inputs.cxx-compiler }}
+        FC_COMPILER: ${{ inputs.fortran-compiler }}
         BUILD_TYPE: ${{ inputs.build-type }}
         INSTALL_PATH: ${{ steps.set-paths.outputs.install-path }}
         BUILD_DIR: ${{ steps.set-paths.outputs.build-dir }}
@@ -115,6 +123,7 @@ runs:
               -B "$BUILD_DIR" \
               -DCMAKE_BUILD_TYPE="$BUILD_TYPE" \
               -DCMAKE_CXX_COMPILER="$CXX_COMPILER" \
+              -DCMAKE_Fortran_COMPILER="$FC_COMPILER" \
               -DCMAKE_INSTALL_PREFIX="$INSTALL_PATH" \
               -DCMAKE_PREFIX_PATH="$CMAKE_PREFIX_PATH_IN" \
               $EXTRA_FLAGS $LAUNCHER

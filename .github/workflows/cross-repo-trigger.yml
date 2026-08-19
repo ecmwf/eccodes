@@ -165,12 +165,14 @@ jobs:
           printf '%s' "$val"
         }
         cxx_compiler=$(require '."cxx-compiler"' cxx-compiler)
+        fortran_compiler=$(require '."fortran-compiler"' fortran-compiler)
         build_type=$(require '."build-type"' build-type)
         options=$(jq -r '."options" // ""' <<<"$leg")
         deps_json=$(require '._resolved.deps | tojson' '_resolved.deps')
         own_artifact_name=$(require '._resolved."own-artifact-name"' '_resolved.own-artifact-name')
         {
           echo "cxx-compiler=${cxx_compiler}"
+          echo "fortran-compiler=${fortran_compiler}"
           echo "build-type=${build_type}"
           echo "options=${options}"
           echo "deps-json=${deps_json}"
@@ -189,6 +191,7 @@ jobs:
       with:
         cmake-prefix-path: ${{ steps.deps.outputs.cmake-prefix-path }}
         cxx-compiler: ${{ steps.m.outputs.cxx-compiler }}
+        fortran-compiler: ${{ steps.m.outputs.fortran-compiler }}
         build-type: ${{ steps.m.outputs.build-type }}
         options: ${{ steps.m.outputs.options }}
     - name: Publish

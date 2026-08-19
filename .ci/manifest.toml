@@ -13,7 +13,7 @@ name = "eccodes"
 prefix = "eccodes"
 repo = "ecmwf/eccodes"
 visibility = "public"
-compiler-inputs = ["cxx-compiler"]
+compiler-inputs = ["cxx-compiler", "fortran-compiler"]
 
 [[deps]]
 repo = "ecmwf/ecbuild"
@@ -44,6 +44,7 @@ when = { options = ["eckit-geo"] }
 [[matrix.build.include]]
 cxx-compiler = "clang++-18"
 build-type = "Release"
+fortran-compiler = "gfortran-13"
 runs-on = "arc-runner-very-large"
 container = "eccr.ecmwf.int/public-playground-ci/ubuntu24.04-clang18-gfortran13:latest"
 platform = "ubuntu-24.04"
@@ -51,6 +52,7 @@ platform = "ubuntu-24.04"
 [[matrix.build.include]]
 cxx-compiler = "g++-13"
 build-type = "Release"
+fortran-compiler = "gfortran-13"
 runs-on = "arc-runner-very-large"
 container = "eccr.ecmwf.int/public-playground-ci/ubuntu24.04-clang18-gfortran13:latest"
 platform = "ubuntu-24.04"
@@ -61,6 +63,7 @@ platform = "ubuntu-24.04"
 [[matrix.build.include]]
 cxx-compiler = "g++-13"
 build-type = "Release"
+fortran-compiler = "gfortran-13"
 options = "eckit-geo"
 runs-on = "arc-runner-very-large"
 container = "eccr.ecmwf.int/public-playground-ci/ubuntu24.04-clang18-gfortran13:latest"
@@ -69,6 +72,6 @@ platform = "ubuntu-24.04"
 [matrix.build]
 triggers = ["upstream-change", "rebuild-request"]
 action = "./.github/actions/build-eccodes"
-forwarded-inputs = ["cxx-compiler", "build-type", "options"]
+forwarded-inputs = ["cxx-compiler", "fortran-compiler", "build-type", "options"]
 forwarded-deps-outputs = ["cmake-prefix-path"]
 needs = ["ecbuild/build", "stack-deps/build", "eckit/build"]
