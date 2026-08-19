@@ -22,9 +22,10 @@ jobs:
   # reusable pre-commit.yml (ecmwf/ci-infrastructure#14), so each repo now
   # carries the job itself; copy the one in stack-dependencies' ci.yml.
   resolve:
-    runs-on: arc-runner-normal
-    container:
-      image: eccr.ecmwf.int/public-playground-ci/ubuntu24.04-base:latest
+    # One batched GraphQL walk of the manifest graph — no compiler, no container.
+    # ubuntu-slim is the cheap 1-CPU ARC runner, and is what ci-infrastructure's
+    # generator picks for the identical job in cross-repo-trigger.yml.
+    runs-on: ubuntu-slim
     outputs:
       build-matrix: ${{ steps.r.outputs.matrix-build }}
     steps:
