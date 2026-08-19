@@ -1,0 +1,211 @@
+# GENERATED FILE - DO NOT EDIT.
+# Regenerate via the ci-infrastructure-generate CLI.
+# Source of truth: each repo's .ci/manifest.toml.
+name: Cross-repo trigger (eccodes)
+run-name: Cross-repo trigger (${{ inputs.from-repo }}@${{ inputs.from-sha }}) [${{ inputs.dispatch-id }}]
+on:
+  workflow_call:
+    inputs:
+      from-repo:
+        description: owner/repo of the dispatcher (upstream producer or downstream consumer)
+        required: true
+        type: string
+      from-sha:
+        description: SHA of the dispatcher commit
+        required: true
+        type: string
+      from-jobs:
+        description: JSON array of package/kinds that triggered us (e.g. '["fortmath/build","fortmath/build-hpc"]') for upstream-change dispatches. '[]' when rebuild-request is true.
+        required: false
+        default: '[]'
+        type: string
+      rebuild-request:
+        description: True when a downstream consumer dispatches us because our artifact was missing. Mutually exclusive with from-jobs.
+        required: false
+        default: false
+        type: boolean
+      branch:
+        description: Dispatcher branch name; we attempt branch-matching against it
+        required: true
+        type: string
+      fallback-ref:
+        description: Ref to check out if branch does not exist in this repo
+        required: false
+        type: string
+        default: main
+  workflow_dispatch:
+    inputs:
+      dispatch-id:
+        description: Correlation id stamped into run-name so the dispatcher can find this run
+        required: false
+        default: ''
+        type: string
+      from-repo:
+        description: owner/repo of the dispatcher (upstream producer or downstream consumer)
+        required: true
+        type: string
+      from-sha:
+        description: SHA of the dispatcher commit
+        required: true
+        type: string
+      from-jobs:
+        description: JSON array of package/kinds that triggered us (e.g. '["fortmath/build","fortmath/build-hpc"]') for upstream-change dispatches. '[]' when rebuild-request is true.
+        required: false
+        default: '[]'
+        type: string
+      rebuild-request:
+        description: True when a downstream consumer dispatches us because our artifact was missing. Mutually exclusive with from-jobs.
+        required: false
+        default: false
+        type: boolean
+      branch:
+        description: Dispatcher branch name; we attempt branch-matching against it
+        required: true
+        type: string
+      fallback-ref:
+        description: Ref to check out if branch does not exist in this repo
+        required: false
+        type: string
+        default: main
+concurrency:
+  group: cross-repo-trigger-runner-eccodes-${{ github.ref }}
+  cancel-in-progress: false
+env:
+  ARTIFACT_POLL_INTERVAL: ${{ vars.ARTIFACT_POLL_INTERVAL || '60' }}
+  ARTIFACT_S3_ENDPOINT: ${{ secrets.ARTIFACT_S3_ENDPOINT }}
+  ARTIFACT_S3_BUCKET: ${{ secrets.ARTIFACT_S3_BUCKET }}
+  SCCACHE_BUCKET: ${{ secrets.SCCACHE_BUCKET }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+jobs:
+  resolve:
+    if: contains(fromJSON(inputs.from-jobs), 'ecbuild/build') || contains(fromJSON(inputs.from-jobs), 'stack-deps/build') || contains(fromJSON(inputs.from-jobs), 'eckit/build') || inputs.rebuild-request
+    runs-on: ubuntu-slim
+    outputs:
+      ref: ${{ steps.pick.outputs.ref }}
+      matrix-build: ${{ steps.r.outputs.matrix-build }}
+    steps:
+    - id: mint
+      uses: actions/create-github-app-token@v3
+      with:
+        client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
+        private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
+        owner: ${{ github.repository_owner }}
+    - id: pick
+      uses: ecmwf/ci-infrastructure/actions/pick-ref@main
+      with:
+        repo: ecmwf/eccodes
+        try-branch: ${{ inputs.branch }}
+        fallback-ref: ${{ inputs.fallback-ref }}
+        token: ${{ steps.mint.outputs.token }}
+    - uses: actions/checkout@v6
+      with:
+        repository: ecmwf/eccodes
+        ref: ${{ steps.pick.outputs.ref }}
+        token: ${{ steps.mint.outputs.token }}
+    - id: r
+      uses: ecmwf/ci-infrastructure/actions/resolve-deps@main
+      with:
+        current-branch: ${{ steps.pick.outputs.ref }}
+        matrix: build
+        token: ${{ steps.mint.outputs.token }}
+        client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
+        app-private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
+  eccodes__build:
+    needs:
+    - resolve
+    if: contains(fromJSON(inputs.from-jobs), 'ecbuild/build') || contains(fromJSON(inputs.from-jobs), 'stack-deps/build') || contains(fromJSON(inputs.from-jobs), 'eckit/build') || inputs.rebuild-request
+    name: eccodes/build (${{ matrix['cxx-compiler'] }}, ${{ matrix.platform }})
+    runs-on: ${{ matrix['runs-on'] }}
+    container:
+      image: ${{ matrix.container || '' }}
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.resolve.outputs.matrix-build) }}
+    steps:
+    - id: mint
+      uses: actions/create-github-app-token@v3
+      with:
+        client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
+        private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
+        owner: ${{ github.repository_owner }}
+    - id: check_start
+      if: ${{ github.event_name == 'workflow_dispatch' && inputs.from-jobs != '[]' }}
+      uses: ecmwf/ci-infrastructure/actions/report-check-run@main
+      with:
+        token: ${{ steps.mint.outputs.token }}
+        head-repo: ${{ inputs.from-repo }}
+        head-sha: ${{ inputs.from-sha }}
+        name: eccodes/build (${{ matrix['cxx-compiler'] }}, ${{ matrix.platform }})
+        details-url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        phase: start
+    - uses: actions/checkout@v6
+      with:
+        repository: ecmwf/eccodes
+        ref: ${{ needs.resolve.outputs.ref }}
+        token: ${{ steps.mint.outputs.token }}
+    - name: Decode matrix-leg
+      id: m
+      shell: bash
+      run: |
+        set -euo pipefail
+        shopt -s inherit_errexit 2>/dev/null || true
+        command -v jq >/dev/null || {
+          echo "::error::jq is required but not installed in this runner/image." >&2
+          exit 1
+        }
+        leg='${{ toJSON(matrix) }}'
+        require() {
+          local val
+          val=$(jq -r "$1" <<<"$leg")
+          if [ -z "$val" ] || [ "$val" = "null" ]; then
+            echo "::error::matrix-leg field '$2' empty or null (jq -r '$1' returned '$val')." >&2
+            exit 1
+          fi
+          printf '%s' "$val"
+        }
+        cxx_compiler=$(require '."cxx-compiler"' cxx-compiler)
+        build_type=$(require '."build-type"' build-type)
+        options=$(jq -r '."options" // ""' <<<"$leg")
+        deps_json=$(require '._resolved.deps | tojson' '_resolved.deps')
+        own_artifact_name=$(require '._resolved."own-artifact-name"' '_resolved.own-artifact-name')
+        {
+          echo "cxx-compiler=${cxx_compiler}"
+          echo "build-type=${build_type}"
+          echo "options=${options}"
+          echo "deps-json=${deps_json}"
+          echo "own-artifact-name=${own_artifact_name}"
+        } >> "$GITHUB_OUTPUT"
+    - name: Fetch resolved deps
+      id: deps
+      uses: ecmwf/ci-infrastructure/actions/fetch-and-publish@main
+      with:
+        mode: download-only
+        deps-json: ${{ steps.m.outputs.deps-json }}
+        token: ${{ steps.mint.outputs.token }}
+    - name: Build
+      id: build
+      uses: ./.github/actions/build-eccodes
+      with:
+        cmake-prefix-path: ${{ steps.deps.outputs.cmake-prefix-path }}
+        cxx-compiler: ${{ steps.m.outputs.cxx-compiler }}
+        build-type: ${{ steps.m.outputs.build-type }}
+        options: ${{ steps.m.outputs.options }}
+    - name: Publish
+      uses: ecmwf/ci-infrastructure/actions/fetch-and-publish@main
+      with:
+        mode: publish
+        install-path: ${{ steps.build.outputs.install-path }}
+        artifact-name: ${{ steps.m.outputs.own-artifact-name }}
+    - name: Report check-run conclusion
+      if: ${{ always() && github.event_name == 'workflow_dispatch' && inputs.from-jobs != '[]' }}
+      uses: ecmwf/ci-infrastructure/actions/report-check-run@main
+      with:
+        token: ${{ steps.mint.outputs.token }}
+        head-repo: ${{ inputs.from-repo }}
+        head-sha: ${{ inputs.from-sha }}
+        name: eccodes/build (${{ matrix['cxx-compiler'] }}, ${{ matrix.platform }})
+        details-url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        phase: finish
+        conclusion: ${{ job.status }}
+        check-run-id: ${{ steps.check_start.outputs.check-run-id }}
