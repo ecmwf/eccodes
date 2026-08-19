@@ -17,9 +17,10 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
 jobs:
-  # No pre-commit job: this repo has no .pre-commit-config.yaml yet. Add the
-  # shared ecmwf/ci-infrastructure/.github/workflows/pre-commit.yml call here
-  # once it does.
+  # No pre-commit job: this repo has no .pre-commit-config.yaml yet. Add an
+  # inlined pre-commit job here once it does — ci-infrastructure dropped its
+  # reusable pre-commit.yml (ecmwf/ci-infrastructure#14), so each repo now
+  # carries the job itself; copy the one in stack-dependencies' ci.yml.
   resolve:
     runs-on: arc-runner-normal
     container:
