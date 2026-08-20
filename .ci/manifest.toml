@@ -75,3 +75,43 @@ action = "./.github/actions/build-eccodes"
 forwarded-inputs = ["cxx-compiler", "fortran-compiler", "build-type", "options"]
 forwarded-deps-outputs = ["cmake-prefix-path"]
 needs = ["ecbuild/build", "stack-deps/build", "eckit/build"]
+
+# --- HPC build --------------------------------------------------------------
+# eccodes built inside a SLURM job, linking the atos-hpc-gnu ecbuild and
+# stack-deps artifacts — and, on the eckit-geo leg only, the atos-hpc-gnu eckit
+# artifact. The `when` predicate on the eckit [[deps]] entry above is per-leg and
+# lane-agnostic, so it scopes this lane exactly as it scopes the runner one: the
+# plain HPC leg neither fetches eckit nor carries it in its deps-hash.
+#
+# `needs` names HPC kinds only: the two lanes are separate artifact universes
+# distinguished by platform, and a runner rebuild must not re-run this.
+[[matrix.build-hpc.include]]
+cxx-compiler = "g++-13"
+fortran-compiler = "gfortran-13"
+build-type = "Release"
+runs-on = "arc-hpc-pet-vsphere-prod"
+container = "eccr.ecmwf.int/private-playground-ci/ubuntu24.04-internal-tools:latest"
+site = "hpc-batch"
+platform = "atos-hpc-gnu"
+
+# The one HPC leg that links eckit. `options` is part of artifact identity, so it
+# publishes under an opts.eckit-geo segment and cannot collide with the plain leg
+# above. `job-script` is per-leg and is NOT part of identity.
+[[matrix.build-hpc.include]]
+cxx-compiler = "g++-13"
+fortran-compiler = "gfortran-13"
+build-type = "Release"
+options = "eckit-geo"
+runs-on = "arc-hpc-pet-vsphere-prod"
+container = "eccr.ecmwf.int/private-playground-ci/ubuntu24.04-internal-tools:latest"
+site = "hpc-batch"
+platform = "atos-hpc-gnu"
+job-script = "./.ci/hpc/build-eckit-geo.sh"
+
+[matrix.build-hpc]
+execution = "hpc"
+container-credentials = true
+job-script = "./.ci/hpc/build.sh"
+triggers = ["upstream-change", "rebuild-request"]
+forwarded-deps-outputs = ["cmake-prefix-path"]
+needs = ["ecbuild/build-hpc", "stack-deps/build-hpc", "eckit/build-hpc"]

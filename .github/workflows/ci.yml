@@ -37,6 +37,7 @@ jobs:
       image: eccr.ecmwf.int/public-playground-ci/ubuntu24.04-base:latest
     outputs:
       build-matrix: ${{ steps.r.outputs.matrix-build }}
+      build-hpc-matrix: ${{ steps.r.outputs.matrix-build-hpc }}
     steps:
       - id: mint
         uses: actions/create-github-app-token@v3
@@ -49,7 +50,7 @@ jobs:
         uses: ecmwf/ci-infrastructure/actions/resolve-deps@main
         with:
           current-branch: ${{ github.head_ref || github.ref_name }}
-          matrix: build
+          matrix: build,build-hpc
           token: ${{ steps.mint.outputs.token }}
           client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
           app-private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
@@ -117,3 +118,50 @@ jobs:
 
       - name: Test
         run: ctest --test-dir "${{ steps.build.outputs.build-dir }}" --output-on-failure
+
+  build-hpc:
+    # eccodes built and tested inside a SLURM job. One leg is the default build;
+    # the other enables the eckit-backed geography backend and is the only leg
+    # that links eckit at all. The container carries the cluster ssh identity so
+    # troika can submit from an ARC pod; build-on-hpc publishes internally.
+    needs: resolve
+    name: build-hpc (${{ matrix.platform }}, ${{ matrix.options || 'default' }})
+    runs-on: ${{ matrix['runs-on'] }}
+    container:
+      image: ${{ matrix.container }}
+      credentials:
+        username: ${{ secrets.ECCR_PULL_ROBOT_NAME }}
+        password: ${{ secrets.ECCR_PULL_ROBOT_TOKEN }}
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.resolve.outputs.build-hpc-matrix) }}
+    steps:
+      - id: mint
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+      - uses: actions/checkout@v6
+
+      - name: Fetch resolved deps
+        id: deps
+        uses: ecmwf/ci-infrastructure/actions/fetch-and-publish@main
+        with:
+          mode: download-only
+          deps-json: ${{ toJSON(matrix._resolved.deps) }}
+          token: ${{ steps.mint.outputs.token }}
+          # Stage the dep prefixes for shipment without installing anything
+          # here: they are consumed on the compute node, not in this container.
+          install-python-deps: 'false'
+
+      - name: Build eccodes on HPC
+        uses: ecmwf/ci-infrastructure/actions/build-on-hpc@main
+        with:
+          site: ${{ matrix.site }}
+          job-script: ${{ matrix.job-script || './.ci/hpc/build.sh' }}
+          artifact-name: ${{ matrix._resolved.own-artifact-name }}
+          cmake-prefix-path: ${{ steps.deps.outputs.cmake-prefix-path }}
+          work-dir: ${{ vars.HPC_CI_WORK_DIR }}
+          remote-work-dir: ${{ vars.HPC_CI_REMOTE_WORK_DIR }}
+          troika-user: ${{ secrets.HPC_CI_SSH_USER }}
