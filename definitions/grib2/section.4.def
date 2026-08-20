@@ -92,7 +92,7 @@ if (centre == 98) {
     alias MTG2Encoder = MTG2Switch;
 }
 else {
-    transient MTG2Encoder = 0: read_only;
+    constant MTG2Encoder = 0;
 }
 
 # ECC-2002
