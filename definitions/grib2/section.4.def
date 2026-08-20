@@ -86,11 +86,13 @@ meta MTG2SwitchDefault mtg2_switch_default(tablesVersion, tablesVersionMTG2Switc
 
 concept MTG2Switch(MTG2SwitchDefault, "MTG2SwitchConcept.def", conceptsDir2,conceptsDir1): hidden, read_only, long_type;
 
+# MTG2Encoder tells software using ecCodes when to use the encoder to create a post-MTG2 file.
+# For now, this is intended for internal use at ECMWF
 if (centre == 98) {
     alias MTG2Encoder = MTG2Switch;
 }
 else {
-    transient MTG2Encoder = 0;
+    transient MTG2Encoder = 0: read_only;
 }
 
 # ECC-2002
