@@ -775,6 +775,58 @@ fn mixed_products_counting() -> eccodes::Result<()> {
     Ok(())
 }
 
+/// `count` reports zero for a file that holds no message of its product —
+/// the C call reports that as an error, and the crate maps it. This pins the
+/// other half: a file that is broken rather than empty must still fail.
+#[test]
+fn counting_tells_an_empty_file_from_a_broken_one() -> eccodes::Result<()> {
+    let (Some(grib_path), Some(bufr_path)) = (sample("GRIB2.tmpl"), sample("BUFR4.tmpl")) else {
+        return Ok(());
+    };
+    let bytes = std::fs::read(&grib_path)?;
+    let dir = Path::new(env!("CARGO_TARGET_TMPDIR"));
+
+    // No GRIB message in sight: zero, not an error.
+    assert_eq!(GribFile::open(&bufr_path)?.count()?, 0);
+    assert!(GribFile::open(&bufr_path)?.offsets()?.is_empty());
+    let empty_path = dir.join("empty.grib2");
+    std::fs::write(&empty_path, b"")?;
+    assert_eq!(GribFile::open(&empty_path)?.count()?, 0);
+
+    // Half a message is not "no messages": the file claims a length it does
+    // not have, and that must not read as an empty file.
+    let truncated_path = dir.join("truncated.grib2");
+    std::fs::write(&truncated_path, &bytes[..bytes.len() / 2])?;
+    let truncated = GribFile::open(&truncated_path)?;
+    let err = truncated
+        .count()
+        .expect_err("a truncated message is not an empty file");
+    assert_eq!(err.code(), Some(Code::PrematureEndOfFile));
+    assert_eq!(err.path(), Some(truncated_path.as_path()));
+    assert_eq!(
+        truncated
+            .offsets()
+            .expect_err("offsets fail where the count does")
+            .code(),
+        Some(Code::PrematureEndOfFile)
+    );
+
+    // Nor is a message whose 7777 terminator has been overwritten.
+    let corrupt_path = dir.join("corrupt.grib2");
+    let mut corrupt = bytes;
+    let tail = corrupt.len() - 4;
+    corrupt[tail..].copy_from_slice(b"XXXX");
+    std::fs::write(&corrupt_path, &corrupt)?;
+    assert_eq!(
+        GribFile::open(&corrupt_path)?
+            .count()
+            .expect_err("a message that never ends is not an empty file")
+            .code(),
+        Some(Code::WrongLength)
+    );
+    Ok(())
+}
+
 /// Errors name the key or the file they happened on, and keep the code
 /// callers match against.
 #[test]
