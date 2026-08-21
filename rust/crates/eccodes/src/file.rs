@@ -409,6 +409,19 @@ impl<K: MessageKind> Iterator for Messages<'_, K> {
     }
 }
 
+impl<K: MessageKind> Drop for Messages<'_, K> {
+    /// Hand back the C library's half-decoded multi-field state for this
+    /// stream before the stream closes, so that the next reader to be given
+    /// its address does not resume this one's message. Only a reader that
+    /// asked for fields can leave any, and only one stopped between two
+    /// fields actually does.
+    fn drop(&mut self) {
+        if let (true, Source::Stream(stream)) = (self.fields, &self.source) {
+            multi::forget(stream.as_ptr());
+        }
+    }
+}
+
 impl<K: MessageKind> FusedIterator for Messages<'_, K> {}
 
 impl<K: MessageKind> fmt::Debug for Messages<'_, K> {

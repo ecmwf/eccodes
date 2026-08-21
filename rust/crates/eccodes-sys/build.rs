@@ -561,8 +561,10 @@ const ALLOWED_FUNCTIONS: &[&str] = &[
     "codes_bufr_copy_data",
     // -- Context config --
     "codes_context_set_debug",
+    "codes_context_set_logging_proc",
     "codes_grib_multi_support_on",
     "codes_grib_multi_support_off",
+    "codes_grib_multi_support_reset_file",
     "codes_samples_path",
     // -- Utilities --
     "codes_get_gaussian_latitudes",
@@ -578,6 +580,7 @@ const ALLOWED_FUNCTIONS: &[&str] = &[
 const ALLOWED_TYPES: &[&str] = &[
     "codes_handle",
     "codes_context",
+    "codes_log_proc",
     "codes_keys_iterator",
     "codes_iterator",
     "codes_nearest",
@@ -589,6 +592,12 @@ const ALLOWED_TYPES: &[&str] = &[
 ];
 
 const ALLOWED_VARS: &[&str] = &[
+    // Log levels
+    "CODES_LOG_INFO",
+    "CODES_LOG_WARNING",
+    "CODES_LOG_ERROR",
+    "CODES_LOG_FATAL",
+    "CODES_LOG_DEBUG",
     // Type constants
     "CODES_TYPE_UNDEFINED",
     "CODES_TYPE_LONG",

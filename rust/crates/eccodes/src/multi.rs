@@ -81,6 +81,22 @@ pub fn reading<T>(fields: bool, call: impl FnOnce() -> T) -> T {
     call()
 }
 
+/// Drop the C library's half-decoded state for `stream`.
+///
+/// A fields read stopped between two fields leaves the message it was
+/// splitting on the context, keyed by the `FILE*` it came from — the library
+/// only clears that entry when it hands out the last field. Once the stream
+/// is closed, the C runtime is free to give that same address to the next
+/// `fopen`, and the reader that gets it would resume this message instead of
+/// reading its own (GRIB-249). So a reader that asked for fields forgets its
+/// stream before closing it.
+pub fn forget(stream: *mut sys::FILE) {
+    let _exclusive = SWITCH.write().unwrap_or_else(PoisonError::into_inner);
+    // SAFETY: a NULL context selects the default one; the stream is compared
+    // against the context's entries, never dereferenced or closed.
+    unsafe { sys::codes_grib_multi_support_reset_file(ptr::null_mut(), stream) };
+}
+
 /// Make a C call that turns the switch on for itself, and turn it back off.
 fn restoring<T>(call: impl FnOnce() -> T) -> T {
     let _exclusive = SWITCH.write().unwrap_or_else(PoisonError::into_inner);

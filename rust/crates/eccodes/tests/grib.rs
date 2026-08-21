@@ -533,6 +533,42 @@ fn multi_field_belongs_to_its_reader() -> eccodes::Result<()> {
     Ok(())
 }
 
+/// A fields reader that stops between two fields leaves the rest of the
+/// message with the C library, filed under the stream it was reading. That
+/// stream is about to close, and its address is about to be handed to
+/// somebody else — who must still read their own file (GRIB-249).
+#[test]
+fn an_abandoned_fields_reader_leaves_nothing_behind() -> eccodes::Result<()> {
+    let Some(path) = sample("GRIB2.tmpl") else {
+        return Ok(());
+    };
+    let abandoned_path = write_multi_field(&path, &[12, 24, 36], "multi_abandoned.grib2")?;
+    let next_steps = [100_i64, 200, 300];
+    let next_path = write_multi_field(&path, &next_steps, "multi_next.grib2")?;
+
+    // Repeated, because whether the new stream lands on the freed one's
+    // address is the C runtime's business, not ours.
+    for _ in 0..8 {
+        let mut giving_up = GribFile::open(&abandoned_path)?
+            .multi_field(true)
+            .messages()?;
+        let first = giving_up.next().expect("a first field")?;
+        assert_eq!(first.get::<i64>("step")?, 12);
+        drop(giving_up);
+
+        let read: Vec<i64> = GribFile::open(&next_path)?
+            .multi_field(true)
+            .messages()?
+            .map(|message| message.and_then(|message| message.get::<i64>("step")))
+            .collect::<eccodes::Result<_>>()?;
+        assert_eq!(
+            read, next_steps,
+            "a fresh reader read someone else's fields"
+        );
+    }
+    Ok(())
+}
+
 /// The same, under contention: reading one file field by field must not
 /// change what another thread reads or counts.
 ///

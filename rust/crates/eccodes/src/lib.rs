@@ -92,7 +92,7 @@ pub use index::{Index, IndexMessages, IndexSelect, IndexValue};
 pub use key::{KeyElement, KeyForce, KeyGet, KeySet, KeyType};
 pub use keys::{KeyFlags, Keys, KeysQuery};
 pub use kind::{Kind, MessageKind};
-pub use library::{Library, Version};
+pub use library::{Library, LogLevel, Logging, Version};
 pub use message::{BufrMessage, GribMessage, Message, WrongKind};
 pub use multi::GribMultiField;
 pub use nearest::{Nearest, NearestPoint, Reuse};
