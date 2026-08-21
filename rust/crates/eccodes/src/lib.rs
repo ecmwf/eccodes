@@ -53,6 +53,10 @@
 //! `eccodes::NotFound: Key/value not found (key "shortNam")`. Match on
 //! [`Error::code`], which context never changes.
 //!
+//! The C library also writes diagnostics of its own, to stderr, for failures
+//! this crate handles and for some it does not report at all — see
+//! [`logging`] to put them under the application's logger.
+//!
 //! # Threads
 //!
 //! Messages, files and indexes are [`Send`] but not [`Sync`]: the C library
@@ -79,6 +83,7 @@ mod key;
 mod keys;
 pub mod kind;
 mod library;
+pub mod logging;
 mod message;
 pub mod missing;
 mod multi;
@@ -92,7 +97,8 @@ pub use index::{Index, IndexMessages, IndexSelect, IndexValue};
 pub use key::{KeyElement, KeyForce, KeyGet, KeySet, KeyType};
 pub use keys::{KeyFlags, Keys, KeysQuery};
 pub use kind::{Kind, MessageKind};
-pub use library::{Library, LogLevel, Logging, Version};
+pub use library::{Library, Version};
+pub use logging::{LogLevel, Logging};
 pub use message::{BufrMessage, GribMessage, Message, WrongKind};
 pub use multi::GribMultiField;
 pub use nearest::{Nearest, NearestPoint, Reuse};
