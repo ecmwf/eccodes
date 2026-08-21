@@ -14,8 +14,8 @@ use std::collections::HashSet;
 use std::path::{Path, PathBuf};
 
 use eccodes::{
-    AnyFile, BufrFile, Code, GribFile, GribMessage, GribMultiField, Index, Kind, LatLon, Library,
-    Message, Messages, Reuse,
+    AnyFile, BufrFile, Code, GribFile, GribMessage, GribMultiField, Index, Kind, LatLon, Message,
+    Messages, Reuse,
 };
 
 /// Path to an in-repo sample message.
@@ -438,61 +438,143 @@ fn index_tigge_golden_count() -> eccodes::Result<()> {
     Ok(())
 }
 
+/// A multi-field GRIB2 message with one field per step, written to `name` in
+/// the target dir — the input `grib_multi.c` reads back field by field.
+fn write_multi_field(sample: &Path, steps: &[i64], name: &str) -> eccodes::Result<PathBuf> {
+    let mut source = first_message(sample)?;
+    let mut multi = GribMultiField::new()?;
+    for &step in steps {
+        source.set("step", step)?;
+        multi.push(&source)?;
+    }
+    let path = Path::new(env!("CARGO_TARGET_TMPDIR")).join(name);
+    std::fs::write(&path, multi.to_vec()?)?;
+    Ok(path)
+}
+
 /// Port of `examples/C/grib_multi_write.c` (build a multi-field GRIB2
 /// message by appending from section 4 per step) and `grib_multi.c`
-/// (read it back field by field with multi-field support on).
+/// (read it back field by field).
 #[test]
 fn multi_field_write_and_read() -> eccodes::Result<()> {
     let Some(path) = sample("GRIB2.tmpl") else {
         return Ok(());
     };
-
-    let mut source = first_message(&path)?;
-    assert_eq!(source.get::<i64>("edition")?, 2, "multi-field needs GRIB2");
+    assert_eq!(
+        first_message(&path)?.get::<i64>("edition")?,
+        2,
+        "multi-field needs GRIB2"
+    );
 
     // grib_multi_write.c: one field per step, sections 4-8 repeated.
     let steps: Vec<i64> = (12..=120).step_by(12).collect();
-    let mut multi = GribMultiField::new()?;
-    for &step in &steps {
-        source.set("step", step)?;
-        multi.push(&source)?;
-    }
+    let file_path = write_multi_field(&path, &steps, "multi_step.grib2")?;
 
-    let file_path = Path::new(env!("CARGO_TARGET_TMPDIR")).join("multi_step.grib2");
-    std::fs::write(&file_path, multi.to_vec()?)?;
-
-    // GribMultiField::new() switched multi-field support on process-wide
-    // (a side effect of codes_grib_multi_handle_new); with it off, the
-    // file reads as one message, keyed by the first field.
-    Library::set_grib_multi_support(false);
+    // The file frames all of that as one message, and a plain read sees
+    // exactly that: one message, keyed by its first field.
     let plain: Vec<_> = GribFile::open(&file_path)?
         .messages()?
         .collect::<eccodes::Result<_>>()?;
     assert_eq!(plain.len(), 1);
     assert_eq!(plain[0].get::<i64>("step")?, steps[0]);
+    assert_eq!(GribFile::open(&file_path)?.count()?, 1);
+    assert_eq!(AnyFile::open(&file_path)?.count()?, 1);
 
-    // grib_multi.c: with support on, every field decodes as its own
-    // message and counting any product agrees.
-    Library::set_grib_multi_support(true);
-    let read_steps: Vec<i64> = GribFile::open(&file_path)?
+    // grib_multi.c: asked for fields, the same file reads as one message per
+    // field — and counting agrees with iterating, which is the whole point of
+    // counting.
+    let fields = GribFile::open(&file_path)?.multi_field(true);
+    let read_steps: Vec<i64> = fields
         .messages()?
         .map(|message| message.and_then(|message| message.get::<i64>("step")))
         .collect::<eccodes::Result<_>>()?;
-    let counted = AnyFile::open(&file_path)?.count()?;
-    // Counting *GRIB* messages is what the C library refuses to do while
-    // multi-field support is on — the wrapper reports that rather than
-    // hiding it as an empty file.
-    let refused = GribFile::open(&file_path)?.count();
-    Library::set_grib_multi_support(false);
-
     assert_eq!(read_steps, steps);
-    assert_eq!(counted, steps.len());
-    assert_eq!(
-        refused
-            .expect_err("counting multi-field GRIB is unsupported")
-            .code(),
-        Some(Code::NotImplemented)
-    );
+    assert_eq!(fields.count()?, steps.len());
+
+    // Offsets are where messages start, so they report the framing either
+    // way: one message, whatever the reader was asked for.
+    assert_eq!(fields.offsets()?.len(), 1);
+    assert_eq!(GribFile::open(&file_path)?.offsets()?.len(), 1);
+    Ok(())
+}
+
+/// Multi-field decoding belongs to the reader that asked for it: the C
+/// library keeps it in a switch on its global context, which a writer sets
+/// for itself and a fields read needs on only while it decodes.
+#[test]
+fn multi_field_belongs_to_its_reader() -> eccodes::Result<()> {
+    let Some(path) = sample("GRIB2.tmpl") else {
+        return Ok(());
+    };
+    let steps = [12_i64, 24, 36];
+    let multi_path = write_multi_field(&path, &steps, "multi_reader.grib2")?;
+
+    // `codes_grib_multi_handle_new` switches the C library into multi-field
+    // mode for itself. Left that way, every GRIB count in the process fails.
+    let writer = GribMultiField::new()?;
+    assert_eq!(GribFile::open(&path)?.count()?, 1);
+    assert_eq!(GribFile::open(&multi_path)?.count()?, 1);
+    drop(writer);
+
+    // A fields reader stopped between two fields keeps its place, and the
+    // readers around it see the file framed as it is on disk.
+    let fields = GribFile::open(&multi_path)?.multi_field(true);
+    let mut reading = fields.messages()?;
+    let first = reading.next().expect("a first field")?;
+    assert_eq!(first.get::<i64>("step")?, steps[0]);
+
+    assert_eq!(GribFile::open(&multi_path)?.count()?, 1);
+    assert_eq!(GribFile::open(&multi_path)?.messages()?.count(), 1);
+
+    let rest: Vec<i64> = reading
+        .map(|message| message.and_then(|message| message.get::<i64>("step")))
+        .collect::<eccodes::Result<_>>()?;
+    assert_eq!(rest, &steps[1..]);
+    Ok(())
+}
+
+/// The same, under contention: reading one file field by field must not
+/// change what another thread reads or counts.
+///
+/// While multi-field support was a process-wide switch, this is what broke —
+/// a plain `count` overlapping a fields read came back
+/// [`Code::NotImplemented`], because the C counter refuses a GRIB file while
+/// the switch is on.
+#[test]
+fn fields_do_not_disturb_other_threads() -> eccodes::Result<()> {
+    const ROUNDS: usize = 40;
+
+    let Some(path) = sample("GRIB2.tmpl") else {
+        return Ok(());
+    };
+    let steps = [12_i64, 24, 36];
+    let multi_path = write_multi_field(&path, &steps, "multi_threads.grib2")?;
+
+    std::thread::scope(|threads| {
+        for _ in 0..4 {
+            threads.spawn(|| {
+                for _ in 0..ROUNDS {
+                    let file = GribFile::open(&path).expect("the sample opens");
+                    assert_eq!(file.count().expect("a plain count is never refused"), 1);
+                    assert_eq!(file.messages().expect("the sample reads").count(), 1);
+                }
+            });
+        }
+        threads.spawn(|| {
+            let fields = GribFile::open(&multi_path)
+                .expect("the multi-field file opens")
+                .multi_field(true);
+            for _ in 0..ROUNDS {
+                let read: Vec<i64> = fields
+                    .messages()
+                    .expect("the multi-field file reads")
+                    .map(|message| message.and_then(|message| message.get::<i64>("step")))
+                    .collect::<eccodes::Result<_>>()
+                    .expect("every field decodes");
+                assert_eq!(read, steps);
+            }
+        });
+    });
     Ok(())
 }
 

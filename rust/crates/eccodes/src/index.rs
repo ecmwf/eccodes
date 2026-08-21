@@ -30,6 +30,7 @@ use eccodes_sys as sys;
 use crate::error::{Code, Error, ErrorContext, Result, check};
 use crate::ffi;
 use crate::message::Message;
+use crate::multi;
 
 /// An index of the messages in one or more files, keyed on a fixed set of
 /// keys.
@@ -71,14 +72,16 @@ impl Index {
         let ckeys = ffi::cstring(&join_keys(keys))?;
         let mut status = 0;
         // SAFETY: as for `new`, plus a NUL-terminated path that is only read.
-        let raw = unsafe {
+        // Indexing decodes the file's messages, so it reads the multi-field
+        // switch: `reading` holds it off for the call.
+        let raw = multi::reading(false, || unsafe {
             sys::codes_index_new_from_file(
                 ptr::null_mut(),
                 cpath.as_ptr(),
                 ckeys.as_ptr(),
                 &raw mut status,
             )
-        };
+        });
         Error::from_raw(status).with_path(path)?;
         NonNull::new(raw)
             .map(|raw| Self { raw })
@@ -112,7 +115,12 @@ impl Index {
     pub fn add_file(&mut self, path: impl AsRef<Path>) -> Result<()> {
         let path = path.as_ref();
         let cpath = ffi::cpath(path)?;
-        check!(sys::codes_index_add_file(self.raw.as_ptr(), cpath.as_ptr())).with_path(path)
+        // Decodes the file, so it reads the multi-field switch — as for
+        // [`from_file`](Self::from_file).
+        multi::reading(false, || {
+            check!(sys::codes_index_add_file(self.raw.as_ptr(), cpath.as_ptr()))
+        })
+        .with_path(path)
     }
 
     /// How many distinct values of `key` the index holds.
@@ -311,7 +319,11 @@ impl Iterator for IndexMessages<'_> {
         }
         let mut status = 0;
         // SAFETY: valid index; the status out-pointer addresses a local.
-        let raw = unsafe { sys::codes_handle_new_from_index(self.index.as_ptr(), &raw mut status) };
+        // Re-reads the message from its file, so it reads the multi-field
+        // switch: an index yields the messages it indexed, never fields.
+        let raw = multi::reading(false, || unsafe {
+            sys::codes_handle_new_from_index(self.index.as_ptr(), &raw mut status)
+        });
         if let Some(raw) = NonNull::new(raw) {
             return Some(Ok(Message::from_raw(raw)));
         }

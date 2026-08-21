@@ -129,24 +129,6 @@ impl Library {
         unsafe { sys::codes_context_set_debug(ptr::null_mut(), i32::from(enabled)) };
     }
 
-    /// Split multi-field GRIB messages into one message per field while
-    /// reading.
-    ///
-    /// Off by default, and worth leaving off: with it on, the C library
-    /// refuses to count messages in a GRIB file. See
-    /// [`GribMultiField`](crate::GribMultiField), which switches it on as a
-    /// side effect of being created.
-    pub fn set_grib_multi_support(enabled: bool) {
-        // SAFETY: a NULL context selects the default one.
-        unsafe {
-            if enabled {
-                sys::codes_grib_multi_support_on(ptr::null_mut());
-            } else {
-                sys::codes_grib_multi_support_off(ptr::null_mut());
-            }
-        }
-    }
-
     /// The `2 * n` Gaussian latitudes of a global Gaussian grid of order `n`,
     /// from north to south.
     ///

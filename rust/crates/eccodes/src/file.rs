@@ -34,6 +34,7 @@ use crate::ffi;
 use crate::index::Index;
 use crate::kind::{Any, Bufr, Grib, MessageKind, product_of};
 use crate::message::Message;
+use crate::multi;
 
 /// A file of messages of one product.
 ///
@@ -41,6 +42,9 @@ use crate::message::Message;
 /// `MessageFile` for a file that may hold anything.
 pub struct MessageFile<K: MessageKind = Any> {
     path: PathBuf,
+    /// Read one message per field of a multi-field GRIB message — see
+    /// [`MessageFile::multi_field`].
+    fields: bool,
     _kind: PhantomData<K>,
 }
 
@@ -70,6 +74,7 @@ impl<K: MessageKind> MessageFile<K> {
         }
         Ok(Self {
             path: path.to_path_buf(),
+            fields: false,
             _kind: PhantomData,
         })
     }
@@ -86,20 +91,33 @@ impl<K: MessageKind> MessageFile<K> {
     /// A file with none — a BUFR file counted as GRIB, say — is `0`, not an
     /// error.
     pub fn count(&self) -> Result<usize> {
+        if self.fields {
+            // Fields are counted by decoding them: the file frames a
+            // multi-field message as one message, and only the decoder knows
+            // how many fields it holds. This is what the C counter does
+            // internally with the switch on, minus its refusal to count a
+            // multi-field GRIB at all.
+            let mut count = 0;
+            for message in self.messages()? {
+                message?;
+                count += 1;
+            }
+            return Ok(count);
+        }
         if K::EXPECTED.is_some() {
             return Ok(self.scan()?.len());
         }
         // Counting any product goes through the C counter rather than the
-        // offsets scan: it decodes handles when multi-field support is on, so
-        // it agrees with iteration where the raw scan would report one
-        // message for a multi-field one.
+        // offsets scan, which reports only what it can frame.
         let cpath = ffi::cpath(&self.path)?;
         let mut count: c_int = 0;
-        check!(sys::codes_count_in_filename(
-            ptr::null_mut(),
-            cpath.as_ptr(),
-            &raw mut count
-        ))
+        multi::reading(false, || {
+            check!(sys::codes_count_in_filename(
+                ptr::null_mut(),
+                cpath.as_ptr(),
+                &raw mut count
+            ))
+        })
         .with_path(&self.path)?;
         ffi::to_usize(count)
     }
@@ -110,11 +128,10 @@ impl<K: MessageKind> MessageFile<K> {
     /// Useful for indexing a file you will come back to; empty when the file
     /// holds no message of this product.
     ///
-    /// These are the messages as the file frames them. With multi-field
-    /// support on (see
-    /// [`Library::set_grib_multi_support`](crate::Library::set_grib_multi_support)),
-    /// one such message decodes into several, so there are fewer offsets than
-    /// [`count`](Self::count) reports.
+    /// These are the messages as the file frames them, always: a multi-field
+    /// GRIB message is one message here however the file is read, so with
+    /// [`multi_field`](MessageFile::multi_field) on there are fewer offsets
+    /// than [`count`](Self::count) reports.
     pub fn offsets(&self) -> Result<Vec<u64>> {
         self.scan()
     }
@@ -127,6 +144,7 @@ impl<K: MessageKind> MessageFile<K> {
     pub fn messages(&self) -> Result<Messages<'static, K>> {
         Ok(Messages {
             source: Source::Stream(ffi::CFile::open(&self.path)?),
+            fields: self.fields,
             done: false,
             _kind: PhantomData,
         })
@@ -160,6 +178,10 @@ impl<K: MessageKind> MessageFile<K> {
     }
 
     /// The offsets of every message of this product (`codes_extract_offsets_malloc`).
+    ///
+    /// Framing only, so it runs with the multi-field switch off whatever this
+    /// file was asked for: the C call refuses a GRIB file outright while the
+    /// switch is on.
     fn scan(&self) -> Result<Vec<u64>> {
         let cpath = ffi::cpath(&self.path)?;
         // Typed by the C signature (`off_t*`), so this module names no libc type.
@@ -168,7 +190,7 @@ impl<K: MessageKind> MessageFile<K> {
         // SAFETY: a NULL context selects the default one; `cpath` is
         // NUL-terminated, and the out-pointers address locals. On success the
         // library hands us an array of `count` offsets to free.
-        let status = unsafe {
+        let status = multi::reading(false, || unsafe {
             sys::codes_extract_offsets_malloc(
                 ptr::null_mut(),
                 cpath.as_ptr(),
@@ -177,7 +199,7 @@ impl<K: MessageKind> MessageFile<K> {
                 &raw mut count,
                 0,
             )
-        };
+        });
 
         // Take the array first, whatever the status: the library allocates
         // before it can fail, and never frees it for us.
@@ -197,10 +219,40 @@ impl<K: MessageKind> MessageFile<K> {
     }
 }
 
+impl MessageFile<Grib> {
+    /// Read a multi-field GRIB message as one message per field.
+    ///
+    /// A multi-field message repeats sections 4-8 per field. Off — the
+    /// default — such a message reads as the single message it is, keyed by
+    /// its first field; on, it reads as one message per field, and
+    /// [`count`](Self::count) counts fields.
+    ///
+    /// ```no_run
+    /// # fn main() -> eccodes::Result<()> {
+    /// let file = eccodes::GribFile::open("combined.grib2")?.multi_field(true);
+    /// for field in &file {
+    ///     println!("{}", field?.get::<i64>("step")?);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// This is a property of the reader. The C library takes it from a switch
+    /// on its global context, which this crate turns on only for the length
+    /// of the calls that read it, so asking one file for fields never changes
+    /// what another reader — or another thread — sees.
+    #[must_use]
+    pub const fn multi_field(mut self, enabled: bool) -> Self {
+        self.fields = enabled;
+        self
+    }
+}
+
 impl<K: MessageKind> Clone for MessageFile<K> {
     fn clone(&self) -> Self {
         Self {
             path: self.path.clone(),
+            fields: self.fields,
             _kind: PhantomData,
         }
     }
@@ -223,6 +275,7 @@ impl<K: MessageKind> IntoIterator for &MessageFile<K> {
             Ok(messages) => messages,
             Err(err) => Messages {
                 source: Source::Failed(Some(err)),
+                fields: self.fields,
                 done: false,
                 _kind: PhantomData,
             },
@@ -236,6 +289,10 @@ impl<K: MessageKind> IntoIterator for &MessageFile<K> {
 /// the iterator is done.
 pub struct Messages<'src, K: MessageKind = Any> {
     source: Source<'src>,
+    /// One message per field, for the multi-field GRIB messages in the
+    /// source — set by [`MessageFile::multi_field`], off for every reader
+    /// built here.
+    fields: bool,
     done: bool,
     _kind: PhantomData<K>,
 }
@@ -255,6 +312,7 @@ impl<K: MessageKind> Messages<'static, K> {
     pub fn from_file(file: std::fs::File) -> Result<Self> {
         Ok(Self {
             source: Source::Stream(ffi::CFile::from_file(file)?),
+            fields: false,
             done: false,
             _kind: PhantomData,
         })
@@ -262,13 +320,18 @@ impl<K: MessageKind> Messages<'static, K> {
 }
 
 impl<'src> Messages<'src, Grib> {
-    /// Read GRIB messages out of a buffer, single- and multi-field alike.
+    /// Read GRIB messages out of a buffer.
     ///
-    /// Each message owns its bytes, so the messages may outlive `bytes`.
+    /// Each message owns its bytes, so the messages may outlive `bytes`. A
+    /// multi-field message reads as the one message it is — reading a buffer
+    /// field by field is not offered, because the C library keeps the state
+    /// for that in a single slot shared by the whole process. Read fields
+    /// from a file instead: [`MessageFile::multi_field`].
     #[must_use]
     pub const fn from_bytes(bytes: &'src [u8]) -> Self {
         Self {
             source: Source::Bytes(bytes),
+            fields: false,
             done: false,
             _kind: PhantomData,
         }
@@ -276,19 +339,20 @@ impl<'src> Messages<'src, Grib> {
 }
 
 impl<K: MessageKind> Messages<'_, K> {
-    /// The next message in a stream (`codes_handle_new_from_file`).
-    fn next_in_stream(stream: &ffi::CFile) -> Option<Result<Message<K>>> {
+    /// The next message in a stream (`codes_handle_new_from_file`), or its
+    /// next field when `fields` is set.
+    fn next_in_stream(stream: &ffi::CFile, fields: bool) -> Option<Result<Message<K>>> {
         let mut status: c_int = 0;
         // SAFETY: a NULL context selects the default one; the stream is open,
         // and the status out-pointer addresses a local.
-        let raw = unsafe {
+        let raw = multi::reading(fields, || unsafe {
             sys::codes_handle_new_from_file(
                 ptr::null_mut(),
                 stream.as_ptr(),
                 product_of::<K>(),
                 &raw mut status,
             )
-        };
+        });
         let Some(raw) = NonNull::new(raw) else {
             // NULL with a success status is the end of the file.
             return Error::from_raw(status).err().map(Err);
@@ -308,14 +372,14 @@ impl<K: MessageKind> Messages<'_, K> {
         // SAFETY: a NULL context selects the default one; `cursor`/`left`
         // describe the unread tail of the buffer and are advanced by the
         // library past the message it decoded.
-        let raw = unsafe {
+        let raw = multi::reading(false, || unsafe {
             sys::codes_grib_handle_new_from_multi_message(
                 ptr::null_mut(),
                 &raw mut cursor,
                 &raw mut left,
                 &raw mut status,
             )
-        };
+        });
         *bytes = &bytes[bytes.len() - left..];
 
         let raw = NonNull::new(raw)?;
@@ -334,7 +398,7 @@ impl<K: MessageKind> Iterator for Messages<'_, K> {
             return None;
         }
         let next = match &mut self.source {
-            Source::Stream(stream) => Self::next_in_stream(stream),
+            Source::Stream(stream) => Self::next_in_stream(stream, self.fields),
             Source::Bytes(bytes) => Self::next_in_bytes(bytes),
             Source::Failed(err) => err.take().map(Err),
         };
