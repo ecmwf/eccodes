@@ -10,9 +10,7 @@
 //! helpers here, so each of those has exactly one audited implementation.
 
 use std::ffi::{CStr, CString, c_char, c_int, c_long, c_void};
-use std::fs::File;
 use std::io::Write;
-use std::os::fd::IntoRawFd;
 use std::path::Path;
 use std::ptr::{self, NonNull};
 
@@ -117,26 +115,6 @@ impl CFile {
             .map(|raw| Self { raw })
             .ok_or_else(Error::last_os_error)
             .with_path(path)
-    }
-
-    /// Take over an open [`File`] (`fdopen`).
-    ///
-    /// The `File` is consumed: the stream owns the descriptor from here on,
-    /// so no second handle shares its cursor.
-    pub(crate) fn from_file(file: File) -> Result<Self> {
-        let fd = file.into_raw_fd();
-        // SAFETY: `fd` is open and owned by us; on success its ownership
-        // moves into the returned stream.
-        let raw = unsafe { libc::fdopen(fd, c"rb".as_ptr()) };
-        NonNull::new(raw.cast::<sys::FILE>())
-            .map(|raw| Self { raw })
-            .ok_or_else(|| {
-                let err = Error::last_os_error();
-                // SAFETY: fdopen failed, so the bare descriptor is still ours
-                // to close.
-                unsafe { libc::close(fd) };
-                err
-            })
     }
 
     pub(crate) const fn as_ptr(&self) -> *mut sys::FILE {

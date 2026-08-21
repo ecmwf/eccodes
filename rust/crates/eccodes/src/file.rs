@@ -16,9 +16,16 @@
 //! ```
 //!
 //! A [`MessageFile`] is a path, not an open stream: it can be counted, then
-//! iterated, then iterated again. To read from a stream you already have, use
-//! [`Messages::from_file`]; to read messages out of memory,
+//! iterated, then iterated again. To read messages out of memory, use
 //! [`Messages::from_bytes`].
+//!
+//! A file is named, never handed over already open. The C library wants a
+//! `FILE*` for every message it reads, and the reader that opened that stream
+//! is the only one that can close it at the right moment — after handing back
+//! the decoding state the library files under it, which is what `Messages`
+//! does when it is dropped. It is also what upstream asks of its callers:
+//! an application's own `FILE*` reaching the library is undefined wherever
+//! the two were built against different C runtimes (ecmwf/eccodes#374).
 
 use std::ffi::{c_int, c_void};
 use std::fmt;
@@ -302,21 +309,6 @@ enum Source<'src> {
     Bytes(&'src [u8]),
     /// The source could not be opened; the error is yielded once, then taken.
     Failed(Option<Error>),
-}
-
-impl<K: MessageKind> Messages<'static, K> {
-    /// Read messages from an open file.
-    ///
-    /// The [`File`](std::fs::File) is consumed: reading messages moves its
-    /// cursor, so no second owner may hold it.
-    pub fn from_file(file: std::fs::File) -> Result<Self> {
-        Ok(Self {
-            source: Source::Stream(ffi::CFile::from_file(file)?),
-            fields: false,
-            done: false,
-            _kind: PhantomData,
-        })
-    }
 }
 
 impl<'src> Messages<'src, Grib> {
