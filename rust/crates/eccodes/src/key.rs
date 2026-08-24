@@ -315,7 +315,7 @@ impl<T: KeyGet> KeyGet for Option<T> {
         }
         // A key the library refuses to answer "is it missing?" for is one we
         // simply read: its own error will say more than this one would.
-        if message.is_missing(key).unwrap_or(false) {
+        if message.is_value_missing(key).unwrap_or(false) {
             return Ok(None);
         }
         T::get_from(message, key).map(Some)

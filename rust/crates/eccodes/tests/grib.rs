@@ -689,7 +689,7 @@ fn data_points_missing_pv_precision() -> eccodes::Result<()> {
     message.set("typeOfFirstFixedSurface", "sfc")?;
     message.set_missing("scaleFactorOfFirstFixedSurface")?;
     message.set("scaledValueOfFirstFixedSurface", None::<i64>)?;
-    assert!(message.is_missing("scaleFactorOfFirstFixedSurface")?);
+    assert!(message.is_value_missing("scaleFactorOfFirstFixedSurface")?);
     assert_eq!(
         message.get::<Option<i64>>("scaledValueOfFirstFixedSurface")?,
         None

@@ -154,8 +154,8 @@ impl<K: MessageKind> Message<K> {
         unsafe { sys::codes_is_defined(self.as_ptr(), ckey.as_ptr()) != 0 }
     }
 
-    /// Whether the key is present but coded as missing.
-    pub fn is_missing(&self, key: &str) -> Result<bool> {
+    /// Whether the key is present but its value is coded as missing.
+    pub fn is_value_missing(&self, key: &str) -> Result<bool> {
         let ckey = ffi::cstring(key)?;
         let mut status: c_int = 0;
         // SAFETY: valid handle, NUL-terminated key, out-pointer to a local.
