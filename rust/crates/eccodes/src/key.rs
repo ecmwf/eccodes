@@ -37,10 +37,10 @@ const _: () = assert!(size_of::<c_long>() == size_of::<i64>());
 pub enum KeyType {
     /// No type — the key exists but codes nothing.
     Undefined,
-    /// Integer.
-    Long,
-    /// Floating point.
-    Double,
+    /// Integer (`CODES_TYPE_LONG`).
+    I64,
+    /// Floating point (`CODES_TYPE_DOUBLE`).
+    F64,
     /// Text.
     String,
     /// Raw octets.
@@ -58,8 +58,8 @@ impl KeyType {
     pub(crate) const fn from_raw(raw: c_int) -> Option<Self> {
         match raw as u32 {
             sys::CODES_TYPE_UNDEFINED => Some(Self::Undefined),
-            sys::CODES_TYPE_LONG => Some(Self::Long),
-            sys::CODES_TYPE_DOUBLE => Some(Self::Double),
+            sys::CODES_TYPE_LONG => Some(Self::I64),
+            sys::CODES_TYPE_DOUBLE => Some(Self::F64),
             sys::CODES_TYPE_STRING => Some(Self::String),
             sys::CODES_TYPE_BYTES => Some(Self::Bytes),
             sys::CODES_TYPE_SECTION => Some(Self::Section),
@@ -73,8 +73,8 @@ impl KeyType {
     pub(crate) const fn as_raw(self) -> c_int {
         (match self {
             Self::Undefined => sys::CODES_TYPE_UNDEFINED,
-            Self::Long => sys::CODES_TYPE_LONG,
-            Self::Double => sys::CODES_TYPE_DOUBLE,
+            Self::I64 => sys::CODES_TYPE_LONG,
+            Self::F64 => sys::CODES_TYPE_DOUBLE,
             Self::String => sys::CODES_TYPE_STRING,
             Self::Bytes => sys::CODES_TYPE_BYTES,
             Self::Section => sys::CODES_TYPE_SECTION,

@@ -136,7 +136,7 @@ fn missing_expansion_and_attributes() -> eccodes::Result<()> {
     assert_eq!(reread.get::<i64>("year")?, 2026);
     // Read raw, a missing value is the library's sentinel; read as an
     // Option, it is simply absent.
-    assert!(missing::is_long(reread.get::<i64>("month")?));
+    assert!(missing::is_i64(reread.get::<i64>("month")?));
     assert_eq!(reread.get::<Option<i64>>("month")?, None);
     assert_eq!(reread.get::<Option<i64>>("day")?, None);
 

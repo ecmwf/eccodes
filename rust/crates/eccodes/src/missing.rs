@@ -20,13 +20,13 @@
 //! # fn main() -> eccodes::Result<()> {
 //! # let mut message: eccodes::GribMessage = unimplemented!();
 //! let mut values = message.values()?;
-//! values[0] = missing::DOUBLE;
-//! message.set("missingValue", missing::DOUBLE)?;
+//! values[0] = missing::F64;
+//! message.set("missingValue", missing::F64)?;
 //! message.set("bitmapPresent", true)?;
 //! message.set_values(&values)?;
 //!
 //! let decoded = message.values()?;
-//! let present = decoded.iter().filter(|value| !missing::is_double(**value)).count();
+//! let present = decoded.iter().filter(|value| !missing::is_f64(**value)).count();
 //! println!("{present} points carry data");
 //! # Ok(())
 //! # }
@@ -34,24 +34,24 @@
 
 use eccodes_sys as sys;
 
-/// The sentinel for a missing `long` value (`CODES_MISSING_LONG`).
+/// The sentinel for a missing integer value (`CODES_MISSING_LONG`).
 #[allow(clippy::cast_lossless)] // `i64::from` is not const
-pub const LONG: i64 = sys::CODES_MISSING_LONG as i64;
+pub const I64: i64 = sys::CODES_MISSING_LONG as i64;
 
-/// The sentinel for a missing `double` value (`CODES_MISSING_DOUBLE`).
-pub const DOUBLE: f64 = sys::CODES_MISSING_DOUBLE;
+/// The sentinel for a missing floating-point value (`CODES_MISSING_DOUBLE`).
+pub const F64: f64 = sys::CODES_MISSING_DOUBLE;
 
-/// Whether `value` is the missing-`long` sentinel.
+/// Whether `value` is the missing-integer sentinel.
 #[must_use]
-pub const fn is_long(value: i64) -> bool {
-    value == LONG
+pub const fn is_i64(value: i64) -> bool {
+    value == I64
 }
 
-/// Whether `value` is the missing-`double` sentinel.
+/// Whether `value` is the missing floating-point sentinel.
 ///
 /// Compared bit for bit: this asks whether the message coded *that* sentinel,
 /// not whether a computed number happens to be near it.
 #[must_use]
-pub const fn is_double(value: f64) -> bool {
-    value.to_bits() == DOUBLE.to_bits()
+pub const fn is_f64(value: f64) -> bool {
+    value.to_bits() == F64.to_bits()
 }
