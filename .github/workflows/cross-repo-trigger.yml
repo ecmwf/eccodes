@@ -195,7 +195,7 @@ jobs:
         build-type: ${{ steps.m.outputs.build-type }}
         options: ${{ steps.m.outputs.options }}
     - name: Test
-      run: ctest --test-dir "${{ steps.build.outputs.build-dir }}" --output-on-failure
+      run: ctest --test-dir "${{ steps.build.outputs.build-dir }}" --output-on-failure -j "$(nproc)"
     - name: Publish
       uses: ecmwf/ci-infrastructure/actions/fetch-and-publish@main
       with:

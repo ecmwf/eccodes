@@ -114,7 +114,7 @@ jobs:
           own-deps-hash: ${{ matrix._resolved.own-deps-hash }}
 
       - name: Test
-        run: ctest --test-dir "${{ steps.build.outputs.build-dir }}" --output-on-failure
+        run: ctest --test-dir "${{ steps.build.outputs.build-dir }}" --output-on-failure -j "$(nproc)"
 
       - name: Publish eccodes
         uses: ecmwf/ci-infrastructure/actions/fetch-and-publish@main
