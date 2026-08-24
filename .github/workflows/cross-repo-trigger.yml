@@ -194,14 +194,14 @@ jobs:
         fortran-compiler: ${{ steps.m.outputs.fortran-compiler }}
         build-type: ${{ steps.m.outputs.build-type }}
         options: ${{ steps.m.outputs.options }}
+    - name: Test
+      run: ctest --test-dir "${{ steps.build.outputs.build-dir }}" --output-on-failure
     - name: Publish
       uses: ecmwf/ci-infrastructure/actions/fetch-and-publish@main
       with:
         mode: publish
         install-path: ${{ steps.build.outputs.install-path }}
         artifact-name: ${{ steps.m.outputs.own-artifact-name }}
-    - name: Test
-      run: ctest --test-dir "${{ steps.build.outputs.build-dir }}" --output-on-failure
     - name: Report check-run conclusion
       if: ${{ always() && github.event_name == 'workflow_dispatch' && inputs.from-jobs != '[]' }}
       uses: ecmwf/ci-infrastructure/actions/report-check-run@main

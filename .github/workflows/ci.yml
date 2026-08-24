@@ -56,11 +56,15 @@ jobs:
           app-private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
 
   build:
-    # Build and test share one job and one container: once eccodes is built and
-    # published we test the tree in place, rather than starting a second
-    # container that would re-checkout, re-fetch deps and re-download our own
-    # artifact. Consumers pick the artifact up as soon as the publish step runs,
-    # without waiting for the tests.
+    # Build and test share one job and one container: once eccodes is built we test
+    # the tree in place, rather than starting a second container that would
+    # re-checkout, re-fetch deps and re-download our own artifact.
+    #
+    # Publishing comes AFTER the tests, so a red suite leaves nothing behind. The
+    # artifact store records existence and nothing else — resolve_deps and
+    # fetch_deps both decide with a bare object_exists — so once an artifact is
+    # published, no consumer can tell it came from a build whose tests failed.
+    # The cost is that a consumer waits for our tests; accepted deliberately.
     needs: resolve
     name: build+test (${{ matrix.cxx-compiler }}, ${{ matrix.options || 'default' }})
     runs-on: ${{ matrix['runs-on'] }}
@@ -96,13 +100,6 @@ jobs:
           build-type: ${{ matrix.build-type }}
           options: ${{ matrix.options }}
 
-      - name: Publish eccodes
-        uses: ecmwf/ci-infrastructure/actions/fetch-and-publish@main
-        with:
-          mode: publish
-          install-path: ${{ steps.build.outputs.install-path }}
-          artifact-name: ${{ matrix._resolved.own-artifact-name }}
-
       - name: Print dependency table
         uses: ecmwf/ci-infrastructure/actions/print-dep-table@main
         with:
@@ -118,6 +115,14 @@ jobs:
 
       - name: Test
         run: ctest --test-dir "${{ steps.build.outputs.build-dir }}" --output-on-failure
+
+      - name: Publish eccodes
+        uses: ecmwf/ci-infrastructure/actions/fetch-and-publish@main
+        with:
+          mode: publish
+          install-path: ${{ steps.build.outputs.install-path }}
+          artifact-name: ${{ matrix._resolved.own-artifact-name }}
+
 
   build-hpc:
     # eccodes built and tested inside a SLURM job. One leg is the default build;
