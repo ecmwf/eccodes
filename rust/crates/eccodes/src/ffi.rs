@@ -10,7 +10,7 @@
 //! helpers here, so each of those has exactly one audited implementation.
 
 use std::ffi::{CStr, CString, c_char, c_int, c_long, c_void};
-use std::io::Write;
+use std::io::{ErrorKind, Read, Write};
 use std::path::Path;
 use std::ptr::{self, NonNull};
 
@@ -127,6 +127,91 @@ impl Drop for CFile {
         // SAFETY: an open stream owned by us; closed exactly once.
         unsafe { sys::fclose(self.raw.as_ptr()) };
     }
+}
+
+/// A Rust reader the C library can pull messages out of.
+///
+/// `codes_handle_new_from_stream` reads through a callback and an opaque
+/// pointer rather than a `FILE*`, which is what lets a message come from a
+/// socket, a pipe or a buffer. This holds the reader that callback pulls
+/// from, together with the I/O failure it hit — the C signature has nowhere
+/// to put one.
+///
+/// The reader is called from a C frame, so a panic inside it aborts the
+/// process, as any panic crossing one does.
+pub struct ReadStream<'src> {
+    reader: Box<dyn Read + 'src>,
+    failure: Option<std::io::Error>,
+}
+
+impl<'src> ReadStream<'src> {
+    pub fn new(reader: impl Read + 'src) -> Self {
+        Self {
+            reader: Box::new(reader),
+            failure: None,
+        }
+    }
+
+    /// The `stream_data` pointer to hand to the C reader, alongside
+    /// [`read_stream`].
+    pub fn as_data(&mut self) -> *mut c_void {
+        (&raw mut *self).cast::<c_void>()
+    }
+
+    /// The I/O failure the reader hit, taken out of the stream.
+    ///
+    /// The callback reports one as the end of the stream, so a read that
+    /// stopped early asks here for the reason before believing it.
+    pub fn take_failure(&mut self) -> Option<Error> {
+        self.failure.take().map(Error::from)
+    }
+}
+
+/// The `stream_proc` of a [`ReadStream`]: fill `buffer` with `len` bytes.
+///
+/// The library wants exactly what it asked for; `-1` says the stream ended,
+/// and anything shorter is a message that stops in the middle, which it
+/// reports as an I/O problem. A failure of the Rust reader is kept on the
+/// stream and reported as the end, for the caller to replace with the real
+/// error.
+///
+/// # Safety
+///
+/// `data` must point to a live [`ReadStream`] that outlives the call, and
+/// `buffer` must be writable for `len` bytes — what the C reader passes back
+/// from `codes_handle_new_from_stream`.
+pub unsafe extern "C" fn read_stream(
+    data: *mut c_void,
+    buffer: *mut c_void,
+    len: c_long,
+) -> c_long {
+    let Ok(wanted) = usize::try_from(len) else {
+        return -1;
+    };
+    // SAFETY: the caller's contract — a live stream, and a buffer of `len`
+    // writable bytes. The borrow ends with this call, so the lifetime the
+    // pointer is read back at cannot outlive the reader it names.
+    let stream = unsafe { &mut *data.cast::<ReadStream<'_>>() };
+    // SAFETY: as above.
+    let buf = unsafe { std::slice::from_raw_parts_mut(buffer.cast::<u8>(), wanted) };
+
+    let mut filled = 0;
+    while filled < wanted {
+        match stream.reader.read(&mut buf[filled..]) {
+            Ok(0) => break,
+            Ok(read) => filled += read,
+            Err(err) if err.kind() == ErrorKind::Interrupted => {}
+            Err(err) => {
+                stream.failure = Some(err);
+                return -1;
+            }
+        }
+    }
+    if filled == 0 && wanted > 0 {
+        return -1;
+    }
+    // `filled` never exceeds `len`, which came from a `c_long`.
+    c_long::try_from(filled).unwrap_or(-1)
 }
 
 /// Run `write_message` with a `FILE*` backed by memory, then hand the bytes

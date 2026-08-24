@@ -15,7 +15,7 @@ use std::path::{Path, PathBuf};
 
 use eccodes::{
     AnyFile, BufrFile, Code, GribFile, GribMessage, GribMultiField, Index, Kind, LatLon, Message,
-    Messages, Reuse,
+    Reuse,
 };
 
 /// Path to an in-repo sample message.
@@ -801,14 +801,47 @@ fn mixed_products_counting() -> eccodes::Result<()> {
         .collect::<eccodes::Result<_>>()?;
     assert_eq!(kinds, [Kind::Grib, Kind::Bufr, Kind::Grib]);
 
-    // The byte-buffer reader walks consecutive GRIB messages.
-    let mut two_gribs = grib_bytes.clone();
-    two_gribs.extend_from_slice(&grib_bytes);
-    let editions: Vec<i64> = Messages::from_bytes(&two_gribs)
+    // The same bytes read as a stream rather than a file: any reader is a
+    // message source, and a typed one skips the products it was not asked
+    // for, exactly as the file reader does.
+    assert_eq!(AnyFile::messages_from(&mixed[..]).count(), 3);
+    assert_eq!(BufrFile::messages_from(&mixed[..]).count(), 1);
+    let editions: Vec<i64> = GribFile::messages_from(&mixed[..])
         .map(|message| message.and_then(|message| message.get::<i64>("edition")))
         .collect::<eccodes::Result<_>>()?;
     assert_eq!(editions, [2, 2]);
+
+    // Read from the file itself, it is the same stream of messages.
+    let kinds_from_reader: Vec<Kind> = AnyFile::messages_from(std::fs::File::open(&mixed_path)?)
+        .map(|message| message.and_then(|message| message.kind()))
+        .collect::<eccodes::Result<_>>()?;
+    assert_eq!(kinds_from_reader, kinds);
     Ok(())
+}
+
+/// A reader that fails part way is not a stream that simply ended: the C
+/// stream API has no room for the reason, so the crate keeps it and reports
+/// it in place of the end.
+#[test]
+fn a_failing_reader_reports_its_error() {
+    struct Broken;
+
+    impl std::io::Read for Broken {
+        fn read(&mut self, _buf: &mut [u8]) -> std::io::Result<usize> {
+            Err(std::io::Error::from(std::io::ErrorKind::ConnectionReset))
+        }
+    }
+
+    let mut messages = GribFile::messages_from(Broken);
+    let err = messages
+        .next()
+        .expect("the failure is reported, not swallowed")
+        .expect_err("the reader never yields a message");
+    assert_eq!(
+        err.io_error().map(std::io::Error::kind),
+        Some(std::io::ErrorKind::ConnectionReset)
+    );
+    assert!(messages.next().is_none(), "a failed reader is done");
 }
 
 /// `count` reports zero for a file that holds no message of its product —

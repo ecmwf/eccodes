@@ -358,7 +358,7 @@ impl<K: MessageKind> Message<K> {
     }
 
     /// Re-tag this message as another product, keeping the same C object.
-    fn retag<T: MessageKind>(self) -> Message<T> {
+    pub(crate) fn retag<T: MessageKind>(self) -> Message<T> {
         // The handle moves out of `self` without running its destructor: the
         // new tag takes over ownership of the same C object.
         let this = ManuallyDrop::new(self);

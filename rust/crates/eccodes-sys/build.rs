@@ -460,6 +460,7 @@ const ALLOWED_FUNCTIONS: &[&str] = &[
     "codes_count_in_filename",
     // -- Handle creation --
     "codes_handle_new_from_file",
+    "codes_handle_new_from_stream",
     "codes_grib_handle_new_from_file",
     "codes_bufr_handle_new_from_file",
     "codes_handle_new_from_message",

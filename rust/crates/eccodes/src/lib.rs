@@ -21,7 +21,10 @@
 //!
 //! - A [`MessageFile`] is a file of messages: [`count`](MessageFile::count)
 //!   it, [`index`](MessageFile::index) it, or iterate it. [`GribFile`] and
-//!   [`BufrFile`] fix the product; plain `MessageFile` accepts any.
+//!   [`BufrFile`] fix the product; plain `MessageFile` accepts any. Bytes
+//!   that are not a file — a socket, a pipe, a buffer — go through
+//!   [`messages_from`](MessageFile::messages_from), which takes any
+//!   [`Read`](std::io::Read); either way you get [`Messages`].
 //! - A [`Message`] is one message. Keys are read and written by name, typed
 //!   by what you ask for — see [`get`](Message::get) and [`set`](Message::set).
 //!   [`GribMessage`] adds grids and nearest-point search; [`BufrMessage`]

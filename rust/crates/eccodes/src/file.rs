@@ -16,8 +16,10 @@
 //! ```
 //!
 //! A [`MessageFile`] is a path, not an open stream: it can be counted, then
-//! iterated, then iterated again. To read messages out of memory, use
-//! [`Messages::from_bytes`].
+//! iterated, then iterated again. Everything else is read through
+//! [`MessageFile::messages_from`], which takes any [`Read`] — a socket, a
+//! pipe, or a buffer in memory. Both hand back the same [`Messages`]
+//! iterator, which is the only way to get one.
 //!
 //! A file is named, never handed over already open. The C library wants a
 //! `FILE*` for every message it reads, and the reader that opened that stream
@@ -27,8 +29,9 @@
 //! an application's own `FILE*` reaching the library is undefined wherever
 //! the two were built against different C runtimes (ecmwf/eccodes#374).
 
-use std::ffi::{c_int, c_void};
+use std::ffi::c_int;
 use std::fmt;
+use std::io::Read;
 use std::iter::FusedIterator;
 use std::marker::PhantomData;
 use std::path::{Path, PathBuf};
@@ -84,6 +87,44 @@ impl<K: MessageKind> MessageFile<K> {
             fields: false,
             _kind: PhantomData,
         })
+    }
+
+    /// Read the messages of this product from anything that reads bytes — a
+    /// socket, a pipe, standard input, a buffer in memory.
+    ///
+    /// Messages are decoded one at a time, as the reader yields them, and
+    /// each owns its bytes. Products other than this one are skipped, as they
+    /// are when reading a file of this product.
+    ///
+    /// The library looks for the start of a message a byte at a time, so hand
+    /// it a [`BufReader`](std::io::BufReader) around anything whose reads cost
+    /// a syscall.
+    ///
+    /// A multi-field GRIB message reads as the one message it is: the C
+    /// library keeps the state for splitting one into fields against the
+    /// `FILE*` it came from, so that is offered on files only — see
+    /// [`MessageFile::multi_field`].
+    ///
+    /// ```no_run
+    /// use eccodes::GribFile;
+    ///
+    /// # fn main() -> eccodes::Result<()> {
+    /// for message in GribFile::messages_from(std::io::stdin().lock()) {
+    ///     println!("{}", message?.get::<String>("shortName")?);
+    /// }
+    ///
+    /// let bytes = std::fs::read("data.grib2")?;
+    /// println!("{} messages", GribFile::messages_from(&bytes[..]).count());
+    /// # Ok(())
+    /// # }
+    /// ```
+    pub fn messages_from<'src>(reader: impl Read + 'src) -> Messages<'src, K> {
+        Messages {
+            source: Source::Reader(ffi::ReadStream::new(reader)),
+            fields: false,
+            done: false,
+            _kind: PhantomData,
+        }
     }
 
     /// The path this file was opened from.
@@ -290,7 +331,11 @@ impl<K: MessageKind> IntoIterator for &MessageFile<K> {
     }
 }
 
-/// Messages read one after another from a file, a stream or memory.
+/// Messages read one after another from a file or a reader.
+///
+/// Handed out by [`MessageFile::messages`] and
+/// [`MessageFile::messages_from`] — a message source is always named as a
+/// file of some product, whatever the bytes then come from.
 ///
 /// Yields `Err` at most once: after a failure, or at the end of the source,
 /// the iterator is done.
@@ -306,28 +351,9 @@ pub struct Messages<'src, K: MessageKind = Any> {
 
 enum Source<'src> {
     Stream(ffi::CFile),
-    Bytes(&'src [u8]),
+    Reader(ffi::ReadStream<'src>),
     /// The source could not be opened; the error is yielded once, then taken.
     Failed(Option<Error>),
-}
-
-impl<'src> Messages<'src, Grib> {
-    /// Read GRIB messages out of a buffer.
-    ///
-    /// Each message owns its bytes, so the messages may outlive `bytes`. A
-    /// multi-field message reads as the one message it is — reading a buffer
-    /// field by field is not offered, because the C library keeps the state
-    /// for that in a single slot shared by the whole process. Read fields
-    /// from a file instead: [`MessageFile::multi_field`].
-    #[must_use]
-    pub const fn from_bytes(bytes: &'src [u8]) -> Self {
-        Self {
-            source: Source::Bytes(bytes),
-            fields: false,
-            done: false,
-            _kind: PhantomData,
-        }
-    }
 }
 
 impl<K: MessageKind> Messages<'_, K> {
@@ -352,33 +378,43 @@ impl<K: MessageKind> Messages<'_, K> {
         Some(Ok(Message::from_raw(raw)))
     }
 
-    /// The next GRIB message in a buffer, advancing `bytes` past it
-    /// (`codes_grib_handle_new_from_multi_message`).
-    fn next_in_bytes(bytes: &mut &[u8]) -> Option<Result<Message<K>>> {
-        if bytes.is_empty() {
-            return None;
-        }
-        let mut cursor = bytes.as_ptr().cast::<c_void>().cast_mut();
-        let mut left = bytes.len();
-        let mut status: c_int = 0;
-        // SAFETY: a NULL context selects the default one; `cursor`/`left`
-        // describe the unread tail of the buffer and are advanced by the
-        // library past the message it decoded.
-        let raw = multi::reading(false, || unsafe {
-            sys::codes_grib_handle_new_from_multi_message(
-                ptr::null_mut(),
-                &raw mut cursor,
-                &raw mut left,
-                &raw mut status,
-            )
-        });
-        *bytes = &bytes[bytes.len() - left..];
+    /// The next message a reader yields (`codes_handle_new_from_stream`).
+    ///
+    /// The C reader takes no product: it decodes whatever framing comes next,
+    /// so messages of other products are skipped here, leaving the same
+    /// stream of messages a file of this product would yield.
+    fn next_in_reader(stream: &mut ffi::ReadStream<'_>) -> Option<Result<Message<K>>> {
+        loop {
+            let mut status: c_int = 0;
+            // SAFETY: a NULL context selects the default one; `stream` is
+            // borrowed for the call, and `read_stream` is its own callback.
+            let raw = unsafe {
+                sys::codes_handle_new_from_stream(
+                    ptr::null_mut(),
+                    stream.as_data(),
+                    Some(ffi::read_stream),
+                    &raw mut status,
+                )
+            };
+            let Some(raw) = NonNull::new(raw) else {
+                // The reader's own failure is reported to C as the end of the
+                // stream, and says more than the status does.
+                return stream
+                    .take_failure()
+                    .or_else(|| Error::from_raw(status).err())
+                    .map(Err);
+            };
 
-        let raw = NonNull::new(raw)?;
-        // The decoded message points into the caller's buffer; cloning it
-        // gives the caller a message that owns its bytes.
-        let borrowed: Message<K> = Message::from_raw(raw);
-        Some(Error::from_raw(status).and_then(|()| borrowed.try_clone()))
+            let message = Message::<Any>::from_raw(raw);
+            let Some(expected) = K::EXPECTED else {
+                return Some(Ok(message.retag()));
+            };
+            match message.kind() {
+                Ok(kind) if kind == expected => return Some(Ok(message.retag())),
+                Ok(_) => continue,
+                Err(err) => return Some(Err(err)),
+            }
+        }
     }
 }
 
@@ -391,7 +427,7 @@ impl<K: MessageKind> Iterator for Messages<'_, K> {
         }
         let next = match &mut self.source {
             Source::Stream(stream) => Self::next_in_stream(stream, self.fields),
-            Source::Bytes(bytes) => Self::next_in_bytes(bytes),
+            Source::Reader(stream) => Self::next_in_reader(stream),
             Source::Failed(err) => err.take().map(Err),
         };
         if next.as_ref().is_none_or(Result::is_err) {
@@ -420,7 +456,7 @@ impl<K: MessageKind> fmt::Debug for Messages<'_, K> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let source = match self.source {
             Source::Stream(_) => "stream",
-            Source::Bytes(_) => "bytes",
+            Source::Reader(_) => "reader",
             Source::Failed(_) => "failed",
         };
         write!(
