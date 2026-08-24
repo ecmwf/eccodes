@@ -92,7 +92,6 @@ pub mod missing;
 mod multi;
 mod nearest;
 
-pub use datetime::JulianDay;
 pub use error::{Code, Error, Result};
 pub use file::{AnyFile, BufrFile, GribFile, MessageFile, Messages};
 pub use grid::{GeoPoint, GridPoints, GridPositions, LatLon};

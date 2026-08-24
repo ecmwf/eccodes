@@ -18,79 +18,17 @@
 //! # }
 //! ```
 //!
-//! [`JulianDay`] covers the one thing [`time`] has no type for: the
-//! fractional Julian day the library converts instants to and from.
-
-use std::ffi::c_long;
-use std::fmt;
+//! A key is a [`Date`] or a [`Time`]; no date-time type of this crate's own
+//! reaches the API. The library's Julian day stays inside, where it does one
+//! job — normalising a date a message codes out of range.
 
 use eccodes_sys as sys;
-use time::{Date, Month, PrimitiveDateTime, Time};
+use time::{Date, Month, Time};
 
-use crate::error::{Code, Error, ErrorContext, Result, check};
+use crate::error::{Code, Error, ErrorContext, Result};
 use crate::key::{KeyGet, KeySet};
 use crate::kind::MessageKind;
 use crate::message::Message;
-
-/// A Julian day, including the fraction that carries the time of day.
-///
-/// [`Date::to_julian_day`] covers whole days; this is the library's own
-/// conversion for instants, as `codes_datetime_to_julian` computes it.
-#[derive(Debug, Clone, Copy, PartialEq, PartialOrd)]
-pub struct JulianDay(pub f64);
-
-impl JulianDay {
-    /// The Julian day of an instant (`codes_datetime_to_julian`).
-    pub fn from_datetime(when: PrimitiveDateTime) -> Result<Self> {
-        let mut julian = 0.0_f64;
-        check!(sys::codes_datetime_to_julian(
-            i64::from(when.year()),
-            i64::from(u8::from(when.month())),
-            i64::from(when.day()),
-            i64::from(when.hour()),
-            i64::from(when.minute()),
-            i64::from(when.second()),
-            &raw mut julian,
-        ))?;
-        Ok(Self(julian))
-    }
-
-    /// The instant a Julian day denotes (`codes_julian_to_datetime`).
-    pub fn to_datetime(self) -> Result<PrimitiveDateTime> {
-        let (mut year, mut month, mut day) = (0 as c_long, 0 as c_long, 0 as c_long);
-        let (mut hour, mut minute, mut second) = (0 as c_long, 0 as c_long, 0 as c_long);
-        check!(sys::codes_julian_to_datetime(
-            self.0,
-            &raw mut year,
-            &raw mut month,
-            &raw mut day,
-            &raw mut hour,
-            &raw mut minute,
-            &raw mut second,
-        ))?;
-        let date = build_date(year, month, day)?;
-        let time = build_time(hour, minute, second)?;
-        Ok(PrimitiveDateTime::new(date, time))
-    }
-}
-
-impl fmt::Display for JulianDay {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        fmt::Display::fmt(&self.0, f)
-    }
-}
-
-impl From<f64> for JulianDay {
-    fn from(julian: f64) -> Self {
-        Self(julian)
-    }
-}
-
-impl From<JulianDay> for f64 {
-    fn from(julian: JulianDay) -> Self {
-        julian.0
-    }
-}
 
 impl KeyGet for Date {
     /// Reads the `YYYYMMDD` form of `dataDate`, `validityDate` and their kin.
