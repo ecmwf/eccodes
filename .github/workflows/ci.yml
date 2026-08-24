@@ -34,7 +34,7 @@ jobs:
     # more than the runner size saves, so keep the container.
     runs-on: arc-runner-normal
     container:
-      image: eccr.ecmwf.int/public-playground-ci/ubuntu24.04-base:latest
+      image: eccr.ecmwf.int/public-ci-images/ubuntu24.04-base:latest
     outputs:
       build-matrix: ${{ steps.r.outputs.matrix-build }}
       build-hpc-matrix: ${{ steps.r.outputs.matrix-build-hpc }}
