@@ -102,15 +102,7 @@ jobs:
       - name: Print dependency table
         uses: ecmwf/ci-infrastructure/actions/print-dep-table@main
         with:
-          deps-json: ${{ toJSON(matrix._resolved.deps) }}
-          own-name: eccodes
-          own-artifact-name: ${{ matrix._resolved.own-artifact-name }}
-          own-ref: ${{ matrix._resolved.own-ref }}
-          own-platform: ${{ matrix._resolved.own-platform }}
-          own-compiler: ${{ matrix._resolved.own-compiler }}
-          own-python: ${{ matrix._resolved.own-python }}
-          own-build-type: ${{ matrix._resolved.own-build-type }}
-          own-deps-hash: ${{ matrix._resolved.own-deps-hash }}
+          resolved-json: ${{ toJSON(matrix._resolved) }}
 
       - name: Test
         run: ctest --test-dir "${{ steps.build.outputs.build-dir }}" --output-on-failure -j "$(nproc)"
