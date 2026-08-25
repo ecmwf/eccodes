@@ -79,9 +79,8 @@ needs = ["ecbuild/build", "stack-deps/build", "eckit/build"]
 # build that only compiles proves nothing beyond "eccodes still links against
 # the new ecbuild/eckit". Same invocation as ci.yml's build+test job.
 ctest = true
-# Parallel, like the build step above: ctest defaults to one test at a time, which
-# left cumulative sec*proc equal to wall-clock in every run so far — the whole
-# machine idle but for one test. Kept identical to ci.yml's Test step.
+# ctest defaults to one test at a time, which leaves the whole runner idle but
+# for one test.
 ctest-args = '-j "$(nproc)"'
 
 # --- HPC build --------------------------------------------------------------

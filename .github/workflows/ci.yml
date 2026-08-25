@@ -21,9 +21,8 @@ env:
 
 jobs:
   # No pre-commit job: this repo has no .pre-commit-config.yaml yet. Add an
-  # inlined pre-commit job here once it does — ci-infrastructure dropped its
-  # reusable pre-commit.yml (ecmwf/ci-infrastructure#14), so each repo now
-  # carries the job itself; copy the one in stack-dependencies' ci.yml.
+  # inlined pre-commit job here once it does; copy the one in
+  # stack-dependencies' ci.yml.
   resolve:
     # Runs in the base image on purpose. ci-infrastructure is baked into that
     # image and advertised via CI_INFRASTRUCTURE_PYTHON, so
@@ -31,7 +30,7 @@ jobs:
     # container it instead builds a venv per job — with PyPI/GitHub egress —
     # and cannot cache it: ARC's Kubernetes mode overlays _work, where
     # RUNNER_TOOL_CACHE lives, with an ephemeral per-job volume. That costs far
-    # more than the runner size saves, so keep the container.
+    # more than the runner size saves.
     runs-on: arc-runner-normal
     container:
       image: eccr.ecmwf.int/public-ci-images/ubuntu24.04-base:latest
@@ -56,15 +55,15 @@ jobs:
           app-private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
 
   build:
-    # Build and test share one job and one container: once eccodes is built we test
-    # the tree in place, rather than starting a second container that would
+    # Build and test share one job and one container: once eccodes is built we
+    # test the tree in place, rather than starting a second container that would
     # re-checkout, re-fetch deps and re-download our own artifact.
     #
-    # Publishing comes AFTER the tests, so a red suite leaves nothing behind. The
+    # Publishing comes AFTER the tests, so a red suite leaves nothing behind: the
     # artifact store records existence and nothing else — resolve_deps and
-    # fetch_deps both decide with a bare object_exists — so once an artifact is
-    # published, no consumer can tell it came from a build whose tests failed.
-    # The cost is that a consumer waits for our tests; accepted deliberately.
+    # fetch_deps both decide with a bare object_exists — so a published artifact
+    # carries no hint that its tests failed. The cost is that a consumer waits
+    # for our tests.
     needs: resolve
     name: build+test (${{ matrix.cxx-compiler }}, ${{ matrix.options || 'default' }})
     runs-on: ${{ matrix['runs-on'] }}
@@ -122,7 +121,6 @@ jobs:
           mode: publish
           install-path: ${{ steps.build.outputs.install-path }}
           artifact-name: ${{ matrix._resolved.own-artifact-name }}
-
 
   build-hpc:
     # eccodes built and tested inside a SLURM job. One leg is the default build;

@@ -7,8 +7,8 @@
 # is a dependency of eccodes at all — see the `when` predicate on the eckit
 # [[deps]] entry in .ci/manifest.toml.
 #
-# ci-infrastructure wraps this file (it waits for the source transfer, unpacks
-# into node-local $TMPDIR and cds there, exports $CMAKE_PREFIX_PATH /
+# ci-infrastructure wraps this file (it unpacks the transferred source into
+# node-local $TMPDIR and cds there, exports $CMAKE_PREFIX_PATH /
 # $CI_INSTALL_PREFIX, appends the sentinel), so this script owns only its #SBATCH
 # resources, module loads and the build/test/install — and must NOT print
 # "Finished: ..." itself.
