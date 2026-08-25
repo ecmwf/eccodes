@@ -338,6 +338,14 @@ impl KeySet for f64 {
     }
 }
 
+impl KeySet for f32 {
+    /// Written through `codes_set_double` — the C API has no scalar float
+    /// setter, and widening an `f32` is exact.
+    fn set_on<K: MessageKind>(self, message: &mut Message<K>, key: &str) -> Result<()> {
+        f64::from(self).set_on(message, key)
+    }
+}
+
 impl KeySet for bool {
     /// Writes the library's `0`/`1` convention for flag keys.
     fn set_on<K: MessageKind>(self, message: &mut Message<K>, key: &str) -> Result<()> {

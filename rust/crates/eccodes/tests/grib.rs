@@ -140,6 +140,11 @@ fn set_get_round_trip() -> eccodes::Result<()> {
     );
     assert_eq!(message.get::<Vec<f32>>("values")?.len(), count);
 
+    // An f32 goes in through the double setter, so it survives widening.
+    message.set("missingValue", 1.5_f32)?;
+    assert_eq!(message.get::<f64>("missingValue")?, 1.5);
+    assert_eq!(message.get::<f32>("missingValue")?, 1.5);
+
     // grib_set_keys.c ends with codes_get_message + fwrite; re-decoding
     // the copy must reproduce the message exactly.
     let bytes = message.to_vec()?;

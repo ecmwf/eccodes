@@ -100,7 +100,7 @@ fn extremes(values: &[f64]) -> Option<(f64, f64)> {
     let present = values
         .iter()
         .copied()
-        .filter(|value| !eccodes::missing::is_double(*value));
+        .filter(|value| !eccodes::missing::is_f64(*value));
     present.fold(None, |extremes, value| {
         Some(extremes.map_or((value, value), |(min, max): (f64, f64)| {
             (min.min(value), max.max(value))
