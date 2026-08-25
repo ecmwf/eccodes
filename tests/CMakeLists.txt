@@ -205,7 +205,6 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-2254
         grib_ecc-2264
         grib_ecc-2265
-        grib_lc-gcr
     )
 
     # These tests require data downloads
@@ -444,6 +443,7 @@ if( HAVE_BUILD_TOOLS )
         grib_local_NCEP
         grib_neg_fctime
         codes_split_file
+        grib_lc-gcr
         grib_mars_keys1
         grib_mars_keys2)
 
