@@ -154,7 +154,7 @@ impl<'src> ReadStream<'src> {
 
     /// The `stream_data` pointer to hand to the C reader, alongside
     /// [`read_stream`].
-    pub fn as_data(&mut self) -> *mut c_void {
+    pub const fn as_data(&mut self) -> *mut c_void {
         (&raw mut *self).cast::<c_void>()
     }
 

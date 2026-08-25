@@ -118,6 +118,7 @@ impl<K: MessageKind> MessageFile<K> {
     /// # Ok(())
     /// # }
     /// ```
+    #[must_use]
     pub fn messages_from<'src>(reader: impl Read + 'src) -> Messages<'src, K> {
         Messages {
             source: Source::Reader(ffi::ReadStream::new(reader)),
@@ -411,7 +412,8 @@ impl<K: MessageKind> Messages<'_, K> {
             };
             match message.kind() {
                 Ok(kind) if kind == expected => return Some(Ok(message.retag())),
-                Ok(_) => continue,
+                // Another product: read on to the next message.
+                Ok(_) => {}
                 Err(err) => return Some(Err(err)),
             }
         }
