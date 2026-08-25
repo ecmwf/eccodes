@@ -661,7 +661,8 @@ if( eccodes_HAVE_ECKIT_GEO AND eccodes_HAVE_GEOGRAPHY )
 
     foreach( test
             grib_from_gridspec
-            grib_to_gridspec )
+            grib_to_gridspec
+            grib_grid_specs_eckit )
         ecbuild_add_test( TARGET eccodes_t_${test}
                           SOURCES ${test}.cc
                           LIBS eccodes eckit_geo
