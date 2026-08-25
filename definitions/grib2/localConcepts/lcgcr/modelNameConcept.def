@@ -14,3 +14,7 @@
     backgroundProcess = 3;
     centre = 173; #NASA nasa
 }
+'CORe' = {
+    backgroundProcess = 4;
+    centre = 7; #NCEP kwbc
+}

@@ -68,6 +68,9 @@ test_stream_and_type()
     ${tools_dir}/grib_set -s centre=nasa,backgroundProcess=3,generatingProcessIdentifier=1 $temp2 $temp3
     grib_check_key_equals $temp3 'class,expver,centre,centre:i,model,stream,type,stattype,timespan,param' "lr $expver nasa 173 MERRA-2 sttd fc moav 24h 235055"
 
+    ${tools_dir}/grib_set -s centre=kwbc,backgroundProcess=4,generatingProcessIdentifier=1 $temp2 $temp3
+    grib_check_key_equals $temp3 'class,expver,centre,centre:i,model,stream,type,stattype,timespan,param' "lr $expver kwbc 7 CORe sttd fc moav 24h 235055"
+
 }
 
 test_stream_and_type 'prod'
