@@ -7,6 +7,11 @@
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
+# ----------------------------------------------
+# This is the test for CARRA/CERRA
+#    epic: PS-74 Support CARRA/CERRA projects
+#    epic: DGOV-198 Support C3S Regional Reanalysis in MARS (CARRA, CERRA)
+# ----------------------------------------------
 
 . ./include.ctest.sh
 
@@ -19,13 +24,15 @@ temp2=temp2.${label}.grib2
 
 tempLog=temp.${label}.log
 
+origins="no-ar-ce no-ar-cw no-ar-pa se-al-ec fr-ms-ec"
+centres="enmi eswi lfpw"
+pspds="10 11"
+types="an fc"
+pdtns="0 1" # oper/enda as per products_crra.def
+
 #tablesVersion=$( ${tools_dir}/grib_get -p tablesVersionLatest $grib2_sample )
 # use tablesVersion=32 i.e. latest one before mtg2 stuff like timespan etc
 
-# ----------------------------------------------
-# epic: PS-74 Support CARRA/CERRA projects
-# epic: DGOV-198 Support C3S Regional Reanalysis in MARS (CARRA, CERRA)
-# ----------------------------------------------
 
 # ECC-993 GRIB: Support for Copernicus regional reanalysis (CARRA/CERRA)
 # ----------------------------------------------
@@ -124,7 +131,7 @@ grib_check_key_equals $temp1 "suiteName:s" "se-ar-ec"
 # ECC-1913
 # ----------
 # types em/es for class=rr and expver=prod/test (and suiteName=se-al-ec though it works generally)
-for pspd in 10 11 ; do
+for pspd in $pspds ; do
   if [ $pspd -eq 10 ]; then
     expver='prod'
   else
@@ -149,6 +156,36 @@ for pspd in 10 11 ; do
     grib_check_key_equals $temp2 'mars.stream,mars.type,mars.expver' "enda $type $expver"
   done
 done
+
+# ECC-2294
+# ----------
+# ML/tiles support
+
+expver=0001
+origins="no-ar-tiles-pa no-ar-ai-ce"
+
+for pspd in $pspds ; do
+for centre in $centres ; do
+for origin in $origins ; do
+for type in $types ; do
+for pdtn in $pdtns ; do
+  if [ "$pdtn" -eq 0 -o "$pdtn" -eq 8 ] ; then
+    stream=oper
+  elif [ "$pdtn" -eq 1 -o "$pdtn" -eq 2 -o "$pdtn" -eq 11 -o "$pdtn" -eq 12 ] ; then
+    stream=enda
+  else
+    echo "unknown productDefinitionTemplateNumber=$pdtn"
+    exit -1
+  fi
+  grib_set -s tablesVersion=32,marsExpver=$expver,centre=$centre,suiteName=$origin,type=$type,productionStatusOfProcessedData=$pspd,\
+grib2LocalSectionPresent=1,grib2LocalSectionNumber=0,crraLocalVersion=2,productDefinitionTemplateNumber=$pdtn $grib2_sample $temp1
+  grib_check_key_equals $temp1 'centre,origin:s,mars.stream,mars.type,mars.expver' "$centre $origin $stream $type $expver"
+done
+done
+done
+done
+done
+
 
 # Clean up
 rm -f $temp1 $temp2 $tempSample $tempLog
