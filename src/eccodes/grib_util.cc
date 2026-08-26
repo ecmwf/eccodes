@@ -1121,7 +1121,8 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
             SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
-
+            SET_LONG_VALUE("iDirectionIncrement", GRIB_MISSING_LONG);
+            SET_LONG_VALUE("Ni", GRIB_MISSING_LONG);
             COPY_SPEC_LONG(Nj);
             COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
             COPY_SPEC_DOUBLE(longitudeOfLastGridPointInDegrees);
@@ -1205,6 +1206,8 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
             SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
+            SET_LONG_VALUE("iDirectionIncrement", GRIB_MISSING_LONG);
+            SET_LONG_VALUE("Ni", GRIB_MISSING_LONG);
             COPY_SPEC_LONG(Nj);
             COPY_SPEC_LONG(N);
             COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
@@ -1629,7 +1632,8 @@ static grib_handle* grib_util_set_spec_(grib_handle* h,
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
             SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
-
+            SET_LONG_VALUE("iDirectionIncrement", GRIB_MISSING_LONG);
+            SET_LONG_VALUE("Ni", GRIB_MISSING_LONG);
             COPY_SPEC_LONG(Nj);
             COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
             COPY_SPEC_DOUBLE(longitudeOfLastGridPointInDegrees);
@@ -1719,7 +1723,8 @@ static grib_handle* grib_util_set_spec_(grib_handle* h,
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
             SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
-
+            SET_LONG_VALUE("iDirectionIncrement", GRIB_MISSING_LONG);
+            SET_LONG_VALUE("Ni", GRIB_MISSING_LONG);
             COPY_SPEC_LONG(Nj);
             COPY_SPEC_LONG(N);
             COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
