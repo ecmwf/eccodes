@@ -65,3 +65,7 @@ concept marsStream(unknown) {
 
 alias mars.stream = marsStream;
 alias mars.type   = marsType;
+
+if (marsStream is "sttd") {
+    unalias mars.step;
+}
