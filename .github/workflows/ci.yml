@@ -3,10 +3,18 @@ name: CI
 on:
   push:
     branches: [develop, master]
-  pull_request:
+    paths-ignore:
+      - "deprecated/**"
+  pull_request_target:
+    types: [opened, reopened, synchronize, labeled, unlabeled]
+    paths-ignore:
+      - "deprecated/**"
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  # The PR number, not github.ref: under pull_request_target github.ref is the
+  # BASE branch, so keying on it would put every open pull request in one group
+  # and have them cancel each other.
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 env:
@@ -19,11 +27,22 @@ env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
+permissions:
+  contents: read
+
 jobs:
+  ci-approval:
+    runs-on: ubuntu-slim
+    permissions:
+      pull-requests: write   # only so the label can be revoked again
+    steps:
+      - uses: ecmwf/ci-infrastructure/actions/require-ci-approval@main
+
   # No pre-commit job: this repo has no .pre-commit-config.yaml yet. Add an
   # inlined pre-commit job here once it does; copy the one in
   # stack-dependencies' ci.yml.
   resolve:
+    needs: ci-approval
     # Runs in the base image on purpose. ci-infrastructure is baked into that
     # image and advertised via CI_INFRASTRUCTURE_PYTHON, so
     # ensure-infrastructure-present short-circuits to a true no-op. Without a
@@ -45,6 +64,13 @@ jobs:
           private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
       - uses: actions/checkout@v6
+        with:
+          # `pull_request_target` checks out the BASE branch by default, so
+          # without this every job below would build our own code and prove
+          # nothing about the pull request. The merge ref is the same tree
+          # `pull_request` would have handed us. Empty on push, where checkout
+          # falls back to the pushed ref.
+          ref: ${{ github.event.pull_request.number && format('refs/pull/{0}/merge', github.event.pull_request.number) || '' }}
       - id: r
         uses: ecmwf/ci-infrastructure/actions/resolve-deps@main
         with:
@@ -65,7 +91,7 @@ jobs:
     # carries no hint that its tests failed. The cost is that a consumer waits
     # for our tests.
     needs: resolve
-    name: build+test (${{ matrix.cxx-compiler }}, ${{ matrix.options || 'default' }})
+    name: build+test (${{ matrix.platform }}, ${{ matrix.cxx-compiler }}, ${{ matrix.options || 'default' }})
     runs-on: ${{ matrix['runs-on'] }}
     container:
       image: ${{ matrix.container || '' }}
@@ -80,6 +106,9 @@ jobs:
           private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
       - uses: actions/checkout@v6
+        with:
+          # The PR's merge ref; see the resolve job.
+          ref: ${{ github.event.pull_request.number && format('refs/pull/{0}/merge', github.event.pull_request.number) || '' }}
 
       - name: Fetch resolved deps
         id: deps
@@ -138,6 +167,9 @@ jobs:
           private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
       - uses: actions/checkout@v6
+        with:
+          # The PR's merge ref; see the resolve job.
+          ref: ${{ github.event.pull_request.number && format('refs/pull/{0}/merge', github.event.pull_request.number) || '' }}
 
       - name: Fetch resolved deps
         id: deps
@@ -154,7 +186,7 @@ jobs:
         uses: ecmwf/ci-infrastructure/actions/build-on-hpc@main
         with:
           site: ${{ matrix.site }}
-          job-script: ${{ matrix.job-script || './.ci/hpc/build.sh' }}
+          job-script: ${{ matrix.job-script || './.ci/hpc/build-gnu.sh' }}
           artifact-name: ${{ matrix._resolved.own-artifact-name }}
           cmake-prefix-path: ${{ steps.deps.outputs.cmake-prefix-path }}
           work-dir: ${{ vars.HPC_CI_WORK_DIR }}

@@ -1,8 +1,8 @@
 #!/bin/bash
 # eccodes' HPC build recipe WITH the eckit-backed geography backend enabled.
 #
-# Identical to .ci/hpc/build.sh except for the two ENABLE_ flags below, which
-# pull in the atos-hpc-gnu eckit artifact. This is the HPC counterpart of the
+# Identical to .ci/hpc/build-gnu.sh except for the two ENABLE_ flags below, which
+# pull in the hpc-atos-gnu eckit artifact. This is the HPC counterpart of the
 # runner `options = "eckit-geo"` leg, and the only configuration in which eckit
 # is a dependency of eccodes at all — see the `when` predicate on the eckit
 # [[deps]] entry in .ci/manifest.toml.
