@@ -34,7 +34,7 @@ label=`basename $0 | sed -e 's/\.sh/_test/'`
 tempGrib=temp.$label.grib
 sample_grib2=$ECCODES_SAMPLES_PATH/sh_ml_grib2.tmpl
 
-${tools_dir}/grib_set -s gridSpec='{grid:[0,0]}' ${sample_grib2} $tempGrib
+${tools_dir}/grib_set -s gridSpec='{grid:[0.5,0.5]}' ${sample_grib2} $tempGrib
 # check return code
 if [ $? -ne 0 ]; then
     echo "grib_set failed"
