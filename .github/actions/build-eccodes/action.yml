@@ -62,9 +62,6 @@ runs:
       shell: bash
       env:
         OPTIONS: ${{ inputs.options }}
-      # Fail loud on an unknown value: silently building the default
-      # configuration would publish it under an opts.<name> artifact name and
-      # quietly claim to be something it is not.
       run: |
         set -euo pipefail
         case "$OPTIONS" in
@@ -77,14 +74,6 @@ runs:
         esac
         echo "cmake-flags=$flags" >> "$GITHUB_OUTPUT"
 
-    # Compile caching. Lives in the build action, not the workflow, so both the
-    # push/PR path and the generated cross-repo-trigger.yml path get it — the
-    # latter calls this action directly and never sees the workflow's steps.
-    #
-    # Opt-in by presence of the bucket: sccache has no default bucket and a
-    # daemon that cannot reach one refuses to start, which would fail the build.
-    # With SCCACHE_BUCKET unset both steps below no-op and the compile runs
-    # uncached, so a repo without the secret still builds.
     - name: Set up sccache
       if: env.SCCACHE_BUCKET != ''
       uses: ecmwf/ci-infrastructure/actions/setup-sccache@main
@@ -116,9 +105,6 @@ runs:
         LAUNCHER: ${{ steps.launcher.outputs.flags }}
       run: |
         set -euo pipefail
-        # Word-splitting EXTRA_FLAGS is intended — it is a fixed, known set of
-        # flags produced by the step above, never user input.
-        # shellcheck disable=SC2086
         cmake -S "$GITHUB_WORKSPACE" \
               -B "$BUILD_DIR" \
               -DCMAKE_BUILD_TYPE="$BUILD_TYPE" \

@@ -19,8 +19,6 @@ env:
   ARTIFACT_POLL_INTERVAL: ${{ vars.ARTIFACT_POLL_INTERVAL || '60' }}
   ARTIFACT_S3_ENDPOINT: ${{ secrets.ARTIFACT_S3_ENDPOINT }}
   ARTIFACT_S3_BUCKET: ${{ secrets.ARTIFACT_S3_BUCKET }}
-  # sccache shares the object store's endpoint and credentials but uses its
-  # own bucket. Unset simply disables compile caching (see the build action).
   SCCACHE_BUCKET: ${{ secrets.SCCACHE_BUCKET }}
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -36,18 +34,8 @@ jobs:
     steps:
       - uses: ecmwf/ci-infrastructure/actions/require-ci-approval@main
 
-  # No pre-commit job: this repo has no .pre-commit-config.yaml yet. Add an
-  # inlined pre-commit job here once it does; copy the one in
-  # stack-dependencies' ci.yml.
   resolve:
     needs: ci-approval
-    # Runs in the base image on purpose. ci-infrastructure is baked into that
-    # image and advertised via CI_INFRASTRUCTURE_PYTHON, so
-    # ensure-infrastructure-present short-circuits to a true no-op. Without a
-    # container it instead builds a venv per job — with PyPI/GitHub egress —
-    # and cannot cache it: ARC's Kubernetes mode overlays _work, where
-    # RUNNER_TOOL_CACHE lives, with an ephemeral per-job volume. That costs far
-    # more than the runner size saves.
     runs-on: arc-runner-normal
     container:
       image: eccr.ecmwf.int/public-ci-images/ubuntu24.04-base:latest
@@ -74,15 +62,6 @@ jobs:
           app-private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
 
   build:
-    # Build and test share one job and one container: once eccodes is built we
-    # test the tree in place, rather than starting a second container that would
-    # re-checkout, re-fetch deps and re-download our own artifact.
-    #
-    # Publishing comes AFTER the tests, so a red suite leaves nothing behind: the
-    # artifact store records existence and nothing else — resolve_deps and
-    # fetch_deps both decide with a bare object_exists — so a published artifact
-    # carries no hint that its tests failed. The cost is that a consumer waits
-    # for our tests.
     needs: resolve
     name: build+test (${{ matrix.platform }}, ${{ matrix.cxx-compiler }}, ${{ matrix.options || 'default' }})
     runs-on: ${{ matrix['runs-on'] }}
@@ -140,10 +119,6 @@ jobs:
           artifact-name: ${{ matrix._resolved.own-artifact-name }}
 
   build-hpc:
-    # eccodes built and tested inside a SLURM job. One leg is the default build;
-    # the other enables the eckit-backed geography backend and is the only leg
-    # that links eckit at all. The container carries the cluster ssh identity so
-    # troika can submit from an ARC pod; build-on-hpc publishes internally.
     needs: resolve
     name: build-hpc (${{ matrix.platform }}, ${{ matrix.options || 'default' }})
     runs-on: ${{ matrix['runs-on'] }}
