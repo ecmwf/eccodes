@@ -2343,21 +2343,35 @@ int parse_keyval_string(const char* grib_tool,
                         grib_values values[], int* count)
 {
     char* p = NULL;
-    char* lasts = NULL;
     int i = 0;
     if (arg == NULL) {
         *count = 0;
         return GRIB_SUCCESS;
     }
-    /* Note: strtok modifies its input argument 'arg'
-     * so it cannot be 'const'
+    /* ECC-2317
+     * Split arg on commas, but skip commas inside {} or [] (e.g., JSON grid specs).
+     * Note: this modifies the input argument 'arg' in-place (replaces separator commas with '\0').
      */
-    p = strtok_r(arg, ",", &lasts);
-    while (p != NULL) {
-        values[i].name = (char*)calloc(1, strlen(p) + 1);
+    p = arg;
+    while (*p != '\0') {
+        char* token_start = p;
+        int depth = 0;
+        while (*p != '\0') {
+            if (*p == '{' || *p == '[')
+                depth++;
+            else if (*p == '}' || *p == ']')
+                depth--;
+            else if (*p == ',' && depth == 0)
+                break;
+            p++;
+        }
+        /* p now points to a top-level comma or the end of the string */
+        if (*p == ',')
+            *p++ = '\0';
+
+        values[i].name = (char*)calloc(1, strlen(token_start) + 1);
         ECCODES_ASSERT(values[i].name);
-        strcpy((char*)values[i].name, p);
-        p = strtok_r(NULL, ",", &lasts);
+        strcpy((char*)values[i].name, token_start);
         i++;
         if (i >= *count) {
             fprintf(stderr, "Input string contains too many entries (max=%d)\n", *count);
