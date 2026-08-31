@@ -698,10 +698,10 @@ CASE("sh: T19")
 {
     const eckit::spec::Custom spec{{"grid", "T19"}};
 
-    // SH grid size: (T+1)*(T+2)/2
+    // SH grid size (number of real coefficients): (T+1)*(T+2)
     std::unique_ptr<const eckit::geo::Grid> grid(eckit::geo::GridFactory::build(spec));
     EXPECT(grid != nullptr);
-    EXPECT(grid->size() == 210);  // 20*21/2
+    EXPECT(grid->size() == 420);  // (19+1)*(19+2) real coefficients
 
     // GribFromSpec for SH requires spectral packing in the sample. Use GRIB2
     // but note: the sample may not have compatible data size, so we just test
@@ -728,7 +728,7 @@ CASE("sh: T42")
     std::unique_ptr<const eckit::geo::Grid> grid(eckit::geo::GridFactory::build(spec));
     EXPECT(grid != nullptr);
     long T = 42;
-    EXPECT(grid->size() == static_cast<size_t>((T + 1) * (T + 2) / 2));
+    EXPECT(grid->size() == static_cast<size_t>((T + 1) * (T + 2)));
 }
 
 
@@ -738,7 +738,7 @@ CASE("sh: T63")
     std::unique_ptr<const eckit::geo::Grid> grid(eckit::geo::GridFactory::build(spec));
     EXPECT(grid != nullptr);
     long T = 63;
-    EXPECT(grid->size() == static_cast<size_t>((T + 1) * (T + 2) / 2));
+    EXPECT(grid->size() == static_cast<size_t>((T + 1) * (T + 2)));
 }
 
 
@@ -748,7 +748,7 @@ CASE("sh: T106")
     std::unique_ptr<const eckit::geo::Grid> grid(eckit::geo::GridFactory::build(spec));
     EXPECT(grid != nullptr);
     long T = 106;
-    EXPECT(grid->size() == static_cast<size_t>((T + 1) * (T + 2) / 2));
+    EXPECT(grid->size() == static_cast<size_t>((T + 1) * (T + 2)));
 }
 
 
@@ -758,7 +758,7 @@ CASE("sh: T639")
     std::unique_ptr<const eckit::geo::Grid> grid(eckit::geo::GridFactory::build(spec));
     EXPECT(grid != nullptr);
     long T = 639;
-    EXPECT(grid->size() == static_cast<size_t>((T + 1) * (T + 2) / 2));
+    EXPECT(grid->size() == static_cast<size_t>((T + 1) * (T + 2)));
 }
 
 
@@ -768,7 +768,7 @@ CASE("sh: via type and truncation")
     std::unique_ptr<const eckit::geo::Grid> grid(eckit::geo::GridFactory::build(spec));
     EXPECT(grid != nullptr);
     long T = 21;
-    EXPECT(grid->size() == static_cast<size_t>((T + 1) * (T + 2) / 2));
+    EXPECT(grid->size() == static_cast<size_t>((T + 1) * (T + 2)));
 }
 
 
@@ -874,7 +874,7 @@ CASE("string spec: T63 from JSON")
     std::string spec_str = R"({"grid":"T63"})";
     std::unique_ptr<const eckit::geo::Grid> grid(eckit::geo::GridFactory::make_from_string(spec_str));
     EXPECT(grid != nullptr);
-    EXPECT(grid->size() == 64 * 65 / 2);
+    EXPECT(grid->size() == 64 * 65);
 }
 
 
