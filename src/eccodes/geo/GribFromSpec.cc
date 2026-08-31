@@ -625,7 +625,19 @@ codes_handle* GribFromSpec::set(const codes_handle* h, const Spec& spec, const s
     ASSERT(edition != 0);
 
     if (edition >= 2) {
-        info.extra_set("numberOfDataPoints", static_cast<long>(grid->size()));
+        if (info.grid.grid_type == CODES_UTIL_GRID_SPEC_SH) {
+            // For spherical harmonics, numberOfDataPoints is the number of real
+            // coefficients: (T+1)*(T+2). Each complex coefficient has a real and
+            // imaginary part. We compute this from the truncation rather than
+            // relying on grid->size() which may return the complex coefficient count.
+            const long T = info.grid.truncation;
+            const long numberOfRealCoeffs = (T + 1) * (T + 2);
+            info.extra_set("numberOfDataPoints", numberOfRealCoeffs);
+            info.extra_set("numberOfValues", numberOfRealCoeffs);
+        }
+        else {
+            info.extra_set("numberOfDataPoints", static_cast<long>(grid->size()));
+        }
     }
 
     try {
