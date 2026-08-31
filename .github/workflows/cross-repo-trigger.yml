@@ -147,6 +147,8 @@ jobs:
     - name: Decode matrix-leg
       id: m
       shell: bash
+      env:
+        MATRIX_LEG: ${{ toJSON(matrix) }}
       run: |
         set -euo pipefail
         shopt -s inherit_errexit 2>/dev/null || true
@@ -154,7 +156,7 @@ jobs:
           echo "::error::jq is required but not installed in this runner/image." >&2
           exit 1
         }
-        leg='${{ toJSON(matrix) }}'
+        leg="$MATRIX_LEG"
         require() {
           local val
           val=$(jq -r "$1" <<<"$leg")
