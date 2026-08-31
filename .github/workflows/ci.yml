@@ -125,8 +125,12 @@ jobs:
         with:
           resolved-json: ${{ toJSON(matrix._resolved) }}
 
+      # Invocation comes from .ci/manifest.toml's [matrix.build], the same place
+      # the generated cross-repo-trigger.yml renders its Test step from. Spelling
+      # it out again here is how the two lanes drift apart.
       - name: Test
-        run: ctest --test-dir "${{ steps.build.outputs.build-dir }}" --output-on-failure -j "$(nproc)"
+        if: ${{ matrix._resolved.ctest }}
+        run: ctest --test-dir "${{ steps.build.outputs.build-dir }}" --output-on-failure ${{ matrix._resolved['ctest-args'] }}
 
       - name: Publish eccodes
         uses: ecmwf/ci-infrastructure/actions/fetch-and-publish@main
