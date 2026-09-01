@@ -177,7 +177,7 @@ for pdtn in $pdtns ; do
     echo "unknown productDefinitionTemplateNumber=$pdtn"
     exit -1
   fi
-  grib_set -s tablesVersion=32,marsExpver=$expver,centre=$centre,suiteName=$origin,type=$type,productionStatusOfProcessedData=$pspd,\
+  ${tools_dir}/grib_set -s tablesVersion=32,marsExpver=$expver,centre=$centre,suiteName=$origin,type=$type,productionStatusOfProcessedData=$pspd,\
 grib2LocalSectionPresent=1,grib2LocalSectionNumber=0,crraLocalVersion=2,productDefinitionTemplateNumber=$pdtn $grib2_sample $temp1
   grib_check_key_equals $temp1 'centre,origin:s,mars.stream,mars.type,mars.expver' "$centre $origin $stream $type $expver"
 done
