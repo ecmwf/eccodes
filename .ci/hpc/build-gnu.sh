@@ -28,5 +28,8 @@ ctest --test-dir "${TMPDIR:-/tmp}/build" --output-on-failure -j "${SLURM_NTASKS:
 # taken anywhere from 7 to >35 minutes depending on filesystem load.
 stage="${TMPDIR:-/tmp}/stage"
 DESTDIR="$stage" cmake --install "${TMPDIR:-/tmp}/build"
-mkdir -p "$CI_INSTALL_PREFIX"
-cp -a "$stage$CI_INSTALL_PREFIX/." "$CI_INSTALL_PREFIX/"
+# The fetcher takes the artifact from CI_INSTALL_ARCHIVE, not from the install
+# tree; .part + mv so it only ever appears complete.
+mkdir -p "$(dirname "$CI_INSTALL_ARCHIVE")"
+tar -czf "$CI_INSTALL_ARCHIVE.part" -C "$stage$CI_INSTALL_PREFIX" .
+mv "$CI_INSTALL_ARCHIVE.part" "$CI_INSTALL_ARCHIVE"
