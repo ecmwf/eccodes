@@ -10,9 +10,13 @@
  */
 
 
+#include <cstdio>
+#include <memory>
+#include <string>
 #include <vector>
 
 #include "eckit/geo/Exceptions.h"
+#include "eckit/geo/Grid.h"
 #include "eckit/spec/Custom.h"
 #include "eckit/testing/Test.h"
 #include "eckit/types/FloatCompare.h"
@@ -48,7 +52,20 @@ void set_string(grib_handle* h, const char* key, const std::string& value)
 }
 
 
-CASE("grid: O2")
+struct grib_file_t
+{
+    int err = 0;
+    std::unique_ptr<FILE, decltype(&std::fclose)> file;
+    std::unique_ptr<codes_handle, decltype(&codes_handle_delete)> handle;
+
+    grib_file_t(const char* path) : file(std::fopen("mtg2-d.grib2", "rb"), &std::fclose), handle(codes_grib_handle_new_from_file(nullptr, file.get(), &err), &codes_handle_delete)
+    {
+        ASSERT(err == CODES_SUCCESS && handle != nullptr && handle.get() != nullptr);
+    }
+};
+
+
+CASE("gridType=reduced_gg")
 {
     const ::eckit::spec::Custom spec{ { "grid", "o2" } };
 
@@ -110,55 +127,93 @@ CASE("grid: O2")
 }
 
 
-CASE("grid: 1/1")
+CASE("gridType=regular_ll")
 {
-    const ::eckit::spec::Custom spec{ { "grid", "1/1" } };
+    SECTION("1/1")
+    {
+        const ::eckit::spec::Custom spec{ { "grid", "1/1" } };
 
-    for (const auto* name : {
-             "GRIB1",
-             "GRIB2",
-         }) {
-        auto* sample = codes_grib_handle_new_from_samples(nullptr, name);
-        EXPECT(sample != nullptr);
+        for (const auto* name : {
+                 "GRIB1",
+                 "GRIB2",
+             }) {
+            auto* sample = codes_grib_handle_new_from_samples(nullptr, name);
+            EXPECT(sample != nullptr);
 
-        auto* h = eccodes::geo::GribFromSpec::set(sample, spec);
-        EXPECT(h != nullptr);
+            auto* h = eccodes::geo::GribFromSpec::set(sample, spec);
+            EXPECT(h != nullptr);
 
-        long valid = 0;
-        set_string(h, "messageValidityChecks", "grid");
-        CHECK(codes_get_long(h, "isMessageValid", &valid));
-        EXPECT(valid == 1);
+            long valid = 0;
+            set_string(h, "messageValidityChecks", "grid");
+            CHECK(codes_get_long(h, "isMessageValid", &valid));
+            EXPECT(valid == 1);
 
-        std::string type;
-        get_string(h, "gridType", type);
-        EXPECT(type == "regular_ll");
+            std::string type;
+            get_string(h, "gridType", type);
+            EXPECT(type == "regular_ll");
 
-        long Ni                 = 0;
-        long Nj                 = 0;
-        long numberOfDataPoints = 0;
-        CHECK(codes_get_long(h, "Ni", &Ni));
-        CHECK(codes_get_long(h, "Nj", &Nj));
-        CHECK(codes_get_long(h, "numberOfDataPoints", &numberOfDataPoints));
+            long Ni                 = 0;
+            long Nj                 = 0;
+            long numberOfDataPoints = 0;
+            CHECK(codes_get_long(h, "Ni", &Ni));
+            CHECK(codes_get_long(h, "Nj", &Nj));
+            CHECK(codes_get_long(h, "numberOfDataPoints", &numberOfDataPoints));
 
-        EXPECT(Ni * Nj == numberOfDataPoints);
+            EXPECT(Ni * Nj == numberOfDataPoints);
 
-        std::vector<double> area(4);
-        CHECK(codes_get_double(h, "latitudeOfFirstGridPointInDegrees", &area[0]));
-        CHECK(codes_get_double(h, "longitudeOfFirstGridPointInDegrees", &area[1]));
-        CHECK(codes_get_double(h, "latitudeOfLastGridPointInDegrees", &area[2]));
-        CHECK(codes_get_double(h, "longitudeOfLastGridPointInDegrees", &area[3]));
+            std::vector<double> area(4);
+            CHECK(codes_get_double(h, "latitudeOfFirstGridPointInDegrees", &area[0]));
+            CHECK(codes_get_double(h, "longitudeOfFirstGridPointInDegrees", &area[1]));
+            CHECK(codes_get_double(h, "latitudeOfLastGridPointInDegrees", &area[2]));
+            CHECK(codes_get_double(h, "longitudeOfLastGridPointInDegrees", &area[3]));
 
-        EXPECT(eckit::types::is_approximately_equal(area[0], 90.));
-        EXPECT(eckit::types::is_approximately_equal(area[1], 0.));
-        EXPECT(eckit::types::is_approximately_equal(area[2], -90.));
-        EXPECT(eckit::types::is_approximately_equal(area[3], 360. - 1., 0.5 * 1e-6));
+            EXPECT(eckit::types::is_approximately_equal(area[0], 90.));
+            EXPECT(eckit::types::is_approximately_equal(area[1], 0.));
+            EXPECT(eckit::types::is_approximately_equal(area[2], -90.));
+            EXPECT(eckit::types::is_approximately_equal(area[3], 360. - 1., 0.5 * 1e-6));
 
-        codes_handle_delete(h);
+            codes_handle_delete(h);
+        }
+    }
+
+
+    SECTION("special cases")
+    {
+        grib_file_t file("mtg2-d.grib2");
+
+        struct test_t
+        {
+            const std::string user;
+            const std::string spec;
+            const std::vector<size_t> shape;
+        };
+
+        for (const auto& test : std::vector<test_t>{
+                 { "{grid:[0,0]}", R"({"area":[90,0,90,0],"grid":[0,0]})", { 1, 1 } },
+                 { "{area:[0,0,0,0], grid:[0,0]}", R"({"area":[0,0,0,0],"grid":[0,0]})", { 1, 1 } },
+                 { "{area:[0,0,0,0], grid:[1,1]}", R"({"area":[0,0,0,0],"grid":[0,0]})", { 1, 1 } },
+                 { "{area:[60,0,60,30], grid:[2,2]}", R"({"area":[60,0,60,30],"grid":[2,0]})", { 1, 16 } },
+                 { "{area:[60,0,0,0], grid:[2,2]}", R"({"area":[60,0,0,0],"grid":[0,2]})", { 31, 1 } },
+                 { "{area:[60,0,0,30], grid:[2,2]}", R"({"area":[60,0,0,30],"grid":[2,2]})", { 31, 16 } },
+             }) {
+            std::unique_ptr<const ::eckit::geo::Grid> grid(::eckit::geo::GridFactory::make_from_string(test.user));
+
+            EXPECT(test.shape == grid->shape());
+            EXPECT(test.spec == grid->spec_str());
+
+            size_t len_user   = test.user.length();
+            size_t len_buffer = 500;
+            std::string buffer(len_buffer, '\0');
+
+            EXPECT(CODES_SUCCESS == codes_set_string(file.handle.get(), "gridSpec", test.user.data(), &len_user));
+            EXPECT(CODES_SUCCESS == codes_get_string(file.handle.get(), "gridSpec", buffer.data(), &len_buffer));
+            EXPECT(test.spec == std::string(buffer.data(), len_buffer));
+        }
     }
 }
 
 
-CASE("grid: reduced_ll")
+CASE("gridType=reduced_ll")
 {
     const ::eckit::spec::Custom spec{ { "type", "reduced_ll" }, { "pl", std::vector<long>{ 0, 10, 0 } }, { "area", std::vector<double>{ 90., 0., -90., 360. } } };
 
