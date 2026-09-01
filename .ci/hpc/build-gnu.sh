@@ -31,5 +31,5 @@ DESTDIR="$stage" cmake --install "${TMPDIR:-/tmp}/build"
 # The fetcher takes the artifact from CI_INSTALL_ARCHIVE, not from the install
 # tree; .part + mv so it only ever appears complete.
 mkdir -p "$(dirname "$CI_INSTALL_ARCHIVE")"
-tar -czf "$CI_INSTALL_ARCHIVE.part" -C "$stage$CI_INSTALL_PREFIX" .
+tar -cf - -C "$stage$CI_INSTALL_PREFIX" . | zstd -T0 -q -o "$CI_INSTALL_ARCHIVE.part"
 mv "$CI_INSTALL_ARCHIVE.part" "$CI_INSTALL_ARCHIVE"
