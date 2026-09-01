@@ -8,6 +8,10 @@
           true = is_one_of(paramId,140101,141101,143101,144101,145101,140102,141102,143102,144102,145102);
           true = is_one_of(MTG2Switch,1,2);
          }
+'satellite' = {
+          true = is_one_of(grib2LocalSectionNumber,14,24,37);
+          true = is_one_of(MTG2Switch,1,2);
+         }
 'base' = {productDefinitionTemplateNumber=0;}
 'base' = {productDefinitionTemplateNumber=1;}
 'base' = {productDefinitionTemplateNumber=2;}
