@@ -270,11 +270,13 @@ void set_grid_type_regular_ll(grib_info& info, const Grid& grid, const BasicAngl
 
     auto order = g.order();
 
-    info.grid.iScansNegatively = static_cast<long>(order.find("i-") != std::string::npos);
-    info.grid.jScansPositively = static_cast<long>(order.find("j+") != std::string::npos);
+    // ECC-2318
+    // For dx==0 and dy==0 use default values iScansNegatively=0, jScansPositively=0, respectively.
+    info.grid.iScansNegatively = is_approximately_equal(g.dx(), 0.) ? 0L : order.find("i-") != std::string::npos ? 1L : 0L;
+    info.grid.jScansPositively = is_approximately_equal(g.dy(), 0.) ? 0L : order.find("j+") != std::string::npos ? 1L : 0L;
 
-    ASSERT(g.dx() < 0 == (info.grid.iScansNegatively == 1L));
-    ASSERT(0 <= g.dy() == (info.grid.jScansPositively == 1L));
+    ASSERT((g.dx() < 0) == (info.grid.iScansNegatively == 1L));
+    ASSERT((0 < g.dy()) == (info.grid.jScansPositively == 1L));
 
     info.grid.iDirectionIncrementInDegrees = std::abs(g.dx());  // west-east
     info.grid.jDirectionIncrementInDegrees = std::abs(g.dy());  // south-north
@@ -625,7 +627,19 @@ codes_handle* GribFromSpec::set(const codes_handle* h, const Spec& spec, const s
     ASSERT(edition != 0);
 
     if (edition >= 2) {
-        info.extra_set("numberOfDataPoints", static_cast<long>(grid->size()));
+        if (info.grid.grid_type == CODES_UTIL_GRID_SPEC_SH) {
+            // For spherical harmonics, numberOfDataPoints is the number of real
+            // coefficients: (T+1)*(T+2). Each complex coefficient has a real and
+            // imaginary part. We compute this from the truncation rather than
+            // relying on grid->size() which may return the complex coefficient count.
+            const long T = info.grid.truncation;
+            const long numberOfRealCoeffs = (T + 1) * (T + 2);
+            info.extra_set("numberOfDataPoints", numberOfRealCoeffs);
+            info.extra_set("numberOfValues", numberOfRealCoeffs);
+        }
+        else {
+            info.extra_set("numberOfDataPoints", static_cast<long>(grid->size()));
+        }
     }
 
     try {

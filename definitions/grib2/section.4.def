@@ -86,6 +86,15 @@ meta MTG2SwitchDefault mtg2_switch_default(tablesVersion, tablesVersionMTG2Switc
 
 concept MTG2Switch(MTG2SwitchDefault, "MTG2SwitchConcept.def", conceptsDir2,conceptsDir1): hidden, read_only, long_type;
 
+# isECMWFPostGRIB2MigrationMessage tells client software using ecCodes when to use the encoder to create a post-MTG2 file.
+# For now, this is intended for internal use at ECMWF
+if (centre == 98) {
+    alias isECMWFPostGRIB2MigrationMessage = MTG2Switch;
+}
+else {
+    constant isECMWFPostGRIB2MigrationMessage = 0;
+}
+
 # ECC-2002
 # if datasetForLocal is not "unknown", we remap conceptsDir1 and conceptsDir2
 # See the g2_concept_dir accessor
