@@ -42,11 +42,7 @@ pub enum Kind {
     Grib,
     /// BUFR.
     Bufr,
-    /// METAR.
-    Metar,
-    /// TAF.
-    Taf,
-    /// GTS bulletin.
+    /// GTS abbreviated header — decoding only, as upstream.
     Gts,
     /// Framing this crate does not recognise.
     Unknown,
@@ -55,9 +51,9 @@ pub enum Kind {
 impl Kind {
     /// The product a message starts with, from its first four bytes.
     ///
-    /// Every WMO product this crate knows is identified by its leading
-    /// octets — `GRIB`, `BUFR`, `META`, `TAF ` or the GTS control sequence.
-    /// Anything shorter than four bytes, or with framing outside that set, is
+    /// The products the library supports are identified by their leading
+    /// octets — `GRIB`, `BUFR`, or the GTS control sequence. Anything
+    /// shorter than four bytes, or with framing outside that set, is
     /// [`Kind::Unknown`].
     ///
     /// This is deliberately not `codes_get_product_kind`: the C call reports
@@ -71,9 +67,6 @@ impl Kind {
         match [bytes[0], bytes[1], bytes[2], bytes[3]] {
             [b'G', b'R', b'I', b'B'] => Self::Grib,
             [b'B', b'U', b'F', b'R'] => Self::Bufr,
-            [b'M', b'E', b'T', b'A'] => Self::Metar,
-            // The trailing space is part of the identifier.
-            [b'T', b'A', b'F', b' '] => Self::Taf,
             // GTS bulletins open with SOH CR CR LF, not with a name.
             [0x01, 0x0D, 0x0D, 0x0A] => Self::Gts,
             _ => Self::Unknown,
@@ -86,8 +79,6 @@ impl fmt::Display for Kind {
         f.write_str(match self {
             Self::Grib => "GRIB",
             Self::Bufr => "BUFR",
-            Self::Metar => "METAR",
-            Self::Taf => "TAF",
             Self::Gts => "GTS",
             Self::Unknown => "unknown",
         })
@@ -168,14 +159,6 @@ mod tests {
         // but we have not seen enough to say so.
         assert_eq!(Kind::from_bytes(b"GRI"), Kind::Unknown);
         assert_eq!(Kind::from_bytes(b""), Kind::Unknown);
-    }
-
-    #[test]
-    fn taf_needs_its_trailing_space() {
-        // "TAF " is four octets including the pad; "TAFS" is a different
-        // product's problem, not a TAF.
-        assert_eq!(Kind::from_bytes(b"TAF "), Kind::Taf);
-        assert_eq!(Kind::from_bytes(b"TAFS"), Kind::Unknown);
     }
 
     #[test]

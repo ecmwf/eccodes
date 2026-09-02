@@ -13,4 +13,4 @@ bindman-utils = { git = "ssh://git@github.com/ecmwf/bindman.git", rev = "34ef5ce
 
 eccodes-sys = { path = "crates/eccodes-sys", version = "2.49.0", default-features = false, features = ["product-grib", "product-bufr", "geography", "jpg"] }
 
-eckit-sys = { git = "ssh://git@github.com/ecmwf/eckit.git", branch = "rust-bindings", default-features = false }
+eckit-sys = { git = "ssh://git@github.com/ecmwf/eckit.git", branch = "develop", default-features = false }

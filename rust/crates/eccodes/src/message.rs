@@ -15,7 +15,7 @@ use crate::key::{KeyElement, KeyForce, KeyGet, KeySet, KeyType};
 use crate::keys::KeysQuery;
 use crate::kind::{Any, Bufr, Grib, Kind, MessageKind};
 
-/// One message: a GRIB field, a BUFR observation set, a METAR report.
+/// One message: a GRIB field, a BUFR observation set, a GTS bulletin.
 ///
 /// The type parameter records the product at compile time — see
 /// [`kind`](crate::kind). Plain `Message` is `Message<Any>` and covers
