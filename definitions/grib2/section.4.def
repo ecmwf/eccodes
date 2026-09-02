@@ -94,7 +94,6 @@ if (centre == 98) {
 else {
     constant isECMWFPostGRIB2MigrationMessage = 0;
 }
-alias MTG2Encoder = isECMWFPostGRIB2MigrationMessage;
 
 # ECC-2002
 # if datasetForLocal is not "unknown", we remap conceptsDir1 and conceptsDir2
