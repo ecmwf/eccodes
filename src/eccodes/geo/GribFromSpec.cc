@@ -270,11 +270,13 @@ void set_grid_type_regular_ll(grib_info& info, const Grid& grid, const BasicAngl
 
     auto order = g.order();
 
-    info.grid.iScansNegatively = static_cast<long>(order.find("i-") != std::string::npos);
-    info.grid.jScansPositively = static_cast<long>(order.find("j+") != std::string::npos);
+    // ECC-2318
+    // For dx==0 and dy==0 use default values iScansNegatively=0, jScansPositively=0, respectively.
+    info.grid.iScansNegatively = is_approximately_equal(g.dx(), 0.) ? 0L : order.find("i-") != std::string::npos ? 1L : 0L;
+    info.grid.jScansPositively = is_approximately_equal(g.dy(), 0.) ? 0L : order.find("j+") != std::string::npos ? 1L : 0L;
 
-    ASSERT(g.dx() < 0 == (info.grid.iScansNegatively == 1L));
-    ASSERT(0 <= g.dy() == (info.grid.jScansPositively == 1L));
+    ASSERT((g.dx() < 0) == (info.grid.iScansNegatively == 1L));
+    ASSERT((0 < g.dy()) == (info.grid.jScansPositively == 1L));
 
     info.grid.iDirectionIncrementInDegrees = std::abs(g.dx());  // west-east
     info.grid.jDirectionIncrementInDegrees = std::abs(g.dy());  // south-north

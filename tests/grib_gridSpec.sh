@@ -114,8 +114,8 @@ for setKeysResult in \
 do
     setKeys=$(echo $setKeysResult | cut -d'|' -f1)
     expectedSpec=$(echo $setKeysResult | cut -d'|' -f2)
-    ${tools_dir}/grib_set -s $setKeys $sample $tempGrib
     set +e
+    ${tools_dir}/grib_set -s $setKeys $sample $tempGrib
     ${tools_dir}/grib_get -p gridSpec $tempGrib > $tempText
     status=$?
     set -e
@@ -127,17 +127,20 @@ rm -f $tempGrib
 
 # Encoding: an explicitly degenerate spec, and an area with no extent
 for spec in \
-    '{area:[0,0,0,0],grid:[0,0]}' \
-    '{area:[0,0,0,0],grid:[1,1]}' \
-    '{area:[60,0,60,30],grid:[2,2]}' \
-    '{area:[60,0,0,0],grid:[2,2]}'
+    '{"area":[0,0,0,0],"grid":[0,0]}|{"area":[0,0,0,0],"grid":[0,0]}' \
+    '{"area":[0,0,0,0],"grid":[1,1]}|{"area":[0,0,0,0],"grid":[0,0]}' \
+    '{"area":[60,0,60,30],"grid":[2,2]}|{"area":[60,0,60,30],"grid":[2,0]}' \
+    '{"area":[60,0,0,0],"grid":[2,2]}|{"area":[60,0,0,0],"grid":[0,2]}'
 do
+    setKeys=$(echo $spec | cut -d'|' -f1)
+    expectedSpec=$(echo $spec | cut -d'|' -f2)
     set +e
-    ${tools_dir}/grib_set -s gridSpec="$spec" $sample $tempGrib 2>$tempText
+    ${tools_dir}/grib_set -s gridSpec="$setKeys" $sample $tempGrib
+    ${tools_dir}/grib_get -p gridSpec $tempGrib > $tempText
     status=$?
     set -e
     [ $status -eq 0 ]
-    grep -F -q $spec $tempText
+    grep -F -q $expectedSpec $tempText
 done
 rm -f $tempGrib
 
