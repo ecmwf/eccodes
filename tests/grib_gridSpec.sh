@@ -99,5 +99,52 @@ set -e
 grep -q "'healpix' specified but input is GRIB edition 1" $tempText
 
 
+# ECC-2318: a degenerate grid (a single point in a direction) is rejected
+# -----------------------------------------------------------------------
+# Such a grid has a zero increment, which a gridSpec cannot describe ('grid' would hold a 0),
+# so it is an error in both directions rather than a spec that does not describe the grid.
+# The sample is a regular_ll grid, area = [60,0,0,30], increments = 2/2 degrees
+sample=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+
+# Decoding: a single row (Nj=1), a single column (Ni=1) and a single point (Ni=Nj=1)
+for setKeysResult in \
+    'Ni=16,Nj=1,numberOfDataPoints=16,latitudeOfLastGridPointInDegrees=60|{"area":[60,0,60,30],"grid":[2,0]}' \
+    'Ni=1,Nj=31,numberOfDataPoints=31,longitudeOfLastGridPointInDegrees=0|{"area":[60,0,0,0],"grid":[0,2]}' \
+    'Ni=1,Nj=1,numberOfDataPoints=1,latitudeOfLastGridPointInDegrees=60,longitudeOfLastGridPointInDegrees=0|{"area":[60,0,60,0],"grid":[0,0]}'
+do
+    setKeys=$(echo $setKeysResult | cut -d'|' -f1)
+    expectedSpec=$(echo $setKeysResult | cut -d'|' -f2)
+    ${tools_dir}/grib_set -s $setKeys $sample $tempGrib
+    set +e
+    ${tools_dir}/grib_get -p gridSpec $tempGrib > $tempText
+    status=$?
+    set -e
+    [ $status -eq 0 ]
+    cat $tempText
+    grep -F -q "$expectedSpec" $tempText
+done
+rm -f $tempGrib
+
+# Encoding: an explicitly degenerate spec, and an area with no extent
+for spec in \
+    '{area:[0,0,0,0],grid:[0,0]}' \
+    '{area:[0,0,0,0],grid:[1,1]}' \
+    '{area:[60,0,60,30],grid:[2,2]}' \
+    '{area:[60,0,0,0],grid:[2,2]}'
+do
+    set +e
+    ${tools_dir}/grib_set -s gridSpec="$spec" $sample $tempGrib 2>$tempText
+    status=$?
+    set -e
+    [ $status -eq 0 ]
+    grep -F -q $spec $tempText
+done
+rm -f $tempGrib
+
+# Grids that do not carry increments in their spec are unaffected
+grib_check_key_equals $ECCODES_SAMPLES_PATH/gg_sfc_grib2.tmpl gridSpec '{"grid":"N48"}'
+grib_check_key_equals $sample gridSpec '{"area":[60,0,0,30],"grid":[2,2]}'
+
+
 # Clean up
 rm -f $tempGrib $tempFilt $tempText
