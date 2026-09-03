@@ -100,11 +100,14 @@ bool eckit_geo_use_for_gridspec(const grib_handle* h)
 
     // EckitGeoLevel::RESTRICTED
 
-    if (get_number(h, "alternativeRowScanning") == 1) {
+    long l = 0;
+    if ((get_number(h, "jPointsAreConsecutive") == 1) ||
+        (get_number(h, "alternativeRowScanning") == 1)) {
         return false;
     }
 
-    if (get_string(h, "gridType") != "rotated_ll") {
+    const auto gridType = get_string(h, "gridType");
+    if (gridType != "rotated_ll") {
         return true;
     }
 
