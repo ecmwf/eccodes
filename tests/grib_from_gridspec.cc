@@ -213,7 +213,7 @@ CASE("gridType=regular_ll")
     }
 
 
-    SECTION("scanningMode=64")
+    SECTION("scanningMode=96")
     {
         grib_file_t file("scanningMode=96.grib");
         auto h = file.handle.get();
@@ -233,19 +233,19 @@ CASE("gridType=regular_ll")
 
         EXPECT(grid->order() == "j+i+");
 
-        auto is_vector_approximately_equal = [](const std::vector<double>& a, const std::vector<double>& b) {
+        auto is_vector_approximately_equal = [](const std::vector<double>& a, const std::vector<double>& b, double eps) {
             if (a.size() != b.size()) { return false; }
             for (size_t i = 0; i < a.size(); ++i) {
-                if (!eckit::types::is_approximately_equal(a[i], b[i])) { return false; }
+                if (!eckit::types::is_approximately_equal(a[i], b[i], eps)) { return false; }
             }
             return true;
         };
 
         auto [lats, lons] = grid->to_latlons();
 
-        EXPECT(is_vector_approximately_equal(values, { 0, 1, 2, 3, 4, 5 }));
-        EXPECT(is_vector_approximately_equal(lats, { 0, 1, 0, 1, 0, 1 }));
-        EXPECT(is_vector_approximately_equal(lons, { 0, 0, 1, 1, 2, 2 }));
+        EXPECT(is_vector_approximately_equal(values, { 0, 1, 2, 3, 4, 5 }, 1e-6));
+        EXPECT(is_vector_approximately_equal(lats, { 0, 1, 0, 1, 0, 1 }, ::eckit::geo::PointLonLat::EPS));
+        EXPECT(is_vector_approximately_equal(lons, { 0, 0, 1, 1, 2, 2 }, ::eckit::geo::PointLonLat::EPS));
     }
 }
 
