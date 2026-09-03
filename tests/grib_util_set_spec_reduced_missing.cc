@@ -59,6 +59,7 @@ static void check_is_missing_long(grib_handle* h, const char* key, const char* c
  * grib_set_from_grid_spec modifies the handle in-place (no fresh sample).
  * Before the fix, Ni and iDirectionIncrement retained the regular_ll values.
  */
+#if defined(HAVE_GEOGRAPHY) && defined(HAVE_ECKIT_GEO)
 static void test_set_from_grid_spec_reduced_gg()
 {
     fprintf(stderr, "\n=== %s ===\n", __func__);
@@ -157,6 +158,7 @@ static void test_set_from_grid_spec_reduced_ll()
 
     grib_handle_delete(h);
 }
+#endif  // defined(HAVE_GEOGRAPHY) && defined(HAVE_ECKIT_GEO)
 
 /*
  * Test via grib_util_set_spec (the legacy path).
@@ -274,9 +276,13 @@ static void test_regular_ll_not_missing()
 
 int main()
 {
+#if defined(HAVE_GEOGRAPHY) && defined(HAVE_ECKIT_GEO)
     /* Core bug: grib_set_from_grid_spec on handle with stale Ni/iDirectionIncrement */
     test_set_from_grid_spec_reduced_gg();
     test_set_from_grid_spec_reduced_ll();
+#else
+    fprintf(stderr, "\nSkipping grib_set_from_grid_spec tests: built without eckit-geo support.\n");
+#endif
 
     /* Also test via grib_util_set_spec (legacy path) */
     test_util_set_spec_reduced_gg();
