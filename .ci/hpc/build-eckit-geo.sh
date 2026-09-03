@@ -7,13 +7,20 @@
 #SBATCH --ntasks=8
 
 module load prgenv/gnu
+module unload gcc
+module load gcc/13.2.0
 module load cmake
 module load ninja
+
+echo "Using: $(command -v gcc) ($($(command -v gcc) --version | head -1))"
+echo "Using: $(command -v gfortran) ($($(command -v gfortran) --version | head -1))"
 
 cmake -S "$CI_SOURCE_DIR" -B "${TMPDIR:-/tmp}/build" \
   -GNinja \
   -DCMAKE_BUILD_TYPE=Release \
-  -DCMAKE_Fortran_COMPILER=gfortran \
+  -DCMAKE_C_COMPILER="$(command -v gcc)" \
+  -DCMAKE_CXX_COMPILER="$(command -v g++)" \
+  -DCMAKE_Fortran_COMPILER="$(command -v gfortran)" \
   -DENABLE_EXTRA_TESTS=1 \
   -DENABLE_ECCODES_OMP_THREADS=1 \
   -DENABLE_GEOGRAPHY=1 \
