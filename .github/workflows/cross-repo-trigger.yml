@@ -139,6 +139,8 @@ jobs:
         name: eccodes/build (${{ matrix.platform }}, ${{ matrix['cxx-compiler'] }}, ${{ matrix.options || 'default' }})
         details-url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         phase: start
+    - name: Announce image
+      uses: ecmwf/ci-infrastructure/actions/announce-image@main
     - uses: actions/checkout@v6
       with:
         repository: ecmwf/eccodes
