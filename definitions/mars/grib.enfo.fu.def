@@ -1,5 +1,11 @@
 if (edition == 2) {
- if (grib2LocalSectionNumber == 44){
+ if (defined(grib2LocalSectionNumber) && grib2LocalSectionNumber == 44){
   alias mars.anoffset=offsetToStartOfForecastFillupInHours;
+  meta dateOfForecast validity_date(dataDate,dataTime,anoffset,one) : read_only;
+  meta timeOfForecast validity_time(dataDate,dataTime,anoffset,one) : read_only;
+  unalias mars.date;
+  unalias mars.time;
+  alias mars.date = dateOfForecast ;
+  alias mars.time = timeOfForecast ;
  }
 }
