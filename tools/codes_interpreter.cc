@@ -27,7 +27,6 @@ static std::string find_definitions_path(const char* argv0)
     std::vector<std::string> candidates;
 
     candidates.push_back("./definitions");
-    candidates.push_back("/ec/res4/scratch/maro/ecc_codes_interpreter/eccodes/definitions");
 
     if (argv0 && argv0[0] != '\0') {
         std::string exe(argv0);
