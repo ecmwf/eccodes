@@ -12,10 +12,12 @@
 
 label="codes_interpreter_test"
 tempMulti=temp.$label.multi.grib
+tempLog=temp.$label.log
 
 result=$(${tools_dir}/codes_interpreter --help 2>&1)
 printf '%s\n' "$result" | grep -q 'Usage:'
 printf '%s\n' "$result" | grep -q -- '--non-fail'
+printf '%s\n' "$result" | grep -q -- '--log-session FILE'
 
 result=$(printf 'print "[edition]";\n' | ${tools_dir}/codes_interpreter "$ECCODES_SAMPLES_PATH/GRIB2.tmpl")
 printf '%s\n' "$result" | grep -q '^2$'
@@ -60,6 +62,17 @@ printf '%s\n' "$result" | grep -q 'invalid regex'
 result=$(printf 'transient toffset = 18;\n:changes [\nquit\n' | ${tools_dir}/codes_interpreter --non-fail --log-key-changes "$ECCODES_SAMPLES_PATH/GRIB2.tmpl" 2>&1)
 printf '%s\n' "$result" | grep -q 'invalid regex'
 
+rm -f "$tempLog"
+result=$(printf 'print "ED=[edition]";\nquit\n' | ${tools_dir}/codes_interpreter --log-session "$tempLog" "$ECCODES_SAMPLES_PATH/GRIB2.tmpl" 2>&1)
+printf '%s\n' "$result" | grep -q '^ED=2$'
+grep -q '^codes_interpreter> print "ED=\[edition\]";$' "$tempLog"
+
+rm -f "$tempLog"
+result=$(printf 'set forecastTime = 36;\nquit\n' | ${tools_dir}/codes_interpreter --log-session "$tempLog" --log-key-changes "$ECCODES_SAMPLES_PATH/GRIB2.tmpl" 2>&1)
+grep -q '^codes_interpreter> set forecastTime = 36;$' "$tempLog"
+grep -q '^Changed keys (' "$tempLog"
+grep -q '^  forecastTime: ' "$tempLog"
+
 result=$(printf 'print "[does_not_exist_key]";\nprint "[edition]";\nquit\n' | ${tools_dir}/codes_interpreter --non-fail "$ECCODES_SAMPLES_PATH/GRIB2.tmpl" 2>&1)
 printf '%s\n' "$result" | grep -q 'Key/value not found'
 printf '%s\n' "$result" | grep -q '2'
@@ -84,4 +97,4 @@ result=$(printf 'print "C=[count]";\n:goto 2\nprint "C=[count]";\nquit\n' | ${to
 [ "$(printf '%s\n' "$result" | grep -c '^C=1$')" = "1" ]
 [ "$(printf '%s\n' "$result" | grep -c '^C=2$')" = "1" ]
 
-rm -f "$tempMulti"
+rm -f "$tempMulti" "$tempLog"

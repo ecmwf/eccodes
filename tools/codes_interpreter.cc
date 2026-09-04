@@ -17,6 +17,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <fstream>
 #include <regex>
 #include <set>
 #include <string>
@@ -491,6 +492,14 @@ static void print_changed_keys(const std::vector<KeyChange>& keys)
     }
 }
 
+static void write_changed_keys(std::ofstream& out, const std::vector<KeyChange>& keys)
+{
+    out << "Changed keys (" << keys.size() << "):\n";
+    for (const auto& key : keys) {
+        out << "  " << key.name << ": " << key.before << " -> " << key.after << "\n";
+    }
+}
+
 static bool compile_regex_or_report(const std::string& pattern, std::regex& re)
 {
     try {
@@ -739,10 +748,11 @@ static grib_handle* replay_session(const grib_handle* base_handle, long current_
 
 static void print_usage(const char* program)
 {
-    fprintf(stderr, "Usage: %s [--non-fail|-n] [--log-key-changes] [--message|-m N] [--help|-h] <message_file>\n", program);
+    fprintf(stderr, "Usage: %s [--non-fail|-n] [--log-key-changes] [--log-session FILE] [--message|-m N] [--help|-h] <message_file>\n", program);
     fprintf(stderr, "Open one GRIB/BUFR/GTS message and evaluate ecCodes filter statements from standard input.\n");
     fprintf(stderr, "  --non-fail, -n  Keep the interpreter open after a statement fails\n");
     fprintf(stderr, "  --log-key-changes Enable key-diff tracking for :changes (off by default)\n");
+    fprintf(stderr, "  --log-session FILE Append session input/output trace to FILE\n");
     fprintf(stderr, "  --message, -m N Open message number N (1-based) from file\n");
     fprintf(stderr, "  --help, -h      Show this help message\n");
 }
@@ -752,6 +762,7 @@ int main(int argc, char* argv[])
     bool non_fail = false;
     bool log_key_changes = false;
     long selected_message = 1;
+    std::string log_session_file;
     int file_arg = -1;
 
     for (int i = 1; i < argc; ++i) {
@@ -762,6 +773,14 @@ int main(int argc, char* argv[])
         }
         if (arg == "--log-key-changes") {
             log_key_changes = true;
+            continue;
+        }
+        if (arg == "--log-session") {
+            if (i + 1 >= argc) {
+                print_usage(argv[0]);
+                return 2;
+            }
+            log_session_file = argv[++i];
             continue;
         }
         if (arg == "--message" || arg == "-m") {
@@ -787,6 +806,15 @@ int main(int argc, char* argv[])
     if (file_arg == -1) {
         print_usage(argv[0]);
         return 2;
+    }
+
+    std::ofstream session_log;
+    if (!log_session_file.empty()) {
+        session_log.open(log_session_file.c_str(), std::ios::app);
+        if (!session_log.good()) {
+            fprintf(stderr, "codes_interpreter: cannot open session log file '%s'\n", log_session_file.c_str());
+            return 1;
+        }
     }
 
     const char* env_defs = getenv("ECCODES_DEFINITION_PATH");
@@ -869,6 +897,15 @@ int main(int argc, char* argv[])
         }
         std::string text(line);
 #endif
+
+        if (session_log.is_open()) {
+            std::string logged = text;
+            while (!logged.empty() && (logged.back() == '\n' || logged.back() == '\r')) {
+                logged.pop_back();
+            }
+            session_log << "codes_interpreter> " << logged << "\n";
+            session_log.flush();
+        }
 
         std::string command = trim(text);
         if (command == "quit" || command == "exit") {
@@ -1036,6 +1073,10 @@ int main(int argc, char* argv[])
                 else {
                     last_changed_keys.clear();
                 }
+                if (session_log.is_open() && log_key_changes) {
+                    write_changed_keys(session_log, last_changed_keys);
+                    session_log.flush();
+                }
 #ifdef HAVE_LIBREADLINE
                 s_completion_handle = h;
 #endif
@@ -1089,6 +1130,10 @@ int main(int argc, char* argv[])
             }
             else {
                 last_changed_keys.clear();
+            }
+            if (session_log.is_open() && log_key_changes) {
+                write_changed_keys(session_log, last_changed_keys);
+                session_log.flush();
             }
 #ifdef HAVE_LIBREADLINE
             s_completion_handle = h;
