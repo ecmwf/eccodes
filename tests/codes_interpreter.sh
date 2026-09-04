@@ -30,7 +30,34 @@ result=$(printf ':accessors count_\nquit\n' | ${tools_dir}/codes_interpreter "$E
 printf '%s\n' "$result" | grep -q '^Accessors matching /count_/'
 printf '%s\n' "$result" | grep -q '^  count_file$'
 
+result=$(printf ':changes\nquit\n' | ${tools_dir}/codes_interpreter "$ECCODES_SAMPLES_PATH/GRIB2.tmpl" 2>&1)
+printf '%s\n' "$result" | grep -q 'not activated - use --log-key-changes'
+
+result=$(printf ':list\nquit\n' | ${tools_dir}/codes_interpreter "$ECCODES_SAMPLES_PATH/GRIB2.tmpl" 2>&1)
+printf '%s\n' "$result" | grep -q '^Keys ('
+
+result=$(printf ':list ^editionNumber$\nquit\n' | ${tools_dir}/codes_interpreter "$ECCODES_SAMPLES_PATH/GRIB2.tmpl" 2>&1)
+printf '%s\n' "$result" | grep -q '^Keys matching /\^editionNumber\$/'
+printf '%s\n' "$result" | grep -q '^  editionNumber$'
+
+result=$(printf 'transient toffset = 18;\n:changes\nquit\n' | ${tools_dir}/codes_interpreter --log-key-changes "$ECCODES_SAMPLES_PATH/GRIB2.tmpl" 2>&1)
+printf '%s\n' "$result" | grep -q '^Changed keys ('
+printf '%s\n' "$result" | grep -q '^  toffset$'
+
+result=$(printf 'transient toffset = 18;\n:changes ^toff\nquit\n' | ${tools_dir}/codes_interpreter --log-key-changes "$ECCODES_SAMPLES_PATH/GRIB2.tmpl" 2>&1)
+printf '%s\n' "$result" | grep -q '^Changed keys matching /\^toff/'
+printf '%s\n' "$result" | grep -q '^  toffset$'
+
+result=$(printf 'meta d1 validity_date(dataDate,dataTime,step,stepUnits);\n:changes\nquit\n' | ${tools_dir}/codes_interpreter --log-key-changes "$ECCODES_SAMPLES_PATH/GRIB2.tmpl" 2>&1)
+printf '%s\n' "$result" | grep -q '^  d1$'
+
 result=$(printf ':accessors [\nquit\n' | ${tools_dir}/codes_interpreter --non-fail "$ECCODES_SAMPLES_PATH/GRIB2.tmpl" 2>&1)
+printf '%s\n' "$result" | grep -q 'invalid regex'
+
+result=$(printf ':list [\nquit\n' | ${tools_dir}/codes_interpreter --non-fail "$ECCODES_SAMPLES_PATH/GRIB2.tmpl" 2>&1)
+printf '%s\n' "$result" | grep -q 'invalid regex'
+
+result=$(printf 'transient toffset = 18;\n:changes [\nquit\n' | ${tools_dir}/codes_interpreter --non-fail --log-key-changes "$ECCODES_SAMPLES_PATH/GRIB2.tmpl" 2>&1)
 printf '%s\n' "$result" | grep -q 'invalid regex'
 
 result=$(printf 'print "[does_not_exist_key]";\nprint "[edition]";\nquit\n' | ${tools_dir}/codes_interpreter --non-fail "$ECCODES_SAMPLES_PATH/GRIB2.tmpl" 2>&1)
