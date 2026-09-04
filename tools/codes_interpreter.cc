@@ -20,6 +20,7 @@
 #include <regex>
 #include <set>
 #include <string>
+#include <unordered_map>
 #include <unistd.h>
 #include <vector>
 
@@ -393,6 +394,13 @@ static bool parse_positive_long(const std::string& text, long* value)
     return true;
 }
 
+struct KeyChange
+{
+    std::string name;
+    std::string before;
+    std::string after;
+};
+
 static bool get_scalar_key_value(grib_handle* h, const std::string& key, std::string& value)
 {
     int type = GRIB_TYPE_UNDEFINED;
@@ -447,9 +455,9 @@ static bool get_scalar_key_value(grib_handle* h, const std::string& key, std::st
     return false;
 }
 
-static std::vector<std::string> compute_changed_scalar_keys(grib_handle* before, grib_handle* after)
+static std::vector<KeyChange> compute_changed_scalar_keys(grib_handle* before, grib_handle* after)
 {
-    std::vector<std::string> changed;
+    std::vector<KeyChange> changed;
     std::set<std::string> all_keys = collect_key_names(before);
     const std::set<std::string> after_keys = collect_key_names(after);
     all_keys.insert(after_keys.begin(), after_keys.end());
@@ -464,18 +472,22 @@ static std::vector<std::string> compute_changed_scalar_keys(grib_handle* before,
             continue;
         }
         if (has_before != has_after || before_value != after_value) {
-            changed.push_back(key);
+            KeyChange e;
+            e.name = key;
+            e.before = has_before ? before_value : "<undefined>";
+            e.after = has_after ? after_value : "<undefined>";
+            changed.push_back(e);
         }
     }
 
     return changed;
 }
 
-static void print_changed_keys(const std::vector<std::string>& keys)
+static void print_changed_keys(const std::vector<KeyChange>& keys)
 {
     printf("Changed keys (%zu):\n", keys.size());
     for (const auto& key : keys) {
-        printf("  %s\n", key.c_str());
+        printf("  %s: %s -> %s\n", key.name.c_str(), key.before.c_str(), key.after.c_str());
     }
 }
 
@@ -491,7 +503,7 @@ static bool compile_regex_or_report(const std::string& pattern, std::regex& re)
     return true;
 }
 
-static void print_changed_keys_filtered(const std::vector<std::string>& keys, const std::string& pattern)
+static void print_changed_keys_filtered(const std::vector<KeyChange>& keys, const std::string& pattern)
 {
     if (pattern.empty()) {
         print_changed_keys(keys);
@@ -503,16 +515,16 @@ static void print_changed_keys_filtered(const std::vector<std::string>& keys, co
         return;
     }
 
-    std::vector<std::string> matched;
+    std::vector<KeyChange> matched;
     for (const auto& key : keys) {
-        if (std::regex_search(key, re)) {
+        if (std::regex_search(key.name, re)) {
             matched.push_back(key);
         }
     }
 
     printf("Changed keys matching /%s/ (%zu):\n", pattern.c_str(), matched.size());
     for (const auto& key : matched) {
-        printf("  %s\n", key.c_str());
+        printf("  %s: %s -> %s\n", key.name.c_str(), key.before.c_str(), key.after.c_str());
     }
 }
 
@@ -547,12 +559,37 @@ static void print_keys(grib_handle* h, const std::string& pattern = std::string(
     }
 }
 
-static std::vector<std::string> merge_changes(std::vector<std::string> a, const std::vector<std::string>& b)
+static std::vector<KeyChange> merge_declared_symbol_changes(std::vector<KeyChange> base_changes,
+                                                            const std::vector<std::string>& declared_symbols,
+                                                            grib_handle* before,
+                                                            grib_handle* after)
 {
-    a.insert(a.end(), b.begin(), b.end());
-    std::sort(a.begin(), a.end());
-    a.erase(std::unique(a.begin(), a.end()), a.end());
-    return a;
+    std::unordered_map<std::string, size_t> pos;
+    for (size_t i = 0; i < base_changes.size(); ++i) {
+        pos[base_changes[i].name] = i;
+    }
+
+    for (const auto& name : declared_symbols) {
+        if (pos.find(name) != pos.end()) {
+            continue;
+        }
+
+        std::string before_value;
+        std::string after_value;
+        const bool has_before = get_scalar_key_value(before, name, before_value);
+        const bool has_after = get_scalar_key_value(after, name, after_value);
+
+        KeyChange e;
+        e.name = name;
+        e.before = has_before ? before_value : "<undefined>";
+        e.after = has_after ? after_value : "<declared>";
+        base_changes.push_back(e);
+    }
+
+    std::sort(base_changes.begin(), base_changes.end(), [](const KeyChange& a, const KeyChange& b) {
+        return a.name < b.name;
+    });
+    return base_changes;
 }
 
 static std::vector<off_t> collect_message_offsets(const char* filename, int* err)
@@ -799,7 +836,7 @@ int main(int argc, char* argv[])
 
     std::string script;
     std::string session_script;
-    std::vector<std::string> last_changed_keys;
+    std::vector<KeyChange> last_changed_keys;
     char line[4096];
 
     printf("\n=== codes_interpreter started ===\n");
@@ -984,10 +1021,10 @@ int main(int argc, char* argv[])
                     grib_handle_delete(h);
                     return err;
                 }
-                std::vector<std::string> changed_now;
+                std::vector<KeyChange> changed_now;
                 if (log_key_changes && persist_statement) {
                     changed_now = compute_changed_scalar_keys(h, next_handle);
-                    changed_now = merge_changes(changed_now, extract_declared_symbols(to_run));
+                    changed_now = merge_declared_symbol_changes(changed_now, extract_declared_symbols(to_run), h, next_handle);
                 }
                 grib_handle_delete(h);
                 h = next_handle;
@@ -1038,10 +1075,10 @@ int main(int argc, char* argv[])
                     return err;
                 }
             }
-            std::vector<std::string> changed_now;
+            std::vector<KeyChange> changed_now;
             if (log_key_changes && persist_statement) {
                 changed_now = compute_changed_scalar_keys(h, next_handle);
-                changed_now = merge_changes(changed_now, extract_declared_symbols(to_run));
+                changed_now = merge_declared_symbol_changes(changed_now, extract_declared_symbols(to_run), h, next_handle);
             }
             grib_handle_delete(h);
             h = next_handle;
