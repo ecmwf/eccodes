@@ -178,7 +178,7 @@ static char* completion_generator(const char* text, int state)
         static const char* kWords[] = {
             "print", "set", "meta", "transient", "if", "else", "while", "switch",
             "assert", "write", "remove", "rename", "concept", "alias", "quit", "exit",
-            "help", "info", "changes", "list", "next", "prev", "goto", "save", "load", "undo", "diff",
+            "help", "info", "changes", "list", "next", "prev", "goto", "save", "load", "undo", "diff", "--values",
             ":help", ":info", ":changes", ":list", ":next", ":prev", ":goto", ":save", ":load", ":undo", ":diff"
         };
 
@@ -627,13 +627,43 @@ static void print_touched_keys_filtered(const std::vector<KeyChange>& keys, cons
     }
 }
 
-static void print_keys(grib_handle* h, const std::string& pattern = std::string())
+static std::string describe_key_value_for_list(grib_handle* h, const std::string& key)
+{
+    std::string value;
+    if (get_scalar_key_value(h, key, value)) {
+        return value;
+    }
+
+    size_t size = 0;
+    if (grib_get_size(h, key.c_str(), &size) == GRIB_SUCCESS) {
+        if (size > 1) {
+            char buffer[64] = {0,};
+            snprintf(buffer, sizeof(buffer), "<array:%zu>", size);
+            return std::string(buffer);
+        }
+        return std::string("<unavailable>");
+    }
+    return std::string("<undef>");
+}
+
+static void print_keys(grib_handle* h, const std::string& pattern = std::string(), bool with_values = false)
 {
     const std::set<std::string> keys = collect_key_names(h);
     if (pattern.empty()) {
-        printf("Keys (%zu):\n", keys.size());
+        if (with_values) {
+            printf("Keys with values (%zu):\n", keys.size());
+        }
+        else {
+            printf("Keys (%zu):\n", keys.size());
+        }
         for (const auto& key : keys) {
-            printf("  %s\n", key.c_str());
+            if (with_values) {
+                const std::string described = describe_key_value_for_list(h, key);
+                printf("  %s = %s\n", key.c_str(), described.c_str());
+            }
+            else {
+                printf("  %s\n", key.c_str());
+            }
         }
         return;
     }
@@ -650,10 +680,21 @@ static void print_keys(grib_handle* h, const std::string& pattern = std::string(
         }
     }
 
-    printf("Keys matching /%s/ (%zu):\n", pattern.c_str(), matched);
+    if (with_values) {
+        printf("Keys with values matching /%s/ (%zu):\n", pattern.c_str(), matched);
+    }
+    else {
+        printf("Keys matching /%s/ (%zu):\n", pattern.c_str(), matched);
+    }
     for (const auto& key : keys) {
         if (std::regex_search(key, re)) {
-            printf("  %s\n", key.c_str());
+            if (with_values) {
+                const std::string described = describe_key_value_for_list(h, key);
+                printf("  %s = %s\n", key.c_str(), described.c_str());
+            }
+            else {
+                printf("  %s\n", key.c_str());
+            }
         }
     }
 }
@@ -1106,7 +1147,7 @@ int main(int argc, char* argv[])
 
         if (script.empty()) {
             if (command == ":help" || command == "help") {
-                printf("Commands: quit, exit, :next, :prev, :goto N, :info, :list [regex], :accessors [regex], :changes [regex], :changes --touched [regex], :diff [regex], :save FILE, :load FILE, :undo, :help\n");
+                printf("Commands: quit, exit, :next, :prev, :goto N, :info, :list [regex], :list --values [regex], :accessors [regex], :changes [regex], :changes --touched [regex], :diff [regex], :save FILE, :load FILE, :undo, :help\n");
                 printf("Switching message resets session state (meta/transient/set history).\n");
                 handled_navigation = true;
             }
@@ -1167,10 +1208,20 @@ int main(int argc, char* argv[])
                 print_keys(h);
                 handled_navigation = true;
             }
+            else if (command == ":list --values" || command == "list --values") {
+                print_keys(h, std::string(), true);
+                handled_navigation = true;
+            }
             else if (starts_with(command, ":list ") || starts_with(command, "list ")) {
                 const size_t offset = (command[0] == ':') ? 6 : 5;
                 const std::string pattern = trim(command.substr(offset));
-                print_keys(h, pattern);
+                if (starts_with(pattern, "--values")) {
+                    const std::string values_pattern = trim(pattern.substr(strlen("--values")));
+                    print_keys(h, values_pattern, true);
+                }
+                else {
+                    print_keys(h, pattern);
+                }
                 handled_navigation = true;
             }
             else if (command == ":accessors" || command == "accessors") {

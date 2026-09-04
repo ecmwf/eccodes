@@ -43,6 +43,10 @@ result=$(printf ':list ^editionNumber$\nquit\n' | ${tools_dir}/codes_interpreter
 printf '%s\n' "$result" | grep -q '^Keys matching /\^editionNumber\$/'
 printf '%s\n' "$result" | grep -q '^  editionNumber$'
 
+result=$(printf ':list --values ^editionNumber$\nquit\n' | ${tools_dir}/codes_interpreter "$ECCODES_SAMPLES_PATH/GRIB2.tmpl" 2>&1)
+printf '%s\n' "$result" | grep -q '^Keys with values matching /\^editionNumber\$/'
+printf '%s\n' "$result" | grep -q '^  editionNumber = L:2$'
+
 result=$(printf 'transient toffset = 18;\n:changes\nquit\n' | ${tools_dir}/codes_interpreter --log-key-changes "$ECCODES_SAMPLES_PATH/GRIB2.tmpl" 2>&1)
 printf '%s\n' "$result" | grep -q '^Changed keys ('
 printf '%s\n' "$result" | grep -q '^  toffset: '
