@@ -1,0 +1,33 @@
+[package]
+name         = "eccodes"
+version      = "0.1.0"
+edition      .workspace = true
+license      .workspace = true
+repository   .workspace = true
+rust-version .workspace = true
+description  = "Safe Rust wrapper for ECMWF's eccodes (GRIB/BUFR)"
+
+[features]
+default = ["vendored"]
+
+# Build strategy (mutually exclusive) — pass-through to eccodes-sys.
+# `vendored` forces `threads` on: the `Send` impl on `Handle` relies on
+# libeccodes locking its global context internally.
+system   = ["eccodes-sys/system"]
+vendored = ["eccodes-sys/vendored", "threads"]
+
+# POSIX-threads locking inside libeccodes (`ENABLE_ECCODES_THREADS`).
+# No-op for `system` builds — there it is on the user to link a library
+# built with it.
+threads = ["eccodes-sys/eccodes-threads"]
+
+[dependencies]
+eccodes-sys.workspace = true
+
+bitflags  = "2"
+thiserror = "2"
+libc      = "0.2"
+
+[dev-dependencies]
+# Fetches optional golden-value fixtures from the ECMWF test-data server.
+ureq = "3"

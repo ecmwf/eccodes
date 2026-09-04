@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["crates/eccodes-sys", "examples/eccodes-example"]
+members = ["crates/eccodes-sys", "crates/eccodes", "examples/eccodes-example"]
 
 [workspace.package]
 edition      = "2024"
@@ -10,5 +10,7 @@ rust-version = "1.90"
 
 [workspace.dependencies]
 bindman-utils = { git = "ssh://git@github.com/ecmwf/bindman.git", rev = "34ef5ce" }
+
+eccodes-sys = { path = "crates/eccodes-sys", version = "2.49.0", default-features = false, features = ["product-grib", "product-bufr", "geography", "jpg"] }
 
 eckit-sys = { git = "ssh://git@github.com/ecmwf/eckit.git", branch = "rust-bindings", default-features = false }
