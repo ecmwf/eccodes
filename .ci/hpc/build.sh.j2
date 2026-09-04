@@ -6,28 +6,25 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=8
 
-module load prgenv/gnu
-# gcc/old, not a version number: it is the alias for the compiler a login node
-# gives you with nothing loaded (8.5.0 today), which is what this cluster's GNU
-# builds actually target. `module avail gcc` lists no 8.5.0 to pin directly.
-module unload gcc
-module load gcc/old
-module load cmake
-module load ninja
+{% for m in modules %}
+module {{ m }}
+{% endfor %}
 
-echo "Using: $(command -v gcc) ($($(command -v gcc) --version | head -1))"
-echo "Using: $(command -v gfortran) ($($(command -v gfortran) --version | head -1))"
+echo "Using: $(command -v {{ cc }}) ($($(command -v {{ cc }}) --version | head -1))"
+echo "Using: $(command -v {{ fc }}) ($($(command -v {{ fc }}) --version | head -1))"
 
 cmake -S "$CI_SOURCE_DIR" -B "${TMPDIR:-/tmp}/build" \
   -GNinja \
-  -DCMAKE_BUILD_TYPE=Release \
-  -DCMAKE_C_COMPILER="$(command -v gcc)" \
-  -DCMAKE_CXX_COMPILER="$(command -v g++)" \
-  -DCMAKE_Fortran_COMPILER="$(command -v gfortran)" \
+  -DCMAKE_BUILD_TYPE={{ build_type }} \
+  -DCMAKE_C_COMPILER="$(command -v {{ cc }})" \
+  -DCMAKE_CXX_COMPILER="$(command -v {{ cxx }})" \
+  -DCMAKE_Fortran_COMPILER="$(command -v {{ fc }})" \
   -DENABLE_EXTRA_TESTS=1 \
   -DENABLE_ECCODES_OMP_THREADS=1 \
+{% if options == "eckit-geo" %}
   -DENABLE_GEOGRAPHY=1 \
   -DENABLE_ECKIT_GEO=1 \
+{% endif %}
   -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON \
   -DCMAKE_PREFIX_PATH="$CMAKE_PREFIX_PATH" \
   -DCMAKE_INSTALL_PREFIX="$CI_INSTALL_PREFIX"

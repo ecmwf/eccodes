@@ -115,7 +115,7 @@ jobs:
     needs:
     - resolve
     if: contains(fromJSON(inputs.from-jobs), 'ecbuild/build-hpc') || contains(fromJSON(inputs.from-jobs), 'stack-deps/build-hpc') || contains(fromJSON(inputs.from-jobs), 'eckit/build-hpc') || inputs.rebuild-request
-    name: eccodes/build-hpc (${{ matrix.platform }}, ${{ matrix['job-script'] }}, ${{ matrix.options || 'default' }})
+    name: eccodes/build-hpc (${{ matrix.platform }}, ${{ matrix.options || 'default' }})
     runs-on: ${{ matrix['runs-on'] }}
     container:
       image: ${{ matrix.container || '' }}
@@ -139,7 +139,7 @@ jobs:
         token: ${{ steps.mint.outputs.token }}
         head-repo: ${{ inputs.from-repo }}
         head-sha: ${{ inputs.from-sha }}
-        name: eccodes/build-hpc (${{ matrix.platform }}, ${{ matrix['job-script'] }}, ${{ matrix.options || 'default' }})
+        name: eccodes/build-hpc (${{ matrix.platform }}, ${{ matrix.options || 'default' }})
         details-url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         phase: start
     - name: Announce image
@@ -189,7 +189,8 @@ jobs:
       uses: ecmwf/ci-infrastructure/actions/build-on-hpc@main
       with:
         site: ${{ matrix.site }}
-        job-script: ${{ matrix.job-script || './.ci/hpc/build-gnu.sh' }}
+        job-script: ${{ matrix.job-script || './.ci/hpc/build.sh.j2' }}
+        matrix-leg: ${{ toJSON(matrix) }}
         artifact-name: ${{ steps.m.outputs.own-artifact-name }}
         cmake-prefix-path: ${{ steps.deps.outputs.cmake-prefix-path }}
         work-dir: ${{ vars.HPC_CI_WORK_DIR }}
@@ -202,7 +203,7 @@ jobs:
         token: ${{ steps.mint.outputs.token }}
         head-repo: ${{ inputs.from-repo }}
         head-sha: ${{ inputs.from-sha }}
-        name: eccodes/build-hpc (${{ matrix.platform }}, ${{ matrix['job-script'] }}, ${{ matrix.options || 'default' }})
+        name: eccodes/build-hpc (${{ matrix.platform }}, ${{ matrix.options || 'default' }})
         details-url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         phase: finish
         conclusion: ${{ job.status }}

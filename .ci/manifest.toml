@@ -58,15 +58,28 @@ needs = ["ecbuild/build", "stack-deps/build", "eckit/build"]
 ctest = true
 ctest-args = '-j "$(nproc)"'
 
+# The toolchain is declared here, not buried in a per-toolchain script:
+# .ci/hpc/build.sh.j2 is rendered against these values, so `cxx-compiler` (which
+# the artifact NAME carries) and the compiler the build actually runs cannot
+# drift apart. `modules` are ordered `module` SUB-COMMANDS, because a block
+# interleaves an unload between two loads. Bump `platform` when you bump a
+# toolchain: that is what invalidates the cache.
 [[matrix.build-hpc.include]]
 cxx-compiler = "g++-8"
 fortran-compiler = "gfortran-8"
 build-type = "Release"
+options = ""
 runs-on = "hpc-submit"
 container = "eccr.ecmwf.int/private-ci-images/ubuntu24.04-internal-tools:latest"
 site = "hpc-batch"
 platform = "hpc-atos-gnu"
-job-script = "./.ci/hpc/build-gnu.sh"
+# gcc/old, not a version number: it is the alias for the compiler a login node
+# gives you with nothing loaded (8.5.0 today), which is what this cluster's GNU
+# builds actually target. `module avail gcc` lists no 8.5.0 to pin directly.
+modules = ["load prgenv/gnu", "unload gcc", "load gcc/old", "load cmake", "load ninja"]
+cc = "gcc"
+cxx = "g++"
+fc = "gfortran"
 
 [[matrix.build-hpc.include]]
 cxx-compiler = "g++-8"
@@ -77,12 +90,15 @@ runs-on = "hpc-submit"
 container = "eccr.ecmwf.int/private-ci-images/ubuntu24.04-internal-tools:latest"
 site = "hpc-batch"
 platform = "hpc-atos-gnu"
-job-script = "./.ci/hpc/build-eckit-geo.sh"
+modules = ["load prgenv/gnu", "unload gcc", "load gcc/old", "load cmake", "load ninja"]
+cc = "gcc"
+cxx = "g++"
+fc = "gfortran"
 
 [matrix.build-hpc]
 execution = "hpc"
 container-credentials = true
-job-script = "./.ci/hpc/build-gnu.sh"
+job-script = "./.ci/hpc/build.sh.j2"
 triggers = ["upstream-change", "rebuild-request"]
 forwarded-deps-outputs = ["cmake-prefix-path"]
 needs = ["ecbuild/build-hpc", "stack-deps/build-hpc", "eckit/build-hpc"]
