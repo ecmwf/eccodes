@@ -178,8 +178,8 @@ static char* completion_generator(const char* text, int state)
         static const char* kWords[] = {
             "print", "set", "meta", "transient", "if", "else", "while", "switch",
             "assert", "write", "remove", "rename", "concept", "alias", "quit", "exit",
-            "help", "info", "changes", "list", "next", "prev", "goto", "save", "load", "undo", "diff", "--values", "--ignore-case", "-i",
-            ":help", ":info", ":changes", ":list", ":next", ":prev", ":goto", ":save", ":load", ":undo", ":diff"
+            "help", "info", "changes", "list", "show", "next", "prev", "goto", "save", "load", "undo", "diff", "--values", "--ignore-case", "-i",
+            ":help", ":info", ":changes", ":list", ":show", ":next", ":prev", ":goto", ":save", ":load", ":undo", ":diff"
         };
 
         std::set<std::string> all_candidates;
@@ -702,6 +702,87 @@ static std::string describe_key_value_for_list(grib_handle* h, const std::string
     return std::string("<undef>");
 }
 
+static const char* native_type_name(int type)
+{
+    switch (type) {
+        case GRIB_TYPE_LONG: return "long";
+        case GRIB_TYPE_DOUBLE: return "double";
+        case GRIB_TYPE_STRING: return "string";
+        case GRIB_TYPE_LABEL: return "label";
+        case GRIB_TYPE_BYTES: return "bytes";
+        case GRIB_TYPE_SECTION: return "section";
+        default: return "undefined";
+    }
+}
+
+static void print_show_key(grib_handle* h, const std::string& key)
+{
+    grib_accessor* acc = grib_find_accessor(h, key.c_str());
+    if (!acc) {
+        fprintf(stderr, "codes_interpreter: key '%s' not found\n", key.c_str());
+        return;
+    }
+
+    int type = GRIB_TYPE_UNDEFINED;
+    if (grib_get_native_type(h, key.c_str(), &type) != GRIB_SUCCESS) {
+        type = GRIB_TYPE_UNDEFINED;
+    }
+
+    int err = GRIB_SUCCESS;
+    int missing = grib_is_missing(h, key.c_str(), &err);
+    const char* missing_str = (err == GRIB_SUCCESS && missing) ? "yes" : "no";
+    const std::string value = describe_key_value_for_list(h, key);
+
+    const bool computed = (acc->flags_ & GRIB_ACCESSOR_FLAG_COMPUTED) != 0;
+    const bool read_only = (acc->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0;
+    const bool function = (acc->flags_ & GRIB_ACCESSOR_FLAG_FUNCTION) != 0;
+
+    printf("Key: %s\n", key.c_str());
+    printf("  type: %s\n", native_type_name(type));
+    printf("  value: %s\n", value.c_str());
+    printf("  missing: %s\n", missing_str);
+    printf("  flags: computed=%s read_only=%s function=%s\n",
+           computed ? "yes" : "no",
+           read_only ? "yes" : "no",
+           function ? "yes" : "no");
+}
+
+static void print_show(grib_handle* h, const std::string& pattern, bool ignore_case)
+{
+    if (pattern.empty()) {
+        fprintf(stderr, "codes_interpreter: missing key or regex for :show\n");
+        return;
+    }
+
+    if (grib_find_accessor(h, pattern.c_str()) != NULL) {
+        print_show_key(h, pattern);
+        return;
+    }
+
+    std::regex re;
+    if (!compile_regex_or_report(pattern, re, ignore_case)) {
+        return;
+    }
+
+    const std::set<std::string> keys = collect_key_names(h);
+    std::vector<std::string> matched;
+    for (const auto& key : keys) {
+        if (std::regex_search(key, re)) {
+            matched.push_back(key);
+        }
+    }
+
+    if (matched.empty()) {
+        printf("No keys matching /%s/\n", pattern.c_str());
+        return;
+    }
+
+    printf("Show matching /%s/ (%zu):\n", pattern.c_str(), matched.size());
+    for (const auto& key : matched) {
+        print_show_key(h, key);
+    }
+}
+
 static void print_keys(grib_handle* h, const std::string& pattern = std::string(), bool with_values = false, bool ignore_case = false)
 {
     const std::set<std::string> keys = collect_key_names(h);
@@ -1113,7 +1194,7 @@ int main(int argc, char* argv[])
     printf("Message: %s\n", argv[file_arg]);
     printf("Selected message: %ld/%zu\n", current_message, message_offsets.size());
     printf("Type a filter expression and end with ';' or type 'quit' to exit.\n");
-    printf("Navigation: :next, :prev, :goto N, :info, :list, :accessors, :changes, :diff, :save, :load, :undo, :help\n");
+    printf("Navigation: :next, :prev, :goto N, :info, :list, :show, :accessors, :changes, :diff, :save, :load, :undo, :help\n");
 
 #ifdef HAVE_LIBREADLINE
     using_history();
@@ -1203,7 +1284,7 @@ int main(int argc, char* argv[])
 
         if (script.empty()) {
             if (command == ":help" || command == "help") {
-                printf("Commands: quit, exit, :next, :prev, :goto N, :info, :list [--values] [--ignore-case|-i] [regex], :accessors [--ignore-case|-i] [regex], :changes [--touched] [--ignore-case|-i] [regex], :diff [--ignore-case|-i] [regex], :save FILE, :load FILE, :undo, :help\n");
+                printf("Commands: quit, exit, :next, :prev, :goto N, :info, :list [--values] [--ignore-case|-i] [regex], :show [--ignore-case|-i] <key-or-regex>, :accessors [--ignore-case|-i] [regex], :changes [--touched] [--ignore-case|-i] [regex], :diff [--ignore-case|-i] [regex], :save FILE, :load FILE, :undo, :help\n");
                 printf("Switching message resets session state (meta/transient/set history).\n");
                 handled_navigation = true;
             }
@@ -1253,6 +1334,16 @@ int main(int argc, char* argv[])
                 std::string pattern;
                 parse_command_flags(args, &ignore_case, NULL, &values, &pattern);
                 print_keys(h, pattern, values, ignore_case);
+                handled_navigation = true;
+            }
+            else if (command == ":show" || command == "show" || starts_with(command, ":show ") || starts_with(command, "show ")) {
+                const bool has_args = starts_with(command, ":show ") || starts_with(command, "show ");
+                const size_t offset = command[0] == ':' ? 6 : 5;
+                const std::string args = has_args ? trim(command.substr(offset)) : std::string();
+                bool ignore_case = false;
+                std::string pattern;
+                parse_command_flags(args, &ignore_case, NULL, NULL, &pattern);
+                print_show(h, pattern, ignore_case);
                 handled_navigation = true;
             }
             else if (command == ":accessors" || command == "accessors") {

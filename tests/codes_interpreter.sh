@@ -55,6 +55,15 @@ result=$(printf ':list --values -i ^EDITIONNUMBER$\nquit\n' | ${tools_dir}/codes
 printf '%s\n' "$result" | grep -q '^Keys with values matching /\^EDITIONNUMBER\$/'
 printf '%s\n' "$result" | grep -q '^  editionNumber = L:2$'
 
+result=$(printf ':show editionNumber\nquit\n' | ${tools_dir}/codes_interpreter "$ECCODES_SAMPLES_PATH/GRIB2.tmpl" 2>&1)
+printf '%s\n' "$result" | grep -q '^Key: editionNumber$'
+printf '%s\n' "$result" | grep -q '^  type: long$'
+printf '%s\n' "$result" | grep -q '^  value: L:2$'
+
+result=$(printf ':show --ignore-case ^EDITIONNUMBER$\nquit\n' | ${tools_dir}/codes_interpreter "$ECCODES_SAMPLES_PATH/GRIB2.tmpl" 2>&1)
+printf '%s\n' "$result" | grep -q '^Show matching /\^EDITIONNUMBER\$/ (1):$'
+printf '%s\n' "$result" | grep -q '^Key: editionNumber$'
+
 result=$(printf 'transient toffset = 18;\n:changes\nquit\n' | ${tools_dir}/codes_interpreter --log-key-changes "$ECCODES_SAMPLES_PATH/GRIB2.tmpl" 2>&1)
 printf '%s\n' "$result" | grep -q '^Changed keys ('
 printf '%s\n' "$result" | grep -q '^  toffset: '
