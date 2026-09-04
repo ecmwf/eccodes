@@ -7,8 +7,11 @@
 #SBATCH --ntasks=8
 
 module load prgenv/gnu
+# gcc/old, not a version number: it is the alias for the compiler a login node
+# gives you with nothing loaded (8.5.0 today), which is what this cluster's GNU
+# builds actually target. `module avail gcc` lists no 8.5.0 to pin directly.
 module unload gcc
-module load gcc/13.2.0
+module load gcc/old
 module load cmake
 module load ninja
 
