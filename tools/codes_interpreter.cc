@@ -17,15 +17,17 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <regex>
 #include <set>
 #include <string>
 #include <unistd.h>
 #include <vector>
 
+#include "accessor/Accessor.h"
+
 #ifdef HAVE_LIBREADLINE
 #include <readline/readline.h>
 #include <readline/history.h>
-#include "accessor/Accessor.h"
 
 static grib_handle* s_completion_handle = NULL;
 static std::vector<std::string> s_completion_candidates;
@@ -35,6 +37,49 @@ static std::set<std::string> s_session_symbols;
 static bool starts_with(const std::string& value, const std::string& prefix)
 {
     return value.size() >= prefix.size() && value.compare(0, prefix.size(), prefix) == 0;
+}
+
+static std::set<std::string> collect_accessor_names()
+{
+    std::set<std::string> names;
+    const std::vector<std::string> registered = eccodes::AccessorFactory::instance().types();
+    names.insert(registered.begin(), registered.end());
+    return names;
+}
+
+static void print_accessors(const std::string& pattern = std::string())
+{
+    const std::set<std::string> accessors = collect_accessor_names();
+    if (pattern.empty()) {
+        printf("Accessors (%zu):\n", accessors.size());
+        for (const auto& name : accessors) {
+            printf("  %s\n", name.c_str());
+        }
+        return;
+    }
+
+    std::regex re;
+    try {
+        re = std::regex(pattern);
+    }
+    catch (const std::regex_error& e) {
+        fprintf(stderr, "codes_interpreter: invalid regex '%s' (%s)\n", pattern.c_str(), e.what());
+        return;
+    }
+
+    size_t matched = 0;
+    for (const auto& name : accessors) {
+        if (std::regex_search(name, re)) {
+            ++matched;
+        }
+    }
+
+    printf("Accessors matching /%s/ (%zu):\n", pattern.c_str(), matched);
+    for (const auto& name : accessors) {
+        if (std::regex_search(name, re)) {
+            printf("  %s\n", name.c_str());
+        }
+    }
 }
 
 static std::set<std::string> collect_key_names(grib_handle* h)
@@ -57,14 +102,6 @@ static std::set<std::string> collect_key_names(grib_handle* h)
     }
     grib_keys_iterator_delete(it);
     return keys;
-}
-
-static std::set<std::string> collect_accessor_names()
-{
-    std::set<std::string> names;
-    const std::vector<std::string> registered = eccodes::AccessorFactory::instance().types();
-    names.insert(registered.begin(), registered.end());
-    return names;
 }
 
 static std::set<std::string> collect_functor_names()
@@ -595,7 +632,7 @@ int main(int argc, char* argv[])
     printf("Message: %s\n", argv[file_arg]);
     printf("Selected message: %ld/%zu\n", current_message, message_offsets.size());
     printf("Type a filter expression and end with ';' or type 'quit' to exit.\n");
-    printf("Navigation: :next, :prev, :goto N, :info, :help\n");
+    printf("Navigation: :next, :prev, :goto N, :info, :accessors, :help\n");
 
 #ifdef HAVE_LIBREADLINE
     using_history();
@@ -673,12 +710,27 @@ int main(int argc, char* argv[])
 
         if (script.empty()) {
             if (command == ":help" || command == "help") {
-                printf("Commands: quit, exit, :next, :prev, :goto N, :info, :help\n");
+                printf("Commands: quit, exit, :next, :prev, :goto N, :info, :accessors [regex], :help\n");
                 printf("Switching message resets session state (meta/transient/set history).\n");
                 handled_navigation = true;
             }
             else if (command == ":info" || command == "info") {
                 printf("Message %ld/%zu from %s\n", current_message, message_offsets.size(), argv[file_arg]);
+                handled_navigation = true;
+            }
+            else if (command == ":accessors" || command == "accessors") {
+                print_accessors();
+                handled_navigation = true;
+            }
+            else if (starts_with(command, ":accessors ") || starts_with(command, "accessors ")) {
+                const size_t offset = (command[0] == ':') ? 11 : 10;
+                const std::string pattern = trim(command.substr(offset));
+                if (pattern.empty()) {
+                    print_accessors();
+                }
+                else {
+                    print_accessors(pattern);
+                }
                 handled_navigation = true;
             }
             else if (command == ":next" || command == "next") {

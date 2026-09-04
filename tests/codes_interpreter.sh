@@ -23,6 +23,16 @@ printf '%s\n' "$result" | grep -q '^2$'
 result=$(printf 'if (edition == 2) { print "OK"; }\n' | ${tools_dir}/codes_interpreter "$ECCODES_SAMPLES_PATH/GRIB2.tmpl")
 printf '%s\n' "$result" | grep -q '^OK$'
 
+result=$(printf ':accessors\nquit\n' | ${tools_dir}/codes_interpreter "$ECCODES_SAMPLES_PATH/GRIB2.tmpl" 2>&1)
+printf '%s\n' "$result" | grep -q '^Accessors ('
+
+result=$(printf ':accessors count_\nquit\n' | ${tools_dir}/codes_interpreter "$ECCODES_SAMPLES_PATH/GRIB2.tmpl" 2>&1)
+printf '%s\n' "$result" | grep -q '^Accessors matching /count_/'
+printf '%s\n' "$result" | grep -q '^  count_file$'
+
+result=$(printf ':accessors [\nquit\n' | ${tools_dir}/codes_interpreter --non-fail "$ECCODES_SAMPLES_PATH/GRIB2.tmpl" 2>&1)
+printf '%s\n' "$result" | grep -q 'invalid regex'
+
 result=$(printf 'print "[does_not_exist_key]";\nprint "[edition]";\nquit\n' | ${tools_dir}/codes_interpreter --non-fail "$ECCODES_SAMPLES_PATH/GRIB2.tmpl" 2>&1)
 printf '%s\n' "$result" | grep -q 'Key/value not found'
 printf '%s\n' "$result" | grep -q '2'
