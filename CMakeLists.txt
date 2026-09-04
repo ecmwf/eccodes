@@ -177,6 +177,14 @@ ecbuild_add_option( FEATURE AEC
     DEFAULT ON
     CONDITION libaec_FOUND )
 
+find_path(Readline_INCLUDE_DIR NAMES readline/readline.h)
+find_library(Readline_LIBRARY NAMES readline)
+if(Readline_INCLUDE_DIR AND Readline_LIBRARY)
+    set( HAVE_LIBREADLINE 1 )
+    set( ECCODES_EXTRA_LIBRARIES ${ECCODES_EXTRA_LIBRARIES} ${Readline_LIBRARY} )
+    set( ECCODES_EXTRA_INCLUDE_DIRS ${ECCODES_EXTRA_INCLUDE_DIRS} ${Readline_INCLUDE_DIR} )
+endif()
+
 ecbuild_find_python( VERSION 3.6 NO_LIBS )
 # find_package( NumPy )
 

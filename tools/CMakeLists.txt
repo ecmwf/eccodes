@@ -31,6 +31,7 @@ endif()
 # tools binaries
 list( APPEND ecc_tools_binaries
              codes_info codes_count codes_split_file codes_export_resource
+             codes_interpreter
              grib_histogram grib_filter grib_ls grib_dump
              grib2ppm grib_set grib_get grib_get_data grib_copy
              grib_compare codes_parser grib_index_build bufr_index_build
@@ -48,10 +49,18 @@ list( APPEND ecc_tools_binaries_extra
 # Install generic tools
 foreach( tool ${ecc_tools_binaries} )
     # here we use the fact that each tool has only one C file that matches its name
+    set( tool_libs ecc_tools )
+    if( ${tool} STREQUAL "codes_interpreter" AND HAVE_LIBREADLINE )
+        list( APPEND tool_libs ${Readline_LIBRARY} )
+    endif()
     ecbuild_add_executable( TARGET     ${tool}
                             SOURCES    ${tool}.cc
-                            LIBS       ecc_tools )
+                            LIBS       ${tool_libs} )
 endforeach()
+
+if( HAVE_LIBREADLINE )
+    target_compile_definitions( codes_interpreter PRIVATE HAVE_LIBREADLINE=1 )
+endif()
 
 # Install extra tools
 # User must run cmake with -DECCODES_INSTALL_EXTRA_TOOLS=ON

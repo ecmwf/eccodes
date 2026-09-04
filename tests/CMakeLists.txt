@@ -438,6 +438,7 @@ if( HAVE_BUILD_TOOLS )
         codes_set_samples_path
         codes_compare_keys
         codes_dump_content
+        codes_interpreter
         codes_to_double
         grib_dump
         grib_dump_debug
