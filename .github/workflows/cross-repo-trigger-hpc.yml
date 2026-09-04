@@ -179,9 +179,8 @@ jobs:
         } >> "$GITHUB_OUTPUT"
     - name: Fetch resolved deps
       id: deps
-      uses: ecmwf/ci-infrastructure/actions/fetch-and-publish@main
+      uses: ecmwf/ci-infrastructure/actions/fetch-deps@main
       with:
-        mode: download-only
         deps-json: ${{ steps.m.outputs.deps-json }}
         token: ${{ steps.mint.outputs.token }}
         install-python-deps: 'false'
