@@ -13,6 +13,7 @@
 label="codes_interpreter_test"
 tempMulti=temp.$label.multi.grib
 tempLog=temp.$label.log
+tempFilter=temp.$label.filter
 
 result=$(${tools_dir}/codes_interpreter --help 2>&1)
 printf '%s\n' "$result" | grep -q 'Usage:'
@@ -49,6 +50,21 @@ printf '%s\n' "$result" | grep -q '^  toffset: '
 result=$(printf 'transient toffset = 18;\n:changes ^toff\nquit\n' | ${tools_dir}/codes_interpreter --log-key-changes "$ECCODES_SAMPLES_PATH/GRIB2.tmpl" 2>&1)
 printf '%s\n' "$result" | grep -q '^Changed keys matching /\^toff/'
 printf '%s\n' "$result" | grep -q '^  toffset: '
+
+result=$(printf 'set forecastTime = 36;\n:changes --touched\nquit\n' | ${tools_dir}/codes_interpreter --log-key-changes "$ECCODES_SAMPLES_PATH/GRIB2.tmpl" 2>&1)
+printf '%s\n' "$result" | grep -q '^Touched but unchanged keys ('
+
+result=$(printf 'transient toffset = 18;\n:diff ^toffset$\nquit\n' | ${tools_dir}/codes_interpreter --log-key-changes "$ECCODES_SAMPLES_PATH/GRIB2.tmpl" 2>&1)
+printf '%s\n' "$result" | grep -q '^Changed keys matching /\^toffset\$/'
+printf '%s\n' "$result" | grep -q '^  toffset: '
+
+rm -f "$tempFilter"
+result=$(printf 'transient toffset = 18;\n:save %s\n:undo\nprint "TOFF=[toffset]";\n:load %s\nprint "TOFF=[toffset]";\nquit\n' "$tempFilter" "$tempFilter" | ${tools_dir}/codes_interpreter --non-fail "$ECCODES_SAMPLES_PATH/GRIB2.tmpl" 2>&1)
+printf '%s\n' "$result" | grep -q '^Saved session to '
+printf '%s\n' "$result" | grep -q '^Undid last statement$'
+printf '%s\n' "$result" | grep -q '^Loaded session from '
+[ "$(printf '%s\n' "$result" | grep -c '^TOFF=undef$')" = "1" ]
+[ "$(printf '%s\n' "$result" | grep -c '^TOFF=18$')" = "1" ]
 
 result=$(printf 'meta d1 validity_date(dataDate,dataTime,step,stepUnits);\n:changes\nquit\n' | ${tools_dir}/codes_interpreter --log-key-changes "$ECCODES_SAMPLES_PATH/GRIB2.tmpl" 2>&1)
 printf '%s\n' "$result" | grep -q '^  d1: '
@@ -97,4 +113,4 @@ result=$(printf 'print "C=[count]";\n:goto 2\nprint "C=[count]";\nquit\n' | ${to
 [ "$(printf '%s\n' "$result" | grep -c '^C=1$')" = "1" ]
 [ "$(printf '%s\n' "$result" | grep -c '^C=2$')" = "1" ]
 
-rm -f "$tempMulti" "$tempLog"
+rm -f "$tempMulti" "$tempLog" "$tempFilter"

@@ -178,7 +178,8 @@ static char* completion_generator(const char* text, int state)
         static const char* kWords[] = {
             "print", "set", "meta", "transient", "if", "else", "while", "switch",
             "assert", "write", "remove", "rename", "concept", "alias", "quit", "exit",
-            "help", "info", "changes", "list", "next", "prev", "goto", ":help", ":info", ":changes", ":list", ":next", ":prev", ":goto"
+            "help", "info", "changes", "list", "next", "prev", "goto", "save", "load", "undo", "diff",
+            ":help", ":info", ":changes", ":list", ":next", ":prev", ":goto", ":save", ":load", ":undo", ":diff"
         };
 
         std::set<std::string> all_candidates;
@@ -484,6 +485,62 @@ static std::vector<KeyChange> compute_changed_scalar_keys(grib_handle* before, g
     return changed;
 }
 
+static std::vector<KeyChange> compute_touched_unchanged_scalar_keys(grib_handle* before,
+                                                                    grib_handle* after,
+                                                                    const std::vector<KeyChange>& changed)
+{
+    std::vector<KeyChange> touched;
+    std::set<std::string> changed_names;
+    for (const auto& item : changed) {
+        changed_names.insert(item.name);
+    }
+
+    std::set<std::string> touched_names = changed_names;
+    bool added = true;
+    while (added) {
+        added = false;
+        for (grib_dependency* dep = after ? after->dependencies : NULL; dep != NULL; dep = dep->next) {
+            if (!dep->observed || !dep->observer || !dep->observed->name_ || !dep->observer->name_) {
+                continue;
+            }
+            const std::string observed = dep->observed->name_;
+            const std::string observer = dep->observer->name_;
+            if (touched_names.find(observed) != touched_names.end()) {
+                if (touched_names.insert(observer).second) {
+                    added = true;
+                }
+            }
+        }
+    }
+
+    for (const auto& key : touched_names) {
+        if (changed_names.find(key) != changed_names.end()) {
+            continue;
+        }
+
+        std::string before_value;
+        std::string after_value;
+        const bool has_before = get_scalar_key_value(before, key, before_value);
+        const bool has_after  = get_scalar_key_value(after, key, after_value);
+        if (!has_before || !has_after) {
+            continue;
+        }
+        if (before_value != after_value) {
+            continue;
+        }
+
+        KeyChange e;
+        e.name   = key;
+        e.before = before_value;
+        e.after  = after_value;
+        touched.push_back(e);
+    }
+    std::sort(touched.begin(), touched.end(), [](const KeyChange& a, const KeyChange& b) {
+        return a.name < b.name;
+    });
+    return touched;
+}
+
 static void print_changed_keys(const std::vector<KeyChange>& keys)
 {
     printf("Changed keys (%zu):\n", keys.size());
@@ -532,6 +589,39 @@ static void print_changed_keys_filtered(const std::vector<KeyChange>& keys, cons
     }
 
     printf("Changed keys matching /%s/ (%zu):\n", pattern.c_str(), matched.size());
+    for (const auto& key : matched) {
+        printf("  %s: %s -> %s\n", key.name.c_str(), key.before.c_str(), key.after.c_str());
+    }
+}
+
+static void print_touched_keys(const std::vector<KeyChange>& keys)
+{
+    printf("Touched but unchanged keys (%zu):\n", keys.size());
+    for (const auto& key : keys) {
+        printf("  %s: %s -> %s\n", key.name.c_str(), key.before.c_str(), key.after.c_str());
+    }
+}
+
+static void print_touched_keys_filtered(const std::vector<KeyChange>& keys, const std::string& pattern)
+{
+    if (pattern.empty()) {
+        print_touched_keys(keys);
+        return;
+    }
+
+    std::regex re;
+    if (!compile_regex_or_report(pattern, re)) {
+        return;
+    }
+
+    std::vector<KeyChange> matched;
+    for (const auto& key : keys) {
+        if (std::regex_search(key.name, re)) {
+            matched.push_back(key);
+        }
+    }
+
+    printf("Touched but unchanged keys matching /%s/ (%zu):\n", pattern.c_str(), matched.size());
     for (const auto& key : matched) {
         printf("  %s: %s -> %s\n", key.name.c_str(), key.before.c_str(), key.after.c_str());
     }
@@ -599,6 +689,58 @@ static std::vector<KeyChange> merge_declared_symbol_changes(std::vector<KeyChang
         return a.name < b.name;
     });
     return base_changes;
+}
+
+static std::string read_text_file(const std::string& path, bool* ok)
+{
+    if (ok)
+        *ok = false;
+    std::ifstream in(path.c_str(), std::ios::in | std::ios::binary);
+    if (!in.good()) {
+        return std::string();
+    }
+
+    std::string content((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+    if (ok)
+        *ok = true;
+    return content;
+}
+
+static bool write_text_file(const std::string& path, const std::string& content)
+{
+    std::ofstream out(path.c_str(), std::ios::out | std::ios::trunc | std::ios::binary);
+    if (!out.good()) {
+        return false;
+    }
+    out << content;
+    return out.good();
+}
+
+static std::string build_session_script(const std::vector<std::string>& statements)
+{
+    std::string result;
+    for (const auto& statement : statements) {
+        if (statement.empty()) {
+            continue;
+        }
+        result += statement;
+        if (result.empty() || result.back() != '\n') {
+            result += "\n";
+        }
+    }
+    return result;
+}
+
+static std::vector<std::string> collect_declared_symbols_from_statements(const std::vector<std::string>& statements)
+{
+    std::vector<std::string> all;
+    for (const auto& statement : statements) {
+        const std::vector<std::string> declared = extract_declared_symbols(statement);
+        all.insert(all.end(), declared.begin(), declared.end());
+    }
+    std::sort(all.begin(), all.end());
+    all.erase(std::unique(all.begin(), all.end()), all.end());
+    return all;
 }
 
 static std::vector<off_t> collect_message_offsets(const char* filename, int* err)
@@ -864,7 +1006,9 @@ int main(int argc, char* argv[])
 
     std::string script;
     std::string session_script;
+    std::vector<std::string> session_statements;
     std::vector<KeyChange> last_changed_keys;
+    std::vector<KeyChange> last_touched_unchanged_keys;
     char line[4096];
 
     printf("\n=== codes_interpreter started ===\n");
@@ -872,7 +1016,7 @@ int main(int argc, char* argv[])
     printf("Message: %s\n", argv[file_arg]);
     printf("Selected message: %ld/%zu\n", current_message, message_offsets.size());
     printf("Type a filter expression and end with ';' or type 'quit' to exit.\n");
-    printf("Navigation: :next, :prev, :goto N, :info, :list, :accessors, :changes, :help\n");
+    printf("Navigation: :next, :prev, :goto N, :info, :list, :accessors, :changes, :diff, :save, :load, :undo, :help\n");
 
 #ifdef HAVE_LIBREADLINE
     using_history();
@@ -916,7 +1060,9 @@ int main(int argc, char* argv[])
         auto clear_session_state = [&]() {
             script.clear();
             session_script.clear();
+            session_statements.clear();
             last_changed_keys.clear();
+            last_touched_unchanged_keys.clear();
 #ifdef HAVE_LIBREADLINE
             s_session_symbols.clear();
 #endif
@@ -960,7 +1106,7 @@ int main(int argc, char* argv[])
 
         if (script.empty()) {
             if (command == ":help" || command == "help") {
-                printf("Commands: quit, exit, :next, :prev, :goto N, :info, :list [regex], :accessors [regex], :changes [regex], :help\n");
+                printf("Commands: quit, exit, :next, :prev, :goto N, :info, :list [regex], :accessors [regex], :changes [regex], :changes --touched [regex], :diff [regex], :save FILE, :load FILE, :undo, :help\n");
                 printf("Switching message resets session state (meta/transient/set history).\n");
                 handled_navigation = true;
             }
@@ -977,6 +1123,15 @@ int main(int argc, char* argv[])
                 }
                 handled_navigation = true;
             }
+            else if (command == ":changes --touched" || command == "changes --touched") {
+                if (!log_key_changes) {
+                    printf("not activated - use --log-key-changes\n");
+                }
+                else {
+                    print_touched_keys(last_touched_unchanged_keys);
+                }
+                handled_navigation = true;
+            }
             else if (starts_with(command, ":changes ") || starts_with(command, "changes ")) {
                 const size_t offset = (command[0] == ':') ? 9 : 8;
                 const std::string pattern = trim(command.substr(offset));
@@ -984,8 +1139,28 @@ int main(int argc, char* argv[])
                     printf("not activated - use --log-key-changes\n");
                 }
                 else {
-                    print_changed_keys_filtered(last_changed_keys, pattern);
+                    if (starts_with(pattern, "--touched")) {
+                        const std::string touched_pattern = trim(pattern.substr(strlen("--touched")));
+                        print_touched_keys_filtered(last_touched_unchanged_keys, touched_pattern);
+                    }
+                    else {
+                        print_changed_keys_filtered(last_changed_keys, pattern);
+                    }
                 }
+                handled_navigation = true;
+            }
+            else if (command == ":diff" || command == "diff") {
+                std::vector<KeyChange> diff = compute_changed_scalar_keys(base_handle, h);
+                diff = merge_declared_symbol_changes(diff, collect_declared_symbols_from_statements(session_statements), base_handle, h);
+                print_changed_keys(diff);
+                handled_navigation = true;
+            }
+            else if (starts_with(command, ":diff ") || starts_with(command, "diff ")) {
+                const size_t offset = (command[0] == ':') ? 6 : 5;
+                const std::string pattern = trim(command.substr(offset));
+                std::vector<KeyChange> diff = compute_changed_scalar_keys(base_handle, h);
+                diff = merge_declared_symbol_changes(diff, collect_declared_symbols_from_statements(session_statements), base_handle, h);
+                print_changed_keys_filtered(diff, pattern);
                 handled_navigation = true;
             }
             else if (command == ":list" || command == "list") {
@@ -1030,6 +1205,135 @@ int main(int argc, char* argv[])
                     handled_navigation = try_navigation(requested);
                 }
             }
+            else if (starts_with(command, ":save ") || starts_with(command, "save ")) {
+                const size_t offset = (command[0] == ':') ? 6 : 5;
+                const std::string path = trim(command.substr(offset));
+                if (path.empty()) {
+                    fprintf(stderr, "codes_interpreter: missing filename for :save\n");
+                }
+                else if (!write_text_file(path, session_script)) {
+                    fprintf(stderr, "codes_interpreter: cannot write '%s'\n", path.c_str());
+                }
+                else {
+                    printf("Saved session to %s\n", path.c_str());
+                }
+                handled_navigation = true;
+            }
+            else if (starts_with(command, ":load ") || starts_with(command, "load ")) {
+                const size_t offset = (command[0] == ':') ? 6 : 5;
+                const std::string path = trim(command.substr(offset));
+                if (path.empty()) {
+                    fprintf(stderr, "codes_interpreter: missing filename for :load\n");
+                    handled_navigation = true;
+                }
+                else {
+                    bool ok = false;
+                    const std::string loaded = read_text_file(path, &ok);
+                    if (!ok) {
+                        fprintf(stderr, "codes_interpreter: cannot read '%s'\n", path.c_str());
+                    }
+                    else if (trim(loaded).empty()) {
+                        printf("Loaded empty script from %s\n", path.c_str());
+                    }
+                    else {
+                        grib_handle* next_handle = replay_session(base_handle, current_message, static_cast<long>(message_offsets.size()),
+                                                                  session_script, loaded, &err);
+                        if (!next_handle) {
+                            fprintf(stderr, "codes_interpreter: %s\n", grib_get_error_message(err));
+                        }
+                        else {
+                            std::vector<KeyChange> changed_now;
+                            std::vector<KeyChange> touched_now;
+                            if (log_key_changes) {
+                                changed_now = compute_changed_scalar_keys(h, next_handle);
+                                changed_now = merge_declared_symbol_changes(changed_now, extract_declared_symbols(loaded), h, next_handle);
+                                touched_now = compute_touched_unchanged_scalar_keys(h, next_handle, changed_now);
+                            }
+
+                            grib_handle_delete(h);
+                            h = next_handle;
+                            grib_context_set_handle_file_count(h->context, static_cast<int>(current_message));
+                            grib_context_set_handle_total_count(h->context, static_cast<int>(message_offsets.size()));
+                            if (log_key_changes) {
+                                last_changed_keys.swap(changed_now);
+                                last_touched_unchanged_keys.swap(touched_now);
+                            }
+                            else {
+                                last_changed_keys.clear();
+                                last_touched_unchanged_keys.clear();
+                            }
+#ifdef HAVE_LIBREADLINE
+                            s_completion_handle = h;
+                            const std::vector<std::string> declared_symbols = extract_declared_symbols(loaded);
+                            for (const auto& declared_symbol : declared_symbols) {
+                                s_session_symbols.insert(declared_symbol);
+                            }
+#endif
+                            session_statements.push_back(loaded);
+                            session_script = build_session_script(session_statements);
+                            if (session_log.is_open() && log_key_changes) {
+                                write_changed_keys(session_log, last_changed_keys);
+                                session_log.flush();
+                            }
+                            printf("Loaded session from %s\n", path.c_str());
+                        }
+                    }
+                    handled_navigation = true;
+                }
+            }
+            else if (command == ":undo" || command == "undo") {
+                if (session_statements.empty()) {
+                    printf("Nothing to undo\n");
+                }
+                else {
+                    const std::string removed = session_statements.back();
+                    session_statements.pop_back();
+                    const std::string rebuilt = build_session_script(session_statements);
+                    grib_handle* next_handle = replay_session(base_handle, current_message, static_cast<long>(message_offsets.size()),
+                                                              rebuilt, std::string(), &err);
+                    if (!next_handle) {
+                        session_statements.push_back(removed);
+                        fprintf(stderr, "codes_interpreter: undo failed: %s\n", grib_get_error_message(err));
+                    }
+                    else {
+                        std::vector<KeyChange> changed_now;
+                        std::vector<KeyChange> touched_now;
+                        if (log_key_changes) {
+                            changed_now = compute_changed_scalar_keys(h, next_handle);
+                            touched_now = compute_touched_unchanged_scalar_keys(h, next_handle, changed_now);
+                        }
+                        grib_handle_delete(h);
+                        h = next_handle;
+                        grib_context_set_handle_file_count(h->context, static_cast<int>(current_message));
+                        grib_context_set_handle_total_count(h->context, static_cast<int>(message_offsets.size()));
+                        session_script = rebuilt;
+                        if (log_key_changes) {
+                            last_changed_keys.swap(changed_now);
+                            last_touched_unchanged_keys.swap(touched_now);
+                        }
+                        else {
+                            last_changed_keys.clear();
+                            last_touched_unchanged_keys.clear();
+                        }
+#ifdef HAVE_LIBREADLINE
+                        s_completion_handle = h;
+                        s_session_symbols.clear();
+                        for (const auto& persisted_statement : session_statements) {
+                            const std::vector<std::string> declared_symbols = extract_declared_symbols(persisted_statement);
+                            for (const auto& declared_symbol : declared_symbols) {
+                                s_session_symbols.insert(declared_symbol);
+                            }
+                        }
+#endif
+                        if (session_log.is_open() && log_key_changes) {
+                            write_changed_keys(session_log, last_changed_keys);
+                            session_log.flush();
+                        }
+                        printf("Undid last statement\n");
+                    }
+                }
+                handled_navigation = true;
+            }
         }
 
         if (handled_navigation) {
@@ -1059,9 +1363,11 @@ int main(int argc, char* argv[])
                     return err;
                 }
                 std::vector<KeyChange> changed_now;
+                std::vector<KeyChange> touched_now;
                 if (log_key_changes && persist_statement) {
                     changed_now = compute_changed_scalar_keys(h, next_handle);
                     changed_now = merge_declared_symbol_changes(changed_now, extract_declared_symbols(to_run), h, next_handle);
+                    touched_now = compute_touched_unchanged_scalar_keys(h, next_handle, changed_now);
                 }
                 grib_handle_delete(h);
                 h = next_handle;
@@ -1069,9 +1375,11 @@ int main(int argc, char* argv[])
                 grib_context_set_handle_total_count(h->context, static_cast<int>(message_offsets.size()));
                 if (log_key_changes && persist_statement) {
                     last_changed_keys.swap(changed_now);
+                    last_touched_unchanged_keys.swap(touched_now);
                 }
                 else {
                     last_changed_keys.clear();
+                    last_touched_unchanged_keys.clear();
                 }
                 if (session_log.is_open() && log_key_changes) {
                     write_changed_keys(session_log, last_changed_keys);
@@ -1081,12 +1389,14 @@ int main(int argc, char* argv[])
                 s_completion_handle = h;
 #endif
                 if (persist_statement) {
+#ifdef HAVE_LIBREADLINE
                     const std::vector<std::string> declared_symbols = extract_declared_symbols(to_run);
                     for (const auto& declared_symbol : declared_symbols) {
                         s_session_symbols.insert(declared_symbol);
                     }
-                    session_script += to_run;
-                    session_script += "\n";
+#endif
+                    session_statements.push_back(to_run);
+                    session_script = build_session_script(session_statements);
                 }
             }
             script.clear();
@@ -1117,9 +1427,11 @@ int main(int argc, char* argv[])
                 }
             }
             std::vector<KeyChange> changed_now;
+            std::vector<KeyChange> touched_now;
             if (log_key_changes && persist_statement) {
                 changed_now = compute_changed_scalar_keys(h, next_handle);
                 changed_now = merge_declared_symbol_changes(changed_now, extract_declared_symbols(to_run), h, next_handle);
+                touched_now = compute_touched_unchanged_scalar_keys(h, next_handle, changed_now);
             }
             grib_handle_delete(h);
             h = next_handle;
@@ -1127,9 +1439,11 @@ int main(int argc, char* argv[])
             grib_context_set_handle_total_count(h->context, static_cast<int>(message_offsets.size()));
             if (log_key_changes && persist_statement) {
                 last_changed_keys.swap(changed_now);
+                last_touched_unchanged_keys.swap(touched_now);
             }
             else {
                 last_changed_keys.clear();
+                last_touched_unchanged_keys.clear();
             }
             if (session_log.is_open() && log_key_changes) {
                 write_changed_keys(session_log, last_changed_keys);
@@ -1138,6 +1452,16 @@ int main(int argc, char* argv[])
 #ifdef HAVE_LIBREADLINE
             s_completion_handle = h;
 #endif
+            if (persist_statement) {
+                session_statements.push_back(to_run);
+                session_script = build_session_script(session_statements);
+#ifdef HAVE_LIBREADLINE
+                const std::vector<std::string> declared_symbols = extract_declared_symbols(to_run);
+                for (const auto& declared_symbol : declared_symbols) {
+                    s_session_symbols.insert(declared_symbol);
+                }
+#endif
+            }
         }
     }
 
