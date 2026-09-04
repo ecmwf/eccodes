@@ -2,6 +2,7 @@ alias mars.anoffset=anoffset;
 
 if (edition == 2) {
  if (defined(grib2LocalSectionNumber) && grib2LocalSectionNumber == 44){
+  unalias mars.anoffset;
   alias mars.anoffset=offsetToStartOfForecastFillupInHours;
   meta dateOfForecast validity_date(dataDate,dataTime,anoffset,one) : read_only;
   meta timeOfForecast validity_time(dataDate,dataTime,anoffset,one) : read_only;
