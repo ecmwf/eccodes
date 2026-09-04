@@ -1,0 +1,52 @@
+#!/bin/bash
+
+#SBATCH --qos=nf
+#SBATCH --gres=ssdtmp:20G
+#SBATCH --time=01:30:00
+#SBATCH --nodes=1
+#SBATCH --ntasks=8
+
+{% for m in modules %}
+module {{ m }}
+{% endfor %}
+
+echo "Using: $(command -v {{ cc }}) ($($(command -v {{ cc }}) --version | head -1))"
+echo "Using: $(command -v {{ fc }}) ($($(command -v {{ fc }}) --version | head -1))"
+
+cmake -S "$CI_SOURCE_DIR" -B "${TMPDIR:-/tmp}/build" \
+  -GNinja \
+  -DCMAKE_BUILD_TYPE={{ build_type }} \
+  -DCMAKE_C_COMPILER="$(command -v {{ cc }})" \
+  -DCMAKE_CXX_COMPILER="$(command -v {{ cxx }})" \
+  -DCMAKE_Fortran_COMPILER="$(command -v {{ fc }})" \
+  -DENABLE_EXTRA_TESTS=1 \
+  -DENABLE_ECCODES_OMP_THREADS=1 \
+{% if options == "eckit-geo" %}
+  -DENABLE_GEOGRAPHY=1 \
+  -DENABLE_ECKIT_GEO=1 \
+{% endif %}
+  -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON \
+  -DCMAKE_PREFIX_PATH="$CMAKE_PREFIX_PATH" \
+  -DCMAKE_INSTALL_PREFIX="$CI_INSTALL_PREFIX"
+cmake --build "${TMPDIR:-/tmp}/build" --parallel "${SLURM_NTASKS:-8}"
+# The C++ tests resolve definitions through the prefix compiled into the library;
+# the .sh ones source include.ctest.sh, which points them at the build tree. This
+# recipe never populates that prefix -- it stages the install under DESTDIR on
+# node-local disk (below) -- so point the C++ tests at the build tree too, exactly
+# as include.ctest.sh does. Without this, eccodes_t_grib_{from,to}_gridspec abort
+# on "Unable to find boot.def".
+export ECCODES_DEFINITION_PATH="${TMPDIR:-/tmp}/build/share/eccodes/definitions"
+export ECCODES_SAMPLES_PATH="${TMPDIR:-/tmp}/build/share/eccodes/samples"
+ctest --test-dir "${TMPDIR:-/tmp}/build" --output-on-failure -j "${SLURM_NTASKS:-8}"
+
+# Install to node-local SSD, then copy the tree across in one pass. eccodes
+# installs ~24k small definition files; doing that as individual `cmake
+# --install` operations straight onto shared scratch is metadata-bound and has
+# taken anywhere from 7 to >35 minutes depending on filesystem load.
+stage="${TMPDIR:-/tmp}/stage"
+DESTDIR="$stage" cmake --install "${TMPDIR:-/tmp}/build"
+# The fetcher takes the artifact from CI_INSTALL_ARCHIVE, not from the install
+# tree; .part + mv so it only ever appears complete.
+mkdir -p "$(dirname "$CI_INSTALL_ARCHIVE")"
+tar -cf - -C "$stage$CI_INSTALL_PREFIX" . | zstd -T0 -q -o "$CI_INSTALL_ARCHIVE.part"
+mv "$CI_INSTALL_ARCHIVE.part" "$CI_INSTALL_ARCHIVE"
