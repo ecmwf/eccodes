@@ -6,6 +6,9 @@ add_subdirectory(tigge)
 add_subdirectory(bufr)
 add_subdirectory(metar)
 add_subdirectory(gts)
+add_subdirectory(lcgcr)
+add_subdirectory(gridspec)
+
 
 
 # Download all the binary GRIB data from website
