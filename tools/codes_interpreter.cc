@@ -12,6 +12,8 @@
 
 #include <algorithm>
 #include <cctype>
+#include <cerrno>
+#include <climits>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -130,7 +132,8 @@ static char* completion_generator(const char* text, int state)
 
         static const char* kWords[] = {
             "print", "set", "meta", "transient", "if", "else", "while", "switch",
-            "assert", "write", "remove", "rename", "concept", "alias", "quit", "exit"
+            "assert", "write", "remove", "rename", "concept", "alias", "quit", "exit",
+            "help", "info", "next", "prev", "goto", ":help", ":info", ":next", ":prev", ":goto"
         };
 
         std::set<std::string> all_candidates;
@@ -328,6 +331,96 @@ static bool should_persist_statement(const std::string& statement)
     return true;
 }
 
+static bool parse_positive_long(const std::string& text, long* value)
+{
+    if (!value) {
+        return false;
+    }
+    if (text.empty()) {
+        return false;
+    }
+
+    char* end = NULL;
+    errno = 0;
+    long v = strtol(text.c_str(), &end, 10);
+    if (errno != 0 || end == text.c_str() || *end != '\0' || v <= 0) {
+        return false;
+    }
+    *value = v;
+    return true;
+}
+
+static std::vector<off_t> collect_message_offsets(const char* filename, int* err)
+{
+    std::vector<off_t> offsets;
+    if (err) {
+        *err = GRIB_SUCCESS;
+    }
+
+    FILE* input = fopen(filename, "rb");
+    if (!input) {
+        if (err) {
+            *err = GRIB_IO_PROBLEM;
+        }
+        return offsets;
+    }
+
+    while (true) {
+        const off_t pos = ftello(input);
+        int local_err = 0;
+        grib_handle* h = grib_handle_new_from_file(grib_context_get_default(), input, &local_err);
+        if (!h) {
+            if (local_err != GRIB_SUCCESS && local_err != GRIB_END_OF_FILE) {
+                if (err) {
+                    *err = local_err;
+                }
+            }
+            break;
+        }
+        offsets.push_back(pos);
+        grib_handle_delete(h);
+    }
+
+    fclose(input);
+    return offsets;
+}
+
+static grib_handle* load_message_from_offset(const char* filename, off_t offset, int* err)
+{
+    if (err) {
+        *err = GRIB_SUCCESS;
+    }
+
+    FILE* input = fopen(filename, "rb");
+    if (!input) {
+        if (err) {
+            *err = GRIB_IO_PROBLEM;
+        }
+        return NULL;
+    }
+
+    if (fseeko(input, offset, SEEK_SET) != 0) {
+        fclose(input);
+        if (err) {
+            *err = GRIB_IO_PROBLEM;
+        }
+        return NULL;
+    }
+
+    int local_err = 0;
+    grib_handle* h = grib_handle_new_from_file(grib_context_get_default(), input, &local_err);
+    fclose(input);
+
+    if (!h) {
+        if (err) {
+            *err = local_err;
+        }
+        return NULL;
+    }
+
+    return h;
+}
+
 static int apply_script(grib_handle* h, const std::string& script)
 {
     if (script.empty()) {
@@ -367,7 +460,8 @@ static int apply_script(grib_handle* h, const std::string& script)
     return err;
 }
 
-static grib_handle* replay_session(const grib_handle* base_handle, const std::string& session_script, const std::string& statement, int* err)
+static grib_handle* replay_session(const grib_handle* base_handle, long current_message, long total_messages,
+                                   const std::string& session_script, const std::string& statement, int* err)
 {
     grib_handle* trial_handle = grib_handle_clone(base_handle);
     if (!trial_handle) {
@@ -375,6 +469,10 @@ static grib_handle* replay_session(const grib_handle* base_handle, const std::st
             *err = GRIB_OUT_OF_MEMORY;
         return NULL;
     }
+
+    // grib_handle_clone resets context counters internally; restore stream counters
+    grib_context_set_handle_file_count(trial_handle->context, static_cast<int>(current_message));
+    grib_context_set_handle_total_count(trial_handle->context, static_cast<int>(total_messages));
 
     std::string combined_script = session_script;
     if (!statement.empty()) {
@@ -399,21 +497,31 @@ static grib_handle* replay_session(const grib_handle* base_handle, const std::st
 
 static void print_usage(const char* program)
 {
-    fprintf(stderr, "Usage: %s [--non-fail|-n] [--help|-h] <message_file>\n", program);
+    fprintf(stderr, "Usage: %s [--non-fail|-n] [--message|-m N] [--help|-h] <message_file>\n", program);
     fprintf(stderr, "Open one GRIB/BUFR/GTS message and evaluate ecCodes filter statements from standard input.\n");
     fprintf(stderr, "  --non-fail, -n  Keep the interpreter open after a statement fails\n");
+    fprintf(stderr, "  --message, -m N Open message number N (1-based) from file\n");
     fprintf(stderr, "  --help, -h      Show this help message\n");
 }
 
 int main(int argc, char* argv[])
 {
     bool non_fail = false;
+    long selected_message = 1;
     int file_arg = -1;
 
     for (int i = 1; i < argc; ++i) {
         std::string arg = argv[i];
         if (arg == "--non-fail" || arg == "-n") {
             non_fail = true;
+            continue;
+        }
+        if (arg == "--message" || arg == "-m") {
+            if (i + 1 >= argc || !parse_positive_long(argv[i + 1], &selected_message)) {
+                print_usage(argv[0]);
+                return 2;
+            }
+            ++i;
             continue;
         }
         if (arg == "--help" || arg == "-h") {
@@ -444,19 +552,25 @@ int main(int argc, char* argv[])
         }
     }
 #endif
-
-    FILE* input = fopen(argv[file_arg], "rb");
-    if (!input) {
-        fprintf(stderr, "codes_interpreter: cannot open message file '%s'\n", argv[file_arg]);
+    int err = 0;
+    std::vector<off_t> message_offsets = collect_message_offsets(argv[file_arg], &err);
+    if (message_offsets.empty()) {
+        fprintf(stderr, "codes_interpreter: cannot decode any message from '%s'", argv[file_arg]);
+        if (err != GRIB_SUCCESS) {
+            fprintf(stderr, ": %s", grib_get_error_message(err));
+        }
+        fprintf(stderr, "\n");
+        return 1;
+    }
+    if (selected_message > static_cast<long>(message_offsets.size())) {
+        fprintf(stderr, "codes_interpreter: message index %ld out of range (1..%zu)\n", selected_message, message_offsets.size());
         return 1;
     }
 
-    int err = 0;
-    grib_handle* h = grib_handle_new_from_file(grib_context_get_default(), input, &err);
-    fclose(input);
-
+    long current_message = selected_message;
+    grib_handle* h = load_message_from_offset(argv[file_arg], message_offsets[current_message - 1], &err);
     if (!h) {
-        fprintf(stderr, "codes_interpreter: cannot decode message '%s': %s\n", argv[file_arg], grib_get_error_message(err));
+        fprintf(stderr, "codes_interpreter: cannot decode message %ld from '%s': %s\n", current_message, argv[file_arg], grib_get_error_message(err));
         return 1;
     }
 
@@ -467,6 +581,11 @@ int main(int argc, char* argv[])
         return GRIB_OUT_OF_MEMORY;
     }
 
+    grib_context_set_handle_file_count(h->context, static_cast<int>(current_message));
+    grib_context_set_handle_total_count(h->context, static_cast<int>(message_offsets.size()));
+    grib_context_set_handle_file_count(base_handle->context, static_cast<int>(current_message));
+    grib_context_set_handle_total_count(base_handle->context, static_cast<int>(message_offsets.size()));
+
     std::string script;
     std::string session_script;
     char line[4096];
@@ -474,7 +593,9 @@ int main(int argc, char* argv[])
     printf("\n=== codes_interpreter started ===\n");
     printf("ecCodes version %d.%d.%d\n\n", ECCODES_MAJOR_VERSION, ECCODES_MINOR_VERSION, ECCODES_REVISION_VERSION);
     printf("Message: %s\n", argv[file_arg]);
+    printf("Selected message: %ld/%zu\n", current_message, message_offsets.size());
     printf("Type a filter expression and end with ';' or type 'quit' to exit.\n");
+    printf("Navigation: :next, :prev, :goto N, :info, :help\n");
 
 #ifdef HAVE_LIBREADLINE
     using_history();
@@ -505,12 +626,86 @@ int main(int argc, char* argv[])
             break;
         }
 
-        if (command.empty()) {
+        bool handled_navigation = false;
+        auto clear_session_state = [&]() {
+            script.clear();
+            session_script.clear();
 #ifdef HAVE_LIBREADLINE
-            continue;
-#else
-            continue;
+            s_session_symbols.clear();
 #endif
+        };
+
+        auto try_navigation = [&](long next_message) -> bool {
+            if (next_message < 1 || next_message > static_cast<long>(message_offsets.size())) {
+                fprintf(stderr, "codes_interpreter: message index %ld out of range (1..%zu)\n", next_message, message_offsets.size());
+                return true;
+            }
+
+            grib_handle* loaded = load_message_from_offset(argv[file_arg], message_offsets[next_message - 1], &err);
+            if (!loaded) {
+                fprintf(stderr, "codes_interpreter: cannot decode message %ld from '%s': %s\n", next_message, argv[file_arg], grib_get_error_message(err));
+                return true;
+            }
+
+            grib_handle* loaded_base = grib_handle_clone(loaded);
+            if (!loaded_base) {
+                fprintf(stderr, "codes_interpreter: cannot clone message %ld\n", next_message);
+                grib_handle_delete(loaded);
+                return true;
+            }
+
+            grib_handle_delete(h);
+            grib_handle_delete(base_handle);
+            h = loaded;
+            base_handle = loaded_base;
+            current_message = next_message;
+            grib_context_set_handle_file_count(h->context, static_cast<int>(current_message));
+            grib_context_set_handle_total_count(h->context, static_cast<int>(message_offsets.size()));
+            grib_context_set_handle_file_count(base_handle->context, static_cast<int>(current_message));
+            grib_context_set_handle_total_count(base_handle->context, static_cast<int>(message_offsets.size()));
+            clear_session_state();
+#ifdef HAVE_LIBREADLINE
+            s_completion_handle = h;
+#endif
+            printf("Switched to message %ld/%zu\n", current_message, message_offsets.size());
+            return true;
+        };
+
+        if (script.empty()) {
+            if (command == ":help" || command == "help") {
+                printf("Commands: quit, exit, :next, :prev, :goto N, :info, :help\n");
+                printf("Switching message resets session state (meta/transient/set history).\n");
+                handled_navigation = true;
+            }
+            else if (command == ":info" || command == "info") {
+                printf("Message %ld/%zu from %s\n", current_message, message_offsets.size(), argv[file_arg]);
+                handled_navigation = true;
+            }
+            else if (command == ":next" || command == "next") {
+                handled_navigation = try_navigation(current_message + 1);
+            }
+            else if (command == ":prev" || command == "prev") {
+                handled_navigation = try_navigation(current_message - 1);
+            }
+            else if (starts_with(command, ":goto ") || starts_with(command, "goto ")) {
+                std::string num = trim(command.substr(command[0] == ':' ? 6 : 5));
+                long requested = 0;
+                if (!parse_positive_long(num, &requested)) {
+                    fprintf(stderr, "codes_interpreter: invalid message index '%s'\n", num.c_str());
+                    handled_navigation = true;
+                }
+                else {
+                    handled_navigation = try_navigation(requested);
+                }
+            }
+        }
+
+        if (handled_navigation) {
+            continue;
+        }
+
+        if (command.empty()) {
+            continue;
         }
 
         script += text;
@@ -518,7 +713,8 @@ int main(int argc, char* argv[])
         if (is_complete_statement(script)) {
             std::string to_run = trim(script);
             if (!to_run.empty()) {
-                grib_handle* next_handle = replay_session(base_handle, session_script, to_run, &err);
+                grib_handle* next_handle = replay_session(base_handle, current_message, static_cast<long>(message_offsets.size()),
+                                                          session_script, to_run, &err);
                 if (!next_handle) {
                     fprintf(stderr, "codes_interpreter: %s\n", grib_get_error_message(err));
                     if (non_fail) {
@@ -531,6 +727,8 @@ int main(int argc, char* argv[])
                 }
                 grib_handle_delete(h);
                 h = next_handle;
+                grib_context_set_handle_file_count(h->context, static_cast<int>(current_message));
+                grib_context_set_handle_total_count(h->context, static_cast<int>(message_offsets.size()));
 #ifdef HAVE_LIBREADLINE
                 s_completion_handle = h;
 #endif
@@ -555,7 +753,8 @@ int main(int argc, char* argv[])
     if (!script.empty()) {
         std::string to_run = trim(script);
         if (!to_run.empty()) {
-            grib_handle* next_handle = replay_session(base_handle, session_script, to_run, &err);
+            grib_handle* next_handle = replay_session(base_handle, current_message, static_cast<long>(message_offsets.size()),
+                                                      session_script, to_run, &err);
             if (!next_handle) {
                 fprintf(stderr, "codes_interpreter: %s\n", grib_get_error_message(err));
                 if (non_fail) {
@@ -570,6 +769,8 @@ int main(int argc, char* argv[])
             }
             grib_handle_delete(h);
             h = next_handle;
+            grib_context_set_handle_file_count(h->context, static_cast<int>(current_message));
+            grib_context_set_handle_total_count(h->context, static_cast<int>(message_offsets.size()));
 #ifdef HAVE_LIBREADLINE
             s_completion_handle = h;
 #endif
