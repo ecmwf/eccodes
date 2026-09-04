@@ -26,7 +26,7 @@ when = { options = ["eckit-geo"] }
 
 [[matrix.build.include]]
 cxx-compiler = "clang++-18"
-build-type = "Release"
+build-type = "RelWithDebInfo"
 fortran-compiler = "gfortran-13"
 runs-on = "arc-runner-very-large"
 container = "eccr.ecmwf.int/public-ci-images/ubuntu24.04-clang18-gfortran13:latest"
@@ -34,7 +34,7 @@ platform = "ubuntu-24.04"
 
 [[matrix.build.include]]
 cxx-compiler = "g++-13"
-build-type = "Release"
+build-type = "RelWithDebInfo"
 fortran-compiler = "gfortran-13"
 runs-on = "arc-runner-very-large"
 container = "eccr.ecmwf.int/public-ci-images/ubuntu24.04-clang18-gfortran13:latest"
@@ -42,7 +42,7 @@ platform = "ubuntu-24.04"
 
 [[matrix.build.include]]
 cxx-compiler = "g++-13"
-build-type = "Release"
+build-type = "RelWithDebInfo"
 fortran-compiler = "gfortran-13"
 options = "eckit-geo"
 runs-on = "arc-runner-very-large"
@@ -67,7 +67,7 @@ ctest-args = '-j "$(nproc)"'
 [[matrix.build-hpc.include]]
 cxx-compiler = "g++-8"
 fortran-compiler = "gfortran-8"
-build-type = "Release"
+build-type = "RelWithDebInfo"
 options = ""
 runs-on = "hpc-submit"
 container = "eccr.ecmwf.int/private-ci-images/ubuntu24.04-internal-tools:latest"
@@ -84,7 +84,7 @@ fc = "gfortran"
 [[matrix.build-hpc.include]]
 cxx-compiler = "g++-8"
 fortran-compiler = "gfortran-8"
-build-type = "Release"
+build-type = "RelWithDebInfo"
 options = "eckit-geo"
 runs-on = "hpc-submit"
 container = "eccr.ecmwf.int/private-ci-images/ubuntu24.04-internal-tools:latest"
