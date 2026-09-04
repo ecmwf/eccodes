@@ -435,6 +435,7 @@ int main(int argc, char* argv[])
 
     const char* env_defs = getenv("ECCODES_DEFINITION_PATH");
     const char* env_legacy_defs = getenv("GRIB_DEFINITION_PATH");
+#ifndef HAVE_MEMFS
     if ((!env_defs || env_defs[0] == '\0') && (!env_legacy_defs || env_legacy_defs[0] == '\0')) {
         std::string defs = find_definitions_path(argv[0]);
         if (!defs.empty()) {
@@ -442,6 +443,7 @@ int main(int argc, char* argv[])
             grib_context_set_definitions_path(grib_context_get_default(), defs.c_str());
         }
     }
+#endif
 
     FILE* input = fopen(argv[file_arg], "rb");
     if (!input) {
