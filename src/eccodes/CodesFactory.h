@@ -33,6 +33,7 @@ public:
     void add(Type const& type, Creator creator);
     void remove(Type const& type);
     Ptr build(Type const& type);
+    std::vector<std::string> types();
 
 private:
     CodesFactory() {}
@@ -95,6 +96,19 @@ typename CodesFactory<T>::Ptr CodesFactory<T>::build(Type const& type)
     else {
         return it->second();
     }
+}
+
+template <class T>
+std::vector<std::string> CodesFactory<T>::types()
+{
+    sync::LockGuard<sync::Mutex> guard(mutex_);
+    std::vector<std::string> values;
+    values.reserve(creators_.size());
+    for (auto const& entry : creators_) {
+        values.push_back(entry.first.c_str());
+    }
+    std::sort(values.begin(), values.end());
+    return values;
 }
 
 

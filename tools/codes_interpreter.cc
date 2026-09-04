@@ -10,9 +10,12 @@
 
 #include "grib_api_internal.h"
 
+#include <algorithm>
+#include <cctype>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <set>
 #include <string>
 #include <unistd.h>
 #include <vector>
@@ -20,6 +23,163 @@
 #ifdef HAVE_LIBREADLINE
 #include <readline/readline.h>
 #include <readline/history.h>
+#include "accessor/Accessor.h"
+
+static grib_handle* s_completion_handle = NULL;
+static std::vector<std::string> s_completion_candidates;
+static size_t s_completion_index = 0;
+static std::set<std::string> s_session_symbols;
+
+static bool starts_with(const std::string& value, const std::string& prefix)
+{
+    return value.size() >= prefix.size() && value.compare(0, prefix.size(), prefix) == 0;
+}
+
+static std::set<std::string> collect_key_names(grib_handle* h)
+{
+    std::set<std::string> keys;
+    if (!h) {
+        return keys;
+    }
+
+    grib_keys_iterator* it = grib_keys_iterator_new(h, GRIB_KEYS_ITERATOR_SKIP_DUPLICATES, NULL);
+    if (!it) {
+        return keys;
+    }
+
+    while (grib_keys_iterator_next(it)) {
+        const char* name = grib_keys_iterator_get_name(it);
+        if (name && *name) {
+            keys.insert(name);
+        }
+    }
+    grib_keys_iterator_delete(it);
+    return keys;
+}
+
+static std::set<std::string> collect_accessor_names()
+{
+    std::set<std::string> names;
+    const std::vector<std::string> registered = eccodes::AccessorFactory::instance().types();
+    names.insert(registered.begin(), registered.end());
+    return names;
+}
+
+static std::set<std::string> collect_functor_names()
+{
+    // Mirrors callable expression functors implemented in expression/Functor.cc
+    static const char* functors[] = {
+        "new", "defined", "changed", "missing", "max", "min", "abs", "size",
+        "element", "debug_mode", "dump_content", "environment_variable", "contains",
+        "is_one_of", "gribex_mode_on"
+    };
+
+    std::set<std::string> names;
+    for (const char* f : functors) {
+        names.insert(f);
+    }
+    return names;
+}
+
+static std::string extract_declared_symbol(const std::string& statement)
+{
+    std::string text = statement;
+    size_t i = 0;
+    while (i < text.size() && (text[i] == ' ' || text[i] == '\t' || text[i] == '\n' || text[i] == '\r')) {
+        ++i;
+    }
+
+    auto parse_name_after = [&](const char* kw) -> std::string {
+        const size_t kw_len = strlen(kw);
+        if (text.compare(i, kw_len, kw) != 0) {
+            return "";
+        }
+        size_t j = i + kw_len;
+        if (j < text.size() && !(text[j] == ' ' || text[j] == '\t')) {
+            return "";
+        }
+        while (j < text.size() && (text[j] == ' ' || text[j] == '\t')) {
+            ++j;
+        }
+        const size_t start = j;
+        while (j < text.size() && (std::isalnum(static_cast<unsigned char>(text[j])) || text[j] == '_')) {
+            ++j;
+        }
+        if (j == start) {
+            return "";
+        }
+        return text.substr(start, j - start);
+    };
+
+    std::string name = parse_name_after("meta");
+    if (!name.empty()) {
+        return name;
+    }
+    return parse_name_after("transient");
+}
+
+static char* completion_generator(const char* text, int state)
+{
+    if (state == 0) {
+        s_completion_candidates.clear();
+        s_completion_index = 0;
+
+        const std::string prefix = text ? text : "";
+        const bool bracketed_key = !prefix.empty() && prefix[0] == '[';
+        const std::string key_prefix = bracketed_key ? prefix.substr(1) : prefix;
+
+        static const char* kWords[] = {
+            "print", "set", "meta", "transient", "if", "else", "while", "switch",
+            "assert", "write", "remove", "rename", "concept", "alias", "quit", "exit"
+        };
+
+        std::set<std::string> all_candidates;
+        if (!bracketed_key) {
+            for (const char* word : kWords) {
+                all_candidates.insert(word);
+            }
+
+            const std::set<std::string> accessors = collect_accessor_names();
+            all_candidates.insert(accessors.begin(), accessors.end());
+
+            const std::set<std::string> functors = collect_functor_names();
+            all_candidates.insert(functors.begin(), functors.end());
+        }
+
+        const std::set<std::string> keys = collect_key_names(s_completion_handle);
+        for (const auto& key : keys) {
+            if (starts_with(key, key_prefix)) {
+                all_candidates.insert(bracketed_key ? ("[" + key + "]") : key);
+            }
+        }
+
+        for (const auto& symbol : s_session_symbols) {
+            if (starts_with(symbol, key_prefix)) {
+                all_candidates.insert(bracketed_key ? ("[" + symbol + "]") : symbol);
+            }
+        }
+
+        for (const auto& candidate : all_candidates) {
+            if (starts_with(candidate, prefix)) {
+                s_completion_candidates.push_back(candidate);
+            }
+        }
+    }
+
+    if (s_completion_index >= s_completion_candidates.size()) {
+        return NULL;
+    }
+
+    return strdup(s_completion_candidates[s_completion_index++].c_str());
+}
+
+static char** codes_interpreter_completion(const char* text, int start, int end)
+{
+    (void)start;
+    (void)end;
+    rl_attempted_completion_over = 0;
+    return rl_completion_matches(text, completion_generator);
+}
 #endif
 
 static std::string find_definitions_path(const char* argv0)
@@ -316,7 +476,8 @@ int main(int argc, char* argv[])
 
 #ifdef HAVE_LIBREADLINE
     using_history();
-    rl_bind_key('\t', rl_insert);
+    rl_attempted_completion_function = codes_interpreter_completion;
+    s_completion_handle = h;
 #endif
 
     while (true) {
@@ -368,7 +529,14 @@ int main(int argc, char* argv[])
                 }
                 grib_handle_delete(h);
                 h = next_handle;
+#ifdef HAVE_LIBREADLINE
+                s_completion_handle = h;
+#endif
                 if (should_persist_statement(to_run)) {
+                    const std::string declared_symbol = extract_declared_symbol(to_run);
+                    if (!declared_symbol.empty()) {
+                        s_session_symbols.insert(declared_symbol);
+                    }
                     session_script += to_run;
                     session_script += "\n";
                 }
@@ -400,6 +568,9 @@ int main(int argc, char* argv[])
             }
             grib_handle_delete(h);
             h = next_handle;
+#ifdef HAVE_LIBREADLINE
+            s_completion_handle = h;
+#endif
         }
     }
 
