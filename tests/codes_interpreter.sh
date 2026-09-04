@@ -33,6 +33,10 @@ result=$(printf ':accessors count_\nquit\n' | ${tools_dir}/codes_interpreter "$E
 printf '%s\n' "$result" | grep -q '^Accessors matching /count_/'
 printf '%s\n' "$result" | grep -q '^  count_file$'
 
+result=$(printf ':accessors --ignore-case ^COUNT_\nquit\n' | ${tools_dir}/codes_interpreter "$ECCODES_SAMPLES_PATH/GRIB2.tmpl" 2>&1)
+printf '%s\n' "$result" | grep -q '^Accessors matching /\^COUNT_/'
+printf '%s\n' "$result" | grep -q '^  count_file$'
+
 result=$(printf ':changes\nquit\n' | ${tools_dir}/codes_interpreter "$ECCODES_SAMPLES_PATH/GRIB2.tmpl" 2>&1)
 printf '%s\n' "$result" | grep -q 'not activated - use --log-key-changes'
 
@@ -47,6 +51,10 @@ result=$(printf ':list --values ^editionNumber$\nquit\n' | ${tools_dir}/codes_in
 printf '%s\n' "$result" | grep -q '^Keys with values matching /\^editionNumber\$/'
 printf '%s\n' "$result" | grep -q '^  editionNumber = L:2$'
 
+result=$(printf ':list --values -i ^EDITIONNUMBER$\nquit\n' | ${tools_dir}/codes_interpreter "$ECCODES_SAMPLES_PATH/GRIB2.tmpl" 2>&1)
+printf '%s\n' "$result" | grep -q '^Keys with values matching /\^EDITIONNUMBER\$/'
+printf '%s\n' "$result" | grep -q '^  editionNumber = L:2$'
+
 result=$(printf 'transient toffset = 18;\n:changes\nquit\n' | ${tools_dir}/codes_interpreter --log-key-changes "$ECCODES_SAMPLES_PATH/GRIB2.tmpl" 2>&1)
 printf '%s\n' "$result" | grep -q '^Changed keys ('
 printf '%s\n' "$result" | grep -q '^  toffset: '
@@ -55,11 +63,19 @@ result=$(printf 'transient toffset = 18;\n:changes ^toff\nquit\n' | ${tools_dir}
 printf '%s\n' "$result" | grep -q '^Changed keys matching /\^toff/'
 printf '%s\n' "$result" | grep -q '^  toffset: '
 
+result=$(printf 'transient toffset = 18;\n:changes -i ^TOFF\nquit\n' | ${tools_dir}/codes_interpreter --log-key-changes "$ECCODES_SAMPLES_PATH/GRIB2.tmpl" 2>&1)
+printf '%s\n' "$result" | grep -q '^Changed keys matching /\^TOFF/'
+printf '%s\n' "$result" | grep -q '^  toffset: '
+
 result=$(printf 'set forecastTime = 36;\n:changes --touched\nquit\n' | ${tools_dir}/codes_interpreter --log-key-changes "$ECCODES_SAMPLES_PATH/GRIB2.tmpl" 2>&1)
 printf '%s\n' "$result" | grep -q '^Touched but unchanged keys ('
 
 result=$(printf 'transient toffset = 18;\n:diff ^toffset$\nquit\n' | ${tools_dir}/codes_interpreter --log-key-changes "$ECCODES_SAMPLES_PATH/GRIB2.tmpl" 2>&1)
 printf '%s\n' "$result" | grep -q '^Changed keys matching /\^toffset\$/'
+printf '%s\n' "$result" | grep -q '^  toffset: '
+
+result=$(printf 'transient toffset = 18;\n:diff --ignore-case ^TOFFSET$\nquit\n' | ${tools_dir}/codes_interpreter --log-key-changes "$ECCODES_SAMPLES_PATH/GRIB2.tmpl" 2>&1)
+printf '%s\n' "$result" | grep -q '^Changed keys matching /\^TOFFSET\$/'
 printf '%s\n' "$result" | grep -q '^  toffset: '
 
 rm -f "$tempFilter"

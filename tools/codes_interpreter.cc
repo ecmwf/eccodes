@@ -49,7 +49,7 @@ static std::set<std::string> collect_accessor_names()
     return names;
 }
 
-static void print_accessors(const std::string& pattern = std::string())
+static void print_accessors(const std::string& pattern = std::string(), bool ignore_case = false)
 {
     const std::set<std::string> accessors = collect_accessor_names();
     if (pattern.empty()) {
@@ -62,7 +62,7 @@ static void print_accessors(const std::string& pattern = std::string())
 
     std::regex re;
     try {
-        re = std::regex(pattern);
+        re = ignore_case ? std::regex(pattern, std::regex_constants::icase) : std::regex(pattern);
     }
     catch (const std::regex_error& e) {
         fprintf(stderr, "codes_interpreter: invalid regex '%s' (%s)\n", pattern.c_str(), e.what());
@@ -178,7 +178,7 @@ static char* completion_generator(const char* text, int state)
         static const char* kWords[] = {
             "print", "set", "meta", "transient", "if", "else", "while", "switch",
             "assert", "write", "remove", "rename", "concept", "alias", "quit", "exit",
-            "help", "info", "changes", "list", "next", "prev", "goto", "save", "load", "undo", "diff", "--values",
+            "help", "info", "changes", "list", "next", "prev", "goto", "save", "load", "undo", "diff", "--values", "--ignore-case", "-i",
             ":help", ":info", ":changes", ":list", ":next", ":prev", ":goto", ":save", ":load", ":undo", ":diff"
         };
 
@@ -358,6 +358,62 @@ static bool starts_with_keyword(const std::string& text, const char* keyword)
 
     const char next = text[keyword_len];
     return next == ' ' || next == '\t' || next == '(' || next == '{' || next == '"';
+}
+
+static void parse_command_flags(const std::string& args, bool* ignore_case, bool* touched, bool* values, std::string* pattern)
+{
+    if (ignore_case) {
+        *ignore_case = false;
+    }
+    if (touched) {
+        *touched = false;
+    }
+    if (values) {
+        *values = false;
+    }
+    if (pattern) {
+        pattern->clear();
+    }
+
+    size_t pos = 0;
+    while (pos < args.size() && (args[pos] == ' ' || args[pos] == '\t')) {
+        ++pos;
+    }
+
+    while (pos < args.size()) {
+        size_t end = pos;
+        while (end < args.size() && args[end] != ' ' && args[end] != '\t') {
+            ++end;
+        }
+
+        const std::string token = args.substr(pos, end - pos);
+        bool consumed = false;
+
+        if (ignore_case && (token == "--ignore-case" || token == "-i")) {
+            *ignore_case = true;
+            consumed = true;
+        }
+        else if (touched && token == "--touched") {
+            *touched = true;
+            consumed = true;
+        }
+        else if (values && token == "--values") {
+            *values = true;
+            consumed = true;
+        }
+
+        if (!consumed) {
+            if (pattern) {
+                *pattern = trim(args.substr(pos));
+            }
+            return;
+        }
+
+        pos = end;
+        while (pos < args.size() && (args[pos] == ' ' || args[pos] == '\t')) {
+            ++pos;
+        }
+    }
 }
 
 static bool should_persist_statement(const std::string& statement)
@@ -557,10 +613,10 @@ static void write_changed_keys(std::ofstream& out, const std::vector<KeyChange>&
     }
 }
 
-static bool compile_regex_or_report(const std::string& pattern, std::regex& re)
+static bool compile_regex_or_report(const std::string& pattern, std::regex& re, bool ignore_case = false)
 {
     try {
-        re = std::regex(pattern);
+        re = ignore_case ? std::regex(pattern, std::regex_constants::icase) : std::regex(pattern);
     }
     catch (const std::regex_error& e) {
         fprintf(stderr, "codes_interpreter: invalid regex '%s' (%s)\n", pattern.c_str(), e.what());
@@ -569,7 +625,7 @@ static bool compile_regex_or_report(const std::string& pattern, std::regex& re)
     return true;
 }
 
-static void print_changed_keys_filtered(const std::vector<KeyChange>& keys, const std::string& pattern)
+static void print_changed_keys_filtered(const std::vector<KeyChange>& keys, const std::string& pattern, bool ignore_case = false)
 {
     if (pattern.empty()) {
         print_changed_keys(keys);
@@ -577,7 +633,7 @@ static void print_changed_keys_filtered(const std::vector<KeyChange>& keys, cons
     }
 
     std::regex re;
-    if (!compile_regex_or_report(pattern, re)) {
+    if (!compile_regex_or_report(pattern, re, ignore_case)) {
         return;
     }
 
@@ -602,7 +658,7 @@ static void print_touched_keys(const std::vector<KeyChange>& keys)
     }
 }
 
-static void print_touched_keys_filtered(const std::vector<KeyChange>& keys, const std::string& pattern)
+static void print_touched_keys_filtered(const std::vector<KeyChange>& keys, const std::string& pattern, bool ignore_case = false)
 {
     if (pattern.empty()) {
         print_touched_keys(keys);
@@ -610,7 +666,7 @@ static void print_touched_keys_filtered(const std::vector<KeyChange>& keys, cons
     }
 
     std::regex re;
-    if (!compile_regex_or_report(pattern, re)) {
+    if (!compile_regex_or_report(pattern, re, ignore_case)) {
         return;
     }
 
@@ -646,7 +702,7 @@ static std::string describe_key_value_for_list(grib_handle* h, const std::string
     return std::string("<undef>");
 }
 
-static void print_keys(grib_handle* h, const std::string& pattern = std::string(), bool with_values = false)
+static void print_keys(grib_handle* h, const std::string& pattern = std::string(), bool with_values = false, bool ignore_case = false)
 {
     const std::set<std::string> keys = collect_key_names(h);
     if (pattern.empty()) {
@@ -669,7 +725,7 @@ static void print_keys(grib_handle* h, const std::string& pattern = std::string(
     }
 
     std::regex re;
-    if (!compile_regex_or_report(pattern, re)) {
+    if (!compile_regex_or_report(pattern, re, ignore_case)) {
         return;
     }
 
@@ -1147,7 +1203,7 @@ int main(int argc, char* argv[])
 
         if (script.empty()) {
             if (command == ":help" || command == "help") {
-                printf("Commands: quit, exit, :next, :prev, :goto N, :info, :list [regex], :list --values [regex], :accessors [regex], :changes [regex], :changes --touched [regex], :diff [regex], :save FILE, :load FILE, :undo, :help\n");
+                printf("Commands: quit, exit, :next, :prev, :goto N, :info, :list [--values] [--ignore-case|-i] [regex], :accessors [--ignore-case|-i] [regex], :changes [--touched] [--ignore-case|-i] [regex], :diff [--ignore-case|-i] [regex], :save FILE, :load FILE, :undo, :help\n");
                 printf("Switching message resets session state (meta/transient/set history).\n");
                 handled_navigation = true;
             }
@@ -1155,73 +1211,48 @@ int main(int argc, char* argv[])
                 printf("Message %ld/%zu from %s\n", current_message, message_offsets.size(), argv[file_arg]);
                 handled_navigation = true;
             }
-            else if (command == ":changes" || command == "changes") {
+            else if (command == ":changes" || command == "changes" || starts_with(command, ":changes ") || starts_with(command, "changes ")) {
                 if (!log_key_changes) {
                     printf("not activated - use --log-key-changes\n");
                 }
                 else {
-                    print_changed_keys(last_changed_keys);
-                }
-                handled_navigation = true;
-            }
-            else if (command == ":changes --touched" || command == "changes --touched") {
-                if (!log_key_changes) {
-                    printf("not activated - use --log-key-changes\n");
-                }
-                else {
-                    print_touched_keys(last_touched_unchanged_keys);
-                }
-                handled_navigation = true;
-            }
-            else if (starts_with(command, ":changes ") || starts_with(command, "changes ")) {
-                const size_t offset = (command[0] == ':') ? 9 : 8;
-                const std::string pattern = trim(command.substr(offset));
-                if (!log_key_changes) {
-                    printf("not activated - use --log-key-changes\n");
-                }
-                else {
-                    if (starts_with(pattern, "--touched")) {
-                        const std::string touched_pattern = trim(pattern.substr(strlen("--touched")));
-                        print_touched_keys_filtered(last_touched_unchanged_keys, touched_pattern);
+                    const bool has_args = starts_with(command, ":changes ") || starts_with(command, "changes ");
+                    const size_t offset = command[0] == ':' ? 9 : 8;
+                    const std::string args = has_args ? trim(command.substr(offset)) : std::string();
+                    bool ignore_case = false;
+                    bool touched = false;
+                    std::string pattern;
+                    parse_command_flags(args, &ignore_case, &touched, NULL, &pattern);
+                    if (touched) {
+                        print_touched_keys_filtered(last_touched_unchanged_keys, pattern, ignore_case);
                     }
                     else {
-                        print_changed_keys_filtered(last_changed_keys, pattern);
+                        print_changed_keys_filtered(last_changed_keys, pattern, ignore_case);
                     }
                 }
                 handled_navigation = true;
             }
-            else if (command == ":diff" || command == "diff") {
+            else if (command == ":diff" || command == "diff" || starts_with(command, ":diff ") || starts_with(command, "diff ")) {
+                const bool has_args = starts_with(command, ":diff ") || starts_with(command, "diff ");
+                const size_t offset = command[0] == ':' ? 6 : 5;
+                const std::string args = has_args ? trim(command.substr(offset)) : std::string();
+                bool ignore_case = false;
+                std::string pattern;
+                parse_command_flags(args, &ignore_case, NULL, NULL, &pattern);
                 std::vector<KeyChange> diff = compute_changed_scalar_keys(base_handle, h);
                 diff = merge_declared_symbol_changes(diff, collect_declared_symbols_from_statements(session_statements), base_handle, h);
-                print_changed_keys(diff);
+                print_changed_keys_filtered(diff, pattern, ignore_case);
                 handled_navigation = true;
             }
-            else if (starts_with(command, ":diff ") || starts_with(command, "diff ")) {
-                const size_t offset = (command[0] == ':') ? 6 : 5;
-                const std::string pattern = trim(command.substr(offset));
-                std::vector<KeyChange> diff = compute_changed_scalar_keys(base_handle, h);
-                diff = merge_declared_symbol_changes(diff, collect_declared_symbols_from_statements(session_statements), base_handle, h);
-                print_changed_keys_filtered(diff, pattern);
-                handled_navigation = true;
-            }
-            else if (command == ":list" || command == "list") {
-                print_keys(h);
-                handled_navigation = true;
-            }
-            else if (command == ":list --values" || command == "list --values") {
-                print_keys(h, std::string(), true);
-                handled_navigation = true;
-            }
-            else if (starts_with(command, ":list ") || starts_with(command, "list ")) {
-                const size_t offset = (command[0] == ':') ? 6 : 5;
-                const std::string pattern = trim(command.substr(offset));
-                if (starts_with(pattern, "--values")) {
-                    const std::string values_pattern = trim(pattern.substr(strlen("--values")));
-                    print_keys(h, values_pattern, true);
-                }
-                else {
-                    print_keys(h, pattern);
-                }
+            else if (command == ":list" || command == "list" || starts_with(command, ":list ") || starts_with(command, "list ")) {
+                const bool has_args = starts_with(command, ":list ") || starts_with(command, "list ");
+                const size_t offset = command[0] == ':' ? 6 : 5;
+                const std::string args = has_args ? trim(command.substr(offset)) : std::string();
+                bool ignore_case = false;
+                bool values = false;
+                std::string pattern;
+                parse_command_flags(args, &ignore_case, NULL, &values, &pattern);
+                print_keys(h, pattern, values, ignore_case);
                 handled_navigation = true;
             }
             else if (command == ":accessors" || command == "accessors") {
@@ -1230,12 +1261,15 @@ int main(int argc, char* argv[])
             }
             else if (starts_with(command, ":accessors ") || starts_with(command, "accessors ")) {
                 const size_t offset = (command[0] == ':') ? 11 : 10;
-                const std::string pattern = trim(command.substr(offset));
+                const std::string args = trim(command.substr(offset));
+                bool ignore_case = false;
+                std::string pattern;
+                parse_command_flags(args, &ignore_case, NULL, NULL, &pattern);
                 if (pattern.empty()) {
                     print_accessors();
                 }
                 else {
-                    print_accessors(pattern);
+                    print_accessors(pattern, ignore_case);
                 }
                 handled_navigation = true;
             }
