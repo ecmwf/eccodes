@@ -7,7 +7,10 @@ add_subdirectory(bufr)
 add_subdirectory(metar)
 add_subdirectory(gts)
 add_subdirectory(lcgcr)
-add_subdirectory(gridspec)
+
+if( eccodes_HAVE_ECKIT_GEO AND eccodes_HAVE_GEOGRAPHY )
+    add_subdirectory(gridspec)
+endif()
 
 
 
