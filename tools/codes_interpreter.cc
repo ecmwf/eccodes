@@ -21,6 +21,7 @@
 #include <regex>
 #include <set>
 #include <string>
+#include <type_traits>
 #include <unordered_map>
 #include <unistd.h>
 #include <vector>
@@ -459,6 +460,29 @@ struct KeyChange
     std::string after;
 };
 
+static const size_t kMaxArrayPreviewValues = 32;
+
+template <typename T>
+static std::string join_array_values(const std::vector<T>& values)
+{
+    std::string out = "A:[";
+    for (size_t i = 0; i < values.size(); ++i) {
+        if (i > 0) {
+            out += ",";
+        }
+        char buffer[64] = {0,};
+        if constexpr (std::is_same<T, long>::value) {
+            snprintf(buffer, sizeof(buffer), "%ld", values[i]);
+        }
+        else {
+            snprintf(buffer, sizeof(buffer), "%.17g", values[i]);
+        }
+        out += buffer;
+    }
+    out += "]";
+    return out;
+}
+
 static void silent_log_proc(const grib_context*, int, const char*)
 {
 }
@@ -496,8 +520,44 @@ static bool get_scalar_key_value(grib_handle* h, const std::string& key, std::st
 
     size_t count = 0;
     err = grib_get_size(h, key.c_str(), &count);
-    if (err != GRIB_SUCCESS || count != 1) {
+    if (err != GRIB_SUCCESS || count == 0) {
         return false;
+    }
+
+    if (count > 1) {
+        if (count > kMaxArrayPreviewValues) {
+            char buffer[64] = {0,};
+            snprintf(buffer, sizeof(buffer), "<array:%zu>", count);
+            value.assign(buffer);
+            return true;
+        }
+
+        if (type == GRIB_TYPE_LONG) {
+            std::vector<long> values(count, 0);
+            size_t len = count;
+            if (grib_get_long_array(h, key.c_str(), values.data(), &len) != GRIB_SUCCESS) {
+                return false;
+            }
+            values.resize(len);
+            value = join_array_values(values);
+            return true;
+        }
+
+        if (type == GRIB_TYPE_DOUBLE) {
+            std::vector<double> values(count, 0);
+            size_t len = count;
+            if (grib_get_double_array(h, key.c_str(), values.data(), &len) != GRIB_SUCCESS) {
+                return false;
+            }
+            values.resize(len);
+            value = join_array_values(values);
+            return true;
+        }
+
+        char buffer[64] = {0,};
+        snprintf(buffer, sizeof(buffer), "<array:%zu>", count);
+        value.assign(buffer);
+        return true;
     }
 
     char buffer[128] = {0,};
@@ -540,15 +600,10 @@ static bool get_scalar_key_value(grib_handle* h, const std::string& key, std::st
     return false;
 }
 
-static bool get_scalar_key_value_quiet(grib_handle* h, const std::string& key, std::string& value)
-{
-    ScopedLogSilencer silencer(h ? h->context : NULL);
-    return get_scalar_key_value(h, key, value);
-}
-
 static std::vector<KeyChange> compute_changed_scalar_keys(grib_handle* before, grib_handle* after)
 {
     std::vector<KeyChange> changed;
+    ScopedLogSilencer silencer((after && after->context) ? after->context : (before ? before->context : NULL));
     std::set<std::string> all_keys = collect_key_names(before);
     const std::set<std::string> after_keys = collect_key_names(after);
     all_keys.insert(after_keys.begin(), after_keys.end());
@@ -556,8 +611,8 @@ static std::vector<KeyChange> compute_changed_scalar_keys(grib_handle* before, g
     for (const auto& key : all_keys) {
         std::string before_value;
         std::string after_value;
-        const bool has_before = get_scalar_key_value_quiet(before, key, before_value);
-        const bool has_after = get_scalar_key_value_quiet(after, key, after_value);
+        const bool has_before = get_scalar_key_value(before, key, before_value);
+        const bool has_after = get_scalar_key_value(after, key, after_value);
 
         if (!has_before && !has_after) {
             continue;
@@ -579,6 +634,7 @@ static std::vector<KeyChange> compute_touched_unchanged_scalar_keys(grib_handle*
                                                                     const std::vector<KeyChange>& changed)
 {
     std::vector<KeyChange> touched;
+    ScopedLogSilencer silencer((after && after->context) ? after->context : (before ? before->context : NULL));
     std::set<std::string> changed_names;
     for (const auto& item : changed) {
         changed_names.insert(item.name);
@@ -609,8 +665,8 @@ static std::vector<KeyChange> compute_touched_unchanged_scalar_keys(grib_handle*
 
         std::string before_value;
         std::string after_value;
-        const bool has_before = get_scalar_key_value_quiet(before, key, before_value);
-        const bool has_after  = get_scalar_key_value_quiet(after, key, after_value);
+        const bool has_before = get_scalar_key_value(before, key, before_value);
+        const bool has_after  = get_scalar_key_value(after, key, after_value);
         if (!has_before || !has_after) {
             continue;
         }
@@ -775,7 +831,7 @@ static void print_show_key(grib_handle* h, const std::string& key)
     printf("  type: %s\n", native_type_name(type));
     printf("  value: %s\n", value.c_str());
     printf("  missing: %s\n", missing_str);
-    printf("  flags: computed=%s read_only=%s function=%s\n",
+    printf("  flags: computed/virtual=%s read_only=%s function=%s\n",
            computed ? "yes" : "no",
            read_only ? "yes" : "no",
            function ? "yes" : "no");
@@ -875,6 +931,7 @@ static std::vector<KeyChange> merge_declared_symbol_changes(std::vector<KeyChang
                                                             grib_handle* before,
                                                             grib_handle* after)
 {
+    ScopedLogSilencer silencer((after && after->context) ? after->context : (before ? before->context : NULL));
     std::unordered_map<std::string, size_t> pos;
     for (size_t i = 0; i < base_changes.size(); ++i) {
         pos[base_changes[i].name] = i;
@@ -887,8 +944,8 @@ static std::vector<KeyChange> merge_declared_symbol_changes(std::vector<KeyChang
 
         std::string before_value;
         std::string after_value;
-        const bool has_before = get_scalar_key_value_quiet(before, name, before_value);
-        const bool has_after = get_scalar_key_value_quiet(after, name, after_value);
+        const bool has_before = get_scalar_key_value(before, name, before_value);
+        const bool has_after = get_scalar_key_value(after, name, after_value);
 
         KeyChange e;
         e.name = name;
@@ -1239,6 +1296,7 @@ int main(int argc, char* argv[])
 
     std::string script;
     std::string session_script;
+    bool log_changes_next_statement = false;
     grib_action* session_action = NULL;
     std::vector<std::string> session_statements;
     std::vector<KeyChange> last_changed_keys;
@@ -1250,7 +1308,7 @@ int main(int argc, char* argv[])
     printf("Message: %s\n", argv[file_arg]);
     printf("Selected message: %ld/%zu\n", current_message, message_offsets.size());
     printf("Type a filter expression and end with ';' or type 'quit' to exit.\n");
-    printf("Navigation: :next, :prev, :goto N, :info, :list, :show, :accessors, :changes, :diff, :save, :load, :undo, :help\n");
+    printf("Navigation: :next, :prev, :goto N, :info, :list, :show, :accessors, :changes, :logchanges, :diff, :save, :load, :undo, :help\n");
 
 #ifdef HAVE_LIBREADLINE
     using_history();
@@ -1294,6 +1352,7 @@ int main(int argc, char* argv[])
         auto clear_session_state = [&]() {
             script.clear();
             session_script.clear();
+            log_changes_next_statement = false;
             if (session_action) {
                 delete session_action;
                 session_action = NULL;
@@ -1344,7 +1403,7 @@ int main(int argc, char* argv[])
 
         if (script.empty()) {
             if (command == ":help" || command == "help") {
-                printf("Commands: quit, exit, :next, :prev, :goto N, :info, :list [--values] [--ignore-case|-i] [regex], :show [--ignore-case|-i] <key-or-regex>, :accessors [--ignore-case|-i] [regex], :changes [--touched] [--ignore-case|-i] [regex], :diff [--ignore-case|-i] [regex], :save FILE, :load FILE, :undo, :help\n");
+                printf("Commands: quit, exit, :next, :prev, :goto N, :info, :list [--values] [--ignore-case|-i] [regex], :show [--ignore-case|-i] <key-or-regex>, :accessors [--ignore-case|-i] [regex], :changes [--touched] [--ignore-case|-i] [regex], :logchanges, :diff [--ignore-case|-i] [regex], :save FILE, :load FILE, :undo, :help\n");
                 printf("Switching message resets session state (meta/transient/set history).\n");
                 handled_navigation = true;
             }
@@ -1353,8 +1412,8 @@ int main(int argc, char* argv[])
                 handled_navigation = true;
             }
             else if (command == ":changes" || command == "changes" || starts_with(command, ":changes ") || starts_with(command, "changes ")) {
-                if (!log_key_changes) {
-                    printf("not activated - use --log-key-changes\n");
+                if (!log_key_changes && last_changed_keys.empty() && last_touched_unchanged_keys.empty()) {
+                    printf("No logged changes. Use --log-key-changes or :logchanges before a statement\n");
                 }
                 else {
                     const bool has_args = starts_with(command, ":changes ") || starts_with(command, "changes ");
@@ -1371,6 +1430,11 @@ int main(int argc, char* argv[])
                         print_changed_keys_filtered(last_changed_keys, pattern, ignore_case);
                     }
                 }
+                handled_navigation = true;
+            }
+            else if (command == ":logchanges" || command == "logchanges") {
+                log_changes_next_statement = true;
+                printf("Will log key changes for the next statement\n");
                 handled_navigation = true;
             }
             else if (command == ":diff" || command == "diff" || starts_with(command, ":diff ") || starts_with(command, "diff ")) {
@@ -1596,6 +1660,9 @@ int main(int argc, char* argv[])
             std::string to_run = trim(script);
             if (!to_run.empty()) {
                 const bool persist_statement = should_persist_statement(to_run);
+                const bool one_shot_log = log_changes_next_statement;
+                const bool capture_changes = persist_statement && (log_key_changes || one_shot_log);
+                log_changes_next_statement = false;
                 grib_action* next_action = NULL;
                 grib_handle* next_handle = replay_session(base_handle, current_message, static_cast<long>(message_offsets.size()),
                                                           session_script, to_run, &next_action, &err);
@@ -1611,7 +1678,7 @@ int main(int argc, char* argv[])
                 }
                 std::vector<KeyChange> changed_now;
                 std::vector<KeyChange> touched_now;
-                if (log_key_changes && persist_statement) {
+                if (capture_changes) {
                     changed_now = compute_changed_scalar_keys(h, next_handle);
                     changed_now = merge_declared_symbol_changes(changed_now, extract_declared_symbols(to_run), h, next_handle);
                     touched_now = compute_touched_unchanged_scalar_keys(h, next_handle, changed_now);
@@ -1624,7 +1691,7 @@ int main(int argc, char* argv[])
                 session_action = next_action;
                 grib_context_set_handle_file_count(h->context, static_cast<int>(current_message));
                 grib_context_set_handle_total_count(h->context, static_cast<int>(message_offsets.size()));
-                if (log_key_changes && persist_statement) {
+                if (capture_changes) {
                     last_changed_keys.swap(changed_now);
                     last_touched_unchanged_keys.swap(touched_now);
                 }
@@ -1632,9 +1699,12 @@ int main(int argc, char* argv[])
                     last_changed_keys.clear();
                     last_touched_unchanged_keys.clear();
                 }
-                if (session_log.is_open() && log_key_changes) {
+                if (session_log.is_open() && capture_changes) {
                     write_changed_keys(session_log, last_changed_keys);
                     session_log.flush();
+                }
+                if (one_shot_log && !log_key_changes && capture_changes) {
+                    print_changed_keys(last_changed_keys);
                 }
 #ifdef HAVE_LIBREADLINE
                 s_completion_handle = h;
@@ -1663,6 +1733,9 @@ int main(int argc, char* argv[])
         std::string to_run = trim(script);
         if (!to_run.empty()) {
             const bool persist_statement = should_persist_statement(to_run);
+            const bool one_shot_log = log_changes_next_statement;
+            const bool capture_changes = persist_statement && (log_key_changes || one_shot_log);
+            log_changes_next_statement = false;
             grib_action* next_action = NULL;
             grib_handle* next_handle = replay_session(base_handle, current_message, static_cast<long>(message_offsets.size()),
                                                       session_script, to_run, &next_action, &err);
@@ -1686,7 +1759,7 @@ int main(int argc, char* argv[])
             }
             std::vector<KeyChange> changed_now;
             std::vector<KeyChange> touched_now;
-            if (log_key_changes && persist_statement) {
+            if (capture_changes) {
                 changed_now = compute_changed_scalar_keys(h, next_handle);
                 changed_now = merge_declared_symbol_changes(changed_now, extract_declared_symbols(to_run), h, next_handle);
                 touched_now = compute_touched_unchanged_scalar_keys(h, next_handle, changed_now);
@@ -1699,7 +1772,7 @@ int main(int argc, char* argv[])
             session_action = next_action;
             grib_context_set_handle_file_count(h->context, static_cast<int>(current_message));
             grib_context_set_handle_total_count(h->context, static_cast<int>(message_offsets.size()));
-            if (log_key_changes && persist_statement) {
+            if (capture_changes) {
                 last_changed_keys.swap(changed_now);
                 last_touched_unchanged_keys.swap(touched_now);
             }
@@ -1707,9 +1780,12 @@ int main(int argc, char* argv[])
                 last_changed_keys.clear();
                 last_touched_unchanged_keys.clear();
             }
-            if (session_log.is_open() && log_key_changes) {
+            if (session_log.is_open() && capture_changes) {
                 write_changed_keys(session_log, last_changed_keys);
                 session_log.flush();
+            }
+            if (one_shot_log && !log_key_changes && capture_changes) {
+                print_changed_keys(last_changed_keys);
             }
 #ifdef HAVE_LIBREADLINE
             s_completion_handle = h;
