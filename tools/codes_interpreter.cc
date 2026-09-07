@@ -733,7 +733,8 @@ static void print_show_key(grib_handle* h, const std::string& key)
     const char* missing_str = (err == GRIB_SUCCESS && missing) ? "yes" : "no";
     const std::string value = describe_key_value_for_list(h, key);
 
-    const bool computed = (acc->flags_ & GRIB_ACCESSOR_FLAG_COMPUTED) != 0;
+    int computed_err = GRIB_SUCCESS;
+    const bool computed = (codes_key_is_computed(h, key.c_str(), &computed_err) == 1 && computed_err == GRIB_SUCCESS);
     const bool read_only = (acc->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0;
     const bool function = (acc->flags_ & GRIB_ACCESSOR_FLAG_FUNCTION) != 0;
 
