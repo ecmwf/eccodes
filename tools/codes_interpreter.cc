@@ -302,7 +302,7 @@ static char* completion_generator(const char* text, int state)
             "print", "set", "meta", "transient", "if", "else", "while", "switch",
             "assert", "write", "remove", "rename", "concept", "alias", "quit", "exit",
             "help", "info", "changes", "list", "show", "next", "prev", "goto", "save", "load", "undo", "diff", "--values", "--ignore-case", "--key", "-i", "-k",
-            ":help", ":info", ":changes", ":list", ":show", ":alias", ":next", ":prev", ":goto", ":save", ":load", ":undo", ":diff"
+            ":help", ":info", ":changes", ":list", ":show", ":show-aliases", ":next", ":prev", ":goto", ":save", ":load", ":undo", ":diff"
         };
 
         std::set<std::string> all_candidates;
@@ -1431,7 +1431,7 @@ int main(int argc, char* argv[])
     printf("Message: %s\n", argv[file_arg]);
     printf("Selected message: %ld/%zu\n", current_message, message_offsets.size());
     printf("Type a filter expression and end with ';' or type 'quit' to exit.\n");
-    printf("Navigation: :next, :prev, :goto N, :info, :list, :show, :alias, :accessors, :changes, :logchanges, :diff, :save, :load, :undo, :help\n");
+    printf("Navigation: :next, :prev, :goto N, :info, :list, :show, :show-aliases, :accessors, :changes, :logchanges, :diff, :save, :load, :undo, :help\n");
 
 #ifdef HAVE_LIBREADLINE
     using_history();
@@ -1527,7 +1527,7 @@ int main(int argc, char* argv[])
 
         if (script.empty()) {
             if (command == ":help" || command == "help") {
-                printf("Commands: quit, exit, :next, :prev, :goto N, :info, :list [--values] [--ignore-case|-i] [regex], :show [--ignore-case|-i] <key-or-regex>, :alias [--key|-k KEY] [--ignore-case|-i] [regex], :accessors [--ignore-case|-i] [regex], :changes [--touched] [--ignore-case|-i] [regex], :logchanges [--touched], :diff [--ignore-case|-i] [regex], :save FILE, :load FILE, :undo, :help\n");
+                printf("Commands: quit, exit, :next, :prev, :goto N, :info, :list [--values] [--ignore-case|-i] [regex], :show [--ignore-case|-i] <key-or-regex>, :show-aliases [--key|-k KEY] [--ignore-case|-i] [regex], :accessors [--ignore-case|-i] [regex], :changes [--touched] [--ignore-case|-i] [regex], :logchanges [--touched], :diff [--ignore-case|-i] [regex], :save FILE, :load FILE, :undo, :help\n");
                 printf("Switching message resets session state (meta/transient/set history).\n");
                 handled_navigation = true;
             }
@@ -1613,12 +1613,15 @@ int main(int argc, char* argv[])
                 print_show(h, pattern, ignore_case);
                 handled_navigation = true;
             }
-            else if (command == ":alias" || command == "alias") {
+            else if (command == ":show-aliases" || command == "show-aliases" || command == ":alias" || command == "alias") {
                 print_aliases(h);
                 handled_navigation = true;
             }
-            else if (starts_with(command, ":alias ") || starts_with(command, "alias ")) {
-                const size_t offset = (command[0] == ':') ? 7 : 6;
+            else if (starts_with(command, ":show-aliases ") || starts_with(command, "show-aliases ") ||
+                     starts_with(command, ":alias ") || starts_with(command, "alias ")) {
+                const size_t offset = starts_with(command, ":show-aliases ") ? 14 :
+                                      starts_with(command, "show-aliases ") ? 13 :
+                                      (command[0] == ':' ? 7 : 6);
                 const std::string args = trim(command.substr(offset));
                 if (starts_with(args, "--key ") || starts_with(args, "-k ")) {
                     const size_t key_offset = starts_with(args, "--key ") ? 6 : 3;
