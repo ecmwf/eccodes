@@ -459,6 +459,29 @@ struct KeyChange
     std::string after;
 };
 
+static void silent_log_proc(const grib_context*, int, const char*)
+{
+}
+
+class ScopedLogSilencer
+{
+public:
+    explicit ScopedLogSilencer(grib_context* c) : context_(c ? c : grib_context_get_default())
+    {
+        previous_ = context_->output_log;
+        grib_context_set_logging_proc(context_, silent_log_proc);
+    }
+
+    ~ScopedLogSilencer()
+    {
+        grib_context_set_logging_proc(context_, previous_);
+    }
+
+private:
+    grib_context* context_;
+    grib_log_proc previous_;
+};
+
 static bool get_scalar_key_value(grib_handle* h, const std::string& key, std::string& value)
 {
     int type = GRIB_TYPE_UNDEFINED;
@@ -513,6 +536,12 @@ static bool get_scalar_key_value(grib_handle* h, const std::string& key, std::st
     return false;
 }
 
+static bool get_scalar_key_value_quiet(grib_handle* h, const std::string& key, std::string& value)
+{
+    ScopedLogSilencer silencer(h ? h->context : NULL);
+    return get_scalar_key_value(h, key, value);
+}
+
 static std::vector<KeyChange> compute_changed_scalar_keys(grib_handle* before, grib_handle* after)
 {
     std::vector<KeyChange> changed;
@@ -523,8 +552,8 @@ static std::vector<KeyChange> compute_changed_scalar_keys(grib_handle* before, g
     for (const auto& key : all_keys) {
         std::string before_value;
         std::string after_value;
-        const bool has_before = get_scalar_key_value(before, key, before_value);
-        const bool has_after = get_scalar_key_value(after, key, after_value);
+        const bool has_before = get_scalar_key_value_quiet(before, key, before_value);
+        const bool has_after = get_scalar_key_value_quiet(after, key, after_value);
 
         if (!has_before && !has_after) {
             continue;
@@ -576,8 +605,8 @@ static std::vector<KeyChange> compute_touched_unchanged_scalar_keys(grib_handle*
 
         std::string before_value;
         std::string after_value;
-        const bool has_before = get_scalar_key_value(before, key, before_value);
-        const bool has_after  = get_scalar_key_value(after, key, after_value);
+        const bool has_before = get_scalar_key_value_quiet(before, key, before_value);
+        const bool has_after  = get_scalar_key_value_quiet(after, key, after_value);
         if (!has_before || !has_after) {
             continue;
         }
@@ -854,8 +883,8 @@ static std::vector<KeyChange> merge_declared_symbol_changes(std::vector<KeyChang
 
         std::string before_value;
         std::string after_value;
-        const bool has_before = get_scalar_key_value(before, name, before_value);
-        const bool has_after = get_scalar_key_value(after, name, after_value);
+        const bool has_before = get_scalar_key_value_quiet(before, name, before_value);
+        const bool has_after = get_scalar_key_value_quiet(after, name, after_value);
 
         KeyChange e;
         e.name = name;
