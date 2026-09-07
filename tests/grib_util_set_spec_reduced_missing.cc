@@ -235,6 +235,7 @@ static void test_util_set_spec_reduced_gg()
     free(pl);
 }
 
+#if defined(HAVE_GEOGRAPHY) && defined(HAVE_ECKIT_GEO)
 /*
  * Contrast test: regular lat-lon grid should have valid (non-missing) Ni.
  */
@@ -273,6 +274,7 @@ static void test_regular_ll_not_missing()
 
     grib_handle_delete(h);
 }
+#endif  // defined(HAVE_GEOGRAPHY) && defined(HAVE_ECKIT_GEO)
 
 int main()
 {
@@ -280,15 +282,15 @@ int main()
     /* Core bug: grib_set_from_grid_spec on handle with stale Ni/iDirectionIncrement */
     test_set_from_grid_spec_reduced_gg();
     test_set_from_grid_spec_reduced_ll();
+
+    /* Contrast: regular lat-lon should have valid Ni */
+    test_regular_ll_not_missing();
 #else
     fprintf(stderr, "\nSkipping grib_set_from_grid_spec tests: built without eckit-geo support.\n");
 #endif
 
     /* Also test via grib_util_set_spec (legacy path) */
     test_util_set_spec_reduced_gg();
-
-    /* Contrast: regular lat-lon should have valid Ni */
-    test_regular_ll_not_missing();
 
     fprintf(stderr, "\nAll tests passed.\n");
     return 0;
