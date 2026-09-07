@@ -1613,15 +1613,13 @@ int main(int argc, char* argv[])
                 print_show(h, pattern, ignore_case);
                 handled_navigation = true;
             }
-            else if (command == ":show-aliases" || command == "show-aliases" || command == ":alias" || command == "alias") {
+            else if (command == ":show-aliases" || command == ":alias") {
                 print_aliases(h);
                 handled_navigation = true;
             }
-            else if (starts_with(command, ":show-aliases ") || starts_with(command, "show-aliases ") ||
-                     starts_with(command, ":alias ") || starts_with(command, "alias ")) {
+            else if (starts_with(command, ":show-aliases ") || starts_with(command, ":alias ")) {
                 const size_t offset = starts_with(command, ":show-aliases ") ? 14 :
-                                      starts_with(command, "show-aliases ") ? 13 :
-                                      (command[0] == ':' ? 7 : 6);
+                                      7;
                 const std::string args = trim(command.substr(offset));
                 if (starts_with(args, "--key ") || starts_with(args, "-k ")) {
                     const size_t key_offset = starts_with(args, "--key ") ? 6 : 3;
