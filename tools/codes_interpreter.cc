@@ -490,6 +490,43 @@ static bool is_complete_statement(const std::string& text)
     return trimmed.size() >= 1 && trimmed.back() == ';';
 }
 
+static int brace_depth_ignoring_strings(const std::string& text)
+{
+    int brace_depth = 0;
+    bool in_string = false;
+    char quote = '\0';
+
+    for (size_t i = 0; i < text.size(); ++i) {
+        const char c = text[i];
+        if (in_string) {
+            if (c == '\\' && i + 1 < text.size()) {
+                ++i;
+                continue;
+            }
+            if (c == quote) {
+                in_string = false;
+                quote = '\0';
+            }
+            continue;
+        }
+
+        if (c == '"' || c == '\'') {
+            in_string = true;
+            quote = c;
+            continue;
+        }
+
+        if (c == '{') {
+            ++brace_depth;
+        }
+        else if (c == '}') {
+            --brace_depth;
+        }
+    }
+
+    return brace_depth;
+}
+
 static std::string trim(const std::string& s)
 {
     size_t start = 0;
@@ -590,6 +627,46 @@ static bool should_persist_statement(const std::string& statement)
         return false;
     }
 
+    return true;
+}
+
+static bool looks_like_statement_start(const std::string& text)
+{
+    static const char* kKeywords[] = {
+        "set", "set_no_fail", "meta", "transient", "alias", "unalias",
+        "remove", "rename", "assert", "print", "write", "append",
+        "if", "while", "switch", "when", "trigger"
+    };
+
+    const std::string t = trim(text);
+    if (t.empty()) {
+        return false;
+    }
+
+    for (const char* kw : kKeywords) {
+        if (starts_with_keyword(t, kw)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+static bool is_simple_incomplete_fragment(const std::string& text)
+{
+    const std::string t = trim(text);
+    if (t.empty()) {
+        return false;
+    }
+    if (t.find('\n') != std::string::npos || t.find('\r') != std::string::npos) {
+        return false;
+    }
+    if (t.find('{') != std::string::npos || t.find('}') != std::string::npos) {
+        return false;
+    }
+    if (t.find(';') != std::string::npos) {
+        return false;
+    }
     return true;
 }
 
@@ -2104,7 +2181,25 @@ int main(int argc, char* argv[])
             continue;
         }
 
-        script += text;
+        if (non_fail && !script.empty() && !is_complete_statement(script)) {
+            const std::string incoming = trim(text);
+            if (is_simple_incomplete_fragment(script) && is_complete_statement(incoming) && looks_like_statement_start(incoming)) {
+                fprintf(stderr,
+                        "codes_interpreter: dropping incomplete buffered input and executing latest statement\n");
+                script.clear();
+            }
+        }
+
+        std::string text_to_append = text;
+        if (!script.empty()) {
+            const std::string incoming = trim(text);
+            if (incoming == "}" && brace_depth_ignoring_strings(script) > 0) {
+                text_to_append = "};";
+                fprintf(stderr, "codes_interpreter: auto-completing block terminator to '};'\n");
+            }
+        }
+
+        script += text_to_append;
 
         if (is_complete_statement(script)) {
             std::string to_run = trim(script);
