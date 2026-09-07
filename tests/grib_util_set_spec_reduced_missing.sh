@@ -13,4 +13,17 @@
 # Test that iDirectionIncrement and Ni are set to MISSING for reduced grids
 # See commit bc0ae2be9342: "eccodes + metkit: iDirectionIncrement/Ni=MISSING for reduced grids"
 
+
+if [ $HAVE_ECKIT_GEO -ne 1 ]; then
+    echo "$0: This test is disabled when HAVE_ECKIT_GEO=OFF"
+    exit 0
+fi
+
+# Check env. variable too
+if [ "${ECCODES_ECKIT_GEO:-0}" -eq 0 ]
+then
+    echo "$0: This test is disabled (env. variable ECCODES_ECKIT_GEO=0)"
+    exit 0
+fi
+
 $EXEC ${test_dir}/grib_util_set_spec_reduced_missing
