@@ -42,6 +42,8 @@ static bool starts_with(const std::string& value, const std::string& prefix)
     return value.size() >= prefix.size() && value.compare(0, prefix.size(), prefix) == 0;
 }
 
+static std::set<std::string> collect_key_names(grib_handle* h);
+
 static std::set<std::string> collect_accessor_names()
 {
     std::set<std::string> names;
@@ -82,6 +84,126 @@ static void print_accessors(const std::string& pattern = std::string(), bool ign
         if (std::regex_search(name, re)) {
             printf("  %s\n", name.c_str());
         }
+    }
+}
+
+static std::vector<std::string> collect_aliases_for_accessor(const grib_accessor* acc)
+{
+    std::set<std::string> aliases_set;
+    if (!acc) {
+        return std::vector<std::string>();
+    }
+
+    for (int i = 1; i < MAX_ACCESSOR_NAMES && acc->all_names_[i]; ++i) {
+        std::string alias;
+        if (acc->all_name_spaces_[i] && acc->all_name_spaces_[i][0] != '\0') {
+            alias = std::string(acc->all_name_spaces_[i]) + "." + acc->all_names_[i];
+        }
+        else {
+            alias = acc->all_names_[i];
+        }
+        aliases_set.insert(alias);
+    }
+
+    return std::vector<std::string>(aliases_set.begin(), aliases_set.end());
+}
+
+static void print_aliases_for_key(grib_handle* h, const std::string& key)
+{
+    if (key.empty()) {
+        fprintf(stderr, "codes_interpreter: missing key name for :alias --key\n");
+        return;
+    }
+
+    grib_accessor* acc = grib_find_accessor(h, key.c_str());
+    if (!acc) {
+        fprintf(stderr, "codes_interpreter: key '%s' not found\n", key.c_str());
+        return;
+    }
+
+    const std::vector<std::string> aliases = collect_aliases_for_accessor(acc);
+    if (aliases.empty()) {
+        printf("No aliases for key %s\n", key.c_str());
+        return;
+    }
+
+    printf("Aliases for %s (%zu):\n", key.c_str(), aliases.size());
+    for (const auto& alias : aliases) {
+        printf("  %s\n", alias.c_str());
+    }
+}
+
+static void print_aliases(grib_handle* h, const std::string& pattern = std::string(), bool ignore_case = false)
+{
+    struct AliasEntry
+    {
+        std::string key;
+        std::vector<std::string> aliases;
+    };
+
+    std::regex re;
+    const bool use_regex = !pattern.empty();
+    if (use_regex) {
+        try {
+            re = ignore_case ? std::regex(pattern, std::regex_constants::icase) : std::regex(pattern);
+        }
+        catch (const std::regex_error& e) {
+            fprintf(stderr, "codes_interpreter: invalid regex '%s' (%s)\n", pattern.c_str(), e.what());
+            return;
+        }
+    }
+
+    const std::set<std::string> keys = collect_key_names(h);
+    std::vector<AliasEntry> entries;
+    for (const auto& key : keys) {
+        grib_accessor* acc = grib_find_accessor(h, key.c_str());
+        if (!acc) {
+            continue;
+        }
+
+        const std::vector<std::string> aliases_set = collect_aliases_for_accessor(acc);
+        if (aliases_set.empty()) {
+            continue;
+        }
+
+        bool matched = true;
+        if (use_regex) {
+            matched = std::regex_search(key, re);
+            if (!matched) {
+                for (const auto& alias : aliases_set) {
+                    if (std::regex_search(alias, re)) {
+                        matched = true;
+                        break;
+                    }
+                }
+            }
+        }
+        if (!matched) {
+            continue;
+        }
+
+        AliasEntry e;
+        e.key = key;
+        e.aliases = aliases_set;
+        entries.push_back(e);
+    }
+
+    if (use_regex) {
+        printf("Aliases matching /%s/ (%zu):\n", pattern.c_str(), entries.size());
+    }
+    else {
+        printf("Aliases (%zu):\n", entries.size());
+    }
+
+    for (const auto& entry : entries) {
+        printf("  %s -> ", entry.key.c_str());
+        for (size_t i = 0; i < entry.aliases.size(); ++i) {
+            if (i > 0) {
+                printf(", ");
+            }
+            printf("%s", entry.aliases[i].c_str());
+        }
+        printf("\n");
     }
 }
 
@@ -179,8 +301,8 @@ static char* completion_generator(const char* text, int state)
         static const char* kWords[] = {
             "print", "set", "meta", "transient", "if", "else", "while", "switch",
             "assert", "write", "remove", "rename", "concept", "alias", "quit", "exit",
-            "help", "info", "changes", "list", "show", "next", "prev", "goto", "save", "load", "undo", "diff", "--values", "--ignore-case", "-i",
-            ":help", ":info", ":changes", ":list", ":show", ":next", ":prev", ":goto", ":save", ":load", ":undo", ":diff"
+            "help", "info", "changes", "list", "show", "next", "prev", "goto", "save", "load", "undo", "diff", "--values", "--ignore-case", "--key", "-i", "-k",
+            ":help", ":info", ":changes", ":list", ":show", ":alias", ":next", ":prev", ":goto", ":save", ":load", ":undo", ":diff"
         };
 
         std::set<std::string> all_candidates;
@@ -1297,6 +1419,7 @@ int main(int argc, char* argv[])
     std::string script;
     std::string session_script;
     bool log_changes_next_statement = false;
+    bool log_changes_next_touched = false;
     grib_action* session_action = NULL;
     std::vector<std::string> session_statements;
     std::vector<KeyChange> last_changed_keys;
@@ -1308,7 +1431,7 @@ int main(int argc, char* argv[])
     printf("Message: %s\n", argv[file_arg]);
     printf("Selected message: %ld/%zu\n", current_message, message_offsets.size());
     printf("Type a filter expression and end with ';' or type 'quit' to exit.\n");
-    printf("Navigation: :next, :prev, :goto N, :info, :list, :show, :accessors, :changes, :logchanges, :diff, :save, :load, :undo, :help\n");
+    printf("Navigation: :next, :prev, :goto N, :info, :list, :show, :alias, :accessors, :changes, :logchanges, :diff, :save, :load, :undo, :help\n");
 
 #ifdef HAVE_LIBREADLINE
     using_history();
@@ -1353,6 +1476,7 @@ int main(int argc, char* argv[])
             script.clear();
             session_script.clear();
             log_changes_next_statement = false;
+            log_changes_next_touched = false;
             if (session_action) {
                 delete session_action;
                 session_action = NULL;
@@ -1403,7 +1527,7 @@ int main(int argc, char* argv[])
 
         if (script.empty()) {
             if (command == ":help" || command == "help") {
-                printf("Commands: quit, exit, :next, :prev, :goto N, :info, :list [--values] [--ignore-case|-i] [regex], :show [--ignore-case|-i] <key-or-regex>, :accessors [--ignore-case|-i] [regex], :changes [--touched] [--ignore-case|-i] [regex], :logchanges, :diff [--ignore-case|-i] [regex], :save FILE, :load FILE, :undo, :help\n");
+                printf("Commands: quit, exit, :next, :prev, :goto N, :info, :list [--values] [--ignore-case|-i] [regex], :show [--ignore-case|-i] <key-or-regex>, :alias [--key|-k KEY] [--ignore-case|-i] [regex], :accessors [--ignore-case|-i] [regex], :changes [--touched] [--ignore-case|-i] [regex], :logchanges [--touched], :diff [--ignore-case|-i] [regex], :save FILE, :load FILE, :undo, :help\n");
                 printf("Switching message resets session state (meta/transient/set history).\n");
                 handled_navigation = true;
             }
@@ -1432,9 +1556,28 @@ int main(int argc, char* argv[])
                 }
                 handled_navigation = true;
             }
-            else if (command == ":logchanges" || command == "logchanges") {
-                log_changes_next_statement = true;
-                printf("Will log key changes for the next statement\n");
+            else if (command == ":logchanges" || command == "logchanges" || starts_with(command, ":logchanges ") || starts_with(command, "logchanges ")) {
+                bool touched = false;
+                std::string pattern;
+                if (starts_with(command, ":logchanges ") || starts_with(command, "logchanges ")) {
+                    const size_t offset = (command[0] == ':') ? 12 : 11;
+                    const std::string args = trim(command.substr(offset));
+                    parse_command_flags(args, NULL, &touched, NULL, &pattern);
+                }
+
+                if (!pattern.empty()) {
+                    fprintf(stderr, "codes_interpreter: unsupported argument for :logchanges: '%s'\n", pattern.c_str());
+                }
+                else {
+                    log_changes_next_statement = true;
+                    log_changes_next_touched = touched;
+                    if (touched) {
+                        printf("Will log touched but unchanged keys for the next statement\n");
+                    }
+                    else {
+                        printf("Will log key changes for the next statement\n");
+                    }
+                }
                 handled_navigation = true;
             }
             else if (command == ":diff" || command == "diff" || starts_with(command, ":diff ") || starts_with(command, "diff ")) {
@@ -1468,6 +1611,26 @@ int main(int argc, char* argv[])
                 std::string pattern;
                 parse_command_flags(args, &ignore_case, NULL, NULL, &pattern);
                 print_show(h, pattern, ignore_case);
+                handled_navigation = true;
+            }
+            else if (command == ":alias" || command == "alias") {
+                print_aliases(h);
+                handled_navigation = true;
+            }
+            else if (starts_with(command, ":alias ") || starts_with(command, "alias ")) {
+                const size_t offset = (command[0] == ':') ? 7 : 6;
+                const std::string args = trim(command.substr(offset));
+                if (starts_with(args, "--key ") || starts_with(args, "-k ")) {
+                    const size_t key_offset = starts_with(args, "--key ") ? 6 : 3;
+                    const std::string key = trim(args.substr(key_offset));
+                    print_aliases_for_key(h, key);
+                    handled_navigation = true;
+                    continue;
+                }
+                bool ignore_case = false;
+                std::string pattern;
+                parse_command_flags(args, &ignore_case, NULL, NULL, &pattern);
+                print_aliases(h, pattern, ignore_case);
                 handled_navigation = true;
             }
             else if (command == ":accessors" || command == "accessors") {
@@ -1661,8 +1824,10 @@ int main(int argc, char* argv[])
             if (!to_run.empty()) {
                 const bool persist_statement = should_persist_statement(to_run);
                 const bool one_shot_log = log_changes_next_statement;
+                const bool one_shot_touched = log_changes_next_touched;
                 const bool capture_changes = persist_statement && (log_key_changes || one_shot_log);
                 log_changes_next_statement = false;
+                log_changes_next_touched = false;
                 grib_action* next_action = NULL;
                 grib_handle* next_handle = replay_session(base_handle, current_message, static_cast<long>(message_offsets.size()),
                                                           session_script, to_run, &next_action, &err);
@@ -1704,7 +1869,12 @@ int main(int argc, char* argv[])
                     session_log.flush();
                 }
                 if (one_shot_log && !log_key_changes && capture_changes) {
-                    print_changed_keys(last_changed_keys);
+                    if (one_shot_touched) {
+                        print_touched_keys(last_touched_unchanged_keys);
+                    }
+                    else {
+                        print_changed_keys(last_changed_keys);
+                    }
                 }
 #ifdef HAVE_LIBREADLINE
                 s_completion_handle = h;
@@ -1734,8 +1904,10 @@ int main(int argc, char* argv[])
         if (!to_run.empty()) {
             const bool persist_statement = should_persist_statement(to_run);
             const bool one_shot_log = log_changes_next_statement;
+            const bool one_shot_touched = log_changes_next_touched;
             const bool capture_changes = persist_statement && (log_key_changes || one_shot_log);
             log_changes_next_statement = false;
+            log_changes_next_touched = false;
             grib_action* next_action = NULL;
             grib_handle* next_handle = replay_session(base_handle, current_message, static_cast<long>(message_offsets.size()),
                                                       session_script, to_run, &next_action, &err);
@@ -1785,7 +1957,12 @@ int main(int argc, char* argv[])
                 session_log.flush();
             }
             if (one_shot_log && !log_key_changes && capture_changes) {
-                print_changed_keys(last_changed_keys);
+                if (one_shot_touched) {
+                    print_touched_keys(last_touched_unchanged_keys);
+                }
+                else {
+                    print_changed_keys(last_changed_keys);
+                }
             }
 #ifdef HAVE_LIBREADLINE
             s_completion_handle = h;
