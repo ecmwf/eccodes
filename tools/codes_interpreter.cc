@@ -484,6 +484,10 @@ private:
 
 static bool get_scalar_key_value(grib_handle* h, const std::string& key, std::string& value)
 {
+    if (!h || grib_is_defined(h, key.c_str()) == 0) {
+        return false;
+    }
+
     int type = GRIB_TYPE_UNDEFINED;
     int err = grib_get_native_type(h, key.c_str(), &type);
     if (err != GRIB_SUCCESS) {
@@ -1022,9 +1026,12 @@ static grib_handle* load_message_from_offset(const char* filename, off_t offset,
     return h;
 }
 
-static int apply_script(grib_handle* h, const std::string& script)
+static int apply_script(grib_handle* h, const std::string& script, grib_action** kept_action)
 {
     if (script.empty()) {
+        if (kept_action) {
+            *kept_action = NULL;
+        }
         return GRIB_SUCCESS;
     }
 
@@ -1051,23 +1058,38 @@ static int apply_script(grib_handle* h, const std::string& script)
     if (!a) {
         fprintf(stderr, "codes_interpreter: unable to parse script\n");
         unlink(name);
+        if (kept_action) {
+            *kept_action = NULL;
+        }
         return GRIB_INVALID_ARGUMENT;
     }
 
     int err = grib_handle_apply_action(h, a);
-    delete a;
+    if (err == GRIB_SUCCESS && kept_action) {
+        *kept_action = a;
+    }
+    else {
+        delete a;
+        if (kept_action) {
+            *kept_action = NULL;
+        }
+    }
     unlink(name);
 
     return err;
 }
 
 static grib_handle* replay_session(const grib_handle* base_handle, long current_message, long total_messages,
-                                   const std::string& session_script, const std::string& statement, int* err)
+                                   const std::string& session_script, const std::string& statement,
+                                   grib_action** kept_action, int* err)
 {
     grib_handle* trial_handle = grib_handle_clone(base_handle);
     if (!trial_handle) {
         if (err)
             *err = GRIB_OUT_OF_MEMORY;
+        if (kept_action) {
+            *kept_action = NULL;
+        }
         return NULL;
     }
 
@@ -1082,13 +1104,16 @@ static grib_handle* replay_session(const grib_handle* base_handle, long current_
     }
 
     if (!combined_script.empty()) {
-        int apply_err = apply_script(trial_handle, combined_script);
+        int apply_err = apply_script(trial_handle, combined_script, kept_action);
         if (apply_err != GRIB_SUCCESS) {
             if (err)
                 *err = apply_err;
             grib_handle_delete(trial_handle);
             return NULL;
         }
+    }
+    else if (kept_action) {
+        *kept_action = NULL;
     }
 
     if (err)
@@ -1214,6 +1239,7 @@ int main(int argc, char* argv[])
 
     std::string script;
     std::string session_script;
+    grib_action* session_action = NULL;
     std::vector<std::string> session_statements;
     std::vector<KeyChange> last_changed_keys;
     std::vector<KeyChange> last_touched_unchanged_keys;
@@ -1268,6 +1294,10 @@ int main(int argc, char* argv[])
         auto clear_session_state = [&]() {
             script.clear();
             session_script.clear();
+            if (session_action) {
+                delete session_action;
+                session_action = NULL;
+            }
             session_statements.clear();
             last_changed_keys.clear();
             last_touched_unchanged_keys.clear();
@@ -1442,8 +1472,9 @@ int main(int argc, char* argv[])
                         printf("Loaded empty script from %s\n", path.c_str());
                     }
                     else {
+                        grib_action* next_action = NULL;
                         grib_handle* next_handle = replay_session(base_handle, current_message, static_cast<long>(message_offsets.size()),
-                                                                  session_script, loaded, &err);
+                                                                  session_script, loaded, &next_action, &err);
                         if (!next_handle) {
                             fprintf(stderr, "codes_interpreter: %s\n", grib_get_error_message(err));
                         }
@@ -1456,8 +1487,12 @@ int main(int argc, char* argv[])
                                 touched_now = compute_touched_unchanged_scalar_keys(h, next_handle, changed_now);
                             }
 
+                            if (session_action) {
+                                delete session_action;
+                            }
                             grib_handle_delete(h);
                             h = next_handle;
+                            session_action = next_action;
                             grib_context_set_handle_file_count(h->context, static_cast<int>(current_message));
                             grib_context_set_handle_total_count(h->context, static_cast<int>(message_offsets.size()));
                             if (log_key_changes) {
@@ -1495,8 +1530,9 @@ int main(int argc, char* argv[])
                     const std::string removed = session_statements.back();
                     session_statements.pop_back();
                     const std::string rebuilt = build_session_script(session_statements);
+                    grib_action* next_action = NULL;
                     grib_handle* next_handle = replay_session(base_handle, current_message, static_cast<long>(message_offsets.size()),
-                                                              rebuilt, std::string(), &err);
+                                                              rebuilt, std::string(), &next_action, &err);
                     if (!next_handle) {
                         session_statements.push_back(removed);
                         fprintf(stderr, "codes_interpreter: undo failed: %s\n", grib_get_error_message(err));
@@ -1508,8 +1544,12 @@ int main(int argc, char* argv[])
                             changed_now = compute_changed_scalar_keys(h, next_handle);
                             touched_now = compute_touched_unchanged_scalar_keys(h, next_handle, changed_now);
                         }
+                        if (session_action) {
+                            delete session_action;
+                        }
                         grib_handle_delete(h);
                         h = next_handle;
+                        session_action = next_action;
                         grib_context_set_handle_file_count(h->context, static_cast<int>(current_message));
                         grib_context_set_handle_total_count(h->context, static_cast<int>(message_offsets.size()));
                         session_script = rebuilt;
@@ -1556,8 +1596,9 @@ int main(int argc, char* argv[])
             std::string to_run = trim(script);
             if (!to_run.empty()) {
                 const bool persist_statement = should_persist_statement(to_run);
+                grib_action* next_action = NULL;
                 grib_handle* next_handle = replay_session(base_handle, current_message, static_cast<long>(message_offsets.size()),
-                                                          session_script, to_run, &err);
+                                                          session_script, to_run, &next_action, &err);
                 if (!next_handle) {
                     fprintf(stderr, "codes_interpreter: %s\n", grib_get_error_message(err));
                     if (non_fail) {
@@ -1575,8 +1616,12 @@ int main(int argc, char* argv[])
                     changed_now = merge_declared_symbol_changes(changed_now, extract_declared_symbols(to_run), h, next_handle);
                     touched_now = compute_touched_unchanged_scalar_keys(h, next_handle, changed_now);
                 }
+                if (session_action) {
+                    delete session_action;
+                }
                 grib_handle_delete(h);
                 h = next_handle;
+                session_action = next_action;
                 grib_context_set_handle_file_count(h->context, static_cast<int>(current_message));
                 grib_context_set_handle_total_count(h->context, static_cast<int>(message_offsets.size()));
                 if (log_key_changes && persist_statement) {
@@ -1618,15 +1663,22 @@ int main(int argc, char* argv[])
         std::string to_run = trim(script);
         if (!to_run.empty()) {
             const bool persist_statement = should_persist_statement(to_run);
+            grib_action* next_action = NULL;
             grib_handle* next_handle = replay_session(base_handle, current_message, static_cast<long>(message_offsets.size()),
-                                                      session_script, to_run, &err);
+                                                      session_script, to_run, &next_action, &err);
             if (!next_handle) {
                 fprintf(stderr, "codes_interpreter: %s\n", grib_get_error_message(err));
                 if (non_fail) {
+                    if (session_action) {
+                        delete session_action;
+                    }
                     grib_handle_delete(base_handle);
                     grib_handle_delete(h);
                     return 0;
                 } else {
+                    if (session_action) {
+                        delete session_action;
+                    }
                     grib_handle_delete(base_handle);
                     grib_handle_delete(h);
                     return err;
@@ -1639,8 +1691,12 @@ int main(int argc, char* argv[])
                 changed_now = merge_declared_symbol_changes(changed_now, extract_declared_symbols(to_run), h, next_handle);
                 touched_now = compute_touched_unchanged_scalar_keys(h, next_handle, changed_now);
             }
+            if (session_action) {
+                delete session_action;
+            }
             grib_handle_delete(h);
             h = next_handle;
+            session_action = next_action;
             grib_context_set_handle_file_count(h->context, static_cast<int>(current_message));
             grib_context_set_handle_total_count(h->context, static_cast<int>(message_offsets.size()));
             if (log_key_changes && persist_statement) {
@@ -1671,6 +1727,9 @@ int main(int argc, char* argv[])
         }
     }
 
+    if (session_action) {
+        delete session_action;
+    }
     grib_handle_delete(base_handle);
     grib_handle_delete(h);
     return 0;
