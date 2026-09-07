@@ -43,6 +43,8 @@ static bool starts_with(const std::string& value, const std::string& prefix)
 }
 
 static std::set<std::string> collect_key_names(grib_handle* h);
+static std::string resolve_alias_target(const std::string& key,
+                                        const std::unordered_map<std::string, std::string>& aliases);
 
 static std::set<std::string> collect_accessor_names()
 {
@@ -108,7 +110,26 @@ static std::vector<std::string> collect_aliases_for_accessor(const grib_accessor
     return std::vector<std::string>(aliases_set.begin(), aliases_set.end());
 }
 
-static void print_aliases_for_key(grib_handle* h, const std::string& key)
+static std::vector<std::string> collect_session_aliases_for_key(
+    const std::unordered_map<std::string, std::string>& session_aliases,
+    const std::string& key)
+{
+    std::set<std::string> aliases_set;
+    for (const auto& item : session_aliases) {
+        if (item.first.empty()) {
+            continue;
+        }
+        const std::string resolved_target = resolve_alias_target(item.second, session_aliases);
+        if (resolved_target == key) {
+            aliases_set.insert(item.first);
+        }
+    }
+    return std::vector<std::string>(aliases_set.begin(), aliases_set.end());
+}
+
+static void print_aliases_for_key(grib_handle* h,
+                                  const std::string& key,
+                                  const std::unordered_map<std::string, std::string>& session_aliases)
 {
     if (key.empty()) {
         fprintf(stderr, "codes_interpreter: missing key name for :alias --key\n");
@@ -121,7 +142,13 @@ static void print_aliases_for_key(grib_handle* h, const std::string& key)
         return;
     }
 
-    const std::vector<std::string> aliases = collect_aliases_for_accessor(acc);
+    std::set<std::string> aliases_set;
+    const std::vector<std::string> builtin_aliases = collect_aliases_for_accessor(acc);
+    aliases_set.insert(builtin_aliases.begin(), builtin_aliases.end());
+    const std::vector<std::string> session_key_aliases = collect_session_aliases_for_key(session_aliases, key);
+    aliases_set.insert(session_key_aliases.begin(), session_key_aliases.end());
+
+    const std::vector<std::string> aliases(aliases_set.begin(), aliases_set.end());
     if (aliases.empty()) {
         printf("No aliases for key %s\n", key.c_str());
         return;
@@ -133,7 +160,10 @@ static void print_aliases_for_key(grib_handle* h, const std::string& key)
     }
 }
 
-static void print_aliases(grib_handle* h, const std::string& pattern = std::string(), bool ignore_case = false)
+static void print_aliases(grib_handle* h,
+                          const std::unordered_map<std::string, std::string>& session_aliases,
+                          const std::string& pattern = std::string(),
+                          bool ignore_case = false)
 {
     struct AliasEntry
     {
@@ -161,16 +191,23 @@ static void print_aliases(grib_handle* h, const std::string& pattern = std::stri
             continue;
         }
 
-        const std::vector<std::string> aliases_set = collect_aliases_for_accessor(acc);
+        std::set<std::string> aliases_set;
+        const std::vector<std::string> builtin_aliases = collect_aliases_for_accessor(acc);
+        aliases_set.insert(builtin_aliases.begin(), builtin_aliases.end());
+        const std::vector<std::string> session_key_aliases = collect_session_aliases_for_key(session_aliases, key);
+        aliases_set.insert(session_key_aliases.begin(), session_key_aliases.end());
+
         if (aliases_set.empty()) {
             continue;
         }
+
+        const std::vector<std::string> aliases(aliases_set.begin(), aliases_set.end());
 
         bool matched = true;
         if (use_regex) {
             matched = std::regex_search(key, re);
             if (!matched) {
-                for (const auto& alias : aliases_set) {
+                for (const auto& alias : aliases) {
                     if (std::regex_search(alias, re)) {
                         matched = true;
                         break;
@@ -184,7 +221,7 @@ static void print_aliases(grib_handle* h, const std::string& pattern = std::stri
 
         AliasEntry e;
         e.key = key;
-        e.aliases = aliases_set;
+        e.aliases = aliases;
         entries.push_back(e);
     }
 
@@ -1122,6 +1159,229 @@ static std::string build_session_script(const std::vector<std::string>& statemen
     return result;
 }
 
+static bool is_identifier_or_dot(const std::string& s)
+{
+    if (s.empty()) {
+        return false;
+    }
+    for (char c : s) {
+        const unsigned char uc = static_cast<unsigned char>(c);
+        if (!(std::isalnum(uc) || c == '_' || c == '.')) {
+            return false;
+        }
+    }
+    return true;
+}
+
+static std::string resolve_alias_target(const std::string& key,
+                                        const std::unordered_map<std::string, std::string>& aliases)
+{
+    std::string current = key;
+    std::set<std::string> visited;
+
+    while (true) {
+        if (visited.find(current) != visited.end()) {
+            return current;
+        }
+        visited.insert(current);
+
+        auto it = aliases.find(current);
+        if (it == aliases.end() || it->second.empty()) {
+            return current;
+        }
+        current = it->second;
+    }
+}
+
+static void update_alias_overrides_from_statement(const std::string& statement,
+                                                  std::unordered_map<std::string, std::string>& aliases)
+{
+    std::string t = trim(statement);
+    if (t.empty()) {
+        return;
+    }
+    if (!t.empty() && t.back() == ';') {
+        t.pop_back();
+        t = trim(t);
+    }
+
+    if (starts_with_keyword(t, "alias")) {
+        std::smatch m;
+        static const std::regex kAliasSimple("^alias\\s+([A-Za-z_][A-Za-z0-9_]*)\\s*=\\s*([A-Za-z_][A-Za-z0-9_\\.]*)\\s*$");
+        static const std::regex kAliasNs("^alias\\s+([A-Za-z_][A-Za-z0-9_]*)\\.([A-Za-z_][A-Za-z0-9_]*)\\s*=\\s*([A-Za-z_][A-Za-z0-9_\\.]*)\\s*$");
+        if (std::regex_match(t, m, kAliasSimple)) {
+            const std::string alias_name = m[1].str();
+            const std::string target_name = m[2].str();
+            if (is_identifier_or_dot(alias_name) && is_identifier_or_dot(target_name)) {
+                aliases[alias_name] = target_name;
+            }
+            return;
+        }
+        if (std::regex_match(t, m, kAliasNs)) {
+            const std::string alias_name = m[1].str() + "." + m[2].str();
+            const std::string target_name = m[3].str();
+            if (is_identifier_or_dot(alias_name) && is_identifier_or_dot(target_name)) {
+                aliases[alias_name] = target_name;
+            }
+            return;
+        }
+        return;
+    }
+
+    if (starts_with_keyword(t, "unalias")) {
+        std::smatch m;
+        static const std::regex kUnaliasSimple("^unalias\\s+([A-Za-z_][A-Za-z0-9_]*)\\s*$");
+        static const std::regex kUnaliasNs("^unalias\\s+([A-Za-z_][A-Za-z0-9_]*)\\.([A-Za-z_][A-Za-z0-9_]*)\\s*$");
+        if (std::regex_match(t, m, kUnaliasSimple)) {
+            aliases.erase(m[1].str());
+            return;
+        }
+        if (std::regex_match(t, m, kUnaliasNs)) {
+            aliases.erase(m[1].str() + "." + m[2].str());
+            return;
+        }
+    }
+}
+
+static std::string rewrite_statement_with_aliases(const std::string& statement,
+                                                  const std::unordered_map<std::string, std::string>& aliases)
+{
+    if (aliases.empty()) {
+        return statement;
+    }
+
+    std::string out;
+    out.reserve(statement.size());
+
+    for (size_t i = 0; i < statement.size(); ++i) {
+        const char c = statement[i];
+        if (c != '[') {
+            out.push_back(c);
+            continue;
+        }
+
+        size_t close = i + 1;
+        while (close < statement.size() && statement[close] != ']') {
+            ++close;
+        }
+        if (close >= statement.size()) {
+            out.push_back(c);
+            continue;
+        }
+
+        const std::string payload = statement.substr(i + 1, close - i - 1);
+        size_t key_end = 0;
+        while (key_end < payload.size() && payload[key_end] != ':' && payload[key_end] != '%' && payload[key_end] != '!' && payload[key_end] != '\'') {
+            ++key_end;
+        }
+        const std::string key = payload.substr(0, key_end);
+        const std::string suffix = payload.substr(key_end);
+
+        if (!key.empty() && is_identifier_or_dot(key)) {
+            const std::string resolved = resolve_alias_target(key, aliases);
+            out += "[";
+            out += resolved;
+            out += suffix;
+            out += "]";
+        }
+        else {
+            out += "[";
+            out += payload;
+            out += "]";
+        }
+        i = close;
+    }
+
+    return out;
+}
+
+static std::string rewrite_script_with_aliases(const std::string& script,
+                                               std::unordered_map<std::string, std::string>& aliases)
+{
+    std::string out;
+    std::string current;
+    int brace_depth = 0;
+    int paren_depth = 0;
+    bool in_string = false;
+    char quote = '\0';
+
+    for (size_t i = 0; i < script.size(); ++i) {
+        const char c = script[i];
+        current.push_back(c);
+
+        if (in_string) {
+            if (c == '\\' && i + 1 < script.size()) {
+                current.push_back(script[++i]);
+                continue;
+            }
+            if (c == quote) {
+                in_string = false;
+                quote = '\0';
+            }
+            continue;
+        }
+
+        if (c == '"' || c == '\'') {
+            in_string = true;
+            quote = c;
+            continue;
+        }
+        if (c == '{') {
+            ++brace_depth;
+            continue;
+        }
+        if (c == '}') {
+            --brace_depth;
+            continue;
+        }
+        if (c == '(') {
+            ++paren_depth;
+            continue;
+        }
+        if (c == ')') {
+            --paren_depth;
+            continue;
+        }
+
+        if (c == ';' && brace_depth == 0 && paren_depth == 0) {
+            const std::string statement = trim(current);
+            if (!statement.empty()) {
+                const std::string rewritten = rewrite_statement_with_aliases(statement, aliases);
+                out += rewritten;
+                out += "\n";
+                update_alias_overrides_from_statement(statement, aliases);
+            }
+            current.clear();
+        }
+    }
+
+    const std::string tail = trim(current);
+    if (!tail.empty()) {
+        const std::string rewritten = rewrite_statement_with_aliases(tail, aliases);
+        out += rewritten;
+        if (out.empty() || out.back() != '\n') {
+            out += "\n";
+        }
+        update_alias_overrides_from_statement(tail, aliases);
+    }
+
+    return out;
+}
+
+static std::string build_effective_session_script(const std::vector<std::string>& statements,
+                                                  std::unordered_map<std::string, std::string>* aliases_out)
+{
+    std::unordered_map<std::string, std::string> aliases;
+    std::string out;
+    for (const auto& statement : statements) {
+        out += rewrite_script_with_aliases(statement, aliases);
+    }
+    if (aliases_out) {
+        *aliases_out = aliases;
+    }
+    return out;
+}
+
 static std::vector<std::string> collect_declared_symbols_from_statements(const std::vector<std::string>& statements)
 {
     std::vector<std::string> all;
@@ -1302,10 +1562,11 @@ static grib_handle* replay_session(const grib_handle* base_handle, long current_
 
 static void print_usage(const char* program)
 {
-    fprintf(stderr, "Usage: %s [--non-fail|-n] [--log-key-changes] [--log-session FILE] [--message|-m N] [--help|-h] <message_file>\n", program);
+    fprintf(stderr, "Usage: %s [--non-fail|-n] [--log-key-changes] [--resolve-aliases] [--log-session FILE] [--message|-m N] [--help|-h] <message_file>\n", program);
     fprintf(stderr, "Open one GRIB/BUFR/GTS message and evaluate ecCodes filter statements from standard input.\n");
     fprintf(stderr, "  --non-fail, -n  Keep the interpreter open after a statement fails\n");
     fprintf(stderr, "  --log-key-changes Enable key-diff tracking for :changes (off by default)\n");
+    fprintf(stderr, "  --resolve-aliases Enable interpreter-only runtime alias resolution for bracket key references\n");
     fprintf(stderr, "  --log-session FILE Append session input/output trace to FILE\n");
     fprintf(stderr, "  --message, -m N Open message number N (1-based) from file\n");
     fprintf(stderr, "  --help, -h      Show this help message\n");
@@ -1315,6 +1576,7 @@ int main(int argc, char* argv[])
 {
     bool non_fail = false;
     bool log_key_changes = false;
+    bool resolve_aliases = false;
     long selected_message = 1;
     std::string log_session_file;
     int file_arg = -1;
@@ -1327,6 +1589,10 @@ int main(int argc, char* argv[])
         }
         if (arg == "--log-key-changes") {
             log_key_changes = true;
+            continue;
+        }
+        if (arg == "--resolve-aliases") {
+            resolve_aliases = true;
             continue;
         }
         if (arg == "--log-session") {
@@ -1418,6 +1684,8 @@ int main(int argc, char* argv[])
 
     std::string script;
     std::string session_script;
+    std::string effective_session_script;
+    std::unordered_map<std::string, std::string> session_alias_overrides;
     bool log_changes_next_statement = false;
     bool log_changes_next_touched = false;
     grib_action* session_action = NULL;
@@ -1475,6 +1743,8 @@ int main(int argc, char* argv[])
         auto clear_session_state = [&]() {
             script.clear();
             session_script.clear();
+            effective_session_script.clear();
+            session_alias_overrides.clear();
             log_changes_next_statement = false;
             log_changes_next_touched = false;
             if (session_action) {
@@ -1528,6 +1798,7 @@ int main(int argc, char* argv[])
         if (script.empty()) {
             if (command == ":help" || command == "help") {
                 printf("Commands: quit, exit, :next, :prev, :goto N, :info, :list [--values] [--ignore-case|-i] [regex], :show [--ignore-case|-i] <key-or-regex>, :show-aliases [--key|-k KEY] [--ignore-case|-i] [regex], :accessors [--ignore-case|-i] [regex], :changes [--touched] [--ignore-case|-i] [regex], :logchanges [--touched], :diff [--ignore-case|-i] [regex], :save FILE, :load FILE, :undo, :help\n");
+                printf("Startup options: --non-fail, --message|-m N, --log-key-changes, --resolve-aliases, --log-session FILE\n");
                 printf("Switching message resets session state (meta/transient/set history).\n");
                 handled_navigation = true;
             }
@@ -1614,7 +1885,7 @@ int main(int argc, char* argv[])
                 handled_navigation = true;
             }
             else if (command == ":show-aliases" || command == ":alias") {
-                print_aliases(h);
+                print_aliases(h, session_alias_overrides);
                 handled_navigation = true;
             }
             else if (starts_with(command, ":show-aliases ") || starts_with(command, ":alias ")) {
@@ -1624,14 +1895,14 @@ int main(int argc, char* argv[])
                 if (starts_with(args, "--key ") || starts_with(args, "-k ")) {
                     const size_t key_offset = starts_with(args, "--key ") ? 6 : 3;
                     const std::string key = trim(args.substr(key_offset));
-                    print_aliases_for_key(h, key);
+                    print_aliases_for_key(h, key, session_alias_overrides);
                     handled_navigation = true;
                     continue;
                 }
                 bool ignore_case = false;
                 std::string pattern;
                 parse_command_flags(args, &ignore_case, NULL, NULL, &pattern);
-                print_aliases(h, pattern, ignore_case);
+                print_aliases(h, session_alias_overrides, pattern, ignore_case);
                 handled_navigation = true;
             }
             else if (command == ":accessors" || command == "accessors") {
@@ -1701,8 +1972,13 @@ int main(int argc, char* argv[])
                     }
                     else {
                         grib_action* next_action = NULL;
+                        std::unordered_map<std::string, std::string> alias_state = session_alias_overrides;
+                        const std::string effective_loaded = resolve_aliases ? rewrite_script_with_aliases(loaded, alias_state) : loaded;
                         grib_handle* next_handle = replay_session(base_handle, current_message, static_cast<long>(message_offsets.size()),
-                                                                  session_script, loaded, &next_action, &err);
+                                                                  resolve_aliases ? effective_session_script : session_script,
+                                                                  effective_loaded,
+                                                                  &next_action,
+                                                                  &err);
                         if (!next_handle) {
                             fprintf(stderr, "codes_interpreter: %s\n", grib_get_error_message(err));
                         }
@@ -1740,6 +2016,9 @@ int main(int argc, char* argv[])
 #endif
                             session_statements.push_back(loaded);
                             session_script = build_session_script(session_statements);
+                            if (resolve_aliases) {
+                                effective_session_script = build_effective_session_script(session_statements, &session_alias_overrides);
+                            }
                             if (session_log.is_open() && log_key_changes) {
                                 write_changed_keys(session_log, last_changed_keys);
                                 session_log.flush();
@@ -1758,11 +2037,17 @@ int main(int argc, char* argv[])
                     const std::string removed = session_statements.back();
                     session_statements.pop_back();
                     const std::string rebuilt = build_session_script(session_statements);
+                    const std::string rebuilt_effective = resolve_aliases ?
+                                                          build_effective_session_script(session_statements, &session_alias_overrides) :
+                                                          rebuilt;
                     grib_action* next_action = NULL;
                     grib_handle* next_handle = replay_session(base_handle, current_message, static_cast<long>(message_offsets.size()),
-                                                              rebuilt, std::string(), &next_action, &err);
+                                                              rebuilt_effective, std::string(), &next_action, &err);
                     if (!next_handle) {
                         session_statements.push_back(removed);
+                        if (resolve_aliases) {
+                            build_effective_session_script(session_statements, &session_alias_overrides);
+                        }
                         fprintf(stderr, "codes_interpreter: undo failed: %s\n", grib_get_error_message(err));
                     }
                     else {
@@ -1781,6 +2066,7 @@ int main(int argc, char* argv[])
                         grib_context_set_handle_file_count(h->context, static_cast<int>(current_message));
                         grib_context_set_handle_total_count(h->context, static_cast<int>(message_offsets.size()));
                         session_script = rebuilt;
+                        effective_session_script = rebuilt_effective;
                         if (log_key_changes) {
                             last_changed_keys.swap(changed_now);
                             last_touched_unchanged_keys.swap(touched_now);
@@ -1829,9 +2115,14 @@ int main(int argc, char* argv[])
                 const bool capture_changes = persist_statement && (log_key_changes || one_shot_log);
                 log_changes_next_statement = false;
                 log_changes_next_touched = false;
+                std::unordered_map<std::string, std::string> alias_state = session_alias_overrides;
+                const std::string effective_to_run = resolve_aliases ? rewrite_script_with_aliases(to_run, alias_state) : to_run;
                 grib_action* next_action = NULL;
                 grib_handle* next_handle = replay_session(base_handle, current_message, static_cast<long>(message_offsets.size()),
-                                                          session_script, to_run, &next_action, &err);
+                                                          resolve_aliases ? effective_session_script : session_script,
+                                                          effective_to_run,
+                                                          &next_action,
+                                                          &err);
                 if (!next_handle) {
                     fprintf(stderr, "codes_interpreter: %s\n", grib_get_error_message(err));
                     if (non_fail) {
@@ -1889,6 +2180,9 @@ int main(int argc, char* argv[])
 #endif
                     session_statements.push_back(to_run);
                     session_script = build_session_script(session_statements);
+                    if (resolve_aliases) {
+                        effective_session_script = build_effective_session_script(session_statements, &session_alias_overrides);
+                    }
                 }
             }
             script.clear();
@@ -1909,9 +2203,14 @@ int main(int argc, char* argv[])
             const bool capture_changes = persist_statement && (log_key_changes || one_shot_log);
             log_changes_next_statement = false;
             log_changes_next_touched = false;
+            std::unordered_map<std::string, std::string> alias_state = session_alias_overrides;
+            const std::string effective_to_run = resolve_aliases ? rewrite_script_with_aliases(to_run, alias_state) : to_run;
             grib_action* next_action = NULL;
             grib_handle* next_handle = replay_session(base_handle, current_message, static_cast<long>(message_offsets.size()),
-                                                      session_script, to_run, &next_action, &err);
+                                                      resolve_aliases ? effective_session_script : session_script,
+                                                      effective_to_run,
+                                                      &next_action,
+                                                      &err);
             if (!next_handle) {
                 fprintf(stderr, "codes_interpreter: %s\n", grib_get_error_message(err));
                 if (non_fail) {
@@ -1971,6 +2270,9 @@ int main(int argc, char* argv[])
             if (persist_statement) {
                 session_statements.push_back(to_run);
                 session_script = build_session_script(session_statements);
+                if (resolve_aliases) {
+                    effective_session_script = build_effective_session_script(session_statements, &session_alias_overrides);
+                }
 #ifdef HAVE_LIBREADLINE
                 const std::vector<std::string> declared_symbols = extract_declared_symbols(to_run);
                 for (const auto& declared_symbol : declared_symbols) {
