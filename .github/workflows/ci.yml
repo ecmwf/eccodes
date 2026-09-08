@@ -6,7 +6,7 @@ on:
     paths-ignore:
       - "deprecated/**"
   pull_request:
-    types: [opened, reopened, synchronize, labeled, unlabeled]
+    types: [opened, reopened, synchronize, labeled]
     paths-ignore:
       - "deprecated/**"
   workflow_dispatch:
