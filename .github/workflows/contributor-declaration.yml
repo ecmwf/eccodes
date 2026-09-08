@@ -1,0 +1,15 @@
+name: Contributor Declaration
+
+on:
+  # pull_request_target runs the BASE branch's copy of this file, so a pull
+  # request cannot edit the gate that judges it. Safe here because nothing from
+  # the pull request is ever checked out or executed and no write token is used.
+  pull_request_target:
+    types: [opened, edited, reopened, synchronize]
+
+permissions:
+  contents: read
+
+jobs:
+  contributor-declaration:
+    uses: ecmwf/ci-infrastructure/.github/workflows/check-pr-declaration.yml@main
