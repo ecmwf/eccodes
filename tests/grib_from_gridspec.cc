@@ -23,6 +23,7 @@
 
 #include "eccodes/eccodes.h"
 #include "eccodes/geo/GribFromSpec.h"
+#include "eccodes/geo/GribToSpec.h"
 
 #define CHECK(a) CODES_CHECK(a, nullptr)
 
@@ -58,7 +59,7 @@ struct grib_file_t
     std::unique_ptr<FILE, decltype(&std::fclose)> file;
     std::unique_ptr<codes_handle, decltype(&codes_handle_delete)> handle;
 
-    grib_file_t(const char* path) : file(std::fopen("mtg2-d.grib2", "rb"), &std::fclose), handle(codes_grib_handle_new_from_file(nullptr, file.get(), &err), &codes_handle_delete)
+    grib_file_t(const char* path) : file(std::fopen(path, "rb"), &std::fclose), handle(codes_grib_handle_new_from_file(nullptr, file.get(), &err), &codes_handle_delete)
     {
         ASSERT(err == CODES_SUCCESS && handle != nullptr && handle.get() != nullptr);
     }
@@ -209,6 +210,42 @@ CASE("gridType=regular_ll")
             EXPECT(CODES_SUCCESS == codes_get_string(file.handle.get(), "gridSpec", buffer.data(), &len_buffer));
             EXPECT(test.spec == std::string(buffer.data(), len_buffer));
         }
+    }
+
+
+    SECTION("scanningMode=96")
+    {
+        grib_file_t file("scanningMode=96.grib");
+        auto h = file.handle.get();
+
+        long scanningMode = 0;
+        EXPECT(CODES_SUCCESS == codes_get_long(h, "scanningMode", &scanningMode) && scanningMode == 96);
+
+        size_t values_len = 0;
+        EXPECT(CODES_SUCCESS == codes_get_size(h, "values", &values_len) && values_len == 6);
+
+        std::vector<double> values(values_len);
+        EXPECT(CODES_SUCCESS == codes_get_double_array(h, "values", values.data(), &values_len));
+
+        eccodes::geo::GribToSpec spec(h);
+        std::unique_ptr<const ::eckit::geo::Grid> grid(::eckit::geo::GridFactory::build(spec));
+        ASSERT(grid);
+
+        EXPECT(grid->order() == "j+i+");
+
+        auto is_vector_approximately_equal = [](const std::vector<double>& a, const std::vector<double>& b, double eps) {
+            if (a.size() != b.size()) { return false; }
+            for (size_t i = 0; i < a.size(); ++i) {
+                if (!eckit::types::is_approximately_equal(a[i], b[i], eps)) { return false; }
+            }
+            return true;
+        };
+
+        auto [lats, lons] = grid->to_latlons();
+
+        EXPECT(is_vector_approximately_equal(values, { 0, 1, 2, 3, 4, 5 }, 1e-6));
+        EXPECT(is_vector_approximately_equal(lats, { 0, 1, 0, 1, 0, 1 }, ::eckit::geo::PointLonLat::EPS));
+        EXPECT(is_vector_approximately_equal(lons, { 0, 0, 1, 1, 2, 2 }, ::eckit::geo::PointLonLat::EPS));
     }
 }
 
