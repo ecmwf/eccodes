@@ -15,7 +15,6 @@
 #       -DCMAKE_INSTALL_PREFIX=/path/to/install
 #
 #       -DCMAKE_MODULE_PATH=/path/to/ecbuild/cmake
-
 cmake_minimum_required( VERSION 3.12 FATAL_ERROR )
 
 find_package( ecbuild 3.7 HINTS ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../ecbuild)
@@ -491,6 +490,10 @@ ecbuild_dont_pack( DIRS
 #ecbuild_dont_pack( DIRS data/tigge DONT_PACK_REGEX "*.grib" )
 
 add_custom_target(dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
+
+### tests data directory
+
+set(TESTS_DATA_DIR "${CMAKE_CURRENT_BINARY_DIR}/data" CACHE INTERNAL "Path to downloaded test data")
 
 ###############################################################################
 # export to other projects

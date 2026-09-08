@@ -34,6 +34,7 @@ list(APPEND test_c_bins
     grib_nearest_test
     grib_util_set_spec
     grib_util_set_spec2
+    grib_util_set_spec_reduced_missing
     grib_check_param_concepts
     grib_local_MeteoFrance
     grib_2nd_order_numValues
@@ -166,6 +167,8 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1766
         grib_ecc-1829
         grib_ecc-2140
+        grib_ecc-2317
+        grib_ecc-2319
         bufr_ecc-1028
         bufr_ecc-912
         bufr_ecc-1195
@@ -468,6 +471,7 @@ if( HAVE_BUILD_TOOLS )
     if( ENABLE_EXTRA_TESTS )
         list(APPEND tests_extra grib_util_set_spec)
         list(APPEND tests_extra grib_util_set_spec2)
+        list(APPEND tests_extra grib_util_set_spec_reduced_missing)
         list(APPEND tests_extra grib_padding)
         list(APPEND tests_extra grib_tigge_conversions1)
         list(APPEND tests_extra grib_tigge_conversions2)
@@ -658,12 +662,10 @@ endif()
 if( eccodes_HAVE_ECKIT_GEO AND eccodes_HAVE_GEOGRAPHY )
     target_link_libraries(grib_geo_iterator eckit_geo)
 
-    foreach( test
-            grib_from_gridspec
-            grib_to_gridspec )
-        ecbuild_add_test( TARGET eccodes_t_${test}
-                          SOURCES ${test}.cc
-                          LIBS eccodes eckit_geo
-                          WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} )
-    endforeach()
+    ecbuild_add_test( TARGET eccodes_t_gridspec
+                      SOURCES gridspec.cc
+                      LIBS eccodes eckit_geo
+                      TEST_DEPENDS eccodes_download_gridspec_gribs
+                      WORKING_DIRECTORY "${TESTS_DATA_DIR}"
+                      ENVIRONMENT ECCODES_ECKIT_GEO=1 )
 endif()
