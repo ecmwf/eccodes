@@ -19,7 +19,7 @@
 
 . ./include.ctest.sh
 
-grib2_sample=$ECCODES_SAMPLES_PATH/lc-gcr_sttd_grib2.tmpl
+grib2_sample=${data_dir}/lcgcr/regular_ll_sttd.grib2
 label="grib_lc-gcr_test"
 
 temp1=temp1.${label}.grib2
