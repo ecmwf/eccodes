@@ -37,7 +37,16 @@ cmake --build "${TMPDIR:-/tmp}/build" --parallel "${SLURM_NTASKS:-8}"
 # on "Unable to find boot.def".
 export ECCODES_DEFINITION_PATH="${TMPDIR:-/tmp}/build/share/eccodes/definitions"
 export ECCODES_SAMPLES_PATH="${TMPDIR:-/tmp}/build/share/eccodes/samples"
-ctest --test-dir "${TMPDIR:-/tmp}/build" --output-on-failure -j "${SLURM_NTASKS:-8}"
+# Fetch the test data first, at low concurrency and with a retry. Four
+# concurrent HTTPS fetches against sites.ecmwf.int have been enough to draw
+# `curl: (16) Error in the HTTP2 framing layer`, and curl's own --retry does not
+# cover exit 16 -- so the retry has to be ctest's. Scoped by the download_data
+# label ecbuild_get_test_multidata applies, so a real eccodes test failure is
+# never silently re-run.
+ctest --test-dir "${TMPDIR:-/tmp}/build" --output-on-failure \
+  -L download_data -j 2 --repeat until-pass:3
+ctest --test-dir "${TMPDIR:-/tmp}/build" --output-on-failure \
+  -LE download_data -j "${SLURM_NTASKS:-8}"
 
 # Install to node-local SSD, then copy the tree across in one pass. eccodes
 # installs ~24k small definition files; doing that as individual `cmake
