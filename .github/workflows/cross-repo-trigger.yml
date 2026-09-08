@@ -115,7 +115,7 @@ jobs:
     needs:
     - resolve
     if: contains(fromJSON(inputs.from-jobs), 'ecbuild/build') || contains(fromJSON(inputs.from-jobs), 'stack-deps/build') || contains(fromJSON(inputs.from-jobs), 'eckit/build') || inputs.rebuild-request
-    name: eccodes/build (${{ matrix['cxx-compiler'] }}, ${{ matrix.platform }})
+    name: eccodes/build (${{ matrix.platform }}, ${{ matrix['cxx-compiler'] }}, ${{ matrix.options || 'default' }})
     runs-on: ${{ matrix['runs-on'] }}
     container:
       image: ${{ matrix.container || '' }}
@@ -136,9 +136,11 @@ jobs:
         token: ${{ steps.mint.outputs.token }}
         head-repo: ${{ inputs.from-repo }}
         head-sha: ${{ inputs.from-sha }}
-        name: eccodes/build (${{ matrix['cxx-compiler'] }}, ${{ matrix.platform }})
+        name: eccodes/build (${{ matrix.platform }}, ${{ matrix['cxx-compiler'] }}, ${{ matrix.options || 'default' }})
         details-url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         phase: start
+    - name: Announce image
+      uses: ecmwf/ci-infrastructure/actions/announce-image@main
     - uses: actions/checkout@v6
       with:
         repository: ecmwf/eccodes
@@ -147,6 +149,8 @@ jobs:
     - name: Decode matrix-leg
       id: m
       shell: bash
+      env:
+        MATRIX_LEG: ${{ toJSON(matrix) }}
       run: |
         set -euo pipefail
         shopt -s inherit_errexit 2>/dev/null || true
@@ -154,7 +158,7 @@ jobs:
           echo "::error::jq is required but not installed in this runner/image." >&2
           exit 1
         }
-        leg='${{ toJSON(matrix) }}'
+        leg="$MATRIX_LEG"
         require() {
           local val
           val=$(jq -r "$1" <<<"$leg")
@@ -180,9 +184,8 @@ jobs:
         } >> "$GITHUB_OUTPUT"
     - name: Fetch resolved deps
       id: deps
-      uses: ecmwf/ci-infrastructure/actions/fetch-and-publish@main
+      uses: ecmwf/ci-infrastructure/actions/fetch-deps@main
       with:
-        mode: download-only
         deps-json: ${{ steps.m.outputs.deps-json }}
         token: ${{ steps.mint.outputs.token }}
     - name: Build
@@ -194,10 +197,11 @@ jobs:
         fortran-compiler: ${{ steps.m.outputs.fortran-compiler }}
         build-type: ${{ steps.m.outputs.build-type }}
         options: ${{ steps.m.outputs.options }}
+    - name: Test
+      run: ctest --test-dir "${{ steps.build.outputs.build-dir }}" --output-on-failure -j "$(nproc)"
     - name: Publish
-      uses: ecmwf/ci-infrastructure/actions/fetch-and-publish@main
+      uses: ecmwf/ci-infrastructure/actions/publish-artifact@main
       with:
-        mode: publish
         install-path: ${{ steps.build.outputs.install-path }}
         artifact-name: ${{ steps.m.outputs.own-artifact-name }}
     - name: Report check-run conclusion
@@ -207,7 +211,7 @@ jobs:
         token: ${{ steps.mint.outputs.token }}
         head-repo: ${{ inputs.from-repo }}
         head-sha: ${{ inputs.from-sha }}
-        name: eccodes/build (${{ matrix['cxx-compiler'] }}, ${{ matrix.platform }})
+        name: eccodes/build (${{ matrix.platform }}, ${{ matrix['cxx-compiler'] }}, ${{ matrix.options || 'default' }})
         details-url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         phase: finish
         conclusion: ${{ job.status }}
