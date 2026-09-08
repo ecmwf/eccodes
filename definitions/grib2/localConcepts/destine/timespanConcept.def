@@ -1,0 +1,7 @@
+## Statistical window concept for ECMWF
+# either instantaneous data or processing is specified by mars stream
+###############
+# 1257 | sttd #
+###############
+# this is for one loop grib2 data
+'none'  = {stream=1257; numberOfTimeRanges=1; true=is_one_of(indicatorOfUnitForTimeRange,1,2,3);}

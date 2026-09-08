@@ -293,6 +293,17 @@
 'satellite' = {productDefinitionTemplateNumber=206;}
 'satellite' = {productDefinitionTemplateNumber=207;}
 #
+'base' = {productDefinitionTemplateNumber=224; MTG2Switch=1;}
+'chemical' = {productDefinitionTemplateNumber=224; MTG2Switch=2;}
+'base' = {productDefinitionTemplateNumber=225; MTG2Switch=1;}
+'chemical' = {productDefinitionTemplateNumber=225; MTG2Switch=2;}
+'base' = {productDefinitionTemplateNumber=226; MTG2Switch=1;}
+'chemical' = {productDefinitionTemplateNumber=226; MTG2Switch=2;}
+'base' = {productDefinitionTemplateNumber=227; MTG2Switch=1;}
+'chemical' = {productDefinitionTemplateNumber=227; MTG2Switch=2;}
+'base' = {productDefinitionTemplateNumber=228; MTG2Switch=1;}
+'chemical' = {productDefinitionTemplateNumber=228; MTG2Switch=2;}
+#
 'base' = {productDefinitionTemplateNumber=254;}
 'base' = {productDefinitionTemplateNumber=311;}
 'base' = {productDefinitionTemplateNumber=1000;}
