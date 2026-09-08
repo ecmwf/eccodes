@@ -661,13 +661,10 @@ endif()
 if( eccodes_HAVE_ECKIT_GEO AND eccodes_HAVE_GEOGRAPHY )
     target_link_libraries(grib_geo_iterator eckit_geo)
 
-    foreach( test
-            grib_from_gridspec
-            grib_to_gridspec )
-        ecbuild_add_test( TARGET eccodes_t_${test}
-                          SOURCES ${test}.cc
-                          LIBS eccodes eckit_geo
-                          WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-                          ENVIRONMENT ECCODES_ECKIT_GEO=1 )
-    endforeach()
+    ecbuild_add_test( TARGET eccodes_t_gridspec
+                      SOURCES gridspec.cc
+                      LIBS eccodes eckit_geo
+                      TEST_DEPENDS eccodes_download_gridspec_gribs
+                      WORKING_DIRECTORY "${TESTS_DATA_DIR}"
+                      ENVIRONMENT ECCODES_ECKIT_GEO=1 )
 endif()
