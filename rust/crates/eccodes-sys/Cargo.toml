@@ -24,6 +24,8 @@ product-bufr = []
 
 # Geospatial (CMake default: ON)
 geography = []
+# eckit::geo Geoiterator backend (CMake default OFF); eckit gates ECKIT_GEO on CODEC+SPEC
+eckit-geo = ["geography", "eckit-sys/eckit-geo", "eckit-sys/eckit-codec", "eckit-sys/eckit-spec"]
 
 # Compression codecs
 aec = []   # CMake default ON

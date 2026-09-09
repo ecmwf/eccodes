@@ -228,6 +228,10 @@ fn build_eccodes_impl(
         bindman_utils::on_off(cfg!(feature = "geography"))
     ));
     cmd.arg(format!(
+        "-DENABLE_ECKIT_GEO={}",
+        bindman_utils::on_off(cfg!(feature = "eckit-geo"))
+    ));
+    cmd.arg(format!(
         "-DENABLE_AEC={}",
         bindman_utils::on_off(cfg!(feature = "aec"))
     ));
