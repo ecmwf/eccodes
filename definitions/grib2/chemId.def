@@ -957,7 +957,7 @@
 '950' = {
 	constituentType = 62045 ;
 	}
-#Burnt carbon as sum of carbon in all carbon species (CO, CO2, OC, BC, Ch4)
+#Burnt carbon as sum of carbon in all carbon species (CO, CO2, OC, BC, CH4)
 '951' = {
 	constituentType = 62046 ;
 	}
