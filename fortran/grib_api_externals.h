@@ -54,7 +54,9 @@ integer, external :: grib_f_get_int, grib_f_get_long,grib_f_get_int_array, &
                      grib_f_grib_surface_type_requires_value
 integer, external :: grib_f_new_from_index, &
                      grib_f_index_new_from_file, &
+                     grib_f_index_new, &
                      grib_f_index_add_file, &
+                     grib_f_index_add_message, &
                      grib_f_index_read, &
                      grib_f_index_write, &
                      grib_f_index_release, &

@@ -50,6 +50,22 @@
     call grib_index_create(indexid, filename, keys, status)
   end subroutine codes_index_create
 
+  !> Create a new empty index with the given keys.
+  !>
+  !> Unlike codes_index_create, no file is scanned. Messages can be added
+  !> later with codes_index_add_message.
+  !>
+  !> @param indexid     ID of the newly created index
+  !> @param keys        comma separated list of keys for the index
+  !> @param status      CODES_SUCCESS if OK, integer value on error
+  subroutine codes_index_new(indexid, keys, status)
+    integer(kind=kindOfInt), intent(inout)          :: indexid
+    character(len=*), intent(in)                    :: keys
+    integer(kind=kindOfInt), optional, intent(out)  :: status
+
+    call grib_index_new(indexid, keys, status)
+  end subroutine codes_index_new
+
   !> Add a file to an index.
   !>
   !> In case of error, if the status parameter (optional) is not given, the program will
@@ -68,6 +84,24 @@
 
     call grib_index_add_file(indexid, filename, status)
   end subroutine codes_index_add_file
+
+  !> Add a GRIB message handle to an index at the given file offset.
+  !> See grib_index_add_message for full documentation.
+  !>
+  !> @param indexid     ID of the index to update
+  !> @param gribid      ID of the message handle to index
+  !> @param filename    name of the file containing the message
+  !> @param offset      byte offset of the message within the file
+  !> @param status      CODES_SUCCESS if OK, integer value on error
+  subroutine codes_index_add_message(indexid, gribid, filename, offset, status)
+    integer(kind=kindOfInt), intent(in)             :: indexid
+    integer(kind=kindOfInt), intent(in)             :: gribid
+    character(len=*), intent(in)                    :: filename
+    integer(kind=8), intent(in)                     :: offset
+    integer(kind=kindOfInt), optional, intent(out)  :: status
+
+    call grib_index_add_message(indexid, gribid, filename, offset, status)
+  end subroutine codes_index_add_message
 
   !> Get the number of distinct values of the key in argument contained in the index. The key must belong to the index.
   !>
