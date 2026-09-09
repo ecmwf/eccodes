@@ -511,7 +511,8 @@ if( HAVE_BUILD_TOOLS )
                       RESOURCES asca_139.t1.ref
                       TEST_DEPENDS eccodes_download_gribs eccodes_download_tigge_gribs
                                    eccodes_download_bufrs eccodes_download_bufr_refs
-                                   eccodes_download_metars eccodes_download_gts )
+                                   eccodes_download_metars eccodes_download_gts
+                                   eccodes_download_lcgcr_gribs eccodes_download_gridspec_gribs )
     endforeach()
 
     if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
