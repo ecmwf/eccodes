@@ -40,8 +40,8 @@ jobs:
     container:
       image: eccr.ecmwf.int/public-ci-images/ubuntu24.04-base:latest
     outputs:
-      build-matrix: ${{ steps.r.outputs.matrix-build }}
-      build-hpc-matrix: ${{ steps.r.outputs.matrix-build-hpc }}
+      build-matrix: ${{ steps.r_retry.outputs.matrix-build || steps.r.outputs.matrix-build }}
+      build-hpc-matrix: ${{ steps.r_retry.outputs.matrix-build-hpc || steps.r.outputs.matrix-build-hpc }}
     steps:
       - name: Announce image
         uses: ecmwf/ci-infrastructure/actions/announce-image@main
@@ -55,6 +55,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.number && format('refs/pull/{0}/merge', github.event.pull_request.number) || '' }}
       - id: r
+        continue-on-error: true
         uses: ecmwf/ci-infrastructure/actions/resolve-deps@main
         with:
           current-branch: ${{ github.head_ref || github.ref_name }}
@@ -62,6 +63,18 @@ jobs:
           token: ${{ steps.mint.outputs.token }}
           client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
           app-private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
+      - id: r_retry
+        if: ${{ steps.r.outcome == 'failure' }}
+        uses: ecmwf/ci-infrastructure/actions/resolve-deps@main
+        with:
+          current-branch: ${{ github.head_ref || github.ref_name }}
+          matrix: build,build-hpc
+          token: ${{ steps.mint.outputs.token }}
+          client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
+          app-private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
+      - name: Fail resolve after retry
+        if: ${{ steps.r.outcome == 'failure' && steps.r_retry.outcome == 'failure' }}
+        run: exit 1
 
   build:
     needs: [ci-approval, resolve]
