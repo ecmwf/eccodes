@@ -31,6 +31,9 @@ grib_check_key_equals $tempGrib marsClass:i,marsType:i,marsStream:i '18 17 1029'
 
 # Check unalias
 # -----------------
+${tools_dir}/grib_set -s stream=gfra,type=ga,backgroundProcess=144,generatingProcessIdentifier=1 $grib2_sample $tempGrib
+grib_check_key_equals $tempGrib mars.stream,mars.type 'gfra ga'
+
 ${tools_dir}/grib_set -s stream=gfas,type=ga,backgroundProcess=144,generatingProcessIdentifier=1 $grib2_sample $tempGrib
 ${tools_dir}/grib_ls -jm $tempGrib > $tempOut
 cat > $tempRef << EOF
