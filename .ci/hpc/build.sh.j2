@@ -38,10 +38,7 @@ cmake --build "${TMPDIR:-/tmp}/build" --parallel "${SLURM_NTASKS:-8}"
 export ECCODES_DEFINITION_PATH="${TMPDIR:-/tmp}/build/share/eccodes/definitions"
 export ECCODES_SAMPLES_PATH="${TMPDIR:-/tmp}/build/share/eccodes/samples"
 # Fetch the test data first. A download failure otherwise surfaces as dozens of
-# unrelated test failures: on 2026-09-08 two `curl: (16)` errors cost 66 of 481
-# tests, only 2 of which were the download tests themselves. Retrying is
-# ecbuild's job, not ctest's. Exactly six targets carry the download_data label
-# that ecbuild_get_test_multidata applies, hence -j 6.
+# unrelated test failures:
 ctest --test-dir "${TMPDIR:-/tmp}/build" --output-on-failure \
   -L download_data -j 6
 ctest --test-dir "${TMPDIR:-/tmp}/build" --output-on-failure \
