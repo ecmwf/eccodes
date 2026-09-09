@@ -37,7 +37,12 @@ cmake --build "${TMPDIR:-/tmp}/build" --parallel "${SLURM_NTASKS:-8}"
 # on "Unable to find boot.def".
 export ECCODES_DEFINITION_PATH="${TMPDIR:-/tmp}/build/share/eccodes/definitions"
 export ECCODES_SAMPLES_PATH="${TMPDIR:-/tmp}/build/share/eccodes/samples"
-ctest --test-dir "${TMPDIR:-/tmp}/build" --output-on-failure -j "${SLURM_NTASKS:-8}"
+# Fetch the test data first. A download failure otherwise surfaces as dozens of
+# unrelated test failures:
+ctest --test-dir "${TMPDIR:-/tmp}/build" --output-on-failure \
+  -L download_data -j 6
+ctest --test-dir "${TMPDIR:-/tmp}/build" --output-on-failure \
+  -LE download_data -j "${SLURM_NTASKS:-8}"
 
 # Install to node-local SSD, then copy the tree across in one pass. eccodes
 # installs ~24k small definition files; doing that as individual `cmake
