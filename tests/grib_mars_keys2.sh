@@ -47,7 +47,7 @@ cat > $tempRef << EOF
     "levelist": 1000,
     "levtype": "pl",
     "param": 130,
-    "configuration": 1.2
+    "configuration": "v1.2"
   }
 ]}
 EOF
@@ -67,7 +67,7 @@ cat > $tempRef << EOF
     "type": "gsd",
     "stream": "gfas",
     "param": 130,
-    "configuration": 1.2
+    "configuration": "v1.2"
   }
 ]}
 EOF
