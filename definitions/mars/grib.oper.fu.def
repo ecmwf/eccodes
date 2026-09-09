@@ -9,7 +9,7 @@ if (edition == 2) {
   unalias mars.date;
   unalias mars.time;
   alias mars.date = dateOfForecast ;
-  alias	mars.time = timeOfForecast ;
+  alias mars.time = timeOfForecast ;
  }
 }
 
