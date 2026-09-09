@@ -56,6 +56,28 @@ cat > $tempRef << EOF
 EOF
 diff $tempRef $tempOut
 
+${tools_dir}/grib_set -s stream=gfra,type=ga,backgroundProcess=144,generatingProcessIdentifier=1 $grib2_sample $tempGrib
+${tools_dir}/grib_ls -jm $tempGrib > $tempOut
+cat > $tempRef << EOF
+{ "messages" : [ 
+  {
+    "domain": "g",
+    "date": 20100912,
+    "time": 1200,
+    "expver": "0001",
+    "class": "od",
+    "type": "ga",
+    "stream": "gfra",
+    "step": 0,
+    "levelist": 1000,
+    "levtype": "pl",
+    "param": 130,
+    "configuration": "v1.2"
+  }
+]}
+EOF
+diff $tempRef $tempOut
+
 # This combo unaliases mars.levelist and mars.step
 ${tools_dir}/grib_set -s stream=gfas,type=gsd,backgroundProcess=144,generatingProcessIdentifier=1 $grib2_sample $tempGrib
 ${tools_dir}/grib_ls -jm $tempGrib > $tempOut
@@ -84,6 +106,24 @@ status=$?
 set -e
 [ $status -ne 0 ]
 
+${tools_dir}/grib_set -s stream=gfra,type=gsd,backgroundProcess=144,generatingProcessIdentifier=1 $grib2_sample $tempGrib
+${tools_dir}/grib_ls -jm $tempGrib > $tempOut
+cat > $tempRef << EOF
+{ "messages" : [ 
+  {
+    "domain": "g",
+    "date": 20100912,
+    "time": 1200,
+    "expver": "0001",
+    "class": "od",
+    "type": "gsd",
+    "stream": "gfra",
+    "param": 130,
+    "configuration": "v1.2"
+  }
+]}
+EOF
+diff $tempRef $tempOut
 
 # GRIB1
 # This combo unaliases mars.step
