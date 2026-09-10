@@ -456,7 +456,7 @@ impl<T: KeySet> KeySet for Option<T> {
     fn set_on<K: MessageKind>(self, message: &mut Message<K>, key: &str) -> Result<()> {
         match self {
             Some(value) => value.set_on(message, key),
-            None => message.set_missing(key),
+            None => message.set_value_missing(key),
         }
     }
 }

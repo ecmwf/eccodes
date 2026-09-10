@@ -699,7 +699,7 @@ fn data_points_missing_pv_precision() -> eccodes::Result<()> {
     // grib_set_missing.c: surface-level scale keys can be set missing
     // and report it — as a predicate, or by reading them as Option.
     message.set("typeOfFirstFixedSurface", "sfc")?;
-    message.set_missing("scaleFactorOfFirstFixedSurface")?;
+    message.set_value_missing("scaleFactorOfFirstFixedSurface")?;
     message.set("scaledValueOfFirstFixedSurface", None::<i64>)?;
     assert!(message.is_value_missing("scaleFactorOfFirstFixedSurface")?);
     assert_eq!(

@@ -120,7 +120,7 @@ impl<K: MessageKind> Message<K> {
     /// Write a key.
     ///
     /// `None` sets the key to its missing value, the same as
-    /// [`set_missing`](Self::set_missing).
+    /// [`set_value_missing`](Self::set_value_missing).
     pub fn set<T: KeySet>(&mut self, key: &str, value: T) -> Result<()> {
         value.set_on(self, key)
     }
@@ -178,7 +178,7 @@ impl<K: MessageKind> Message<K> {
     }
 
     /// Code the key as missing.
-    pub fn set_missing(&mut self, key: &str) -> Result<()> {
+    pub fn set_value_missing(&mut self, key: &str) -> Result<()> {
         let ckey = ffi::cstring(key)?;
         check!(sys::codes_set_missing(self.as_ptr(), ckey.as_ptr())).with_key(key)
     }
