@@ -51,9 +51,7 @@ jobs:
           client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
           private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
-      - uses: actions/checkout@v6
-        with:
-          ref: ${{ github.event.pull_request.number && format('refs/pull/{0}/merge', github.event.pull_request.number) || '' }}
+      - uses: ecmwf/ci-infrastructure/actions/checkout-under-test@main
       - id: r
         uses: ecmwf/ci-infrastructure/actions/resolve-deps@main
         with:
@@ -81,9 +79,7 @@ jobs:
           client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
           private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
-      - uses: actions/checkout@v6
-        with:
-          ref: ${{ github.event.pull_request.number && format('refs/pull/{0}/merge', github.event.pull_request.number) || '' }}
+      - uses: ecmwf/ci-infrastructure/actions/checkout-under-test@main
 
       - name: Fetch resolved deps
         id: deps
@@ -102,11 +98,6 @@ jobs:
           build-type: ${{ matrix.build-type }}
           options: ${{ matrix.options }}
 
-      - name: Print dependency table
-        uses: ecmwf/ci-infrastructure/actions/print-dep-table@main
-        with:
-          resolved-json: ${{ toJSON(matrix._resolved) }}
-
       # Invocation comes from .ci/manifest.toml's [matrix.build], the same place
       # the generated cross-repo-trigger.yml renders its Test step from. Spelling
       # it out again here is how the two lanes drift apart.
@@ -119,6 +110,21 @@ jobs:
         with:
           install-path: ${{ steps.build.outputs.install-path }}
           artifact-name: ${{ matrix._resolved.own-artifact-name }}
+
+      - name: Print dependency table
+        if: always()
+        uses: ecmwf/ci-infrastructure/actions/print-dep-table@main
+        with:
+          deps-json: ${{ toJSON(matrix._resolved.deps) }}
+          own-name: eccodes
+          own-sha: ${{ matrix._resolved.own-sha }}
+          own-ref: ${{ matrix._resolved.own-ref }}
+          own-artifact-name: ${{ matrix._resolved.own-artifact-name }}
+          own-platform: ${{ matrix._resolved.own-platform }}
+          own-compiler: ${{ matrix._resolved.own-compiler }}
+          own-python: ${{ matrix._resolved.own-python }}
+          own-build-type: ${{ matrix._resolved.own-build-type }}
+          own-deps-hash: ${{ matrix._resolved.own-deps-hash }}
 
   build-hpc:
     needs: [ci-approval, resolve]
@@ -141,9 +147,7 @@ jobs:
           client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
           private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
-      - uses: actions/checkout@v6
-        with:
-          ref: ${{ github.event.pull_request.number && format('refs/pull/{0}/merge', github.event.pull_request.number) || '' }}
+      - uses: ecmwf/ci-infrastructure/actions/checkout-under-test@main
 
       - name: Fetch resolved deps
         id: deps
@@ -167,3 +171,18 @@ jobs:
           work-dir: ${{ vars.HPC_CI_WORK_DIR }}
           remote-work-dir: ${{ vars.HPC_CI_REMOTE_WORK_DIR }}
           troika-user: ${{ secrets.HPC_CI_SSH_USER }}
+
+      - name: Print dependency table
+        if: always()
+        uses: ecmwf/ci-infrastructure/actions/print-dep-table@main
+        with:
+          deps-json: ${{ toJSON(matrix._resolved.deps) }}
+          own-name: eccodes
+          own-sha: ${{ matrix._resolved.own-sha }}
+          own-ref: ${{ matrix._resolved.own-ref }}
+          own-artifact-name: ${{ matrix._resolved.own-artifact-name }}
+          own-platform: ${{ matrix._resolved.own-platform }}
+          own-compiler: ${{ matrix._resolved.own-compiler }}
+          own-python: ${{ matrix._resolved.own-python }}
+          own-build-type: ${{ matrix._resolved.own-build-type }}
+          own-deps-hash: ${{ matrix._resolved.own-deps-hash }}
