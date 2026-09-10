@@ -51,6 +51,9 @@ foreach( tool ${ecc_tools_binaries} )
     ecbuild_add_executable( TARGET     ${tool}
                             SOURCES    ${tool}.cc
                             LIBS       ecc_tools )
+    if( HAVE_EMSCRIPTEN )
+        eccodes_add_wasm_wrapper( ${tool} )
+    endif()
 endforeach()
 
 # Install extra tools
@@ -60,6 +63,9 @@ foreach( tool ${ecc_tools_binaries_extra} )
                             SOURCES    ${tool}.cc
                             CONDITION  ECCODES_INSTALL_EXTRA_TOOLS
                             LIBS       ecc_tools )
+    if( HAVE_EMSCRIPTEN AND ECCODES_INSTALL_EXTRA_TOOLS )
+        eccodes_add_wasm_wrapper( ${tool} )
+    endif()
 endforeach()
 
 
@@ -73,6 +79,11 @@ ecbuild_add_executable( TARGET     bufr_count
 ecbuild_add_executable( TARGET     gts_count
                         SOURCES    codes_count.cc
                         LIBS       ecc_tools )
+if( HAVE_EMSCRIPTEN )
+    eccodes_add_wasm_wrapper( grib_count )
+    eccodes_add_wasm_wrapper( bufr_count )
+    eccodes_add_wasm_wrapper( gts_count )
+endif()
 
 # grib to netcdf is optional
 ecbuild_add_executable( TARGET     grib_to_netcdf
@@ -89,6 +100,9 @@ ecbuild_add_executable( TARGET     grib_list_keys
 ecbuild_add_executable( TARGET     codes_bufr_filter
                         SOURCES    bufr_filter.cc
                         LIBS       ecc_tools )
+if( HAVE_EMSCRIPTEN )
+    eccodes_add_wasm_wrapper( codes_bufr_filter )
+endif()
 
 
 if( ECCODES_INSTALL_EXTRA_TOOLS )

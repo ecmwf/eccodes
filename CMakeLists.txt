@@ -73,9 +73,118 @@ ecbuild_debug("ECCODES_BIG_ENDIAN=${ECCODES_BIG_ENDIAN}")
 ecbuild_debug("ECCODES_LITTLE_ENDIAN=${ECCODES_LITTLE_ENDIAN}")
 ecbuild_info("Operating system=${CMAKE_SYSTEM} (${EC_OS_BITS} bits)")
 
-# Only support 64 bit operating systems
-if( NOT EC_OS_BITS EQUAL "64" )
+# Only support 64 bit operating systems.
+# Exception: Emscripten/WebAssembly is allowed in both wasm32 and wasm64
+# configurations. The wasm32 target reports EC_OS_BITS=32 but is a sandboxed
+# runtime where the usual 64-bit platform assumptions (size_t width in on-disk
+# formats, etc.) do not apply because ecCodes never persists its in-memory
+# types across processes there.
+if( NOT EC_OS_BITS EQUAL "64" AND NOT (CMAKE_SYSTEM_NAME STREQUAL "Emscripten" OR EMSCRIPTEN) )
     ecbuild_critical( "Operating system ${CMAKE_SYSTEM} (${EC_OS_BITS} bits) -- ecCodes only supports 64 bit platforms" )
+endif()
+
+###############################################################################
+# WebAssembly (Emscripten) support
+#
+# When building with the Emscripten toolchain the compiled binaries are
+# JavaScript loader files (foo.js) that load an accompanying foo.wasm.
+# The existing ecCodes test harness expects to invoke tools directly by name
+# (e.g. ${tools_dir}/grib_dump). To make the tests work in wasm we:
+#   - detect the Emscripten build (HAVE_EMSCRIPTEN)
+#   - after each executable is built, drop a small shell wrapper next to the
+#     .js output so the tools can be invoked by their plain name via Node.js
+#   - disable ctests that require external data downloads or unsupported
+#     features (see tests/CMakeLists.txt).
+set( HAVE_EMSCRIPTEN 0 )
+if( CMAKE_SYSTEM_NAME STREQUAL "Emscripten" OR EMSCRIPTEN )
+    set( HAVE_EMSCRIPTEN 1 )
+    ecbuild_info("Emscripten/WebAssembly build detected -- HAVE_EMSCRIPTEN=1")
+
+    if( NOT DEFINED ECCODES_WASM_NODE )
+        set( ECCODES_WASM_NODE "node" CACHE STRING "Node.js executable used to run wasm binaries in ctests" )
+    endif()
+
+    # Emscripten note: by default the runtime keeps stdio buffered and does not
+    # flush it on exit(), which breaks ecCodes tools (e.g. codes_info -v) that
+    # write output without a trailing newline. Enabling EXIT_RUNTIME=1 ensures
+    # streams are flushed cleanly when main() returns.
+    #
+    # NODE_HOST_ENV=1 mirrors the host process environment into the wasm module
+    # so tests can pass ECCODES_*_PATH and GRIB_*_PATH environment variables to
+    # the tools just like on a native build.
+    #
+    # NODERAWFS=1 replaces the default in-memory filesystem with direct access
+    # to the underlying Node.js filesystem. Without it the wasm tools cannot
+    # read the sample/test GRIB/BUFR files that live on the host disk.
+    foreach( _flag "-sEXIT_RUNTIME=1" "-sNODE_HOST_ENV=1" "-sNODERAWFS=1" )
+        string( FIND "${CMAKE_EXE_LINKER_FLAGS}" "${_flag}" _pos )
+        if( _pos EQUAL -1 )
+            set( CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${_flag}" CACHE STRING "" FORCE )
+        endif()
+    endforeach()
+
+    # ecCodes uses C++ exceptions in some accessors. Emscripten's default build
+    # settings disable exception support at compile time (see -fno-exceptions),
+    # which turns any `throw` into an abort at runtime. Enable the JavaScript-
+    # based exception model so the tools do not crash on parsing errors.
+    foreach( _flag "-fexceptions" )
+        string( FIND "${CMAKE_CXX_FLAGS}" "${_flag}" _pos )
+        if( _pos EQUAL -1 )
+            set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${_flag}" CACHE STRING "" FORCE )
+        endif()
+        string( FIND "${CMAKE_EXE_LINKER_FLAGS}" "${_flag}" _pos )
+        if( _pos EQUAL -1 )
+            set( CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${_flag}" CACHE STRING "" FORCE )
+        endif()
+    endforeach()
+
+    # ecCodes registers its accessors and CodesFactory types via static
+    # initialisers scattered across many translation units (see
+    # AccessorBuilder<T> in src/eccodes/accessor/*.cc). When linking a static
+    # library the linker discards object files whose symbols are not directly
+    # referenced by main(), which drops those registrations and produces
+    # "No creator for type <foo>" errors at runtime. Under Emscripten we build
+    # ecCodes as a static archive, so we must ask the linker to keep every
+    # object from the archive.
+    foreach( _flag "-Wl,--whole-archive" )
+        string( FIND "${CMAKE_EXE_LINKER_FLAGS}" "whole-archive" _pos )
+        if( _pos EQUAL -1 )
+            # Note: --whole-archive must apply to libeccodes.a and libeccodes_memfs.a
+            # only, not to system libraries. We rely on the fact that these are
+            # the first archives on the link line via the tool/test target
+            # settings; --no-whole-archive is appended by
+            # eccodes_finalise_whole_archive() below to close the scope.
+            set( CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${_flag}" CACHE STRING "" FORCE )
+        endif()
+    endforeach()
+
+    # Under wasm32 size_t and unsigned long are 32 bits wide, so a handful of
+    # 64-bit hex literals in the GRIB second-order-packing accessors trigger
+    # -Wc++11-narrowing (they are silently accepted on 64-bit native builds).
+    # Demote it to a plain warning so the build proceeds; the affected loops
+    # are bounded by their array `count` and cannot walk into the truncated
+    # tail entries.
+    foreach( _flag "-Wno-c++11-narrowing" )
+        string( FIND "${CMAKE_CXX_FLAGS}" "${_flag}" _pos )
+        if( _pos EQUAL -1 )
+            set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${_flag}" CACHE STRING "" FORCE )
+        endif()
+    endforeach()
+
+    # Helper: create a POSIX shell wrapper next to each Emscripten .js target so
+    # that the existing shell-based test suite can invoke tools/tests by their
+    # plain name (e.g. grib_dump) instead of grib_dump.js.
+    function( eccodes_add_wasm_wrapper target )
+        set( _wrapper_dir  ${CMAKE_BINARY_DIR}/wasm_wrappers )
+        set( _wrapper_file ${_wrapper_dir}/${target}.wrapper.sh )
+        file( GENERATE OUTPUT ${_wrapper_file}
+              CONTENT "#!/bin/sh\nexec ${ECCODES_WASM_NODE} $<TARGET_FILE_DIR:${target}>/${target}.js \"$@\"\n" )
+        add_custom_command( TARGET ${target} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${_wrapper_file} $<TARGET_FILE_DIR:${target}>/${target}
+            COMMAND chmod +x $<TARGET_FILE_DIR:${target}>/${target}
+            VERBATIM
+            COMMENT "Creating wasm wrapper for ${target}" )
+    endfunction()
 endif()
 
 ###############################################################################

@@ -93,6 +93,9 @@ foreach( tool ${test_c_bins} )
                             NOINSTALL
                             SOURCES   ${tool}.cc
                             LIBS      eccodes )
+    if( HAVE_EMSCRIPTEN )
+        eccodes_add_wasm_wrapper( ${tool} )
+    endif()
 endforeach()
 
 
@@ -483,10 +486,26 @@ if( HAVE_BUILD_TOOLS )
 
     # These tests do not require any data downloads
     foreach( test ${tests_basic} )
-        ecbuild_add_test( TARGET  eccodes_t_${test}
-                          TYPE    SCRIPT
-                          LABELS  "sanity"
-                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh )
+        # Under Emscripten (WebAssembly) some tests cannot run because they
+        # require features not available in the wasm shell (fork/pipe/exec,
+        # network downloads, native command line tools such as diff/awk with
+        # binary data, or fortran/python bindings that are not built).
+        set( _skip_wasm 0 )
+        if( HAVE_EMSCRIPTEN )
+            # Tests that require features currently unavailable under wasm.
+            list( FIND ECCODES_WASM_DISABLED_TESTS "${test}" _idx )
+            if( NOT _idx EQUAL -1 )
+                set( _skip_wasm 1 )
+            endif()
+        endif()
+        if( _skip_wasm )
+            ecbuild_info("Disabling ctest ${test} under Emscripten (unsupported in wasm environment)")
+        else()
+            ecbuild_add_test( TARGET  eccodes_t_${test}
+                              TYPE    SCRIPT
+                              LABELS  "sanity"
+                              COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh )
+        endif()
     endforeach()
     ecbuild_add_test( TARGET eccodes_t_grib_check_gaussian_grids
                       TYPE SCRIPT
@@ -503,10 +522,15 @@ if( HAVE_BUILD_TOOLS )
     # Note: making the test dependent on the grib files (with DEPENDS)
     #       means they will be downloaded at "make" time
     #       rather than when you do "ctest". Use TEST_DEPENDS instead
+    #
+    # Under Emscripten the required data downloads cannot be performed
+    # at ctest time (no networking in the wasm shell), so we skip these
+    # tests entirely. Basic sanity tests above still run and validate
+    # the wasm build.
     foreach( test ${tests_extra} )
         ecbuild_add_test( TARGET eccodes_t_${test}
                       TYPE SCRIPT
-                      CONDITION ENABLE_EXTRA_TESTS
+                      CONDITION ENABLE_EXTRA_TESTS AND NOT HAVE_EMSCRIPTEN
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
                       RESOURCES asca_139.t1.ref
                       TEST_DEPENDS eccodes_download_gribs eccodes_download_tigge_gribs
@@ -515,10 +539,10 @@ if( HAVE_BUILD_TOOLS )
                                    eccodes_download_lcgcr_gribs eccodes_download_gridspec_gribs )
     endforeach()
 
-    if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
+    if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS AND NOT HAVE_EMSCRIPTEN )
         set_tests_properties( eccodes_t_bufr_dump_encode_fortran PROPERTIES TIMEOUT 2500 )
     endif()
-    if( ENABLE_EXTRA_TESTS )
+    if( ENABLE_EXTRA_TESTS AND NOT HAVE_EMSCRIPTEN )
         set_tests_properties( eccodes_t_bufr_dump_encode_C PROPERTIES TIMEOUT 2500 )
     endif()
 
@@ -527,7 +551,7 @@ if( HAVE_BUILD_TOOLS )
     # Note: the reference file is in the tests dir not data dir!
     ecbuild_add_test( TARGET eccodes_t_grib_grid_lamb_az_eq_area
                       TYPE SCRIPT
-                      CONDITION ENABLE_EXTRA_TESTS
+                      CONDITION ENABLE_EXTRA_TESTS AND NOT HAVE_EMSCRIPTEN
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_grid_lamb_az_eq_area.sh
                       RESOURCES grib_lamb_az_eq_area.ref
                       TEST_DEPENDS eccodes_download_gribs )
@@ -536,18 +560,18 @@ if( HAVE_BUILD_TOOLS )
     ###########################################
     ecbuild_add_test( TARGET eccodes_t_tools_data_from_stdin
                       TYPE SCRIPT
-                      CONDITION NOT ECCODES_ON_WINDOWS AND ENABLE_EXTRA_TESTS
+                      CONDITION NOT ECCODES_ON_WINDOWS AND ENABLE_EXTRA_TESTS AND NOT HAVE_EMSCRIPTEN
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tools_data_from_stdin.sh
                       TEST_DEPENDS eccodes_download_bufrs )
 
     ecbuild_add_test( TARGET eccodes_t_bufr_ecc-197
                       TYPE SCRIPT
-                      CONDITION NOT ECCODES_ON_WINDOWS AND ENABLE_EXTRA_TESTS
+                      CONDITION NOT ECCODES_ON_WINDOWS AND ENABLE_EXTRA_TESTS AND NOT HAVE_EMSCRIPTEN
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/bufr_ecc-197.sh
                       TEST_DEPENDS eccodes_download_bufrs )
     ecbuild_add_test( TARGET eccodes_t_bufr_ecc-1288
                       TYPE SCRIPT
-                      CONDITION NOT ECCODES_ON_WINDOWS AND ENABLE_EXTRA_TESTS
+                      CONDITION NOT ECCODES_ON_WINDOWS AND ENABLE_EXTRA_TESTS AND NOT HAVE_EMSCRIPTEN
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/bufr_ecc-1288.sh
                       TEST_DEPENDS eccodes_download_bufrs eccodes_download_bufr_refs )
 
@@ -590,25 +614,25 @@ if( HAVE_BUILD_TOOLS )
 
     ecbuild_add_test( TARGET eccodes_t_grib_to_netcdf
                       TYPE SCRIPT
-                      CONDITION HAVE_NETCDF AND ENABLE_EXTRA_TESTS AND NOT ECCODES_ON_WINDOWS
+                      CONDITION HAVE_NETCDF AND ENABLE_EXTRA_TESTS AND NOT ECCODES_ON_WINDOWS AND NOT HAVE_EMSCRIPTEN
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_to_netcdf.sh
                       TEST_DEPENDS eccodes_download_gribs )
 
     ecbuild_add_test( TARGET eccodes_t_grib_jpeg
                       TYPE SCRIPT
-                      CONDITION HAVE_JPEG AND ENABLE_EXTRA_TESTS
+                      CONDITION HAVE_JPEG AND ENABLE_EXTRA_TESTS AND NOT HAVE_EMSCRIPTEN
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_jpeg.sh
                       TEST_DEPENDS eccodes_download_gribs )
 
     ecbuild_add_test( TARGET eccodes_t_grib_png
                       TYPE SCRIPT
-                      CONDITION HAVE_PNG AND ENABLE_EXTRA_TESTS
+                      CONDITION HAVE_PNG AND ENABLE_EXTRA_TESTS AND NOT HAVE_EMSCRIPTEN
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_png.sh
                       TEST_DEPENDS eccodes_download_gribs )
 
     ecbuild_add_test( TARGET eccodes_t_grib_ccsds
                       TYPE SCRIPT
-                      CONDITION HAVE_AEC AND ENABLE_EXTRA_TESTS
+                      CONDITION HAVE_AEC AND ENABLE_EXTRA_TESTS AND NOT HAVE_EMSCRIPTEN
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_ccsds.sh
                       TEST_DEPENDS eccodes_download_gribs )
 
@@ -624,13 +648,13 @@ if( HAVE_BUILD_TOOLS )
 
     ecbuild_add_test( TARGET eccodes_t_bufr_split_by_rdbSubtype
                       TYPE SCRIPT
-                      CONDITION ENABLE_EXTRA_TESTS AND ECCODES_INSTALL_EXTRA_TOOLS
+                      CONDITION ENABLE_EXTRA_TESTS AND ECCODES_INSTALL_EXTRA_TOOLS AND NOT HAVE_EMSCRIPTEN
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/bufr_split_by_rdbSubtype.sh
                       TEST_DEPENDS eccodes_download_bufrs )
 
     ecbuild_add_test( TARGET eccodes_t_codes_export_resource
                       TYPE SCRIPT
-                      CONDITION ECCODES_INSTALL_EXTRA_TOOLS
+                      CONDITION ECCODES_INSTALL_EXTRA_TOOLS AND NOT HAVE_EMSCRIPTEN
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/codes_export_resource.sh )
 
     # Performance test
