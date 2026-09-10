@@ -104,6 +104,25 @@ if( CMAKE_SYSTEM_NAME STREQUAL "Emscripten" OR EMSCRIPTEN )
         set( ECCODES_WASM_NODE "node" CACHE STRING "Node.js executable used to run wasm binaries in ctests" )
     endif()
 
+    # Sanity ctests that are known to fail specifically on wasm32 (they rely on
+    # BUFR values with bit-widths that do not fit into a 32-bit size_t on the
+    # wasm target -- see ECC-1290 / spectralWaveDensity). Under wasm64 all
+    # sanity tests pass, so this list is only consulted when the wasm ABI is
+    # 32-bit (CMAKE_SIZEOF_VOID_P equals 4).
+    if( NOT DEFINED ECCODES_WASM_DISABLED_TESTS )
+        if( CMAKE_SIZEOF_VOID_P EQUAL 4 )
+            set( ECCODES_WASM_DISABLED_TESTS
+                 bufr_ecc-1290
+                 bufr_ecc-2153
+                 CACHE STRING
+                 "ctests to skip under Emscripten (wasm32 only)" )
+        else()
+            set( ECCODES_WASM_DISABLED_TESTS ""
+                 CACHE STRING
+                 "ctests to skip under Emscripten" )
+        endif()
+    endif()
+
     # Emscripten note: by default the runtime keeps stdio buffered and does not
     # flush it on exit(), which breaks ecCodes tools (e.g. codes_info -v) that
     # write output without a trailing newline. Enabling EXIT_RUNTIME=1 ensures
@@ -116,7 +135,23 @@ if( CMAKE_SYSTEM_NAME STREQUAL "Emscripten" OR EMSCRIPTEN )
     # NODERAWFS=1 replaces the default in-memory filesystem with direct access
     # to the underlying Node.js filesystem. Without it the wasm tools cannot
     # read the sample/test GRIB/BUFR files that live on the host disk.
-    foreach( _flag "-sEXIT_RUNTIME=1" "-sNODE_HOST_ENV=1" "-sNODERAWFS=1" )
+    #
+    # ALLOW_MEMORY_GROWTH=1 lets the wasm heap grow past the (small) initial
+    # size. GRIB tools happily allocate tens of megabytes when parsing tables
+    # and building action trees; the default 16 MiB is not enough and produces
+    # `Aborted(OOM)` runtime errors under wasm32.
+    #
+    # INITIAL_HEAP=64MB avoids many small heap-grow round trips on startup.
+    #
+    # STACK_SIZE=8MB is needed because ecCodes' expression parser, action tree
+    # builder and several accessors recurse deeply (some tests allocate large
+    # arrays on the stack too, e.g. grib_sh_imag with a 992-element buffer of
+    # doubles). The wasm32 default stack of 64 KB overflows during shutdown
+    # from destructors of static objects that were populated on the stack,
+    # producing bogus "memory access out of bounds" errors inside exitRuntime.
+    foreach( _flag "-sEXIT_RUNTIME=1" "-sNODE_HOST_ENV=1" "-sNODERAWFS=1"
+                   "-sALLOW_MEMORY_GROWTH=1" "-sINITIAL_HEAP=64MB"
+                   "-sSTACK_SIZE=8MB" )
         string( FIND "${CMAKE_EXE_LINKER_FLAGS}" "${_flag}" _pos )
         if( _pos EQUAL -1 )
             set( CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${_flag}" CACHE STRING "" FORCE )
