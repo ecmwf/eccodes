@@ -115,16 +115,7 @@ jobs:
         if: always()
         uses: ecmwf/ci-infrastructure/actions/print-dep-table@main
         with:
-          deps-json: ${{ toJSON(matrix._resolved.deps) }}
-          own-name: eccodes
-          own-sha: ${{ matrix._resolved.own-sha }}
-          own-ref: ${{ matrix._resolved.own-ref }}
-          own-artifact-name: ${{ matrix._resolved.own-artifact-name }}
-          own-platform: ${{ matrix._resolved.own-platform }}
-          own-compiler: ${{ matrix._resolved.own-compiler }}
-          own-python: ${{ matrix._resolved.own-python }}
-          own-build-type: ${{ matrix._resolved.own-build-type }}
-          own-deps-hash: ${{ matrix._resolved.own-deps-hash }}
+          resolved: ${{ toJSON(matrix._resolved) }}
 
   build-hpc:
     needs: [ci-approval, resolve]
@@ -160,6 +151,7 @@ jobs:
           install-python-deps: 'false'
 
       - name: Build eccodes on HPC
+        id: build
         uses: ecmwf/ci-infrastructure/actions/build-on-hpc@main
         with:
           site: ${{ matrix.site }}
@@ -176,13 +168,5 @@ jobs:
         if: always()
         uses: ecmwf/ci-infrastructure/actions/print-dep-table@main
         with:
-          deps-json: ${{ toJSON(matrix._resolved.deps) }}
-          own-name: eccodes
-          own-sha: ${{ matrix._resolved.own-sha }}
-          own-ref: ${{ matrix._resolved.own-ref }}
-          own-artifact-name: ${{ matrix._resolved.own-artifact-name }}
-          own-platform: ${{ matrix._resolved.own-platform }}
-          own-compiler: ${{ matrix._resolved.own-compiler }}
-          own-python: ${{ matrix._resolved.own-python }}
-          own-build-type: ${{ matrix._resolved.own-build-type }}
-          own-deps-hash: ${{ matrix._resolved.own-deps-hash }}
+          resolved: ${{ toJSON(matrix._resolved) }}
+          own-source: ${{ steps.build.outputs.cache-hit == 'true' && 'artifact' || 'built' }}
