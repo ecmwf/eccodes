@@ -1,6 +1,6 @@
 [package]
 name         = "eccodes-sys"
-version      = "2.49.0"
+version      .workspace = true
 edition      .workspace = true
 license      .workspace = true
 repository   .workspace = true
