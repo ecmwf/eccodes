@@ -668,4 +668,9 @@ if( eccodes_HAVE_ECKIT_GEO AND eccodes_HAVE_GEOGRAPHY )
                       TEST_DEPENDS eccodes_download_gridspec_gribs
                       WORKING_DIRECTORY "${TESTS_DATA_DIR}"
                       ENVIRONMENT ECCODES_ECKIT_GEO=1 )
+    # TODO: re-enable once TESTS_DATA_DIR is set before add_subdirectory(tests)
+    # and the test is gated on ENABLE_EXTRA_TESTS like its data download.
+    if( TEST eccodes_t_gridspec )
+        set_tests_properties( eccodes_t_gridspec PROPERTIES DISABLED TRUE )
+    endif()
 endif()
