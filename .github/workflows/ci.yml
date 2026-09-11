@@ -6,7 +6,7 @@ on:
     paths-ignore:
       - "deprecated/**"
   pull_request:
-    types: [opened, reopened, synchronize, labeled, unlabeled]
+    types: [opened, reopened, synchronize, labeled]
     paths-ignore:
       - "deprecated/**"
   workflow_dispatch:
@@ -51,9 +51,7 @@ jobs:
           client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
           private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
-      - uses: actions/checkout@v6
-        with:
-          ref: ${{ github.event.pull_request.number && format('refs/pull/{0}/merge', github.event.pull_request.number) || '' }}
+      - uses: ecmwf/ci-infrastructure/actions/checkout-under-test@main
       - id: r
         uses: ecmwf/ci-infrastructure/actions/resolve-deps@main
         with:
@@ -65,7 +63,7 @@ jobs:
 
   build:
     needs: [ci-approval, resolve]
-    name: build+test (${{ matrix.platform }}, ${{ matrix.cxx-compiler }}, ${{ matrix.options || 'default' }})
+    name: build+test (${{ matrix._resolved['job-name'] }})
     runs-on: ${{ matrix['runs-on'] }}
     container:
       image: ${{ matrix.container || '' }}
@@ -81,9 +79,7 @@ jobs:
           client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
           private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
-      - uses: actions/checkout@v6
-        with:
-          ref: ${{ github.event.pull_request.number && format('refs/pull/{0}/merge', github.event.pull_request.number) || '' }}
+      - uses: ecmwf/ci-infrastructure/actions/checkout-under-test@main
 
       - name: Fetch resolved deps
         id: deps
@@ -102,11 +98,6 @@ jobs:
           build-type: ${{ matrix.build-type }}
           options: ${{ matrix.options }}
 
-      - name: Print dependency table
-        uses: ecmwf/ci-infrastructure/actions/print-dep-table@main
-        with:
-          resolved-json: ${{ toJSON(matrix._resolved) }}
-
       # Invocation comes from .ci/manifest.toml's [matrix.build], the same place
       # the generated cross-repo-trigger.yml renders its Test step from. Spelling
       # it out again here is how the two lanes drift apart.
@@ -120,9 +111,15 @@ jobs:
           install-path: ${{ steps.build.outputs.install-path }}
           artifact-name: ${{ matrix._resolved.own-artifact-name }}
 
+      - name: Print dependency table
+        if: always()
+        uses: ecmwf/ci-infrastructure/actions/print-dep-table@main
+        with:
+          resolved: ${{ toJSON(matrix._resolved) }}
+
   build-hpc:
     needs: [ci-approval, resolve]
-    name: build-hpc (${{ matrix.platform }}, ${{ matrix.options || 'default' }})
+    name: build-hpc (${{ matrix._resolved['job-name'] }})
     runs-on: ${{ matrix['runs-on'] }}
     container:
       image: ${{ matrix.container }}
@@ -141,9 +138,7 @@ jobs:
           client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
           private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
-      - uses: actions/checkout@v6
-        with:
-          ref: ${{ github.event.pull_request.number && format('refs/pull/{0}/merge', github.event.pull_request.number) || '' }}
+      - uses: ecmwf/ci-infrastructure/actions/checkout-under-test@main
 
       - name: Fetch resolved deps
         id: deps
@@ -156,6 +151,7 @@ jobs:
           install-python-deps: 'false'
 
       - name: Build eccodes on HPC
+        id: build
         uses: ecmwf/ci-infrastructure/actions/build-on-hpc@main
         with:
           site: ${{ matrix.site }}
@@ -167,3 +163,10 @@ jobs:
           work-dir: ${{ vars.HPC_CI_WORK_DIR }}
           remote-work-dir: ${{ vars.HPC_CI_REMOTE_WORK_DIR }}
           troika-user: ${{ secrets.HPC_CI_SSH_USER }}
+
+      - name: Print dependency table
+        if: always()
+        uses: ecmwf/ci-infrastructure/actions/print-dep-table@main
+        with:
+          resolved: ${{ toJSON(matrix._resolved) }}
+          own-source: ${{ steps.build.outputs.cache-hit == 'true' && 'artifact' || 'built' }}

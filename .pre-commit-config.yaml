@@ -1,0 +1,13 @@
+---
+# Only the cross-repo CI gate check for now. The repo's own formatting and lint
+# hooks are a separate rollout: it does not pass them today, and adding them here
+# would fail every pull request for reasons unrelated to CI.
+#
+# Nothing runs this in CI yet either -- there is deliberately no `pre-commit` job
+# in ci.yml. Until there is, this is a local convenience, not enforcement.
+
+repos:
+  - repo: https://github.com/ecmwf/ci-infrastructure
+    rev: 83c6ffdefe118a75d76e6802bf0b8cf27185eaf7
+    hooks:
+      - id: check-ci-approval

@@ -1,11 +1,15 @@
 name: Contributor Declaration
 
 on:
-  # pull_request_target runs the BASE branch's copy of this file, so a pull
-  # request cannot edit the gate that judges it. Safe here because nothing from
-  # the pull request is ever checked out or executed and no write token is used.
-  pull_request_target:
-    types: [opened, edited, reopened, synchronize]
+  # Parked: run it by hand only, until the declaration check comes back. To
+  # restore, put back the trigger below -- pull_request_target runs the BASE
+  # branch's copy of this file, so a pull request cannot edit the gate that
+  # judges it, and it is safe here because nothing from the pull request is ever
+  # checked out or executed and no write token is used.
+  #
+  #  pull_request_target:
+  #    types: [opened, edited, reopened, synchronize]
+  workflow_dispatch:
 
 permissions:
   contents: read
