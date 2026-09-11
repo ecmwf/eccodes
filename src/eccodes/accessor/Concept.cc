@@ -247,7 +247,17 @@ static int concept_conditions_expression_apply(grib_handle* h, grib_concept_cond
     return err;
 }
 
-static int rectify_concept_apply(grib_handle* h, const char* key)
+static bool concept_values_contains_key(const grib_values* values, int count, const char* key)
+{
+    for (int i = 0; i < count; ++i) {
+        if (values[i].name && STR_EQUAL(values[i].name, key)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+static int rectify_concept_apply(grib_handle* h, const char* key, const grib_values* values, int count)
 {
     // The key was not found. In specific cases, rectify the problem by setting
     // a secondary key
@@ -255,6 +265,31 @@ static int rectify_concept_apply(grib_handle* h, const char* key)
     // GRIB is instantaneous but paramId being set is for accum/avg
     //
     int ret = GRIB_NOT_FOUND;
+
+    // If both probabilityType and typeOfRelationToReferenceDataset are present
+    // in the concept being applied, select the reference-period probability PDTN.
+    const bool has_probability_type = concept_values_contains_key(values, count, "probabilityType");
+    const bool has_relation_type    = concept_values_contains_key(values, count, "typeOfRelationToReferenceDataset");
+    if ((STR_EQUAL(key, "probabilityType") || STR_EQUAL(key, "typeOfRelationToReferenceDataset")) &&
+        has_probability_type && has_relation_type)
+    {
+        long pdt_new = 131; // point-in-time
+        char stepType[32] = {0,};
+        size_t stepTypeLen = sizeof(stepType);
+        if (grib_get_string(h, "stepType", stepType, &stepTypeLen) == GRIB_SUCCESS &&
+            !STR_EQUAL(stepType, "instant"))
+        {
+            pdt_new = 112; // time-interval based
+        }
+        grib_context_log(h->context, GRIB_LOG_DEBUG,
+                         "Concept: Key %s not found, setting productDefinitionTemplateNumber to %ld",
+                         key, pdt_new);
+        ret = grib_set_long(h, "productDefinitionTemplateNumber", pdt_new);
+        if (ret == GRIB_SUCCESS) {
+            return ret;
+        }
+    }
+
     static const std::map<std::string_view, std::pair<std::string_view, long>> keyMap = {
         { "typeOfStatisticalProcessing",       { "selectStepTemplateInterval", 1 }        },
         { "typeOfWavePeriodInterval",          { "is_wave_period_range", 1 }              },
@@ -470,7 +505,7 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
             for (int i = 0; i < count; i++) {
                 if (values[i].error == GRIB_NOT_FOUND) {
                     // Try to rectify the most common causes of failure
-                    if (rectify_concept_apply(h, values[i].name) == GRIB_SUCCESS) {
+                    if (rectify_concept_apply(h, values[i].name, values, count) == GRIB_SUCCESS) {
                         resubmit = true;
                         grib_set_values(h, &values[i], 1);
                     }
