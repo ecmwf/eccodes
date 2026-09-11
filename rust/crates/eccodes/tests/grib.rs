@@ -41,7 +41,7 @@ fn first_message(path: &Path) -> eccodes::Result<GribMessage> {
 /// A ramp `i * 0.5` over the message's grid, packed at 24 bits so the
 /// quantization error stays far below the tolerances used below.
 fn set_ramp(message: &mut GribMessage) -> eccodes::Result<Vec<f64>> {
-    let count = message.key_len("values")?;
+    let count = message.key("values").len()?;
     let ramp: Vec<f64> = (0..count).map(|i| i as f64 * 0.5).collect();
     message.set("bitsPerValue", 24_i64)?;
     message.set_values(&ramp)?;
@@ -113,7 +113,7 @@ fn set_get_round_trip() -> eccodes::Result<()> {
 
     // grib_get_keys.c: grid geometry as longs/doubles, consistent with
     // the values array size.
-    let count = message.key_len("values")?;
+    let count = message.key("values").len()?;
     let ni = message.get::<i64>("Ni")?;
     let nj = message.get::<i64>("Nj")?;
     assert_eq!(
@@ -183,7 +183,7 @@ fn grid_iteration_and_missing_values() -> eccodes::Result<()> {
     let mut message = first_message(&path)?;
     assert!(!message.get::<bool>("bitmapPresent")?);
 
-    let count = message.key_len("values")?;
+    let count = message.key("values").len()?;
     set_ramp(&mut message)?;
 
     // Full pass: as many points as the grid declares, positions in
@@ -251,7 +251,7 @@ fn nearest_point_search() -> eccodes::Result<()> {
 
     let mut message = first_message(&path)?;
     // Known values: value at grid index i is i * 0.5.
-    let count = message.key_len("values")?;
+    let count = message.key("values").len()?;
     set_ramp(&mut message)?;
     let decoded = message.values()?;
 
@@ -687,7 +687,7 @@ fn data_points_missing_pv_precision() -> eccodes::Result<()> {
     };
 
     let mut message = first_message(&path)?;
-    let count = message.key_len("values")?;
+    let count = message.key("values").len()?;
     set_ramp(&mut message)?;
 
     // grib_get_data.c: the bulk accessor agrees with the grid iterator.
@@ -701,14 +701,14 @@ fn data_points_missing_pv_precision() -> eccodes::Result<()> {
     message.set("typeOfFirstFixedSurface", "sfc")?;
     message.set_value_missing("scaleFactorOfFirstFixedSurface")?;
     message.set("scaledValueOfFirstFixedSurface", None::<i64>)?;
-    assert!(message.is_value_missing("scaleFactorOfFirstFixedSurface")?);
+    assert!(message.key("scaleFactorOfFirstFixedSurface").is_value_missing()?);
     assert_eq!(
         message.get::<Option<i64>>("scaledValueOfFirstFixedSurface")?,
         None
     );
     // A key that is not there at all reads the same way.
     assert_eq!(message.get::<Option<i64>>("thisKeyDoesNotExist")?, None);
-    assert!(!message.contains_key("thisKeyDoesNotExist"));
+    assert!(!message.key("thisKeyDoesNotExist").exists());
 
     // grib_set_pv.c: vertical-coordinate array round trips through its
     // own key.

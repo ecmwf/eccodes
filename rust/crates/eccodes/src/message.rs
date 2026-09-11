@@ -1,6 +1,6 @@
 //! [`Message`] — one GRIB, BUFR or other WMO message.
 
-use std::ffi::{c_int, c_void};
+use std::ffi::c_void;
 use std::fmt;
 use std::io::Write;
 use std::marker::PhantomData;
@@ -11,7 +11,7 @@ use eccodes_sys as sys;
 
 use crate::error::{Code, Error, ErrorContext, Result, check};
 use crate::ffi;
-use crate::key::{KeyElement, KeyForce, KeyGet, KeySet, KeyType};
+use crate::key::{Key, KeyElement, KeyForce, KeyGet, KeySet};
 use crate::keys::KeysQuery;
 use crate::kind::{Any, Bufr, Grib, Kind, MessageKind};
 
@@ -141,100 +141,27 @@ impl<K: MessageKind> Message<K> {
         T::elements_from(self, key, indexes)
     }
 
-    /// Whether the message defines this key.
+    /// One key of this message, by name: whether it exists, how it is
+    /// stored, how long it is — see [`Key`].
     ///
-    /// A name the C API could never look up — one containing a NUL byte — is
-    /// simply not defined.
+    /// ```no_run
+    /// # fn main() -> eccodes::Result<()> {
+    /// # let message: eccodes::Message = unimplemented!();
+    /// if message.key("level").exists() {
+    ///     println!("{}", message.get::<i64>("level")?);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
     #[must_use]
-    pub fn contains_key(&self, key: &str) -> bool {
-        let Ok(ckey) = ffi::cstring(key) else {
-            return false;
-        };
-        // SAFETY: valid handle and NUL-terminated key.
-        unsafe { sys::codes_is_defined(self.as_ptr(), ckey.as_ptr()) != 0 }
-    }
-
-    /// Whether the key is present but its value is coded as missing.
-    pub fn is_value_missing(&self, key: &str) -> Result<bool> {
-        let ckey = ffi::cstring(key)?;
-        let mut status: c_int = 0;
-        // SAFETY: valid handle, NUL-terminated key, out-pointer to a local.
-        let missing =
-            unsafe { sys::codes_is_missing(self.as_ptr(), ckey.as_ptr(), &raw mut status) };
-        Error::from_raw(status).with_key(key)?;
-        Ok(missing != 0)
-    }
-
-    /// Whether the key is computed by the definitions rather than coded in
-    /// the message.
-    pub fn is_computed(&self, key: &str) -> Result<bool> {
-        let ckey = ffi::cstring(key)?;
-        let mut status: c_int = 0;
-        // SAFETY: valid handle, NUL-terminated key, out-pointer to a local.
-        let computed =
-            unsafe { sys::codes_key_is_computed(self.as_ptr(), ckey.as_ptr(), &raw mut status) };
-        Error::from_raw(status).with_key(key)?;
-        Ok(computed != 0)
+    pub const fn key<'a>(&'a self, name: &'a str) -> Key<'a, K> {
+        Key::new(self, name)
     }
 
     /// Code the key as missing.
     pub fn set_value_missing(&mut self, key: &str) -> Result<()> {
         let ckey = ffi::cstring(key)?;
         check!(sys::codes_set_missing(self.as_ptr(), ckey.as_ptr())).with_key(key)
-    }
-
-    /// How the key is stored in the message.
-    pub fn key_type(&self, key: &str) -> Result<KeyType> {
-        let ckey = ffi::cstring(key)?;
-        let mut raw: c_int = 0;
-        check!(sys::codes_get_native_type(
-            self.as_ptr(),
-            ckey.as_ptr(),
-            &raw mut raw
-        ))
-        .with_key(key)?;
-        KeyType::from_raw(raw)
-            .ok_or(Code::InvalidType)
-            .with_key(key)
-    }
-
-    /// How many elements the key holds — 1 for a scalar, N for an array.
-    pub fn key_len(&self, key: &str) -> Result<usize> {
-        let ckey = ffi::cstring(key)?;
-        let mut len: usize = 0;
-        check!(sys::codes_get_size(
-            self.as_ptr(),
-            ckey.as_ptr(),
-            &raw mut len
-        ))
-        .with_key(key)?;
-        Ok(len)
-    }
-
-    /// How many bytes the key's string form occupies.
-    pub fn key_string_len(&self, key: &str) -> Result<usize> {
-        let ckey = ffi::cstring(key)?;
-        let mut len: usize = 0;
-        check!(sys::codes_get_length(
-            self.as_ptr(),
-            ckey.as_ptr(),
-            &raw mut len
-        ))
-        .with_key(key)?;
-        Ok(len)
-    }
-
-    /// Where the key sits in the message, in bytes from its start.
-    pub fn key_offset(&self, key: &str) -> Result<usize> {
-        let ckey = ffi::cstring(key)?;
-        let mut offset: usize = 0;
-        check!(sys::codes_get_offset(
-            self.as_ptr(),
-            ckey.as_ptr(),
-            &raw mut offset
-        ))
-        .with_key(key)?;
-        Ok(offset)
     }
 
     /// The keys of this message, as a query you can narrow before iterating.

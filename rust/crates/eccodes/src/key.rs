@@ -24,7 +24,7 @@ use eccodes_sys as sys;
 
 use crate::error::{Code, Error, ErrorContext, Result, check};
 use crate::ffi;
-use crate::kind::MessageKind;
+use crate::kind::{Any, MessageKind};
 use crate::message::Message;
 
 // `long` keys cross the boundary as `i64`, so arrays are passed pointer-wise
@@ -92,6 +92,137 @@ impl fmt::Display for KeyType {
         // fallback for codes it does not know.
         let name = unsafe { ffi::static_str(sys::codes_get_type_name(self.as_raw())) };
         f.write_str(name.unwrap_or("unknown"))
+    }
+}
+
+/// One key of a message, by name — see [`Message::key`].
+///
+/// This is what a key *is*: whether the message defines it, how it is
+/// stored, how much of it there is. What it *holds* is read and written
+/// through [`Message::get`] and [`Message::set`].
+///
+/// ```no_run
+/// # fn main() -> eccodes::Result<()> {
+/// # let message: eccodes::Message = unimplemented!();
+/// let level = message.key("level");
+/// if level.exists() {
+///     println!("{} of {}", level.len()?, level.value_type()?);
+/// }
+/// # Ok(())
+/// # }
+/// ```
+#[derive(Debug, Clone, Copy)]
+pub struct Key<'a, K: MessageKind = Any> {
+    message: &'a Message<K>,
+    name: &'a str,
+}
+
+impl<'a, K: MessageKind> Key<'a, K> {
+    pub(crate) const fn new(message: &'a Message<K>, name: &'a str) -> Self {
+        Self { message, name }
+    }
+
+    /// The key's name.
+    #[must_use]
+    pub const fn name(&self) -> &str {
+        self.name
+    }
+
+    /// Whether the message defines this key.
+    ///
+    /// A name the C API could never look up — one containing a NUL byte — is
+    /// simply not defined.
+    #[must_use]
+    pub fn exists(&self) -> bool {
+        let Ok(cname) = ffi::cstring(self.name) else {
+            return false;
+        };
+        // SAFETY: valid handle and NUL-terminated key.
+        unsafe { sys::codes_is_defined(self.message.as_ptr(), cname.as_ptr()) != 0 }
+    }
+
+    /// Whether the key is present but its value is coded as missing.
+    pub fn is_value_missing(&self) -> Result<bool> {
+        let cname = ffi::cstring(self.name)?;
+        let mut status: c_int = 0;
+        // SAFETY: valid handle, NUL-terminated key, out-pointer to a local.
+        let missing = unsafe {
+            sys::codes_is_missing(self.message.as_ptr(), cname.as_ptr(), &raw mut status)
+        };
+        Error::from_raw(status).with_key(self.name)?;
+        Ok(missing != 0)
+    }
+
+    /// Whether the key is computed by the definitions rather than coded in
+    /// the message.
+    pub fn is_computed(&self) -> Result<bool> {
+        let cname = ffi::cstring(self.name)?;
+        let mut status: c_int = 0;
+        // SAFETY: valid handle, NUL-terminated key, out-pointer to a local.
+        let computed = unsafe {
+            sys::codes_key_is_computed(self.message.as_ptr(), cname.as_ptr(), &raw mut status)
+        };
+        Error::from_raw(status).with_key(self.name)?;
+        Ok(computed != 0)
+    }
+
+    /// How the key's value is stored in the message.
+    pub fn value_type(&self) -> Result<KeyType> {
+        let cname = ffi::cstring(self.name)?;
+        let mut raw: c_int = 0;
+        check!(sys::codes_get_native_type(
+            self.message.as_ptr(),
+            cname.as_ptr(),
+            &raw mut raw
+        ))
+        .with_key(self.name)?;
+        KeyType::from_raw(raw)
+            .ok_or(Code::InvalidType)
+            .with_key(self.name)
+    }
+
+    /// How many elements the key holds — 1 for a scalar, N for an array.
+    pub fn len(&self) -> Result<usize> {
+        let cname = ffi::cstring(self.name)?;
+        let mut len: usize = 0;
+        check!(sys::codes_get_size(
+            self.message.as_ptr(),
+            cname.as_ptr(),
+            &raw mut len
+        ))
+        .with_key(self.name)?;
+        Ok(len)
+    }
+
+    /// Whether the key holds no elements at all.
+    pub fn is_empty(&self) -> Result<bool> {
+        Ok(self.len()? == 0)
+    }
+
+    /// How many bytes the key's string form occupies.
+    pub fn string_len(&self) -> Result<usize> {
+        let cname = ffi::cstring(self.name)?;
+        let mut len: usize = 0;
+        check!(sys::codes_get_length(
+            self.message.as_ptr(),
+            cname.as_ptr(),
+            &raw mut len
+        ))
+        .with_key(self.name)?;
+        Ok(len)
+    }
+
+    /// Where the key sits in the message, in bytes from its start.
+    pub fn offset(&self) -> Result<usize> {
+        let cname = ffi::cstring(self.name)?;
+        let mut offset: usize = 0;
+        check!(sys::codes_get_offset(
+            self.message.as_ptr(),
+            cname.as_ptr(),
+            &raw mut offset
+        ))
+        .with_key(self.name)?;
+        Ok(offset)
     }
 }
 
@@ -187,7 +318,7 @@ impl KeyGet for String {
     fn get_from<K: MessageKind>(message: &Message<K>, key: &str) -> Result<Self> {
         let ckey = ffi::cstring(key)?;
         // One more than the key's own length, for the NUL the library appends.
-        let mut len = message.key_string_len(key)? + 1;
+        let mut len = message.key(key).string_len()? + 1;
         let mut buf = vec![0_u8; len];
         check!(sys::codes_get_string(
             message.as_ptr(),
@@ -213,7 +344,7 @@ impl KeyGet for Vec<u8> {
         // `codes_get_size` counts elements, not bytes, so the first guess can
         // undershoot — `codedValues` packs several bytes per element. On
         // ArrayTooSmall the library writes the byte count it wants into `len`.
-        let mut len = message.key_len(key)?;
+        let mut len = message.key(key).len()?;
         let mut buf = vec![0_u8; len];
         let mut outcome = check!(sys::codes_get_bytes(
             message.as_ptr(),
@@ -239,7 +370,7 @@ impl KeyGet for Vec<u8> {
 impl KeyGet for Vec<i64> {
     fn get_from<K: MessageKind>(message: &Message<K>, key: &str) -> Result<Self> {
         let ckey = ffi::cstring(key)?;
-        let mut len = message.key_len(key)?;
+        let mut len = message.key(key).len()?;
         let mut values = vec![0_i64; len];
         check!(sys::codes_get_long_array(
             message.as_ptr(),
@@ -256,7 +387,7 @@ impl KeyGet for Vec<i64> {
 impl KeyGet for Vec<f64> {
     fn get_from<K: MessageKind>(message: &Message<K>, key: &str) -> Result<Self> {
         let ckey = ffi::cstring(key)?;
-        let mut len = message.key_len(key)?;
+        let mut len = message.key(key).len()?;
         let mut values = vec![0.0_f64; len];
         check!(sys::codes_get_double_array(
             message.as_ptr(),
@@ -273,7 +404,7 @@ impl KeyGet for Vec<f64> {
 impl KeyGet for Vec<f32> {
     fn get_from<K: MessageKind>(message: &Message<K>, key: &str) -> Result<Self> {
         let ckey = ffi::cstring(key)?;
-        let mut len = message.key_len(key)?;
+        let mut len = message.key(key).len()?;
         let mut values = vec![0.0_f32; len];
         check!(sys::codes_get_float_array(
             message.as_ptr(),
@@ -290,7 +421,7 @@ impl KeyGet for Vec<f32> {
 impl KeyGet for Vec<String> {
     fn get_from<K: MessageKind>(message: &Message<K>, key: &str) -> Result<Self> {
         let ckey = ffi::cstring(key)?;
-        let mut len = message.key_len(key)?;
+        let mut len = message.key(key).len()?;
         // The library allocates each string; we own them from here on.
         let mut ptrs: Vec<*mut c_char> = vec![std::ptr::null_mut(); len];
         check!(sys::codes_get_string_array(
@@ -310,12 +441,12 @@ impl KeyGet for Vec<String> {
 impl<T: KeyGet> KeyGet for Option<T> {
     /// `None` when the key is absent or coded as missing.
     fn get_from<K: MessageKind>(message: &Message<K>, key: &str) -> Result<Self> {
-        if !message.contains_key(key) {
+        if !message.key(key).exists() {
             return Ok(None);
         }
         // A key the library refuses to answer "is it missing?" for is one we
         // simply read: its own error will say more than this one would.
-        if message.is_value_missing(key).unwrap_or(false) {
+        if message.key(key).is_value_missing().unwrap_or(false) {
             return Ok(None);
         }
         T::get_from(message, key).map(Some)

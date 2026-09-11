@@ -79,7 +79,7 @@ impl GribMessage {
     /// Allocates the whole field; [`grid_points`](Self::grid_points) streams
     /// the same information point by point.
     pub fn data_points(&self) -> Result<Vec<GeoPoint>> {
-        let count = self.key_len("values")?;
+        let count = self.key("values").len()?;
         let mut lats = vec![0.0_f64; count];
         let mut lons = vec![0.0_f64; count];
         let mut values = vec![0.0_f64; count];

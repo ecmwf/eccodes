@@ -96,7 +96,7 @@ pub use error::{Code, Error, Result};
 pub use file::{AnyFile, BufrFile, GribFile, MessageFile, Messages};
 pub use grid::{GeoPoint, GridPoints, GridPositions, LatLon};
 pub use index::{Index, IndexMessages, IndexSelect, IndexValue};
-pub use key::{KeyElement, KeyForce, KeyGet, KeySet, KeyType};
+pub use key::{Key, KeyElement, KeyForce, KeyGet, KeySet, KeyType};
 pub use keys::{KeyFlags, Keys, KeysQuery};
 pub use kind::{Kind, MessageKind};
 pub use library::{Library, Version};
