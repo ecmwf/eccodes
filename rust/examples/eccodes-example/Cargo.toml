@@ -5,10 +5,11 @@ edition      .workspace = true
 license      .workspace = true
 repository   .workspace = true
 rust-version .workspace = true
-description  = "Sample app for eccodes-sys; exercises the cargo install flow"
+description  = "Sample apps for eccodes/eccodes-sys; exercises the cargo install flow"
 publish      = false
 
 [dependencies]
+eccodes     = { path = "../../crates/eccodes" }
 eccodes-sys = { path = "../../crates/eccodes-sys" }
 
 [build-dependencies]

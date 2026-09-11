@@ -15,11 +15,13 @@ fn main() {
 
     let out_dir = PathBuf::from(env::var("OUT_DIR").expect("OUT_DIR not set"));
 
-    // docs.rs: no C toolchain available. Emit an empty bindings.rs so the
-    // `include!` in lib.rs still resolves; the crate documents as empty.
+    // docs.rs: no C toolchain, so nothing is built — but bindgen still runs,
+    // against the headers under `docs-headers/`, so the crate documents its
+    // real API and downstream crates still compile there.
     if bindman_utils::is_docs_rs() {
-        std::fs::write(out_dir.join("bindings.rs"), "")
-            .expect("Failed to write empty bindings.rs for docs.rs");
+        let headers = docs_source_include();
+        configure_version_header(&headers, &out_dir);
+        generate_bindings_from(&out_dir, &headers, &[&headers, &out_dir]);
         return;
     }
 
@@ -30,6 +32,38 @@ fn main() {
     } else {
         build_vendored(&out_dir);
     }
+}
+
+/// Header root for docs builds (`DOCS_RS=1`), where the native eccodes build
+/// is skipped. `docs-headers/` mirrors the install include layout with
+/// symlinks into this repo's `src/`; `cargo package` embeds the linked files'
+/// content.
+fn docs_source_include() -> PathBuf {
+    PathBuf::from(env::var("CARGO_MANIFEST_DIR").expect("CARGO_MANIFEST_DIR not set"))
+        .join("docs-headers")
+}
+
+/// Substitute `eccodes_version.h.in` into `out_dir`, as `CMake` does at
+/// configure time — the one header of the include chain that is generated
+/// rather than tracked. Only `grib_api.h`'s `#include` needs it; no
+/// allowlisted symbol comes from it.
+fn configure_version_header(headers: &Path, out_dir: &Path) {
+    let template = std::fs::read_to_string(headers.join("eccodes_version.h.in"))
+        .expect("Failed to read docs-headers/eccodes_version.h.in");
+    let version = env::var("CARGO_PKG_VERSION").expect("CARGO_PKG_VERSION not set");
+    let mut parts = version.split('.');
+    let (major, minor, patch) = (
+        parts.next().unwrap_or("0"),
+        parts.next().unwrap_or("0"),
+        parts.next().unwrap_or("0"),
+    );
+    let configured = template
+        .replace("@eccodes_VERSION_STR@", &version)
+        .replace("@eccodes_VERSION_MAJOR@", major)
+        .replace("@eccodes_VERSION_MINOR@", minor)
+        .replace("@eccodes_VERSION_PATCH@", patch);
+    std::fs::write(out_dir.join("eccodes_version.h"), configured)
+        .expect("Failed to write eccodes_version.h");
 }
 
 /// Build using system-installed eccodes via `CMake` `find_package`
@@ -192,6 +226,10 @@ fn build_eccodes_impl(
     cmd.arg(format!(
         "-DENABLE_GEOGRAPHY={}",
         bindman_utils::on_off(cfg!(feature = "geography"))
+    ));
+    cmd.arg(format!(
+        "-DENABLE_ECKIT_GEO={}",
+        bindman_utils::on_off(cfg!(feature = "eckit-geo"))
     ));
     cmd.arg(format!(
         "-DENABLE_AEC={}",
@@ -460,10 +498,12 @@ const ALLOWED_FUNCTIONS: &[&str] = &[
     "codes_count_in_filename",
     // -- Handle creation --
     "codes_handle_new_from_file",
+    "codes_handle_new_from_stream",
     "codes_grib_handle_new_from_file",
     "codes_bufr_handle_new_from_file",
     "codes_handle_new_from_message",
     "codes_handle_new_from_message_copy",
+    "codes_grib_handle_new_from_multi_message",
     "codes_handle_new_from_samples",
     "codes_grib_handle_new_from_samples",
     "codes_bufr_handle_new_from_samples",
@@ -560,8 +600,10 @@ const ALLOWED_FUNCTIONS: &[&str] = &[
     "codes_bufr_copy_data",
     // -- Context config --
     "codes_context_set_debug",
+    "codes_context_set_logging_proc",
     "codes_grib_multi_support_on",
     "codes_grib_multi_support_off",
+    "codes_grib_multi_support_reset_file",
     "codes_samples_path",
     // -- Utilities --
     "codes_get_gaussian_latitudes",
@@ -577,6 +619,7 @@ const ALLOWED_FUNCTIONS: &[&str] = &[
 const ALLOWED_TYPES: &[&str] = &[
     "codes_handle",
     "codes_context",
+    "codes_log_proc",
     "codes_keys_iterator",
     "codes_iterator",
     "codes_nearest",
@@ -588,6 +631,12 @@ const ALLOWED_TYPES: &[&str] = &[
 ];
 
 const ALLOWED_VARS: &[&str] = &[
+    // Log levels
+    "CODES_LOG_INFO",
+    "CODES_LOG_WARNING",
+    "CODES_LOG_ERROR",
+    "CODES_LOG_FATAL",
+    "CODES_LOG_DEBUG",
     // Type constants
     "CODES_TYPE_UNDEFINED",
     "CODES_TYPE_LONG",
@@ -688,10 +737,19 @@ const ALLOWED_VARS: &[&str] = &[
 ];
 
 fn generate_bindings(out_dir: &Path, include_dir: &Path) {
+    generate_bindings_from(out_dir, include_dir, &[include_dir]);
+}
+
+/// Generate the bindings for `include_dir/eccodes.h`, searching every path in
+/// `search` for the headers it includes.
+fn generate_bindings_from(out_dir: &Path, include_dir: &Path, search: &[&Path]) {
     let header = include_dir.join("eccodes.h");
-    let mut builder = bindgen::Builder::default()
-        .header(header.to_str().expect("Invalid header path"))
-        .clang_arg(format!("-I{}", include_dir.display()));
+    let mut builder =
+        bindgen::Builder::default().header(header.to_str().expect("Invalid header path"));
+
+    for dir in search {
+        builder = builder.clang_arg(format!("-I{}", dir.display()));
+    }
 
     for name in ALLOWED_FUNCTIONS {
         builder = builder.allowlist_function(name);
