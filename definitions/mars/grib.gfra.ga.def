@@ -5,4 +5,3 @@ if ( !defined(MTG2Switch) || MTG2Switch == 0 ){
 else {
  alias mars.step = endStep;
 }
-
