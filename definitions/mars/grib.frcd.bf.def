@@ -1,7 +1,1 @@
-
-if (defined(stattype) && stattype is "moav"){
- meta marsForecastMonth g1forecastmonth(dataDate, forecastTime): read_only;
- alias forecastMonth = marsForecastMonth;
- alias mars.fcmonth = marsForecastMonth;
- unalias mars.step;
-}
+alias mars.number = perturbationNumber;
