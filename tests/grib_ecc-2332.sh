@@ -20,13 +20,13 @@ label="grib_ecc-2332_test"
 temp_instant=temp.${label}.instant.grib
 temp_interval=temp.${label}.interval.grib
 
-sample_grib2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+sample_grib2=${samp_dir}/GRIB2.tmpl
 
 # Example concept entry with both keys exists for tablesVersion=37:
 # paramId=133093
 
 # Instantaneous case -> PDT 4.131
-${tools_dir}/grib_set -s tablesVersion=37,paramId=133093 $sample_grib2 $temp_instant
+${tools_dir}/grib_set -s tablesVersion=37,stepType=instant,paramId=133093 $sample_grib2 $temp_instant
 grib_check_key_equals $temp_instant productDefinitionTemplateNumber,stepType,probabilityType,typeOfRelationToReferenceDataset '131 instant 3 1'
 
 # Time-interval case -> PDT 4.112

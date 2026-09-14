@@ -266,6 +266,8 @@ static int rectify_concept_apply(grib_handle* h, const char* key, const grib_val
     //
     int ret = GRIB_NOT_FOUND;
 
+    // ECC-2332
+    // PDTN selection workaround. It can be removed once the general selection mechanism is in place. 
     // If both probabilityType and typeOfRelationToReferenceDataset are present
     // in the concept being applied, select the reference-period probability PDTN.
     const bool has_probability_type = concept_values_contains_key(values, count, "probabilityType");
