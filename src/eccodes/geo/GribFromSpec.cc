@@ -23,6 +23,8 @@
 #include "eckit/geo/Projection.h"
 #include "eckit/spec/Spec.h"
 #include "eckit/geo/area/BoundingBox.h"
+#include "eckit/geo/figure/Earth.h"
+#include "eckit/geo/figure/Sun.h"
 #include "eckit/geo/grid/reduced/HEALPix.h"
 #include "eckit/geo/grid/ORCA.h"
 #include "eckit/geo/grid/reduced/ReducedLonLat.h"
@@ -201,11 +203,38 @@ private:
 };
 
 
+// Code table 3.2: only codes 1, 3 and 7 need the figure size, the others (below) define it
 class Shape
 {
 public:
     explicit Shape(const ::eckit::geo::Figure& figure) :
         figure_(figure) {}
+
+    static long table_32_code(const ::eckit::geo::Figure& figure)
+    {
+        static const struct
+        {
+            long code;
+            double a;
+            double b;
+        } CODES[]{
+            { 0, ::eckit::geo::figure::DatumGRIB1::a, ::eckit::geo::figure::DatumGRIB1::b },
+            { 2, ::eckit::geo::figure::DatumIau1965::a, ::eckit::geo::figure::DatumIau1965::b },
+            { 4, ::eckit::geo::figure::DatumGrs80::a, ::eckit::geo::figure::DatumGrs80::b },
+            { 5, ::eckit::geo::figure::DatumWgs84::a, ::eckit::geo::figure::DatumWgs84::b },
+            { 6, ::eckit::geo::figure::DatumIFS::a, ::eckit::geo::figure::DatumIFS::b },
+            { 8, ::eckit::geo::figure::DatumWgs84Sphere::a, ::eckit::geo::figure::DatumWgs84Sphere::b },
+            { 11, ::eckit::geo::figure::DatumSun::a, ::eckit::geo::figure::DatumSun::b },
+        };
+
+        for (const auto& [code, a, b] : CODES) {
+            if (is_approximately_equal(figure.a(), a) && is_approximately_equal(figure.b(), b)) {
+                return code;
+            }
+        }
+
+        return figure.spherical() ? 1 : 7;
+    }
 
     void fillGrib(grib_info& info) const
     {
@@ -219,21 +248,15 @@ public:
         static const auto* B = "earthMinorAxis";
 
         // check if shape is already set/provided
-        auto code     = 6L;
-        bool provided = false;
-
         for (long j = 0; j < info.packing.extra_settings_count; ++j) {
             if (const auto& set = info.packing.extra_settings[j];
                 set.name == SHAPE && set.type == CODES_TYPE_LONG) {
-                code     = set.long_value;
-                provided = true;
+                return;
             }
         }
 
-        if (!provided) {
-            code = figure_.spherical() ? 1L : 7L;
-            info.extra_set(SHAPE.c_str(), code);
-        }
+        const auto code = table_32_code(figure_);
+        info.extra_set(SHAPE.c_str(), code);
 
         switch (code) {
             case 1:
@@ -242,14 +265,13 @@ public:
             case 3:
                 info.extra_set(A, figure_.a() / 1000.);
                 info.extra_set(B, figure_.b() / 1000.);
-            case 6:
                 break;
             case 7:
                 info.extra_set(A, figure_.a());
                 info.extra_set(B, figure_.b());
                 break;
             default:
-                throw ::eckit::geo::exception::FigureError("Shape: unsupported " + SHAPE + ": " + std::to_string(code), Here());
+                break;
         }
     }
 
@@ -303,6 +325,9 @@ void set_grid_type_regular_ll(grib_info& info, const Grid& grid, const BasicAngl
         BasicAngle basic(basic_angle.num, basic_angle.den);
         basic.fillGrib(info);
     }
+
+    Shape shape(grid.figure());
+    shape.fillGrib(info);
 }
 
 
@@ -331,6 +356,9 @@ void set_grid_type_regular_gg(grib_info& info, const Grid& grid)
         BoundingBox bbox(std::get<PointLonLat>(g.first_point()), std::get<PointLonLat>(g.last_point()));
         bbox.fillGrib(info);
     }
+
+    Shape shape(grid.figure());
+    shape.fillGrib(info);
 }
 
 
@@ -355,6 +383,9 @@ void set_grid_type_reduced_ll(grib_info& info, const Grid& grid)
     const auto east  = bbox.periodic() ? bbox.west() + 360. - 360. / static_cast<double>(max_pl) : bbox.east();
 
     BoundingBox(bbox.north(), bbox.west(), bbox.south(), east).fillGrib(info);
+
+    Shape shape(grid.figure());
+    shape.fillGrib(info);
 }
 
 
@@ -379,6 +410,9 @@ void set_grid_type_reduced_gg(grib_info& info, const Grid& grid)
 
     auto bbox = BoundingBox::make_from_points_minmax(g);
     bbox.fillGrib(info);
+
+    Shape shape(grid.figure());
+    shape.fillGrib(info);
 }
 
 
@@ -403,6 +437,9 @@ void set_grid_type_unstructured(grib_info& info, const Grid& grid)
     else if (type == "orca") {
         properties(dynamic_cast<const ::eckit::geo::grid::ORCA&>(grid));
     }
+
+    Shape shape(grid.figure());
+    shape.fillGrib(info);
 }
 
 
@@ -416,6 +453,9 @@ void set_grid_type_healpix(grib_info& info, const Grid& grid)
     info.grid.longitudeOfFirstGridPointInDegrees = 45.;
 
     info.extra_set("orderingConvention", g.order().c_str());
+
+    Shape shape(grid.figure());
+    shape.fillGrib(info);
 }
 
 
