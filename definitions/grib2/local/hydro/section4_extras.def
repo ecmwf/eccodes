@@ -65,3 +65,10 @@ if (defined(stream) && !(stream is "frcd")){
  }
  alias mars.forcing = forcingModel;
 }
+
+if (defined(stream) && (stream is "frcd")){
+ concept inputModelName(unknown, "inputModelNameConcept.def", conceptsDir2, conceptsLocalDirAll): no_copy, dump;
+ concept inputModelVersion(unknown, "inputModelVersionConcept.def", conceptsDir2, conceptsLocalDirAll): no_copy, dump;
+ meta forcingModel sprintf("%s-%s",inputOriginatingCentre,inputModelName);
+ alias mars.model = forcingModel;
+}
