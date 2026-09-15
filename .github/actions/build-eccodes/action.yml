@@ -25,10 +25,11 @@ inputs:
     required: true
   options:
     description: >
-      Named feature configuration for this leg. Empty is the default build.
-      "eckit-geo" turns on the eckit-backed geography backend, and is the only
-      configuration for which eckit is a dependency at all (see the `when`
-      predicate on the eckit [[deps]] entry in .ci/manifest.toml).
+      Named feature configuration for this leg: the configure preset in
+      CMakePresets.json to use. Empty selects the `ci` preset. "eckit-geo" turns
+      on the eckit-backed geography backend, and is the only configuration for
+      which eckit is a dependency at all (see the `when` predicate on the eckit
+      [[deps]] entry in .ci/manifest.toml).
     required: false
     default: ''
 
@@ -57,23 +58,6 @@ runs:
           echo "build-dir=$RUNNER_TEMP/_eccodes-build"
         } >> "$GITHUB_OUTPUT"
 
-    - name: Map options to CMake flags
-      id: opts
-      shell: bash
-      env:
-        OPTIONS: ${{ inputs.options }}
-      run: |
-        set -euo pipefail
-        case "$OPTIONS" in
-          '')          flags='' ;;
-          'eckit-geo') flags='-DENABLE_GEOGRAPHY=1 -DENABLE_ECKIT_GEO=1' ;;
-          *)
-            echo "::error::unknown options value '$OPTIONS' for eccodes; add it here and to .ci/manifest.toml" >&2
-            exit 1
-            ;;
-        esac
-        echo "cmake-flags=$flags" >> "$GITHUB_OUTPUT"
-
     - name: Set up sccache
       if: env.SCCACHE_BUCKET != ''
       uses: ecmwf/ci-infrastructure/actions/setup-sccache@main
@@ -101,18 +85,19 @@ runs:
         BUILD_TYPE: ${{ inputs.build-type }}
         INSTALL_PATH: ${{ steps.set-paths.outputs.install-path }}
         BUILD_DIR: ${{ steps.set-paths.outputs.build-dir }}
-        EXTRA_FLAGS: ${{ steps.opts.outputs.cmake-flags }}
+        OPTIONS: ${{ inputs.options }}
         LAUNCHER: ${{ steps.launcher.outputs.flags }}
       run: |
         set -euo pipefail
-        cmake -S "$GITHUB_WORKSPACE" \
+        cmake --preset "${OPTIONS:-ci}" \
+              -S "$GITHUB_WORKSPACE" \
               -B "$BUILD_DIR" \
               -DCMAKE_BUILD_TYPE="$BUILD_TYPE" \
               -DCMAKE_CXX_COMPILER="$CXX_COMPILER" \
               -DCMAKE_Fortran_COMPILER="$FC_COMPILER" \
               -DCMAKE_INSTALL_PREFIX="$INSTALL_PATH" \
               -DCMAKE_PREFIX_PATH="$CMAKE_PREFIX_PATH_IN" \
-              $EXTRA_FLAGS $LAUNCHER
+              $LAUNCHER
 
     - name: Build and install eccodes
       shell: bash
