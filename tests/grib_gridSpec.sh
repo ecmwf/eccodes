@@ -40,10 +40,9 @@ set -u
 
 # Decode gridSpec
 # ----------------
-# Note: this sample is encoded with shapeOfTheEarth=0, which is not the default (6), so it shows in the spec
 infile=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 ${tools_dir}/grib_get -p gridSpec $infile
-grib_check_key_equals $infile gridSpec '{"area":[60,0,0,30],"figure":"grib1","grid":[2,2]}'
+grib_check_key_equals $infile gridSpec '{"area":[60,0,0,30],"grid":[2,2]}'
 
 infile=$ECCODES_SAMPLES_PATH/gg_sfc_grib2.tmpl
 ${tools_dir}/grib_get -p gridSpec $infile
@@ -75,7 +74,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 ${tools_dir}/grib_filter -o $tempGrib $tempFilt $infile
-${tools_dir}/grib_compare $infile $tempGrib
+${tools_dir}/grib_compare -b shapeOfTheEarth $infile $tempGrib  # the missing.grib2 has shapeOfTheEarth=0, the new one has shapeOfTheEarth=6
 rm -f $tempGrib
 
 # Can encode and decode in one step!
@@ -85,7 +84,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 ECCODES_DEBUG=-1 ${tools_dir}/grib_filter -o $tempGrib $tempFilt $infile > $tempText 2>&1
-${tools_dir}/grib_compare $infile $tempGrib
+${tools_dir}/grib_compare -b shapeOfTheEarth $infile $tempGrib
 grep -q "ECCODES DEBUG grib_set_from_grid_spec: grib_set_values, setting 17 key/value pairs" $tempText
 
 
@@ -109,9 +108,9 @@ sample=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
 # Decoding: a single row (Nj=1), a single column (Ni=1) and a single point (Ni=Nj=1)
 for setKeysResult in \
-    'Ni=16,Nj=1,numberOfDataPoints=16,latitudeOfLastGridPointInDegrees=60|{"area":[60,0,60,30],"figure":"grib1","grid":[2,0]}' \
-    'Ni=1,Nj=31,numberOfDataPoints=31,longitudeOfLastGridPointInDegrees=0|{"area":[60,0,0,0],"figure":"grib1","grid":[0,2]}' \
-    'Ni=1,Nj=1,numberOfDataPoints=1,latitudeOfLastGridPointInDegrees=60,longitudeOfLastGridPointInDegrees=0|{"area":[60,0,60,0],"figure":"grib1","grid":[0,0]}'
+    'Ni=16,Nj=1,numberOfDataPoints=16,latitudeOfLastGridPointInDegrees=60|{"area":[60,0,60,30],"grid":[2,0]}' \
+    'Ni=1,Nj=31,numberOfDataPoints=31,longitudeOfLastGridPointInDegrees=0|{"area":[60,0,0,0],"grid":[0,2]}' \
+    'Ni=1,Nj=1,numberOfDataPoints=1,latitudeOfLastGridPointInDegrees=60,longitudeOfLastGridPointInDegrees=0|{"area":[60,0,60,0],"grid":[0,0]}'
 do
     setKeys=$(echo $setKeysResult | cut -d'|' -f1)
     expectedSpec=$(echo $setKeysResult | cut -d'|' -f2)
@@ -147,7 +146,7 @@ rm -f $tempGrib
 
 # Grids that do not carry increments in their spec are unaffected
 grib_check_key_equals $ECCODES_SAMPLES_PATH/gg_sfc_grib2.tmpl gridSpec '{"grid":"N48"}'
-grib_check_key_equals $sample gridSpec '{"area":[60,0,0,30],"figure":"grib1","grid":[2,2]}'
+grib_check_key_equals $sample gridSpec '{"area":[60,0,0,30],"grid":[2,2]}'
 
 
 # Clean up
