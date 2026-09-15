@@ -31,8 +31,7 @@
 #include "eckit/geo/grid/reduced/ReducedGaussian.h"
 #include "eckit/geo/grid/regular/RegularGaussian.h"
 #include "eckit/geo/grid/SphericalHarmonics.h"
-#include "eckit/geo/grid/unstructured/FESOM.h"
-#include "eckit/geo/grid/unstructured/ICON.h"
+#include "eckit/geo/grid/Unstructured.h"
 #include "eckit/geo/projection/Rotation.h"
 #include "eckit/geo/util/mutex.h"
 #include "eckit/types/FloatCompare.h"
@@ -427,15 +426,11 @@ void set_grid_type_unstructured(grib_info& info, const Grid& grid)
         info.extra_set("uuidOfHGrid", grid.uid().c_str());
     };
 
-    if (const auto type = grid.type();
-        type == "fesom") {
-        properties(dynamic_cast<const ::eckit::geo::grid::unstructured::FESOM&>(grid));
-    }
-    else if (type == "icon") {
-        properties(dynamic_cast<const ::eckit::geo::grid::unstructured::ICON&>(grid));
-    }
-    else if (type == "orca") {
+    if (grid.type() == "ORCA") {
         properties(dynamic_cast<const ::eckit::geo::grid::ORCA&>(grid));
+    }
+    else {
+        properties(dynamic_cast<const ::eckit::geo::grid::Unstructured&>(grid));
     }
 
     Shape shape(grid.figure());
