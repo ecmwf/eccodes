@@ -1105,7 +1105,18 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
 
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
-            SET_LONG_VALUE("ijDirectionIncrementGiven", 1);
+
+            if (editionNumber == 1) {
+                SET_LONG_VALUE("ijDirectionIncrementGiven", 1);
+            }
+            else if (editionNumber == 2) {
+                SET_LONG_VALUE("iDirectionIncrementGiven", 1);
+                SET_LONG_VALUE("jDirectionIncrementGiven", 0);
+            }
+            else {
+                grib_context_log(c, GRIB_LOG_ERROR, "%s: Unknown editionNumber (%ld)", __func__, editionNumber);
+                return GRIB_INVALID_ARGUMENT;
+            }
 
             COPY_SPEC_LONG(Ni);
             COPY_SPEC_DOUBLE(iDirectionIncrementInDegrees);
@@ -1196,6 +1207,7 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
         case GRIB_UTIL_GRID_SPEC_HEALPIX:
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
+            SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
             COPY_SPEC_LONG(N); // Nside
             COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
             break;
@@ -1626,7 +1638,18 @@ static grib_handle* grib_util_set_spec_(grib_handle* h,
 
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
-            SET_LONG_VALUE("ijDirectionIncrementGiven", 1);
+
+            if (editionNumber == 1) {
+                SET_LONG_VALUE("ijDirectionIncrementGiven", 1);
+            }
+            else if (editionNumber == 2) {
+                SET_LONG_VALUE("iDirectionIncrementGiven", 1);
+                SET_LONG_VALUE("jDirectionIncrementGiven", 0);
+            }
+            else {
+                grib_context_log(c, GRIB_LOG_ERROR, "%s: Unknown editionNumber (%ld)", __func__, editionNumber);
+                return NULL;
+            }
 
             // TODO(masn): add ECCODES_ASSERT
             COPY_SPEC_LONG(Ni);
@@ -1726,6 +1749,7 @@ static grib_handle* grib_util_set_spec_(grib_handle* h,
         case GRIB_UTIL_GRID_SPEC_HEALPIX:
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
+            SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
             COPY_SPEC_LONG(N); // Nside
             COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
             break;
