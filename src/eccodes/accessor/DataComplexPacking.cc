@@ -331,6 +331,18 @@ int DataComplexPacking::pack_double(const double* val, size_t* len)
         grib_ieee_encode_array(context_, values, n_vals, bytes, buf);
         if (d)
             grib_context_free(context_, values);
+
+        // ECC-2328
+        // Reset unused keys to default values
+        if ((grib_set_long_internal(gh, decimal_scale_factor_, 0)) != GRIB_SUCCESS)
+            return ret;
+        if ((grib_set_long_internal(gh, binary_scale_factor_, 0)) != GRIB_SUCCESS)
+            return ret;
+        if ((grib_set_double_internal(gh, reference_value_, 0)) != GRIB_SUCCESS)
+            return ret;
+        if ((grib_set_double_internal(gh, laplacianOperator_, 0)) != GRIB_SUCCESS)
+            return ret;
+
         grib_buffer_replace(this, buf, buflen, 1, 1);
         grib_context_free(context_, buf);
         return 0;

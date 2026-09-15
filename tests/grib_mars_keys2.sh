@@ -31,7 +31,10 @@ grib_check_key_equals $tempGrib marsClass:i,marsType:i,marsStream:i '18 17 1029'
 
 # Check unalias
 # -----------------
-${tools_dir}/grib_set -s stream=gfas,type=ga $grib2_sample $tempGrib
+${tools_dir}/grib_set -s stream=gfra,type=ga,backgroundProcess=144,generatingProcessIdentifier=1 $grib2_sample $tempGrib
+grib_check_key_equals $tempGrib mars.stream,mars.type 'gfra ga'
+
+${tools_dir}/grib_set -s stream=gfas,type=ga,backgroundProcess=144,generatingProcessIdentifier=1 $grib2_sample $tempGrib
 ${tools_dir}/grib_ls -jm $tempGrib > $tempOut
 cat > $tempRef << EOF
 { "messages" : [ 
@@ -46,14 +49,37 @@ cat > $tempRef << EOF
     "step": 0,
     "levelist": 1000,
     "levtype": "pl",
-    "param": 130
+    "param": 130,
+    "configuration": "v1.2"
+  }
+]}
+EOF
+diff $tempRef $tempOut
+
+${tools_dir}/grib_set -s stream=gfra,type=ga,backgroundProcess=144,generatingProcessIdentifier=1 $grib2_sample $tempGrib
+${tools_dir}/grib_ls -jm $tempGrib > $tempOut
+cat > $tempRef << EOF
+{ "messages" : [ 
+  {
+    "domain": "g",
+    "date": 20100912,
+    "time": 1200,
+    "expver": "0001",
+    "class": "od",
+    "type": "ga",
+    "stream": "gfra",
+    "step": 0,
+    "levelist": 1000,
+    "levtype": "pl",
+    "param": 130,
+    "configuration": "v1.2"
   }
 ]}
 EOF
 diff $tempRef $tempOut
 
 # This combo unaliases mars.levelist and mars.step
-${tools_dir}/grib_set -s stream=gfas,type=gsd $grib2_sample $tempGrib
+${tools_dir}/grib_set -s stream=gfas,type=gsd,backgroundProcess=144,generatingProcessIdentifier=1 $grib2_sample $tempGrib
 ${tools_dir}/grib_ls -jm $tempGrib > $tempOut
 cat > $tempRef << EOF
 { "messages" : [ 
@@ -65,7 +91,8 @@ cat > $tempRef << EOF
     "class": "od",
     "type": "gsd",
     "stream": "gfas",
-    "param": 130
+    "param": 130,
+    "configuration": "v1.2"
   }
 ]}
 EOF
@@ -79,6 +106,24 @@ status=$?
 set -e
 [ $status -ne 0 ]
 
+${tools_dir}/grib_set -s stream=gfra,type=gsd,backgroundProcess=144,generatingProcessIdentifier=1 $grib2_sample $tempGrib
+${tools_dir}/grib_ls -jm $tempGrib > $tempOut
+cat > $tempRef << EOF
+{ "messages" : [ 
+  {
+    "domain": "g",
+    "date": 20100912,
+    "time": 1200,
+    "expver": "0001",
+    "class": "od",
+    "type": "gsd",
+    "stream": "gfra",
+    "param": 130,
+    "configuration": "v1.2"
+  }
+]}
+EOF
+diff $tempRef $tempOut
 
 # GRIB1
 # This combo unaliases mars.step
