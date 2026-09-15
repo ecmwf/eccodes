@@ -78,6 +78,7 @@ list(APPEND test_c_bins
     grib_sh_imag
     grib_spectral
     grib_lam_bf
+    grib_grib2mars_replay
     grib_lam_gp)
 
 if( eccodes_HAVE_ECKIT_GEO AND eccodes_HAVE_GEOGRAPHY )
@@ -449,6 +450,7 @@ if( HAVE_BUILD_TOOLS )
         grib_neg_fctime
         codes_split_file
         grib_lc-gcr
+        grib_grib2mars_replay
         grib_mars_keys1
         grib_mars_keys2)
 
