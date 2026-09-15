@@ -156,6 +156,33 @@ CASE("gridType=unstructured_grid")
 
         EXPECT(grib_to_gridspec("gridspec/gridType=unstructured_grid,orca.grib", specs));
     }
+
+
+    SECTION("orca (encode)")
+    {
+        auto* sample = codes_grib_handle_new_from_samples(nullptr, "GRIB2");
+        EXPECT(sample != nullptr);
+
+        auto* h = eccodes::geo::GribFromSpec::set(sample, ::eckit::spec::Custom{ { "grid", "ORCA2_T" } });
+        EXPECT(h != nullptr);
+
+        auto str = [&h](const char* key) {
+            std::string value;
+            ASSERT(get_string(h, key, value));
+            return value;
+        };
+
+        EXPECT(str("gridType") == "unstructured_grid");
+        EXPECT(str("unstructuredGridType") == "ORCA2");
+        EXPECT(str("unstructuredGridSubtype") == "T");
+        EXPECT(str("uuidOfHGrid") == "d5bde4f52ff3a9bea5629cd9ac514410");
+
+        long numberOfDataPoints = 0;
+        CHECK(codes_get_long(h, "numberOfDataPoints", &numberOfDataPoints));
+        EXPECT(numberOfDataPoints == 149 * 182);
+
+        codes_handle_delete(h);
+    }
 }
 
 
@@ -705,7 +732,7 @@ CASE("shapeOfTheEarth")
         set_string(h.get(), "gridSpec", user);
 
         long shapeOfTheEarth = -1;
-        ASSERT(codes_get_long(h.get(), "shapeOfTheEarth", &shapeOfTheEarth));
+        ASSERT(CODES_SUCCESS == codes_get_long(h.get(), "shapeOfTheEarth", &shapeOfTheEarth));
 
         EXPECT_EQUAL(shapeOfTheEarth, test.shapeOfTheEarth);
 
@@ -732,7 +759,7 @@ CASE("shapeOfTheEarth")
         set_string(h2.get(), "gridSpec", grid->spec_str());
 
         long shapeOfTheEarth2 = -1;
-        ASSERT(codes_get_long(h2.get(), "shapeOfTheEarth", &shapeOfTheEarth2));
+        ASSERT(CODES_SUCCESS == codes_get_long(h2.get(), "shapeOfTheEarth", &shapeOfTheEarth2));
 
         EXPECT_EQUAL(shapeOfTheEarth2, test.shapeOfTheEarth_back);
     }
