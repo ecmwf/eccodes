@@ -20,7 +20,6 @@ tempRef="temp.${label}.ref"
 tempGrib="temp.${label}.grib"
 tempLog="temp.${label}.log"
 tempOut="temp.${label}.out"
-tempGrib2="temp.${label}.2.grib"
 
 input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
@@ -52,25 +51,6 @@ fi
 ${tools_dir}/grib_dump -O -p section_3 $tempGrib
 ${tools_dir}/grib_ls -jn geography $tempGrib > $tempLog
 grep -q "orderingConvention.*ring" $tempLog
-
-# Direction increments
-# --------------------
-# Grid definition template 3.150 does not encode Di/Dj, so the resolution and
-# component flags must say the increments are not given and the increment keys
-# themselves must not be available
-grib_check_key_equals $tempGrib iDirectionIncrementGiven,jDirectionIncrementGiven '0 0'
-grib_check_key_equals $tempGrib DiGiven,DjGiven '0 0'
-
-for key in iDirectionIncrement jDirectionIncrement \
-           iDirectionIncrementInDegrees jDirectionIncrementInDegrees \
-           Di Dj DiInDegrees DjInDegrees; do
-  set +e
-  ${tools_dir}/grib_get -p $key $tempGrib > $tempOut 2> $tempLog
-  status=$?
-  set -e
-  [ $status -ne 0 ]
-  grep -q "$key.*not found" $tempLog
-done
 
 # Geoiterator ring-ordering
 # --------------------------
@@ -104,16 +84,6 @@ diff $tempRef $tempOut
 # Nearest
 val=$(${tools_dir}/grib_get -l 0,0,1 $tempGrib | tr -d ' ')
 [ "$val" = 5 ]
-
-# isMessageValid: the increment flags must be zero for HEALPix
-# (see MessageIsValid::check_grid_increments)
-grib_check_key_equals $tempGrib isMessageValid 1
-for flags in 48 32 16; do
-  ${tools_dir}/grib_set -s resolutionAndComponentFlags=$flags $tempGrib $tempGrib2
-  ${tools_dir}/grib_get -p isMessageValid $tempGrib2 > $tempOut 2> $tempLog
-  [ "$(cat $tempOut)" = 0 ]
-  grep -q "gridType=healpix but [ij]DirectionIncrementGiven=1 (must be 0)" $tempLog
-rm -f $tempGrib2
 
 # Check other iterator-related keys
 cat > $tempFilt <<EOF
@@ -208,4 +178,4 @@ grep -q "Nside must be greater than zero" $tempLog
 
 
 # Clean up
-rm -f $tempFilt $tempGrib $tempGrib2 $tempLog $tempOut $tempRef
+rm -f $tempFilt $tempGrib $tempLog $tempOut $tempRef

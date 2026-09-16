@@ -195,7 +195,7 @@ if( HAVE_BUILD_TOOLS )
         grib_grid_lambert_conformal
         grib_grid_polar_stereographic
         grib_grid_healpix
-        grib_grid_gaussian
+        grib_ij_direction_increment
         grib_g1day_of_the_year_date
         grib_paramid_chemid_split
         grib_cmp_paramtype
