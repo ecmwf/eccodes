@@ -1068,7 +1068,9 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
     }
 
     // ECC-2336: Reset the direction increments given flags, flags will be set correctly later when a direction increment is actually set.
-    SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
+    if (grib_is_defined(h, "ijDirectionIncrementGiven") != 0 ) {
+        SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
+    }
 
     // Set grid keys
     switch (spec->grid_type) {
@@ -1568,7 +1570,9 @@ static grib_handle* grib_util_set_spec_(grib_handle* h,
     }
 
     // ECC-2336: Reset the direction increments given flags, flags will be set correctly later when a direction increment is actually set.
-    SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
+    if (grib_is_defined(h, "ijDirectionIncrementGiven") != 0 ) {
+        SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
+    }
 
     // Set grid
     switch (spec->grid_type) {
