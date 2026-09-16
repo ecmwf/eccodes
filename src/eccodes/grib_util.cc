@@ -1135,8 +1135,13 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
 
         case GRIB_UTIL_GRID_SPEC_POLAR_STEREOGRAPHIC:
             if (editionNumber == 1) {
-                // In GRIB2 (template 3.20) there are no direction increment flags
                 SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
+            }
+            else {
+                // GRIB2 template 3.20 defines no flagbits inside the resolution and
+                // component flags, so initialise the whole octet instead. Otherwise we
+                // would inherit meaningless bits from the input grid definition
+                SET_LONG_VALUE("resolutionAndComponentFlags", 0);
             }
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
@@ -1158,6 +1163,10 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
             break;
 
         case GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA:
+            // GRIB2 template 3.140 defines no flagbits inside the resolution and
+            // component flags, so initialise the whole octet instead. Otherwise we
+            // would inherit meaningless bits from the input grid definition
+            SET_LONG_VALUE("resolutionAndComponentFlags", 0);
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
 
@@ -1657,8 +1666,13 @@ static grib_handle* grib_util_set_spec_(grib_handle* h,
 
         case GRIB_UTIL_GRID_SPEC_POLAR_STEREOGRAPHIC:
             if (editionNumber == 1) {
-                // In GRIB2 (template 3.20) there are no direction increment flags
                 SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
+            }
+            else {
+                // GRIB2 template 3.20 defines no flagbits inside the resolution and
+                // component flags, so initialise the whole octet instead. Otherwise we
+                // would inherit meaningless bits from the input grid definition
+                SET_LONG_VALUE("resolutionAndComponentFlags", 0);
             }
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
@@ -1681,6 +1695,10 @@ static grib_handle* grib_util_set_spec_(grib_handle* h,
             break;
 
         case GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA:
+            // GRIB2 template 3.140 defines no flagbits inside the resolution and
+            // component flags, so initialise the whole octet instead. Otherwise we
+            // would inherit meaningless bits from the input grid definition
+            SET_LONG_VALUE("resolutionAndComponentFlags", 0);
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
 
