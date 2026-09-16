@@ -666,6 +666,7 @@ if( eccodes_HAVE_ECKIT_GEO AND eccodes_HAVE_GEOGRAPHY )
 
     ecbuild_add_test( TARGET eccodes_t_gridspec
                       SOURCES gridspec.cc
+                      CONDITION ENABLE_EXTRA_TESTS
                       LIBS eccodes eckit_geo
                       TEST_DEPENDS eccodes_download_gridspec_gribs
                       WORKING_DIRECTORY "${TESTS_DATA_DIR}"
