@@ -1067,16 +1067,17 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
         return GRIB_INVALID_ARGUMENT;
     }
 
-    // ECC-2336: Reset the direction increments given flags, flags will be set correctly later when a direction increment is actually set.
-    if (grib_is_defined(h, "ijDirectionIncrementGiven") != 0 ) {
-        SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
-    }
-
     // Set grid keys
+    // Note on the "direction increments given" flags (ECC-2336):
+    // These are reset here for each grid type that actually has them; they are then
+    // set correctly later when a direction increment is actually set.
+    // Grid definitions without those flags (spherical harmonics, lambert azimuthal
+    // equal area, unstructured and, in GRIB2, polar stereographic) must not set them
     switch (spec->grid_type) {
         case GRIB_UTIL_GRID_SPEC_REGULAR_LL:
         case GRIB_UTIL_GRID_SPEC_ROTATED_LL:
 
+            SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue)
                 COPY_SPEC_DOUBLE(missingValue);
@@ -1105,6 +1106,7 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
         case GRIB_UTIL_GRID_SPEC_REGULAR_GG:
         case GRIB_UTIL_GRID_SPEC_ROTATED_GG:
 
+            SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
 
@@ -1119,6 +1121,7 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
             break;
 
         case GRIB_UTIL_GRID_SPEC_REDUCED_LL:
+            SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
             SET_LONG_VALUE("iDirectionIncrement", GRIB_MISSING_LONG);
@@ -1131,6 +1134,10 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
             break;
 
         case GRIB_UTIL_GRID_SPEC_POLAR_STEREOGRAPHIC:
+            if (editionNumber == 1) {
+                // In GRIB2 (template 3.20) there are no direction increment flags
+                SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
+            }
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
 
@@ -1172,6 +1179,7 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
             // TODO(masn): Other keys
             break;
         case GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL:
+            SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
 
@@ -1194,6 +1202,8 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
             // TODO(masn): Add other keys like Latin1, LoV etc
             break;
         case GRIB_UTIL_GRID_SPEC_HEALPIX:
+            // HEALPix (GRIB2 only) has no direction increments, so the flags must be zero
+            SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
             COPY_SPEC_LONG(N); // Nside
@@ -1203,6 +1213,7 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
         case GRIB_UTIL_GRID_SPEC_REDUCED_GG:
         case GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG:
 
+            SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
             SET_LONG_VALUE("iDirectionIncrement", GRIB_MISSING_LONG);
@@ -1569,16 +1580,17 @@ static grib_handle* grib_util_set_spec_(grib_handle* h,
         return NULL;
     }
 
-    // ECC-2336: Reset the direction increments given flags, flags will be set correctly later when a direction increment is actually set.
-    if (grib_is_defined(h, "ijDirectionIncrementGiven") != 0 ) {
-        SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
-    }
-
     // Set grid
+    // Note on the "direction increments given" flags (ECC-2336):
+    // These are reset here for each grid type that actually has them; they are then
+    // set correctly later when a direction increment is actually set.
+    // Grid definitions without those flags (spherical harmonics, lambert azimuthal
+    // equal area, unstructured and, in GRIB2, polar stereographic) must not set them
     switch (spec->grid_type) {
         case GRIB_UTIL_GRID_SPEC_REGULAR_LL:
         case GRIB_UTIL_GRID_SPEC_ROTATED_LL:
 
+            SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue)
                 COPY_SPEC_DOUBLE(missingValue);
@@ -1612,6 +1624,7 @@ static grib_handle* grib_util_set_spec_(grib_handle* h,
         case GRIB_UTIL_GRID_SPEC_REGULAR_GG:
         case GRIB_UTIL_GRID_SPEC_ROTATED_GG:
 
+            SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
 
@@ -1629,6 +1642,7 @@ static grib_handle* grib_util_set_spec_(grib_handle* h,
             break;
 
         case GRIB_UTIL_GRID_SPEC_REDUCED_LL:
+            SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
             SET_LONG_VALUE("iDirectionIncrement", GRIB_MISSING_LONG);
@@ -1642,6 +1656,10 @@ static grib_handle* grib_util_set_spec_(grib_handle* h,
             break;
 
         case GRIB_UTIL_GRID_SPEC_POLAR_STEREOGRAPHIC:
+            if (editionNumber == 1) {
+                // In GRIB2 (template 3.20) there are no direction increment flags
+                SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
+            }
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
 
@@ -1687,6 +1705,7 @@ static grib_handle* grib_util_set_spec_(grib_handle* h,
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
             break;
         case GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL:
+            SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
 
@@ -1710,6 +1729,8 @@ static grib_handle* grib_util_set_spec_(grib_handle* h,
             // TODO(masn): Add other keys like Latin1, LoV etc
             break;
         case GRIB_UTIL_GRID_SPEC_HEALPIX:
+            // HEALPix (GRIB2 only) has no direction increments, so the flags must be zero
+            SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
             COPY_SPEC_LONG(N); // Nside
@@ -1719,6 +1740,7 @@ static grib_handle* grib_util_set_spec_(grib_handle* h,
         case GRIB_UTIL_GRID_SPEC_REDUCED_GG:
         case GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG:
 
+            SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
             SET_LONG_VALUE("iDirectionIncrement", GRIB_MISSING_LONG);
