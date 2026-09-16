@@ -26,12 +26,10 @@
 #include "eckit/geo/figure/Earth.h"
 #include "eckit/geo/figure/Sun.h"
 #include "eckit/geo/grid/reduced/HEALPix.h"
-#include "eckit/geo/grid/ORCA.h"
 #include "eckit/geo/grid/reduced/ReducedLonLat.h"
 #include "eckit/geo/grid/reduced/ReducedGaussian.h"
 #include "eckit/geo/grid/regular/RegularGaussian.h"
 #include "eckit/geo/grid/SphericalHarmonics.h"
-#include "eckit/geo/grid/Unstructured.h"
 #include "eckit/geo/projection/Rotation.h"
 #include "eckit/geo/util/mutex.h"
 #include "eckit/types/FloatCompare.h"
@@ -420,18 +418,9 @@ void set_grid_type_unstructured(grib_info& info, const Grid& grid)
     info.grid.grid_type        = CODES_UTIL_GRID_SPEC_UNSTRUCTURED;
     info.packing.editionNumber = 2;
 
-    auto properties = [&info](const auto& grid) {
-        info.extra_set("unstructuredGridType", grid.name().c_str());
-        info.extra_set("unstructuredGridSubtype", grid.arrangement().c_str());
-        info.extra_set("uuidOfHGrid", grid.uid().c_str());
-    };
-
-    if (grid.type() == "ORCA") {
-        properties(dynamic_cast<const ::eckit::geo::grid::ORCA&>(grid));
-    }
-    else {
-        properties(dynamic_cast<const ::eckit::geo::grid::Unstructured&>(grid));
-    }
+    info.extra_set("unstructuredGridType", grid.name().c_str());
+    info.extra_set("unstructuredGridSubtype", grid.arrangement().c_str());
+    info.extra_set("uuidOfHGrid", grid.uid().c_str());
 
     Shape shape(grid.figure());
     shape.fillGrib(info);
