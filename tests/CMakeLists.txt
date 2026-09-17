@@ -169,6 +169,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-2140
         grib_ecc-2317
         grib_ecc-2319
+        grib_ecc-2332
         bufr_ecc-1028
         bufr_ecc-912
         bufr_ecc-1195
@@ -207,6 +208,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-2254
         grib_ecc-2264
         grib_ecc-2265
+        grib_ecc-2338
     )
 
     # These tests require data downloads

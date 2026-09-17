@@ -986,60 +986,60 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
-	 typeOfStatisticalProcessing = 10 ;
 	 scaledValueOfLowerLimit = 1 ;
 	 scaleFactorOfLowerLimit = 0 ;
 	 probabilityType = 3 ;
+	 typeOfRelationToReferenceDataset = 1 ;
 	}
 #Probability of temperature standardized anomaly greater than 1.5 standard deviation
 'Probability of temperature standardized anomaly greater than 1.5 standard deviation' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
-	 typeOfStatisticalProcessing = 10 ;
 	 scaledValueOfLowerLimit = 15 ;
 	 scaleFactorOfLowerLimit = 1 ;
 	 probabilityType = 3 ;
+	 typeOfRelationToReferenceDataset = 1 ;
 	}
 #Probability of temperature standardized anomaly greater than 2 standard deviation
 'Probability of temperature standardized anomaly greater than 2 standard deviation' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
-	 typeOfStatisticalProcessing = 10 ;
 	 scaledValueOfLowerLimit = 2 ;
 	 scaleFactorOfLowerLimit = 0 ;
 	 probabilityType = 3 ;
+	 typeOfRelationToReferenceDataset = 1 ;
 	}
 #Probability of temperature standardized anomaly less than -1 standard deviation
 'Probability of temperature standardized anomaly less than -1 standard deviation' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
-	 typeOfStatisticalProcessing = 10 ;
 	 scaledValueOfLowerLimit = -1 ;
 	 scaleFactorOfLowerLimit = 0 ;
 	 probabilityType = 0 ;
+	 typeOfRelationToReferenceDataset = 1 ;
 	}
 #Probability of temperature standardized anomaly less than -1.5 standard deviation
 'Probability of temperature standardized anomaly less than -1.5 standard deviation' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
-	 typeOfStatisticalProcessing = 10 ;
 	 scaledValueOfLowerLimit = -15 ;
 	 scaleFactorOfLowerLimit = 1 ;
 	 probabilityType = 0 ;
+	 typeOfRelationToReferenceDataset = 1 ;
 	}
 #Probability of temperature standardized anomaly less than -2 standard deviation
 'Probability of temperature standardized anomaly less than -2 standard deviation' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
-	 typeOfStatisticalProcessing = 10 ;
 	 scaledValueOfLowerLimit = -2 ;
 	 scaleFactorOfLowerLimit = 0 ;
 	 probabilityType = 0 ;
+	 typeOfRelationToReferenceDataset = 1 ;
 	}
 #Wave induced mean sea level correction
 'Wave induced mean sea level correction' = {
@@ -18888,6 +18888,18 @@
 	 parameterNumber = 27 ;
 	 typeOfFirstFixedSurface = 28 ;
 	 typeOfSecondFixedSurface = 29 ;
+	}
+#Fire combustion rate per unit area
+'Fire combustion rate per unit area' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 47 ;
+	}
+#Fire radiative power density
+'Fire radiative power density' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 48 ;
 	}
 #Universal thermal climate index
 'Universal thermal climate index' = {
