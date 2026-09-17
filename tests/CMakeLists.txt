@@ -674,6 +674,6 @@ if( eccodes_HAVE_ECKIT_GEO AND eccodes_HAVE_GEOGRAPHY )
                       CONDITION ENABLE_EXTRA_TESTS
                       LIBS eccodes eckit_geo
                       TEST_DEPENDS eccodes_download_gridspec_gribs
-                      WORKING_DIRECTORY "${TESTS_DATA_DIR}"
+                      ARGS "${TESTS_DATA_DIR}"
                       ENVIRONMENT ECCODES_ECKIT_GEO=1 )
 endif()
