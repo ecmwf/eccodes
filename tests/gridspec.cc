@@ -36,13 +36,24 @@ using map_count_spec_t = std::map<size_t, std::string>;
 // Directory holding the "gridspec/*.grib" test data, set from the first command-line argument
 static std::string DATA_DIR = ".";
 
+struct FileCloser {
+    // Required, because fclose carries compiler attributes that are not compatible with std::unique_ptr's deleter type requirements
+    void operator()(FILE* f) const noexcept {
+        if (f) {
+            std::fclose(f);
+        }
+    }
+};
+
+std::unique_ptr<FILE, FileCloser> file;
+
 
 struct grib_file_t
 {
-    std::unique_ptr<FILE, decltype(&std::fclose)> file;
+    std::unique_ptr<FILE, FileCloser> file;
     std::unique_ptr<codes_handle, decltype(&codes_handle_delete)> handle;
 
-    grib_file_t(const std::string& path) : file(std::fopen((DATA_DIR + "/" + path).c_str(), "rb"), &std::fclose), handle(nullptr, &codes_handle_delete)
+    grib_file_t(const std::string& path) : file(std::fopen((DATA_DIR + "/" + path).c_str(), "rb")), handle(nullptr, &codes_handle_delete)
     {
         ASSERT(file);
     }

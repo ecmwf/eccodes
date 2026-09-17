@@ -92,21 +92,23 @@ bool ConditionT<long>::eval(codes_handle* h) const
 }
 
 
-template <>
-bool ConditionT<double>::eval(codes_handle* h) const
-{
-    ASSERT(h != nullptr);
-
-    double value = 0;
-    int err      = codes_get_double(h, key_, &value);
-
-    if (err == CODES_NOT_FOUND) {
-        return false;
-    }
-
-    CHECK_ERROR(err, key_);
-    return value_ == value;  // Want an epsilon?
-}
+// Not used, but could be useful for future extensions
+//
+// template <>
+// bool ConditionT<double>::eval(codes_handle* h) const
+// {
+//     ASSERT(h != nullptr);
+//
+//     double value = 0;
+//     int err      = codes_get_double(h, key_, &value);
+//
+//     if (err == CODES_NOT_FOUND) {
+//         return false;
+//     }
+//
+//     CHECK_ERROR(err, key_);
+//     return value_ == value;  // Want an epsilon?
+// }
 
 
 template <>
