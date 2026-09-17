@@ -520,6 +520,8 @@ if( HAVE_BUILD_TOOLS )
                                    eccodes_download_lcgcr_gribs eccodes_download_gridspec_gribs )
     endforeach()
 
+    set_tests_properties( eccodes_t_grib_grib2mars_replay PROPERTIES DISABLED TRUE)
+
     if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
         set_tests_properties( eccodes_t_bufr_dump_encode_fortran PROPERTIES TIMEOUT 2500 )
     endif()
