@@ -1749,6 +1749,7 @@ static grib_handle* grib_util_set_spec_(grib_handle* h,
 
         case GRIB_UTIL_GRID_SPEC_SH:
             *err = grib_get_string(h, "gridType", input_grid_type, &input_grid_type_len);
+            auto err_grid_type = *err;
 
             SET_LONG_VALUE("J", spec->truncation);
             SET_LONG_VALUE("K", spec->truncation);
@@ -1758,13 +1759,26 @@ static grib_handle* grib_util_set_spec_(grib_handle* h,
                 const long JS = spec->truncation < 20 ? spec->truncation : 20;
                 SET_STRING_VALUE("packingType", "spectral_complex");
                 packingTypeIsSet = 1;
-                SET_LONG_VALUE("JS", JS);
-                SET_LONG_VALUE("KS", JS);
-                SET_LONG_VALUE("MS", JS);
+                long current_JS = 0;
+                long current_KS = 0;
+                long current_MS = 0;
+
+                if ((*err = grib_get_long(h, "JS", &current_JS)) != GRIB_SUCCESS)
+                    return NULL;
+                if ((*err = grib_get_long(h, "KS", &current_KS)) != GRIB_SUCCESS)
+                    return NULL;
+                if ((*err = grib_get_long(h, "MS", &current_MS)) != GRIB_SUCCESS)
+                    return NULL;
+
+                // Make sure the current subset truncation values are preserved if valid, otherwise use the spec truncation value
+                SET_LONG_VALUE("JS", std::min(current_JS, spec->truncation));
+                SET_LONG_VALUE("KS", std::min(current_KS, spec->truncation));
+                SET_LONG_VALUE("MS", std::min(current_MS, spec->truncation)); 
+
                 if (packing_spec->packing == GRIB_UTIL_PACKING_USE_PROVIDED && editionNumber == 2) {
                     SET_LONG_VALUE("computeLaplacianOperator", 1);
                 }
-                else if ((!(*err) && strcmp(input_grid_type, "sh")) || packing_spec->computeLaplacianOperator) {
+                else if ((!(err_grid_type) && strcmp(input_grid_type, "sh")) || packing_spec->computeLaplacianOperator) {
                     SET_LONG_VALUE("computeLaplacianOperator", 1);
                     if (packing_spec->truncateLaplacian)
                         SET_LONG_VALUE("truncateLaplacian", 1);
