@@ -27,7 +27,6 @@
  */
 static int test_gh_to_z_conversion(void)
 {
-    int err = 0;
     codes_handle* h = NULL;
     size_t values_len = 0;
     double* values = NULL;
@@ -179,7 +178,6 @@ static int test_gh_to_z_conversion(void)
  */
 static int test_scale_values_by_with_complex_packing(void)
 {
-    int err = 0;
     codes_handle* h = NULL;
     size_t values_len = 0;
     double* values = NULL;
