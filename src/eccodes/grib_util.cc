@@ -1067,6 +1067,11 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
         return GRIB_INVALID_ARGUMENT;
     }
 
+    // ECC-2336: Reset the direction increments given flags, flags will be set correctly later when a direction increment is actually set.
+    if (grib_is_defined(h, "resolutionAndComponentFlags") != 0) {
+        SET_LONG_VALUE("resolutionAndComponentFlags", 0);
+    }
+
     // Set grid keys
     switch (spec->grid_type) {
         case GRIB_UTIL_GRID_SPEC_REGULAR_LL:
@@ -1076,14 +1081,11 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
             if (spec->missingValue)
                 COPY_SPEC_DOUBLE(missingValue);
 
-            SET_LONG_VALUE("ijDirectionIncrementGiven", 1);
             if (editionNumber == 1) {
                 // GRIB-863: GRIB1 cannot represent increments less than a millidegree
                 if (!angle_can_be_encoded(h, spec->iDirectionIncrementInDegrees) ||
                     !angle_can_be_encoded(h, spec->jDirectionIncrementInDegrees)) {
                     grib1_high_resolution_fix = true;
-                    // Set flag to compute the increments
-                    SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
                 }
             }
 
@@ -1105,7 +1107,6 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
 
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
-            SET_LONG_VALUE("ijDirectionIncrementGiven", 1);
 
             COPY_SPEC_LONG(Ni);
             COPY_SPEC_DOUBLE(iDirectionIncrementInDegrees);
@@ -1120,7 +1121,6 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
         case GRIB_UTIL_GRID_SPEC_REDUCED_LL:
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
-            SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
             SET_LONG_VALUE("iDirectionIncrement", GRIB_MISSING_LONG);
             SET_LONG_VALUE("Ni", GRIB_MISSING_LONG);
             COPY_SPEC_LONG(Nj);
@@ -1205,7 +1205,6 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
 
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
-            SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
             SET_LONG_VALUE("iDirectionIncrement", GRIB_MISSING_LONG);
             SET_LONG_VALUE("Ni", GRIB_MISSING_LONG);
             COPY_SPEC_LONG(Nj);
@@ -1583,6 +1582,11 @@ static grib_handle* grib_util_set_spec_(grib_handle* h,
         return NULL;
     }
 
+    // ECC-2336: Reset the direction increments given flags, flags will be set correctly later when a direction increment is actually set.
+    if (grib_is_defined(h, "resolutionAndComponentFlags") != 0) {
+        SET_LONG_VALUE("resolutionAndComponentFlags", 0);
+    }
+
     // Set grid
     switch (spec->grid_type) {
         case GRIB_UTIL_GRID_SPEC_REGULAR_LL:
@@ -1592,14 +1596,11 @@ static grib_handle* grib_util_set_spec_(grib_handle* h,
             if (spec->missingValue)
                 COPY_SPEC_DOUBLE(missingValue);
 
-            SET_LONG_VALUE("ijDirectionIncrementGiven", 1);
             if (editionNumber == 1) {
                 // GRIB-863: GRIB1 cannot represent increments less than a millidegree
                 if (!angle_can_be_encoded(h, spec->iDirectionIncrementInDegrees) ||
                     !angle_can_be_encoded(h, spec->jDirectionIncrementInDegrees)) {
                     grib1_high_resolution_fix = true;
-                    // Set flag to compute the increments
-                    SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
                 }
             }
 
@@ -1626,7 +1627,6 @@ static grib_handle* grib_util_set_spec_(grib_handle* h,
 
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
-            SET_LONG_VALUE("ijDirectionIncrementGiven", 1);
 
             // TODO(masn): add ECCODES_ASSERT
             COPY_SPEC_LONG(Ni);
@@ -1644,7 +1644,6 @@ static grib_handle* grib_util_set_spec_(grib_handle* h,
         case GRIB_UTIL_GRID_SPEC_REDUCED_LL:
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
-            SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
             SET_LONG_VALUE("iDirectionIncrement", GRIB_MISSING_LONG);
             SET_LONG_VALUE("Ni", GRIB_MISSING_LONG);
             COPY_SPEC_LONG(Nj);
@@ -1735,7 +1734,6 @@ static grib_handle* grib_util_set_spec_(grib_handle* h,
 
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
-            SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
             SET_LONG_VALUE("iDirectionIncrement", GRIB_MISSING_LONG);
             SET_LONG_VALUE("Ni", GRIB_MISSING_LONG);
             COPY_SPEC_LONG(Nj);
