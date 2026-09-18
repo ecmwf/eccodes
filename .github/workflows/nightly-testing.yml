@@ -25,12 +25,12 @@ jobs:
     strategy:
       matrix:
         name:
-          - clang@macos-13-arm
+          - clang@macos-26-arm
           - clang@macos-13-x86
         include:
-          - name: clang@macos-13-arm
-            labels: [self-hosted, platform-builder-macosx-13.4.1-arm64]
-            os: macos-13-arm
+          - name: clang@macos-26-arm
+            labels: [self-hosted, platform-builder-MacOSX-26.6.1-arm64]
+            os: macos-26-arm
             compiler: clang
             compiler_cc: clang
             compiler_cxx: clang++
