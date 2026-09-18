@@ -170,7 +170,7 @@ jobs:
         }
         c_compiler=$(require '."c-compiler"' c-compiler)
         cxx_compiler=$(require '."cxx-compiler"' cxx-compiler)
-        fortran_compiler=$(require '."fortran-compiler"' fortran-compiler)
+        fortran_compiler=$(jq -r '."fortran-compiler" // ""' <<<"$leg")
         build_type=$(require '."build-type"' build-type)
         options=$(jq -r '."options" // ""' <<<"$leg")
         deps_json=$(require '._resolved.deps | tojson' '_resolved.deps')

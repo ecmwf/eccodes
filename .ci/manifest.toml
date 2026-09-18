@@ -3,7 +3,7 @@ name = "eccodes"
 prefix = "eccodes"
 repo = "ecmwf/eccodes"
 visibility = "public"
-compiler-inputs = ["cxx-compiler", "fortran-compiler"]
+compiler-inputs = ["cxx-compiler"]
 
 [[deps]]
 repo = "ecmwf/ecbuild"
@@ -24,13 +24,14 @@ ref = "develop"
 compiler-inputs = ["cxx-compiler"]
 when = { options = ["eckit-geo"] }
 
+# No fortran-compiler: the clang image ships no Fortran, because gfortran-N
+# depends on gcc-N. The Fortran interface is covered by the g++-13 legs and HPC.
 [[matrix.build.include]]
 cxx-compiler = "clang++-18"
 c-compiler = "clang-18"
 build-type = "RelWithDebInfo"
-fortran-compiler = "gfortran-13"
 runs-on = "arc-runner-very-large"
-container = "eccr.ecmwf.int/public-ci-images/ubuntu24.04-clang18-gfortran13:latest"
+container = "eccr.ecmwf.int/public-ci-images/ubuntu24.04-clang18:latest"
 platform = "ubuntu-24.04"
 
 [[matrix.build.include]]

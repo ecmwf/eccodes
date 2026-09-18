@@ -26,7 +26,11 @@ inputs:
       builds its Fortran interface by default (FEATURE FORTRAN, DEFAULT ON) and
       the CI images ship only versioned binaries — there is no unversioned
       `gfortran` for CMake to discover — so this must be passed explicitly.
-    required: true
+      Empty builds without the Fortran interface, for images that ship no Fortran
+      compiler at all: the clang image does not, because gfortran-N depends on
+      gcc-N and would put an unnamed GNU C compiler in it.
+    required: false
+    default: ''
   build-type:
     description: 'CMake build type (e.g. Release, Debug, RelWithDebInfo)'
     required: true
@@ -97,13 +101,18 @@ runs:
         LAUNCHER: ${{ steps.launcher.outputs.flags }}
       run: |
         set -euo pipefail
+        if [ -n "$FC_COMPILER" ]; then
+          fortran=( -DCMAKE_Fortran_COMPILER="$FC_COMPILER" )
+        else
+          fortran=( -DENABLE_FORTRAN=OFF )
+        fi
         cmake --preset "${OPTIONS:-ci}" \
               -S "$GITHUB_WORKSPACE" \
               -B "$BUILD_DIR" \
               -DCMAKE_BUILD_TYPE="$BUILD_TYPE" \
               -DCMAKE_C_COMPILER="$C_COMPILER" \
               -DCMAKE_CXX_COMPILER="$CXX_COMPILER" \
-              -DCMAKE_Fortran_COMPILER="$FC_COMPILER" \
+              "${fortran[@]}" \
               -DCMAKE_INSTALL_PREFIX="$INSTALL_PATH" \
               -DCMAKE_PREFIX_PATH="$CMAKE_PREFIX_PATH_IN" \
               $LAUNCHER
