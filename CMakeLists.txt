@@ -458,6 +458,10 @@ foreach( _tpl ${ECCODES_TPLS} )
     endif()
 endforeach()
 
+### tests data directory
+
+set(TESTS_DATA_DIR "${CMAKE_CURRENT_BINARY_DIR}/data" CACHE INTERNAL "Path to downloaded test data")
+
 ### include directories
 
 include_directories(
@@ -491,9 +495,6 @@ ecbuild_dont_pack( DIRS
 
 add_custom_target(dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
 
-### tests data directory
-
-set(TESTS_DATA_DIR "${CMAKE_CURRENT_BINARY_DIR}/data" CACHE INTERNAL "Path to downloaded test data")
 
 ###############################################################################
 # export to other projects
