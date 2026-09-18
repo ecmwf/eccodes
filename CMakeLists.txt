@@ -25,7 +25,7 @@ if(NOT ecbuild_FOUND)
         GIT_REPOSITORY https://github.com/ecmwf/ecbuild.git
         GIT_TAG        3.16.0
     )
-    find_package( ecbuild 3.7 REQUIRED HINTS ${ecbuild_SOURCE_DIR})
+    find_package( ecbuild 3.16 REQUIRED HINTS ${ecbuild_SOURCE_DIR})
 endif()
 
 # Initialise project
