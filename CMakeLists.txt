@@ -117,7 +117,7 @@ ecbuild_add_option( FEATURE ECKIT_GEO
     DEFAULT OFF )
 
 if( eccodes_HAVE_ECKIT_GEO AND NOT TARGET eckit_geo )
-    ecbuild_find_package(NAME eckit VERSION 2.1 REQUIRED)
+    ecbuild_find_package(NAME eckit VERSION 2.3 REQUIRED)
     if( NOT TARGET eckit_geo )
         ecbuild_critical("eckit has not been built with ECKIT_GEO enabled")
     endif()
