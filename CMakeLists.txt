@@ -23,9 +23,9 @@ if(NOT ecbuild_FOUND)
     include(FetchContent)
     FetchContent_Populate(ecbuild
         GIT_REPOSITORY https://github.com/ecmwf/ecbuild.git
-        GIT_TAG        3.12.0
+        GIT_TAG        3.16.0
     )
-    find_package( ecbuild 3.7 REQUIRED HINTS ${ecbuild_SOURCE_DIR})
+    find_package( ecbuild 3.16 REQUIRED HINTS ${ecbuild_SOURCE_DIR})
 endif()
 
 # Initialise project
@@ -117,7 +117,7 @@ ecbuild_add_option( FEATURE ECKIT_GEO
     DEFAULT OFF )
 
 if( eccodes_HAVE_ECKIT_GEO AND NOT TARGET eckit_geo )
-    ecbuild_find_package(NAME eckit VERSION 2.1 REQUIRED)
+    ecbuild_find_package(NAME eckit VERSION 2.3 REQUIRED)
     if( NOT TARGET eckit_geo )
         ecbuild_critical("eckit has not been built with ECKIT_GEO enabled")
     endif()
@@ -458,6 +458,10 @@ foreach( _tpl ${ECCODES_TPLS} )
     endif()
 endforeach()
 
+### tests data directory
+
+set(TESTS_DATA_DIR "${CMAKE_CURRENT_BINARY_DIR}/data" CACHE INTERNAL "Path to downloaded test data")
+
 ### include directories
 
 include_directories(
@@ -491,9 +495,6 @@ ecbuild_dont_pack( DIRS
 
 add_custom_target(dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
 
-### tests data directory
-
-set(TESTS_DATA_DIR "${CMAKE_CURRENT_BINARY_DIR}/data" CACHE INTERNAL "Path to downloaded test data")
 
 ###############################################################################
 # export to other projects

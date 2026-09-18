@@ -74,7 +74,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 ${tools_dir}/grib_filter -o $tempGrib $tempFilt $infile
-${tools_dir}/grib_compare $infile $tempGrib
+${tools_dir}/grib_compare -b shapeOfTheEarth $infile $tempGrib  # the missing.grib2 has shapeOfTheEarth=0, the new one has shapeOfTheEarth=6
 rm -f $tempGrib
 
 # Can encode and decode in one step!
@@ -84,8 +84,8 @@ cat >$tempFilt<<EOF
     write;
 EOF
 ECCODES_DEBUG=-1 ${tools_dir}/grib_filter -o $tempGrib $tempFilt $infile > $tempText 2>&1
-${tools_dir}/grib_compare $infile $tempGrib
-grep -q "ECCODES DEBUG grib_set_from_grid_spec: grib_set_values, setting 16 key/value pairs" $tempText
+${tools_dir}/grib_compare -b shapeOfTheEarth $infile $tempGrib
+grep -q "ECCODES DEBUG grib_set_from_grid_spec: grib_set_values, setting 17 key/value pairs" $tempText
 
 
 # Error conditions

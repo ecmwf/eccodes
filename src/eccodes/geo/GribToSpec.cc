@@ -92,21 +92,23 @@ bool ConditionT<long>::eval(codes_handle* h) const
 }
 
 
-template <>
-bool ConditionT<double>::eval(codes_handle* h) const
-{
-    ASSERT(h != nullptr);
-
-    double value = 0;
-    int err      = codes_get_double(h, key_, &value);
-
-    if (err == CODES_NOT_FOUND) {
-        return false;
-    }
-
-    CHECK_ERROR(err, key_);
-    return value_ == value;  // Want an epsilon?
-}
+// Not used, but could be useful for future extensions
+//
+// template <>
+// bool ConditionT<double>::eval(codes_handle* h) const
+// {
+//     ASSERT(h != nullptr);
+//
+//     double value = 0;
+//     int err      = codes_get_double(h, key_, &value);
+//
+//     if (err == CODES_NOT_FOUND) {
+//         return false;
+//     }
+//
+//     CHECK_ERROR(err, key_);
+//     return value_ == value;  // Want an epsilon?
+// }
 
 
 template <>
@@ -228,6 +230,39 @@ Condition* is_gaussian()
 }
 
 
+/// @brief eckit::geo::figure name for a Code table 3.2 (shape of the reference system) entry, if known
+bool get_figure(codes_handle* h, std::string& value)
+{
+    static const std::map<long, std::string> NAMED{
+        { 0, "grib1" },         // sphere, R = 6 367 470 m
+        { 2, "iau1965" },       // oblate spheroid, IAU 1965
+        { 4, "grs80" },         // oblate spheroid, IAG-GRS80
+        { 5, "wgs84" },         // oblate spheroid, WGS-84
+        { 6, "earth" },         // sphere, R = 6 371 229 m
+        { 8, "wgs84_sphere" },  // sphere, R = 6 371 200 m, WGS-84 datum
+        { 11, "sun" },          // Sun, R = 695 990 000 m
+    };
+
+    // 'shapeOfTheEarth' is a GRIB edition 2 concept (in edition 1 it is a hidden transient)
+    if (long edition = 0; codes_get_long(h, "edition", &edition) != CODES_SUCCESS || edition < 2) {
+        return false;
+    }
+
+    long code = 0;
+    if (codes_get_long(h, "shapeOfTheEarth", &code) != CODES_SUCCESS) {
+        return false;
+    }
+
+    // codes that are not tabulated are described by their size ('radius'/'semi_major_axis'/'semi_minor_axis')
+    if (auto it = NAMED.find(code); it != NAMED.end()) {
+        value = it->second;
+        return true;
+    }
+
+    return false;
+}
+
+
 const char* get_key(const std::string& name, codes_handle* h)
 {
     struct P
@@ -276,6 +311,7 @@ const char* get_key(const std::string& name, codes_handle* h)
         { "reference_lon", "longitudeOfFirstGridPointInDegrees" },
 
         { "truncation", "pentagonalResolutionParameterJ" },  // Assumes triangular truncation
+        { "truncation_subset", "subSetJ" },                  // Assumes triangular truncation
         { "accuracy", "bitsPerValue" },
 
         { "south_pole_latitude", "latitudeOfSouthernPoleInDegrees" },
@@ -870,6 +906,11 @@ bool GribToSpec::has(const std::string& name) const
 {
     lock_type lock;
 
+    if (name == "figure") {
+        std::string figure;
+        return get_figure(handle_, figure);
+    }
+
     const auto* key = get_key(name, handle_);
     if (key == nullptr || std::strlen(key) == 0) {
         return false;
@@ -882,6 +923,10 @@ bool GribToSpec::has(const std::string& name) const
 bool GribToSpec::get(const std::string& name, std::string& value) const
 {
     lock_type lock;
+
+    if (name == "figure") {
+        return get_figure(handle_, value);
+    }
 
     const auto* key = get_key(name, handle_);
 

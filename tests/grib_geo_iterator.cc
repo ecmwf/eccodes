@@ -57,8 +57,7 @@ CASE("reduced_gg")
             ASSERT(in != nullptr);
 
             int err   = 0;
-            int count = 0;
-            for (grib_handle* h = nullptr; nullptr != (h = codes_handle_new_from_file(nullptr, in, PRODUCT_GRIB, &err)); ++count) {
+            for (grib_handle* h = nullptr; nullptr != (h = codes_handle_new_from_file(nullptr, in, PRODUCT_GRIB, &err));) {
                 ASSERT(err == CODES_SUCCESS);
                 ASSERT(h != nullptr);
 
