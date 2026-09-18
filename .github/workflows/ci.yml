@@ -102,6 +102,7 @@ jobs:
         uses: ./.github/actions/build-eccodes
         with:
           cmake-prefix-path: ${{ steps.deps.outputs.cmake-prefix-path }}
+          c-compiler: ${{ matrix.c-compiler }}
           cxx-compiler: ${{ matrix.cxx-compiler }}
           fortran-compiler: ${{ matrix.fortran-compiler }}
           build-type: ${{ matrix.build-type }}

@@ -26,6 +26,7 @@ when = { options = ["eckit-geo"] }
 
 [[matrix.build.include]]
 cxx-compiler = "clang++-18"
+c-compiler = "clang-18"
 build-type = "RelWithDebInfo"
 fortran-compiler = "gfortran-13"
 runs-on = "arc-runner-very-large"
@@ -34,6 +35,7 @@ platform = "ubuntu-24.04"
 
 [[matrix.build.include]]
 cxx-compiler = "g++-13"
+c-compiler = "gcc-13"
 build-type = "RelWithDebInfo"
 fortran-compiler = "gfortran-13"
 runs-on = "arc-runner-very-large"
@@ -42,6 +44,7 @@ platform = "ubuntu-24.04"
 
 [[matrix.build.include]]
 cxx-compiler = "g++-13"
+c-compiler = "gcc-13"
 build-type = "RelWithDebInfo"
 fortran-compiler = "gfortran-13"
 options = "eckit-geo"
@@ -52,7 +55,7 @@ platform = "ubuntu-24.04"
 [matrix.build]
 triggers = ["upstream-change", "rebuild-request"]
 action = "./.github/actions/build-eccodes"
-forwarded-inputs = ["cxx-compiler", "fortran-compiler", "build-type", "options"]
+forwarded-inputs = ["c-compiler", "cxx-compiler", "fortran-compiler", "build-type", "options"]
 forwarded-deps-outputs = ["cmake-prefix-path"]
 needs = ["ecbuild/build", "stack-deps/build", "eckit/build"]
 ctest = true

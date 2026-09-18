@@ -10,6 +10,13 @@ inputs:
   cmake-prefix-path:
     description: 'Semicolon-separated prefixes of the resolved deps'
     required: true
+  c-compiler:
+    description: >
+      C compiler binary including version (e.g. clang-18, gcc-13). Must be the
+      same toolchain family as cxx-compiler: left unset CMake discovers
+      /usr/bin/cc, which is the image's gcc whatever the C++ compiler is, and a
+      mixed build then gets two OpenMP runtimes and two sets of flag spellings.
+    required: true
   cxx-compiler:
     description: 'C++ compiler binary including version (e.g. clang++-18, g++-13)'
     required: true
@@ -80,6 +87,7 @@ runs:
       shell: bash
       env:
         CMAKE_PREFIX_PATH_IN: ${{ inputs.cmake-prefix-path }}
+        C_COMPILER: ${{ inputs.c-compiler }}
         CXX_COMPILER: ${{ inputs.cxx-compiler }}
         FC_COMPILER: ${{ inputs.fortran-compiler }}
         BUILD_TYPE: ${{ inputs.build-type }}
@@ -93,6 +101,7 @@ runs:
               -S "$GITHUB_WORKSPACE" \
               -B "$BUILD_DIR" \
               -DCMAKE_BUILD_TYPE="$BUILD_TYPE" \
+              -DCMAKE_C_COMPILER="$C_COMPILER" \
               -DCMAKE_CXX_COMPILER="$CXX_COMPILER" \
               -DCMAKE_Fortran_COMPILER="$FC_COMPILER" \
               -DCMAKE_INSTALL_PREFIX="$INSTALL_PATH" \

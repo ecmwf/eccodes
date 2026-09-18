@@ -168,6 +168,7 @@ jobs:
           fi
           printf '%s' "$val"
         }
+        c_compiler=$(require '."c-compiler"' c-compiler)
         cxx_compiler=$(require '."cxx-compiler"' cxx-compiler)
         fortran_compiler=$(require '."fortran-compiler"' fortran-compiler)
         build_type=$(require '."build-type"' build-type)
@@ -175,6 +176,7 @@ jobs:
         deps_json=$(require '._resolved.deps | tojson' '_resolved.deps')
         own_artifact_name=$(require '._resolved."own-artifact-name"' '_resolved.own-artifact-name')
         {
+          echo "c-compiler=${c_compiler}"
           echo "cxx-compiler=${cxx_compiler}"
           echo "fortran-compiler=${fortran_compiler}"
           echo "build-type=${build_type}"
@@ -193,6 +195,7 @@ jobs:
       uses: ./.github/actions/build-eccodes
       with:
         cmake-prefix-path: ${{ steps.deps.outputs.cmake-prefix-path }}
+        c-compiler: ${{ steps.m.outputs.c-compiler }}
         cxx-compiler: ${{ steps.m.outputs.cxx-compiler }}
         fortran-compiler: ${{ steps.m.outputs.fortran-compiler }}
         build-type: ${{ steps.m.outputs.build-type }}
