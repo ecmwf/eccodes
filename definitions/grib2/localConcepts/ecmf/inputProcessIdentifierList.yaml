@@ -64,6 +64,16 @@ models:
     versions:
       - version: null
 
+  - name: emo-1
+    start: 65530
+    versions:
+      - version: null
+
+  - name: emo-earth
+    start: 65531
+    versions:
+      - version: null
+
   - name: era5-land
     start: 65532
     versions:
