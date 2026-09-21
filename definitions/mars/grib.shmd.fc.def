@@ -8,7 +8,7 @@ if (class is "c3") {
 }
 
 if (class is "eh" || class is "gh") {
- #meta marsForecastMonth g1forecastmonth(dataDate, forecastTime): read_only;
+ meta marsForecastMonth g1forecastmonth(dataDate, forecastTime): read_only;
  alias mars.date=referenceDate;
 }
 
