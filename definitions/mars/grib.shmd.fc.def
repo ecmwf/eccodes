@@ -1,9 +1,16 @@
-alias mars.fcmonth = marsForecastMonth;
-alias mars.number  = perturbationNumber;
-alias mars.system = systemNumber;
-
+if (class isnot "eh" && class isnot "gh") {
+ alias mars.system = systemNumber;
+}
 unalias mars.step;
 
 if (class is "c3") {
     alias mars.origin  = centre;
 }
+
+if (class is "eh" || class is "gh") {
+ #meta marsForecastMonth g1forecastmonth(dataDate, forecastTime): read_only;
+ alias mars.date=referenceDate;
+}
+
+alias mars.fcmonth = marsForecastMonth;
+alias mars.number  = perturbationNumber;

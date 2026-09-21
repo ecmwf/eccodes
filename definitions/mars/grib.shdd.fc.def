@@ -1,9 +1,15 @@
 
 alias mars.number  = perturbationNumber;
-alias mars.system = systemNumber;
-
-#unalias mars.step;
+if (class isnot "eh" && class isnot "gh") {
+ alias mars.system = systemNumber;
+}
 
 if (class is "c3") {
     alias mars.origin  = centre;
+}
+
+if (class is "eh" || class is "gh") {
+ unalias mars.date;
+ alias mars.hdate=dataDate;
+ alias mars.date=referenceDate;
 }
