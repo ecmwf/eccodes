@@ -26,30 +26,28 @@ when = { options = ["eckit-geo"] }
 
 # No fortran-compiler: the clang image ships no Fortran, because gfortran-N
 # depends on gcc-N. The Fortran interface is covered by the g++-13 legs and HPC.
+[matrix.build.defaults]
+build-type = "RelWithDebInfo"
+runs-on = "arc-runner-very-large"
+
 [[matrix.build.include]]
 cxx-compiler = "clang++-18"
 c-compiler = "clang-18"
-build-type = "RelWithDebInfo"
-runs-on = "arc-runner-very-large"
 container = "eccr.ecmwf.int/public-ci-images/ubuntu24.04-clang18:latest"
 platform = "ubuntu-24.04"
 
 [[matrix.build.include]]
 cxx-compiler = "g++-13"
 c-compiler = "gcc-13"
-build-type = "RelWithDebInfo"
 fortran-compiler = "gfortran-13"
-runs-on = "arc-runner-very-large"
 container = "eccr.ecmwf.int/public-ci-images/ubuntu24.04-gcc13-gfortran13:latest"
 platform = "ubuntu-24.04"
 
 [[matrix.build.include]]
 cxx-compiler = "g++-13"
 c-compiler = "gcc-13"
-build-type = "RelWithDebInfo"
 fortran-compiler = "gfortran-13"
 options = "eckit-geo"
-runs-on = "arc-runner-very-large"
 container = "eccr.ecmwf.int/public-ci-images/ubuntu24.04-gcc13-gfortran13:latest"
 platform = "ubuntu-24.04"
 
@@ -62,11 +60,10 @@ needs = ["ecbuild/build", "stack-deps/build", "eckit/build"]
 ctest = true
 ctest-args = '-j "$(nproc)"'
 
-[[matrix.build-hpc.include]]
+[matrix.build-hpc.defaults]
 cxx-compiler = "g++-8"
 fortran-compiler = "gfortran-8"
 build-type = "RelWithDebInfo"
-options = ""
 runs-on = "hpc-submit"
 container = "eccr.ecmwf.int/private-ci-images/ubuntu24.04-internal-tools:latest"
 site = "hpc-batch"
@@ -80,19 +77,10 @@ fc = "gfortran"
 time = "01:30:00"
 
 [[matrix.build-hpc.include]]
-cxx-compiler = "g++-8"
-fortran-compiler = "gfortran-8"
-build-type = "RelWithDebInfo"
+options = ""
+
+[[matrix.build-hpc.include]]
 options = "eckit-geo"
-runs-on = "hpc-submit"
-container = "eccr.ecmwf.int/private-ci-images/ubuntu24.04-internal-tools:latest"
-site = "hpc-batch"
-platform = "hpc-atos-gnu"
-modules = ["load prgenv/gnu", "unload gcc", "load gcc/old", "load cmake", "load ninja"]
-cc = "gcc"
-cxx = "g++"
-fc = "gfortran"
-time = "01:30:00"
 
 [matrix.build-hpc]
 execution = "hpc"
