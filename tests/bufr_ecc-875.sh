@@ -3,7 +3,7 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-#
+# 
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
@@ -31,14 +31,14 @@ ${tools_dir}/bufr_copy -g -w numberOfSubsets=9 $input $tempBufr
 ${tools_dir}/gts_ls $tempBufr | sed 1d | sed 9,11d > $tempOut
 
 cat > $tempRef <<EOF
-TT          AA          II          CCCC        YY          GG          gg          BBB         identifier
-IU          SZ          41          KWBC        17          12          10          NNN         GTS
-IU          SZ          42          KWBC        17          12          10          NNN         GTS
-IU          SV          41          KWBC        17          12          10          NNN         GTS
-IU          SV          42          KWBC        17          12          10          NNN         GTS
-IU          KN          80          KWBC        17          12          09          NNN         GTS
-IU          KN          50          KWBC        17          12          00          RRA         GTS
-IU          KN          50          KWBC        17          12          00          RRB         GTS
+TT          AA          II          CCCC        YY          GG          gg          BBB         identifier  
+IU          SZ          41          KWBC        17          12          10          NNN         GTS        
+IU          SZ          42          KWBC        17          12          10          NNN         GTS        
+IU          SV          41          KWBC        17          12          10          NNN         GTS        
+IU          SV          42          KWBC        17          12          10          NNN         GTS        
+IU          KN          80          KWBC        17          12          09          NNN         GTS        
+IU          KN          50          KWBC        17          12          00          RRA         GTS        
+IU          KN          50          KWBC        17          12          00          RRB         GTS        
 EOF
 
 diff $tempRef $tempOut

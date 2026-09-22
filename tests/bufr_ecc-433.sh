@@ -3,7 +3,7 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-#
+# 
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
@@ -36,11 +36,11 @@ EOF
 ${tools_dir}/codes_bufr_filter $tempRules $input > $tempOut
 
 cat > $tempRef << EOF
-59 59 57 51 47 48 45 45
-45 42 44 45 41 39 39 36
-33 34 33 31 35 -1e+100 -1e+100 -1e+100
--1e+100 -1e+100 -1e+100 -1e+100 35 -1e+100 -1e+100 -1e+100
--1e+100 -1e+100 -1e+100 -1e+100 -1e+100 -1e+100 -1e+100 -1e+100
+59 59 57 51 47 48 45 45 
+45 42 44 45 41 39 39 36 
+33 34 33 31 35 -1e+100 -1e+100 -1e+100 
+-1e+100 -1e+100 -1e+100 -1e+100 35 -1e+100 -1e+100 -1e+100 
+-1e+100 -1e+100 -1e+100 -1e+100 -1e+100 -1e+100 -1e+100 -1e+100 
 -1e+100 -1e+100 -1e+100
 EOF
 

@@ -3,7 +3,7 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-#
+# 
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
@@ -42,7 +42,7 @@ for class in "od" "mc"; do
 ${tools_dir}/grib_set -s stream=gfas,type=ga,class=$class,backgroundProcess=144,generatingProcessIdentifier=1 $grib2_sample $tempGrib
 ${tools_dir}/grib_ls -jm $tempGrib > $tempOut
 cat > $tempRef << EOF
-{ "messages" : [
+{ "messages" : [ 
   {
     "domain": "g",
     "date": 20100912,
@@ -64,7 +64,7 @@ done
 ${tools_dir}/grib_set -s stream=gfas,type=ga,class=we,backgroundProcess=144,generatingProcessIdentifier=1 $grib2_sample $tempGrib
 ${tools_dir}/grib_ls -jm $tempGrib > $tempOut
 cat > $tempRef << EOF
-{ "messages" : [
+{ "messages" : [ 
   {
     "domain": "g",
     "date": 20100912,
@@ -87,7 +87,7 @@ for class in "od" "mc"; do
 ${tools_dir}/grib_set -s stream=gfra,type=ga,class=$class,backgroundProcess=144,generatingProcessIdentifier=1 $grib2_sample $tempGrib
 ${tools_dir}/grib_ls -jm $tempGrib > $tempOut
 cat > $tempRef << EOF
-{ "messages" : [
+{ "messages" : [ 
   {
     "domain": "g",
     "date": 20100912,
@@ -109,7 +109,7 @@ done
 ${tools_dir}/grib_set -s stream=gfra,type=ga,class=we,backgroundProcess=144,generatingProcessIdentifier=1 $grib2_sample $tempGrib
 ${tools_dir}/grib_ls -jm $tempGrib > $tempOut
 cat > $tempRef << EOF
-{ "messages" : [
+{ "messages" : [ 
   {
     "domain": "g",
     "date": 20100912,
@@ -133,7 +133,7 @@ for class in "od" "mc"; do
 ${tools_dir}/grib_set -s stream=gfas,type=gsd,class=$class,backgroundProcess=144,generatingProcessIdentifier=1 $grib2_sample $tempGrib
 ${tools_dir}/grib_ls -jm $tempGrib > $tempOut
 cat > $tempRef << EOF
-{ "messages" : [
+{ "messages" : [ 
   {
     "domain": "g",
     "date": 20100912,
@@ -152,7 +152,7 @@ done
 ${tools_dir}/grib_set -s stream=gfas,type=gsd,class=we,backgroundProcess=144,generatingProcessIdentifier=1 $grib2_sample $tempGrib
 ${tools_dir}/grib_ls -jm $tempGrib > $tempOut
 cat > $tempRef << EOF
-{ "messages" : [
+{ "messages" : [ 
   {
     "domain": "g",
     "date": 20100912,
@@ -180,7 +180,7 @@ for class in "od" "mc"; do
 ${tools_dir}/grib_set -s stream=gfra,type=gsd,class=$class,backgroundProcess=144,generatingProcessIdentifier=1 $grib2_sample $tempGrib
 ${tools_dir}/grib_ls -jm $tempGrib > $tempOut
 cat > $tempRef << EOF
-{ "messages" : [
+{ "messages" : [ 
   {
     "domain": "g",
     "date": 20100912,
@@ -199,7 +199,7 @@ done
 ${tools_dir}/grib_set -s stream=gfra,type=gsd,class=we,backgroundProcess=144,generatingProcessIdentifier=1 $grib2_sample $tempGrib
 ${tools_dir}/grib_ls -jm $tempGrib > $tempOut
 cat > $tempRef << EOF
-{ "messages" : [
+{ "messages" : [ 
   {
     "domain": "g",
     "date": 20100912,
@@ -220,7 +220,7 @@ diff $tempRef $tempOut
 ${tools_dir}/grib_set -s localDefinitionNumber=31,stream=esmm,type=em $grib1_sample $tempGrib
 ${tools_dir}/grib_ls -jm $tempGrib > $tempOut
 cat > $tempRef << EOF
-{ "messages" : [
+{ "messages" : [ 
   {
     "domain": "g",
     "levtype": "pl",

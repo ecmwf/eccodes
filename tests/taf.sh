@@ -3,7 +3,7 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-#
+# 
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
@@ -19,7 +19,7 @@ tempTxt=temp.$label.txt
 tempRef=temp.$label.ref
 
 cat >$tempTaf<<EOF
-TAF
+TAF 
 KXYZ 051730Z 0518/0624 31008KT 3SM -SHRA BKN020
 FM052300 30006KT 5SM -SHRA OVC030
 PROB30 0604/0606 VRB20G35KT 1SM TSRA BKN015CB

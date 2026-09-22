@@ -3,7 +3,7 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-#
+# 
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
@@ -27,7 +27,7 @@ cat > $tempRef <<EOF
 ordering by param,step
 1 fields in the fieldset
 n,step,param
-1 0 t
+1 0 t  
 Idx	lat	lon	dist	val
 4839	-40.46	18.00	259.679	285.527
 4838	-40.46	15.00	51.5268	284.074
@@ -44,7 +44,7 @@ cat > $tempRef <<EOF
 ordering by param,step
 1 fields in the fieldset
 n,step,param
-1 0 t
+1 0 t  
 Idx	lat	lon	dist
 4839	-40.46	18.00	259.679
 4838	-40.46	15.00	51.5268

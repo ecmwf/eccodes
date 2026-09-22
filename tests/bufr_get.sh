@@ -3,7 +3,7 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-#
+# 
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
@@ -79,7 +79,7 @@ result=`${tools_dir}/bufr_get -m syno_1.bufr`
 [ "$result" = "1 20121030 0000 91334" ]
 ${tools_dir}/bufr_ls -j -m syno_1.bufr > $fTmp
 cat > $tempRef <<EOF
-{ "messages" : [
+{ "messages" : [ 
   {
     "obstype": 1,
     "date": 20121030,
@@ -153,3 +153,4 @@ grep -q "unreadable message" $fLog
 
 # Clean up
 rm -f $fLog $fTmp $res_get $tempRef
+

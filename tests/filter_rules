@@ -3,14 +3,14 @@ transient pNumber=identificationNumber;
 set identificationOfOriginatingGeneratingSubCentre = 98 ;
 set localDefinitionNumber = 1 ;
 set marsClass="od";
-set marsStream="kwbc";
+set marsStream="kwbc"; 
 #print "marsType=[marsType:l]";
 if ( marsType == 2 || marsType == 3 ) {
-  set marsType=11;
+  set marsType=11; 
 }
 # Control Forecast
 if ( marsType == 1 ) {
-  set marsType="cf";
+  set marsType="cf"; 
 }
 set experimentVersionNumber="0001";
 set numberOfForecastsInEnsemble=11;
@@ -21,7 +21,7 @@ set perturbationNumber=pNumber;
 if ( ( level == 500 || level == 1000 )  && indicatorOfParameter == 7 ) {
 	print "found indicatorOfParameter=[indicatorOfParameter] level=[level] date=[date]";
 	set gribTablesVersionNo = 128;
-	set indicatorOfParameter = 129 ;
+	set indicatorOfParameter = 129 ; 
 	print "indicatorOfParameter=[indicatorOfParameter] level=[level] date=[date]";
 	write "out.grib";
 	print;
@@ -47,22 +47,23 @@ if ( level == 250 && indicatorOfParameter == 34 ) {
 	print;
 }
 
-# Relative humidity
+# Relative humidity 
 if ( level == 700 && indicatorOfParameter == 52 ) {
 	print "found indicatorOfParameter=[indicatorOfParameter] level=[level] date=[date]";
 	set gribTablesVersionNo = 128;
-	set indicatorOfParameter = 157 ;
+	set indicatorOfParameter = 157 ; 
 	print "indicatorOfParameter=[indicatorOfParameter] level=[level] date=[date]";
 	write "out.grib";
 	print;
 }
 
-# Temperature
+# Temperature 
 if ( level == 850 && indicatorOfParameter == 11 ) {
 	print "found indicatorOfParameter=[indicatorOfParameter] level=[level] date=[date]";
 	set gribTablesVersionNo = 128;
-	set indicatorOfParameter = 130;
+	set indicatorOfParameter = 130; 
 	print "indicatorOfParameter=[indicatorOfParameter] level=[level] date=[date]";
 	write "out.grib";
 	print;
 }
+
