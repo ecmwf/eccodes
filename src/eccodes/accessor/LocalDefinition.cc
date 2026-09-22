@@ -10,8 +10,7 @@
 
 #include "LocalDefinition.h"
 
-eccodes::accessor::LocalDefinition _grib_accessor_local_definition;
-eccodes::Accessor* grib_accessor_local_definition = &_grib_accessor_local_definition;
+eccodes::AccessorBuilder<eccodes::accessor::LocalDefinition> _grib_accessor_local_definition_builder{};
 
 namespace eccodes::accessor
 {
@@ -120,9 +119,9 @@ int LocalDefinition::pack_long(const long* val, size_t* len)
                 else if (type == 18) {
                     productDefinitionTemplateNumberNew = 2;
                     derivedForecast                    = 4;
-                    // eps or enda or elda or ewla
+                    // eps or enda or elda or ewla or xwda
                 }
-                else if (eps == 1 || stream == 1030 || stream == 1249 || stream == 1250) {
+                else if (eps == 1 || stream == 1030 || stream == 1249 || stream == 1250 || stream == 1259) {
                     productDefinitionTemplateNumberNew = 1;
                 }
                 else {
@@ -138,9 +137,9 @@ int LocalDefinition::pack_long(const long* val, size_t* len)
                 else if (type == 18) {
                     productDefinitionTemplateNumberNew = 12;
                     derivedForecast                    = 4;
-                    // eps or enda or elda or ewla
+                    // eps or enda or elda or ewla or xwda
                 }
-                else if (eps == 1 || stream == 1030 || stream == 1249 || stream == 1250) {
+                else if (eps == 1 || stream == 1030 || stream == 1249 || stream == 1250 || stream == 1259) {
                     productDefinitionTemplateNumberNew = 11;
                 }
                 else {
@@ -231,7 +230,9 @@ int LocalDefinition::pack_long(const long* val, size_t* len)
     if (derivedForecast >= 0)
         grib_set_long(hand, derivedForecast_, derivedForecast);
 
-    grib_set_long(hand, grib2LocalSectionNumber_, *val);
+    if (*val > 0) { // ECC-2215
+        grib_set_long(hand, grib2LocalSectionNumber_, *val);
+    }
 
     return 0;
 }

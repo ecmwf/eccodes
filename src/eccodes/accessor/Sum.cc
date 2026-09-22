@@ -10,8 +10,7 @@
 
 #include "Sum.h"
 
-eccodes::accessor::Sum _grib_accessor_sum;
-eccodes::Accessor* grib_accessor_sum = &_grib_accessor_sum;
+eccodes::AccessorBuilder<eccodes::accessor::Sum> _grib_accessor_sum_builder{};
 
 namespace eccodes::accessor
 {

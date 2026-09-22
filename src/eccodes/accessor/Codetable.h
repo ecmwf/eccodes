@@ -19,9 +19,9 @@ namespace eccodes::accessor
 class Codetable : public Unsigned
 {
 public:
-    grib_accessor* create_empty_accessor() override { return new Codetable{}; }
     Codetable() :
-        Unsigned() { class_name_ = "codetable"; }
+        Unsigned() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     long get_native_type() override;
     int pack_missing() override;
     int pack_string(const char*, size_t* len) override;
@@ -43,6 +43,9 @@ private:
     int table_loaded_ = 0;
 
     grib_codetable* load_table();
+
+public:
+    static inline const AccessorType accessor_type_{"codetable"};
 };
 
 }  // namespace eccodes::accessor

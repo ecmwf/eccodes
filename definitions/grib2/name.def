@@ -847,6 +847,27 @@
 	 parameterCategory = 6 ;
 	 parameterNumber = 5 ;
 	}
+#Probability of a tropical storm
+'Probability of a tropical storm' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 6 ;
+	 probabilityType = 9 ;
+	}
+#Probability of a hurricane
+'Probability of a hurricane' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 5 ;
+	 probabilityType = 9 ;
+	}
+#Probability of a tropical depression
+'Probability of a tropical depression' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 7 ;
+	 probabilityType = 9 ;
+	}
 #Total precipitation of at least 25 mm
 'Total precipitation of at least 25 mm' = {
 	 discipline = 0 ;
@@ -894,6 +915,36 @@
 	 scaleFactorOfLowerLimit = 0 ;
 	 probabilityType = 3 ;
 	}
+#Hail of at least 2 cm diameter
+'Hail of at least 2 cm diameter' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 134 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 scaledValueOfLowerLimit = 1 ;
+	 scaleFactorOfLowerLimit = 2 ;
+	 probabilityType = 3 ;
+	}
+#Hail of at least 5 cm diameter
+'Hail of at least 5 cm diameter' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 134 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 scaledValueOfLowerLimit = 25 ;
+	 scaleFactorOfLowerLimit = 3 ;
+	 probabilityType = 3 ;
+	}
+#Thunderstorm in vicinity (lightning-based)
+'Thunderstorm in vicinity (lightning-based)' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 4 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 scaledValueOfLowerLimit = 0 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
+	}
 #Convective available potential energy shear index
 'Convective available potential energy shear index' = {
 	 discipline = 0 ;
@@ -935,60 +986,60 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
-	 typeOfStatisticalProcessing = 10 ;
 	 scaledValueOfLowerLimit = 1 ;
 	 scaleFactorOfLowerLimit = 0 ;
 	 probabilityType = 3 ;
+	 typeOfRelationToReferenceDataset = 1 ;
 	}
 #Probability of temperature standardized anomaly greater than 1.5 standard deviation
 'Probability of temperature standardized anomaly greater than 1.5 standard deviation' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
-	 typeOfStatisticalProcessing = 10 ;
 	 scaledValueOfLowerLimit = 15 ;
 	 scaleFactorOfLowerLimit = 1 ;
 	 probabilityType = 3 ;
+	 typeOfRelationToReferenceDataset = 1 ;
 	}
 #Probability of temperature standardized anomaly greater than 2 standard deviation
 'Probability of temperature standardized anomaly greater than 2 standard deviation' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
-	 typeOfStatisticalProcessing = 10 ;
 	 scaledValueOfLowerLimit = 2 ;
 	 scaleFactorOfLowerLimit = 0 ;
 	 probabilityType = 3 ;
+	 typeOfRelationToReferenceDataset = 1 ;
 	}
 #Probability of temperature standardized anomaly less than -1 standard deviation
 'Probability of temperature standardized anomaly less than -1 standard deviation' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
-	 typeOfStatisticalProcessing = 10 ;
 	 scaledValueOfLowerLimit = -1 ;
 	 scaleFactorOfLowerLimit = 0 ;
 	 probabilityType = 0 ;
+	 typeOfRelationToReferenceDataset = 1 ;
 	}
 #Probability of temperature standardized anomaly less than -1.5 standard deviation
 'Probability of temperature standardized anomaly less than -1.5 standard deviation' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
-	 typeOfStatisticalProcessing = 10 ;
 	 scaledValueOfLowerLimit = -15 ;
 	 scaleFactorOfLowerLimit = 1 ;
 	 probabilityType = 0 ;
+	 typeOfRelationToReferenceDataset = 1 ;
 	}
 #Probability of temperature standardized anomaly less than -2 standard deviation
 'Probability of temperature standardized anomaly less than -2 standard deviation' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
-	 typeOfStatisticalProcessing = 10 ;
 	 scaledValueOfLowerLimit = -2 ;
 	 scaleFactorOfLowerLimit = 0 ;
 	 probabilityType = 0 ;
+	 typeOfRelationToReferenceDataset = 1 ;
 	}
 #Wave induced mean sea level correction
 'Wave induced mean sea level correction' = {
@@ -10397,6 +10448,13 @@
 	 parameterNumber = 24 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean Wind speed threshold for wind erosion
+'Time-mean Wind speed threshold for wind erosion' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 70 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-integrated land surface heat net flux
 'Time-integrated land surface heat net flux' = {
 	 discipline = 2 ;
@@ -12447,6 +12505,13 @@
 	 parameterNumber = 0 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
+#Time-maximum Wind speed threshold for wind erosion
+'Time-maximum Wind speed threshold for wind erosion' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 70 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
 #Time-minimum temperature tendency due to short-wave radiation
 'Time-minimum temperature tendency due to short-wave radiation' = {
 	 discipline = 0 ;
@@ -14461,6 +14526,13 @@
 	 parameterNumber = 0 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
+#Time-minimum Wind speed threshold for wind erosion
+'Time-minimum Wind speed threshold for wind erosion' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 70 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
 #Time-standard-deviation temperature tendency due to short-wave radiation
 'Time-standard-deviation temperature tendency due to short-wave radiation' = {
 	 discipline = 0 ;
@@ -16456,6 +16528,13 @@
 	 discipline = 2 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 0 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation Wind speed threshold for wind erosion
+'Time-standard-deviation Wind speed threshold for wind erosion' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 70 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Cross sectional area of flow in channel
@@ -18773,6 +18852,54 @@
 	 parameterCategory = 4 ;
 	 parameterNumber = 63 ;
 	 typeOfFirstFixedSurface = 1 ;
+	}
+#Storm relative helicity - right moving storm
+'Storm relative helicity - right moving storm' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 23 ;
+	}
+#Storm relative helicity - left moving storm
+'Storm relative helicity - left moving storm' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 24 ;
+	}
+#Effective storm relative helicity - mean flow
+'Effective storm relative helicity - mean flow' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 25 ;
+	 typeOfFirstFixedSurface = 28 ;
+	 typeOfSecondFixedSurface = 29 ;
+	}
+#Effective storm relative helicity - right moving storm
+'Effective storm relative helicity - right moving storm' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 26 ;
+	 typeOfFirstFixedSurface = 28 ;
+	 typeOfSecondFixedSurface = 29 ;
+	}
+#Effective storm relative helicity - left moving storm
+'Effective storm relative helicity - left moving storm' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 27 ;
+	 typeOfFirstFixedSurface = 28 ;
+	 typeOfSecondFixedSurface = 29 ;
+	}
+#Fire combustion rate per unit area
+'Fire combustion rate per unit area' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 47 ;
+	}
+#Fire radiative power density
+'Fire radiative power density' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 48 ;
 	}
 #Universal thermal climate index
 'Universal thermal climate index' = {
@@ -25380,6 +25507,42 @@
 	 scaledValueOfLowerLimit = 27315 ;
 	 scaleFactorOfLowerLimit = 2 ;
 	 probabilityType = 0 ;
+	}
+#Significant wave height of at least 2 m
+'Significant wave height of at least 2 m' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 scaledValueOfLowerLimit = 2 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
+	}
+#Significant wave height of at least 4 m
+'Significant wave height of at least 4 m' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 scaledValueOfLowerLimit = 4 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
+	}
+#Significant wave height of at least 6 m
+'Significant wave height of at least 6 m' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 scaledValueOfLowerLimit = 6 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
+	}
+#Significant wave height of at least 8 m
+'Significant wave height of at least 8 m' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 scaledValueOfLowerLimit = 8 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
 	}
 #10 metre wind gust index
 '10 metre wind gust index' = {

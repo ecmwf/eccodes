@@ -20,14 +20,17 @@ class Nearest : public Gen
 {
 public:
     Nearest() :
-        Gen() { class_name_ = "nearest"; }
-    grib_accessor* create_empty_accessor() override { return new Nearest{}; }
+        Gen() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     void init(const long l, grib_arguments* args) override;
     void dump(eccodes::Dumper* dumper) override;
 
 private:
     grib_arguments* args_ = nullptr;
     friend eccodes::geo_nearest::Nearest* eccodes::geo_nearest::gribNearestNew(const grib_handle* ch, int* error);
+
+public:
+    static inline const AccessorType accessor_type_{"nearest"};
 };
 
 }  // namespace eccodes::accessor

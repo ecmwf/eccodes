@@ -63,6 +63,122 @@ typedef enum
         count++;                                       \
     } while (0)
 
+class FileRestorer {
+public:
+    explicit FileRestorer(FILE* f) {
+        f_ = f;
+        pos_ = ftell(f);
+        ECCODES_ASSERT(pos_ != -1);
+    }
+    ~FileRestorer() {
+        int err = fseeko(f_, pos_, SEEK_SET);
+        ECCODES_ASSERT(!err);
+    }
+private:
+    FILE* f_;
+    long pos_;
+};
+
+#define UINT3(a, b, c)    (size_t)((a << 16) + (b << 8) + c);
+#define UINT4(a, b, c, d) (size_t)((a << 24) + (b << 16) + (c << 8) + d);
+
+// Currently only for GRIB edition 2 single-field
+// It does not work for multi-field GRIB2 files!
+// and it will not work for STREAMs (because we do ftell and fseek etc)
+int grib_get_header_length(FILE* f, size_t* result)
+{
+    ECCODES_ASSERT(f);
+    FileRestorer fRestore(f);
+
+    size_t sec0len = 16; // GRIB2
+    size_t sec1len = 0;
+    size_t sec2len = 0;
+    size_t sec3len = 0;
+    size_t sec4len = 0;
+    unsigned char buf[40000]; // Large enough to contain all the above sections
+    size_t n = fread(buf, 1, sec0len, f);
+    if (n != sec0len)
+        return GRIB_INTERNAL_ERROR;
+
+    if (buf[0] != 'G' ||
+        buf[1] != 'R' ||
+        buf[2] != 'I' ||
+        buf[3] != 'B') {
+        return GRIB_INVALID_MESSAGE;
+    }
+    int edition = (int)buf[7];
+    if (edition != 2)
+        return GRIB_UNSUPPORTED_EDITION;
+
+    // Next 4 bytes encodes section1's length
+    int i = sec0len;
+    n = fread(&buf[i], 1, 4, f);
+    if (n!=4) return GRIB_INVALID_MESSAGE;
+    sec1len = UINT4(buf[i], buf[i + 1], buf[i + 2], buf[i + 3]);
+    i += 4;
+
+    // The next byte is the numberOfSection which should be 1
+    n = fread(&buf[i], 1, 1, f);
+    if (n!=1) return GRIB_INVALID_MESSAGE;
+    if ( (size_t)buf[i] != 1)
+        return GRIB_INVALID_MESSAGE;
+    i += 1;
+
+    // Read the rest of section 1. Note: We've read 5 bytes already
+    n = fread(buf + i, 1, sec1len - 5, f);
+    if (n != sec1len - 5) return GRIB_INVALID_MESSAGE;
+    i += sec1len - 5;
+
+    // Next comes Section2 (which is optional) or Section3
+    n = fread(&buf[i], 1, 4, f);
+    if (n != 4) return GRIB_INVALID_MESSAGE;
+    size_t sec2or3len = UINT4(buf[i], buf[i + 1], buf[i + 2], buf[i + 3]);
+    i += 4;
+
+    // Read the next section number: 2 or 3
+    n = fread(&buf[i], 1, 1, f);
+    if (n!=1) return GRIB_INVALID_MESSAGE;
+    size_t sec2or3Num = (size_t)buf[i];
+    ECCODES_ASSERT( sec2or3Num == 2 || sec2or3Num == 3);
+    i += 1;
+
+    // Read the rest
+    if (sec2or3Num == 2) {
+        // We have the optional section 2
+        sec2len = sec2or3len;
+        if (fread(buf + i, 1, sec2len - 5, f) != sec2len - 5)
+            return GRIB_INVALID_MESSAGE;
+        i += sec2len - 5;
+
+        // Section3
+        if (fread(&buf[i], 1, 4, f) != 4)
+            return GRIB_INVALID_MESSAGE;
+        sec3len = UINT4(buf[i], buf[i + 1], buf[i + 2], buf[i + 3]);
+        i += 4;
+
+        if (fread(buf + i, 1, sec3len - 4, f) != sec3len - 4)
+            return GRIB_INVALID_MESSAGE;
+        i += sec3len - 4;
+    } else {
+        // No section 2
+        sec3len = sec2or3len;
+        n = fread(buf + i, 1, sec3len - 5, f);
+        if (n != sec3len - 5)
+            return GRIB_INVALID_MESSAGE;
+        i += sec3len - 5;
+    }
+
+    // Section 4
+    n = fread(&buf[i], 1, 4, f);
+    if (n != 4)
+        return GRIB_INVALID_MESSAGE;
+    sec4len = UINT4(buf[i], buf[i + 1], buf[i + 2], buf[i + 3]);
+    i += 4;
+
+    *result = sec0len + sec1len +  sec2len + sec3len + sec4len;
+
+    return GRIB_SUCCESS;
+}
 
 static void set_total_length(unsigned char* buffer, long* section_length, const long* section_offset, int edition, size_t totalLength)
 {
@@ -1005,7 +1121,8 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
             SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
-
+            SET_LONG_VALUE("iDirectionIncrement", GRIB_MISSING_LONG);
+            SET_LONG_VALUE("Ni", GRIB_MISSING_LONG);
             COPY_SPEC_LONG(Nj);
             COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
             COPY_SPEC_DOUBLE(longitudeOfLastGridPointInDegrees);
@@ -1089,6 +1206,8 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
             SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
+            SET_LONG_VALUE("iDirectionIncrement", GRIB_MISSING_LONG);
+            SET_LONG_VALUE("Ni", GRIB_MISSING_LONG);
             COPY_SPEC_LONG(Nj);
             COPY_SPEC_LONG(N);
             COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
@@ -1107,12 +1226,25 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
             SET_LONG_VALUE("M", spec->truncation);
 
             if (packing_spec->packing_type == GRIB_UTIL_PACKING_TYPE_SPECTRAL_COMPLEX) {
-                const long JS = spec->truncation < 20 ? spec->truncation : 20;
                 SET_STRING_VALUE("packingType", "spectral_complex");
                 packingTypeIsSet = 1;
-                SET_LONG_VALUE("JS", JS);
-                SET_LONG_VALUE("KS", JS);
-                SET_LONG_VALUE("MS", JS);
+
+                long current_JS = 0;
+                long current_KS = 0;
+                long current_MS = 0;
+
+                if ((err = grib_get_long(h, "JS", &current_JS)) != GRIB_SUCCESS)
+                    return err;
+                if ((err = grib_get_long(h, "KS", &current_KS)) != GRIB_SUCCESS)
+                    return err;
+                if ((err = grib_get_long(h, "MS", &current_MS)) != GRIB_SUCCESS)
+                    return err;
+
+                // Make sure the current subset truncation values are preserved if valid, otherwise use the spec truncation value
+                SET_LONG_VALUE("JS", std::min(current_JS, spec->truncation));
+                SET_LONG_VALUE("KS", std::min(current_KS, spec->truncation));
+                SET_LONG_VALUE("MS", std::min(current_MS, spec->truncation)); 
+
                 if (packing_spec->packing == GRIB_UTIL_PACKING_USE_PROVIDED && editionNumber == 2) {
                     SET_LONG_VALUE("computeLaplacianOperator", 1);
                 }
@@ -1513,7 +1645,8 @@ static grib_handle* grib_util_set_spec_(grib_handle* h,
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
             SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
-
+            SET_LONG_VALUE("iDirectionIncrement", GRIB_MISSING_LONG);
+            SET_LONG_VALUE("Ni", GRIB_MISSING_LONG);
             COPY_SPEC_LONG(Nj);
             COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
             COPY_SPEC_DOUBLE(longitudeOfLastGridPointInDegrees);
@@ -1603,7 +1736,8 @@ static grib_handle* grib_util_set_spec_(grib_handle* h,
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
             SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
-
+            SET_LONG_VALUE("iDirectionIncrement", GRIB_MISSING_LONG);
+            SET_LONG_VALUE("Ni", GRIB_MISSING_LONG);
             COPY_SPEC_LONG(Nj);
             COPY_SPEC_LONG(N);
             COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
@@ -1615,22 +1749,35 @@ static grib_handle* grib_util_set_spec_(grib_handle* h,
 
         case GRIB_UTIL_GRID_SPEC_SH:
             *err = grib_get_string(h, "gridType", input_grid_type, &input_grid_type_len);
+            auto err_grid_type = *err;
 
             SET_LONG_VALUE("J", spec->truncation);
             SET_LONG_VALUE("K", spec->truncation);
             SET_LONG_VALUE("M", spec->truncation);
 
             if (packing_spec->packing_type == GRIB_UTIL_PACKING_TYPE_SPECTRAL_COMPLEX) {
-                const long JS = spec->truncation < 20 ? spec->truncation : 20;
                 SET_STRING_VALUE("packingType", "spectral_complex");
                 packingTypeIsSet = 1;
-                SET_LONG_VALUE("JS", JS);
-                SET_LONG_VALUE("KS", JS);
-                SET_LONG_VALUE("MS", JS);
+                long current_JS = 0;
+                long current_KS = 0;
+                long current_MS = 0;
+
+                if ((*err = grib_get_long(h, "JS", &current_JS)) != GRIB_SUCCESS)
+                    return NULL;
+                if ((*err = grib_get_long(h, "KS", &current_KS)) != GRIB_SUCCESS)
+                    return NULL;
+                if ((*err = grib_get_long(h, "MS", &current_MS)) != GRIB_SUCCESS)
+                    return NULL;
+
+                // Make sure the current subset truncation values are preserved if valid, otherwise use the spec truncation value
+                SET_LONG_VALUE("JS", std::min(current_JS, spec->truncation));
+                SET_LONG_VALUE("KS", std::min(current_KS, spec->truncation));
+                SET_LONG_VALUE("MS", std::min(current_MS, spec->truncation)); 
+
                 if (packing_spec->packing == GRIB_UTIL_PACKING_USE_PROVIDED && editionNumber == 2) {
                     SET_LONG_VALUE("computeLaplacianOperator", 1);
                 }
-                else if ((!(*err) && strcmp(input_grid_type, "sh")) || packing_spec->computeLaplacianOperator) {
+                else if ((!(err_grid_type) && strcmp(input_grid_type, "sh")) || packing_spec->computeLaplacianOperator) {
                     SET_LONG_VALUE("computeLaplacianOperator", 1);
                     if (packing_spec->truncateLaplacian)
                         SET_LONG_VALUE("truncateLaplacian", 1);
@@ -2222,21 +2369,35 @@ int parse_keyval_string(const char* grib_tool,
                         grib_values values[], int* count)
 {
     char* p = NULL;
-    char* lasts = NULL;
     int i = 0;
     if (arg == NULL) {
         *count = 0;
         return GRIB_SUCCESS;
     }
-    /* Note: strtok modifies its input argument 'arg'
-     * so it cannot be 'const'
+    /* ECC-2317
+     * Split arg on commas, but skip commas inside {} or [] (e.g., JSON grid specs).
+     * Note: this modifies the input argument 'arg' in-place (replaces separator commas with '\0').
      */
-    p = strtok_r(arg, ",", &lasts);
-    while (p != NULL) {
-        values[i].name = (char*)calloc(1, strlen(p) + 1);
+    p = arg;
+    while (*p != '\0') {
+        char* token_start = p;
+        int depth = 0;
+        while (*p != '\0') {
+            if (*p == '{' || *p == '[')
+                depth++;
+            else if (*p == '}' || *p == ']')
+                depth--;
+            else if (*p == ',' && depth == 0)
+                break;
+            p++;
+        }
+        /* p now points to a top-level comma or the end of the string */
+        if (*p == ',')
+            *p++ = '\0';
+
+        values[i].name = (char*)calloc(1, strlen(token_start) + 1);
         ECCODES_ASSERT(values[i].name);
-        strcpy((char*)values[i].name, p);
-        p = strtok_r(NULL, ",", &lasts);
+        strcpy((char*)values[i].name, token_start);
         i++;
         if (i >= *count) {
             fprintf(stderr, "Input string contains too many entries (max=%d)\n", *count);

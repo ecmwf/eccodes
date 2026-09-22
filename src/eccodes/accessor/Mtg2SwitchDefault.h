@@ -19,8 +19,8 @@ class Mtg2SwitchDefault : public Long
 {
 public:
     Mtg2SwitchDefault() :
-        Long() { class_name_ = "mtg2_switch_default"; }
-    grib_accessor* create_empty_accessor() override { return new Mtg2SwitchDefault{}; }
+        Long() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
 
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
@@ -30,6 +30,9 @@ private:
     const char* tablesVersionMTG2Switch_ = nullptr;  // int
     const char* marsClass_               = nullptr;  // str
     const char* MTG2SwitchViaTablesVersion_  = nullptr;  //int
+
+public:
+    static inline const AccessorType accessor_type_{"mtg2_switch_default"};
 };
 
 }  // namespace eccodes::accessor

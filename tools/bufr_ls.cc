@@ -42,6 +42,8 @@ const char* tool_name   = "bufr_ls";
 const char* tool_online_doc = "https://confluence.ecmwf.int/display/ECC/bufr_ls";
 const char* tool_usage  = "[options] bufr_file bufr_file ...";
 static int first_handle = 1;
+static bool json_nonempty_output = false; // ECC-2210
+
 
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 
@@ -113,6 +115,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         if (options->json_output && first_handle) {
             fprintf(stdout, "{ \"messages\" : [ \n");
             first_handle = 0;
+            json_nonempty_output = true;
         }
     }
 
@@ -132,8 +135,13 @@ int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
 /* This is executed after the last message in the last file is processed */
 int grib_tool_finalise_action(grib_runtime_options* options)
 {
-    if (options->json_output)
-        fprintf(stdout, "\n]}\n");
+    if (options->json_output) {
+        // ECC-2210: Check if there was some JSON output
+        if (json_nonempty_output)
+            fprintf(stdout, "\n]}\n");
+        else
+            fprintf(stdout, "{ \"messages\" : [\n]}\n");
+    }
     return 0;
 }
 

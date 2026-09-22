@@ -1031,6 +1031,127 @@ static void test_stl_exceptions()
     ECCODES_ASSERT(e == GRIB_RUNTIME_ERROR);
 }
 
+void test_grib_is_all_bits_one() {
+    printf("Running %s ...\n", __func__);
+
+    // --- Edge cases for nbits ---
+
+    // nbits == 0: only val==0 should be "all bits one" (vacuous truth)
+    // ECCODES_ASSERT(grib_is_all_bits_one(0, 0));
+    // ECCODES_ASSERT(!grib_is_all_bits_one(1, 0));
+
+    // nbits == 1
+    ECCODES_ASSERT(grib_is_all_bits_one(1, 1));
+    ECCODES_ASSERT(!grib_is_all_bits_one(0, 1));
+
+    // nbits == 63 (max for signed int64_t)
+    ECCODES_ASSERT(grib_is_all_bits_one(INT64_MAX, 63));  // 0x7FFFFFFFFFFFFFFF
+    ECCODES_ASSERT(!grib_is_all_bits_one(INT64_MAX - 1, 63));
+
+    // --- Typical bit widths (common in GRIB packing) ---
+
+    // nbits == 8 (byte)
+    ECCODES_ASSERT(grib_is_all_bits_one(0xFF, 8));
+    ECCODES_ASSERT(!grib_is_all_bits_one(0xFE, 8));
+    ECCODES_ASSERT(!grib_is_all_bits_one(0x7F, 8));
+    ECCODES_ASSERT(!grib_is_all_bits_one(0, 8));
+
+    // nbits == 16 (short)
+    ECCODES_ASSERT(grib_is_all_bits_one(0xFFFF, 16));
+    ECCODES_ASSERT(!grib_is_all_bits_one(0xFFFE, 16));
+
+    // nbits == 32 (int)
+    ECCODES_ASSERT(grib_is_all_bits_one(0xFFFFFFFF, 32));
+    ECCODES_ASSERT(!grib_is_all_bits_one(0xFFFFFFFE, 32));
+
+    // --- Exhaustive check: all nbits from 1 to 63 with exact all-ones values ---
+
+    for (long nbits = 1; nbits <= 63; ++nbits) {
+        int64_t all_ones = static_cast<int64_t>(UINT64_MAX >> (64 - nbits));
+        ECCODES_ASSERT(grib_is_all_bits_one(all_ones, nbits));
+        ECCODES_ASSERT(!grib_is_all_bits_one(all_ones - 1, nbits));
+        ECCODES_ASSERT(!grib_is_all_bits_one(0, nbits));
+    }
+
+    // --- Different source data types cast to int64_t ---
+
+    // uint8_t
+    {
+        uint8_t u8 = 0xFF;
+        ECCODES_ASSERT(grib_is_all_bits_one(static_cast<int64_t>(u8), 8));
+        u8 = 0x0F;
+        ECCODES_ASSERT(grib_is_all_bits_one(static_cast<int64_t>(u8), 4));
+        ECCODES_ASSERT(!grib_is_all_bits_one(static_cast<int64_t>(u8), 8));
+    }
+
+    // int8_t (signed): -1 sign-extends to 0xFFFFFFFFFFFFFFFF, not 0xFF
+    {
+        int8_t s8 = -1;
+        ECCODES_ASSERT(!grib_is_all_bits_one(static_cast<int64_t>(s8), 8));
+        // Mask to get the unsigned representation
+        ECCODES_ASSERT(grib_is_all_bits_one(static_cast<int64_t>(s8) & 0xFF, 8));
+    }
+
+    // uint16_t
+    {
+        uint16_t u16 = 0xFFFF;
+        ECCODES_ASSERT(grib_is_all_bits_one(static_cast<int64_t>(u16), 16));
+        u16 = 0x03FF;
+        ECCODES_ASSERT(grib_is_all_bits_one(static_cast<int64_t>(u16), 10));
+        ECCODES_ASSERT(!grib_is_all_bits_one(static_cast<int64_t>(u16), 16));
+    }
+
+    // int16_t: -1 sign-extends to 0xFFFFFFFFFFFFFFFF, not 0xFFFF
+    {
+        int16_t s16 = -1;
+        ECCODES_ASSERT(!grib_is_all_bits_one(static_cast<int64_t>(s16), 16));
+        ECCODES_ASSERT(grib_is_all_bits_one(static_cast<int64_t>(s16) & 0xFFFF, 16));
+    }
+
+    // uint32_t
+    {
+        uint32_t u32 = 0xFFFFFFFF;
+        ECCODES_ASSERT(grib_is_all_bits_one(static_cast<int64_t>(u32), 32));
+        u32 = 0x00FFFFFF;
+        ECCODES_ASSERT(grib_is_all_bits_one(static_cast<int64_t>(u32), 24));
+        ECCODES_ASSERT(!grib_is_all_bits_one(static_cast<int64_t>(u32), 32));
+    }
+
+    // int32_t: -1 sign-extends to 0xFFFFFFFFFFFFFFFF, not 0xFFFFFFFF
+    {
+        int32_t s32 = -1;
+        ECCODES_ASSERT(!grib_is_all_bits_one(static_cast<int64_t>(s32), 32));
+        ECCODES_ASSERT(grib_is_all_bits_one(static_cast<int64_t>(s32) & 0xFFFFFFFF, 32));
+    }
+
+    // --- Random / non-trivial nbits values ---
+
+    // nbits == 3: val == 0b111 == 7
+    ECCODES_ASSERT(grib_is_all_bits_one(7, 3));
+    ECCODES_ASSERT(!grib_is_all_bits_one(6, 3));
+    ECCODES_ASSERT(!grib_is_all_bits_one(5, 3));
+
+    // nbits == 7
+    ECCODES_ASSERT(grib_is_all_bits_one(0x7F, 7));
+    ECCODES_ASSERT(!grib_is_all_bits_one(0x7E, 7));
+
+    // nbits == 13
+    ECCODES_ASSERT(grib_is_all_bits_one(0x1FFF, 13));
+    ECCODES_ASSERT(!grib_is_all_bits_one(0x1FFE, 13));
+
+    // nbits == 20
+    ECCODES_ASSERT(grib_is_all_bits_one(0xFFFFF, 20));
+    ECCODES_ASSERT(!grib_is_all_bits_one(0xFFFFE, 20));
+
+    // nbits == 48
+    ECCODES_ASSERT(grib_is_all_bits_one(0xFFFFFFFFFFFF, 48));
+    ECCODES_ASSERT(!grib_is_all_bits_one(0xFFFFFFFFFFFE, 48));
+
+    // nbits == 53 (double mantissa bits)
+    ECCODES_ASSERT(grib_is_all_bits_one(0x1FFFFFFFFFFFFF, 53));
+    ECCODES_ASSERT(!grib_is_all_bits_one(0x1FFFFFFFFFFFFE, 53));
+}
+
 int main(int argc, char** argv)
 {
     printf("Doing unit tests. ecCodes version = %ld\n", grib_get_api_version());
@@ -1108,6 +1229,7 @@ int main(int argc, char** argv)
     test_codes_get_features();
     test_filepool();
     test_expressions();
+    test_grib_is_all_bits_one();
 
     test_stl_exceptions();
 

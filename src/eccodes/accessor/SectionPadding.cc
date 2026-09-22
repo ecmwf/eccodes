@@ -10,8 +10,7 @@
 
 #include "SectionPadding.h"
 
-eccodes::accessor::SectionPadding _grib_accessor_section_padding;
-eccodes::Accessor* grib_accessor_section_padding = &_grib_accessor_section_padding;
+eccodes::AccessorBuilder<eccodes::accessor::SectionPadding> _grib_accessor_section_padding_builder{};
 
 namespace eccodes::accessor
 {

@@ -14,8 +14,7 @@
 #include <utility>
 #include <map>
 
-eccodes::accessor::Concept _grib_accessor_concept;
-eccodes::Accessor* grib_accessor_concept = &_grib_accessor_concept;
+eccodes::AccessorBuilder<eccodes::accessor::Concept> _grib_accessor_concept_builder{};
 
 namespace eccodes::accessor
 {
@@ -248,7 +247,17 @@ static int concept_conditions_expression_apply(grib_handle* h, grib_concept_cond
     return err;
 }
 
-static int rectify_concept_apply(grib_handle* h, const char* key)
+static bool concept_values_contains_key(const grib_values* values, int count, const char* key)
+{
+    for (int i = 0; i < count; ++i) {
+        if (values[i].name && STR_EQUAL(values[i].name, key)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+static int rectify_concept_apply(grib_handle* h, const char* key, const grib_values* values, int count)
 {
     // The key was not found. In specific cases, rectify the problem by setting
     // a secondary key
@@ -256,6 +265,33 @@ static int rectify_concept_apply(grib_handle* h, const char* key)
     // GRIB is instantaneous but paramId being set is for accum/avg
     //
     int ret = GRIB_NOT_FOUND;
+
+    // ECC-2332
+    // PDTN selection workaround. It can be removed once the general selection mechanism is in place. 
+    // If both probabilityType and typeOfRelationToReferenceDataset are present
+    // in the concept being applied, select the reference-period probability PDTN.
+    const bool has_probability_type = concept_values_contains_key(values, count, "probabilityType");
+    const bool has_relation_type    = concept_values_contains_key(values, count, "typeOfRelationToReferenceDataset");
+    if ((STR_EQUAL(key, "probabilityType") || STR_EQUAL(key, "typeOfRelationToReferenceDataset")) &&
+        has_probability_type && has_relation_type)
+    {
+        long pdt_new = 131; // point-in-time
+        char stepType[32] = {0,};
+        size_t stepTypeLen = sizeof(stepType);
+        if (grib_get_string(h, "stepType", stepType, &stepTypeLen) == GRIB_SUCCESS &&
+            !STR_EQUAL(stepType, "instant"))
+        {
+            pdt_new = 112; // time-interval based
+        }
+        grib_context_log(h->context, GRIB_LOG_DEBUG,
+                         "Concept: Key %s not found, setting productDefinitionTemplateNumber to %ld",
+                         key, pdt_new);
+        ret = grib_set_long(h, "productDefinitionTemplateNumber", pdt_new);
+        if (ret == GRIB_SUCCESS) {
+            return ret;
+        }
+    }
+
     static const std::map<std::string_view, std::pair<std::string_view, long>> keyMap = {
         { "typeOfStatisticalProcessing",       { "selectStepTemplateInterval", 1 }        },
         { "typeOfWavePeriodInterval",          { "is_wave_period_range", 1 }              },
@@ -352,7 +388,7 @@ static bool blacklisted(grib_handle* h, long edition, const char* concept_name, 
     return false;
 }
 
-#define MAX_NUM_CONCEPT_VALUES 40
+#define MAX_NUM_CONCEPT_VALUES 50
 
 static void print_user_friendly_message(grib_handle* h, const char* name, grib_concept_value* concepts, grib_action* act)
 {
@@ -373,6 +409,10 @@ static void print_user_friendly_message(grib_handle* h, const char* name, grib_c
     if (grib_get_string(h, "datasetForLocal", dataset_s, &dataset_len) == GRIB_SUCCESS && !STR_EQUAL(dataset_s, "unknown")) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "concept: input handle dataset=%s", dataset_s);
     }
+    long tablesVersion = 0;
+    if (grib_get_long(h, "tablesVersion", &tablesVersion) == GRIB_SUCCESS) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "concept: input handle tablesVersion=%ld", tablesVersion);
+    }
     if (strcmp(act->name_, "paramId") == 0) {
         if (string_to_long(name, &dummy, 1) == GRIB_SUCCESS) {
             // The paramId value is an integer. Show them the param DB
@@ -391,16 +431,19 @@ static void print_user_friendly_message(grib_handle* h, const char* name, grib_c
     }
 
     // Create a list of all possible values for this concept and sort it
+    bool hasMore = false;
     while (pCon) {
-        if (i >= MAX_NUM_CONCEPT_VALUES)
+        if (i >= MAX_NUM_CONCEPT_VALUES) {
+            hasMore = true;
             break;
+        }
         all_concept_vals[i++] = pCon->name;
         pCon                  = pCon->next;
     }
     concept_count = i;
     // Only print out all concepts if fewer than MAX_NUM_CONCEPT_VALUES.
     // Printing out all values for concepts like paramId would be silly!
-    if (concept_count <= MAX_NUM_CONCEPT_VALUES) {
+    if (!hasMore) {
         fprintf(stderr, "Here are some possible values for concept %s:\n", act->name_);
         qsort(&all_concept_vals, concept_count, sizeof(char*), cmpstringp);
         for (i = 0; i < concept_count; ++i) {
@@ -464,7 +507,7 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
             for (int i = 0; i < count; i++) {
                 if (values[i].error == GRIB_NOT_FOUND) {
                     // Try to rectify the most common causes of failure
-                    if (rectify_concept_apply(h, values[i].name) == GRIB_SUCCESS) {
+                    if (rectify_concept_apply(h, values[i].name, values, count) == GRIB_SUCCESS) {
                         resubmit = true;
                         grib_set_values(h, &values[i], 1);
                     }
@@ -515,7 +558,7 @@ int Concept::pack_long(const long* val, size_t* len)
             if (grib_get_long(h, "paramIdForConversion", &newParamId) == GRIB_SUCCESS && newParamId > 0) {
                 if (context_->debug) {
                     fprintf(stderr, "ECCODES DEBUG %s::%s: Changing %s from %ld to %ld\n",
-                            class_name_, __func__, name_, *val, newParamId);
+                            accessor_type().c_str(), __func__, name_, *val, newParamId);
                 }
                 snprintf(buf, sizeof(buf), "%ld", newParamId);
             }

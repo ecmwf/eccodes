@@ -10,8 +10,7 @@
 
 #include "CountTotal.h"
 
-eccodes::accessor::CountTotal _grib_accessor_count_total;
-eccodes::Accessor* grib_accessor_count_total = &_grib_accessor_count_total;
+eccodes::AccessorBuilder<eccodes::accessor::CountTotal> _grib_accessor_count_total_builder{};
 
 namespace eccodes::accessor
 {

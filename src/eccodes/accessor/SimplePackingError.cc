@@ -11,8 +11,7 @@
 #include "SimplePackingError.h"
 #include "grib_scaling.h"
 
-eccodes::accessor::SimplePackingError _grib_accessor_simple_packing_error;
-eccodes::Accessor* grib_accessor_simple_packing_error = &_grib_accessor_simple_packing_error;
+eccodes::AccessorBuilder<eccodes::accessor::SimplePackingError> _grib_accessor_simple_packing_error_builder{};
 
 namespace eccodes::accessor
 {

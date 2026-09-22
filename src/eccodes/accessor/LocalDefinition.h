@@ -19,8 +19,8 @@ class LocalDefinition : public Unsigned
 {
 public:
     LocalDefinition() :
-        Unsigned() { class_name_ = "local_definition"; }
-    grib_accessor* create_empty_accessor() override { return new LocalDefinition{}; }
+        Unsigned() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     int value_count(long*) override;
@@ -36,6 +36,9 @@ private:
     const char* eps_ = nullptr;
     const char* stepType_ = nullptr;
     const char* derivedForecast_ = nullptr;
+
+public:
+    static inline const AccessorType accessor_type_{"local_definition"};
 };
 
 }  // namespace eccodes::accessor

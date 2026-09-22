@@ -23,20 +23,19 @@
 #include "eckit/geo/Projection.h"
 #include "eckit/spec/Spec.h"
 #include "eckit/geo/area/BoundingBox.h"
+#include "eckit/geo/figure/Earth.h"
+#include "eckit/geo/figure/Sun.h"
 #include "eckit/geo/grid/reduced/HEALPix.h"
-#include "eckit/geo/grid/ORCA.h"
 #include "eckit/geo/grid/reduced/ReducedLonLat.h"
 #include "eckit/geo/grid/reduced/ReducedGaussian.h"
 #include "eckit/geo/grid/regular/RegularGaussian.h"
 #include "eckit/geo/grid/SphericalHarmonics.h"
-#include "eckit/geo/grid/unstructured/FESOM.h"
-#include "eckit/geo/grid/unstructured/ICON.h"
 #include "eckit/geo/projection/Rotation.h"
 #include "eckit/geo/util/mutex.h"
 #include "eckit/types/FloatCompare.h"
 
-#include "eccodes/geo/EckitMainInit.h"
 #include "eccodes/Spec.h"
+#include "eccodes/geo/eckit.h"
 
 #include "grib_api_internal.h"
 
@@ -201,11 +200,38 @@ private:
 };
 
 
+// Code table 3.2: only codes 1, 3 and 7 need the figure size, the others (below) define it
 class Shape
 {
 public:
     explicit Shape(const ::eckit::geo::Figure& figure) :
         figure_(figure) {}
+
+    static long table_32_code(const ::eckit::geo::Figure& figure)
+    {
+        static const struct
+        {
+            long code;
+            double a;
+            double b;
+        } CODES[]{
+            { 0, ::eckit::geo::figure::DatumGRIB1::a, ::eckit::geo::figure::DatumGRIB1::b },
+            { 2, ::eckit::geo::figure::DatumIau1965::a, ::eckit::geo::figure::DatumIau1965::b },
+            { 4, ::eckit::geo::figure::DatumGrs80::a, ::eckit::geo::figure::DatumGrs80::b },
+            { 5, ::eckit::geo::figure::DatumWgs84::a, ::eckit::geo::figure::DatumWgs84::b },
+            { 6, ::eckit::geo::figure::DatumIFS::a, ::eckit::geo::figure::DatumIFS::b },
+            { 8, ::eckit::geo::figure::DatumWgs84Sphere::a, ::eckit::geo::figure::DatumWgs84Sphere::b },
+            { 11, ::eckit::geo::figure::DatumSun::a, ::eckit::geo::figure::DatumSun::b },
+        };
+
+        for (const auto& [code, a, b] : CODES) {
+            if (is_approximately_equal(figure.a(), a) && is_approximately_equal(figure.b(), b)) {
+                return code;
+            }
+        }
+
+        return figure.spherical() ? 1 : 7;
+    }
 
     void fillGrib(grib_info& info) const
     {
@@ -219,21 +245,15 @@ public:
         static const auto* B = "earthMinorAxis";
 
         // check if shape is already set/provided
-        auto code     = 6L;
-        bool provided = false;
-
         for (long j = 0; j < info.packing.extra_settings_count; ++j) {
             if (const auto& set = info.packing.extra_settings[j];
                 set.name == SHAPE && set.type == CODES_TYPE_LONG) {
-                code     = set.long_value;
-                provided = true;
+                return;
             }
         }
 
-        if (!provided) {
-            code = figure_.spherical() ? 1L : 7L;
-            info.extra_set(SHAPE.c_str(), code);
-        }
+        const auto code = table_32_code(figure_);
+        info.extra_set(SHAPE.c_str(), code);
 
         switch (code) {
             case 1:
@@ -242,14 +262,13 @@ public:
             case 3:
                 info.extra_set(A, figure_.a() / 1000.);
                 info.extra_set(B, figure_.b() / 1000.);
-            case 6:
                 break;
             case 7:
                 info.extra_set(A, figure_.a());
                 info.extra_set(B, figure_.b());
                 break;
             default:
-                throw ::eckit::geo::exception::FigureError("Shape: unsupported " + SHAPE + ": " + std::to_string(code), Here());
+                break;
         }
     }
 
@@ -270,11 +289,13 @@ void set_grid_type_regular_ll(grib_info& info, const Grid& grid, const BasicAngl
 
     auto order = g.order();
 
-    info.grid.iScansNegatively = static_cast<long>(order.find("i-") != std::string::npos);
-    info.grid.jScansPositively = static_cast<long>(order.find("j+") != std::string::npos);
+    // ECC-2318
+    // For dx==0 and dy==0 use default values iScansNegatively=0, jScansPositively=0, respectively.
+    info.grid.iScansNegatively = is_approximately_equal(g.dx(), 0.) ? 0L : order.find("i-") != std::string::npos ? 1L : 0L;
+    info.grid.jScansPositively = is_approximately_equal(g.dy(), 0.) ? 0L : order.find("j+") != std::string::npos ? 1L : 0L;
 
-    ASSERT(g.dx() < 0 == (info.grid.iScansNegatively == 1L));
-    ASSERT(0 <= g.dy() == (info.grid.jScansPositively == 1L));
+    ASSERT((g.dx() < 0) == (info.grid.iScansNegatively == 1L));
+    ASSERT((0 < g.dy()) == (info.grid.jScansPositively == 1L));
 
     info.grid.iDirectionIncrementInDegrees = std::abs(g.dx());  // west-east
     info.grid.jDirectionIncrementInDegrees = std::abs(g.dy());  // south-north
@@ -301,6 +322,9 @@ void set_grid_type_regular_ll(grib_info& info, const Grid& grid, const BasicAngl
         BasicAngle basic(basic_angle.num, basic_angle.den);
         basic.fillGrib(info);
     }
+
+    Shape shape(grid.figure());
+    shape.fillGrib(info);
 }
 
 
@@ -329,6 +353,9 @@ void set_grid_type_regular_gg(grib_info& info, const Grid& grid)
         BoundingBox bbox(std::get<PointLonLat>(g.first_point()), std::get<PointLonLat>(g.last_point()));
         bbox.fillGrib(info);
     }
+
+    Shape shape(grid.figure());
+    shape.fillGrib(info);
 }
 
 
@@ -353,6 +380,9 @@ void set_grid_type_reduced_ll(grib_info& info, const Grid& grid)
     const auto east  = bbox.periodic() ? bbox.west() + 360. - 360. / static_cast<double>(max_pl) : bbox.east();
 
     BoundingBox(bbox.north(), bbox.west(), bbox.south(), east).fillGrib(info);
+
+    Shape shape(grid.figure());
+    shape.fillGrib(info);
 }
 
 
@@ -377,6 +407,9 @@ void set_grid_type_reduced_gg(grib_info& info, const Grid& grid)
 
     auto bbox = BoundingBox::make_from_points_minmax(g);
     bbox.fillGrib(info);
+
+    Shape shape(grid.figure());
+    shape.fillGrib(info);
 }
 
 
@@ -385,22 +418,12 @@ void set_grid_type_unstructured(grib_info& info, const Grid& grid)
     info.grid.grid_type        = CODES_UTIL_GRID_SPEC_UNSTRUCTURED;
     info.packing.editionNumber = 2;
 
-    auto properties = [&info](const auto& grid) {
-        info.extra_set("unstructuredGridType", grid.name().c_str());
-        info.extra_set("unstructuredGridSubtype", grid.arrangement().c_str());
-        info.extra_set("uuidOfHGrid", grid.uid().c_str());
-    };
+    info.extra_set("unstructuredGridType", grid.name().c_str());
+    info.extra_set("unstructuredGridSubtype", grid.arrangement().c_str());
+    info.extra_set("uuidOfHGrid", grid.uid().c_str());
 
-    if (const auto type = grid.type();
-        type == "fesom") {
-        properties(dynamic_cast<const ::eckit::geo::grid::unstructured::FESOM&>(grid));
-    }
-    else if (type == "icon") {
-        properties(dynamic_cast<const ::eckit::geo::grid::unstructured::ICON&>(grid));
-    }
-    else if (type == "orca") {
-        properties(dynamic_cast<const ::eckit::geo::grid::ORCA&>(grid));
-    }
+    Shape shape(grid.figure());
+    shape.fillGrib(info);
 }
 
 
@@ -414,6 +437,9 @@ void set_grid_type_healpix(grib_info& info, const Grid& grid)
     info.grid.longitudeOfFirstGridPointInDegrees = 45.;
 
     info.extra_set("orderingConvention", g.order().c_str());
+
+    Shape shape(grid.figure());
+    shape.fillGrib(info);
 }
 
 
@@ -576,31 +602,31 @@ codes_handle* GribFromSpec::set(const codes_handle* h, const Spec& spec, const s
 
     grib_info info;
 
-    if (const auto g = grid->type(), p = grid->projection().type(); g == "regular-ll") {
+    if (const auto g = grid->type(), p = grid->projection().type(); g == "regular_ll") {
         set_grid_type_regular_ll(info, *grid, basic_angle);
     }
-    else if (g == "regular-xy" && p == "laea") {
+    else if (g == "regular_xy" && p == "laea") {
         set_grid_type_lambert_azimuthal_equal_area(info, *grid);
     }
-    else if (g == "regular-xy" && p == "lcc") {
+    else if (g == "regular_xy" && p == "lcc") {
         set_grid_type_grid_type_lambert(info, *grid);
     }
-    else if (g == "regular-xy" && p == "polar-stereographic") {
+    else if (g == "regular_xy" && p == "polar_stereographic") {
         set_grid_type_polar_stereographic(info, *grid);
     }
-    else if (g == "reduced-ll") {
+    else if (g == "reduced_ll") {
         set_grid_type_reduced_ll(info, *grid);
     }
-    else if (g == "regular-gg") {
+    else if (g == "regular_gg") {
         set_grid_type_regular_gg(info, *grid);
     }
-    else if (g == "reduced-gg") {
+    else if (g == "reduced_gg") {
         set_grid_type_reduced_gg(info, *grid);
     }
-    else if (g == "healpix") {
+    else if (g == "HEALPix") {
         set_grid_type_healpix(info, *grid);
     }
-    else if (g == "unstructured" || g == "fesom" || g == "icon" || g == "orca") {
+    else if (g == "unstructured_ll" || g == "FESOM" || g == "ICON" || g == "ORCA") {
         set_grid_type_unstructured(info, *grid);
     }
     else if (g == "sh") {
@@ -625,7 +651,19 @@ codes_handle* GribFromSpec::set(const codes_handle* h, const Spec& spec, const s
     ASSERT(edition != 0);
 
     if (edition >= 2) {
-        info.extra_set("numberOfDataPoints", static_cast<long>(grid->size()));
+        if (info.grid.grid_type == CODES_UTIL_GRID_SPEC_SH) {
+            // For spherical harmonics, numberOfDataPoints is the number of real
+            // coefficients: (T+1)*(T+2). Each complex coefficient has a real and
+            // imaginary part. We compute this from the truncation rather than
+            // relying on grid->size() which may return the complex coefficient count.
+            const long T = info.grid.truncation;
+            const long numberOfRealCoeffs = (T + 1) * (T + 2);
+            info.extra_set("numberOfDataPoints", numberOfRealCoeffs);
+            info.extra_set("numberOfValues", numberOfRealCoeffs);
+        }
+        else {
+            info.extra_set("numberOfDataPoints", static_cast<long>(grid->size()));
+        }
     }
 
     try {

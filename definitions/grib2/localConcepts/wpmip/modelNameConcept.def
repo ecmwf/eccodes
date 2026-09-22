@@ -1,0 +1,81 @@
+'BoM-AccessG' = {
+    backgroundProcess = 14;
+}
+'BoM-AIFS_init_AccessG' = {
+    backgroundProcess = 5;
+}
+'CMA-Fengshun' = {
+    backgroundProcess = 25;
+}
+'CPTEC-GM' = {
+    backgroundProcess = 6;
+}
+'CSIR-GM' = {
+    backgroundProcess = 7;
+}
+'DWD-ICON' = {
+    backgroundProcess = 3;
+}
+'DWD-AICON' = {
+    backgroundProcess = 4;
+}
+'ECCC-GDPS' = {
+    backgroundProcess = 8;
+}
+'ECCC-GDPS_nudge' = {
+    backgroundProcess = 9;
+}
+'ECCC-GEML' = {
+    backgroundProcess = 10;
+}
+'EMCWF-IFS' = {
+    backgroundProcess = 255;
+}
+'EMCWF-AIFS' = {
+    backgroundProcess = 1;
+}
+'EMCWF-IFS_nudge_AIFS' = {
+    backgroundProcess = 2;
+}
+'GFDL-SHiELD' = {
+    backgroundProcess = 11;
+}
+'GFDL-AI_SHiELD' = {
+    backgroundProcess = 26;
+}
+'IMD-GFS' = {
+    backgroundProcess = 12;
+}
+'IMD-NCUM' = {
+    backgroundProcess = 13;
+}
+'JMA-GSM' = {
+    backgroundProcess = 15;
+}
+'JMA-GraphCast_init_GSM' = {
+    backgroundProcess = 16;
+}
+'KIAPS_KMA-KIM' = {
+    backgroundProcess = 24;
+}
+'UKMO-UM' = {
+    backgroundProcess = 17;
+}
+'METNO-AIWP' = {
+    backgroundProcess = 18;
+}
+'NOAA-GFS' = {
+    backgroundProcess = 19;
+}
+'NOAA-MLGFS' = {
+    backgroundProcess = 20;
+}
+'NRL-NOGAPS' = {
+    backgroundProcess = 21;
+}
+'RAS-SL_AV' = {
+    backgroundProcess = 22;
+}
+'SAWS-GM' = {
+    backgroundProcess = 23;
+}

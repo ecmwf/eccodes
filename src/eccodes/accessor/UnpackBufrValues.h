@@ -20,8 +20,8 @@ class UnpackBufrValues : public Gen
 {
 public:
     UnpackBufrValues() :
-        Gen() { class_name_ = "unpack_bufr_values"; }
-    grib_accessor* create_empty_accessor() override { return new UnpackBufrValues{}; }
+        Gen() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     long get_native_type() override;
     int pack_double(const double* val, size_t* len) override;
     int pack_long(const long* val, size_t* len) override;
@@ -36,6 +36,9 @@ public:
 
 private:
     BufrDataArray* data_accessor_ = nullptr;
+
+public:
+    static inline const AccessorType accessor_type_{"unpack_bufr_values"};
 };
 
 }  // namespace eccodes::accessor

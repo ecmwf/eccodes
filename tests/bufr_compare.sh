@@ -173,15 +173,22 @@ echo "Test: Compare two-way (symmetric mode)" >> $fLog
 f=$ECCODES_SAMPLES_PATH/BUFR3.tmpl
 # Add a local section
 ${tools_dir}/bufr_set -s section2Present=1 $f $fBufrTmp
-# Compare A with B will pass
-${tools_dir}/bufr_compare $f $fBufrTmp
+# ECC-2211: Comparing A with B must return 1
+set +e
+${tools_dir}/bufr_compare $f $fBufrTmp > $fLog 2>&1
+status=$?
+set -e
+[ $status -eq 1 ]
+fgrep -q "DIFFERENCE == long [section2Present]: [0] != [1]" $fLog
+
 # Compare with -2 option
 set +e
 ${tools_dir}/bufr_compare -2 -v $f $fBufrTmp > $fLog 2>&1
 status=$?
 set -e
 [ $status -eq 1 ]
-grep Swapping $fLog
+grep -q "Swapping" $fLog
+grep -q "rdbType. not found in 1st field" $fLog
 
 #------------------------------------------------------------------
 echo "Test: ECC-656: using relative comparison (-R) with 'all'..."
@@ -311,8 +318,8 @@ set -e
 ${tools_dir}/bufr_compare -bident -v $tempIndex1 $tempIndex2
 rm -f $tempIndex1 $tempIndex2
 
-# ECC-2209
-# ------------
+# ECC-2209 string
+# ----------------
 f=$ECCODES_SAMPLES_PATH/BUFR4.tmpl
 ${tools_dir}/codes_bufr_filter -o $fBufrTmp - $f <<EOF
  set unpack=1;
@@ -325,15 +332,39 @@ ${tools_dir}/bufr_compare $f $fBufrTmp > $fLog 2>&1
 status=$?
 set -e
 [ $status -eq 1 ]
-grep -q "stationOrSiteName.*MISSING. != .*Darya" $fLog
-
+grep -q "string.*stationOrSiteName.*MISSING. != .*Darya" $fLog
 
 set +e
 ${tools_dir}/bufr_compare $fBufrTmp $f > $fLog 2>&1
 status=$?
 set -e
 [ $status -eq 1 ]
-grep -q "stationOrSiteName.*Darya. != .*MISSING" $fLog
+grep -q "string.*stationOrSiteName.*Darya. != .*MISSING" $fLog
+
+# ECC-2209 integer
+# ----------------
+f=$ECCODES_SAMPLES_PATH/BUFR4.tmpl
+${tools_dir}/codes_bufr_filter -o $fBufrTmp - $f <<EOF
+ set unpack=1;
+ set cloudCoverTotal=42;
+ set pack=1;
+ write;
+EOF
+set +e
+${tools_dir}/bufr_compare $f $fBufrTmp > $fLog 2>&1
+status=$?
+set -e
+[ $status -eq 1 ]
+cat $fLog
+grep -q "long.*cloudCoverTotal.*MISSING. != .*42" $fLog
+
+set +e
+${tools_dir}/bufr_compare $fBufrTmp $f > $fLog 2>&1
+status=$?
+set -e
+[ $status -eq 1 ]
+grep -q "long.*cloudCoverTotal.*42. != .*MISSING" $fLog
+
 
 
 # Fail to unpack
@@ -387,6 +418,33 @@ status=$?
 set -e
 [ $status -ne 0 ]
 grep -q "unreadable message" $fLog
+
+
+# ----------------------------------------
+echo "Test: Cannot get type..."
+# ----------------------------------------
+f1=$ECCODES_SAMPLES_PATH/BUFR4.tmpl
+f2=$ECCODES_SAMPLES_PATH/BUFR4_local.tmpl
+set +e
+${tools_dir}/bufr_compare -c xxxx $f1 $f2  > $fLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Error.*cannot get type of" $fLog
+
+# ----------------------------------------
+echo "Test: not found in field..."
+# ----------------------------------------
+f1=$ECCODES_SAMPLES_PATH/BUFR4.tmpl
+f2=$ECCODES_SAMPLES_PATH/BUFR4_local.tmpl
+set +e
+${tools_dir}/bufr_compare -c rdbType $f2 $f1 > $fLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+cat $fLog
+grep -q "rdbType.* not found in 2nd field" $fLog
+
 
 # Options
 # ----------

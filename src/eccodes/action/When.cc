@@ -9,7 +9,7 @@
  */
 
 #include "When.h"
-
+#include "grib_accessor_factory.h"
 
 /* The check on self->loop can only be done in non-threaded mode */
 #if defined(DEBUG) && GRIB_PTHREADS == 0 && GRIB_OMP_THREADS == 0

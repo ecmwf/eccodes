@@ -9,6 +9,7 @@
  */
 
 #include "Template.h"
+#include "grib_accessor_factory.h"
 
 grib_action* grib_action_create_template(grib_context* context, int nofail, const char* name, const char* arg1, int lineno)
 {

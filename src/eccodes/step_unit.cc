@@ -12,13 +12,13 @@
 
 namespace eccodes {
 
-std::vector<Unit::Value> Unit::grib_selected_units = {
+const std::array<Unit::Value, 3> Unit::grib_selected_units = {{
     Unit::Value::SECOND,
     Unit::Value::MINUTE,
     Unit::Value::HOUR,
-};
+}};
 
-std::vector<Unit::Value> Unit::complete_unit_order_ = {
+const std::array<Unit::Value, 15> Unit::complete_unit_order_ = {{
     Unit::Value::MISSING   ,
     Unit::Value::SECOND    ,
     Unit::Value::MINUTE    ,
@@ -34,7 +34,7 @@ std::vector<Unit::Value> Unit::complete_unit_order_ = {
     Unit::Value::YEARS10   ,
     Unit::Value::YEARS30   ,
     Unit::Value::CENTURY
-};
+}};
 
 template <> long Unit::value<long>() const {
     return get_converter().unit_to_long(internal_value_);

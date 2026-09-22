@@ -1,41 +1,41 @@
 # Concept combinationOfAttributesOfTile
 
-'UNDEF' = {attributeOfTile = [0];}
-'UNMOD' = {attributeOfTile = [1];}
-'SNOW' = {attributeOfTile = [2];}
-'FLOOD' = {attributeOfTile = [3];}
-'ICE' = {attributeOfTile = [4];}
-'ITCW' = {attributeOfTile = [5];}
-'ITCS' = {attributeOfTile = [6];}
-'AGG' = {attributeOfTile = [7];}
+'undef' = {attributeOfTile = [0];}
+'unmod' = {attributeOfTile = [1];}
+'snow' = {attributeOfTile = [2];}
+'flood' = {attributeOfTile = [3];}
+'ice' = {attributeOfTile = [4];}
+'itcw' = {attributeOfTile = [5];}
+'itcs' = {attributeOfTile = [6];}
+'agg' = {attributeOfTile = [7];}
 
-'SNOW_FLOOD' = {attributeOfTile = [2,3];}
-'SNOW_ICE' = {attributeOfTile = [2,4];}
-'SNOW_ITCW' = {attributeOfTile = [2,5];}
-'SNOW_ITCS' = {attributeOfTile = [2,6];}
-'FLOOD_ICE' = {attributeOfTile = [3,4];}
-'FLOOD_ITCW' = {attributeOfTile = [3,5];}
-'FLOOD_ITCS' = {attributeOfTile = [3,6];}
-'ICE_ITCW' = {attributeOfTile = [4,5];}
-'ICE_ITCS' = {attributeOfTile = [4,6];}
-'ITCW_ITCS' = {attributeOfTile = [5,6];}
+'snow_flood' = {attributeOfTile = [2,3];}
+'snow_ice' = {attributeOfTile = [2,4];}
+'snow_itcw' = {attributeOfTile = [2,5];}
+'snow_itcs' = {attributeOfTile = [2,6];}
+'flood_ice' = {attributeOfTile = [3,4];}
+'flood_itcw' = {attributeOfTile = [3,5];}
+'flood_itcs' = {attributeOfTile = [3,6];}
+'ice_itcw' = {attributeOfTile = [4,5];}
+'ice_itcs' = {attributeOfTile = [4,6];}
+'itcw_itcs' = {attributeOfTile = [5,6];}
 
-'SNOW_FLOOD_ICE' = {attributeOfTile = [2,3,4];}
-'SNOW_FLOOD_ITCW' = {attributeOfTile = [2,3,5];}
-'SNOW_FLOOD_ITCS' = {attributeOfTile = [2,3,6];}
-'SNOW_ICE_ITCW' = {attributeOfTile = [2,4,5];}
-'SNOW_ICE_ITCS' = {attributeOfTile = [2,4,6];}
-'SNOW_ITCW_ITCS' = {attributeOfTile = [2,5,6];}
-'FLOOD_ICE_ITCW' = {attributeOfTile = [3,4,5];}
-'FLOOD_ICE_ITCS' = {attributeOfTile = [3,4,6];}
-'FLOOD_ITCW_ITCS' = {attributeOfTile = [3,5,6];}
-'ICE_ITCW_ITCS' = {attributeOfTile = [4,5,6];}
+'snow_flood_ice' = {attributeOfTile = [2,3,4];}
+'snow_flood_itcw' = {attributeOfTile = [2,3,5];}
+'snow_flood_itcs' = {attributeOfTile = [2,3,6];}
+'snow_ice_itcw' = {attributeOfTile = [2,4,5];}
+'snow_ice_itcs' = {attributeOfTile = [2,4,6];}
+'snow_itcw_itcs' = {attributeOfTile = [2,5,6];}
+'flood_ice_itcw' = {attributeOfTile = [3,4,5];}
+'flood_ice_itcs' = {attributeOfTile = [3,4,6];}
+'flood_itcw_itcs' = {attributeOfTile = [3,5,6];}
+'ice_itcw_itcs' = {attributeOfTile = [4,5,6];}
 
-'SNOW_FLOOD_ICE_ITCW' = {attributeOfTile = [2,3,4,5];}
-'SNOW_FLOOD_ICE_ITCS' = {attributeOfTile = [2,3,4,6];}
-'SNOW_FLOOD_ITCW_ITCS' = {attributeOfTile = [2,3,5,6];}
-'SNOW_ICE_ITCW_ITCS' = {attributeOfTile = [2,4,5,6];}
-'FLOOD_ICE_ITCW_ITCS' = {attributeOfTile = [3,4,5,6];}
+'snow_flood_ice_itcw' = {attributeOfTile = [2,3,4,5];}
+'snow_flood_ice_itcs' = {attributeOfTile = [2,3,4,6];}
+'snow_flood_itcw_itcs' = {attributeOfTile = [2,3,5,6];}
+'snow_ice_itcw_itcs' = {attributeOfTile = [2,4,5,6];}
+'flood_ice_itcw_itcs' = {attributeOfTile = [3,4,5,6];}
 
-'SNOW_FLOOD_ICE_ITCW_ITCS' = {attributeOfTile = [2,3,4,5,6];}
+'snow_flood_ice_itcw_itcs' = {attributeOfTile = [2,3,4,5,6];}
 

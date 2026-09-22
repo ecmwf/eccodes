@@ -12,5 +12,7 @@ if ( defined(stattype) && is_one_of(stattype,"moav","momn","momx","mosd") ) {
  alias monthlyVerificationDate = dataDate;
 }
 
-unalias mars.time;	
+if (class isnot "rd"){
+ unalias mars.time;
+}
 unalias mars.step;

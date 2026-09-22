@@ -41,5 +41,14 @@ do
 done
 
 
+# ECC-2210: bufr_ls with '-j' and empty output
+rm -f $tempLog
+input=aaen_55.bufr
+${tools_dir}/bufr_ls -j -w localTablesVersionNumber=42 $input > $tempLog
+if test "x$JSON_CHECK" != "x"; then
+  cat $tempLog | json_xs -t none
+fi
+
+
 # Clean up
 rm -f $tempLog

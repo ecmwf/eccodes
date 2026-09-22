@@ -1,0 +1,91 @@
+[package]
+name = "eccodes"
+prefix = "eccodes"
+repo = "ecmwf/eccodes"
+visibility = "public"
+compiler-inputs = ["cxx-compiler"]
+
+[[deps]]
+repo = "ecmwf/ecbuild"
+package = "ecbuild"
+ref = "develop"
+compiler-inputs = []
+
+[[deps]]
+repo = "ecmwf/stack-dependencies"
+package = "stack-deps"
+ref = "master"
+compiler-inputs = ["cxx-compiler"]
+
+[[deps]]
+repo = "ecmwf/eckit"
+package = "eckit"
+ref = "develop"
+compiler-inputs = ["cxx-compiler"]
+when = { options = ["eckit-geo"] }
+
+# No fortran-compiler: the clang image ships no Fortran, because gfortran-N
+# depends on gcc-N. The Fortran interface is covered by the g++-13 legs and HPC.
+[matrix.build.defaults]
+build-type = "RelWithDebInfo"
+runs-on = "arc-runner-very-large"
+
+[[matrix.build.include]]
+cxx-compiler = "clang++-18"
+c-compiler = "clang-18"
+container = "eccr.ecmwf.int/public-ci-images/ubuntu24.04-clang18:latest"
+platform = "ubuntu-24.04"
+
+[[matrix.build.include]]
+cxx-compiler = "g++-13"
+c-compiler = "gcc-13"
+fortran-compiler = "gfortran-13"
+container = "eccr.ecmwf.int/public-ci-images/ubuntu24.04-gcc13-gfortran13:latest"
+platform = "ubuntu-24.04"
+
+[[matrix.build.include]]
+cxx-compiler = "g++-13"
+c-compiler = "gcc-13"
+fortran-compiler = "gfortran-13"
+options = "eckit-geo"
+container = "eccr.ecmwf.int/public-ci-images/ubuntu24.04-gcc13-gfortran13:latest"
+platform = "ubuntu-24.04"
+
+[matrix.build]
+triggers = ["upstream-change", "rebuild-request"]
+action = "./.github/actions/build-eccodes"
+forwarded-inputs = ["c-compiler", "cxx-compiler", "fortran-compiler", "build-type", "options"]
+forwarded-deps-outputs = ["cmake-prefix-path"]
+needs = ["ecbuild/build", "stack-deps/build", "eckit/build"]
+ctest = true
+ctest-args = '-j "$(nproc)"'
+
+[matrix.build-hpc.defaults]
+cxx-compiler = "g++-8"
+fortran-compiler = "gfortran-8"
+build-type = "RelWithDebInfo"
+runs-on = "hpc-submit"
+container = "eccr.ecmwf.int/private-ci-images/ubuntu24.04-internal-tools:latest"
+site = "hpc-batch"
+platform = "hpc-atos-gnu"
+# gcc/old, not a version number: as of now gives you 8.5.0
+# `module avail gcc` lists no 8.5.0 to pin directly.
+modules = ["load prgenv/gnu", "unload gcc", "load gcc/old", "load cmake", "load ninja"]
+cc = "gcc"
+cxx = "g++"
+fc = "gfortran"
+time = "01:30:00"
+
+[[matrix.build-hpc.include]]
+options = ""
+
+[[matrix.build-hpc.include]]
+options = "eckit-geo"
+
+[matrix.build-hpc]
+execution = "hpc"
+container-credentials = true
+job-script = "./.ci/hpc/build.sh.j2"
+triggers = ["upstream-change", "rebuild-request"]
+forwarded-deps-outputs = ["cmake-prefix-path"]
+needs = ["ecbuild/build-hpc", "stack-deps/build-hpc", "eckit/build-hpc"]

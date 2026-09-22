@@ -11,8 +11,7 @@
 #include "SecondOrderBitsPerValue.h"
 #include "grib_scaling.h"
 
-eccodes::accessor::SecondOrderBitsPerValue _grib_accessor_second_order_bits_per_value;
-eccodes::Accessor* grib_accessor_second_order_bits_per_value = &_grib_accessor_second_order_bits_per_value;
+eccodes::AccessorBuilder<eccodes::accessor::SecondOrderBitsPerValue> _grib_accessor_second_order_bits_per_value_builder{};
 
 namespace eccodes::accessor
 {

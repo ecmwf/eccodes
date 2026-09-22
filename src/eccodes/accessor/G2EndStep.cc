@@ -12,8 +12,7 @@
 #include "step_utilities.h"
 #include <stdexcept>
 
-eccodes::accessor::G2EndStep _grib_accessor_g2end_step;
-eccodes::Accessor* grib_accessor_g2end_step = &_grib_accessor_g2end_step;
+eccodes::AccessorBuilder<eccodes::accessor::G2EndStep> _grib_accessor_g2end_step_builder{};
 
 namespace eccodes::accessor
 {
@@ -100,6 +99,8 @@ int G2EndStep::unpack_one_time_range_long_(long* val, size_t* len)
     long time_range_unit;
     long time_range_value, typeOfTimeIncrement;
     int add_time_range = 1; /* whether we add lengthOfTimeRange */
+    long MTG2Switch = 0; /* use the MTG2 switch value to deprecate old hacky logic */
+    long typeOfTimeIncrementSwitch = 0; /* configurable switch to enable endStep for typeOfTimeIncrement=1 */
 
     grib_handle* h = get_enclosing_handle();
 
@@ -113,16 +114,21 @@ int G2EndStep::unpack_one_time_range_long_(long* val, size_t* len)
         return err;
     if ((err = grib_get_long_internal(h, typeOfTimeIncrement_, &typeOfTimeIncrement)))
         return err;
+    if ((err = grib_get_long_internal(h, "MTG2Switch", &MTG2Switch)))
+        return err;
+    if ((err = grib_get_long_internal(h, "typeOfTimeIncrementSwitch", &typeOfTimeIncrementSwitch)))
+        return err;
 
     err = convert_time_range_long_(h, step_units, time_range_unit, &time_range_value);
     if (err != GRIB_SUCCESS)
         return err;
 
-    if (typeOfTimeIncrement == 1) {
-        /* See GRIB-488 */
+    if (typeOfTimeIncrement == 1 && MTG2Switch == 0) {
+        /* See GRIB-488 & ECC-1734 */
         /* Note: For this case, lengthOfTimeRange is not related to step and should not be used to calculate step */
         add_time_range = 0;
-        if (is_special_expver(h)) {
+        /* Check if typeOfTimeIncrementSwitch is enabled, or if it's a special expver case */
+        if (typeOfTimeIncrementSwitch == 1 || is_special_expver(h)) {
             add_time_range = 1;
         }
     }
@@ -150,6 +156,8 @@ int G2EndStep::unpack_one_time_range_double_(double* val, size_t* len)
     double time_range_value;
     long typeOfTimeIncrement;
     int add_time_range = 1; /* whether we add lengthOfTimeRange */
+    long MTG2Switch = 0; /* use the MTG2 switch value to deprecate old hacky logic */
+    long typeOfTimeIncrementSwitch = 0; /* configurable switch to enable endStep for typeOfTimeIncrement=1 */
 
     grib_handle* h = get_enclosing_handle();
 
@@ -165,15 +173,20 @@ int G2EndStep::unpack_one_time_range_double_(double* val, size_t* len)
         return err;
     if ((err = grib_get_long_internal(h, typeOfTimeIncrement_, &typeOfTimeIncrement)))
         return err;
+    if ((err = grib_get_long_internal(h, "MTG2Switch", &MTG2Switch)))
+        return err;
+    if ((err = grib_get_long_internal(h, "typeOfTimeIncrementSwitch", &typeOfTimeIncrementSwitch)))
+        return err;
 
     eccodes::Step start_step{ start_step_value, start_step_unit };
     eccodes::Step time_range{ time_range_value, time_range_unit };
 
-    if (typeOfTimeIncrement == 1) {
-        /* See GRIB-488 */
+    if (typeOfTimeIncrement == 1 && MTG2Switch == 0) {
+        /* See GRIB-488 & ECC-1734 */
         /* Note: For this case, lengthOfTimeRange is not related to step and should not be used to calculate step */
         add_time_range = 0;
-        if (is_special_expver(h)) {
+        /* Check if typeOfTimeIncrementSwitch is enabled, or if it's a special expver case */
+        if (typeOfTimeIncrementSwitch == 1 || is_special_expver(h)) {
             add_time_range = 1;
         }
     }
@@ -474,7 +487,7 @@ int G2EndStep::pack_long_(const long end_step_value, const long end_step_unit)
         grib_context_log(h->context, GRIB_LOG_ERROR,
                          "%s:%s: Date/Time is not valid! "
                          "year=%ld month=%ld day=%ld hour=%ld minute=%ld second=%ld",
-                         class_name_, __func__, year, month, day, hour, minute, second);
+                         accessor_type().c_str(), __func__, year, month, day, hour, minute, second);
         return GRIB_DECODING_ERROR;
     }
 

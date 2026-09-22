@@ -91,10 +91,12 @@ concept marsType(unknown) {
    }
 }
 
-# get the values from the 1st most outer loop which matter
-meta outerLoopLengthOfTimeRange element(lengthOfTimeRange, 0);
-meta outerLoopTypeOfStatisticalProcessing element(typeOfStatisticalProcessing, 0);
-meta outerLoopTypeOfTimeIncrement element(typeOfTimeIncrement, 0);
+if (defined(lengthOfTimeRange) && defined(typeOfStatisticalProcessing)) {
+  # get the values from the 1st most outer loop which matter for moda/dame
+  meta outerLoopLengthOfTimeRange element(lengthOfTimeRange, 0);
+  meta outerLoopTypeOfStatisticalProcessing element(typeOfStatisticalProcessing, 0);
+  meta outerLoopTypeOfTimeIncrement element(typeOfTimeIncrement, 0);
+}
 
 # See GRIB-205 re no_copy
 # Cannot use typeOfProcessedData for stream. See GRIB-911
@@ -105,6 +107,9 @@ concept marsStream(unknown) {
     }
     oper = {
       productDefinitionTemplateNumber = 8;
+    }
+    oper = {
+      productDefinitionTemplateNumber = 113;
     }
     enda = {
       productDefinitionTemplateNumber = 11;
@@ -123,6 +128,10 @@ concept marsStream(unknown) {
       productDefinitionTemplateNumber = 8;
       outerLoopTypeOfTimeIncrement = 1;
     }
+    moda = {
+      productDefinitionTemplateNumber = 113;
+      outerLoopTypeOfTimeIncrement = 1;
+    }
     # avgd, mind, maxd
     dame = {
       productDefinitionTemplateNumber = 8;
@@ -132,6 +141,17 @@ concept marsStream(unknown) {
     # accumd
     dame = {
       productDefinitionTemplateNumber = 8;
+      outerLoopTypeOfTimeIncrement = 1;
+      outerLoopLengthOfTimeRange = 24;
+    }
+    dame = {
+      productDefinitionTemplateNumber = 113;
+      outerLoopTypeOfTimeIncrement = 1;
+      outerLoopLengthOfTimeRange = 21;
+    }
+    # accumd
+    dame = {
+      productDefinitionTemplateNumber = 113;
       outerLoopTypeOfTimeIncrement = 1;
       outerLoopLengthOfTimeRange = 24;
     }

@@ -19,12 +19,14 @@ class DataG2SimplePacking : public DataSimplePacking
 {
 public:
     DataG2SimplePacking() :
-        DataSimplePacking() { class_name_ = "data_g2simple_packing"; }
-    grib_accessor* create_empty_accessor() override { return new DataG2SimplePacking{}; }
+        DataSimplePacking() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int pack_bytes(const unsigned char*, size_t* len) override;
     int pack_double(const double* val, size_t* len) override;
     int value_count(long*) override;
     void init(const long, grib_arguments*) override;
+
+    static inline const AccessorType accessor_type_{"data_g2simple_packing"};
 };
 
 }  // namespace eccodes::accessor

@@ -19,14 +19,17 @@ class PadToMultiple : public Padding
 {
 public:
     PadToMultiple() :
-        Padding() { class_name_ = "padtomultiple"; }
-    grib_accessor* create_empty_accessor() override { return new PadToMultiple{}; }
+        Padding() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     void init(const long, grib_arguments*) override;
     size_t preferred_size(int) override;
 
 private:
     grib_expression* begin_ = nullptr;
     grib_expression* multiple_ = nullptr;
+
+public:
+    static inline const AccessorType accessor_type_{"padtomultiple"};
 };
 
 }  // namespace eccodes::accessor

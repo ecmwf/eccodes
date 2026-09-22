@@ -10,8 +10,7 @@
 
 #include "PadToEven.h"
 
-eccodes::accessor::PadToEven _grib_accessor_padtoeven;
-eccodes::Accessor* grib_accessor_padtoeven = &_grib_accessor_padtoeven;
+eccodes::AccessorBuilder<eccodes::accessor::PadToEven> _grib_accessor_padtoeven_builder{};
 
 namespace eccodes::accessor
 {

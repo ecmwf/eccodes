@@ -11,8 +11,7 @@
 #include "Vector.h"
 #include "AbstractVector.h"
 
-eccodes::accessor::Vector _grib_accessor_vector;
-eccodes::Accessor* grib_accessor_vector = &_grib_accessor_vector;
+eccodes::AccessorBuilder<eccodes::accessor::Vector> _grib_accessor_vector_builder{};
 
 namespace eccodes::accessor
 {

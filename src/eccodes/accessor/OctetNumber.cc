@@ -10,8 +10,7 @@
 
 #include "OctetNumber.h"
 
-eccodes::accessor::OctetNumber _grib_accessor_octet_number;
-eccodes::Accessor* grib_accessor_octet_number = &_grib_accessor_octet_number;
+eccodes::AccessorBuilder<eccodes::accessor::OctetNumber> _grib_accessor_octet_number_builder{};
 
 namespace eccodes::accessor
 {

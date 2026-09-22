@@ -19,8 +19,8 @@ class Raw : public Gen
 {
 public:
     Raw() :
-        Gen() { class_name_ = "raw"; }
-    grib_accessor* create_empty_accessor() override { return new Raw{}; }
+        Gen() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     long get_native_type() override;
     int pack_bytes(const unsigned char*, size_t* len) override;
     int unpack_bytes(unsigned char*, size_t* len) override;
@@ -34,6 +34,9 @@ private:
     const char* totalLength_ = nullptr;
     const char* sectionLength_ = nullptr;
     long relativeOffset_ = 0;
+
+public:
+    static inline const AccessorType accessor_type_{"raw"};
 };
 
 }  // namespace eccodes::accessor

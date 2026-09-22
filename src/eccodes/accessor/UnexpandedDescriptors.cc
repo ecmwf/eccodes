@@ -11,8 +11,7 @@
 #include "ExpandedDescriptors.h"
 #include "UnexpandedDescriptors.h"
 
-eccodes::accessor::UnexpandedDescriptors _grib_accessor_unexpanded_descriptors;
-eccodes::Accessor* grib_accessor_unexpanded_descriptors = &_grib_accessor_unexpanded_descriptors;
+eccodes::AccessorBuilder<eccodes::accessor::UnexpandedDescriptors> _grib_accessor_unexpanded_descriptors_builder{};
 
 namespace eccodes::accessor
 {

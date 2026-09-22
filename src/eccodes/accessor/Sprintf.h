@@ -19,8 +19,8 @@ class Sprintf : public Ascii
 {
 public:
     Sprintf() :
-        Ascii() { class_name_ = "sprintf"; }
-    grib_accessor* create_empty_accessor() override { return new Sprintf{}; }
+        Ascii() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int unpack_string(char*, size_t* len) override;
     size_t string_length() override;
     int value_count(long*) override;
@@ -28,6 +28,9 @@ public:
 
 private:
     grib_arguments* args_ = nullptr;
+
+public:
+    static inline const AccessorType accessor_type_{"sprintf"};
 };
 
 }  // namespace eccodes::accessor

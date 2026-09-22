@@ -19,8 +19,8 @@ class SpectralTruncation : public Long
 {
 public:
     SpectralTruncation() :
-        Long() { class_name_ = "spectral_truncation"; }
-    grib_accessor* create_empty_accessor() override { return new SpectralTruncation{}; }
+        Long() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
 
@@ -29,6 +29,9 @@ private:
     const char* K_ = nullptr;
     const char* M_ = nullptr;
     const char* T_ = nullptr;
+
+public:
+    static inline const AccessorType accessor_type_{"spectral_truncation"};
 };
 
 }  // namespace eccodes::accessor

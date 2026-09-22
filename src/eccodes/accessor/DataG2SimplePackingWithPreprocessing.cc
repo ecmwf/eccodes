@@ -12,8 +12,7 @@
 #define DIRECT  0
 #define INVERSE 1
 
-eccodes::accessor::DataG2SimplePackingWithPreprocessing _grib_accessor_data_g2simple_packing_with_preprocessing;
-eccodes::Accessor* grib_accessor_data_g2simple_packing_with_preprocessing = &_grib_accessor_data_g2simple_packing_with_preprocessing;
+eccodes::AccessorBuilder<eccodes::accessor::DataG2SimplePackingWithPreprocessing> _grib_accessor_data_g2simple_packing_with_preprocessing_builder{};
 
 namespace eccodes::accessor
 {

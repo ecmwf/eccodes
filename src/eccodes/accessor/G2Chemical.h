@@ -19,8 +19,8 @@ class G2Chemical : public Unsigned
 {
 public:
     G2Chemical() :
-        Unsigned() { class_name_ = "g2_chemical"; }
-    grib_accessor* create_empty_accessor() override { return new G2Chemical{}; }
+        Unsigned() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     int value_count(long*) override;
@@ -30,6 +30,9 @@ private:
     const char* productDefinitionTemplateNumber_ = nullptr;
     const char* stepType_ = nullptr;
     int chemical_type_ = 0;
+
+public:
+    static inline const AccessorType accessor_type_{"g2_chemical"};
 };
 
 }  // namespace eccodes::accessor

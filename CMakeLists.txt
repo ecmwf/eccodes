@@ -15,7 +15,6 @@
 #       -DCMAKE_INSTALL_PREFIX=/path/to/install
 #
 #       -DCMAKE_MODULE_PATH=/path/to/ecbuild/cmake
-
 cmake_minimum_required( VERSION 3.12 FATAL_ERROR )
 
 find_package( ecbuild 3.7 HINTS ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../ecbuild)
@@ -24,9 +23,9 @@ if(NOT ecbuild_FOUND)
     include(FetchContent)
     FetchContent_Populate(ecbuild
         GIT_REPOSITORY https://github.com/ecmwf/ecbuild.git
-        GIT_TAG        3.12.0
+        GIT_TAG        3.16.0
     )
-    find_package( ecbuild 3.7 REQUIRED HINTS ${ecbuild_SOURCE_DIR})
+    find_package( ecbuild 3.16 REQUIRED HINTS ${ecbuild_SOURCE_DIR})
 endif()
 
 # Initialise project
@@ -118,7 +117,7 @@ ecbuild_add_option( FEATURE ECKIT_GEO
     DEFAULT OFF )
 
 if( eccodes_HAVE_ECKIT_GEO AND NOT TARGET eckit_geo )
-    ecbuild_find_package(NAME eckit VERSION 1.27 REQUIRED)
+    ecbuild_find_package(NAME eckit VERSION 2.3 REQUIRED)
     if( NOT TARGET eckit_geo )
         ecbuild_critical("eckit has not been built with ECKIT_GEO enabled")
     endif()
@@ -165,7 +164,7 @@ else()
     set( libaec_USE_STATIC_LIBS ON )
 endif()
 
-find_package( libaec 1.0.6 )
+find_package( libaec 1.1.4 )
 if(NOT DEFINED ENABLE_AEC AND NOT libaec_FOUND)
   ecbuild_critical("AEC library was not found.\n"
                    "AEC (Adaptive Entropy Coding) provides the WMO GRIB CCSDS compression and decompression of data. "
@@ -230,7 +229,8 @@ ecbuild_add_option( FEATURE INSTALL_ECCODES_SAMPLES
 ecbuild_add_option( FEATURE MEMORY_MANAGEMENT   DESCRIPTION "Enable memory management" DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE ALIGN_MEMORY        DESCRIPTION "Enable memory alignment"  DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE ECCODES_THREADS     DESCRIPTION "Enable thread-safety using POSIX threads" DEFAULT OFF ADVANCED )
-ecbuild_add_option( FEATURE ECCODES_OMP_THREADS DESCRIPTION "Enable thread-safety using OpenMP threads" DEFAULT OFF ADVANCED )
+ecbuild_add_option( FEATURE ECCODES_OMP_THREADS DESCRIPTION "Enable thread-safety using OpenMP threads" DEFAULT OFF ADVANCED
+                    REQUIRED_PACKAGES "OpenMP COMPONENTS C CXX" )
 ecbuild_add_option( FEATURE EXTRA_TESTS         DESCRIPTION "Enable extended regression testing" DEFAULT OFF ADVANCED )
 
 ###############################################################################
@@ -320,7 +320,9 @@ if( HAVE_ECCODES_THREADS )
         set( GRIB_LINUX_PTHREADS 1 )
     endif()
 elseif(HAVE_ECCODES_OMP_THREADS)
-    ecbuild_enable_omp()
+    if( NOT TARGET OpenMP::OpenMP_CXX )
+        ecbuild_critical("ENABLE_ECCODES_OMP_THREADS is ON but no OpenMP C++ toolchain was found")
+    endif()
     set( GRIB_OMP_THREADS 1 )
 endif()
 
@@ -459,6 +461,10 @@ foreach( _tpl ${ECCODES_TPLS} )
     endif()
 endforeach()
 
+### tests data directory
+
+set(TESTS_DATA_DIR "${CMAKE_CURRENT_BINARY_DIR}/data" CACHE INTERNAL "Path to downloaded test data")
+
 ### include directories
 
 include_directories(
@@ -491,6 +497,7 @@ ecbuild_dont_pack( DIRS
 #ecbuild_dont_pack( DIRS data/tigge DONT_PACK_REGEX "*.grib" )
 
 add_custom_target(dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
+
 
 ###############################################################################
 # export to other projects

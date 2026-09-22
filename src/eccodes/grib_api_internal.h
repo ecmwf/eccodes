@@ -26,7 +26,10 @@
 
 
 #ifdef __cplusplus
+#include "AccessorStore.h"
 extern "C" {
+#else
+#include <stdint.h>
 #endif
 
 #ifndef GRIB_INLINE
@@ -163,7 +166,6 @@ extern int pthread_mutexattr_settype(pthread_mutexattr_t* attr, int type);
 
 #define MAX_ACCESSOR_ATTRIBUTES     20
 #define MAX_FILE_HANDLES_WITH_MULTI 10
-#define ACCESSORS_ARRAY_SIZE        5000
 #define MAX_NUM_CONCEPTS            2000
 #define MAX_NUM_HASH_ARRAY          2000
 
@@ -486,7 +488,6 @@ struct bufr_descriptor
     long reference;
     long width;
     int nokey; /* set if descriptor does not have an associated key */
-    grib_accessor* a;
 };
 
 struct bufr_descriptors_array
@@ -545,9 +546,17 @@ struct grib_handle
     int header_mode;                           /** Header not jet complete */
     char* gts_header;
     size_t gts_header_len;
-    int use_trie;
     int trie_invalid;
-    grib_accessor* accessors[ACCESSORS_ARRAY_SIZE];
+#ifdef __cplusplus
+    eccodes::AccessorStore accessor_store;
+#else
+    /* Layout-compatible C view of eccodes::AccessorStore (POD layout). */
+    struct {
+        uint64_t hash;
+        void*    value;
+    } accessor_store_slots_[1024];
+    size_t accessor_store_size_;
+#endif
     char* section_offset[MAX_NUM_SECTIONS];
     char* section_length[MAX_NUM_SECTIONS];
     int sections_count;
@@ -673,8 +682,6 @@ struct grib_context
     int gts_header_on;
     int gribex_mode_on;
     int large_constant_fields;
-    grib_itrie* keys;
-    int keys_count;
     grib_itrie* concepts_index;
     int concepts_count;
     grib_concept_value* concepts[MAX_NUM_CONCEPTS];
@@ -922,17 +929,17 @@ struct grib_math
     int arity;
 };
 
-typedef double (*mathproc)(void);
-typedef int (*funcproc)(grib_math*, mathproc);
+typedef double (*grib_mathproc)(void);
+typedef int (*grib_funcproc)(grib_math*, grib_mathproc);
 
-typedef struct func
+typedef struct grib_func
 {
     char* name;
-    funcproc addr;
-    mathproc proc;
+    grib_funcproc addr;
+    grib_mathproc proc;
     int arity;
     char* info;
-} func;
+} grib_func;
 
 /* action file */
 struct grib_action_file

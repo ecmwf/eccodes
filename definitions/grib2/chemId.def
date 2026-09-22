@@ -522,6 +522,22 @@
 '236' = {
 	constituentType = 0 ;
 	}
+#Methyl ethyl ketone (2-butanone)
+'255' = {
+	constituentType = 10069 ;
+	}
+#Trichloromethane (chloroform)
+'256' = {
+	constituentType = 10070 ;
+	}
+#Methyl iodide (iodomethane)
+'257' = {
+	constituentType = 10071 ;
+	}
+#Methacrolein and methyl vinyl ketone
+'258' = {
+	constituentType = 10072 ;
+	}
 #Olefins
 '311' = {
 	constituentType = 60010 ;
@@ -533,6 +549,14 @@
 #Biomass burning volatile organic compounds
 '332' = {
 	constituentType = 60034 ;
+	}
+#Gaseous Non-Methane Organic Compounds
+'333' = {
+	constituentType = 60036 ;
+	}
+#Non-Methane Hydrocarbons
+'334' = {
+	constituentType = 60037 ;
 	}
 #Water vapour
 '359' = {
@@ -605,6 +629,62 @@
 #Octane
 '447' = {
 	constituentType = 10068 ;
+	}
+#Lumped pollen
+'800' = {
+	constituentType = 62298 ;
+	}
+#Lumped fungal spores
+'801' = {
+	constituentType = 62299 ;
+	}
+#Calcite
+'802' = {
+	constituentType = 62400 ;
+	}
+#Chlorite
+'803' = {
+	constituentType = 62401 ;
+	}
+#Dolomite
+'804' = {
+	constituentType = 62402 ;
+	}
+#Feldspar
+'805' = {
+	constituentType = 62403 ;
+	}
+#Goethite
+'806' = {
+	constituentType = 62404 ;
+	}
+#Gypsum
+'807' = {
+	constituentType = 62405 ;
+	}
+#Hematite
+'808' = {
+	constituentType = 62406 ;
+	}
+#Illite
+'809' = {
+	constituentType = 62407 ;
+	}
+#Kaolinite
+'810' = {
+	constituentType = 62408 ;
+	}
+#Montmorillonite
+'811' = {
+	constituentType = 62409 ;
+	}
+#Quartz
+'812' = {
+	constituentType = 62410 ;
+	}
+#Vermiculite
+'813' = {
+	constituentType = 62411 ;
 	}
 #Nitrate
 '900' = {
@@ -844,4 +924,40 @@
 #Sea salt wet at 80% relative humidity
 '942' = {
 	constituentType = 62037 ;
+	}
+#Brown carbon hydrophilic dry
+'943' = {
+	constituentType = 62038 ;
+	}
+#Brown carbon hydrophobic dry
+'944' = {
+	constituentType = 62039 ;
+	}
+#Organic carbon dry
+'945' = {
+	constituentType = 62040 ;
+	}
+#Organic carbon hydrophilic dry
+'946' = {
+	constituentType = 62041 ;
+	}
+#Organic carbon hydrophobic dry
+'947' = {
+	constituentType = 62042 ;
+	}
+#Total carbon dry
+'948' = {
+	constituentType = 62043 ;
+	}
+#Total carbon hydrophilic dry
+'949' = {
+	constituentType = 62044 ;
+	}
+#Total carbon hydrophobic dry
+'950' = {
+	constituentType = 62045 ;
+	}
+#Burnt carbon as sum of carbon in all carbon species (CO, CO2, OC, BC, CH4)
+'951' = {
+	constituentType = 62046 ;
 	}

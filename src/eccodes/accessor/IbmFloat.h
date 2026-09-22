@@ -19,8 +19,8 @@ class IbmFloat : public Double
 {
 public:
     IbmFloat() :
-        Double() { class_name_ = "ibmfloat"; }
-    grib_accessor* create_empty_accessor() override { return new IbmFloat{}; }
+        Double() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
     int unpack_float(float* val, size_t* len) override;
@@ -34,6 +34,9 @@ public:
 
 private:
     grib_arguments* arg_ = nullptr;
+
+public:
+    static inline const AccessorType accessor_type_{"ibmfloat"};
 };
 
 }  // namespace eccodes::accessor

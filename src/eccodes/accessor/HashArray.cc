@@ -11,8 +11,7 @@
 #include "HashArray.h"
 #include "action/HashArray.h"
 
-eccodes::accessor::HashArray _grib_accessor_hash_array;
-eccodes::Accessor* grib_accessor_hash_array = &_grib_accessor_hash_array;
+eccodes::AccessorBuilder<eccodes::accessor::HashArray> _grib_accessor_hash_array_builder{};
 
 namespace eccodes::accessor
 {

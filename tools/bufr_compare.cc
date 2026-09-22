@@ -371,7 +371,7 @@ static void printInfo(grib_handle* h)
 
 static void print_index_key_values(grib_index* index, int icounter, const char* error_message)
 {
-    grib_index_key* keys = index->keys;
+    const grib_index_key* keys = index->keys;
     printf("== %d == ", icounter);
     if (error_message)
         printf("%s == ", error_message);
@@ -409,7 +409,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         global_handle = codes_new_from_index(idx1, CODES_BUFR, &err);
         if (options->verbose) {
             off_t offset   = 0;
-            char* filename = grib_get_field_file(options->index2, &offset);
+            const char* filename = grib_get_field_file(options->index2, &offset);
             printf("file1=\"%s\" ", filename);
             filename = grib_get_field_file(options->index1, &offset);
             printf("file2=\"%s\" \n", filename);
@@ -504,8 +504,8 @@ int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
 
 int grib_tool_finalise_action(grib_runtime_options* options)
 {
-    grib_error* e   = error_summary;
-    int err         = 0;
+    const grib_error* e = error_summary;
+    int err = 0;
     grib_context* c = grib_context_get_default();
 
     /*if (grib_options_on("w:")) return 0;*/
@@ -616,7 +616,14 @@ static char* get_keyname_without_rank(const char* name)
     return ret;
 }
 
-static bool is_string_missing(grib_handle* h, const char* key, const char* sval, size_t slen)
+static bool is_integer_key_missing(grib_handle* h, const char* key)
+{
+    int err = 0;
+    bool isMissing = ( (grib_is_missing(h, key, &err) == 1) && !err );
+    return isMissing;
+}
+
+static bool is_string_key_missing(grib_handle* h, const char* key, const char* sval, size_t slen)
 {
     if (strlen(sval) == 0) { // empty string means missing
         return true;
@@ -634,8 +641,8 @@ static bool are_strings_both_missing(grib_handle* h1, grib_handle* h2, const cha
                                     size_t slen1, size_t slen2)
 {
     // Note: one string could have all its bits=1 and the other empty
-    const bool is_miss_1 = is_string_missing(h1, key, s1, slen1);
-    const bool is_miss_2 = is_string_missing(h2, key, s2, slen2);
+    const bool is_miss_1 = is_string_key_missing(h1, key, s1, slen1);
+    const bool is_miss_2 = is_string_key_missing(h2, key, s2, slen2);
     if (is_miss_1 && is_miss_2) {
         return true;
     }
@@ -806,9 +813,9 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
                 if (err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS) {
                     if (strings_are_different(handle1, handle2, name, sval1, sval2, slen1, slen2)) {
                         printInfo(handle1);
-                        if (is_string_missing(handle1, name, sval1, slen1))
+                        if (is_string_key_missing(handle1, name, sval1, slen1))
                             printf("string [%s]: [%s] != [%s]\n", name, "MISSING", sval2);
-                        else if (is_string_missing(handle2, name, sval2, slen2))
+                        else if (is_string_key_missing(handle2, name, sval2, slen2))
                             printf("string [%s]: [%s] != [%s]\n", name, sval1, "MISSING");
                         else
                             printf("string [%s]: [%s] != [%s]\n", name, sval1, sval2);
@@ -911,10 +918,17 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
                     printInfo(handle1);
                     save_error(c, name);
                     err1 = GRIB_VALUE_MISMATCH;
-                    if (len1 == 1)
-                        printf("long [%s]: [%ld] != [%ld]\n", name, *lval1, *lval2);
-                    else
+                    if (len1 == 1) {
+                        if (is_integer_key_missing(handle1, name))
+                            printf("long [%s]: [%s] != [%ld]\n", name, "MISSING", *lval2);
+                        else if (is_integer_key_missing(handle2, name))
+                            printf("long [%s]: [%ld] != [%s]\n", name, *lval1, "MISSING");
+                        else
+                            printf("long [%s]: [%ld] != [%ld]\n", name, *lval1, *lval2);
+                    }
+                    else {
                         printf("long [%s] %d out of %zu different\n", name, countdiff, len1);
+                    }
                 }
             }
 
@@ -995,12 +1009,12 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
                 value_tolerance *= tolerance_factor;
                 if (verbose)
                     printf("  (%d values) tolerance=%g\n", (int)len1, value_tolerance);
-                for (size_t i = 0; i < len1; i++) {
+                for (size_t k = 0; k < len1; k++) {
                     if ((diff = compare_double(pv1++, pv2++, &value_tolerance)) != 0) {
                         countdiff++;
                         if (maxdiff < diff) {
                             maxdiff  = diff;
-                            imaxdiff = i;
+                            imaxdiff = k;
                         }
                         err1 = GRIB_VALUE_MISMATCH;
                     }
@@ -1164,6 +1178,12 @@ static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, gri
     release_keys_list(); /* The keys list is used to determine the rank */
     new_keys_list();
 
+    // ECC-2211: Some keys are not included in the iterator
+    if (compare_values(options, handle1, handle2, "section2Present", GRIB_TYPE_UNDEFINED)) {
+        (*pErr)++;
+        ret = 1;
+    }
+
     while (grib_keys_iterator_next(iter)) {
         int rank          = 0;
         int dofree        = 0;
@@ -1263,8 +1283,8 @@ static int compare_handles(grib_handle* handle1, grib_handle* handle2, grib_runt
                 printf("#%d different size: %d!=%d\n",lcount,(int)size1,(int)size2);
             }
             if (memcmp_ret) {
-                unsigned char *m1=(unsigned char*)msg1;
-                unsigned char *m2=(unsigned char*)msg2;
+                const unsigned char *m1=(unsigned char*)msg1;
+                const unsigned char *m2=(unsigned char*)msg2;
                 printf("=== list of different bytes for message %d\n",lcount);
                 for (ii=0;ii<size1;ii++) {
                     if (memcmp(m1,m2,1)) {

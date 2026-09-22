@@ -10,8 +10,7 @@
 
 #include "Raw.h"
 
-eccodes::accessor::Raw _grib_accessor_raw;
-eccodes::Accessor* grib_accessor_raw = &_grib_accessor_raw;
+eccodes::AccessorBuilder<eccodes::accessor::Raw> _grib_accessor_raw_builder{};
 
 void accessor_raw_set_length(grib_accessor* a, size_t len)
 {

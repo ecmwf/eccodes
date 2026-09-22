@@ -10,8 +10,7 @@
 
 #include "PackingType.h"
 
-eccodes::accessor::PackingType _grib_accessor_packing_type;
-eccodes::Accessor* grib_accessor_packing_type = &_grib_accessor_packing_type;
+eccodes::AccessorBuilder<eccodes::accessor::PackingType> _grib_accessor_packing_type_builder{};
 
 namespace eccodes::accessor
 {

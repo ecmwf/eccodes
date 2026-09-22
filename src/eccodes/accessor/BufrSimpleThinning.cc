@@ -10,8 +10,7 @@
 
 #include "BufrSimpleThinning.h"
 
-eccodes::accessor::BufrSimpleThinning _grib_accessor_bufr_simple_thinning;
-eccodes::Accessor* grib_accessor_bufr_simple_thinning = &_grib_accessor_bufr_simple_thinning;
+eccodes::AccessorBuilder<eccodes::accessor::BufrSimpleThinning> _grib_accessor_bufr_simple_thinning_builder{};
 
 namespace eccodes::accessor
 {

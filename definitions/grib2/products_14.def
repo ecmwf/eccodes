@@ -1,0 +1,8 @@
+# (C) Copyright 2005- ECMWF.
+
+# LC-GCR re-analysis products (prod)
+if (!defined(marsExpver)) {
+  constant marsExpver = 'prod';
+}
+
+include "grib2/products_lcgcr.def"

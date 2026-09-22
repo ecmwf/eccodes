@@ -10,12 +10,11 @@
 
 #include "Codeflag.h"
 
-eccodes::accessor::Codeflag _grib_accessor_codeflag;
-eccodes::Accessor* grib_accessor_codeflag = &_grib_accessor_codeflag;
+eccodes::AccessorBuilder<eccodes::accessor::Codeflag> _grib_accessor_codeflag_builder{};
 
 static int test_bit(long a, long b)
 {
-    DEBUG_ASSERT(b >= 0);
+    if (b < 0) return 0;
     return a & (1 << b);
 }
 

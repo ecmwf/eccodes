@@ -20,8 +20,8 @@ class SmartTable : public Unsigned
 {
 public:
     SmartTable() :
-        Unsigned() { class_name_ = "smart_table"; }
-    grib_accessor* create_empty_accessor() override { return new SmartTable{}; }
+        Unsigned() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     long get_native_type() override;
     int unpack_long(long* val, size_t* len) override;
     int unpack_string(char*, size_t* len) override;
@@ -46,6 +46,9 @@ private:
 
     grib_smart_table* load_table();
     int get_table_codes();
+
+public:
+    static inline const AccessorType accessor_type_{"smart_table"};
 };
 
 }  // namespace eccodes::accessor

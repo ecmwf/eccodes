@@ -9,6 +9,7 @@
  */
 
 #include "Assert.h"
+#include "grib_accessor_factory.h"
 
 grib_action* grib_action_create_assert(grib_context* context, grib_expression* expression)
 {

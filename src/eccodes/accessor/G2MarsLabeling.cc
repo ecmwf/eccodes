@@ -10,8 +10,7 @@
 
 #include "G2MarsLabeling.h"
 
-eccodes::accessor::G2MarsLabeling _grib_accessor_g2_mars_labeling;
-eccodes::Accessor* grib_accessor_g2_mars_labeling = &_grib_accessor_g2_mars_labeling;
+eccodes::AccessorBuilder<eccodes::accessor::G2MarsLabeling> _grib_accessor_g2_mars_labeling_builder{};
 
 namespace eccodes::accessor
 {
@@ -269,6 +268,7 @@ int G2MarsLabeling::extra_set(long val)
                 case 1030:      /* enda */
                 case 1249:      /* elda */
                 case 1250:      /* ewla */
+                case 1259:      /* xwda */
                     is_eps = 1; /* These streams are all for ensembles */
                     grib_get_string(hand, stepType_, stepType, &stepTypelen);
                     is_instant                         = (strcmp(stepType, "instant") == 0);

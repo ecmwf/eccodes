@@ -106,9 +106,7 @@ int LambertAzimuthalEqualArea::init_oblate(grib_handle* h,
     double Q__qp = 0, Q__rq = 0, Q__cosb1, Q__sinb1, Q__dd, Q__xmf, Q__ymf, t;
     /* double Q__mmf = 0; */
     double e, es, temp, one_es;
-    double APA[3] = {
-        0,
-    };
+    double APA[3] = {0,};
     double xFirst, yFirst;
 
     Dx = iScansNegatively == 0 ? Dx / 1000 : -Dx / 1000;

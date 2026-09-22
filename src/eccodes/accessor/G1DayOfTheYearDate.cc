@@ -10,8 +10,7 @@
 
 #include "G1DayOfTheYearDate.h"
 
-eccodes::accessor::G1DayOfTheYearDate _grib_accessor_g1day_of_the_year_date;
-eccodes::Accessor* grib_accessor_g1day_of_the_year_date = &_grib_accessor_g1day_of_the_year_date;
+eccodes::AccessorBuilder<eccodes::accessor::G1DayOfTheYearDate> _grib_accessor_g1day_of_the_year_date_builder{};
 
 namespace eccodes::accessor
 {

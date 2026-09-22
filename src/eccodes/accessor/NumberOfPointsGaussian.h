@@ -19,8 +19,8 @@ class NumberOfPointsGaussian : public Long
 {
 public:
     NumberOfPointsGaussian() :
-        Long() { class_name_ = "number_of_points_gaussian"; }
-    grib_accessor* create_empty_accessor() override { return new NumberOfPointsGaussian{}; }
+        Long() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
 
@@ -38,6 +38,9 @@ private:
 
     int unpack_long_new(long* val, size_t* len);
     int unpack_long_with_legacy_support(long* val, size_t* len);
+
+public:
+    static inline const AccessorType accessor_type_{"number_of_points_gaussian"};
 };
 
 }  // namespace eccodes::accessor

@@ -9,6 +9,7 @@
  */
 
 #include "List.h"
+#include "grib_accessor_factory.h"
 
 grib_action* grib_action_create_list(grib_context* context, const char* name, grib_expression* expression, grib_action* block)
 {

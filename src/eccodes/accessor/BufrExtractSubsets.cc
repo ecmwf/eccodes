@@ -10,8 +10,7 @@
 
 #include "BufrExtractSubsets.h"
 
-eccodes::accessor::BufrExtractSubsets _grib_accessor_bufr_extract_subsets;
-eccodes::Accessor* grib_accessor_bufr_extract_subsets = &_grib_accessor_bufr_extract_subsets;
+eccodes::AccessorBuilder<eccodes::accessor::BufrExtractSubsets> _grib_accessor_bufr_extract_subsets_builder{};
 
 namespace eccodes::accessor
 {

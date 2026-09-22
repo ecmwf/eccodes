@@ -3,7 +3,7 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
+#
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
@@ -31,9 +31,9 @@ if [ $HAVE_ECKIT_GEO -ne 1 ]; then
 fi
 
 # Check env. variable too
-set +u
-if test "x$ECCODES_ECKIT_GEO" = "x"; then
-    echo "$0: This test is disabled (env. variable ECCODES_ECKIT_GEO is not set)"
+if [ "${ECCODES_ECKIT_GEO:-0}" -eq 0 ]
+then
+    echo "$0: This test is disabled (env. variable ECCODES_ECKIT_GEO=0)"
     exit 0
 fi
 set -u
@@ -74,7 +74,7 @@ cat >$tempFilt<<EOF
     write;
 EOF
 ${tools_dir}/grib_filter -o $tempGrib $tempFilt $infile
-${tools_dir}/grib_compare $infile $tempGrib
+${tools_dir}/grib_compare -b shapeOfTheEarth $infile $tempGrib  # the missing.grib2 has shapeOfTheEarth=0, the new one has shapeOfTheEarth=6
 rm -f $tempGrib
 
 # Can encode and decode in one step!
@@ -84,8 +84,8 @@ cat >$tempFilt<<EOF
     write;
 EOF
 ECCODES_DEBUG=-1 ${tools_dir}/grib_filter -o $tempGrib $tempFilt $infile > $tempText 2>&1
-${tools_dir}/grib_compare $infile $tempGrib
-grep -q "ECCODES DEBUG grib_set_from_grid_spec: grib_set_values, setting 16 key/value pairs" $tempText
+${tools_dir}/grib_compare -b shapeOfTheEarth $infile $tempGrib
+grep -q "ECCODES DEBUG grib_set_from_grid_spec: grib_set_values, setting 17 key/value pairs" $tempText
 
 
 # Error conditions
@@ -97,6 +97,56 @@ status=$?
 set -e
 [ $status -ne 0 ]
 grep -q "'healpix' specified but input is GRIB edition 1" $tempText
+
+
+# ECC-2318: a degenerate grid (a single point in a direction) is rejected
+# -----------------------------------------------------------------------
+# Such a grid has a zero increment, which a gridSpec cannot describe ('grid' would hold a 0),
+# so it is an error in both directions rather than a spec that does not describe the grid.
+# The sample is a regular_ll grid, area = [60,0,0,30], increments = 2/2 degrees
+sample=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+
+# Decoding: a single row (Nj=1), a single column (Ni=1) and a single point (Ni=Nj=1)
+for setKeysResult in \
+    'Ni=16,Nj=1,numberOfDataPoints=16,latitudeOfLastGridPointInDegrees=60|{"area":[60,0,60,30],"grid":[2,0]}' \
+    'Ni=1,Nj=31,numberOfDataPoints=31,longitudeOfLastGridPointInDegrees=0|{"area":[60,0,0,0],"grid":[0,2]}' \
+    'Ni=1,Nj=1,numberOfDataPoints=1,latitudeOfLastGridPointInDegrees=60,longitudeOfLastGridPointInDegrees=0|{"area":[60,0,60,0],"grid":[0,0]}'
+do
+    setKeys=$(echo $setKeysResult | cut -d'|' -f1)
+    expectedSpec=$(echo $setKeysResult | cut -d'|' -f2)
+    set +e
+    ${tools_dir}/grib_set -s $setKeys $sample $tempGrib
+    ${tools_dir}/grib_get -p gridSpec $tempGrib > $tempText
+    status=$?
+    set -e
+    [ $status -eq 0 ]
+    cat $tempText
+    grep -F -q "$expectedSpec" $tempText
+done
+rm -f $tempGrib
+
+# Encoding: an explicitly degenerate spec, and an area with no extent
+for spec in \
+    '{"area":[0,0,0,0],"grid":[0,0]}|{"area":[0,0,0,0],"grid":[0,0]}' \
+    '{"area":[0,0,0,0],"grid":[1,1]}|{"area":[0,0,0,0],"grid":[0,0]}' \
+    '{"area":[60,0,60,30],"grid":[2,2]}|{"area":[60,0,60,30],"grid":[2,0]}' \
+    '{"area":[60,0,0,0],"grid":[2,2]}|{"area":[60,0,0,0],"grid":[0,2]}'
+do
+    setKeys=$(echo $spec | cut -d'|' -f1)
+    expectedSpec=$(echo $spec | cut -d'|' -f2)
+    set +e
+    ${tools_dir}/grib_set -s gridSpec="$setKeys" $sample $tempGrib
+    ${tools_dir}/grib_get -p gridSpec $tempGrib > $tempText
+    status=$?
+    set -e
+    [ $status -eq 0 ]
+    grep -F -q $expectedSpec $tempText
+done
+rm -f $tempGrib
+
+# Grids that do not carry increments in their spec are unaffected
+grib_check_key_equals $ECCODES_SAMPLES_PATH/gg_sfc_grib2.tmpl gridSpec '{"grid":"N48"}'
+grib_check_key_equals $sample gridSpec '{"area":[60,0,0,30],"grid":[2,2]}'
 
 
 # Clean up

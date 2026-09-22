@@ -19,8 +19,8 @@ class Padding : public Bytes
 {
 public:
     Padding() :
-        Bytes() { class_name_ = "padding"; }
-    //grib_accessor* create_empty_accessor() override { return new Padding{}; }
+        Bytes() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     size_t string_length() override;
     long byte_count() override;
     int value_count(long*) override;
@@ -28,6 +28,8 @@ public:
     void update_size(size_t) override;
     void resize(size_t) override;
     int compare(grib_accessor*) override;
+
+    static inline const AccessorType accessor_type_{"padding"};
 };
 
 }  // namespace eccodes::accessor

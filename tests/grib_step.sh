@@ -329,3 +329,4 @@ grep -q "ECCODES WARNING :  endStep < startStep" $tempLog
 # Clean up
 rm -f $temp $tempLog $tempFilt $tempGrb
 rm -f $grib2File.p8tmp ${grib2File}.tmp x.grib
+rm -f $tempGrbA $tempGrbB

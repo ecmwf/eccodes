@@ -899,60 +899,60 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
-	 typeOfStatisticalProcessing = 10 ;
 	 scaledValueOfLowerLimit = 1 ;
 	 scaleFactorOfLowerLimit = 0 ;
 	 probabilityType = 3 ;
+	 typeOfRelationToReferenceDataset = 1 ;
 	}
 #Probability of temperature standardized anomaly greater than 1.5 standard deviation
 '133094' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
-	 typeOfStatisticalProcessing = 10 ;
 	 scaledValueOfLowerLimit = 15 ;
 	 scaleFactorOfLowerLimit = 1 ;
 	 probabilityType = 3 ;
+	 typeOfRelationToReferenceDataset = 1 ;
 	}
 #Probability of temperature standardized anomaly greater than 2 standard deviation
 '133095' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
-	 typeOfStatisticalProcessing = 10 ;
 	 scaledValueOfLowerLimit = 2 ;
 	 scaleFactorOfLowerLimit = 0 ;
 	 probabilityType = 3 ;
+	 typeOfRelationToReferenceDataset = 1 ;
 	}
 #Probability of temperature standardized anomaly less than -1 standard deviation
 '133096' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
-	 typeOfStatisticalProcessing = 10 ;
 	 scaledValueOfLowerLimit = -1 ;
 	 scaleFactorOfLowerLimit = 0 ;
 	 probabilityType = 0 ;
+	 typeOfRelationToReferenceDataset = 1 ;
 	}
 #Probability of temperature standardized anomaly less than -1.5 standard deviation
 '133097' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
-	 typeOfStatisticalProcessing = 10 ;
 	 scaledValueOfLowerLimit = -15 ;
 	 scaleFactorOfLowerLimit = 1 ;
 	 probabilityType = 0 ;
+	 typeOfRelationToReferenceDataset = 1 ;
 	}
 #Probability of temperature standardized anomaly less than -2 standard deviation
 '133098' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
-	 typeOfStatisticalProcessing = 10 ;
 	 scaledValueOfLowerLimit = -2 ;
 	 scaleFactorOfLowerLimit = 0 ;
 	 probabilityType = 0 ;
+	 typeOfRelationToReferenceDataset = 1 ;
 	}
 #Wave induced mean sea level correction
 '140098' = {
@@ -8607,6 +8607,13 @@
 	 typeOfSecondFixedSurface = 167 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean Wind speed threshold for wind erosion
+'235416' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 70 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-integrated land surface heat net flux
 '236386' = {
 	 discipline = 2 ;
@@ -10558,6 +10565,13 @@
 	 typeOfSecondFixedSurface = 167 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
+#Time-maximum Wind speed threshold for wind erosion
+'237416' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 70 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
 #Time-minimum temperature tendency due to short-wave radiation
 '238001' = {
 	 discipline = 0 ;
@@ -12473,6 +12487,13 @@
 	 typeOfSecondFixedSurface = 167 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
+#Time-minimum Wind speed threshold for wind erosion
+'238416' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 70 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
 #Time-standard-deviation temperature tendency due to short-wave radiation
 '239001' = {
 	 discipline = 0 ;
@@ -14369,6 +14390,13 @@
 	 parameterNumber = 25 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 167 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation Wind speed threshold for wind erosion
+'239416' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 70 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Cross sectional area of flow in channel
@@ -16650,6 +16678,24 @@
 	 parameterCategory = 4 ;
 	 parameterNumber = 63 ;
 	 typeOfFirstFixedSurface = 1 ;
+	}
+#Wind speed threshold for wind erosion
+'260695' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 70 ;
+	}
+#Fire combustion rate per unit area
+'260703' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 47 ;
+	}
+#Fire radiative power density
+'260704' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 48 ;
 	}
 #Universal thermal climate index
 '261001' = {
@@ -21818,6 +21864,118 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 19 ;
 	}
+#Photolysis rate
+'480000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 20 ;
+	}
+#Time-mean Photolysis rate
+'480001' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 20 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum Photolysis rate
+'480003' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 20 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum Photolysis rate
+'480004' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 20 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation Photolysis rate
+'480005' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 20 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Emission potential
+'481000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 21 ;
+	}
+#Time-mean Emission potential
+'481001' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 21 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum Emission potential
+'481003' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 21 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum Emission potential
+'481004' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 21 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation Emission potential
+'481005' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 21 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Column single scatter albedo
+'482000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 103 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
+#Time-mean Column single scatter albedo
+'482001' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 103 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum Column single scatter albedo
+'482003' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 103 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum Column single scatter albedo
+'482004' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 103 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation Column single scatter albedo
+'482005' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 103 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Pressure tendency
 '3003' = {
 	 discipline = 0 ;
@@ -22221,6 +22379,42 @@
 	 scaledValueOfLowerLimit = 27315 ;
 	 scaleFactorOfLowerLimit = 2 ;
 	 probabilityType = 0 ;
+	}
+#Significant wave height of at least 2 m
+'131074' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 scaledValueOfLowerLimit = 2 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
+	}
+#Significant wave height of at least 4 m
+'131075' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 scaledValueOfLowerLimit = 4 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
+	}
+#Significant wave height of at least 6 m
+'131076' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 scaledValueOfLowerLimit = 6 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
+	}
+#Significant wave height of at least 8 m
+'131077' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 scaledValueOfLowerLimit = 8 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
 	}
 #Period corresponding to maximum individual wave height
 '140217' = {

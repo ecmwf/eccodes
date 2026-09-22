@@ -98,7 +98,6 @@ int Section::notify_change(grib_accessor* notified,
         return GRIB_INTERNAL_ERROR;
     }
 
-    ECCODES_ASSERT(h->kid == NULL);
     tmp_handle->loader = &loader;
     tmp_handle->main   = h;
     h->kid             = tmp_handle;
@@ -106,8 +105,6 @@ int Section::notify_change(grib_accessor* notified,
 
     grib_context_log(context_, GRIB_LOG_DEBUG, "------------- CREATE TMP BLOCK act=%s notified=%s", name_, notified->name_);
     tmp_handle->root = grib_section_create(tmp_handle, NULL);
-
-    tmp_handle->use_trie = 1;
 
     err = create_accessor(tmp_handle->root, &loader);
     if (err) {
@@ -157,7 +154,6 @@ int Section::notify_change(grib_accessor* notified,
     }
     grib_handle_delete(tmp_handle);
 
-    h->use_trie     = 1;
     h->trie_invalid = 1;
     h->kid          = NULL;
 

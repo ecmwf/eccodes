@@ -74,6 +74,7 @@ ValueType updateErrorAndReturnValue(tl::expected<ValueType, ErrorType> result, i
         return result.value();
     }
     else {
+        //ECCODES_ASSERT(err != nullptr);
         *err = result.error();
         return {};
     }

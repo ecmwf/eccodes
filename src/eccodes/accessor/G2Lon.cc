@@ -10,8 +10,7 @@
 
 #include "G2Lon.h"
 
-eccodes::accessor::G2Lon _grib_accessor_g2lon;
-eccodes::Accessor* grib_accessor_g2lon = &_grib_accessor_g2lon;
+eccodes::AccessorBuilder<eccodes::accessor::G2Lon> _grib_accessor_g2lon_builder{};
 
 namespace eccodes::accessor
 {

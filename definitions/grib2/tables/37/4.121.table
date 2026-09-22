@@ -1,0 +1,9 @@
+# Code table 4.121 - Type of reference dataset for verification
+0 0 Analysis interpolated on forecast grid
+1 1 Analysis with forecast interpolated on analysis grid
+2 2 Analysis interpolated on a common grid with the forecast but different to original grid
+3 3 Gridded observation on forecast grid
+4 4 Gridded observation with forecast interpolated on observation grid
+# 5-191 Reserved
+# 192-254 Reserved for local use
+255 255 Missing

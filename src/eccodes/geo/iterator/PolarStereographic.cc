@@ -67,12 +67,8 @@ int PolarStereographic::init(grib_handle* h, grib_arguments* args)
     double ts;                                /* value of small t */
     double height;                            /* height above ellipsoid */
     double x0, y0, lonFirst, latFirst;
-    proj_data_t fwd_proj_data = {
-        0,
-    };
-    proj_data_t inv_proj_data = {
-        0,
-    };
+    proj_data_t fwd_proj_data = {0,};
+    proj_data_t inv_proj_data = {0,};
 
     const char* s_radius                 = args->get_name(h, carg_++);
     const char* s_nx                     = args->get_name(h, carg_++);

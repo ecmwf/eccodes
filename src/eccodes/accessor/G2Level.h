@@ -19,8 +19,8 @@ class G2Level : public Long
 {
 public:
     G2Level() :
-        Long() { class_name_ = "g2level"; }
-    grib_accessor* create_empty_accessor() override { return new G2Level{}; }
+        Long() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int is_missing() override;
     int pack_double(const double* val, size_t* len) override;
     int pack_long(const long* val, size_t* len) override;
@@ -33,6 +33,9 @@ private:
     const char* scale_first_ = nullptr;
     const char* value_first_ = nullptr;
     const char* pressure_units_ = nullptr;
+
+public:
+    static inline const AccessorType accessor_type_{"g2level"};
 };
 
 }  // namespace eccodes::accessor

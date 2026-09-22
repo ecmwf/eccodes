@@ -12,6 +12,7 @@ if [ "$(uname)" = "Darwin" ] ; then
         echo "Fixing deps of $e"
         for p in libopenjp libaec libpng ; do
             # check that the lib $e has $p as a dependency, but also that $e is *not* $p itself
+            # we are being careful, even though currently only libeckit.dylib seems to be relevant
             if (otool -l $e | grep "name.*$p.*offset" >/dev/null 2>/dev/null) && (echo $e | grep -v $p >/dev/null 2>/dev/null) ; then
                 ORIG_NAME=$(otool -l $e | grep "name.*$p.*" | sed 's/.*name \(.*\) (offset.*)/\1/')
                 ORIG_BASE=$(basename $ORIG_NAME)

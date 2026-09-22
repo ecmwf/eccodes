@@ -11,8 +11,7 @@
 #include "Signed.h"
 #include "ecc_numeric_limits.h"
 
-eccodes::accessor::Signed _grib_accessor_signed;
-eccodes::Accessor* grib_accessor_signed = &_grib_accessor_signed;
+eccodes::AccessorBuilder<eccodes::accessor::Signed> _grib_accessor_signed_builder{};
 
 namespace eccodes::accessor
 {

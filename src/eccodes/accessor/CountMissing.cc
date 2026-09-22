@@ -10,8 +10,7 @@
 
 #include "CountMissing.h"
 
-eccodes::accessor::CountMissing _grib_accessor_count_missing;
-eccodes::Accessor* grib_accessor_count_missing = &_grib_accessor_count_missing;
+eccodes::AccessorBuilder<eccodes::accessor::CountMissing> _grib_accessor_count_missing_builder{};
 
 namespace eccodes::accessor
 {
@@ -76,8 +75,7 @@ static int get_count_of_missing_values(grib_handle* h, long* p_count_of_missing)
 }
 int CountMissing::unpack_long(long* val, size_t* len)
 {
-    unsigned char* p;
-    int i;
+    const unsigned char* p = NULL;
     long size               = 0;
     long offset             = 0;
     long unusedBitsInBitmap = 0;
@@ -122,7 +120,7 @@ int CountMissing::unpack_long(long* val, size_t* len)
     size -= unusedBitsInBitmap / 8;
     unusedBitsInBitmap = unusedBitsInBitmap % 8;
 
-    for (i = 0; i < size - 1; i++)
+    for (long i = 0; i < size - 1; i++)
         *val += bitsoff[*(p++)];
 
     *val += bitsoff[(*p) | used[unusedBitsInBitmap]];

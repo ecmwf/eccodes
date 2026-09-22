@@ -19,8 +19,8 @@ class G2LatLon : public Double
 {
 public:
     G2LatLon() :
-        Double() { class_name_ = "g2latlon"; }
-    grib_accessor* create_empty_accessor() override { return new G2LatLon{}; }
+        Double() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int pack_missing() override;
     int is_missing() override;
     int pack_double(const double* val, size_t* len) override;
@@ -31,6 +31,9 @@ private:
     const char* grid_ = nullptr;
     int index_ = 0;
     const char* given_ = nullptr;
+
+public:
+    static inline const AccessorType accessor_type_{"g2latlon"};
 };
 
 }  // namespace eccodes::accessor

@@ -10,8 +10,7 @@
 
 #include "CfVarName.h"
 
-eccodes::accessor::CfVarName _grib_accessor_cf_var_name;
-eccodes::Accessor* grib_accessor_cf_var_name = &_grib_accessor_cf_var_name;
+eccodes::AccessorBuilder<eccodes::accessor::CfVarName> _grib_accessor_cf_var_name_builder{};
 
 namespace eccodes::accessor
 {

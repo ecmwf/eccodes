@@ -10,8 +10,7 @@
 
 #include "GlobalGaussian.h"
 
-eccodes::accessor::GlobalGaussian _grib_accessor_global_gaussian;
-eccodes::Accessor* grib_accessor_global_gaussian = &_grib_accessor_global_gaussian;
+eccodes::AccessorBuilder<eccodes::accessor::GlobalGaussian> _grib_accessor_global_gaussian_builder{};
 
 namespace eccodes::accessor
 {

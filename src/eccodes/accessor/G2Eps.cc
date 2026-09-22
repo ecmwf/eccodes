@@ -10,8 +10,7 @@
 
 #include "G2Eps.h"
 
-eccodes::accessor::G2Eps _grib_accessor_g2_eps;
-eccodes::Accessor* grib_accessor_g2_eps = &_grib_accessor_g2_eps;
+eccodes::AccessorBuilder<eccodes::accessor::G2Eps> _grib_accessor_g2_eps_builder{};
 
 namespace eccodes::accessor
 {
@@ -77,8 +76,8 @@ int G2Eps::pack_long(const long* val, size_t* len)
         return GRIB_ENCODING_ERROR;
     }
 
-    // eps or stream=(enda or elda or ewla)
-    if (eps || stream == 1030 || stream == 1249 || stream == 1250) {
+    // eps or stream=(enda or elda or ewla or xwda)
+    if (eps || stream == 1030 || stream == 1249 || stream == 1250 || stream == 1259) {
         if (isInstant) {
             // type=em || type=es
             if (type == 17) {

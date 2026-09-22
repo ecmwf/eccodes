@@ -9,6 +9,7 @@
  */
 
 #include "Gen.h"
+#include "grib_accessor_factory.h"
 
 grib_action* grib_action_create_gen(grib_context* context, const char* name, const char* op, const long len,
                                     grib_arguments* params, grib_arguments* default_value, int flags, const char* name_space, const char* set)

@@ -19,8 +19,8 @@ class SimplePackingError : public Double
 {
 public:
     SimplePackingError() :
-        Double() { class_name_ = "simple_packing_error"; }
-    grib_accessor* create_empty_accessor() override { return new SimplePackingError{}; }
+        Double() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int unpack_double(double* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
 
@@ -30,6 +30,9 @@ private:
     const char* decimalScaleFactor_ = nullptr;
     const char* referenceValue_ = nullptr;
     const char* floatType_ = nullptr;
+
+public:
+    static inline const AccessorType accessor_type_{"simple_packing_error"};
 };
 
 }  // namespace eccodes::accessor

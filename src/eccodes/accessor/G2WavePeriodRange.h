@@ -18,9 +18,8 @@ namespace eccodes::accessor
 class G2WavePeriodRange : public Unsigned
 {
 public:
-    G2WavePeriodRange() :
-        Unsigned() { class_name_ = "g2_wave_period_range"; }
-    grib_accessor* create_empty_accessor() override { return new G2WavePeriodRange{}; }
+    G2WavePeriodRange() : Unsigned() {}
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     int value_count(long*) override;
@@ -29,6 +28,9 @@ public:
 private:
     const char* productDefinitionTemplateNumber_ = nullptr;
     const char* stepType_ = nullptr;
+
+public:
+    static inline const AccessorType accessor_type_{"g2_wave_period_range"};
 };
 
 }  // namespace eccodes::accessor

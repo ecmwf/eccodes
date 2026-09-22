@@ -109,6 +109,20 @@
 	 parameterNumber = 0 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#U component of wind
+'m s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 2 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#V component of wind
+'m s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Specific humidity
 'kg kg**-1' = {
 	 discipline = 0 ;

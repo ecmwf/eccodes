@@ -19,11 +19,13 @@ class LibraryVersion : public Ascii
 {
 public:
     LibraryVersion() :
-        Ascii() { class_name_ = "library_version"; }
-    grib_accessor* create_empty_accessor() override { return new LibraryVersion{}; }
+        Ascii() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int unpack_string(char*, size_t* len) override;
     size_t string_length() override;
     int value_count(long*) override;
+
+    static inline const AccessorType accessor_type_{"library_version"};
 };
 
 }  // namespace eccodes::accessor

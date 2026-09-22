@@ -43,7 +43,8 @@ cat <<EOF
 
 REDIRECT=/dev/null
 
-label="prod_${TEST_TITLE}_test"  # Change prod to bufr or grib etc
+label=\`basename \$0 | sed -e 's/\.sh/_test/'\`
+
 tempGrib=temp.\$label.grib
 tempBufr=temp.\$label.bufr
 tempFilt=temp.\$label.filt

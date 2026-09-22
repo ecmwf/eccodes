@@ -15,7 +15,6 @@
 #include <vector>
 #include <stdexcept>
 #include <array>
-#include <unordered_map>
 #include <algorithm>
 
 namespace eccodes {
@@ -94,8 +93,8 @@ public:
     }
 
     template <typename T> T value() const;
-    static std::vector<Value> grib_selected_units;
-    static std::vector<Value> complete_unit_order_;
+    static const std::array<Value, 3> grib_selected_units;
+    static const std::array<Value, 15> complete_unit_order_;
 
     static std::vector<Unit> list_supported_units() {
         std::vector<Unit> result;
@@ -110,69 +109,60 @@ public:
     }
 
 private:
+    // Trivially destructible lookup table — no heap allocations, so no
+    // data-race during static destruction when OpenMP threads are still alive.
     class Map {
     public:
-        Map() {
-            for (const auto& entry : tab_) {
-                // unit_value <-> unit_name
-                name_to_value_[entry.unit_name] = entry.unit_value;
-                value_to_name_[entry.unit_value] = entry.unit_name;
-
-                // unit_value <-> duration in seconds
-                value_to_duration_[entry.unit_value] = entry.duration;
-                duration_to_value_[entry.duration] = entry.unit_value;
-
-                // unit_value <-> wmo_code
-                value_to_long_[entry.unit_value] = static_cast<long>(entry.unit_value);
-                long_to_value_[static_cast<long>(entry.unit_value)] = entry.unit_value;
-            }
-        }
-
-        // wmo_code <-> unit_name
-        std::string unit_to_name(const Value& unit_value) const {return value_to_name_.at(unit_value);}
-        Value name_to_unit(const std::string& name) const {return name_to_value_.at(name);}
-
-        // unit_value <-> duration
-        uint64_t unit_to_duration(const Value& unit_value) const {return value_to_duration_.at(unit_value);}
-        Value duration_to_unit(long duration) const {return duration_to_value_.at(duration);}
-
-        // wmo_code <-> unit_name
-        long unit_to_long(const Value& unit_value) const {return value_to_long_.at(unit_value);}
-        Value long_to_unit(long wmo_code) const {return long_to_value_.at(wmo_code);}
-
-    private:
         struct Entry {
             Value unit_value;
-            std::string unit_name;
+            const char* unit_name;
             uint64_t duration;
         };
 
-        const std::array<Entry, 15> tab_ = {{
-            Entry{Value::MISSING   , "MISSING" , 0},
-            Entry{Value::SECOND    , "s"       , 1},
-            Entry{Value::MINUTE    , "m"       , 60},
-            Entry{Value::MINUTES15 , "15m"     , 900},
-            Entry{Value::MINUTES30 , "30m"     , 1800},
-            Entry{Value::HOUR      , "h"       , 3600},
-            Entry{Value::HOURS3    , "3h"      , 10800},
-            Entry{Value::HOURS6    , "6h"      , 21600},
-            Entry{Value::HOURS12   , "12h"     , 43200},
-            Entry{Value::DAY       , "D"       , 86400},
-            Entry{Value::MONTH     , "M"       , 2592000},
-            Entry{Value::YEAR      , "Y"       , 31536000},
-            Entry{Value::YEARS10   , "10Y"     , 315360000},
-            Entry{Value::YEARS30   , "30Y"     , 946080000},
-            Entry{Value::CENTURY   , "C"       , 3153600000},
+        static constexpr std::array<Entry, 15> tab_ = {{
+            {Value::MISSING   , "MISSING" , 0},
+            {Value::SECOND    , "s"       , 1},
+            {Value::MINUTE    , "m"       , 60},
+            {Value::MINUTES15 , "15m"     , 900},
+            {Value::MINUTES30 , "30m"     , 1800},
+            {Value::HOUR      , "h"       , 3600},
+            {Value::HOURS3    , "3h"      , 10800},
+            {Value::HOURS6    , "6h"      , 21600},
+            {Value::HOURS12   , "12h"     , 43200},
+            {Value::DAY       , "D"       , 86400},
+            {Value::MONTH     , "M"       , 2592000},
+            {Value::YEAR      , "Y"       , 31536000},
+            {Value::YEARS10   , "10Y"     , 315360000},
+            {Value::YEARS30   , "30Y"     , 946080000},
+            {Value::CENTURY   , "C"       , 3153600000},
         }};
 
-        std::unordered_map<std::string, Value> name_to_value_;
-        std::unordered_map<Value, std::string> value_to_name_;
+        std::string unit_to_name(const Value& v) const {
+            for (const auto& e : tab_) if (e.unit_value == v) return e.unit_name;
+            throw std::out_of_range("unit_to_name: unknown unit");
+        }
+        Value name_to_unit(const std::string& name) const {
+            for (const auto& e : tab_) if (name == e.unit_name) return e.unit_value;
+            throw std::out_of_range("name_to_unit: unknown name");
+        }
 
-        std::unordered_map<Value, long> value_to_long_;
-        std::unordered_map<long, Value> long_to_value_;
+        uint64_t unit_to_duration(const Value& v) const {
+            for (const auto& e : tab_) if (e.unit_value == v) return e.duration;
+            throw std::out_of_range("unit_to_duration: unknown unit");
+        }
+        Value duration_to_unit(long duration) const {
+            for (const auto& e : tab_) if (e.duration == static_cast<uint64_t>(duration)) return e.unit_value;
+            throw std::out_of_range("duration_to_unit: unknown duration");
+        }
 
-        std::unordered_map<Value, uint64_t> value_to_duration_;
-        std::unordered_map<uint64_t, Value> duration_to_value_;
+        long unit_to_long(const Value& v) const {
+            for (const auto& e : tab_) if (e.unit_value == v) return static_cast<long>(e.unit_value);
+            throw std::out_of_range("unit_to_long: unknown unit");
+        }
+        Value long_to_unit(long wmo_code) const {
+            for (const auto& e : tab_) if (static_cast<long>(e.unit_value) == wmo_code) return e.unit_value;
+            throw std::out_of_range("long_to_unit: unknown code");
+        }
     };
 
 

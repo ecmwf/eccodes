@@ -10,8 +10,7 @@
 
 #include "LatLonIncrement.h"
 
-eccodes::accessor::LatLonIncrement _grib_accessor_latlon_increment;
-eccodes::Accessor* grib_accessor_latlon_increment = &_grib_accessor_latlon_increment;
+eccodes::AccessorBuilder<eccodes::accessor::LatLonIncrement> _grib_accessor_latlon_increment_builder{};
 
 namespace eccodes::accessor
 {

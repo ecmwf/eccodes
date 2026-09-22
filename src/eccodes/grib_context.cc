@@ -330,8 +330,6 @@ static grib_context default_grib_context = {
     0,              /* gts_header_on              */
     0,              /* gribex_mode_on             */
     0,              /* large_constant_fields      */
-    0,              /* keys                       */
-    0,              /* keys_count                 */
     0,              /* concepts_index             */
     0,              /* concepts_count             */
     {0,},           /* concepts                   */
@@ -530,9 +528,6 @@ static grib_context* grib_context_get_default_()
             fprintf(stderr, "ECCODES DEBUG Definitions path: %s\n", default_grib_context.grib_definition_files_path);
             fprintf(stderr, "ECCODES DEBUG Samples path:     %s\n", default_grib_context.grib_samples_path);
         }
-        default_grib_context.keys_count = 0;
-        default_grib_context.keys       = grib_hash_keys_new(&(default_grib_context), &(default_grib_context.keys_count));
-
         default_grib_context.concepts_index = grib_itrie_new(&(default_grib_context), &(default_grib_context.concepts_count));
         default_grib_context.hash_array_index = grib_itrie_new(&(default_grib_context), &(default_grib_context.hash_array_count));
         default_grib_context.def_files = grib_trie_new(&(default_grib_context));
@@ -823,7 +818,6 @@ static void grib_context_delete_(grib_context* c)
 {
     if (!c) c = grib_context_get_default();
 
-    grib_hash_keys_delete(c->keys);
     /* grib_trie_delete(c->def_files);  TODO:masn */
 
     grib_context_reset(c);

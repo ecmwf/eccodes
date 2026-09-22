@@ -11,9 +11,9 @@
 
 
 #include "eccodes/geo/GribToSpec.h"
-#include "grib_api_internal.h"
 
 #include <algorithm>
+#include <map>
 #include <cstring>
 #include <functional>
 #include <initializer_list>
@@ -22,7 +22,6 @@
 #include <sstream>
 #include <vector>
 
-#include "eckit/config/Resource.h"
 #include "eckit/geo/Exceptions.h"
 #include "eckit/geo/PointLonLat.h"
 #include "eckit/geo/util/mutex.h"
@@ -30,6 +29,9 @@
 #include "eckit/types/FloatCompare.h"
 #include "eckit/types/Fraction.h"
 #include "eckit/utils/SafeCasts.h"
+
+#include "eccodes/geo/eckit.h"
+#include "eccodes/grib_api_internal.h"
 
 
 namespace eckit::geo::util
@@ -44,9 +46,6 @@ namespace eccodes::geo
 
 namespace
 {
-
-
-using eckit::Log;
 
 
 struct Condition
@@ -93,21 +92,23 @@ bool ConditionT<long>::eval(codes_handle* h) const
 }
 
 
-template <>
-bool ConditionT<double>::eval(codes_handle* h) const
-{
-    ASSERT(h != nullptr);
-
-    double value = 0;
-    int err      = codes_get_double(h, key_, &value);
-
-    if (err == CODES_NOT_FOUND) {
-        return false;
-    }
-
-    CHECK_ERROR(err, key_);
-    return value_ == value;  // Want an epsilon?
-}
+// Not used, but could be useful for future extensions
+//
+// template <>
+// bool ConditionT<double>::eval(codes_handle* h) const
+// {
+//     ASSERT(h != nullptr);
+//
+//     double value = 0;
+//     int err      = codes_get_double(h, key_, &value);
+//
+//     if (err == CODES_NOT_FOUND) {
+//         return false;
+//     }
+//
+//     CHECK_ERROR(err, key_);
+//     return value_ == value;  // Want an epsilon?
+// }
 
 
 template <>
@@ -164,17 +165,19 @@ public:
 */
 
 
+void wrongly_encoded_grib_error(const std::string& msg)
+{
+    grib_context_log(nullptr, GRIB_LOG_ERROR, "%s", msg.c_str());
+    throw eckit::geo::exception::GridError(msg, Here());
+}
+
+
 void wrongly_encoded_grib(const std::string& msg)
 {
-    static bool abortIfWronglyEncodedGRIB = eckit::Resource<bool>("$MIR_ABORT_IF_WRONGLY_ENCODED_GRIB", false);
-
-    if (abortIfWronglyEncodedGRIB) {
-        // Log::error() << msg << std::endl;
-        grib_context_log(nullptr, GRIB_LOG_ERROR, "%s", msg.c_str());
-        throw eckit::UserError(msg);
+    if (static bool do_abort = codes_getenv("ECCODES_GRIB_GEO_STRICT") != nullptr; do_abort) {
+        wrongly_encoded_grib_error(msg);
     }
 
-    Log::warning() << msg << std::endl;
     grib_context_log(nullptr, GRIB_LOG_WARNING, "%s", msg.c_str());
 }
 
@@ -227,6 +230,39 @@ Condition* is_gaussian()
 }
 
 
+/// @brief eckit::geo::figure name for a Code table 3.2 (shape of the reference system) entry, if known
+bool get_figure(codes_handle* h, std::string& value)
+{
+    static const std::map<long, std::string> NAMED{
+        { 0, "grib1" },         // sphere, R = 6 367 470 m
+        { 2, "iau1965" },       // oblate spheroid, IAU 1965
+        { 4, "grs80" },         // oblate spheroid, IAG-GRS80
+        { 5, "wgs84" },         // oblate spheroid, WGS-84
+        { 6, "earth" },         // sphere, R = 6 371 229 m
+        { 8, "wgs84_sphere" },  // sphere, R = 6 371 200 m, WGS-84 datum
+        { 11, "sun" },          // Sun, R = 695 990 000 m
+    };
+
+    // 'shapeOfTheEarth' is a GRIB edition 2 concept (in edition 1 it is a hidden transient)
+    if (long edition = 0; codes_get_long(h, "edition", &edition) != CODES_SUCCESS || edition < 2) {
+        return false;
+    }
+
+    long code = 0;
+    if (codes_get_long(h, "shapeOfTheEarth", &code) != CODES_SUCCESS) {
+        return false;
+    }
+
+    // codes that are not tabulated are described by their size ('radius'/'semi_major_axis'/'semi_minor_axis')
+    if (auto it = NAMED.find(code); it != NAMED.end()) {
+        value = it->second;
+        return true;
+    }
+
+    return false;
+}
+
+
 const char* get_key(const std::string& name, codes_handle* h)
 {
     struct P
@@ -246,6 +282,8 @@ const char* get_key(const std::string& name, codes_handle* h)
         { "west_east_increment", "iDirectionIncrementInDegrees" },
         { "south_north_increment", "jDirectionIncrementInDegrees" },
 
+        { "west", "longitudeOfLastGridPointInDegrees", is("iScansNegatively", 1L) },
+        { "east", "longitudeOfFirstGridPointInDegrees", is("iScansNegatively", 1L) },
         { "west", "longitudeOfFirstGridPointInDegrees" },
         { "east", "longitudeOfLastGridPointInDegrees_fix_for_global_reduced_grids", is("gridType", "reduced_gg") },
         { "east", "longitudeOfLastGridPointInDegrees" },
@@ -269,7 +307,11 @@ const char* get_key(const std::string& name, codes_handle* h)
         { "north", "latitudeOfFirstGridPointInDegrees" },
         { "south", "latitudeOfLastGridPointInDegrees" },
 
+        { "reference_lat", "latitudeOfFirstGridPointInDegrees" },
+        { "reference_lon", "longitudeOfFirstGridPointInDegrees" },
+
         { "truncation", "pentagonalResolutionParameterJ" },  // Assumes triangular truncation
+        { "truncation_subset", "subSetJ" },                  // Assumes triangular truncation
         { "accuracy", "bitsPerValue" },
 
         { "south_pole_latitude", "latitudeOfSouthernPoleInDegrees" },
@@ -606,8 +648,8 @@ ProcessingT<double>* grid_increment(const char* inc_key, const char* incgiven_ke
     return new ProcessingT<double>([=](codes_handle* h, double& value) {
         bool given = false;
         if (long incgiven = 0; codes_is_well_defined(h, inc_key) && (codes_get_long(h, incgiven_key, &incgiven) == CODES_SUCCESS) && (incgiven != 0)) {
-            codes_get_double(h, inc_key, &value);
-            given = true;
+            CHECK_CALL(codes_get_double(h, inc_key, &value));
+            given = value != CODES_MISSING_DOUBLE;
         }
 
         if (codes_is_well_defined(h, x0_key) && codes_is_well_defined(h, x1_key) && codes_is_well_defined(h, n_key) && codes_is_well_defined(h, sign_key)) {
@@ -619,10 +661,23 @@ ProcessingT<double>* grid_increment(const char* inc_key, const char* incgiven_ke
 
             long n = 0;
             CHECK_CALL(codes_get_long(h, n_key, &n));
-            ASSERT(n > 1);
+
+            if (n == 0) {
+                throw eckit::geo::exception::GridError("GribToSpec: number of points is zero, invalid increment", Here());
+            }
+
+            if (n == 1) {
+                value = 0.;
+                return true;
+            }
 
             long sign = 0;
             CHECK_CALL(codes_get_long(h, sign_key, &sign));
+
+            // For longitudes, adjust x1 to respect positive/negative increment
+            if (STR_EQUAL(n_key, "Ni") && (sign == 0 ? x0 < x1 : x1 < x0)) {
+                x1 += sign == 0 ? -360. : 360.;
+            }
 
             if (auto value_calculated = (x1 - x0) / static_cast<double>(sign != 0 ? (n - 1) : (1 - n)); given) {
                 if (!eckit::types::is_approximately_equal(value, value_calculated, 1e-6)) {
@@ -633,6 +688,7 @@ ProcessingT<double>* grid_increment(const char* inc_key, const char* incgiven_ke
                         ", '" + std::string{ x1_key } + "'=" + std::to_string(x1) +
                         ", '" + std::string{ n_key } + "'=" + std::to_string(n) +
                         ", '" + std::string{ sign_key } + "'=" + std::to_string(sign) + ")");
+                    value = value_calculated;
                 }
             }
             else {
@@ -746,6 +802,26 @@ class lock_type
 };
 
 
+template <typename T>
+bool cache_get(const GribToSpec::cache_type& cache, const std::string& name, T& value)
+{
+    if (auto it = cache.find(name); it != cache.end()) {
+        if (std::holds_alternative<T>(it->second)) {
+            value = std::get<T>(it->second);
+            return true;
+        }
+    }
+    return false;
+}
+
+
+template <typename T>
+void cache_set(GribToSpec::cache_type& cache, const std::string& name, const T& value)
+{
+    cache.insert_or_assign(name, eckit::spec::Custom::value_type{ std::in_place_type<T>, value });
+}
+
+
 }  // namespace
 
 
@@ -753,6 +829,76 @@ GribToSpec::GribToSpec(codes_handle* h) :
     handle_(h)
 {
     ASSERT(handle_ != nullptr);
+
+    if (eckit_geo_use_grib_fixes(h)) {
+        using fixes_type = std::map<std::string, const cache_type>;
+        static const fixes_type FIXES{
+
+            // gridName=N640, edition=2
+            { "51ea7dcd62e71c9707157a2d15247593", { { "longitudeOfLastGridPointInDegrees", 359.859375 } } },
+
+            // gridName=O2560, edition=1, experimentVersionNumber=h5xa/h5zi
+            { "8a6f6c4cc9ad3f64546773b87566bc72", { { "latitudeOfFirstGridPointInDegrees", 89.973 }, { "latitudeOfLastGridPointInDegrees", -89.973 } } },
+
+            // gridName=O640, edition=1, experimentVersionNumber=h5wk/h6en/hc9k
+            { "f5dc74ec36353f4c83f7de3bf46e1aef", { { "latitudeOfFirstGridPointInDegrees", 89.892 }, { "latitudeOfLastGridPointInDegrees", -89.892 } } },
+
+            // gridType=regular_ll, edition=2, centre=egrr (Arakawa C-grid UM)
+            { "026edb6c52792bc15957072536dbe7c2", { { "longitudeOfLastGridPointInDegrees", 359.0625 } } },                                                   // N96, T
+            { "379bbee20b78c58b9e86e1377c14a3da", { { "longitudeOfLastGridPointInDegrees", 358.125 } } },                                                    // N96, U
+            { "2e0f685a14d8ad3615dbc7252d5ebbb9", { { "longitudeOfLastGridPointInDegrees", 359.0625 } } },                                                   // N96, V
+            { "fd45c3ec374370a77222de303aa00a23", { { "latitudeOfFirstGridPointInDegrees", -89.8125 }, { "latitudeOfLastGridPointInDegrees", 89.8125 } } },  // N320, T
+        };
+
+        char buffer[34];
+        auto size = sizeof(buffer);
+        CHECK_CALL(codes_get_string(handle_, "md5GridSection", buffer, &size));
+
+        const std::string md5GridSection(buffer);
+        ASSERT(md5GridSection.size() == 32);
+
+        if (const auto& fix = FIXES.find(md5GridSection); fix != FIXES.end()) {
+            grib_context_log(nullptr, GRIB_LOG_WARNING, "GribToSpec: applying fix for md5GridSection=%s", md5GridSection.c_str());
+            cache_ = fix->second;
+        }
+    };
+
+    std::string gridType;
+    ASSERT(get("gridType", gridType));
+
+    if (gridType == "healpix") {
+        // ECC-2162
+        double l = 0;
+        ASSERT(get("longitudeOfFirstGridPointInDegrees", l));
+
+        if (!eckit::types::is_approximately_equal(l, 45.)) {
+            wrongly_encoded_grib("GribToSpec: gridType=" + gridType + ", longitudeOfFirstGridPointInDegrees should be 45.");
+        }
+    }
+
+    // ECC-1642:
+    // - Validate regular grid consistency
+    // - Validate Ni*Nj == numberOfDataPoints for grids with both Ni and Nj
+
+    long Ni = 0;
+    long Nj = 0;
+    long Nv = 0;
+    int err = 0;
+
+    if (
+        !(codes_is_missing(handle_, "Ni", &err) != 0 && err == CODES_SUCCESS) && //
+        !(codes_is_missing(handle_, "Nj", &err) != 0 && err == CODES_SUCCESS) && //
+        codes_get_long(handle_, "Ni", &Ni) == CODES_SUCCESS && //
+        codes_get_long(handle_, "Nj", &Nj) == CODES_SUCCESS && //
+        codes_get_long(handle_, "numberOfDataPoints", &Nv) == CODES_SUCCESS)
+    {
+        if (Ni * Nj != Nv) {
+            wrongly_encoded_grib_error(
+                    "GribToSpec: Ni*Nj!=numberOfDataPoints (" +
+                    std::to_string(Ni) + "*" + std::to_string(Nj) + "!=" +
+                    std::to_string(Nv) + ")");
+        }
+    }
 }
 
 
@@ -760,18 +906,17 @@ bool GribToSpec::has(const std::string& name) const
 {
     lock_type lock;
 
-    if (cache_.has(name)) {
-        return true;
+    if (name == "figure") {
+        std::string figure;
+        return get_figure(handle_, figure);
     }
 
     const auto* key = get_key(name, handle_);
-
-    ASSERT(key != nullptr);
-    if (std::strlen(key) == 0) {
+    if (key == nullptr || std::strlen(key) == 0) {
         return false;
     }
 
-    return codes_is_defined(handle_, key) != 0;
+    return cache_.find(key) != cache_.end() || codes_is_defined(handle_, key) != 0;
 }
 
 
@@ -779,8 +924,8 @@ bool GribToSpec::get(const std::string& name, std::string& value) const
 {
     lock_type lock;
 
-    if (cache_.get(name, value)) {
-        return true;
+    if (name == "figure") {
+        return get_figure(handle_, value);
     }
 
     const auto* key = get_key(name, handle_);
@@ -788,6 +933,10 @@ bool GribToSpec::get(const std::string& name, std::string& value) const
     ASSERT(key != nullptr);
     if (std::strlen(key) == 0) {
         return false;
+    }
+
+    if (cache_get(cache_, key, value)) {
+        return true;
     }
 
     char buffer[10240];
@@ -811,7 +960,8 @@ bool GribToSpec::get(const std::string& name, std::string& value) const
         return false;
     }
 
-    cache_.set(name, value = buffer);
+    value = buffer;
+    cache_set(cache_, name, value);
     return true;
 }
 
@@ -820,10 +970,6 @@ bool GribToSpec::get(const std::string& name, bool& value) const
 {
     lock_type lock;
 
-    if (cache_.get(name, value)) {
-        return true;
-    }
-
     const auto* key = get_key(name, handle_);
 
     ASSERT(key != nullptr);
@@ -831,12 +977,21 @@ bool GribToSpec::get(const std::string& name, bool& value) const
         return false;
     }
 
+    if (cache_get(cache_, key, value)) {
+        return true;
+    }
+
     // FIXME: make sure that 'temp' is not set if CODES_MISSING_LONG
     long temp = CODES_MISSING_LONG;
     int err   = codes_get_long(handle_, key, &temp);
+    if (err == CODES_NOT_FOUND || codes_is_missing(handle_, key, &err) != 0) {
+        return false;
+    }
+
     CHECK_ERROR(err, key);
 
-    cache_.set(name, value = temp != 0);
+    value = temp != 0;
+    cache_set(cache_, name, value);
     return true;
 }
 
@@ -857,13 +1012,13 @@ bool GribToSpec::get(const std::string& name, long& value) const
 {
     lock_type lock;
 
-    if (cache_.get(name, value)) {
-        return true;
-    }
-
     const std::string key = get_key(name, handle_);
     if (key.empty()) {
         return false;
+    }
+
+    if (cache_get(cache_, key, value)) {
+        return true;
     }
 
     // FIXME: make sure that 'value' is not set if CODES_MISSING_LONG
@@ -874,7 +1029,7 @@ bool GribToSpec::get(const std::string& name, long& value) const
 
     CHECK_ERROR(err, key.c_str());
 
-    cache_.set(name, value);
+    cache_set(cache_, name, value);
     return true;
 }
 
@@ -887,12 +1042,13 @@ bool GribToSpec::get(const std::string& /*name*/, long long& /*value*/) const
 
 bool GribToSpec::get(const std::string& name, std::size_t& value) const
 {
-    if (cache_.get(name, value)) {
+    if (cache_get(cache_, name, value)) {
         return true;
     }
 
     if (long value_long = 0; get(name, value_long)) {
-        cache_.set(name, value = eckit::into_unsigned<size_t>(value_long));
+        value = eckit::into_unsigned<size_t>(value_long);
+        cache_set(cache_, name, value);
         return true;
     }
 
@@ -902,12 +1058,13 @@ bool GribToSpec::get(const std::string& name, std::size_t& value) const
 
 bool GribToSpec::get(const std::string& name, float& value) const
 {
-    if (cache_.get(name, value)) {
+    if (cache_get(cache_, name, value)) {
         return true;
     }
 
     if (double v = 0; get(name, v)) {
-        cache_.set(name, value = static_cast<float>(v));
+        value = static_cast<float>(v);
+        cache_set(cache_, name, value);
         return true;
     }
 
@@ -919,16 +1076,16 @@ bool GribToSpec::get(const std::string& name, double& value) const
 {
     lock_type lock;
 
-    if (cache_.get(name, value)) {
-        return true;
-    }
-
     ASSERT(name != "grid");
 
     const auto* key = get_key(name, handle_);
 
     if (key == nullptr || std::strlen(key) == 0) {
         return false;
+    }
+
+    if (cache_get(cache_, key, value)) {
+        return true;
     }
 
     // FIXME: make sure that 'value' is not set if CODES_MISSING_DOUBLE
@@ -949,7 +1106,7 @@ bool GribToSpec::get(const std::string& name, double& value) const
         };
 
         if (get_value(key, handle_, value, process)) {
-            cache_.set(name, value);
+            cache_set(cache_, name, value);
             return true;
         }
 
@@ -958,7 +1115,7 @@ bool GribToSpec::get(const std::string& name, double& value) const
 
     CHECK_ERROR(err, key);
 
-    cache_.set(name, value);
+    cache_set(cache_, name, value);
     return true;
 }
 
@@ -973,10 +1130,6 @@ bool GribToSpec::get(const std::string& name, std::vector<long>& value) const
 {
     lock_type lock;
 
-    if (cache_.get(name, value)) {
-        return true;
-    }
-
     const auto* key = get_key(name, handle_);
 
     ASSERT(key != nullptr);
@@ -984,29 +1137,25 @@ bool GribToSpec::get(const std::string& name, std::vector<long>& value) const
         return false;
     }
 
+    if (cache_get(cache_, key, value)) {
+        return true;
+    }
+
     size_t count = 0;
-    int err      = codes_get_size(handle_, key, &count);
-    CHECK_ERROR(err, key);
+    CHECK_CALL(codes_get_size(handle_, key, &count));
+    ASSERT(count > 0);
 
     size_t size = count;
-
-    value.resize(count);
-
+    value.resize(size);
     CHECK_CALL(codes_get_long_array(handle_, key, value.data(), &size));
     ASSERT(count == size);
 
-    ASSERT(!value.empty());
-
-    if (name == "pl") {
-        // pl array must not contain zeros for reduced grids (except reduced_ll)
-        if (std::find(value.rbegin(), value.rend(), 0) != value.rend()) {
-            if (std::string gridType; get("gridType", gridType) && (gridType != "reduced_ll")) {
-                wrongly_encoded_grib("GribToSpec: pl array contains zeros");
-            }
-        }
+    // gridType=reduced_ll pl is (assumed) regional, otherwise assumed global
+    if (name == "pl" && get_string("gridType") != "reduced_ll") {
+        pl_expand_to_global(value);
     }
 
-    cache_.set(name, value);
+    cache_set(cache_, name, value);
     return true;
 }
 
@@ -1025,7 +1174,7 @@ bool GribToSpec::get(const std::string& /*name*/, std::vector<std::size_t>& /*va
 
 bool GribToSpec::get(const std::string& name, std::vector<float>& value) const
 {
-    if (cache_.get(name, value)) {
+    if (cache_get(cache_, name, value)) {
         return true;
     }
 
@@ -1036,7 +1185,7 @@ bool GribToSpec::get(const std::string& name, std::vector<float>& value) const
             value.push_back(static_cast<float>(d));
         }
 
-        cache_.set(name, value);
+        cache_set(cache_, name, value);
         return true;
     }
 
@@ -1048,16 +1197,16 @@ bool GribToSpec::get(const std::string& name, std::vector<double>& value) const
 {
     lock_type lock;
 
-    if (cache_.get(name, value)) {
-        return true;
-    }
-
     const auto* key = get_key(name, handle_);
 
     // NOTE: MARS client sets 'grid=vector' (deprecated) which needs to be compared against GRIB gridName
     ASSERT(key != nullptr);
     if (std::strlen(key) == 0 || std::strncmp(key, "gridName", 8) == 0) {
         return false;
+    }
+
+    if (cache_get(cache_, key, value)) {
+        return true;
     }
 
     static const ProcessingList<std::vector<double>> process{
@@ -1073,7 +1222,7 @@ bool GribToSpec::get(const std::string& name, std::vector<double>& value) const
     };
 
     if (get_value(key, handle_, value, process)) {
-        cache_.set(name, value);
+        cache_set(cache_, name, value);
         return true;
     }
 
@@ -1096,7 +1245,7 @@ bool GribToSpec::get(const std::string& name, std::vector<double>& value) const
 
     ASSERT(!value.empty());
 
-    cache_.set(name, value);
+    cache_set(cache_, name, value);
     return true;
 }
 
@@ -1106,6 +1255,32 @@ bool GribToSpec::get(const std::string& /*name*/, std::vector<std::string>& /*va
     return false;
 }
 
+
+void GribToSpec::pl_expand_to_global(std::vector<long>& pl) const
+{
+    auto N = get_long("N");
+    if (pl.size() == 2 * N) {
+        return;
+    }
+
+    const auto lat1 = get_double("latitudeOfFirstGridPointInDegrees");
+    const auto lat2 = get_double("latitudeOfLastGridPointInDegrees");
+
+    const auto increasing = lat1 < lat2;
+    const auto& lats(eckit::geo::util::gaussian_latitudes(N, increasing));
+    const auto eps = std::max(eckit::geo::PointLonLat::EPS, get_double("angular_precision"));
+
+    auto approx              = [=](double a, double b) { return increasing ? a + eps < b : a - eps > b; };
+    const auto j             = std::distance(lats.begin(), std::lower_bound(lats.begin(), lats.end(), lat1, approx));
+    const auto lat2_expected = lats[j + pl.size() - 1];
+    if (j + pl.size() > 2 * N || !eckit::types::is_approximately_equal<double>(lat2, lat2_expected, eps)) {
+        wrongly_encoded_grib_error("GribToSpec: cropped 'pl' doesn't align to global latitudes: start=" + std::to_string(j) + " + #pl=" + std::to_string(pl.size()) + " <= #lats=" + std::to_string(lats.size()));
+    }
+
+    std::vector<long> pl_global(2 * N, 0);
+    std::copy(pl.begin(), pl.end(), pl_global.begin() + j);
+    pl.swap(pl_global);
+}
 
 void GribToSpec::json(eckit::JSON& j) const
 {

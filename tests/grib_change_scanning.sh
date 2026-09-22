@@ -101,14 +101,14 @@ cat > $tempFilt <<EOF
   set DjInDegrees = 1;
   set DiInDegrees = 1;
 
-  set alternativeRowScanning = 1;
+  set alternateRowScanning = 1; # use the more correct alias
   set values={ 12, 13, 14, 15, 16, 17 };
   write;
 EOF
 
 ${tools_dir}/grib_filter -o $tempGribA $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl
 ${tools_dir}/grib_set -s swapScanningAlternativeRows=1 $tempGribA $tempGribB
-grib_check_key_equals $tempGribB alternativeRowScanning 0
+grib_check_key_equals $tempGribB alternativeRowScanning,alternateRowScanning '0 0'
 
 ${tools_dir}/grib_get_data -F "%.2f" $tempGribB > $tempText
 cat > $tempRef << EOF

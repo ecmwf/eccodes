@@ -11,8 +11,7 @@
 #include "ExpandedDescriptors.h"
 #include "grib_scaling.h"
 
-eccodes::accessor::ExpandedDescriptors _grib_accessor_expanded_descriptors;
-eccodes::Accessor* grib_accessor_expanded_descriptors = &_grib_accessor_expanded_descriptors;
+eccodes::AccessorBuilder<eccodes::accessor::ExpandedDescriptors> _grib_accessor_expanded_descriptors_builder{};
 
 namespace eccodes::accessor
 {
@@ -309,7 +308,8 @@ void ExpandedDescriptors::__expand(bufr_descriptors_array* unexpanded, bufr_desc
 #endif
             if (u->type != BUFR_DESCRIPTOR_TYPE_FLAG &&
                 u->type != BUFR_DESCRIPTOR_TYPE_TABLE &&
-                u->type != BUFR_DESCRIPTOR_TYPE_STRING) {
+                u->type != BUFR_DESCRIPTOR_TYPE_STRING &&
+                u->X != 31) { /* ECC-912: class 31 (replication factors) not affected by 201/202 */
                 if (ccp->localDescriptorWidth > 0) {
                     u->width     = ccp->localDescriptorWidth;
                     u->reference = 0;

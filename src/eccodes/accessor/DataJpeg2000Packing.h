@@ -19,8 +19,8 @@ class DataJpeg2000Packing : public DataSimplePacking
 {
 public:
     DataJpeg2000Packing() :
-        DataSimplePacking() { class_name_ = "data_jpeg2000_packing"; }
-    grib_accessor* create_empty_accessor() override { return new DataJpeg2000Packing{}; }
+        DataSimplePacking() { }
+    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
     int unpack_float(float* val, size_t* len) override;
@@ -39,6 +39,9 @@ private:
     const char* scanning_mode_ = nullptr;
     int jpeg_lib_ = 0;
     const char* dump_jpg_ = nullptr;
+
+public:
+    static inline const AccessorType accessor_type_{"data_jpeg2000_packing"};
 };
 
 }  // namespace eccodes::accessor

@@ -21,6 +21,9 @@ sample_grib2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 tablesVersionLatest=$( ${tools_dir}/grib_get -p tablesVersionLatest $sample_grib2 )
 
 # Setup Destine pseudo-centre GRIB message
+# !!!!!!
+# This ensures the dataset key is created which is needed for subsequent logic based on its value
+# !!!!!!
 # First latest tables version and add local section with MARS labeling
 ${tools_dir}/grib_set -s tablesVersion=$tablesVersionLatest,setLocalDefinition=1,grib2LocalSectionNumber=1 $sample_grib2 $temp_grib_a
 
@@ -93,6 +96,24 @@ ${tools_dir}/grib_ls -jm $temp_grib_a
 [ $( ${tools_dir}/grib_get -f -p mars.step $temp_grib_a ) = "not_found" ]
 [ $( ${tools_dir}/grib_get -f -p mars.timespan $temp_grib_a ) = "not_found" ]
 
+# Setting stream sttd and type fc should set mars.date to dataDate except for monthly processing
+# (which we don't test explicitly here) and mars.step and mars.time should be unaliased
+# We also expect to have the stattype and timespan key present, the latter of which is removed
+# for other climate-dt data
+# We must also set dataset=climate-dt, since in other datasets mars.step is set to stepRange
+
+${tools_dir}/grib_set -s dataset=climate-dt,stream=sttd,type=fc $destine_sample $temp_grib_a
+
+result1=$( ${tools_dir}/grib_get -p mars.date $temp_grib_a )
+result2=$( ${tools_dir}/grib_get -p dataDate $temp_grib_a )
+[ "$result1" = "$result2" ]
+
+${tools_dir}/grib_ls -jm $temp_grib_a
+[ $( ${tools_dir}/grib_get -f -p mars.step $temp_grib_a ) = "not_found" ]
+[ $( ${tools_dir}/grib_get -f -p mars.time $temp_grib_a ) = "not_found" ]
+
+grib_check_key_exists $temp_grib_a mars.stattype,mars.timespan
+
 # ECC-1801
 ${tools_dir}/grib_set -s productionStatusOfProcessedData=13 $sample_grib2 $temp_grib_a
 ${tools_dir}/grib_compare -b productionStatusOfProcessedData $sample_grib2 $temp_grib_a
@@ -101,14 +122,18 @@ ${tools_dir}/grib_compare -b productionStatusOfProcessedData $sample_grib2 $temp
 # Check setting dataset to on-demand-extremes-dt (4). Check keys are present and equal defaults
 ${tools_dir}/grib_set -s dataset=4 $destine_sample $temp_grib_a
 
-grib_check_key_exists $temp_grib_a dataset,georef
-grib_check_key_equals $temp_grib_a "dataset,dataset:s,georef,mars.georef" "4 on-demand-extremes-dt s0000000 s0000000"
+grib_check_key_exists $temp_grib_a dataset,georef,model
+grib_check_key_equals $temp_grib_a "dataset,dataset:s,georef,mars.georef,model,mars.model" "4 on-demand-extremes-dt s0000000 s0000000 IFS IFS"
 
 # Check an example where a few additional things are set in on-demand-extremes-dt
 
-${tools_dir}/grib_set -s dataset=4,georef=gcpkd2eu $destine_sample $temp_grib_a
+${tools_dir}/grib_set -s dataset=4,georef=gcpkd2eu,model=HARMONIE-AROME $destine_sample $temp_grib_a
 
 grib_check_key_equals $temp_grib_a "georef" "gcpkd2eu"
+grib_check_key_equals $temp_grib_a "model" "HARMONIE-AROME"
+
+# ECC-2304: Check the size of the model keyword. This was accidentally defined in both section4_extras and post_meta_data.hook
+grib_check_key_is_scalar $temp_grib_a "model" "HARMONIE-AROME"
 
 # ECC-2161: We replace mars.step=stepRange with mars.step=endStep (default) and mars.timespan
 # in extremes-dt. We continue to unalias timespan in climate-dt streams clte/clmn (checked above)
