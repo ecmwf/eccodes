@@ -562,10 +562,17 @@ if( HAVE_BUILD_TOOLS )
 
 
     if( ENABLE_EXTRA_TESTS AND (HAVE_ECCODES_THREADS OR HAVE_ECCODES_OMP_THREADS) )
+        # These carry their own #pragma omp, so they need the flag on their own
+        # compile line; linking eccodes PRIVATE does not propagate it.
+        set( eccodes_thread_test_libs eccodes ${CMAKE_THREAD_LIBS_INIT} )
+        if( HAVE_ECCODES_OMP_THREADS )
+            list( APPEND eccodes_thread_test_libs OpenMP::OpenMP_CXX )
+        endif()
+
         ecbuild_add_executable( TARGET    grib_encode_threads
                                 NOINSTALL
                                 SOURCES   grib_encode_threads.cc
-                                LIBS      eccodes ${CMAKE_THREAD_LIBS_INIT} )
+                                LIBS      ${eccodes_thread_test_libs} )
         ecbuild_add_test( TARGET eccodes_t_grib_encode_threads
                           TYPE SCRIPT
                           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_encode_threads.sh )
@@ -574,7 +581,7 @@ if( HAVE_BUILD_TOOLS )
             ecbuild_add_executable( TARGET    ${test}
                                     NOINSTALL
                                     SOURCES   ${test}.cc
-                                    LIBS      eccodes ${CMAKE_THREAD_LIBS_INIT} )
+                                    LIBS      ${eccodes_thread_test_libs} )
         endforeach()
         ecbuild_add_test( TARGET eccodes_t_grib_encode_threads2
                           TYPE SCRIPT

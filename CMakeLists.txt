@@ -229,7 +229,8 @@ ecbuild_add_option( FEATURE INSTALL_ECCODES_SAMPLES
 ecbuild_add_option( FEATURE MEMORY_MANAGEMENT   DESCRIPTION "Enable memory management" DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE ALIGN_MEMORY        DESCRIPTION "Enable memory alignment"  DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE ECCODES_THREADS     DESCRIPTION "Enable thread-safety using POSIX threads" DEFAULT OFF ADVANCED )
-ecbuild_add_option( FEATURE ECCODES_OMP_THREADS DESCRIPTION "Enable thread-safety using OpenMP threads" DEFAULT OFF ADVANCED )
+ecbuild_add_option( FEATURE ECCODES_OMP_THREADS DESCRIPTION "Enable thread-safety using OpenMP threads" DEFAULT OFF ADVANCED
+                    REQUIRED_PACKAGES "OpenMP COMPONENTS C CXX" )
 ecbuild_add_option( FEATURE EXTRA_TESTS         DESCRIPTION "Enable extended regression testing" DEFAULT OFF ADVANCED )
 
 ###############################################################################
@@ -319,7 +320,9 @@ if( HAVE_ECCODES_THREADS )
         set( GRIB_LINUX_PTHREADS 1 )
     endif()
 elseif(HAVE_ECCODES_OMP_THREADS)
-    ecbuild_enable_omp()
+    if( NOT TARGET OpenMP::OpenMP_CXX )
+        ecbuild_critical("ENABLE_ECCODES_OMP_THREADS is ON but no OpenMP C++ toolchain was found")
+    endif()
     set( GRIB_OMP_THREADS 1 )
 endif()
 

@@ -448,6 +448,7 @@ ecbuild_add_library(
         ${CMAKE_THREAD_LIBS_INIT}
         ${PNG_LIBRARIES}
         $<$<BOOL:${libaec_FOUND}>:libaec::aec>
+        $<$<BOOL:${HAVE_ECCODES_OMP_THREADS}>:OpenMP::OpenMP_CXX>
     PUBLIC_LIBS
         ${CMATH_LIBRARIES}
         ${THREADS_LIBRARIES}
