@@ -10,7 +10,7 @@ int main(int argc,char** argv)
 	grib_handle  *h =  0;
 	int err;
 	int cnt = 0;
-	
+
 	f = fopen(argc > 1 ? argv[1]: "data" ,"r");
 	if(!f)
 	{

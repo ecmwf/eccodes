@@ -69,19 +69,19 @@ if( indicatorOfParameter == 34 && indicatorOfTypeOfLevel == 105)  { productDefin
 
 
 # Dew point
-if( indicatorOfParameter == 17)  { 	
+if( indicatorOfParameter == 17)  {
 	productDefinitionTemplateNumber = 1;
-	shortName                = '2d'; 
+	shortName                = '2d';
 	typeOfFirstFixedSurface         = 103;
 	scaleFactorOfFirstFixedSurface  = 0;
 	scaledValueOfFirstFixedSurface  = 2;
 }
 
 # 2Meter temp.
-if( indicatorOfParameter == 11 && indicatorOfTypeOfLevel == 105)  
-{ 
+if( indicatorOfParameter == 11 && indicatorOfTypeOfLevel == 105)
+{
 	productDefinitionTemplateNumber = 1;
-	shortName                = '2t'; 
+	shortName                = '2t';
 	typeOfFirstFixedSurface         = 103;
 	scaleFactorOfFirstFixedSurface  = 0;
 	scaledValueOfFirstFixedSurface  = 2;
@@ -100,9 +100,9 @@ if( indicatorOfParameter == 13)  { productDefinitionTemplateNumber=1;shortName =
 if( indicatorOfParameter == 65)  { productDefinitionTemplateNumber=1;shortName = 'sd'; }
 
 # Snow fall
-if( indicatorOfParameter == 99)  { 
+if( indicatorOfParameter == 99)  {
 	productDefinitionTemplateNumber = 11;
-	shortName = 'sf'; 
+	shortName = 'sf';
 }
 
 
@@ -119,7 +119,7 @@ if(indicatorOfParameter == 61)   { productDefinitionTemplateNumber = 11;shortNam
 if(indicatorOfParameter == 114)  { productDefinitionTemplateNumber = 11;shortName = 'ttr'; }
 if(indicatorOfParameter == 167)  { productDefinitionTemplateNumber = 1;shortName = 'tcw'; }
 
-if( indicatorOfParameter == 33 && indicatorOfTypeOfLevel == 117)  
+if( indicatorOfParameter == 33 && indicatorOfTypeOfLevel == 117)
 { scaleFactorOfFirstFixedSurface=6;scaledValueOfFirstFixedSurface=2;typeOfFirstFixedSurface=109;productDefinitionTemplateNumber=1;shortName = 'u'; }
 
 if( indicatorOfParameter == 34 && indicatorOfTypeOfLevel == 117)  { scaleFactorOfFirstFixedSurface=6;scaledValueOfFirstFixedSurface=2;typeOfFirstFixedSurface=109;productDefinitionTemplateNumber=1;shortName = 'v'; }

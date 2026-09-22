@@ -4,7 +4,7 @@ GRIB (
       grib_compare
       grib_copy
       grib_count desc
-      grib_dump 
+      grib_dump
       grib_filter
       grib_get
       grib_get_data
@@ -23,16 +23,15 @@ BUFR (
       bufr_ls
       bufr_set
       )
-!GTS (           
+!GTS (
       gts_copy
       gts_dump
       gts_filter
       gts_ls
-    )  
+    )
 
 Generic (
       codes_count desc
       codes_info desc
       codes_split_file desc
       )
-

@@ -34,4 +34,3 @@ LDADD = $(top_builddir)/src/libgrib_api.la
 DEPENDENCIES = $(LDADD)
 
 EXTRA_DIST =$(TESTS) include.sh CMakeLists.txt
-

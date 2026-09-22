@@ -25,4 +25,3 @@ public:
 };
 
 }  // namespace eccodes::geo_iterator
-

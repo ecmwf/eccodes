@@ -13,5 +13,3 @@ do
   time /usr/local/lib/metaps/lib/grib_api/${version}/bin/grib_dump -O $file 2> /dev/null > /dev/null
   echo
 done
-
-

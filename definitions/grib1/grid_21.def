@@ -16,4 +16,3 @@ constant jDirectionIncrement = 2500;
 
 constant numberOfDataPoints=1369;
 constant numberOfValues=1333 ;
-

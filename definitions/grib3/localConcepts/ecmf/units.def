@@ -2981,25 +2981,25 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 120 ;
 	}
-#UV visible albedo for direct radiation, isotropic component 
+#UV visible albedo for direct radiation, isotropic component
 '(0 - 1)' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 186 ;
 	}
-#UV visible albedo for direct radiation, volumetric component 
+#UV visible albedo for direct radiation, volumetric component
 '(0 - 1)' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 187 ;
 	}
-#UV visible albedo for direct radiation, geometric component 
+#UV visible albedo for direct radiation, geometric component
 '(0 - 1)' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 188 ;
 	}
-#Near IR albedo for direct radiation, isotropic component 
+#Near IR albedo for direct radiation, isotropic component
 '(0 - 1)' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
@@ -3011,43 +3011,43 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 190 ;
 	}
-#Near IR albedo for direct radiation, geometric component 
+#Near IR albedo for direct radiation, geometric component
 '(0 - 1)' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 191 ;
 	}
-#UV visible albedo for diffuse radiation, isotropic component 
+#UV visible albedo for diffuse radiation, isotropic component
 '(0 - 1)' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 192 ;
 	}
-#UV visible albedo for diffuse radiation, volumetric component 
+#UV visible albedo for diffuse radiation, volumetric component
 '(0 - 1)' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 193 ;
 	}
-#UV visible albedo for diffuse radiation, geometric component 
+#UV visible albedo for diffuse radiation, geometric component
 '(0 - 1)' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 194 ;
 	}
-#Near IR albedo for diffuse radiation, isotropic component 
+#Near IR albedo for diffuse radiation, isotropic component
 '(0 - 1)' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 195 ;
 	}
-#Near IR albedo for diffuse radiation, volumetric component 
+#Near IR albedo for diffuse radiation, volumetric component
 '(0 - 1)' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 196 ;
 	}
-#Near IR albedo for diffuse radiation, geometric component 
+#Near IR albedo for diffuse radiation, geometric component
 '(0 - 1)' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;

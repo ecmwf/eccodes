@@ -3,7 +3,7 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
+#
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
@@ -42,7 +42,7 @@ cat > $tempRef <<EOF
   floatValues = 3600;
   integerValues(3) =  {
   55, 44, 66
-  } 
+  }
 EOF
 diff $tempRef $tempTxt
 
@@ -56,7 +56,7 @@ cat > $tempRef <<EOF
   numberOfIntegers = 1;
   floatValues(3) =  {
   8.8, 9.9, 10.1
-  } 
+  }
   integerValues = -557;
 EOF
 diff $tempRef $tempTxt
@@ -72,10 +72,10 @@ cat > $tempRef <<EOF
   numberOfIntegers = 4;
   floatValues(3) =  {
   -8.8, 9.9, 10.1
-  } 
+  }
   integerValues(4) =  {
   33, 55, -44, 66
-  } 
+  }
 EOF
 diff $tempRef $tempTxt
 

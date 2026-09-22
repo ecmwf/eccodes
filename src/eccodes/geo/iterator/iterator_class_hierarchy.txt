@@ -12,4 +12,3 @@ Iterator Class Hierarchy
    |-----grib_iterator_class_gaussian
    |-----grib_iterator_class_latlon
    |---grib_iterator_class_space_view
-

@@ -34,7 +34,7 @@ C
       IF(INPUT.EQ.'-i') THEN
          CALL GETARG(2,YDATAFILE)
       ELSE
-         print*,'Usage: gribex_check -i inputfile' 
+         print*,'Usage: gribex_check -i inputfile'
          STOP
       END IF
 

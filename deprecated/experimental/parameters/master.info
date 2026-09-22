@@ -12,9 +12,9 @@
 # 12 ... scaledValueOfSecondFixedSurface
 # 13 ... scaleFactorOfSecondFixedSurface
 # 14 ... typeOfStatisticalProcessing
-# 15 ... productDefinitionTemplateNumber 
-# 16 ... scaledValueOfLowerLimit 
-# 17 ... scaledValueOfUpperLimit 
+# 15 ... productDefinitionTemplateNumber
+# 16 ... scaledValueOfLowerLimit
+# 17 ... scaledValueOfUpperLimit
 # 18 ... one
 #
 #     # ... means value does not exist or is variable (e.g. value for pressure levels)
@@ -66,4 +66,3 @@ mars.param mars.abbreviation tigge_name mars.levtype discipline parameterCategor
 171034  ssta   sea_surface_temperature_anomaly	         sfc   0    0    9    1     MISSING      MISSING    MISSING    MISSING     MISSING  #  # # # #
 49      10u  maximum_wind_gust                             sfc   0    2    22   103     10      0     MISSING    MISSING     MISSING    2 	#	#	# #
 default unknown  unknown # 0 0 0 # # # # # # # # # # #
-

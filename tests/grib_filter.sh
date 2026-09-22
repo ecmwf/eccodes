@@ -3,7 +3,7 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
+#
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
@@ -28,7 +28,7 @@ cat >${data_dir}/f.rules <<EOF
  write "${data_dir}/split/[centre]_[date]_[dataType]_[gridType]_[levelType]_[level]_[short_name]_[packingType].grib[editionNumber]";
 EOF
 
-[ -d ${data_dir}/split ] || mkdir -p ${data_dir}/split 
+[ -d ${data_dir}/split ] || mkdir -p ${data_dir}/split
 
 ${tools_dir}/grib_filter ${data_dir}/f.rules ${data_dir}/tigge_pf_ecmwf.grib2 2> $REDIRECT > $REDIRECT
 
@@ -246,13 +246,13 @@ EOF
 ${tools_dir}/grib_filter $tempFilt $input > $tempOut
 
 cat >$tempRef <<EOF
-pl_scaled=2.00 2.70 3.60 4.00 4.50 5.00 6.00 6.40 
-7.20 7.50 8.00 9.00 9.00 9.60 10.00 10.80 
-10.80 12.00 12.00 12.00 12.80 12.80 12.80 12.80 
-12.80 12.80 12.80 12.80 12.80 12.80 12.80 12.80 
-12.80 12.80 12.80 12.80 12.80 12.80 12.80 12.80 
-12.80 12.80 12.80 12.80 12.00 12.00 12.00 10.80 
-10.80 10.00 9.60 9.00 9.00 8.00 7.50 7.20 
+pl_scaled=2.00 2.70 3.60 4.00 4.50 5.00 6.00 6.40
+7.20 7.50 8.00 9.00 9.00 9.60 10.00 10.80
+10.80 12.00 12.00 12.00 12.80 12.80 12.80 12.80
+12.80 12.80 12.80 12.80 12.80 12.80 12.80 12.80
+12.80 12.80 12.80 12.80 12.80 12.80 12.80 12.80
+12.80 12.80 12.80 12.80 12.00 12.00 12.00 10.80
+10.80 10.00 9.60 9.00 9.00 8.00 7.50 7.20
 6.40 6.00 5.00 4.50 4.00 3.60 2.70 2.00
 
 EOF

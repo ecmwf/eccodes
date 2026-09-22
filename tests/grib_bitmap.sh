@@ -46,15 +46,15 @@ fi
 ${tools_dir}/grib_dump -O -p bitmap $outfile | grep -v FILE > $outfile.dump
 cat > $tempRef <<EOF
 963-1728  bitmap = 766 {
-   ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, 
-   ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, 
-   ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, 
-   ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, 
-   ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, 
-   ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, 
+   ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff,
+   ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff,
+   ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff,
+   ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff,
+   ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff,
+   ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff,
    ff, ff, ff, ff
    ... 665 more values
-} # g1bitmap bitmap 
+} # g1bitmap bitmap
 EOF
 diff $tempRef $outfile.dump
 
@@ -146,7 +146,7 @@ in=${data_dir}/grid_complex_spatial_differencing.grib2
 in_with_bitmap=${data_dir}/temp_grid_complex_spatial_differencing_bitmap.grib2
 in_no_bitmap=${data_dir}/temp_grid_complex_spatial_differencing_no_bitmap.grib2
 
-${tools_dir}/grib_set -s bitmapPresent=1 $in $in_with_bitmap 
+${tools_dir}/grib_set -s bitmapPresent=1 $in $in_with_bitmap
 ${tools_dir}/grib_set -s bitmapPresent=0 $in $in_no_bitmap
 
 # No bitmap

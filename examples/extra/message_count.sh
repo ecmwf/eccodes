@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# check the fortran against the tools for the support for 
+# check the fortran against the tools for the support for
 # multi gribs to be consistent
 
 #set -x

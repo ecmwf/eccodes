@@ -72,4 +72,3 @@ stepRange=3942000 step=3942000 startStep=3942000 endStep=3942000 stepUnits=m
 indicatorOfUnitOfTimeRange=3h timeRangeIndicator=10 P1=85 P2=140
 stepRange=236520000 step=236520000 startStep=236520000 endStep=236520000 stepUnits=s
 indicatorOfUnitOfTimeRange=3h timeRangeIndicator=10 P1=85 P2=140
-

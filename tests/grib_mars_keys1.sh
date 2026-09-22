@@ -3,7 +3,7 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
+#
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
@@ -40,7 +40,7 @@ grib_check_key_equals $tempGrib stream enfh
 # --------------------------------
 ${tools_dir}/grib_ls -jm $grib2_sample > $tempOut
 cat > $tempRef << EOF
-{ "messages" : [ 
+{ "messages" : [
   {
     "domain": "g",
     "date": 20100912,
@@ -64,7 +64,7 @@ ${tools_dir}/grib_set -s \
     $grib2_sample $tempGrib
 ${tools_dir}/grib_ls -jm $tempGrib > $tempOut
 cat > $tempRef << EOF
-{ "messages" : [ 
+{ "messages" : [
   {
     "domain": "g",
     "date": 20100912,

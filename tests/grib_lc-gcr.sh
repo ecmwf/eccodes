@@ -3,7 +3,7 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
+#
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
@@ -48,7 +48,7 @@ test_stream_and_type()
                            $grib2_sample $temp2
 
     grib_check_key_equals $temp2 'class,expver,centre,centre:i,model,stream,mars.stream,type,stattype,timespan,param' "lr $expver ecmf 98 ERA5 sttd sttd fc moav 24h 235055"
-    
+
     # Check mars domain is not set
     key=`${tools_dir}/grib_get -f -p mars.domain $temp2`
     [ "$key" = "not_found" ]

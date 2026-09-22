@@ -65,7 +65,7 @@ while (<>) {
         if ($name !~ /Error$/) {
             $name = $name . "Error";
         }
-        
+
         $name = 'FunctionNotImplementedError' if ($name eq 'NotImplementedError');
         $name = 'MessageEndNotFoundError'     if ($name eq '7777NotFoundError');
         $name = 'IOProblemError'              if ($name eq 'IoProblemError');

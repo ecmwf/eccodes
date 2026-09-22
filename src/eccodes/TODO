@@ -2,7 +2,7 @@ geography
 grib1 words = grib2 words
         gridType -> dataRepresentationType (grib1)
                     ??? (grib2)
-  
+
 
 why if(a->offset%2) buflen++;
 lat/lon is not in 0..180

@@ -12,4 +12,3 @@ alias dimension=dimensionNumber;
 unsigned[2] totalNumberOfdimensions;
 
 alias extraDimensionPresent=one;
-

@@ -39,4 +39,3 @@ int True::native_type(grib_handle* h) const
 grib_expression* new_true_expression(grib_context* c) {
     return new eccodes::expression::True();
 }
-

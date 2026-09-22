@@ -31,7 +31,7 @@ extern void yyerror(const char*);
 
 %%
 
-all        : empty        
+all        : empty
            | message
            ;
 
@@ -42,7 +42,7 @@ messages : message
          ;
 
 message : IDENT '{' accessors '}' ';'  { load_finish(); }
-        ; 
+        ;
 
 accessors : accessor
     | accessors accessor
@@ -54,13 +54,13 @@ accessor : IDENT '=' INTEGER ';'     { load_long($1,$3);   }
          | IDENT '=' FLOAT  ';'      { load_double($1,$3); }
          | IDENT '=' MISSING  ';'    { load_missing($1);  }
          | IDENT '=' '-' FLOAT  ';'  { load_double($1,-$4); }
-		 | IDENT '=' '{' {load_start_array();} values ',' '}'  ';' 
+		 | IDENT '=' '{' {load_start_array();} values ',' '}'  ';'
 		 	{ load_end_array($1); free($1); }
 
          ;
 
-values: value 
-	  | values ',' value 
+values: value
+	  | values ',' value
 	  ;
 
 value : INTEGER      { load_long_value($1);  }

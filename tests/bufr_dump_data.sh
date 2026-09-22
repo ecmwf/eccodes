@@ -46,7 +46,7 @@ file="aaen_55.bufr"
 export ECCODES_DEBUG=1
 
 # By default debug output goes to stderr
-${tools_dir}/bufr_dump -O ${data_dir}/bufr/$file > $fLog 2>&1 
+${tools_dir}/bufr_dump -O ${data_dir}/bufr/$file > $fLog 2>&1
 grep -q "parsing include file" $fLog
 
 # Redirect it to stdout
@@ -83,7 +83,7 @@ set -e
 #==============================================
 # Testing a malformed bufr file (see ECC-110)
 #==============================================
-# find another way to test malformed bufr 
+# find another way to test malformed bufr
 #echo "Test: malformed bufr file " >> $fLog
 
 #rm -f $fJsonTmp
@@ -113,7 +113,7 @@ set -e
 #diff $fJsonTmp $fJsonRef
 #
 # Clean up
-#rm -f $fLog 
+#rm -f $fLog
 #rm -f $fJsonTmp
 
 rm -f $fLog

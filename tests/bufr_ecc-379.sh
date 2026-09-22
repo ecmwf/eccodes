@@ -3,7 +3,7 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
+#
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
@@ -69,7 +69,7 @@ unset ECCODES_BUFR_SET_TO_MISSING_IF_OUT_OF_RANGE
 #echo 'set unpack=1;print "[longitude]";' | ${tools_dir}/bufr_filter - $BufrFile
 #echo 'set unpack=1;print "[longitude]";' | ${tools_dir}/bufr_filter - $tempOut > $tempText
 #cat > $tempRef << EOF
-#-1e+100 -172.14317 -1e+100 -170.17433 -169.407 -168.9308 -168.49104 -167.98389 
+#-1e+100 -172.14317 -1e+100 -170.17433 -169.407 -168.9308 -168.49104 -167.98389
 #-166.95331 -166.52921 -166.06108 -165.66135 -164.99666 -164.67058 -164.23764
 #EOF
 #diff $tempText $tempRef

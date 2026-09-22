@@ -62,9 +62,9 @@ int main(int argc,char** argv)
 
 #if 0
 		if(result_class_name && (strcmp(result_class_name,"data_2order_packing") == 0 ||
-		
+
 			strcmp(result_class_name,"data_g22order_packing") == 0)
-		
+
 		)
 		{
 			cnt++;

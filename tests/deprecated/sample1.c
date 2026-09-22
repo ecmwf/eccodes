@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
 		printf("ERROR: Unable to create grib handle\n");
 		exit(1);
 	}
-	
+
 	grib_set_double(h,"latitudeOfFirstGridPointInDegrees",10);
 	grib_set_double(h,"longitudeOfFirstGridPointInDegrees",-10);
 
@@ -32,10 +32,10 @@ int main(int argc, char *argv[])
 
 	grib_get_long( h,"numberOfPointsAlongAParallel",&numberOfPointsAlongAParallel);
 	grib_get_long( h,"numberOfPointsAlongAMeridian",&numberOfPointsAlongAMeridian);
-	
+
 	numberOfPoints=numberOfPointsAlongAMeridian*numberOfPointsAlongAMeridian;
 	values=(double*)malloc(numberOfPoints*sizeof(double));
-	
+
 	grib_set_double( h,"missingValue",missing);
 
 	for (j=0;j<numberOfPointsAlongAMeridian;j++) {
@@ -45,14 +45,14 @@ int main(int argc, char *argv[])
 			else values[k]=50;
 		}
 	}
-	
+
 	grib_set_double_array( h,"values",values,numberOfPoints);
-	
-  if (h) { 
+
+  if (h) {
 		grib_dump_content(h,stdout,"serialize",option_flags,NULL);
 	} else  {
 		printf("Error: unable to create grib_handle\n");
 	}
   return ret;
-	
+
 }

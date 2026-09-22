@@ -33,4 +33,3 @@ unsigned[4] Dy  : dump ;
 unsigned[1] projectionCentreFlag  : dump ;
 
 include "grib3/template.4.scanning_mode.def";
-

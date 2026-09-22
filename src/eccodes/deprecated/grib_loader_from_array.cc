@@ -227,4 +227,3 @@ int grib_lookup_long_from_array(grib_context* gc, grib_loader* loader, const cha
 
 //     return retval;
 // }
-

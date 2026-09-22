@@ -1,5 +1,5 @@
 if ( g is "CAVOK") {
-    rename(g,cavokTrend2); 
+    rename(g,cavokTrend2);
     group g : dump; non_alpha na;
 		constant isCavokTrend2=1;
 		constant ceilingAndVisibilityOKTrend2="true";
@@ -9,11 +9,11 @@ if ( g is "CAVOK") {
 		if (g is "//" || g is "///" || g is "////" || g is "/////" || g is "//////") {
 				rename(g,missingVisibilityField1Trend2);
 				group g : dump; non_alpha na;
-		} 
+		}
 		if (g is "//" || g is "///" || g is "////" || g is "/////" || g is "//////") {
 				rename(g,missingVisibilityField2Trend2);
 				group g : dump; non_alpha na;
-		} 
+		}
 		if (substr(g,-3,3) is "NDV" || is_integer(g,0,4)  ) {
 				rename(g,visibilityInMetresTrend2);
 		    group g : dump; non_alpha na;
@@ -33,14 +33,14 @@ if ( g is "CAVOK") {
 		if (is_integer(g,0,1)) {
 				rename(g,visibilityIntegerTrend2);
 		    group g : dump; non_alpha na;
-		} 
+		}
 		if (substr(g, -2 ,2) is "SM" ) {
         rename(g,visibilityInStatuteMilesTrend2);
         group g : dump; non_alpha na;
 		}
-		if ( ( substr(g,4,1) is "N" || substr(g,4,1) is "S" || substr(g,4,1) is "E" || substr(g,4,1) is "W" 
+		if ( ( substr(g,4,1) is "N" || substr(g,4,1) is "S" || substr(g,4,1) is "E" || substr(g,4,1) is "W"
 				||
-				substr(g,4,2) is "NE" || substr(g,4,2) is "SE" || substr(g,4,2) is "NW" || substr(g,4,2) is "SW" 
+				substr(g,4,2) is "NE" || substr(g,4,2) is "SE" || substr(g,4,2) is "NW" || substr(g,4,2) is "SW"
 				||
 				substr(g,4,1) is "/" )
 				&&
@@ -51,4 +51,4 @@ if ( g is "CAVOK") {
 				variationOfVisibilityTrend2=to_integer(directionalVariationInVisibilityTrend2);
 				variationOfVisibilityDirectionTrend2=dict_search("metar/direction.table",1);
 		}
-} 
+}

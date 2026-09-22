@@ -1,9 +1,9 @@
 NAME    codes_count
 
 DESCRIPTION
-        Print the total number of GRIB or BUFR messages in the given files. 
+        Print the total number of GRIB or BUFR messages in the given files.
 
-USAGE 
+USAGE
         codes_count [options] file file ...
 
 OPTIONS

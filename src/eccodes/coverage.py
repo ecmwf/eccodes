@@ -87,6 +87,3 @@ if __name__ == "__main__":
         print_coverage_branch(headers, endpoint)
     else:
         print_coverage_files(headers, endpoint, args.link)
-
-
-

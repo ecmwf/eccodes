@@ -1,4 +1,4 @@
-# stepUnits table used for both grib 1 and 2     
+# stepUnits table used for both grib 1 and 2
 0 m  Minute
 1 h  Hour
 2 D  Day

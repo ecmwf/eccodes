@@ -51,7 +51,7 @@ awk '/stationOrSiteName/{x=NR+12}(NR<=x){print}' $TEMP_DUMP > $TEMP_TEXT
 
 cat > $TEMP_REF << EOF
           "key" : "stationOrSiteName",
-          "value" : 
+          "value" :
           [            "ARD2-LPTR",
             "ETH2-LPTR",
             null,

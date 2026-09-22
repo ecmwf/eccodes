@@ -853,7 +853,7 @@ int codes_get_string_array(const codes_handle* h, const char* key, char** vals, 
  * @param bytes     : the address of a byte array where the data will be retrieved
  * @param length    : the address of a size_t that contains allocated length of the byte array on input,
  *                    and that contains the actual length of the byte array on output.
- *                    The length can be determined by codes_get_length, similar to strings. 
+ *                    The length can be determined by codes_get_length, similar to strings.
  *                    This is different to other calls array retrieving calls.
  * @return          0 if OK, integer value on error
  * @see             codes_get_length

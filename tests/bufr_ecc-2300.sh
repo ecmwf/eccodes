@@ -95,7 +95,7 @@ numberOfSubsets=1
 observedData=1
 compressedData=0
 unexpandedDescriptors={
-      111000, 031002, 007040, 105000, 031001, 002153, 101000, 031000, 015037, 033007, 
+      111000, 031002, 007040, 105000, 031001, 002153, 101000, 031000, 015037, 033007,
       101000, 031001, 015036 }
 #1#impactParameter=MISSING
 #1#satelliteChannelCentreFrequency=MISSING

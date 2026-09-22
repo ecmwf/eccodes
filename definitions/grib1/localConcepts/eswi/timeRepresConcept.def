@@ -1,15 +1,15 @@
 # author: Sebastien Villaume
 # created: 13 May 2013
 #
-"none"={matchTimeRepres=0;} 
+"none"={matchTimeRepres=0;}
 "3hMean"={matchTimeRepres=1;}
 "diurnalMean"={matchTimeRepres=2;}
-"1hMean"={matchTimeRepres=3;} 
-"monthlyMean"={matchTimeRepres=5;} 
-"mean"={matchTimeRepres=6;} 
+"1hMean"={matchTimeRepres=3;}
+"monthlyMean"={matchTimeRepres=5;}
+"mean"={matchTimeRepres=6;}
 "yearMean"={matchTimeRepres=7;}
-"max"={matchTimeRepres=10;} 
-"min"={matchTimeRepres=11;} 
+"max"={matchTimeRepres=10;}
+"min"={matchTimeRepres=11;}
 "dailyMax"={matchTimeRepres=12;}
 "monthlyMax"={matchTimeRepres=14;}
 "yearMax"={matchTimeRepres=16;}

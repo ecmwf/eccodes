@@ -3,7 +3,7 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
+#
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
@@ -52,7 +52,7 @@ EOF
 ${tools_dir}/grib_filter -o $tempGrib1 $tempFilt $sample_grib1
 ${tools_dir}/grib_set -s edition=2 $tempGrib1 $tempGrib2
 
-echo 'print "[scaledDirections=]"; print; print "[scaledFrequencies=]";' | ${tools_dir}/grib_filter - $tempGrib2 
+echo 'print "[scaledDirections=]"; print; print "[scaledFrequencies=]";' | ${tools_dir}/grib_filter - $tempGrib2
 
 ${tools_dir}/grib_compare -c scaledDirections,scaledFrequencies $tempGrib1 $tempGrib2
 ${tools_dir}/grib_dump -O $tempGrib2

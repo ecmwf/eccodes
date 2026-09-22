@@ -3,7 +3,7 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
+#
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
@@ -65,8 +65,8 @@ f="$ECCODES_SAMPLES_PATH/BUFR4.tmpl"
 cat > $tempFilt <<EOF
  set masterTablesVersionNumber = 37;
  set inputOverriddenReferenceValues = { -100, 10000, -100 };
- set unexpandedDescriptors = { 
-        203015,   12023, 42008, 42007,   203255, 
+ set unexpandedDescriptors = {
+        203015,   12023, 42008, 42007,   203255,
                   12023, 42008, 42007,
         203000 };
  # Now setting out-of-range values will work
@@ -91,7 +91,7 @@ diff $tempRef $tempLog
 cat > $tempFilt <<EOF
  set masterTablesVersionNumber = 37;
  set inputOverriddenReferenceValues = { -150 };
- set unexpandedDescriptors = { 
+ set unexpandedDescriptors = {
         203015, 12023,  203255, 12023, 203000 };
  set temperature = -101;
  set pack=1;

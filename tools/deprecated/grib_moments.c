@@ -81,7 +81,7 @@ int main(int argc, char* argv[]) {
 		if (split>1) {
 			double inc=0;
 			double d=(gwest-geast)/split;
-			
+
 			inc=0;
 			for (i=0;i<split;i++) {
 				east[i]=geast+inc;

@@ -33,6 +33,6 @@
 "top"={matchLandType=100;}
 "effdose"={matchLandType=150;}
 "skin"={matchLandType=151;}
-"thyroid"={matchLandType=152;} 
+"thyroid"={matchLandType=152;}
 "lung"={matchLandType=153;}
 "missing"={matchLandType=255;}

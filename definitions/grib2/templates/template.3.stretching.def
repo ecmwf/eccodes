@@ -16,4 +16,3 @@ unsigned[4] stretchingFactorScaled : edition_specific,no_copy;
 
 meta geography.stretchingFactor
      scale(stretchingFactorScaled,oneConstant,grib2divider) : dump;
-

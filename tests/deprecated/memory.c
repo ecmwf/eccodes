@@ -29,7 +29,7 @@ static void  default_free(const grib_context* c, void* p)   {
 	free(p);
 }
 
-static void* default_malloc(const grib_context* c, size_t size) { 
+static void* default_malloc(const grib_context* c, size_t size) {
 	cnt++;
 #if 0
 	if(m == NUMBER(foo)) marslog(LOG_EXIT,"Too many malloc");
@@ -121,7 +121,7 @@ int main(int argc,char** argv)
 
 
 		{
-				grib_handle *h  = grib_handle_clone(g); 
+				grib_handle *h  = grib_handle_clone(g);
 				grib_keyset* ks = grib_new_keyset(h,"mars.*");
 				char name[80];
 				size_t len = sizeof(name);
@@ -166,8 +166,8 @@ int main(int argc,char** argv)
 
 		length = sizeof(buffer);
 	}
-	
-	
+
+
 
 	rewind(f);
 	while((g = grib_handle_new_from_file(c,f,&e)))
@@ -183,7 +183,7 @@ int i;
 
 		grib_handle_delete(g);
 	}
-	
+
 	if(e) {
 	fprintf(stderr,"grib_handle_new_from_file error %s\n",grib_get_error_message(e));
 		exit(1);}

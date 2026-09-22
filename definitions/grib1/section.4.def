@@ -85,35 +85,35 @@ concept packingType {
                                           additionalFlagPresent = 0;hideThis=1; }
   "grid_simple_matrix"                = { sphericalHarmonics = 0; complexPacking = 0; additionalFlagPresent = 1;}
 
-  "grid_second_order_row_by_row"        = { sphericalHarmonics = 0; complexPacking = 1; secondOrderOfDifferentWidth=1; 
+  "grid_second_order_row_by_row"        = { sphericalHarmonics = 0; complexPacking = 1; secondOrderOfDifferentWidth=1;
                                             matrixOfValues=0; secondaryBitmapPresent=0; generalExtended2ordr=0; }
-  "grid_second_order_constant_width"    = { sphericalHarmonics = 0; complexPacking = 1; secondOrderOfDifferentWidth=0; 
+  "grid_second_order_constant_width"    = { sphericalHarmonics = 0; complexPacking = 1; secondOrderOfDifferentWidth=0;
                                             matrixOfValues=0; secondaryBitmapPresent=1; generalExtended2ordr=0; }
-  "grid_second_order_general_grib1"    = { sphericalHarmonics = 0; complexPacking = 1; secondOrderOfDifferentWidth=1; 
+  "grid_second_order_general_grib1"    = { sphericalHarmonics = 0; complexPacking = 1; secondOrderOfDifferentWidth=1;
                                            matrixOfValues=0; secondaryBitmapPresent=1; generalExtended2ordr=0; }
-  "grid_second_order_no_SPD"  = { sphericalHarmonics = 0; complexPacking = 1; secondOrderOfDifferentWidth=1; 
+  "grid_second_order_no_SPD"  = { sphericalHarmonics = 0; complexPacking = 1; secondOrderOfDifferentWidth=1;
                                   matrixOfValues=0; secondaryBitmapPresent=0; generalExtended2ordr=1;
                                   plusOneinOrdersOfSPD=0; twoOrdersOfSPD=0;}
-  "grid_second_order"  = { sphericalHarmonics = 0; complexPacking = 1; secondOrderOfDifferentWidth=1; 
+  "grid_second_order"  = { sphericalHarmonics = 0; complexPacking = 1; secondOrderOfDifferentWidth=1;
                            matrixOfValues=0; secondaryBitmapPresent=0; generalExtended2ordr=1;
                            plusOneinOrdersOfSPD=0; twoOrdersOfSPD=1; boustrophedonic=1;}
-  "grid_second_order"  = { sphericalHarmonics = 0; complexPacking = 1; secondOrderOfDifferentWidth=1; 
+  "grid_second_order"  = { sphericalHarmonics = 0; complexPacking = 1; secondOrderOfDifferentWidth=1;
                            matrixOfValues=0; secondaryBitmapPresent=0; generalExtended2ordr=1;
                            plusOneinOrdersOfSPD=0; twoOrdersOfSPD=1; boustrophedonic=0;}
-  "grid_second_order_no_boustrophedonic"  = { sphericalHarmonics = 0; complexPacking = 1; secondOrderOfDifferentWidth=1; 
+  "grid_second_order_no_boustrophedonic"  = { sphericalHarmonics = 0; complexPacking = 1; secondOrderOfDifferentWidth=1;
                                       matrixOfValues=0; secondaryBitmapPresent=0; generalExtended2ordr=1;
                                     plusOneinOrdersOfSPD=0; twoOrdersOfSPD=1; boustrophedonic=0;}
-  "grid_second_order_boustrophedonic" = { sphericalHarmonics = 0; complexPacking = 1; secondOrderOfDifferentWidth=1; 
+  "grid_second_order_boustrophedonic" = { sphericalHarmonics = 0; complexPacking = 1; secondOrderOfDifferentWidth=1;
                                           matrixOfValues=0; secondaryBitmapPresent=0; generalExtended2ordr=1;
                                           plusOneinOrdersOfSPD=0; twoOrdersOfSPD=1; boustrophedonic=1;}
-  "grid_second_order_SPD1"  = { sphericalHarmonics = 0; complexPacking = 1; secondOrderOfDifferentWidth=1; 
-                                matrixOfValues=0; secondaryBitmapPresent=0; generalExtended2ordr=1; 
+  "grid_second_order_SPD1"  = { sphericalHarmonics = 0; complexPacking = 1; secondOrderOfDifferentWidth=1;
+                                matrixOfValues=0; secondaryBitmapPresent=0; generalExtended2ordr=1;
                                 plusOneinOrdersOfSPD=1; twoOrdersOfSPD=0; }
-  "grid_second_order_SPD2"  = { sphericalHarmonics = 0; complexPacking = 1; secondOrderOfDifferentWidth=1; 
-                                matrixOfValues=0; secondaryBitmapPresent=0; generalExtended2ordr=1; 
+  "grid_second_order_SPD2"  = { sphericalHarmonics = 0; complexPacking = 1; secondOrderOfDifferentWidth=1;
+                                matrixOfValues=0; secondaryBitmapPresent=0; generalExtended2ordr=1;
                                 plusOneinOrdersOfSPD=0; twoOrdersOfSPD=1; }
-  "grid_second_order_SPD3"  = { sphericalHarmonics = 0; complexPacking = 1; secondOrderOfDifferentWidth=1; 
-                                matrixOfValues=0; secondaryBitmapPresent=0; generalExtended2ordr=1; 
+  "grid_second_order_SPD3"  = { sphericalHarmonics = 0; complexPacking = 1; secondOrderOfDifferentWidth=1;
+                                matrixOfValues=0; secondaryBitmapPresent=0; generalExtended2ordr=1;
                                 plusOneinOrdersOfSPD=1; twoOrdersOfSPD=1; }
   # The following are not in GRIB edition 1.
   # They are added here to stop failures when setting packingType. The packing itself is not changed

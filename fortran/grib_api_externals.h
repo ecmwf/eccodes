@@ -68,7 +68,7 @@ integer, external :: grib_f_new_from_index, &
                      grib_f_index_select_string, &
                      grib_f_index_select_int, &
                      grib_f_index_select_long
-                         
+
 integer, external :: grib_f_set_int, grib_f_set_int_array, &
                      grib_f_set_long, grib_f_set_long_array, &
                      grib_f_set_byte_array, &

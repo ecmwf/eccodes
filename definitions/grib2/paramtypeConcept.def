@@ -55,7 +55,7 @@
 'chemical' = {productDefinitionTemplateNumber=45; MTG2Switch=2;}
 'chemical' = {productDefinitionTemplateNumber=46; MTG2Switch=2;}
 'chemical' = {productDefinitionTemplateNumber=47; MTG2Switch=2;}
-# chemical optical parameters in gribMix have no chem 
+# chemical optical parameters in gribMix have no chem
 # therefore they have paramtype optical
 'optical' = {productDefinitionTemplateNumber=48; MTG2Switch=1;}
 'optical' = {productDefinitionTemplateNumber=49; MTG2Switch=1;}

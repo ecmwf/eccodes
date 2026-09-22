@@ -34,7 +34,7 @@
 #if defined (__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
 
 /* C99 says to define __STDC_LIMIT_MACROS before including stdint.h,
- * if you want the limit (max/min) macros for int types. 
+ * if you want the limit (max/min) macros for int types.
  */
 #ifndef __STDC_LIMIT_MACROS
 #define __STDC_LIMIT_MACROS 1
@@ -52,7 +52,7 @@ typedef uint64_t flex_uint64_t;
 typedef signed char flex_int8_t;
 typedef short int flex_int16_t;
 typedef int flex_int32_t;
-typedef unsigned char flex_uint8_t; 
+typedef unsigned char flex_uint8_t;
 typedef unsigned short int flex_uint16_t;
 typedef unsigned int flex_uint32_t;
 
@@ -163,10 +163,10 @@ extern FILE *grib_yyin, *grib_yyout;
 #define EOB_ACT_CONTINUE_SCAN 0
 #define EOB_ACT_END_OF_FILE 1
 #define EOB_ACT_LAST_MATCH 2
-    
+
     #define YY_LESS_LINENO(n)
     #define YY_LINENO_REWIND_TO(ptr)
-    
+
 /* Return all but the first "n" matched characters back to the input stream. */
 #define grib_yyless(n) \
 	do \
@@ -1279,9 +1279,9 @@ extern int grib_yywrap ( void );
 #endif
 
 #ifndef YY_NO_UNPUT
-    
+
     void grib_yyunput ( int c, char *buf_ptr  );
-    
+
 #endif
 
 #ifndef grib_yytext_ptr
@@ -1408,7 +1408,7 @@ YY_DECL
 	grib_yy_state_type grib_yy_current_state;
 	char *grib_yy_cp, *grib_yy_bp;
 	int grib_yy_act;
-    
+
 	if ( !(grib_yy_init) )
 		{
 		(grib_yy_init) = 1;
@@ -2534,7 +2534,7 @@ static int grib_yy_get_next_buffer (void)
 {
 	grib_yy_state_type grib_yy_current_state;
 	char *grib_yy_cp;
-    
+
 	grib_yy_current_state = (grib_yy_start);
 
 	for ( grib_yy_cp = (grib_yytext_ptr) + YY_MORE_ADJ; grib_yy_cp < (grib_yy_c_buf_p); ++grib_yy_cp )
@@ -2590,7 +2590,7 @@ static int grib_yy_get_next_buffer (void)
     void grib_yyunput (int c, char * grib_yy_bp )
 {
 	char *grib_yy_cp;
-    
+
     grib_yy_cp = (grib_yy_c_buf_p);
 
 	/* undo effects of setting up grib_yytext */
@@ -2635,7 +2635,7 @@ static int grib_yy_get_next_buffer (void)
 
 {
 	int c;
-    
+
 	*(grib_yy_c_buf_p) = (grib_yy_hold_char);
 
 	if ( *(grib_yy_c_buf_p) == YY_END_OF_BUFFER_CHAR )
@@ -2702,12 +2702,12 @@ static int grib_yy_get_next_buffer (void)
 
 /** Immediately switch to a different input stream.
  * @param input_file A readable stream.
- * 
+ *
  * @note This function does not reset the start condition to @c INITIAL .
  */
     void grib_yyrestart  (FILE * input_file )
 {
-    
+
 	if ( ! YY_CURRENT_BUFFER ){
         grib_yyensure_buffer_stack ();
 		YY_CURRENT_BUFFER_LVALUE =
@@ -2720,11 +2720,11 @@ static int grib_yy_get_next_buffer (void)
 
 /** Switch to a different input buffer.
  * @param new_buffer The new input buffer.
- * 
+ *
  */
     void grib_yy_switch_to_buffer  (YY_BUFFER_STATE  new_buffer )
 {
-    
+
 	/* TODO. We should be able to replace this entire function body
 	 * with
 	 *		grib_yypop_buffer_state();
@@ -2764,13 +2764,13 @@ static void grib_yy_load_buffer_state  (void)
 /** Allocate and initialize an input buffer state.
  * @param file A readable stream.
  * @param size The character buffer size in bytes. When in doubt, use @c YY_BUF_SIZE.
- * 
+ *
  * @return the allocated buffer state.
  */
     YY_BUFFER_STATE grib_yy_create_buffer  (FILE * file, int  size )
 {
 	YY_BUFFER_STATE b;
-    
+
 	b = (YY_BUFFER_STATE) grib_yyalloc( sizeof( struct grib_yy_buffer_state )  );
 	if ( ! b )
 		YY_FATAL_ERROR( "out of dynamic memory in grib_yy_create_buffer()" );
@@ -2793,11 +2793,11 @@ static void grib_yy_load_buffer_state  (void)
 
 /** Destroy the buffer.
  * @param b a buffer created with grib_yy_create_buffer()
- * 
+ *
  */
     void grib_yy_delete_buffer (YY_BUFFER_STATE  b )
 {
-    
+
 	if ( ! b )
 		return;
 
@@ -2818,7 +2818,7 @@ static void grib_yy_load_buffer_state  (void)
 
 {
 	int oerrno = errno;
-    
+
 	grib_yy_flush_buffer( b );
 
 	b->grib_yy_input_file = file;
@@ -2834,13 +2834,13 @@ static void grib_yy_load_buffer_state  (void)
     }
 
         b->grib_yy_is_interactive = file ? (isatty( fileno(file) ) > 0) : 0;
-    
+
 	errno = oerrno;
 }
 
 /** Discard all buffered characters. On the next scan, YY_INPUT will be called.
  * @param b the buffer state to be flushed, usually @c YY_CURRENT_BUFFER.
- * 
+ *
  */
     void grib_yy_flush_buffer (YY_BUFFER_STATE  b )
 {
@@ -2869,7 +2869,7 @@ static void grib_yy_load_buffer_state  (void)
  *  the current state. This function will allocate the stack
  *  if necessary.
  *  @param new_buffer The new state.
- *  
+ *
  */
 void grib_yypush_buffer_state (YY_BUFFER_STATE new_buffer )
 {
@@ -2899,7 +2899,7 @@ void grib_yypush_buffer_state (YY_BUFFER_STATE new_buffer )
 
 /** Removes and deletes the top of the stack, if present.
  *  The next element becomes the new top.
- *  
+ *
  */
 void grib_yypop_buffer_state (void)
 {
@@ -2923,7 +2923,7 @@ void grib_yypop_buffer_state (void)
 static void grib_yyensure_buffer_stack (void)
 {
 	grib_yy_size_t num_to_alloc;
-    
+
 	if (!(grib_yy_buffer_stack)) {
 
 		/* First allocation is just for 2 elements, since we don't know if this
@@ -2966,13 +2966,13 @@ static void grib_yyensure_buffer_stack (void)
 /** Setup the input buffer state to scan directly from a user-specified character buffer.
  * @param base the character buffer
  * @param size the size in bytes of the character buffer
- * 
+ *
  * @return the newly allocated buffer state object.
  */
 YY_BUFFER_STATE grib_yy_scan_buffer  (char * base, grib_yy_size_t  size )
 {
 	YY_BUFFER_STATE b;
-    
+
 	if ( size < 2 ||
 	     base[size-2] != YY_END_OF_BUFFER_CHAR ||
 	     base[size-1] != YY_END_OF_BUFFER_CHAR )
@@ -3001,14 +3001,14 @@ YY_BUFFER_STATE grib_yy_scan_buffer  (char * base, grib_yy_size_t  size )
 /** Setup the input buffer state to scan a string. The next call to grib_yylex() will
  * scan from a @e copy of @a str.
  * @param grib_yystr a NUL-terminated string to scan
- * 
+ *
  * @return the newly allocated buffer state object.
  * @note If you want to scan bytes that may contain NUL values, then use
  *       grib_yy_scan_bytes() instead.
  */
 YY_BUFFER_STATE grib_yy_scan_string (const char * grib_yystr )
 {
-    
+
 	return grib_yy_scan_bytes( grib_yystr, (int) strlen(grib_yystr) );
 }
 
@@ -3016,7 +3016,7 @@ YY_BUFFER_STATE grib_yy_scan_string (const char * grib_yystr )
  * scan from a @e copy of @a bytes.
  * @param grib_yybytes the byte buffer to scan
  * @param _grib_yybytes_len the number of bytes in the buffer pointed to by @a bytes.
- * 
+ *
  * @return the newly allocated buffer state object.
  */
 YY_BUFFER_STATE grib_yy_scan_bytes  (const char * grib_yybytes, grib_yy_size_t  _grib_yybytes_len )
@@ -3025,7 +3025,7 @@ YY_BUFFER_STATE grib_yy_scan_bytes  (const char * grib_yybytes, grib_yy_size_t  
 	char *buf;
 	grib_yy_size_t n;
 	grib_yy_size_t i;
-    
+
 	/* Get memory for full buffer, including space for trailing EOB's. */
 	n = (grib_yy_size_t) (_grib_yybytes_len + 2);
 	buf = (char *) grib_yyalloc( n  );
@@ -3079,16 +3079,16 @@ static void grib_yynoreturn grib_yy_fatal_error (const char* msg )
 /* Accessor  methods (get/set functions) to struct members. */
 
 /** Get the current line number.
- * 
+ *
  */
 int grib_yyget_lineno  (void)
 {
-    
+
     return grib_yylineno;
 }
 
 /** Get the input stream.
- * 
+ *
  */
 FILE *grib_yyget_in  (void)
 {
@@ -3096,7 +3096,7 @@ FILE *grib_yyget_in  (void)
 }
 
 /** Get the output stream.
- * 
+ *
  */
 FILE *grib_yyget_out  (void)
 {
@@ -3104,7 +3104,7 @@ FILE *grib_yyget_out  (void)
 }
 
 /** Get the length of the current token.
- * 
+ *
  */
 grib_yy_size_t grib_yyget_leng  (void)
 {
@@ -3112,7 +3112,7 @@ grib_yy_size_t grib_yyget_leng  (void)
 }
 
 /** Get the current token.
- * 
+ *
  */
 
 char *grib_yyget_text  (void)
@@ -3122,18 +3122,18 @@ char *grib_yyget_text  (void)
 
 /** Set the current line number.
  * @param _line_number line number
- * 
+ *
  */
 void grib_yyset_lineno (int  _line_number )
 {
-    
+
     grib_yylineno = _line_number;
 }
 
 /** Set the input stream. This does not discard the current
  * input buffer.
  * @param _in_str A readable stream.
- * 
+ *
  * @see grib_yy_switch_to_buffer
  */
 void grib_yyset_in (FILE *  _in_str )
@@ -3187,7 +3187,7 @@ static int grib_yy_init_globals (void)
 /* grib_yylex_destroy is for both reentrant and non-reentrant scanners. */
 int grib_yylex_destroy  (void)
 {
-    
+
     /* Pop the buffer stack, destroying each element. */
 	while(YY_CURRENT_BUFFER){
 		grib_yy_delete_buffer( YY_CURRENT_BUFFER  );
@@ -3213,7 +3213,7 @@ int grib_yylex_destroy  (void)
 #ifndef grib_yytext_ptr
 static void grib_yy_flex_strncpy (char* s1, const char * s2, int n )
 {
-		
+
 	int i;
 	for ( i = 0; i < n; ++i )
 		s1[i] = s2[i];
@@ -3238,7 +3238,7 @@ void *grib_yyalloc (grib_yy_size_t  size )
 
 void *grib_yyrealloc  (void * ptr, grib_yy_size_t  size )
 {
-		
+
 	/* The cast to (char *) in the following accommodates both
 	 * implementations that use char* generic pointers, and those
 	 * that use void* generic pointers.  It works with the latter
@@ -3257,6 +3257,3 @@ void grib_yyfree (void * ptr )
 #define YYTABLES_NAME "grib_yytables"
 
 #line 287 "gribl.l"
-
-
-

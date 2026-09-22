@@ -69,19 +69,19 @@ if( indicatorOfParameter == 34 && indicatorOfTypeOfLevel == 105)  { productDefin
 
 
 # Dew point
-if( indicatorOfParameter == 17)  { 	
+if( indicatorOfParameter == 17)  {
 	productDefinitionTemplateNumber = 1;
-	tigge_short_name                = '2d'; 
+	tigge_short_name                = '2d';
 	typeOfFirstFixedSurface         = 103;
 	scaleFactorOfFirstFixedSurface  = 0;
 	scaledValueOfFirstFixedSurface  = 2;
 }
 
 # 2Meter temp.
-if( indicatorOfParameter == 11 && indicatorOfTypeOfLevel == 105)  
-{ 
+if( indicatorOfParameter == 11 && indicatorOfTypeOfLevel == 105)
+{
 	productDefinitionTemplateNumber = 1;
-	tigge_short_name                = '2t'; 
+	tigge_short_name                = '2t';
 	typeOfFirstFixedSurface         = 103;
 	scaleFactorOfFirstFixedSurface  = 0;
 	scaledValueOfFirstFixedSurface  = 2;
@@ -100,9 +100,9 @@ if( indicatorOfParameter == 13)  { productDefinitionTemplateNumber=1;tigge_short
 if( indicatorOfParameter == 65)  { productDefinitionTemplateNumber=1;tigge_short_name = 'sd'; }
 
 # Snow fall
-if( indicatorOfParameter == 99)  { 
+if( indicatorOfParameter == 99)  {
 	productDefinitionTemplateNumber = 11;
-	tigge_short_name = 'sf'; 
+	tigge_short_name = 'sf';
 }
 
 
@@ -119,7 +119,7 @@ if(indicatorOfParameter == 61)   { productDefinitionTemplateNumber = 11;tigge_sh
 if(indicatorOfParameter == 114)  { productDefinitionTemplateNumber = 11;tigge_short_name = 'ttr'; }
 if(indicatorOfParameter == 167)  { productDefinitionTemplateNumber = 1;tigge_short_name = 'tcw'; }
 
-if( indicatorOfParameter == 33 && indicatorOfTypeOfLevel == 117)  
+if( indicatorOfParameter == 33 && indicatorOfTypeOfLevel == 117)
 { scaleFactorOfFirstFixedSurface=6;scaledValueOfFirstFixedSurface=2;typeOfFirstFixedSurface=109;productDefinitionTemplateNumber=1;tigge_short_name = 'u'; }
 
 if( indicatorOfParameter == 34 && indicatorOfTypeOfLevel == 117)  { scaleFactorOfFirstFixedSurface=6;scaledValueOfFirstFixedSurface=2;typeOfFirstFixedSurface=109;productDefinitionTemplateNumber=1;tigge_short_name = 'v'; }

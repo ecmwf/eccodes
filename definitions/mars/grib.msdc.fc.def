@@ -3,4 +3,3 @@
 meta verificationDate   g1verificationdate(dataDate, dataTime, startStep) : read_only;
 alias mars.date       = verificationDate;
 alias mars.step       = startStep;
-
