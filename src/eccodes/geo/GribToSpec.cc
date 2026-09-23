@@ -243,23 +243,30 @@ bool get_figure(codes_handle* h, std::string& value)
         { 11, "sun" },          // Sun, R = 695 990 000 m
     };
 
-    // 'shapeOfTheEarth' is a GRIB edition 2 concept (in edition 1 it is a hidden transient)
-    if (long edition = 0; codes_get_long(h, "edition", &edition) != CODES_SUCCESS || edition < 2) {
-        return false;
-    }
-
     long code = 0;
     if (codes_get_long(h, "shapeOfTheEarth", &code) != CODES_SUCCESS) {
+        value = "earth";
+    }
+    else if (code == 1) {
+        double R = 0;
+        ASSERT(CODES_SUCCESS == codes_get_double(h, "radiusInMetres", &R));
+        value = R"({"R":)" + std::to_string(R) + "}";
+    }
+    else if (code == 3 || code == 7 || code == 9) {
+        double a = 0;
+        double b = 0;
+        ASSERT(CODES_SUCCESS == codes_get_double(h, "earthMajorAxisInMetres", &a));
+        ASSERT(CODES_SUCCESS == codes_get_double(h, "earthMinorAxisInMetres", &b));
+        value = R"({"a":)" + std::to_string(a) + R"(,"b":)" + std::to_string(b) + "}";
+    }
+    else if (auto it = NAMED.find(code); it != NAMED.end()) {
+        value = it->second;
+    }
+    else {
         return false;
     }
 
-    // codes that are not tabulated are described by their size ('radius'/'semi_major_axis'/'semi_minor_axis')
-    if (auto it = NAMED.find(code); it != NAMED.end()) {
-        value = it->second;
-        return true;
-    }
-
-    return false;
+    return true;
 }
 
 
