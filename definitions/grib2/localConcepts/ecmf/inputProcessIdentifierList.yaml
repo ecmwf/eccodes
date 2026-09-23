@@ -69,7 +69,7 @@ models:
     versions:
       - version: null
 
-  - name: emo-earth
+  - name: em-earth
     start: 65531
     versions:
       - version: null

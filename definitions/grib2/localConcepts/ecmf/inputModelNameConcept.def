@@ -35,8 +35,8 @@
 # emo-1 (ID range: 65530-65530)
 'emo-1' = {inputProcessIdentifier=65530;}
 
-# emo-earth (ID range: 65531-65531)
-'emo-earth' = {inputProcessIdentifier=65531;}
+# em-earth (ID range: 65531-65531)
+'em-earth' = {inputProcessIdentifier=65531;}
 
 # era5-land (ID range: 65532-65532)
 'era5-land' = {inputProcessIdentifier=65532;}
