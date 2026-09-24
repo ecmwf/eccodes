@@ -20,10 +20,14 @@ namespace eccodes
 
 constexpr std::size_t fnv1a_hash(const char* str)
 {
-    std::size_t hash = 14695981039346656037ULL;
+    constexpr std::size_t fnv_offset_basis = sizeof(std::size_t) == 8 ? 14695981039346656037ULL : 2166136261U;
+    constexpr std::size_t fnv_prime = sizeof(std::size_t) == 8 ? 1099511628211ULL : 16777619U;
+
+    size_t hash = fnv_offset_basis;
+
     while (*str) {
         hash ^= static_cast<std::size_t>(*str++);
-        hash *= 1099511628211ULL;
+        hash *= fnv_prime;
     }
     return hash;
 }
