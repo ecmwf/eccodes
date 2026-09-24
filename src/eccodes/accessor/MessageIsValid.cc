@@ -407,6 +407,62 @@ int MessageIsValid::check_grid_increments()
     long iDirectionIncrementGiven = 0, jDirectionIncrementGiven = 0;
     long iDirectionIncrement = 0, jDirectionIncrement = 0;
 
+    char gridType[128] = {0,};
+    size_t len = sizeof(gridType);
+    if (grib_get_string(handle_, "gridType", gridType, &len) != GRIB_SUCCESS) {
+        return GRIB_SUCCESS;  // Cannot determine the grid. Nothing to do
+    }
+
+    // HEALPix (GRIB2, Grid definition template 3.150) does not encode Di/Dj at all,
+    // so both "increments given" bits must be zero. (There is no HEALPix in GRIB1)
+    if (edition_ == 2 && STR_EQUAL(gridType, "healpix")) {
+        long iGiven = 0, jGiven = 0;
+        if (grib_get_long(handle_, "iDirectionIncrementGiven", &iGiven) == GRIB_SUCCESS && iGiven != 0) {
+            grib_context_log(c, GRIB_LOG_ERROR, "%s: gridType=healpix but iDirectionIncrementGiven=%ld (must be 0)", TITLE, iGiven);
+            return GRIB_WRONG_GRID;
+        }
+        if (grib_get_long(handle_, "jDirectionIncrementGiven", &jGiven) == GRIB_SUCCESS && jGiven != 0) {
+            grib_context_log(c, GRIB_LOG_ERROR, "%s: gridType=healpix but jDirectionIncrementGiven=%ld (must be 0)", TITLE, jGiven);
+            return GRIB_WRONG_GRID;
+        }
+        return GRIB_SUCCESS;  // No Di/Dj keys to check
+    }
+
+    // Gaussian grids have no Dj: the number of parallels between a pole and the
+    // equator (N) is used instead. Only Di is encoded and it may be either given
+    // (and then present) or not given (and then missing).
+    // Note: the reduced variants are already excluded by the PLPresent check above
+    if (STR_EQUAL(gridType, "regular_gg") || STR_EQUAL(gridType, "rotated_gg")) {
+        // The i/j flags are handled differently in the two editions:
+        //  GRIB2: separate bits 3 and 4 of the resolution and component flags.
+        //         Templates 3.40/3.41 have no Dj, so bit 4 must be zero
+        //  GRIB1: a single bit (ijDirectionIncrementGiven) covers both directions,
+        //         so iDirectionIncrementGiven and jDirectionIncrementGiven are
+        //         aliases of the same bit and it cannot be required to be zero
+        if (edition_ == 2) {
+            if (grib_get_long(handle_, "jDirectionIncrementGiven", &jDirectionIncrementGiven) == GRIB_SUCCESS &&
+                jDirectionIncrementGiven != 0) {
+                grib_context_log(c, GRIB_LOG_ERROR,
+                                 "%s: gridType=%s has no jDirectionIncrement but jDirectionIncrementGiven=%ld (must be 0)",
+                                 TITLE, gridType, jDirectionIncrementGiven);
+                return GRIB_WRONG_GRID;
+            }
+        }
+        if (grib_get_long(handle_, "iDirectionIncrementGiven", &iDirectionIncrementGiven) == GRIB_SUCCESS) {
+            err = 0;
+            const bool iIncrementMissing = (grib_is_missing(handle_, "iDirectionIncrement", &err) == 1 && !err);
+            if (iDirectionIncrementGiven && iIncrementMissing) {
+                grib_context_log(c, GRIB_LOG_ERROR, "%s: iDirectionIncrementGiven=1 but iDirectionIncrement=missing", TITLE);
+                return GRIB_WRONG_GRID;
+            }
+            if (!iDirectionIncrementGiven && !iIncrementMissing) {
+                grib_context_log(c, GRIB_LOG_ERROR, "%s: iDirectionIncrementGiven=0 but iDirectionIncrement!=missing", TITLE);
+                return GRIB_WRONG_GRID;
+            }
+        }
+        return GRIB_SUCCESS;  // No Dj key to check
+    }
+
     if (grib_get_long(handle_, "iDirectionIncrementGiven", &iDirectionIncrementGiven) == GRIB_SUCCESS &&
         grib_get_long(handle_, "jDirectionIncrementGiven", &jDirectionIncrementGiven) == GRIB_SUCCESS &&
         grib_get_long(handle_, "iDirectionIncrement", &iDirectionIncrement) == GRIB_SUCCESS &&
