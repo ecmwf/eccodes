@@ -1967,5 +1967,3 @@ def codes_bufr_multi_element_constant_arrays_off():
     @exception GribInternalError
     """
     _internal.codes_c_bufr_multi_element_constant_arrays_off()
-
-

@@ -227,8 +227,8 @@ int grib_c_find_nearest_four_single(int* gid, int* INPUT, double* INPUT, double*
 * Get the binary string message for a grib.
 *
 * Set the 3rd argument to nothing in 'cstring_output_allocate_size'.
-* This is kind of difficult to explain, but, *msg will point directly to 
-* the binary message data of the current grib (which is stored in 
+* This is kind of difficult to explain, but, *msg will point directly to
+* the binary message data of the current grib (which is stored in
 * handle->buffer->data if I remember correctly) so freeing it will cause
 * the binary message data in the grib_handle structure to be freed. This
 * is a problem as grib_api does not know that, so it tries to free it
@@ -251,6 +251,3 @@ void grib_c_gts_header_on();
 void grib_c_gts_header_off();
 void grib_c_set_definitions_path(const char* path);
 void grib_c_set_samples_path(const char* path);
-
-
-

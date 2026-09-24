@@ -11,6 +11,6 @@
 8 8 Pressure anomaly (Pa)
 9 9 Geopotential height anomaly (gpm)
 10 10 Density (kg m-3)
-# 11-191 Reserved 
-# 192-254 Reserved for local use 
-255 255 Missing 
+# 11-191 Reserved
+# 192-254 Reserved for local use
+255 255 Missing

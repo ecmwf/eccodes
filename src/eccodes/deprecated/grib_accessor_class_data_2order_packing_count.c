@@ -14,10 +14,10 @@
 
    START_CLASS_DEF
    CLASS      = accessor
-   SUPER      = grib_accessor_class_unsigned 
+   SUPER      = grib_accessor_class_unsigned
    IMPLEMENTS = init
-   IMPLEMENTS = unpack_long  
-   MEMBERS = const char* offsetsection 
+   IMPLEMENTS = unpack_long
+   MEMBERS = const char* offsetsection
    MEMBERS = const char* p1
    MEMBERS = const char* two_ordr_spd
    MEMBERS = const char* plus1_spd

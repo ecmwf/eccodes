@@ -17,10 +17,9 @@
 56 56 Changes of amount in atmosphere (see Note 1) mol s-1
 57 57 Total yearly average burden of the atmosphere mol
 58 58 Total yearly averaged atmospheric loss (see Note 1) mol s-1
-#59-99 59-99 Reserved 
+#59-99 59-99 Reserved
 100 100 Surface area density (aerosol) m-1
 101 101 Atmosphere optical thickness m
 #102-191 102-191 Reserved
 #192-254 192-254 Reserved for local use
-255 255 Missing 
-
+255 255 Missing

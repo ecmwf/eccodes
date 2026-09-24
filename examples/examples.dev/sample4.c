@@ -24,15 +24,15 @@ int main(int argc, char *argv[])
 		printf("ERROR: Unable to create grib handle\n");
 		exit(1);
 	}
-	
+
 	/* set values as appropriate in the grib handle header */
 	CHECK(grib_set_long(h,"gribTablesVersionNo", 210));
 	CHECK(grib_set_long(h,"indicatorOfParameter",80 ));
-	
+
 	CHECK(grib_set_long(h,"indicatorOfTypeOfLevel",1 ));
 	CHECK(grib_set_long(h,"topLevel",0));
   CHECK(grib_set_long(h,"bottomLevel",0));
-	
+
 	CHECK(grib_set_long(h,"dataDate",20021201 ));
 	CHECK(grib_set_long(h,"dataTime",1200 ));
 
@@ -45,17 +45,17 @@ int main(int argc, char *argv[])
 	CHECK(grib_set_double(h,"jDirectionIncrementInDegrees",0.5));
 	CHECK(grib_set_double(h,"iDirectionIncrementInDegrees",0.5));
 
-	
+
 	/* get number of points calculated automatically by the grib_api */
 	CHECK(grib_get_long( h,"numberOfPointsAlongAParallel",&numberOfPointsAlongAParallel));
 	CHECK(grib_get_long( h,"numberOfPointsAlongAMeridian",&numberOfPointsAlongAMeridian));
 
 	numberOfPoints=numberOfPointsAlongAMeridian*numberOfPointsAlongAMeridian;
-	
+
 	/* allocate the values array */
 	values=(double*)malloc(numberOfPoints*sizeof(double));
 
-	/* load the values array */	
+	/* load the values array */
 	for (j=0;j<numberOfPointsAlongAMeridian;j++) {
 		for (i=0;i<numberOfPointsAlongAParallel;i++) {
 			k=i+numberOfPointsAlongAParallel*j;
@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
   }
 
   grib_get_message(h,&buffer,&size);
-  
+
 	if(fwrite(buffer,1,size,f) != size) {
       perror(filename);
       exit(1);
@@ -84,9 +84,9 @@ int main(int argc, char *argv[])
         perror(filename);
         exit(1);
 	}
-	
+
 	grib_handle_delete( h);
-	
+
 	return ret;
 
 }

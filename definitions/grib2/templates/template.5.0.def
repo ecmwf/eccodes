@@ -4,4 +4,3 @@
 
 include "grib2/templates/template.5.packing.def"
 include "grib2/templates/template.5.original_values.def"
-

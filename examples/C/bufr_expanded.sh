@@ -32,7 +32,7 @@ ${examples_dir}/c_bufr_expanded $f > $fTmp 2> $REDIRECT
 #Check if there is any output
 [ -s ${fTmp} ]
 
-#cat $fTmp 
+#cat $fTmp
 
 #Clean up
 rm -f ${fTmp}

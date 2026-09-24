@@ -27,7 +27,7 @@ int compare(const void *a, const void *b)
 {
 	double da = *(double*)a;
 	double db = *(double*)b;
-	return da == db ? 0 : ( da > db ? 1 : -1 ); 
+	return da == db ? 0 : ( da > db ? 1 : -1 );
 }
 
 int main(int argc, const char *argv[])
@@ -60,14 +60,14 @@ int main(int argc, const char *argv[])
 
 	if((h1 = grib_handle_new_from_file(NULL,in1,&e)) == NULL )
 	{
-		if(e == 0) e = -1; 
+		if(e == 0) e = -1;
 		GRIB_CHECK(e,argv[1]);
 		exit(1);
 	}
 
 	if((h2 = grib_handle_new_from_file(NULL,in2,&e)) == NULL )
 	{
-		if(e == 0) e = -1; 
+		if(e == 0) e = -1;
 		GRIB_CHECK(e,argv[2]);
 		exit(1);
 	}
@@ -118,7 +118,7 @@ int main(int argc, const char *argv[])
 		printf("%g\n",d/(d1+d2));
 	}
 
-	if(1) 
+	if(1)
 	{
 		double d1 = 0;
 		double d2 = 0;
@@ -151,7 +151,7 @@ int main(int argc, const char *argv[])
 		d = 0;
 		for(i = 0; i < s1; i++)
 		{
-			if(v1[i] == 0 && v2[i] == 0) 
+			if(v1[i] == 0 && v2[i] == 0)
 				d += 0.0;
 			else
 				d += fabs(v1[i]-v2[i])/(fabs(v1[i]) + fabs(v2[i]));
@@ -163,4 +163,3 @@ int main(int argc, const char *argv[])
 
 	return 0;
 }
-

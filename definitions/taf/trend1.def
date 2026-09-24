@@ -10,7 +10,7 @@ if (! nosigPresent) {
 				rename(g,changeIndicatorCodedTrend1);
 				constant changeIndicatorTrend1="BECOMING";
 				group g : dump; non_alpha na;
-		} 
+		}
 		if (!defined(changeIndicatorTrend1) && g is "TEMPO" ) {
 				alias presentTrend1=one;
 				rename(g,changeIndicatorCodedTrend1);
@@ -40,9 +40,9 @@ if (! nosigPresent) {
 
 				include "taf/horizontalVisibility_Trend1.def";
 
-				if ( ! isCavokTrend1) { 
+				if ( ! isCavokTrend1) {
 						include "taf/present_weather_Trend1.def";
-						include "taf/clouds_Trend1.def"; 
+						include "taf/clouds_Trend1.def";
 				}
 		} else {
 				if (substr(g,0,2) is "FM") {
@@ -56,9 +56,9 @@ if (! nosigPresent) {
 
 						include "taf/horizontalVisibility_Trend1.def";
 
-						if ( ! isCavokTrend1) { 
+						if ( ! isCavokTrend1) {
 								include "taf/present_weather_Trend1.def";
-								include "taf/clouds_Trend1.def"; 
+								include "taf/clouds_Trend1.def";
 						}
 				}
 		}
@@ -81,5 +81,3 @@ if (! nosigPresent) {
 
 
 }
-
-

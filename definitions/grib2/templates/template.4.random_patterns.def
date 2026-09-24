@@ -1,5 +1,5 @@
 # Random patterns - SKEB / SPPT / SPP
- 
+
 unsigned[2] randomFieldNumber : dump,edition_specific;
 unsigned[2] totalNumberOfRandomFields : dump,edition_specific;
 unsigned[2] spatioTemporalScaleNumber = missing() : can_be_missing,dump,edition_specific;

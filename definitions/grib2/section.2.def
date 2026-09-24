@@ -64,4 +64,3 @@ if ( addEmptySection2 == 0 ) {
 }
 
 section_padding section2Padding : read_only;
-

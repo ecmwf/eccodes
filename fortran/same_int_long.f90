@@ -73,4 +73,3 @@ program same_int_long
     write (*, '(i1)') 1
   end if
 end program same_int_long
-

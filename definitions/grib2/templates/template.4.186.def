@@ -15,4 +15,3 @@ include "grib2/templates/template.4.statistical.def"
 # MARS includes
 
 include "mars/mars.wavelength.def"
-

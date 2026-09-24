@@ -24,13 +24,13 @@ BEGIN {
 
 /TEST\:/	{test_name = $2}
 /PASS\:/	{ if (JMETER=="true")
-			for (key in times) jmeter_sample(dir,test_name,key,times[key],TIMESTAMP,"true") 
+			for (key in times) jmeter_sample(dir,test_name,key,times[key],TIMESTAMP,"true")
 		  else
 			junit_sample(dir,test_name,times["real"], "true")
 		}
 
 /FAIL\:/	{ if (JMETER=="true")
-			for (key in times) jmeter_sample(dir,test_name,key,times[key],TIMESTAMP,"false") 
+			for (key in times) jmeter_sample(dir,test_name,key,times[key],TIMESTAMP,"false")
 		  else
 			junit_sample(dir,test_name,times["real"], "false")
 		}
@@ -84,4 +84,3 @@ function get_dir(dir) {
 	len = split(dir,bits,"/")
 	return bits[len]
 }
-

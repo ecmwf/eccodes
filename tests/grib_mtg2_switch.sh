@@ -3,7 +3,7 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
+#
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
@@ -1549,7 +1549,7 @@ for i in "${!cases[@]}"; do
         grib_check_key_equals ${cases[i]} shortName         "max_cape"
         grib_check_key_equals ${cases[i]} paramIdFilename   "paramId.chemsplit.def"
         grib_check_key_equals ${cases[i]} shortNameFilename "shortName.chemsplit.def"
-    
+
     # Otherwise we are post-MTG2 so we expect new paramId and to read the post-MTG2 defs
     else
         grib_check_key_equals ${cases[i]} paramId           "237287"

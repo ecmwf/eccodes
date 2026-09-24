@@ -7,7 +7,7 @@ foreach my $x ( qw(class type stream) )
 	my $table = "metdb::grib_$x";
 	eval "use $table";
 
-	my  @params = $table->find({},[qw(grib_code)]); 
+	my  @params = $table->find({},[qw(grib_code)]);
 
 	open(STDOUT,">$x.table");
 

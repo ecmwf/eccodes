@@ -263,5 +263,3 @@ size_t levenshteinDistance(const char* a, const char* b)
     }
     return prev[n];
 }
-
-

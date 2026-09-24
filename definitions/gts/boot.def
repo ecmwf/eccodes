@@ -2,7 +2,7 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
+#
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
@@ -47,5 +47,5 @@ meta lengthOfHeaders evaluate(endOfHeadersMarker-startOfHeaders);
 meta md5Headers md5(startOfHeaders, lengthOfHeaders);
 
 ascii[4] endMark;
-position totalLength; 
+position totalLength;
 alias ls.totalLength=totalLength;

@@ -10,4 +10,3 @@ if (edition == 2) {
   alias mars.time = timeOfForecast ;
  }
 }
-

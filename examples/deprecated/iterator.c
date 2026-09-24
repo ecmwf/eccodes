@@ -22,7 +22,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "grib_api.h"  
+#include "grib_api.h"
 
 void usage(char* prog) {
   printf("Usage: %s grib_file\n",prog);
@@ -37,10 +37,10 @@ int main(int argc, char** argv) {
   char* filename = NULL;
 
   /* Message handle. Required in all the grib_api calls acting on a message.*/
-  grib_handle *h = NULL;   
+  grib_handle *h = NULL;
   /* Iterator on lat/lon/values.*/
-  grib_iterator* iter=NULL;  
-  
+  grib_iterator* iter=NULL;
+
   if (argc != 2) usage(argv[0]);
 
   filename=strdup(argv[1]);
@@ -52,34 +52,34 @@ int main(int argc, char** argv) {
   }
 
   /* Loop on all the messages in a file.*/
-  while ((h = grib_handle_new_from_file(0,in,&err)) != NULL ) { 
+  while ((h = grib_handle_new_from_file(0,in,&err)) != NULL ) {
 	/* Check of errors after reading a message. */
-    if (err != GRIB_SUCCESS) GRIB_CHECK(err,0);                       
+    if (err != GRIB_SUCCESS) GRIB_CHECK(err,0);
 
 	/* Get the double representing the missing value in the field. */
-	GRIB_CHECK(grib_get_double(h,"missingValue",&missingValue),0);  
+	GRIB_CHECK(grib_get_double(h,"missingValue",&missingValue),0);
 
 	/* A new iterator on lat/lon/values is created from the message handle h. */
-	iter=grib_iterator_new(h,0,&err);                                     
-    if (err != GRIB_SUCCESS) GRIB_CHECK(err,0);                       
+	iter=grib_iterator_new(h,0,&err);
+    if (err != GRIB_SUCCESS) GRIB_CHECK(err,0);
 
     n = 0;
 	/* Loop on all the lat/lon/values. */
-    while(grib_iterator_next(iter,&lat,&lon,&value)) {   
+    while(grib_iterator_next(iter,&lat,&lon,&value)) {
 	  /* You can now print lat and lon,  */
-      printf("- %d - lat=%f lon=%f value=",n,lat,lon);   
+      printf("- %d - lat=%f lon=%f value=",n,lat,lon);
 	  /* decide what to print if a missing value is found. */
-      if (value == missingValue ) printf("missing\n");   
+      if (value == missingValue ) printf("missing\n");
 	  /* and print the value if is not missing. */
 	  else printf("%f\n",value);
       n++;
     }
 
 	/* At the end the iterator is deleted to free memory. */
-    grib_iterator_delete(iter);               
+    grib_iterator_delete(iter);
 
     /* At the end the grib_handle is deleted to free memory. */
-    grib_handle_delete(h);            
+    grib_handle_delete(h);
   }
 
 

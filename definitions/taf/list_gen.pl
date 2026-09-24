@@ -15,4 +15,3 @@ print "95|25";
 print "96|30";
 print "97|35";
 print "98|40 or more";
-

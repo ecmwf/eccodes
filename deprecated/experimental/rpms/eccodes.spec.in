@@ -25,14 +25,14 @@ Release: %{rel}
 Distribution: @LINUX_DISTRIBUTION_NAME@ @LINUX_DISTRIBUTION_VERSION@
 
 Vendor: ECMWF
-License: Apache Licence version 2.0 
+License: Apache Licence version 2.0
 Group: Scientific/Libraries
 Source: %{pkgname}-%{version}.tar.gz
 %if %{_requires_jasper}
 Requires: libjasper
 %endif
 %if %{_requires_openjpeg}
-Requires: openjpeg 
+Requires: openjpeg
 %endif
 Buildroot: /tmp/%{pkgname}-root
 URL: http://www.ecmwf.int
@@ -40,7 +40,7 @@ Prefix: %{prefix}
 BuildArchitectures: %{_target_cpu}
 Packager: Software Support <software.support@ecmwf.int>
 
-%description 
+%description
 The ECMWF ecCodes package is an application program interface accessible from C, FORTRAN and Python programs developed for encoding and decoding WMO FM-92 GRIB edition 1 and edition 2 messages.
 
 %changelog
@@ -128,4 +128,3 @@ and edition 2 messages.
 %prefix/include/*.mod
 %prefix/lib*/*f90*
 %endif
-

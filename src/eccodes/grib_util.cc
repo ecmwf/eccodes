@@ -1243,7 +1243,7 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
                 // Make sure the current subset truncation values are preserved if valid, otherwise use the spec truncation value
                 SET_LONG_VALUE("JS", std::min(current_JS, spec->truncation));
                 SET_LONG_VALUE("KS", std::min(current_KS, spec->truncation));
-                SET_LONG_VALUE("MS", std::min(current_MS, spec->truncation)); 
+                SET_LONG_VALUE("MS", std::min(current_MS, spec->truncation));
 
                 if (packing_spec->packing == GRIB_UTIL_PACKING_USE_PROVIDED && editionNumber == 2) {
                     SET_LONG_VALUE("computeLaplacianOperator", 1);
@@ -1772,7 +1772,7 @@ static grib_handle* grib_util_set_spec_(grib_handle* h,
                 // Make sure the current subset truncation values are preserved if valid, otherwise use the spec truncation value
                 SET_LONG_VALUE("JS", std::min(current_JS, spec->truncation));
                 SET_LONG_VALUE("KS", std::min(current_KS, spec->truncation));
-                SET_LONG_VALUE("MS", std::min(current_MS, spec->truncation)); 
+                SET_LONG_VALUE("MS", std::min(current_MS, spec->truncation));
 
                 if (packing_spec->packing == GRIB_UTIL_PACKING_USE_PROVIDED && editionNumber == 2) {
                     SET_LONG_VALUE("computeLaplacianOperator", 1);

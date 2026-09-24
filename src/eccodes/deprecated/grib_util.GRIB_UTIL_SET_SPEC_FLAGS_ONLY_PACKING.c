@@ -1,6 +1,6 @@
 /* ECC-1269 */
 /* Old logic moved from src/grib_util.c function:grib_util_set_spec2  */
- 
+
     if (flags & GRIB_UTIL_SET_SPEC_FLAGS_ONLY_PACKING) {
         if (packing_spec->packing == GRIB_UTIL_PACKING_USE_PROVIDED &&
             strcmp(input_packing_type, "grid_simple_matrix")) {
@@ -147,4 +147,3 @@
 
         return h;
     } /* flags & GRIB_UTIL_SET_SPEC_FLAGS_ONLY_PACKING */
-

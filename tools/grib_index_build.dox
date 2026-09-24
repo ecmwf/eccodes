@@ -1,17 +1,17 @@
 /*!  \page grib_index_build grib_index_build
-\section DESCRIPTION 
+\section DESCRIPTION
  Build an index file for a set of input grib files.
 
-\section USAGE 
- grib_index_build 
- [options] grib_file grib_file ... 
+\section USAGE
+ grib_index_build
+ [options] grib_file grib_file ...
 
-\section OPTIONS 
+\section OPTIONS
 -f  \n Force. Force the execution not to fail on error.
- \n \n -o output_index_file \n 
+ \n \n -o output_index_file \n
 		Output is written to output_index_file.
 		If an output index file is required and -o is not used, the output index is written to gribidx
- \n \n -k key1,key2,... \n 
+ \n \n -k key1,key2,... \n
 		Specify a list of keys to index on. By default the input files are indexed on the MARS keys.
 		For each key a string (key:s) or a double (key:d) or an integer (key:i)
 		type can be requested.
@@ -21,14 +21,14 @@
  \n \n -M  \n Multi-field support off. Turn off support for multiple fields in single grib message.
  \n \n -N  \n Do not compress index.
 		By default the index is compressed to remove keys with only one value.
- \n \n 
+ \n \n
 \section grib_index_build_examples grib_index_build examples
 -# By default grib_index_build will index on the MARS keys. \n
-\verbatim 
+\verbatim
 > grib_index_build ../data/reduced*.grib1 ../data/regular*.grib1 ../data/reduced*.grib2
-\endverbatim\n 
--# To specify a custom list of keys to index on, use the -k option.\n 
-\verbatim 
+\endverbatim\n
+-# To specify a custom list of keys to index on, use the -k option.\n
+\verbatim
 > grib_index_build -k paramId,dataDate ../data/reduced*.grib1 ../data/regular*.grib1 ../data/reduced*.grib2
-\endverbatim\n 
+\endverbatim\n
 */

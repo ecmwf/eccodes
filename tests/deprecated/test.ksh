@@ -25,7 +25,7 @@ do
 	echo
 	echo $file
 	echo
-	
+
 	ok=1
 	for t in  `cat tests| grep -v "#" `
 	do
@@ -45,7 +45,6 @@ do
 	else
 		echo $file >> pass.t
 	fi
-	
+
 
 done < todo
-

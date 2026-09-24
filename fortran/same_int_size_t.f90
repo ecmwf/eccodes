@@ -73,4 +73,3 @@ program same_int_size_t
     write (*, '(i1)') 1
   end if
 end program same_int_size_t
-

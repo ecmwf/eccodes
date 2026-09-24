@@ -162,4 +162,3 @@ program test
   print *, 'kind_of_long_long=', kind_of_long_long()
 
 end program test
-

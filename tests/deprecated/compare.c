@@ -30,7 +30,7 @@ const double maxAbsoluteError = 0;
 #define		ISECTION_3	2
 #define		ISECTION_4	512
 
-#define		RSECTION_2	512	
+#define		RSECTION_2	512
 #define		RSECTION_3	2
 #define		RSECTION_4	1
 
@@ -163,19 +163,19 @@ double bucket_size(grib_handle* g)
 	unsigned long one  = 1;
 	double z,o,s,d,reference_value;
 	int err=0;
-  
+
 	err=grib_get_double(g,"referenceValue",&reference_value);
 	if (err!=GRIB_SUCCESS) return 0.0;
-	
+
 	grib_get_long(g,"binaryScaleFactor",&binary_scale_factor);
 	if (err!=GRIB_SUCCESS) return 0.0;
-	
+
 	grib_get_long(g,"numberOfBitsContainingEachPackedValue",&bits);
 	if (err!=GRIB_SUCCESS) return 0.0;
-	
+
 	grib_get_long(g,"decimalScaleFactor",&decimal_scale_factor);
 	if (err!=GRIB_SUCCESS) return 0.0;
-	
+
 	s = grib_power(binary_scale_factor,2);
 	d = grib_power(-decimal_scale_factor,10) ;
 
@@ -190,7 +190,7 @@ static double err(double A, double B)
 {
 	double relativeError;
 
-	if(fabs(A) <= maxAbsoluteError || fabs(B) <= maxAbsoluteError) 
+	if(fabs(A) <= maxAbsoluteError || fabs(B) <= maxAbsoluteError)
 		relativeError = fabs(A-B);
 	else if (fabs(B) > fabs(A))
 		relativeError = fabs((A - B) / B);
@@ -212,10 +212,10 @@ extern void gribex_(long*, long*, long*, double*, long*, double*, long*, double*
 static int cgribex(
 		long miss,
 
-		long ksec0[],long   ksec1[], 
-		long ksec2[],double rsec2[], 
-		long ksec3[],double rsec3[], 
-		long ksec4[],double rsec4[], 
+		long ksec0[],long   ksec1[],
+		long ksec2[],double rsec2[],
+		long ksec3[],double rsec3[],
+		long ksec4[],double rsec4[],
 		long sec4len,
 
 		char *buffer,
@@ -271,7 +271,7 @@ int compare_values(double* v1,double* v2,int count,const char *what)
 		fprintf(stderr,"value no %d out of %d %s v1=%g v2=%g abs=%g rel=%g\n",j,count,what,v1[j], v2[j],v1[j]-v2[j],maxError);
 		return 1;
 	}
-	
+
 	return 0;
 }
 
@@ -352,7 +352,7 @@ double *values;
 	values = (double*)malloc(sizeof(double)*(count+100000));
 
 	sec4len = count +100000;
-	if((err = grib_get_message(g,&buffer,&size))) 
+	if((err = grib_get_message(g,&buffer,&size)))
 	{
 		fprintf(stderr,"Cannot get message %d\n",err);
 		goto foo;
@@ -529,7 +529,7 @@ char   *b;
 	b = (char*)malloc(sizeof(char)*(count+100000));
 
 	sec4len = count +100000;
-	if((err = grib_get_message(g,&buffer,&size))) 
+	if((err = grib_get_message(g,&buffer,&size)))
 	{
 		fprintf(stderr,"Cannot get message %d\n",err);
 		goto foo;

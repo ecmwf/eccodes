@@ -71,10 +71,10 @@ if ($compare) {
 #@diffs = diff( \%map1, \%map2 );
 #exit 0;
 #print @$_ for map{
-#    @$_ 
-#} diff( 
-#    [ split "\n", Dumper( \%map1 ) ], 
-#    [ split "\n", Dumper( \%map2 ) ] 
+#    @$_
+#} diff(
+#    [ split "\n", Dumper( \%map1 ) ],
+#    [ split "\n", Dumper( \%map2 ) ]
 #);
 
 print "\nTesting now...\n";
@@ -121,11 +121,11 @@ done_testing();
 # -------------------------------------------------------------------------
 sub process {
     my ($filename) = @_;
-    
+
     open FILE, $filename or die "Tried to open $filename\n$!";
     my @lines = <FILE>;
     close(FILE);
-    
+
     my %map1 = ();
     my %map2 = ();  # inner map
     my $lineNum = 0;

@@ -8,5 +8,3 @@ else
 {
 	alias mars.origin = centre;
 }
-
-

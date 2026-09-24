@@ -5,7 +5,7 @@ use the -DENABLE_PYTHON=ON in the cmake step:
 
   cmake /path/to/src -DENABLE_PYTHON=ON
 
-This will enable the build of the Python bindings with 
+This will enable the build of the Python bindings with
 NumPy support enabled. Python needs to be in the path
 and, of course, the NumPy package installed.
 

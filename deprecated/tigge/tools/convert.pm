@@ -74,10 +74,10 @@ sub Grib1ToGrib2 {
             my %key_value;
 
         	while( my ( $key, $value ) = $sth2->fetchrow_array() ){
-	
-				$key_value{ $key } = $value  if( $value ne "255" and $value ne "pressure level [Pa]" )		            
-            }	
-    	
+
+				$key_value{ $key } = $value  if( $value ne "255" and $value ne "pressure level [Pa]" )
+            }
+
         	$result{ $grib1 . "_" . $levtype } = \%key_value
         }
 	}
@@ -99,8 +99,8 @@ sub Grib1ToNewId {
 
     while( my ( $NewId ) = $sth1->fetchrow_array() ){
 
-		my $grib1 = $NewId; 
-		$grib1 =~ s/^(\d\d\d)(\d\d\d)\Z/\2.\1/; 
+		my $grib1 = $NewId;
+		$grib1 =~ s/^(\d\d\d)(\d\d\d)\Z/\2.\1/;
 		$grib1 =~ s/^(\d{1,3})\Z/\1.128/;
 
 		$grib1 =~ s/^0*//;

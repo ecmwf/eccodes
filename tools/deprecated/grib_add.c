@@ -86,7 +86,7 @@ int main(int argc, const char *argv[])
 
 	if(result)
 	{
-		const void *buffer; 
+		const void *buffer;
 		GRIB_CHECK(grib_set_double_array(result,"values",values,size),argv[i]);
 		GRIB_CHECK(grib_get_message(result,&buffer,&size),argv[0]);
 

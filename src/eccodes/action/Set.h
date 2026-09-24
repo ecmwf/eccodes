@@ -33,4 +33,3 @@ public:
 
 grib_action* grib_action_create_set(grib_context* context,
                                     const char* name, grib_expression* expression, int nofail);
-

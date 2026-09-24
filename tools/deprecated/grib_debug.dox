@@ -1,21 +1,21 @@
 /*!  \page grib_debug grib_debug
-\section DESCRIPTION 
+\section DESCRIPTION
  Dump the content of a grib file in debug mode.
 
-\section USAGE 
- grib_debug 
+\section USAGE
+ grib_debug
  [options] grib_file grib_file ...
 
-\section OPTIONS 
+\section OPTIONS
 -V  \n Version.
- \n \n 
+ \n \n
 \section grib_debug_examples grib_debug examples
 
 Dumping in a WMO documentation style with hexadecimal octet values (-H)\n
 and with the aliases of each key listed in square brackets (-a).\n\n
 grib_dump -Ha ../data/reduced_gaussian_model_level.grib1\n
 \verbatim
-***** FILE: ../data/reduced_gaussian_model_level.grib1 
+***** FILE: ../data/reduced_gaussian_model_level.grib1
 ======================   MESSAGE 1 ( length=10142 )            ======================
 ======================   SECTION_0 ( length=0, padding=0 )     ======================
 1-4       identifier = GRIB
@@ -47,7 +47,7 @@ grib_dump -Ha ../data/reduced_gaussian_model_level.grib1\n
 27-28     decimalScaleFactor = 2 ( 0x00 0x02 )
 29-40     reservedNeedNotBePresent = 12 {
                00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00
-            } # pad reservedNeedNotBePresent 
+            } # pad reservedNeedNotBePresent
 41        localDefinitionNumber = 1 ( 0x01 )
 42        marsClass = 1 ( 0x01 ) [Operational archive (mars/class.table) ] [mars.class]
 43        marsType = 2 ( 0x02 ) [Analysis (mars/type.table) ] [ls.dataType, mars.type]
@@ -57,7 +57,7 @@ grib_dump -Ha ../data/reduced_gaussian_model_level.grib1\n
 51        numberOfForecastsInEnsemble = 0 ( 0x00 )
 52        padding_local1_1 = 1 {
                      00
-                  } # pad padding_local1_1 
+                  } # pad padding_local1_1
 ======================   SECTION_2 ( length=896, padding=0 )   ======================
 1-3       section2Length = 896 ( 0x00 0x03 0x80 )
 4         numberOfVerticalCoordinateValues = 184 ( 0xB8 ) [NV, numberOfCoordinatesValues]
@@ -75,33 +75,33 @@ grib_dump -Ha ../data/reduced_gaussian_model_level.grib1\n
 28        scanningMode = 0 [00000000]
 29-32     padding_grid4_1 = 4 {
                   00, 00, 00, 00
-               } # pad padding_grid4_1 
+               } # pad padding_grid4_1
 33-768    pv = (184,736) {
-         0,    2.00004,    3.98083,    7.38719,    12.9083,    21.4136,    33.9529,    51.7466, 
-   76.1677,    108.716,    150.986,    204.637,    271.356,    352.824,    450.686,    566.519, 
-   701.813,    857.946,    1036.17,    1237.59,    1463.16,    1713.71,    1989.87,    2292.16, 
-    2620.9,     2976.3,    3358.43,     3767.2,    4202.42,    4663.78,    5150.86,    5663.16, 
-   6199.84,    6759.73,    7341.47,    7942.93,    8564.62,     9208.3,    9873.56,    10558.9, 
-   11262.5,    11982.7,    12713.9,    13453.2,      14192,    14922.7,    15638.1,    16329.6, 
-   16990.6,    17613.3,      18191,      18717,    19184.5,    19587.5,    19919.8,    20175.4, 
-   20348.9,    20434.2,    20426.2,      20319,      20107,    19785.4,    19348.8,    18798.8, 
-   18141.3,    17385.6,    16544.6,    15633.6,    14665.6,    13653.2,    12608.4,    11543.2, 
-   10471.3,    9405.22,    8356.25,    7335.16,    6353.92,     5422.8,    4550.21,    3743.46, 
-   3010.15,     2356.2,    1784.85,    1297.66,    895.194,    576.314,    336.772,    162.043, 
-   54.2083,    6.57563,    0.00316,          0,          0,          0,          0,          0, 
+         0,    2.00004,    3.98083,    7.38719,    12.9083,    21.4136,    33.9529,    51.7466,
+   76.1677,    108.716,    150.986,    204.637,    271.356,    352.824,    450.686,    566.519,
+   701.813,    857.946,    1036.17,    1237.59,    1463.16,    1713.71,    1989.87,    2292.16,
+    2620.9,     2976.3,    3358.43,     3767.2,    4202.42,    4663.78,    5150.86,    5663.16,
+   6199.84,    6759.73,    7341.47,    7942.93,    8564.62,     9208.3,    9873.56,    10558.9,
+   11262.5,    11982.7,    12713.9,    13453.2,      14192,    14922.7,    15638.1,    16329.6,
+   16990.6,    17613.3,      18191,      18717,    19184.5,    19587.5,    19919.8,    20175.4,
+   20348.9,    20434.2,    20426.2,      20319,      20107,    19785.4,    19348.8,    18798.8,
+   18141.3,    17385.6,    16544.6,    15633.6,    14665.6,    13653.2,    12608.4,    11543.2,
+   10471.3,    9405.22,    8356.25,    7335.16,    6353.92,     5422.8,    4550.21,    3743.46,
+   3010.15,     2356.2,    1784.85,    1297.66,    895.194,    576.314,    336.772,    162.043,
+   54.2083,    6.57563,    0.00316,          0,          0,          0,          0,          0,
          0,          0,          0,          0
 ... 84 more values
-} # ibmfloat pv 
+} # ibmfloat pv
 769-896   pl = (64,128) {
-        20,         27,         36,         40,         45,         50,         60,         64, 
-        72,         75,         80,         90,         90,         96,        100,        108, 
-       108,        120,        120,        120,        128,        128,        128,        128, 
-       128,        128,        128,        128,        128,        128,        128,        128, 
-       128,        128,        128,        128,        128,        128,        128,        128, 
-       128,        128,        128,        128,        120,        120,        120,        108, 
-       108,        100,         96,         90,         90,         80,         75,         72, 
+        20,         27,         36,         40,         45,         50,         60,         64,
+        72,         75,         80,         90,         90,         96,        100,        108,
+       108,        120,        120,        120,        128,        128,        128,        128,
+       128,        128,        128,        128,        128,        128,        128,        128,
+       128,        128,        128,        128,        128,        128,        128,        128,
+       128,        128,        128,        128,        120,        120,        120,        108,
+       108,        100,         96,         90,         90,         80,         75,         72,
         64,         60,         50,         45,         40,         36,         27,         20
-} # unsigned pl 
+} # unsigned pl
 ======================   SECTION_4 ( length=9182, padding=0 )   ======================
 1-3       section4Length = 9182 ( 0x00 0x23 0xDE )
 4         dataFlag = 0 [00000000]
@@ -109,28 +109,28 @@ grib_dump -Ha ../data/reduced_gaussian_model_level.grib1\n
 7-10      referenceValue = 17402.8
 11        numberOfBitsContainingEachPackedValue = 12 ( 0x0C ) [nbp, numberOfBits, bitsPerValue]
 12-9182   values = (6114,9171) {
-   203.778,    203.468,    202.958,    202.348,    201.758,    201.278,    200.888,    200.558, 
-   200.268,    200.078,    200.068,    200.318,    200.808,    201.458,    202.138,    202.758, 
-   203.248,    203.588,    203.798,    203.878,    205.968,    205.418,    204.438,    203.218, 
-   202.008,    201.128,    200.708,    200.598,    200.478,    200.228,    199.908,    199.528, 
-   199.108,    198.708,    198.528,    198.748,    199.458,    200.488,    201.548,    202.478, 
-   203.358,    204.178,    204.808,    205.198,    205.508,    205.838,    206.068,    207.338, 
-   206.488,    205.198,    203.798,    202.548,    201.528,    200.848,    200.638,    200.818, 
-   201.028,    200.888,    200.308,    199.638,    199.228,    199.018,    198.738,    198.328, 
-   197.868,    197.358,    196.928,    196.858,    197.348,    198.368,    199.638,    200.758, 
-   201.538,    202.288,    203.338,    204.438,    205.158,    205.558,    205.938,    206.438, 
-   207.008,    207.468,    207.638,    207.178,    206.658,    205.398,    203.788,    202.468, 
-   201.338,    200.298,    199.938,    200.318,    200.608,    200.478,    200.008,    199.208, 
+   203.778,    203.468,    202.958,    202.348,    201.758,    201.278,    200.888,    200.558,
+   200.268,    200.078,    200.068,    200.318,    200.808,    201.458,    202.138,    202.758,
+   203.248,    203.588,    203.798,    203.878,    205.968,    205.418,    204.438,    203.218,
+   202.008,    201.128,    200.708,    200.598,    200.478,    200.228,    199.908,    199.528,
+   199.108,    198.708,    198.528,    198.748,    199.458,    200.488,    201.548,    202.478,
+   203.358,    204.178,    204.808,    205.198,    205.508,    205.838,    206.068,    207.338,
+   206.488,    205.198,    203.798,    202.548,    201.528,    200.848,    200.638,    200.818,
+   201.028,    200.888,    200.308,    199.638,    199.228,    199.018,    198.738,    198.328,
+   197.868,    197.358,    196.928,    196.858,    197.348,    198.368,    199.638,    200.758,
+   201.538,    202.288,    203.338,    204.438,    205.158,    205.558,    205.938,    206.438,
+   207.008,    207.468,    207.638,    207.178,    206.658,    205.398,    203.788,    202.468,
+   201.338,    200.298,    199.938,    200.318,    200.608,    200.478,    200.008,    199.208,
    198.278,    197.708,    197.558,    197.318
 ... 6014 more values
-} # data_g1simple_packing values 
+} # data_g1simple_packing values
 ======================   SECTION_5 ( length=4, padding=0 )     ======================
 1-4       7777 = 7777
 \endverbatim\n
 \n \n How to obtain all the key names available in a grib file.\n\n
 grib_dump -D ../data/regular_latlon_surface.grib1
-\verbatim 
-***** FILE: ../data/regular_latlon_surface.grib1 
+\verbatim
+***** FILE: ../data/regular_latlon_surface.grib1
 ======================   MESSAGE 1 ( length=1100 )             ======================
 0-0 constant oneConstant = 1
 0-0 constant oneMillionConstant = 1000000
@@ -144,7 +144,7 @@ grib_dump -D ../data/regular_latlon_surface.grib1
    0-0 constant ieeeFloats = 0
    0-0 transient dummy = 1
    ======> section section_0 (0,0,0)
-      ----> label empty 
+      ----> label empty
    <===== section section_0
    0-4 ascii identifier = GRIB
    4-7 g1_message_length totalLength = 1100
@@ -180,7 +180,7 @@ grib_dump -D ../data/regular_latlon_surface.grib1
       36-36 transient setLocalDefinition = 0
       36-48 pad reservedNeedNotBePresent = 12 {
          00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00
-      } # pad reservedNeedNotBePresent 
+      } # pad reservedNeedNotBePresent
       48-48 g1date dataDate = 20070318 [mars.date, ls.date]
       48-48 evaluate year = 2007
       48-48 g1monthlydate monthlyDate = 20070301
@@ -208,7 +208,7 @@ grib_dump -D ../data/regular_latlon_surface.grib1
          58-59 unsigned numberOfForecastsInEnsemble = 0
          59-60 pad padding_local1_1 = 1 {
             00
-         } # pad padding_local1_1 
+         } # pad padding_local1_1
       <===== section localDefinition
       60-60 transient centreForTableNumber = 98
       60-60 section_padding localExtensionPadding = 0 {}
@@ -263,7 +263,7 @@ grib_dump -D ../data/regular_latlon_surface.grib1
          88-88 bit scanningMode8 = 0
          88-88 latlon_increment jDirectionIncrementInDegrees = 2 [geography.jInc, geography.gridNorthSouth]
          88-88 latlon_increment iDirectionIncrementInDegrees = 2 [geography.iInc, geography.gridWestEast]
-         ----> iterator ITERATOR 
+         ----> iterator ITERATOR
       <===== section dataRepresentation
       88-88 position endGridDefinition = 88
       88-88 transient PVPresent = 0
@@ -272,7 +272,7 @@ grib_dump -D ../data/regular_latlon_surface.grib1
       88-88 transient PLPresent = 0 [reducedGrid]
       88-92 padto padding_sec2_1 = 4 {
          00, 00, 00, 00
-      } # padto padding_sec2_1 
+      } # padto padding_sec2_1
       92-92 padtoeven padding_sec2_3 = 0 {}
    <===== section section_2
    92-92 position endOfHeadersMaker = 92
@@ -295,21 +295,21 @@ grib_dump -D ../data/regular_latlon_surface.grib1
          103-103 position offsetBeforeData = 103
          103-103 constant bitMapIndicator = 255
          103-1096 data_g1simple_packing values = (496,993) {
-               277.704,    277.797,    278.103,    274.598,    269.587,    278.345,    277.213,     278.19, 
-               277.853,    276.747,    274.361,    273.636,    274.593,    273.782,    273.016,    274.316, 
-               278.492,    278.792,    278.836,    278.333,    277.389,    278.525,    278.175,    277.255, 
-               277.383,    278.047,    277.877,    276.213,     273.99,    278.333,     278.58,    277.642, 
-               278.865,    278.997,    278.509,    278.983,    279.527,    279.414,      278.8,    278.749, 
-               278.895,    279.056,    278.699,    278.426,    276.601,    277.491,    279.646,    279.198, 
-               279.108,    279.156,    279.406,    279.527,    280.344,    280.869,    279.951,    281.621, 
-               281.221,    280.676,    281.049,    280.354,    279.025,    278.192,     280.05,    280.375, 
-                280.68,    281.269,    281.406,    281.483,    279.454,    280.641,    282.984,    282.578, 
-               281.797,    281.542,    281.854,      281.5,    279.917,    280.529,    282.008,    281.102, 
-               282.223,    282.727,    280.315,    278.539,    280.066,    280.789,    280.517,    282.883, 
-               283.897,    285.161,    285.779,    285.847,    281.973,    282.869,    281.926,    280.816, 
+               277.704,    277.797,    278.103,    274.598,    269.587,    278.345,    277.213,     278.19,
+               277.853,    276.747,    274.361,    273.636,    274.593,    273.782,    273.016,    274.316,
+               278.492,    278.792,    278.836,    278.333,    277.389,    278.525,    278.175,    277.255,
+               277.383,    278.047,    277.877,    276.213,     273.99,    278.333,     278.58,    277.642,
+               278.865,    278.997,    278.509,    278.983,    279.527,    279.414,      278.8,    278.749,
+               278.895,    279.056,    278.699,    278.426,    276.601,    277.491,    279.646,    279.198,
+               279.108,    279.156,    279.406,    279.527,    280.344,    280.869,    279.951,    281.621,
+               281.221,    280.676,    281.049,    280.354,    279.025,    278.192,     280.05,    280.375,
+                280.68,    281.269,    281.406,    281.483,    279.454,    280.641,    282.984,    282.578,
+               281.797,    281.542,    281.854,      281.5,    279.917,    280.529,    282.008,    281.102,
+               282.223,    282.727,    280.315,    278.539,    280.066,    280.789,    280.517,    282.883,
+               283.897,    285.161,    285.779,    285.847,    281.973,    282.869,    281.926,    280.816,
                 282.48,    281.894,    281.035,    281.722
             ... 396 more values
-         } # data_g1simple_packing values 
+         } # data_g1simple_packing values
       <===== section dataValues
       1096-1096 size valuesCount = 496
       1096-1096 concept typeOfGrid = regular_ll [ls.gridType]
@@ -317,7 +317,7 @@ grib_dump -D ../data/regular_latlon_surface.grib1
       1096-1096 padtoeven padding_sec4_1 = 0 {}
    <===== section section_4
    ======> section section_5 (4,4,0)
-      ----> label gribSection5 
+      ----> label gribSection5
       1096-1096 position offsetSection5 = 1096
       1096-1100 ascii 7777 = 7777
    <===== section section_5
@@ -325,7 +325,7 @@ grib_dump -D ../data/regular_latlon_surface.grib1
 \endverbatim\n
 \n\n How to obtain a C code example from a grib file.\n\n
 grib_dump -C ../data/regular_latlon_surface.grib1\n
-\code 
+\code
 #include <grib_api.h>
 
 /* This code was generated automatically */
@@ -445,7 +445,7 @@ int main(int argc,const char** argv)
     /* 0 = 00000000
     (1=0)  Points scan in +i direction
     (2=0)  Points scan in -j direction
-    (3=0)  Adjacent points in i direction are consecutive 
+    (3=0)  Adjacent points in i direction are consecutive
     See grib1/8.table */
     GRIB_CHECK(grib_set_long(h,"scanningMode",0),0);
 
@@ -593,7 +593,7 @@ int main(int argc,const char** argv)
     v[ 484] = 302.885; v[ 485] = 305.413; v[ 486] = 305.523; v[ 487] = 303.672;
     v[ 488] = 304.547; v[ 489] = 303.334; v[ 490] = 301.616; v[ 491] = 298.654;
     v[ 492] = 297.975; v[ 493] = 295.379; v[ 494] =  293.83; v[ 495] = 300.082;
-   
+
     GRIB_CHECK(grib_set_double_array(h,"values",v,size),0);
     free(v);
 
