@@ -16685,18 +16685,6 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 70 ;
 	}
-#Fire combustion rate per unit area
-'kg s**-1 m**-2' = {
-	 discipline = 2 ;
-	 parameterCategory = 4 ;
-	 parameterNumber = 47 ;
-	}
-#Fire radiative power density
-'W m**-2' = {
-	 discipline = 2 ;
-	 parameterCategory = 4 ;
-	 parameterNumber = 48 ;
-	}
 #Universal thermal climate index
 'K' = {
 	 discipline = 20 ;
@@ -22940,6 +22928,18 @@
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 34 ;
+	}
+#Wildfire radiative power
+'W m**-2' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 48 ;
+	}
+#Wildfire combustion rate
+'kg m**-2 s**-1' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 47 ;
 	}
 #Convective inhibition
 'J kg**-1' = {

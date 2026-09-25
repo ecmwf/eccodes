@@ -18889,18 +18889,6 @@
 	 typeOfFirstFixedSurface = 28 ;
 	 typeOfSecondFixedSurface = 29 ;
 	}
-#Fire combustion rate per unit area
-'260703' = {
-	 discipline = 2 ;
-	 parameterCategory = 4 ;
-	 parameterNumber = 47 ;
-	}
-#Fire radiative power density
-'260704' = {
-	 discipline = 2 ;
-	 parameterCategory = 4 ;
-	 parameterNumber = 48 ;
-	}
 #Universal thermal climate index
 '261001' = {
 	 discipline = 20 ;
@@ -26134,6 +26122,18 @@
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 34 ;
+	}
+#Wildfire radiative power
+'210099' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 48 ;
+	}
+#Wildfire combustion rate
+'210100' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 47 ;
 	}
 #Nitrogen dioxide mass mixing ratio
 '210121' = {
