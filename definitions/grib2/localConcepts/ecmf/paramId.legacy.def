@@ -2481,6 +2481,18 @@
 	 parameterCategory = 190 ;
 	 parameterNumber = 141 ;
 	}
+#Wildfire radiative power
+'210099' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 99 ;
+	}
+#Wildfire combustion rate
+'210100' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 100 ;
+	}
 #Nitrogen dioxide mass mixing ratio
 '210121' = {
 	 discipline = 192 ;

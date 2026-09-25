@@ -7761,7 +7761,7 @@
 	 parameterNumber = 27 ;
 	}
 #Live wood fuel load
-'Live wood fuel load ' = {
+'Live wood fuel load' = {
 	 discipline = 2 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 28 ;
@@ -18889,18 +18889,6 @@
 	 typeOfFirstFixedSurface = 28 ;
 	 typeOfSecondFixedSurface = 29 ;
 	}
-#Fire combustion rate per unit area
-'Fire combustion rate per unit area' = {
-	 discipline = 2 ;
-	 parameterCategory = 4 ;
-	 parameterNumber = 47 ;
-	}
-#Fire radiative power density
-'Fire radiative power density' = {
-	 discipline = 2 ;
-	 parameterCategory = 4 ;
-	 parameterNumber = 48 ;
-	}
 #Universal thermal climate index
 'Universal thermal climate index' = {
 	 discipline = 20 ;
@@ -26134,6 +26122,18 @@
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 34 ;
+	}
+#Wildfire radiative power
+'Wildfire radiative power' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 48 ;
+	}
+#Wildfire combustion rate
+'Wildfire combustion rate' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 47 ;
 	}
 #Nitrogen dioxide mass mixing ratio
 'Nitrogen dioxide mass mixing ratio' = {
