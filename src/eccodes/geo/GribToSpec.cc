@@ -26,6 +26,7 @@
 #include "eckit/geo/PointLonLat.h"
 #include "eckit/geo/util/mutex.h"
 #include "eckit/log/JSON.h"
+#include "eckit/spec/Custom.h"
 #include "eckit/types/FloatCompare.h"
 #include "eckit/types/Fraction.h"
 #include "eckit/utils/SafeCasts.h"
@@ -250,14 +251,14 @@ bool get_figure(codes_handle* h, std::string& value)
     else if (code == 1) {
         double R = 0;
         ASSERT(CODES_SUCCESS == codes_get_double(h, "radiusInMetres", &R));
-        value = R"({"R":)" + std::to_string(R) + "}";
+        value = eckit::spec::Custom{ { "R", R } }.str();
     }
     else if (code == 3 || code == 7 || code == 9) {
         double a = 0;
         double b = 0;
         ASSERT(CODES_SUCCESS == codes_get_double(h, "earthMajorAxisInMetres", &a));
         ASSERT(CODES_SUCCESS == codes_get_double(h, "earthMinorAxisInMetres", &b));
-        value = R"({"a":)" + std::to_string(a) + R"(,"b":)" + std::to_string(b) + "}";
+        value = eckit::spec::Custom{ { "a", a }, { "b", b } }.str();
     }
     else if (auto it = NAMED.find(code); it != NAMED.end()) {
         value = it->second;
@@ -324,6 +325,7 @@ const char* get_key(const std::string& name, codes_handle* h)
         { "south_pole_latitude", "latitudeOfSouthernPoleInDegrees" },
         { "south_pole_longitude", "longitudeOfSouthernPoleInDegrees" },
         { "south_pole_rotation_angle", "angleOfRotationInDegrees" },
+        { "rotation_angle", "angleOfRotationInDegrees" },
 
         { "proj", "projTargetString" },
         { "projSource", "projSourceString" },
@@ -916,6 +918,12 @@ bool GribToSpec::has(const std::string& name) const
     if (name == "figure") {
         std::string figure;
         return get_figure(handle_, figure);
+    }
+
+    if (name == "rotation") {
+        // [lat, lon] of the south pole (as the MARS key)
+        std::vector<double> rotation;
+        return get(name, rotation);
     }
 
     const auto* key = get_key(name, handle_);

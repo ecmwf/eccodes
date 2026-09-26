@@ -666,28 +666,34 @@ CASE("gridType=regular_ll")
 }
 
 
-#if 0
 CASE("gridType=rotated_gg")
 {
     const map_count_spec_t specs{
-        { 0, "" },
+        { 0, R"({"grid":"F48","projection":{"south_pole":[30,30],"type":"rotation"}})" },
+        { 1, R"({"grid":"F48"})" },
+        { 2, R"({"grid":"F80"})" },
+        { 3, R"({"grid":"F80","projection":{"south_pole":[30,30],"type":"rotation"}})" },
     };
 
     EXPECT(grib_to_gridspec("gridspec/gridType=rotated_gg.grib", specs));
 }
-#endif
 
 
-#if 0
 CASE("gridType=rotated_ll")
 {
+    // south pole at [0,-90] is not a rotation
     const map_count_spec_t specs{
-        { 0, "" },
+        { 0, R"({"area":[90,0,-78,360],"grid":[3,3]})" },
+        { 1, R"({"area":[69,-60,21,60],"grid":[3,3]})" },
+        { 2, R"({"area":[90,0,-78,360],"grid":[3,3],"projection":{"south_pole":[30,30],"type":"rotation"}})" },
+        { 3, R"({"area":[69,-60,21,60],"grid":[3,3],"projection":{"south_pole":[30,30],"type":"rotation"}})" },
+        { 4, R"({"area":[5.5,-3.8,-8.5,7.7],"grid":[0.02,0.02],"order":"i+j+","projection":{"south_pole":[10,-47],"type":"rotation"}})" },
+        { 5, R"({"grid":[3,3]})" },
+        { 6, R"({"grid":[3,3],"projection":{"south_pole":[30,30],"type":"rotation"}})" },
     };
 
     EXPECT(grib_to_gridspec("gridspec/gridType=rotated_ll.grib", specs));
 }
-#endif
 
 
 CASE("gridType=sh")
@@ -733,9 +739,7 @@ CASE("shapeOfTheEarth")
         };
 
         auto figure_spec = [](const std::string& figure) {
-            return figure.empty()          ? R"({"figure":"earth"})"
-                   : figure.front() == '{' ? figure
-                                           : R"({"figure":)" + figure + "}";
+            return R"({"figure":)" + (figure.empty() ? R"("earth")" : figure) + "}";
         };
 
         const auto user = gridspec_with(test.figure);
@@ -777,6 +781,75 @@ CASE("shapeOfTheEarth")
         ASSERT(CODES_SUCCESS == codes_get_long(h2.get(), "shapeOfTheEarth", &shapeOfTheEarth2));
 
         EXPECT_EQUAL(shapeOfTheEarth2, test.shapeOfTheEarth_back);
+    }
+}
+
+
+CASE("figure")
+{
+    struct test_t
+    {
+        const std::string path;
+        const std::vector<std::pair<size_t, std::string>> figures;  // [(count, figure), (count, figure), ...]
+    };
+
+    for (const auto& test : std::vector<test_t>{
+             { "gridType=healpix.grib", { { 4, R"("grib1")" }, { 1, R"("earth")" } } },
+             { "gridType=reduced_gg,N320.area.grib", { { 1, R"("earth")" } } },
+             { "gridType=reduced_ll.grib", { { 4, R"("grib1")" } } },
+             { "gridType=reduced_rotated_gg.grib", { { 5, R"("grib1")" } } },
+             { "gridType=regular_gg.grib", { { 7, R"("grib1")" }, { 1, R"("earth")" }, { 5, R"("grib1")" } } },
+             { "gridType=regular_ll,isECMWFPostGRIB2MigrationMessage=1.grib", { { 1, R"("grib1")" } } },
+             { "gridType=regular_ll,scanningMode=96.grib", { { 1, R"("earth")" } } },
+             { "gridType=regular_ll.grib", { { 2, R"("grib1")" }, { 1, R"("earth")" }, { 1, R"("grib1")" }, { 1, R"("earth")" }, { 1, R"("grib1")" }, { 1, R"("earth")" }, { 1, R"("grib1")" }, { 1, R"("earth")" }, { 2, R"("grib1")" }, { 1, R"("earth")" }, { 2, R"("grib1")" }, { 1, R"("earth")" }, { 7, R"("grib1")" }, { 1, R"("earth")" }, { 2, R"("grib1")" }, { 1, R"("earth")" }, { 1, R"("grib1")" }, { 1, R"("earth")" }, { 7, R"("grib1")" }, { 2, R"("earth")" }, { 5, R"("grib1")" }, { 1, R"("earth")" }, { 1, R"("grib1")" }, { 3, R"({"R":6371229})" }, { 1, R"("earth")" }, { 2, R"({"R":6371229})" }, { 3, R"("grib1")" } } },
+             { "gridType=rotated_gg.grib", { { 4, R"("grib1")" } } },
+             { "gridType=sh.grib", { { 1, R"("grib1")" } } },
+             { "gridType=unstructured_grid,icon.grib", { { 1, R"("earth")" } } },
+             { "gridType=unstructured_grid,orca.grib", { { 6, R"("earth")" } } },
+         }) {
+        std::vector<std::string> figures;
+        for (const auto& [n, figure] : test.figures) {
+            figures.insert(figures.end(), n, figure);
+        }
+
+        size_t count = 0;
+        for (grib_file_t file("gridspec/" + test.path); file.next(); ++count) {
+            ASSERT(count < figures.size());
+            auto* h = file.handle.get();
+
+            std::unique_ptr<const ::eckit::geo::Figure> expected(
+                ::eckit::geo::FigureFactory::make_from_string(R"({"figure":)" + figures[count] + "}"));
+            ASSERT(expected);
+
+            // the figure, as decoded from the GRIB
+            long edition = 0;
+            CHECK(codes_get_long(h, "edition", &edition));
+
+            eccodes::geo::GribToSpec spec(h);
+            EXPECT(spec.has("figure"));
+
+            std::unique_ptr<const ::eckit::geo::Figure> figure(::eckit::geo::FigureFactory::build(spec));
+            ASSERT(figure);
+
+            EXPECT(*figure == *expected);
+            EXPECT(edition == 2 || figure->is_default());
+
+            // the figure, as part of the gridSpec (only if not a default figure)
+            std::string gridSpec;
+            EXPECT(get_string(h, "gridSpec", gridSpec));
+
+            const bool has_figure = gridSpec.find(R"("figure":)") != std::string::npos;
+            EXPECT(has_figure == !expected->is_default());
+
+            if (has_figure) {
+                std::unique_ptr<const ::eckit::geo::Grid> grid(::eckit::geo::GridFactory::make_from_string(gridSpec));
+                ASSERT(grid);
+
+                EXPECT(grid->figure() == *expected);
+            }
+        }
+
+        EXPECT_EQUAL(count, figures.size());
     }
 }
 
