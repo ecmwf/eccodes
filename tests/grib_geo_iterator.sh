@@ -28,4 +28,5 @@ then
     exit 0
 fi
 
-$EXEC ${test_dir}/grib_geo_iterator "${data_dir}/gridspec/gridType=reduced_gg,N320.area.grib"
+$EXEC ${test_dir}/grib_geo_iterator "${data_dir}/gridspec/gridType=reduced_gg,N320.area.grib"  # reduced_gg
+$EXEC ${test_dir}/grib_geo_iterator "${data_dir}/constant_field.grib2"                         # rotated_ll
