@@ -471,16 +471,28 @@ CASE("gridType=reduced_ll")
 }
 
 
-#if 0
 CASE("gridType=reduced_rotated_gg")
 {
-    const map_count_spec_t specs{
-        { 0, "" },
-    };
+    SECTION("GRIB to gridSpec")
+    {
+        const map_count_spec_t specs{
+            { 0, R"({"grid":"N80","projection":{"south_pole":[30,30],"type":"rotation"}})" },
+            { 1, R"({"grid":"N80"})" },
+            { 2, R"({"grid":"O80","projection":{"south_pole":[30,30],"type":"rotation"}})" },
+            { 3, R"({"grid":"O80"})" },
+            { 4, R"({"area":[27.9625200060835,0,-13.9110027017923,40],"grid":"N320","projection":{"south_pole":[-40,-22],"type":"rotation"}})" },
+        };
 
-    EXPECT(grib_to_gridspec("gridspec/gridType=reduced_rotated_gg.grib", specs));
+        EXPECT(grib_to_gridspec("gridspec/gridType=reduced_rotated_gg.grib", specs));
+    }
+
+
+    SECTION("gridSpec to GRIB")
+    {
+        const std::string spec = R"({"grid":"O80","projection":{"south_pole":[30,30],"type":"rotation"}})";
+        gridspec_to_grib("reduced_gg_pl_80_grib2", spec, "reduced_rotated_gg", { 89.141519, 0, -89.141519, 358.928571 }, spec);
+    }
 }
-#endif
 
 
 CASE("gridType=regular_gg")
