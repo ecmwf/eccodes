@@ -165,10 +165,6 @@ struct Rotation
 
     void fillGrib(grib_info& info) const
     {
-        // Warning: scanning mode not considered
-
-        info.grid.grid_type = CODES_UTIL_GRID_SPEC_ROTATED_LL;
-
         info.grid.latitudeOfSouthernPoleInDegrees  = south_pole_lat_;
         info.grid.longitudeOfSouthernPoleInDegrees = south_pole_lon_;
         info.grid.angleOfRotationInDegrees = south_pole_angle_;
@@ -303,16 +299,12 @@ void set_grid_type_regular_ll(grib_info& info, const Grid& grid, const BasicAngl
     info.grid.Ni = static_cast<long>(g.nx());
     info.grid.Nj = static_cast<long>(g.ny());
 
-    if (rotated) {
-        BoundingBox bbox(std::get<PointLonLat>(grid.projection().inv(g.first_point())), std::get<PointLonLat>(grid.projection().inv(g.last_point())));
-        bbox.fillGrib(info);
+    BoundingBox bbox(std::get<PointLonLat>(g.first_point()), std::get<PointLonLat>(g.last_point()));
+    bbox.fillGrib(info);
 
+    if (rotated) {
         Rotation rotation(dynamic_cast<const ::eckit::geo::projection::Rotation&>(grid.projection()));
         rotation.fillGrib(info);
-    }
-    else {
-        BoundingBox bbox(std::get<PointLonLat>(g.first_point()), std::get<PointLonLat>(g.last_point()));
-        bbox.fillGrib(info);
     }
 
     if (basic_angle.num != 0) {
@@ -342,16 +334,12 @@ void set_grid_type_regular_gg(grib_info& info, const Grid& grid)
     info.grid.Ni = static_cast<long>(g.nx());
     info.grid.Nj = static_cast<long>(g.ny());
 
-    if (rotated) {
-        BoundingBox bbox(std::get<PointLonLat>(grid.projection().inv(g.first_point())), std::get<PointLonLat>(grid.projection().inv(g.last_point())));
-        bbox.fillGrib(info);
+    BoundingBox bbox(std::get<PointLonLat>(g.first_point()), std::get<PointLonLat>(g.last_point()));
+    bbox.fillGrib(info);
 
+    if (rotated) {
         Rotation rotation(dynamic_cast<const ::eckit::geo::projection::Rotation&>(grid.projection()));
         rotation.fillGrib(info);
-    }
-    else {
-        BoundingBox bbox(std::get<PointLonLat>(g.first_point()), std::get<PointLonLat>(g.last_point()));
-        bbox.fillGrib(info);
     }
 
     Shape shape(grid.figure());
