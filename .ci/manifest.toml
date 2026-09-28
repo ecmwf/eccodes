@@ -1,6 +1,5 @@
 [package]
 name = "eccodes"
-prefix = "eccodes"
 repo = "ecmwf/eccodes"
 visibility = "public"
 compiler-inputs = ["cxx-compiler"]
