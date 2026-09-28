@@ -19,4 +19,3 @@ REDIRECT=/dev/null
 label=`basename $0 | sed -e 's/\.sh/_test/'`
 
 ${test_dir}/grib_shape_of_the_earth
-
