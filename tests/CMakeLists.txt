@@ -79,6 +79,7 @@ list(APPEND test_c_bins
     grib_spectral
     grib_lam_bf
     grib_grib2mars_replay
+    grib_shape_of_the_earth
     grib_lam_gp)
 
 if( eccodes_HAVE_ECKIT_GEO AND eccodes_HAVE_GEOGRAPHY )
@@ -171,6 +172,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-2317
         grib_ecc-2319
         grib_ecc-2332
+        grib_ecc-2339
         bufr_ecc-1028
         bufr_ecc-912
         bufr_ecc-1195
@@ -211,6 +213,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-2264
         grib_ecc-2265
         grib_ecc-2338
+        grib_shape_of_the_earth
     )
 
     # These tests require data downloads
