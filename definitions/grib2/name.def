@@ -26123,8 +26123,8 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 34 ;
 	}
-#Wildfire radiative power
-'Wildfire radiative power' = {
+#Wildfire radiative power density
+'Wildfire radiative power density' = {
 	 discipline = 2 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 48 ;

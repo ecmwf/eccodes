@@ -22929,7 +22929,7 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 34 ;
 	}
-#Wildfire radiative power
+#Wildfire radiative power density
 'frpfire' = {
 	 discipline = 2 ;
 	 parameterCategory = 4 ;

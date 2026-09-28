@@ -16379,8 +16379,8 @@
 	 table2Version = 210 ;
 	 indicatorOfParameter = 98 ;
 	}
-#Wildfire radiative power
-'Wildfire radiative power' = {
+#Wildfire radiative power density
+'Wildfire radiative power density' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 99 ;
 	}
