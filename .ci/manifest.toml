@@ -28,6 +28,7 @@ when = { options = ["eckit-geo"] }
 [matrix.build.defaults]
 build-type = "RelWithDebInfo"
 runs-on = "arc-runner-very-large"
+ctest-args = '-j "$(nproc)"'
 
 [[matrix.build.include]]
 cxx-compiler = "clang++-18"
@@ -56,7 +57,6 @@ action = "./.github/actions/build-eccodes"
 forwarded-inputs = ["c-compiler", "cxx-compiler", "fortran-compiler", "build-type", "options"]
 forwarded-deps-outputs = ["cmake-prefix-path"]
 ctest = true
-ctest-args = '-j "$(nproc)"'
 
 [matrix.build-hpc.defaults]
 cxx-compiler = "g++-8"
@@ -73,6 +73,7 @@ cc = "gcc"
 cxx = "g++"
 fc = "gfortran"
 time = "01:30:00"
+job-script = "./.ci/hpc/build.sh.j2"
 
 [[matrix.build-hpc.include]]
 options = ""
@@ -83,6 +84,5 @@ options = "eckit-geo"
 [matrix.build-hpc]
 execution = "hpc"
 container-credentials = true
-job-script = "./.ci/hpc/build.sh.j2"
 triggers = ["upstream-change", "rebuild-request"]
 forwarded-deps-outputs = ["cmake-prefix-path"]

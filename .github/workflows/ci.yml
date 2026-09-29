@@ -164,7 +164,7 @@ jobs:
         uses: ecmwf/ci-infrastructure/actions/build-on-hpc@main
         with:
           site: ${{ matrix.site }}
-          job-script: ${{ matrix.job-script || './.ci/hpc/build.sh.j2' }}
+          job-script: ${{ matrix.job-script }}
           # The render context for the .j2 recipe: the toolchain this leg declares.
           matrix-leg: ${{ toJSON(matrix) }}
           artifact-name: ${{ matrix._resolved.own-artifact-name }}
