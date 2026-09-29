@@ -55,7 +55,6 @@ triggers = ["upstream-change", "rebuild-request"]
 action = "./.github/actions/build-eccodes"
 forwarded-inputs = ["c-compiler", "cxx-compiler", "fortran-compiler", "build-type", "options"]
 forwarded-deps-outputs = ["cmake-prefix-path"]
-needs = ["ecbuild/build", "stack-deps/build", "eckit/build"]
 ctest = true
 ctest-args = '-j "$(nproc)"'
 
@@ -87,4 +86,3 @@ container-credentials = true
 job-script = "./.ci/hpc/build.sh.j2"
 triggers = ["upstream-change", "rebuild-request"]
 forwarded-deps-outputs = ["cmake-prefix-path"]
-needs = ["ecbuild/build-hpc", "stack-deps/build-hpc", "eckit/build-hpc"]
