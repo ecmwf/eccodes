@@ -11,7 +11,7 @@ self-hosted-runner:
     - arc-runner-normal
     - arc-runner-large
     - arc-runner-very-large
-    - arc-hpc-pet-vsphere-prod
+    - hpc-submit
     - hpc
     # Legacy: the macOS builders nightly-testing.yml selects via its `labels`
     # matrix. They go once old_CI.yml and the nightly-* workflows retire.
