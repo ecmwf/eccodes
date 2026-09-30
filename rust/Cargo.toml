@@ -17,3 +17,7 @@ bindman-utils = "0.2"
 eccodes-sys = { version = "2.49", path = "crates/eccodes-sys", default-features = false, features = ["product-grib", "product-bufr", "geography", "jpg"] }
 
 eckit-sys = { version = "2.3", default-features = false }
+
+# Temporary: remove once eckit-sys 2.3 is on crates.io.
+[patch.crates-io]
+eckit-sys = { git = "ssh://git@github.com/ecmwf/eckit.git", branch = "develop" }
