@@ -32,3 +32,8 @@ system   = ["eccodes/system"]
 vendored = ["eccodes/vendored"]
 
 ndarray = ["dep:ndarray"]
+
+# Upstream gates its no-link docs.rs build behind this feature and told
+# dependents to enable it. Here eccodes-sys detects docs.rs by itself and
+# skips the native build, so the flag only needs to resolve.
+docs = []
