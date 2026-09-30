@@ -3,8 +3,8 @@
 The [ScaleWeather `eccodes`](https://github.com/ScaleWeather/eccodes) 0.15 API,
 reimplemented as a thin layer over the official [`eccodes`](../eccodes) crate.
 
-For existing users of the unofficial bindings, migration is one `Cargo.toml` line —
-no source changes:
+For existing users of the unofficial bindings, migration is one `Cargo.toml`
+line, with no source changes:
 
 ```toml
 [dependencies]
@@ -30,5 +30,5 @@ concurrency and performance only. `RefMessage` reads lock-free and its
   per `find_nearest()` call. (Keeping it alive would hold the lock and
   deadlock `read_key` on the same message.)
 - `CodesError::LibcNonZero` is never produced. Upstream only emits it when
-  `fdopen`/`fmemopen` fail after a successful open — fd exhaustion or OOM;
+  `fdopen`/`fmemopen` fail after a successful open (fd exhaustion or OOM);
   every realistic failure surfaces as `FileHandlingInterrupted` in both.

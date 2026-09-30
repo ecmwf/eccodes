@@ -2,7 +2,7 @@
 //! the official [`eccodes`] crate.
 //!
 //! For existing users of the unofficial bindings: depend on this crate under
-//! the old name and keep your code unchanged —
+//! the old name and keep your code unchanged.
 //!
 //! ```toml
 //! [dependencies]
