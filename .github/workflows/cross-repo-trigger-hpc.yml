@@ -80,11 +80,15 @@ env:
 jobs:
   resolve:
     if: contains(fromJSON(inputs.from-jobs), 'ecbuild/build-hpc') || contains(fromJSON(inputs.from-jobs), 'stack-deps/build-hpc') || contains(fromJSON(inputs.from-jobs), 'eckit/build-hpc') || inputs.rebuild-request
-    runs-on: ubuntu-slim
+    runs-on: arc-runner-normal
+    container:
+      image: eccr.ecmwf.int/public-ci-images/ubuntu24.04-base:latest
     outputs:
       ref: ${{ steps.pick.outputs.ref }}
       matrix-build-hpc: ${{ steps.r.outputs.matrix-build-hpc }}
     steps:
+    - name: Announce image
+      uses: ecmwf/ci-infrastructure/actions/announce-image@main
     - id: mint
       uses: actions/create-github-app-token@v3
       with:
@@ -107,6 +111,7 @@ jobs:
       uses: ecmwf/ci-infrastructure/actions/resolve-deps@main
       with:
         current-branch: ${{ steps.pick.outputs.ref }}
+        pin: ${{ !inputs.rebuild-request && format('{0}@{1}', inputs.from-repo, inputs.from-sha) || '' }}
         matrix: build-hpc
         token: ${{ steps.mint.outputs.token }}
         client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
@@ -189,7 +194,7 @@ jobs:
       uses: ecmwf/ci-infrastructure/actions/build-on-hpc@main
       with:
         site: ${{ matrix.site }}
-        job-script: ${{ matrix.job-script || './.ci/hpc/build.sh.j2' }}
+        job-script: ${{ matrix.job-script }}
         matrix-leg: ${{ toJSON(matrix) }}
         artifact-name: ${{ steps.m.outputs.own-artifact-name }}
         cmake-prefix-path: ${{ steps.deps.outputs.cmake-prefix-path }}

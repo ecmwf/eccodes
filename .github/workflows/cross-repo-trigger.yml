@@ -80,11 +80,15 @@ env:
 jobs:
   resolve:
     if: contains(fromJSON(inputs.from-jobs), 'ecbuild/build') || contains(fromJSON(inputs.from-jobs), 'stack-deps/build') || contains(fromJSON(inputs.from-jobs), 'eckit/build') || inputs.rebuild-request
-    runs-on: ubuntu-slim
+    runs-on: arc-runner-normal
+    container:
+      image: eccr.ecmwf.int/public-ci-images/ubuntu24.04-base:latest
     outputs:
       ref: ${{ steps.pick.outputs.ref }}
       matrix-build: ${{ steps.r.outputs.matrix-build }}
     steps:
+    - name: Announce image
+      uses: ecmwf/ci-infrastructure/actions/announce-image@main
     - id: mint
       uses: actions/create-github-app-token@v3
       with:
@@ -107,6 +111,7 @@ jobs:
       uses: ecmwf/ci-infrastructure/actions/resolve-deps@main
       with:
         current-branch: ${{ steps.pick.outputs.ref }}
+        pin: ${{ !inputs.rebuild-request && format('{0}@{1}', inputs.from-repo, inputs.from-sha) || '' }}
         matrix: build
         token: ${{ steps.mint.outputs.token }}
         client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
@@ -201,7 +206,7 @@ jobs:
         build-type: ${{ steps.m.outputs.build-type }}
         options: ${{ steps.m.outputs.options }}
     - name: Test
-      run: ctest --test-dir "${{ steps.build.outputs.build-dir }}" --output-on-failure -j "$(nproc)"
+      run: ctest --test-dir "${{ steps.build.outputs.build-dir }}" --output-on-failure ${{ matrix._resolved['ctest-args'] }}
     - name: Publish
       uses: ecmwf/ci-infrastructure/actions/publish-artifact@main
       with:
