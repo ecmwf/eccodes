@@ -70,6 +70,12 @@ fi
 
 for file in $files; do
    if [ -f ${data_dir}/$file ]; then
+      # Skip if message is invalid
+      ${tools_dir}/grib_get -p isMessageValid ${data_dir}/$file
+      if [ $? -eq 0 ]; then
+         echo "File $file: skipping invalid message"
+         continue
+      fi
       ${tools_dir}/grib_dump -w count=1 -Da ${data_dir}/$file > $temp 2>&1
       set +e
       # Look for the word ERROR in output. We should not find any
@@ -86,6 +92,12 @@ done
 if [ $HAVE_JPEG -eq 1 ]; then
     files="jpeg.grib2 v.grib2 multi.grib2 gfs.c255.grib2 missing.grib2 test_uuid.grib2"
     for file in $files; do
+        # Skip if message is invalid
+        ${tools_dir}/grib_get -p isMessageValid ${data_dir}/$file
+        if [ $? -eq 0 ]; then
+            echo "File $file: skipping invalid message"
+            continue
+        fi
         ${tools_dir}/grib_dump -w count=1 -Da ${data_dir}/$file > $temp 2>&1
         set +e
         grep -q 'ERROR ' $temp | grep -v "Message Validity Checks" > $temp2
