@@ -12,7 +12,8 @@ eccodes = { package = "eccodes-compat", version = "0.1" }
 ```
 
 This crate is frozen at the 0.15 surface and maintained for migration only.
-New code should depend on the official `eccodes` crate directly.
+New code should depend on the official `eccodes` crate directly;
+[MIGRATION.md](MIGRATION.md) maps every 0.15 call to its official equivalent.
 
 ## Known behavioural differences
 
