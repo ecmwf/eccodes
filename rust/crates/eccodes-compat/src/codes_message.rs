@@ -296,7 +296,7 @@ impl<P: Debug> CodesMessage<P> {
 
     /// Clones this message into an independent, editable [`BufMessage`].
     ///
-    /// Reads the whole message into memory — mind the size of large grids.
+    /// Reads the whole message into memory; mind the size of large grids.
     pub fn try_clone(&self) -> Result<BufMessage, CodesError> {
         // The only C-side failure mode of a handle clone is a null result.
         let inner = self
