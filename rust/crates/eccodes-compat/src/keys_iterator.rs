@@ -55,9 +55,9 @@ impl<P: Debug> CodesMessage<P> {
             set | KeyFlags::from_bits_truncate(*flag as u32)
         });
 
-        // The exclusive borrow makes the mutex moot: nothing else can touch
-        // the message while the iterator (lifetime 'a) is alive.
-        let message = &*self.lock_mut();
+        // The exclusive borrow makes any locking moot: nothing else can
+        // touch the message while the iterator (lifetime 'a) is alive.
+        let message = &*self.get_mut();
         let mut query = message.keys().flags(flags);
         if !namespace.is_empty() {
             query = query.namespace(namespace);
