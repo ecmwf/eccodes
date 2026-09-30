@@ -3,3 +3,5 @@
 'v1.0' = { generatingProcessIdentifier = 3; }
 'v1.1' = { generatingProcessIdentifier = 4; }
 'v2.0' = { generatingProcessIdentifier = 5; }
+'v3.0' = { generatingProcessIdentifier = 6; }
+'v3.1' = { generatingProcessIdentifier = 7; }
