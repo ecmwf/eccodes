@@ -19218,18 +19218,6 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 98 ;
 	}
-#Wildfire radiative power
-'frpfire' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 99 ;
-	}
-#Wildfire combustion rate
-'crfire' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 100 ;
-	}
 #Formaldehyde
 'hcho' = {
 	 discipline = 192 ;
