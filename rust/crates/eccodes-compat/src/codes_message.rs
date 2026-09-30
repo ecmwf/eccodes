@@ -7,7 +7,7 @@ use std::{
     io::Write,
     marker::PhantomData,
     path::Path,
-    sync::{Mutex, MutexGuard, PoisonError},
+    sync::{Mutex, PoisonError},
 };
 
 use eccodes::{GribMessage, KeyType};
@@ -18,10 +18,16 @@ use crate::errors::CodesError;
 /// one message of a GRIB file, a collection of key-value pairs.
 pub struct CodesMessage<P: Debug> {
     _parent: P,
-    // The official crate's message is Send but not Sync; the mutex restores
-    // Sync for `ArcMessage` sharing, serialising reads instead of trusting
-    // concurrent access to one C handle.
-    inner: Mutex<GribMessage>,
+    store: Store,
+}
+
+// The official crate's message is Send but not Sync. RefMessage never
+// crosses threads (upstream it is not even Send), so it reads lock-free;
+// ArcMessage and BufMessage promise Sync and pay for it with a mutex,
+// serialising reads instead of trusting concurrent access to one C handle.
+enum Store {
+    Direct(GribMessage),
+    Locked(Mutex<GribMessage>),
 }
 
 /// Marker tying [`RefMessage`] to its parent file's lifetime.
@@ -52,7 +58,7 @@ impl RefMessage<'_> {
     pub(crate) const fn new(inner: GribMessage) -> Self {
         Self {
             _parent: RefParent(PhantomData),
-            inner: Mutex::new(inner),
+            store: Store::Direct(inner),
         }
     }
 }
@@ -61,7 +67,7 @@ impl<D: Debug> ArcMessage<D> {
     pub(crate) const fn new(inner: GribMessage) -> Self {
         Self {
             _parent: ArcParent(PhantomData),
-            inner: Mutex::new(inner),
+            store: Store::Locked(Mutex::new(inner)),
         }
     }
 }
@@ -70,10 +76,16 @@ impl BufMessage {
     pub(crate) const fn new(inner: GribMessage) -> Self {
         Self {
             _parent: BufParent(),
-            inner: Mutex::new(inner),
+            store: Store::Locked(Mutex::new(inner)),
         }
     }
 }
+
+// SAFETY: ArcMessage and BufMessage are only ever constructed with
+// Store::Locked (their new() above), and Mutex<GribMessage> is Sync.
+unsafe impl<D: Debug> Sync for ArcMessage<D> {}
+// SAFETY: as above.
+unsafe impl Sync for BufMessage {}
 
 impl<P: Debug> Debug for CodesMessage<P> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -83,12 +95,26 @@ impl<P: Debug> Debug for CodesMessage<P> {
 
 impl<P: Debug> CodesMessage<P> {
     // A poisoned lock only means a reader panicked; the message is intact.
-    pub(crate) fn lock(&self) -> MutexGuard<'_, GribMessage> {
-        self.inner.lock().unwrap_or_else(PoisonError::into_inner)
+    pub(crate) fn read<R>(&self, f: impl FnOnce(&GribMessage) -> R) -> R {
+        match &self.store {
+            Store::Direct(message) => f(message),
+            Store::Locked(inner) => f(&inner.lock().unwrap_or_else(PoisonError::into_inner)),
+        }
     }
 
-    pub(crate) fn lock_mut(&mut self) -> &mut GribMessage {
-        self.inner.get_mut().unwrap_or_else(PoisonError::into_inner)
+    /// The message when it can be borrowed without a lock (`RefMessage`).
+    pub(crate) const fn direct(&self) -> Option<&GribMessage> {
+        match &self.store {
+            Store::Direct(message) => Some(message),
+            Store::Locked(_) => None,
+        }
+    }
+
+    pub(crate) fn get_mut(&mut self) -> &mut GribMessage {
+        match &mut self.store {
+            Store::Direct(message) => message,
+            Store::Locked(inner) => inner.get_mut().unwrap_or_else(PoisonError::into_inner),
+        }
     }
 }
 
@@ -115,13 +141,11 @@ pub trait KeyPropertiesRead {
 
 impl<P: Debug> KeyPropertiesRead for CodesMessage<P> {
     fn get_key_size(&self, key_name: &str) -> Result<usize, CodesError> {
-        Ok(self.lock().key(key_name).len()?)
+        Ok(self.read(|message| message.key(key_name).len())?)
     }
 
     fn get_key_native_type(&self, key_name: &str) -> Result<NativeKeyType, CodesError> {
-        let message = self.lock();
-        let key_type = message.key(key_name).value_type()?;
-        drop(message);
+        let key_type = self.read(|message| message.key(key_name).value_type())?;
         Ok(match key_type {
             KeyType::Undefined => NativeKeyType::Undefined,
             KeyType::I64 => NativeKeyType::Long,
@@ -165,19 +189,20 @@ macro_rules! impl_key_read {
     ($key_sizing:ident, $key_type:pat, $gen_type:ty) => {
         impl<P: Debug> KeyRead<$gen_type> for CodesMessage<P> {
             fn read_key(&self, key_name: &str) -> Result<$gen_type, CodesError> {
-                let message = self.lock();
-                let key = message.key(key_name);
-                match key.value_type()? {
-                    $key_type => (),
-                    _ => return Err(CodesError::WrongRequestedKeyType),
-                }
-                let key_size = key.len()?;
-                key_size_check!($key_sizing, key_size);
-                Ok(message.get(key_name)?)
+                self.read(|message| {
+                    let key = message.key(key_name);
+                    match key.value_type()? {
+                        $key_type => (),
+                        _ => return Err(CodesError::WrongRequestedKeyType),
+                    }
+                    let key_size = key.len()?;
+                    key_size_check!($key_sizing, key_size);
+                    Ok(message.get(key_name)?)
+                })
             }
 
             fn read_key_unchecked(&self, key_name: &str) -> Result<$gen_type, CodesError> {
-                Ok(self.lock().get(key_name)?)
+                self.read(|message| Ok(message.get(key_name)?))
             }
         }
     };
@@ -211,9 +236,14 @@ pub enum DynamicKeyType {
 
 impl<P: Debug> CodesMessage<P> {
     /// Reads the key in its native type, falling back to bytes when that fails.
-    #[allow(clippy::significant_drop_tightening)] // guard spans the fallback read
     pub fn read_key_dynamic(&self, key_name: &str) -> Result<DynamicKeyType, CodesError> {
-        let message = self.lock();
+        self.read(|message| Self::read_dynamic_from(message, key_name))
+    }
+
+    fn read_dynamic_from(
+        message: &GribMessage,
+        key_name: &str,
+    ) -> Result<DynamicKeyType, CodesError> {
         let key = message.key(key_name);
         let key_type = key.value_type()?;
         let key_size = key.len()?;
@@ -247,21 +277,21 @@ impl<P: Debug> CodesMessage<P> {
     }
 
     /// Writes this message to `file_path`; `append` adds instead of replacing.
-    #[allow(clippy::significant_drop_tightening)] // written bytes borrow the guard
     pub fn write_to_file<Q: AsRef<Path>>(
         &self,
         file_path: Q,
         append: bool,
     ) -> Result<(), CodesError> {
-        let message = self.lock();
-        let buf = message.as_bytes()?;
-        let mut file = OpenOptions::new()
-            .write(true)
-            .create(true)
-            .append(append)
-            .open(file_path)?;
-        file.write_all(buf)?;
-        Ok(())
+        self.read(|message| {
+            let buf = message.as_bytes()?;
+            let mut file = OpenOptions::new()
+                .write(true)
+                .create(true)
+                .append(append)
+                .open(file_path)?;
+            file.write_all(buf)?;
+            Ok(())
+        })
     }
 
     /// Clones this message into an independent, editable [`BufMessage`].
@@ -270,8 +300,7 @@ impl<P: Debug> CodesMessage<P> {
     pub fn try_clone(&self) -> Result<BufMessage, CodesError> {
         // The only C-side failure mode of a handle clone is a null result.
         let inner = self
-            .lock()
-            .try_clone()
+            .read(GribMessage::try_clone)
             .map_err(|_| CodesError::CloneFailed)?;
         Ok(BufMessage::new(inner))
     }
@@ -291,7 +320,7 @@ macro_rules! impl_key_write {
                 name: &str,
                 value: $gen_type,
             ) -> Result<&mut Self, CodesError> {
-                self.lock_mut().set(name, value)?;
+                self.get_mut().set(name, value)?;
                 Ok(self)
             }
         }
