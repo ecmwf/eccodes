@@ -30,4 +30,3 @@ if (  ( extraLocalSectionPresent || addExtraLocalSection )  && ! deleteExtraLoca
     codetable[2] extraLocalSectionNumber 'grib3/grib3LocalSectionNumber.[centreForLocal:l].table' = 300 : dump;
     template  localSection  "grib3/local.98.[extraLocalSectionNumber:l].def";
 }
-

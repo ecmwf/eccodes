@@ -4,12 +4,12 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
+#
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-if [ $# != 2 ] 
+if [ $# != 2 ]
 then
 echo "
 usage: $0 grib_api_installation_dir definition_files_installation_dir
@@ -41,8 +41,8 @@ if [ $version != $requiredLibVersion ]
 then
 echo "
 #################################################################
-# grib_api version $version found in 
-# $grib_api_dir 
+# grib_api version $version found in
+# $grib_api_dir
 # Version $requiredLibVersion is required.
 # Installation aborted.
 #################################################################
@@ -53,7 +53,7 @@ fi
 echo checking definition files compatibility...
 for file in `find . -name '*.def' -print`
 do
-  ${grib_api_bin}/codes_parser $file 
+  ${grib_api_bin}/codes_parser $file
 done
 if [ $? != 0 ]
 then
@@ -72,24 +72,24 @@ cp -r * $definitions.tmp~
 
 if [ -d $definitions ]
 then
-	if [ -d ${definitions}.backup~ ] 
+	if [ -d ${definitions}.backup~ ]
 	then
 		echo "
 #################################################################
 # A backup definition files directory is present:
 # ${definitions}.backup~
-# Please rename or remove it before installing a 
+# Please rename or remove it before installing a
 # new version of definition files.
-# INSTALLATION ABORTED 
+# INSTALLATION ABORTED
 #################################################################
 "
   exit 1
 	fi
 	echo "
 #################################################################
-# Definition file directory found in 
+# Definition file directory found in
 # ${definitions}
-# Moving $definitions to 
+# Moving $definitions to
 # ${definitions}.backup~
 #################################################################
 	"

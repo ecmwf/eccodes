@@ -80,3 +80,7 @@ build/
 trash
 
 *swp
+
+# Rust
+/rust/target/
+/rust/**/Cargo.lock

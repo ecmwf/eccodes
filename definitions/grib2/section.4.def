@@ -88,8 +88,8 @@ concept MTG2Switch(MTG2SwitchDefault, "MTG2SwitchConcept.def", conceptsDir2,conc
 
 # isECMWFPostGRIB2MigrationMessage tells client software using ecCodes when to use the encoder to create a post-MTG2 file.
 # For now, this is intended for internal use at ECMWF
-if (centre == 98) {
-    alias isECMWFPostGRIB2MigrationMessage = MTG2Switch;
+if (centre == 98 && MTG2Switch > 0) {
+    constant isECMWFPostGRIB2MigrationMessage = 1;
 }
 else {
     constant isECMWFPostGRIB2MigrationMessage = 0;

@@ -38,7 +38,7 @@ if ( g is "COR" ) {
 		alias isCorrection=one;
 		alias status=correction;
 		group g : dump; non_alpha na;
-}  
+}
 if (length(g) == 4) {
 		include "taf/cccc.def";
 } else {
@@ -46,13 +46,13 @@ if (length(g) == 4) {
 				rename(g,metarTwice);
 				group g : dump; non_alpha na;
 				if (length(g) == 4) { include "taf/cccc.def"; }
-				else { 
-						constant CCCC = "unknown"; 
-						constant coordinatesPresent = 0; 
+				else {
+						constant CCCC = "unknown";
+						constant coordinatesPresent = 0;
 				}
 		} else {
-				constant CCCC = "unknown"; 
-				constant coordinatesPresent = 0; 
+				constant CCCC = "unknown";
+				constant coordinatesPresent = 0;
 		}
 }
 
@@ -72,23 +72,23 @@ if ( ! isCorrection && g is "COR" ) {
 		alias status=correction;
 		alias isCorrection=one;
 		group g : dump; non_alpha na;
-}  
+}
 
 include "taf/wrong_delayed.def";
 
-if ( g is "NIL" ) { 
+if ( g is "NIL" ) {
 		rename(g,nil); group g : dump;
 } else {
-		if (g is "AUTO") { 
-				rename(g,auto); 
-				alias isAuto=true; 
-				group g : dump; non_alpha na; 
+		if (g is "AUTO") {
+				rename(g,auto);
+				alias isAuto=true;
+				group g : dump; non_alpha na;
 		}
 
 		include "taf/wind.def";
 		include "taf/horizontalVisibility.def";
 
-		if ( ! isCavok ) { 
+		if ( ! isCavok ) {
 				include "taf/present_weather.def";
 				include "taf/clouds.def";
 		}
@@ -110,10 +110,10 @@ if ( g is "NIL" ) {
 
 include "taf/remark.def";
 
-if (length(g) == 0) { 
+if (length(g) == 0) {
 		modify g : hidden;
 } else {
-		if ( ! remarkPresent) { 
+		if ( ! remarkPresent) {
 				rename(g,skippedGroup);
 				group g : dump; non_alpha na;
 				include "taf/colour.def";
@@ -131,26 +131,24 @@ if (length(g) == 0) {
 				}
 		}
 		include "taf/remark.def";
-		if ( ! remarkPresent) { 
+		if ( ! remarkPresent) {
 				if ( length(g) == 0) {
 						modify g : hidden;
 				} else {
-						rename(g,unknownGroup) ; 
+						rename(g,unknownGroup) ;
 				}
 		}
 		group notDecoded("=") : dump;
-		if (remarkPresent) { 
-				rename(notDecoded,remark); 
+		if (remarkPresent) {
+				rename(notDecoded,remark);
 		}
 }
 ascii[1] endMark :read_only ;
 
-position totalLength; 
+position totalLength;
 position endOfMessage;
 
 meta lengthOfMessage evaluate( endOfMessage-startOfMessage);
 meta md5Headers md5(startOfMessage,lengthOfMessage);
 
 alias ls.totalLength=totalLength;
-
-

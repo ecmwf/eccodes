@@ -1,5 +1,5 @@
 tigge_name mars.levtype min1 min2 max1 max2 checks
----------------------------------------------------------------------------------------------------------------------------------      
+---------------------------------------------------------------------------------------------------------------------------------
 #potential_temperature pv 220 460 3 3 point_in_time,given_level,potential_vorticity_level
 # Changed for ukmo
 potential_temperature pv 220 265 380 1200 point_in_time,given_level,potential_vorticity_level

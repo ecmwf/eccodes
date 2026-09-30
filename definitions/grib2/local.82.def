@@ -11,4 +11,3 @@ template_nofail marsKeywords "mars/eswi/grib2.[stream:s].[type:s].def";
 template ls_labeling "grib2/ls_labeling.82.def";
 
 position offsetAfterLocalSection;
-

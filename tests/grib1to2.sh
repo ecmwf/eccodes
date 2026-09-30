@@ -39,16 +39,16 @@ do
   rm -f ${output}
   ${tools_dir}/grib_set -s editionNumber=2 ${file}.grib1 ${output} 2> $REDIRECT > $REDIRECT
 
-  grib1Statistics=`${tools_dir}/grib_get -fp numberOfValues,numberOfPoints,max,min,average,numberOfMissing ${file}.grib1` 
-  grib2Statistics=`${tools_dir}/grib_get -fp numberOfValues,numberOfPoints,max,min,average,numberOfMissing ${output}` 
+  grib1Statistics=`${tools_dir}/grib_get -fp numberOfValues,numberOfPoints,max,min,average,numberOfMissing ${file}.grib1`
+  grib2Statistics=`${tools_dir}/grib_get -fp numberOfValues,numberOfPoints,max,min,average,numberOfMissing ${output}`
 
-  if [ "$grib1Statistics" != "$grib2Statistics" ]; then 
+  if [ "$grib1Statistics" != "$grib2Statistics" ]; then
     exit 1
   fi
 
   #${tools_dir}/grib_compare -A1.0e-8 -c values ${file}.grib1 ${output} 2> /dev/null > /dev/null
   ${tools_dir}/grib_compare -P -c values ${file}.grib1 ${output} 2> $REDIRECT > $REDIRECT
-  
+
   rm -f ${output}
 
 done

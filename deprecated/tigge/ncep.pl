@@ -19,18 +19,18 @@ my %DEFAULTS = (
 		);
 
 my @RULES = (
-		
-		
-		
-# Minimum temperature 
+
+
+
+# Minimum temperature
 	[
 		# condition
 		{ discipline=>0, parameterCategory=>0, parameterNumber=>5,
 			typeOfFirstFixedSurface => 103 },
 		# action
 		{ tigge_short_name => "mn2t6" }, ],
-		
-# Maximum temperature 
+
+# Maximum temperature
 	[
 		# condition
 		{ discipline=>0, parameterCategory=>0, parameterNumber=>4,
@@ -61,34 +61,34 @@ my @RULES = (
 		{ discipline=>0, parameterCategory=>7, parameterNumber=>6,
 			typeOfFirstFixedSurface => 108 },
 		# action
-		{ tigge_short_name => "cape",  
+		{ tigge_short_name => "cape",
 		}, ],
 
 # Convective inhibition
 	[
 		# condition
-		{ discipline=>0, parameterCategory=>7, parameterNumber=>7, 
+		{ discipline=>0, parameterCategory=>7, parameterNumber=>7,
 			typeOfFirstFixedSurface => 1 },
 		# action
-		{ tigge_short_name => "ci",  
+		{ tigge_short_name => "ci",
 		}, ],
 
 # Skin temperature
 	[
 		# condition
-		{ discipline=>0, parameterCategory=>0, parameterNumber=>0, 
+		{ discipline=>0, parameterCategory=>0, parameterNumber=>0,
 			typeOfFirstFixedSurface => 1 },
 		# action
-		{ tigge_short_name => "skt",  
+		{ tigge_short_name => "skt",
 		}, ],
 
 # Snow depth
 	[
 		# condition
-		{ discipline=>0, parameterCategory=>1, parameterNumber=>13, 
+		{ discipline=>0, parameterCategory=>1, parameterNumber=>13,
 			typeOfFirstFixedSurface => 1 },
 		# action
-		{ tigge_short_name => "sd",  
+		{ tigge_short_name => "sd",
 		}, ],
 
 # Total precipitation
@@ -101,30 +101,30 @@ my @RULES = (
 
 
 # Single levels
-	[ 
+	[
 		# condition
-		{ typeOfSecondFixedSurface => 255 } , 
+		{ typeOfSecondFixedSurface => 255 } ,
 		# action
-		{ scaleFactorOfSecondFixedSurface => undef, 
+		{ scaleFactorOfSecondFixedSurface => undef,
 		scaledValueOfSecondFixedSurface => undef } ],
-	[ 
+	[
 		# condition
-		{ typeOfSecondFixedSurface => 8 } , 
+		{ typeOfSecondFixedSurface => 8 } ,
 		# action
-		{ scaleFactorOfSecondFixedSurface => undef, 
+		{ scaleFactorOfSecondFixedSurface => undef,
 		scaledValueOfSecondFixedSurface => undef } ],
-	[ 
+	[
 		# condition
-		{ typeOfFirstFixedSurface => 1 } , 
+		{ typeOfFirstFixedSurface => 1 } ,
 		# action
-		{ scaleFactorOfFirstFixedSurface => undef, 
+		{ scaleFactorOfFirstFixedSurface => undef,
 		scaledValueOfFirstFixedSurface => undef } ],
 
-	[ 
+	[
 		# condition
-		{ typeOfFirstFixedSurface => 101 } , 
+		{ typeOfFirstFixedSurface => 101 } ,
 		# action
-		{ scaleFactorOfFirstFixedSurface => undef, 
+		{ scaleFactorOfFirstFixedSurface => undef,
 		scaledValueOfFirstFixedSurface => undef } ],
 
 );
@@ -154,7 +154,7 @@ while(my $g = GRIB::API->new(\*IN))
 close(OUT) or die "$ARGV[1]: $!";
 #system("./tigge_check $ARGV[1] && mv $ARGV[0] done/");
 
-# Checks if a handle matches a rule condition 
+# Checks if a handle matches a rule condition
 sub match {
 	my ($h,$cond) = @_;
 	foreach my $c ( keys %{$cond} )
@@ -163,4 +163,3 @@ sub match {
 	}
 	return 1;
 }
-

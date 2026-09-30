@@ -1,9 +1,9 @@
 NAME    bufr_count
 
 DESCRIPTION
-        Print the total number of BUFR messages in the given files. 
+        Print the total number of BUFR messages in the given files.
 
-USAGE 
+USAGE
         bufr_count [options] bufr_file bufr_file ...
 
 OPTIONS

@@ -14,4 +14,3 @@ alias mars.step = startStep;
 
 alias mars.instrument = instrumentType;
 alias mars.ident = satelliteNumber;
-

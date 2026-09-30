@@ -14,4 +14,3 @@ if (centre == 80 && subCentre == 98 && (class is "c3" || class is "ci")) {
 }
 
 if (class is "ci") { unalias mars.method; }
-

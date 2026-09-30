@@ -50,4 +50,3 @@ codetable[2] dataSelection "grib3/tables/local/ecmf/obstat.10.0.table";
 unsigned[2] scanPosition;
 
 codetable[1] mask "grib3/tables/local/ecmf/obstat.8.0.table";
-

@@ -10,4 +10,3 @@ unsigned[1] modelErrorType  : dump;
 alias local.componentIndex=componentIndex;
 alias local.numberOfComponents=numberOfComponents;
 alias local.modelErrorType=modelErrorType;
-

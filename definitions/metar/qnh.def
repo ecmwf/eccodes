@@ -30,4 +30,3 @@ if (! qnhPresent && substr(g,0,1) is "Q" ) {
 		}
 		group g : dump; non_alpha na;
 }
-

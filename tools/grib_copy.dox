@@ -1,43 +1,43 @@
 /*!  \page grib_copy grib_copy
-\section DESCRIPTION 
+\section DESCRIPTION
  Copies the content of grib files printing values of some keys.
 
-\section USAGE 
- grib_copy 
+\section USAGE
+ grib_copy
  [options] grib_file grib_file ... output_grib_file
 
-\section OPTIONS 
+\section OPTIONS
 -f  \n Force. Force the execution not to fail on error.
  \n \n -r  \n Repack data. Sometimes after setting some keys involving properties
 		of the packing algorithm a repacking of data is needed.
 		This repacking is performed setting this -r option.
- \n \n -p key[:{s/d/i}],key[:{s/d/i}],... \n 
+ \n \n -p key[:{s/d/i}],key[:{s/d/i}],... \n
 		Declaration of keys to print.
 		For each key a string (key:s), a double (key:d) or an integer (key:i)
 		type can be requested. Default type is string.
- \n \n -P key[:{s/d/i}],key[:{s/d/i}],... \n 
+ \n \n -P key[:{s/d/i}],key[:{s/d/i}],... \n
 		As -p adding the declared keys to the default list.
- \n \n -w key[:{s/d/i}]{=/!=}value,key[:{s/d/i}]=value,... \n 
+ \n \n -w key[:{s/d/i}]{=/!=}value,key[:{s/d/i}]=value,... \n
 		Where clause.
 		Only grib messages matching the key/value constraints are copied to the
 		output_grib_file.
 		A valid constraint is of type key=value or key!=value.
 		For each key a string (key:s), a double (key:d) or an integer (key:i)
 		type can be defined. Default type is string.
- \n \n -B order by directive \n 
+ \n \n -B order by directive \n
 		Order by. The output will be ordered according to the order by directive.
 		Order by example: "step:i asc, centre desc" (step numeric ascending and centre descending)
  \n \n -V  \n Version.
- \n \n -W width \n 
+ \n \n -W width \n
 		Minimum width of each column in output. Default is 10.
  \n \n -M  \n Multi-field support off. Turn off support for multiple fields in single grib message.
  \n \n -T T | B | M | A \n Message type. T->GTS, B->BUFR, M->METAR (Experimental),A->Any (Experimental).
 			The input file is interpreted according to the message type.
- \n \n -g  \n Copy GTS header. 
+ \n \n -g  \n Copy GTS header.
  \n \n -G  \n GRIBEX compatibility mode.
  \n \n -7  \n Does not fail when the message has wrong length
  \n \n -v  \n Verbose.
- \n \n 
+ \n \n
 \section grib_copy_examples grib_copy examples
 -# To copy only the pressure levels from a file\n
 \verbatim

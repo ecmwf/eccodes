@@ -49,8 +49,8 @@ static int find_nearest_in_array(double val,double* vals,int ilast,int* i1,int* 
     return GRIB_GEOCALCULUS_PROBLEM;
   }
 
-  if (*i1 < 0 || *i1 > ilast || vals[*i1] > val) *i1=0; 
-  if (*i2 < 0 || *i2 > ilast || vals[*i2] < val) *i2=ilast; 
+  if (*i1 < 0 || *i1 > ilast || vals[*i1] > val) *i1=0;
+  if (*i2 < 0 || *i2 > ilast || vals[*i2] < val) *i2=ilast;
 
   nstep=(*i2-*i1)/2;
   while (nstep >= 1) {
@@ -63,7 +63,7 @@ static int find_nearest_in_array(double val,double* vals,int ilast,int* i1,int* 
     printf("----- iteration %d -- val=%g -- val[%d]=%g  val[%d]=%g\n",count,val,*i1,vals[*i1],*i2,vals[*i2]);
 	count++;
   }
-   
+
   return 0;
 }
 
@@ -78,9 +78,9 @@ int grib_gaussian_find_nearest(int reduced,int order,int* npoints,double* lats,d
 
   ilatlast=2*order-1;
 
-  if ((ret=find_nearest_in_array(lat,lats,ilatlast,&ilat1,&ilat2)) != GRIB_SUCCESS ) 
+  if ((ret=find_nearest_in_array(lat,lats,ilatlast,&ilat1,&ilat2)) != GRIB_SUCCESS )
     return ret;
-  
+
   printf("------------ nearest of lat=%g -- lat[%d]=%g  lat[%d]=%g \n",lat,ilat1,lats[ilat1],ilat2,lats[ilat2]);
 
   if (ilat1 <= order) npoints1=npoints[ilat1];
@@ -94,7 +94,7 @@ int grib_gaussian_find_nearest(int reduced,int order,int* npoints,double* lats,d
 
   lonstep2=360.0/npoints2;
   ilon2=floor(lon/lonstep2);
-  
+
   printf("------------ nearest of lon=%g -- (%d,%d) lon=%g  (step=%g npoints=%d) - (%d,%d) lon=%g  (step=%g npoints=%d)\n",
 		 lon,
          ilat1,ilon1,ilon1*lonstep1,lonstep1,npoints1,
@@ -154,7 +154,7 @@ int main(int argc, char *argv[])
      if (reduced) printf("Error: unable to build the reduced gaussian grid %d\n",(int)order);
      else printf("Error: unable to build the gaussian grid %d\n",(int)order);
   }
-  
+
   n=4;
   nearest_idx=(int*)malloc(n*sizeof(int));
   if ( grib_gaussian_find_nearest(reduced,order,npoints,lats,lat,lon,&n,nearest_idx) != GRIB_SUCCESS  ) {
@@ -165,22 +165,22 @@ int main(int argc, char *argv[])
   else printf("--- Gaussian grid %d ---\n",(int)order);
 
   if (reduced) {
-    printf("Latitude  Number     Latitude\n"); 
-    printf("number    of points\n"); 
+    printf("Latitude  Number     Latitude\n");
+    printf("number    of points\n");
 	tot_npoints=0;
-    for (i=0; i< order; i++) { 
-       printf("%-*d %-*d %2.5f\n",9,i,10,npoints[i],lats[i]);  
+    for (i=0; i< order; i++) {
+       printf("%-*d %-*d %2.5f\n",9,i,10,npoints[i],lats[i]);
 	   tot_npoints+=npoints[i];
 	}
     for (i=order; i< 2*order; i++) {
-       printf("%-*d %-*d %2.5f\n",9,i,10,npoints[2*order-i-1],lats[i]);  
+       printf("%-*d %-*d %2.5f\n",9,i,10,npoints[2*order-i-1],lats[i]);
 	   tot_npoints+=npoints[2*order-i-1];
 	}
 	printf("Total Number Of Points = %d\n",tot_npoints);
   } else {
     printf("Latitude  Latitude\n");
-    printf("number   \n"); 
-    for ( i=0; i < 2*order; i++) 
+    printf("number   \n");
+    for ( i=0; i < 2*order; i++)
       printf("%-*d %2.5f\n",9,i,lats[i]);
   }
 
@@ -189,5 +189,3 @@ int main(int argc, char *argv[])
   return 0;
 
 }
-
-

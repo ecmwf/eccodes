@@ -2,7 +2,7 @@
 
 # What to do:
 #
-# 1) change info in the file master.info 
+# 1) change info in the file master.info
 #
 # 2)
 #    the following tabe must exist in psql metdb_test;
@@ -16,7 +16,7 @@
 #			 update_date                 date default current_date,
 #
 #            PRIMARY KEY ("param_id", "levtype", "keyword", "value")
-#			 );			
+#			 );
 
 use strict;
 
@@ -32,7 +32,7 @@ my $DHB = DBI->connect("dbi:Pg(RaiseError=>1):dbname=metdb_test;host=datasvc","m
 my $prepare = "delete from grib2_test";
 my $sth = $DHB->prepare( $prepare );
 $sth->execute();
-						
+
 my $header = 0;
 my $data   = 0;
 my @headers;
@@ -52,15 +52,15 @@ while( <IN> ) {
 	    $header = 1;
 		@headers = split( /\s/, $current );
 	    next
-	}	
-	
+	}
+
 	my @data = split( " ", $current );
 
     my $grib1;
 	my $levtype;
 	my $count = 0;
 	foreach my $name ( @headers ) {
-		
+
 		$grib1   = $data[ $count ] if( $name =~ m/^mars.param\Z/ );
 		$levtype = $data[ $count ] if( $name =~ m/^mars.levtype\Z/ );
 
@@ -72,17 +72,16 @@ while( <IN> ) {
         if( $name =~ /^\w+\Z/ and $data[ $count ] =~ /\d+/ ) {
 			my $keyword = $name;
 			my $value   = $data[ $count ];
-		
+
 		    my $prepare = "insert into grib2_test values( '$grib1', '$levtype', '$keyword', '$value' )";
 			my $sth = $DHB->prepare( $prepare );
 
 			print $prepare . "\n";
-			
+
 			$sth->execute();
-		}	
+		}
 
 		$count++;
 	}
-	
-}	
 
+}

@@ -111,7 +111,7 @@
                                   scaleFactorOfSecondFixedSurface=0; scaledValueOfSecondFixedSurface=80000;}
 'mediumCloudLayer'             = {typeOfFirstFixedSurface=100; scaleFactorOfFirstFixedSurface=0; scaledValueOfFirstFixedSurface=80000;
                                   typeOfSecondFixedSurface=100; scaleFactorOfSecondFixedSurface=0; scaledValueOfSecondFixedSurface=45000;}
-'highCloudLayer'               = {typeOfFirstFixedSurface=100; scaleFactorOfFirstFixedSurface=0; scaledValueOfFirstFixedSurface=45000; 
+'highCloudLayer'               = {typeOfFirstFixedSurface=100; scaleFactorOfFirstFixedSurface=0; scaledValueOfFirstFixedSurface=45000;
                                   typeOfSecondFixedSurface=8; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();}
 'highCloudLayer'               = {typeOfFirstFixedSurface=100; scaleFactorOfFirstFixedSurface=0;
                                   scaledValueOfFirstFixedSurface=45000; typeOfSecondFixedSurface=8;}

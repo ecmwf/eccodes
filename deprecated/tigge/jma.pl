@@ -3,7 +3,7 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
+#
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 
@@ -19,52 +19,52 @@ my %DEFAULTS = (
 		);
 
 my @RULES = (
-		
-		
-		
+
+
+
 # Dew point
 	[
 		# condition
-		{ discipline=>0, parameterCategory=>0, parameterNumber=>6, 
+		{ discipline=>0, parameterCategory=>0, parameterNumber=>6,
 			typeOfFirstFixedSurface => 1,
 		},
 		# action
 		{ tigge_short_name => "2d", typeOfFirstFixedSurface=>103,
 			scaleFactorOfFirstFixedSurface=>0,
-			scaledValueOfFirstFixedSurface=>2 }, 
+			scaledValueOfFirstFixedSurface=>2 },
 	],
 
 # Total precip.
 	[
 		# condition
-		{ discipline=>0, parameterCategory=>1, parameterNumber=>8, 
+		{ discipline=>0, parameterCategory=>1, parameterNumber=>8,
 		},
 		# action
 		{ tigge_short_name => "tp",}
 	],
-		
+
 # Mean sea level pressure
 
 	[
 		# condition
-		{ discipline=>0, parameterCategory=>3, parameterNumber=>1, 
+		{ discipline=>0, parameterCategory=>3, parameterNumber=>1,
 		},
 		# action
 		{ tigge_short_name => "msl",}
 	],
-		
-# Total cloud cover 
+
+# Total cloud cover
 
 	[
 		# condition
-		{ discipline=>0, parameterCategory=>6, parameterNumber=>1, 
+		{ discipline=>0, parameterCategory=>6, parameterNumber=>1,
 		},
 		# action
 		{ tigge_short_name => "tcc",}
 	],
-		
-		
-		
+
+
+
 
 );
 
@@ -96,7 +96,7 @@ while(my $g = GRIB::API->new(\*IN))
 close(OUT) or die "$ARGV[1]: $!";
 #system("./tigge_check $ARGV[1] && mv $ARGV[0] done/");
 
-# Checks if a handle matches a rule condition 
+# Checks if a handle matches a rule condition
 sub match {
 	my ($h,$cond) = @_;
 	foreach my $c ( keys %{$cond} )
@@ -105,4 +105,3 @@ sub match {
 	}
 	return 1;
 }
-

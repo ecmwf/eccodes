@@ -3,7 +3,7 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
+#
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 
@@ -392,7 +392,7 @@ while($g = GRIB::API->new(\*IN))
 unless(exists $NEW_ID{$p})
 {
 	system("smslabel","info","No ID for $p");
-	die "No ID for $p" 
+	die "No ID for $p"
 }
 	$p = $NEW_ID{$p};
 	$p = "${p}_${l}";
@@ -417,7 +417,7 @@ unless(exists $NEW_ID{$p})
 		unless($mapping) {
 			# $g->Dump(\*STDOUT);
 		system("smslabel","info","No mapping for [$m] [$g1{$m}]");
-			die Dumper(\%g1, "No mapping for [$m] [$g1{$m}]") 
+			die Dumper(\%g1, "No mapping for [$m] [$g1{$m}]")
 		}
 
 		foreach my $k ( keys %{$mapping} )
@@ -487,7 +487,7 @@ unless(exists $NEW_ID{$p})
 
 		my $y = $g->get_long("latitudeOfFirstGridPoint");
 		die if($x != $y);
-		
+
 	}
 
 	my $n = $g->get("numberOfValues");

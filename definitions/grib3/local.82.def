@@ -18,5 +18,3 @@ template ls_labeling "grib3/ls_labeling.82.def";
 
 
 position offsetAfterLocalSection;
-
-

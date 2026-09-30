@@ -1,13 +1,13 @@
 /*! \page keys ecCodes keys
-The GRIBEX routine used at ECMWF to encode and decode GRIB messages works 
-on a number based table to retrive all the information from the message. 
-This approach forces the user either to learn a code table 
-or to use the documentation intensively. 
+The GRIBEX routine used at ECMWF to encode and decode GRIB messages works
+on a number based table to retrive all the information from the message.
+This approach forces the user either to learn a code table
+or to use the documentation intensively.
 With grib_api a key name based access is provided so that
 all the information contained in the GRIB message is retrieved through
 alphanumeric names. \n
-All the key names are built from the official WMO documentation on 
-the GRIB edition 1 and 2 coding standard removing the spaces in the key 
+All the key names are built from the official WMO documentation on
+the GRIB edition 1 and 2 coding standard removing the spaces in the key
 description and capitalizing the initials so that the caption:\n
 \verbatim
 identification of originating generating centre
@@ -16,26 +16,26 @@ is transformed into the key name\n
 \verbatim
 identificationOfOriginatingGeneratingCentre
 \endverbatim\n
-Some short names (aliases) are also provided, e.g. "centre" is an alias 
-for identificationOfOriginatingGeneratingCentre. 
+Some short names (aliases) are also provided, e.g. "centre" is an alias
+for identificationOfOriginatingGeneratingCentre.
 The names are always easily releated to the meaning of their value.\n
-A different set of keys is available for each message because the content 
-is different. It is easy to find the keys available in a message by using 
-the GRIB tools (\ref grib_dump "grib_dump) 
+A different set of keys is available for each message because the content
+is different. It is easy to find the keys available in a message by using
+the GRIB tools (\ref grib_dump "grib_dump)
 or the library (\ref grib_keys_iterator.c "grib_keys_iterator.c").\n
 
 \section coded_computed Coded and Computed keys
 
 There are two different types of keys: coded and computed. \n
 The coded keys are directly linked to octets of the GRIB message and
-their value is obtained by only decoding the octets. 
+their value is obtained by only decoding the octets.
 A list of all the coded keys in a message can be obtained
 using \ref grib_dump "grib_dump" without any option (use the -a option to obtain also their aliases).\n
-The computed keys are obtained by combining other keys (coded or computed) and 
+The computed keys are obtained by combining other keys (coded or computed) and
 when their value is set all the related keys are set in a cascade process.\n
 These keys provide a synthesis of the information contained in the GRIB message
 and are a safe way to set complex attributes such as the type of grid or the type of
-packing. They are also helpful in the interpretation of some octets such as 
+packing. They are also helpful in the interpretation of some octets such as
 the scanning mode whose bits are related to the way of scanning the grid.
 In this case the computed keys:\n
 \verbatim
@@ -44,17 +44,17 @@ jScansPositively
 jPointsAreConsecutive
 alternativeRowScanning (available only for edition 2)
 \endverbatim\n
-will provide access to single bits of the scanning mode octet hiding 
+will provide access to single bits of the scanning mode octet hiding
 its structure from the user.\n
 The keys can also have some attributes as \e read \e only, which means that
 the key cannot be set (e.g. 7777 at the end of the message), or \e edition \e specific
 that is the attribute of all the keys having different values in the
-two editions (e.g. longitudeOfFirstGridPoint) or being present in one edition 
+two editions (e.g. longitudeOfFirstGridPoint) or being present in one edition
 only (e.g. alternativeRowScanning).\n
-Moreover there are some computed keys that cannot be "get" 
-and can be considered as functions acting on the grib in some way. These keys 
+Moreover there are some computed keys that cannot be "get"
+and can be considered as functions acting on the grib in some way. These keys
 are always characterised by a predicate in their name (e.g. setDecimalPrecision).\n
-For the computed keys we provide the following preliminary documentation that will be extended soon. 
+For the computed keys we provide the following preliminary documentation that will be extended soon.
 - MARS keywords.\n
 All MARS keywords are available. Some examples are:
  - date
@@ -64,10 +64,10 @@ All MARS keywords are available. Some examples are:
  - step
  - stream
 - angles in degrees. \n
-All the angle variables are provided in two versions, a native one with the units 
+All the angle variables are provided in two versions, a native one with the units
 coded into the GRIB file and an edition independent one in degrees. It is always better
 to work with the "in degrees" version that is always provided through the key which has the
-same name of the native version with the suffix InDegrees  
+same name of the native version with the suffix InDegrees
 \verbatim
 longitudeOfFirstGridPoint -> longitudeOfFirstGridPointInDegrees
 latitudeOfFirstGridPoint -> latitudeOfFirstGridPointInDegrees
@@ -78,7 +78,7 @@ iDirectionIncrement -> iDirectionIncrementInDegrees
 jDirectionIncrement -> jDirectionIncrementInDegrees
 \endverbatim
 - gridType\n
- The type of grid computed from the grid description section. 
+ The type of grid computed from the grid description section.
  - For both editions:
   - regular_ll
   - reduced_ll

@@ -147,7 +147,7 @@ static void do_checks(grib_handle* h)
 
 static void output_field(grib_handle* h,FILE* f,long bits,double* values,size_t size,const char* out)
 {
-    const void *buffer; 
+    const void *buffer;
 
     GRIB_CHECK(grib_set_long(h,"numberOfBitsContainingEachPackedValue",bits),"numberOfBitsContainingEachPackedValue");
     GRIB_CHECK(grib_set_double_array(h,"values",values,size),NULL);

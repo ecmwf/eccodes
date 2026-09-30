@@ -12,7 +12,7 @@
 #
 # It exits with status 0 if the files are considered the same
 # otherwise status is 1.
-# 
+#
 # Only the first difference is printed
 #
 ########################################################################

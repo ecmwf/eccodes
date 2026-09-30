@@ -14,7 +14,7 @@ all-local: all-perl
 all-perl: $(PERLLIB)
 
 $(PERLMAKEFILE): $(PERLMAKEMAKER)
-	cd $(API_DIR) && @PERL@ Makefile.PL @PERL_INSTALL_OPTIONS@ @PERL_MAKE_OPTIONS@ @PERL_LD_OPTIONS@ 
+	cd $(API_DIR) && @PERL@ Makefile.PL @PERL_INSTALL_OPTIONS@ @PERL_MAKE_OPTIONS@ @PERL_LD_OPTIONS@
 
 $(PERLLIB): $(PERLMAKEFILE) $(top_builddir)/src/libgrib_api.a
 	cd $(API_DIR) && $(MAKE)

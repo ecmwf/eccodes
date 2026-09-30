@@ -21,14 +21,14 @@ f=${data_dir}/bufr/syno_1.bufr
 
 REDIRECT=/dev/null
 
-#The input ($f) and output ($fBufrTmp) are hardcoded in the example!!!  
-$PYTHON $examples_src/bufr_clone.py >$REDIRECT 2> $REDIRECT 
+#The input ($f) and output ($fBufrTmp) are hardcoded in the example!!!
+$PYTHON $examples_src/bufr_clone.py >$REDIRECT 2> $REDIRECT
 
 #TODO: add more checks
 
 #Compare clone to the original
 set +e
-${tools_dir}/bufr_compare $f $fBufrTmp >$REDIRECT 2> $REDIRECT 
+${tools_dir}/bufr_compare $f $fBufrTmp >$REDIRECT 2> $REDIRECT
 
 #Check if clone is different
 if [ $? -eq 0 ]; then
@@ -40,4 +40,3 @@ set -e
 
 #Clean up
 rm -f ${fBufrTmp}
-

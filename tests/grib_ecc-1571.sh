@@ -3,7 +3,7 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
+#
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
@@ -34,8 +34,3 @@ ${tools_dir}/grib_set -s setLocalDefinition=1,grib2LocalSectionNumber=0,uerraLoc
 grib_check_key_equals ${tempGribB} uerraLocalVersion,experimentVersionNumber "1 1234"
 
 rm -f ${tempGribA} ${tempGribB}
-
-
-
-
-

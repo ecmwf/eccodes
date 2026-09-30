@@ -3,7 +3,7 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
+#
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
@@ -49,4 +49,3 @@ test_ld12 $sample_grib2 "0"    "0000"
 test_ld12 $sample_grib2 "12"   "0012"
 test_ld12 $sample_grib2 "2400" "2400"
 test_ld12 $sample_grib2 "1423" "1423"
-

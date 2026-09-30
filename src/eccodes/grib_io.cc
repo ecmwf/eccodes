@@ -1077,7 +1077,7 @@ static int read_any_metar(reader* r)
                 already_read = 5;
                 off_t rTell = r->tell(r->read_data);
                 r->offset = (rTell != -1 ? rTell : offset) - already_read;
-                
+
                 message_size = already_read;
                 while (r->read(r->read_data, &c, 1, &err) == 1 && err == 0) {
                     message_size++;

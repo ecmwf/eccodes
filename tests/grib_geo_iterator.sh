@@ -28,4 +28,4 @@ then
     exit 0
 fi
 
-$EXEC ${test_dir}/grib_geo_iterator ${proj_dir}/tests/grib_to_gridspec/N320.area.grib
+$EXEC ${test_dir}/grib_geo_iterator "${data_dir}/gridspec/gridType=reduced_gg,N320.area.grib"

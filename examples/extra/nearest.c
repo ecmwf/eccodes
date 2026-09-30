@@ -4,7 +4,7 @@
 *
 *  Description:
 *    Get the nearest for all the messages in the input grib file.
-*    No land-sea mask applied yet. Print the nearest values to 
+*    No land-sea mask applied yet. Print the nearest values to
 *    stdout with high precision.
 *
 *  Author: Cristian D Codorean
@@ -39,7 +39,7 @@ int main(int argc, char** argv) {
     /* program inputs */
     double lat =0,lon = 0;
     char** file_names  = NULL;
-    
+
     /* just some input validation */
     if (argc < 4) {
         usage(argv[0]);
@@ -55,7 +55,7 @@ int main(int argc, char** argv) {
         file_names[i] = strdup(argv[i+shift]);
     }
 
-    
+
 
     for (i = 0; i < nfiles; i++) {
 
@@ -70,12 +70,12 @@ int main(int argc, char** argv) {
         while (h = grib_handle_new_from_file(0,file_handle,&err)) {
 
             if (err != GRIB_SUCCESS) GRIB_CHECK(err,0);
-            
+
             GRIB_CHECK(grib_nearest_find_multiple(h,0,&lat,&lon,1,&outlat,&outlon,&value,&distance,&index),0);
 
             /*printf("outlat: %lf outlon: %lf value: %.10lf distance: %lf index: %d\n",
                 outlat, outlon, value, distance, index);*/
-            
+
             printf("%.10lf\n",value);
 
             GRIB_CHECK(grib_handle_delete(h),0);

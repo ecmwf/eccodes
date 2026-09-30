@@ -133,7 +133,7 @@
 139 pscw PSCW Pseudo satellite image: cloud water reflectivity (visible) -
 144 prtp PRTP Precipitation Type -
 158 mrad MRAD Surface downward moon radiation -
-160 cape CAPE CAPE out of the model J kg-1 
+160 cape CAPE CAPE out of the model J kg-1
 161 xhail XHAIL AROME hail diagnostic kg m**-2
 162 ugst UGST Gust, u-component m s*-1
 163 vgst VGST Gust, v-component m s*-1

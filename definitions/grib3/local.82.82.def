@@ -11,5 +11,3 @@
 include "grib3/local.82.0.def";
 
 unsigned[1] marsExperimentOffset = 0 : dump, long_type;
-
-

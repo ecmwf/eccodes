@@ -9,7 +9,7 @@
  */
 
 #include "grib_api_internal.h"
-/* 
+/*
    This is used by make_class.pl
 
    START_CLASS_DEF
@@ -18,7 +18,7 @@
    IMPLEMENTS = pack_long;unpack_long
    IMPLEMENTS = init
    MEMBERS    = const char* table
-   MEMBERS    = const char* parameter 
+   MEMBERS    = const char* parameter
    END_CLASS_DEF
 
  */

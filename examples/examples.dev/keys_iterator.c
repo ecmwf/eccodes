@@ -90,4 +90,3 @@ static void usage(char* progname) {
 	printf("\nUsage: %s grib_file\n",progname);
 	exit(1);
 }
-

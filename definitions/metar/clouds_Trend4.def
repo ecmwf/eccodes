@@ -57,4 +57,3 @@ if (substr(g,0,3) is "FEW" || substr(g,0,3) is "SCT" ||
 				}
 		}
 }
-

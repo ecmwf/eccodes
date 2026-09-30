@@ -15,12 +15,12 @@ if (versionNumberOfSuperblock == 0 || versionNumberOfSuperblock == 1)
     uint8 reserved2;
     #uint32_little_endian groupLeafAndInternalNodeK : dump;
     #uint32_little_endian fileConsistencyFlags : dump;
-    
+
     #unsigned[4] groupLeafAndInternalNodeK : dump;
     unsigned[2] groupLeafNodeK : dump;
     unsigned[2] groupInternalNodeK : dump;
     unsigned[4] fileConsistencyFlags : dump;
-    
+
     if (versionNumberOfSuperblock == 1) {
         uint16 indexedStorageInternalNodeK : dump;
         uint16 reserved3;

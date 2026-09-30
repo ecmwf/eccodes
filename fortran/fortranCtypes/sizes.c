@@ -41,4 +41,3 @@ void check_long_long(long long *x,long long *y,char* ret) {
   *ret = ((char*)y)-((char*)x) == sizeof(*x) ?  't' : 'f';
 }
 void check_long_long_(long long *x,long long *y,char* ret) {check_long_long(x,y,ret);}
-

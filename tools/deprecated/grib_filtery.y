@@ -62,29 +62,29 @@ semi : ';'
 	 ;
 
 
-set : IDENT '=' INTEGER { 	
+set : IDENT '=' INTEGER {
 							grib_filter_to_set[grib_filter_irule][grib_filter_nset[grib_filter_irule]].key=$1;
 							grib_runtime_type* rtt=grib_runtime_type_new(NULL);
 							grib_runtime_type_set_long(rtt,$3);
 							grib_filter_to_set[grib_filter_irule][grib_filter_nset[grib_filter_irule]].value=rtt;
 							grib_filter_nset[grib_filter_irule]++;
-						} 
-		| IDENT '=' FLOAT { 	
+						}
+		| IDENT '=' FLOAT {
 							grib_filter_to_set[grib_filter_irule][grib_filter_nset[grib_filter_irule]].key=$1;
 							grib_runtime_type* rtt=grib_runtime_type_new(NULL);
 							grib_runtime_type_set_double(rtt,$3);
 							grib_filter_to_set[grib_filter_irule][grib_filter_nset[grib_filter_irule]].value=rtt;
 							grib_filter_nset[grib_filter_irule]++;
-						} 
-		| IDENT '=' STRING { 	
+						}
+		| IDENT '=' STRING {
 							grib_filter_to_set[grib_filter_irule][grib_filter_nset[grib_filter_irule]].key=$1;
 							grib_runtime_type* rtt=grib_runtime_type_new(NULL);
 							grib_runtime_type_set_char(rtt,$3,strlen($3));
 							grib_filter_to_set[grib_filter_irule][grib_filter_nset[grib_filter_irule]].value=rtt;
 							grib_filter_nset[grib_filter_irule]++;
 						}
-   ; 
-   
+   ;
+
 instruction : set semi
 	 ;
 
@@ -95,12 +95,12 @@ instructions : instruction
 if_blocks : if_block
 			| if_block if_blocks
 
-if_block : 
+if_block :
   IF '(' condition ')' '{' instructions '}' {grib_filter_irule++;}
-   ; 
-   
+   ;
 
-comparison  : IDENT EQ INTEGER 	{ 	
+
+comparison  : IDENT EQ INTEGER 	{
 									grib_filter_keys[grib_filter_irule][grib_filter_nkey[grib_filter_irule]]=$1;
 									grib_filter_values[grib_filter_irule][grib_filter_nkey[grib_filter_irule]]=$3;
 									grib_filter_nkey[grib_filter_irule]++;

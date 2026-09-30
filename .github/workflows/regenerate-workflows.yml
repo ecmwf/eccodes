@@ -1,0 +1,21 @@
+name: Regenerate downstream-CI workflows
+
+on:
+  push:
+    branches: [develop]
+  # Drift also comes from sibling manifests and the generator.
+  schedule:
+    - cron: '17 3 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: regenerate-workflows-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  regenerate:
+    uses: ecmwf/ci-infrastructure/.github/workflows/regenerate-workflows.yml@main
+    secrets: inherit

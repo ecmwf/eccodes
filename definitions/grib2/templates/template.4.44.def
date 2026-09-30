@@ -16,4 +16,3 @@ include "grib2/templates/template.4.forecast_time_44.def"
 
 include "grib2/templates/template.4.point_in_time.def"
 include "grib2/templates/template.4.horizontal.def"
-

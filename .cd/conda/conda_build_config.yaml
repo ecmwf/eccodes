@@ -1,0 +1,9 @@
+# Standard C library variant definitions
+# Required for {{ stdlib("c") }} to resolve correctly with conda-build >= 26.x
+# See: https://github.com/conda/conda-build/issues/5745
+c_stdlib:
+  - sysroot                     # [linux]
+  - macosx_deployment_target    # [osx]
+c_stdlib_version:
+  - 2.17                        # [linux]
+  - 10.13                       # [osx]

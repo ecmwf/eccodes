@@ -2,4 +2,3 @@
 
 constant section5Length=4;
 ascii[4] '7777' = "7777" : read_only;
-

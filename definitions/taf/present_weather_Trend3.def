@@ -42,4 +42,3 @@ if (g is "NSW") {
 						alias presentWeather3PresentTrend3=one;
 		}
 }
-

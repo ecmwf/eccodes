@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
 
   FILE* f = NULL;
   codes_handle* h=NULL;
-  
+
   int err=0;
   int msg_count=0;
 

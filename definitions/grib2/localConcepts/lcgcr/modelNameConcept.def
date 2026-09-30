@@ -1,12 +1,20 @@
 'ERA5' = {
     backgroundProcess = 255;
+    centre = 98; #EMCWF ecmf
 }
 'CRA-40' = {
     backgroundProcess = 1;
+    centre = 38; #CMA babj
 }
 'JRA-3Q' = {
     backgroundProcess = 2;
+    centre = 34; #JMA rjtd
 }
 'MERRA-2' = {
     backgroundProcess = 3;
+    centre = 173; #NASA nasa
+}
+'CORe' = {
+    backgroundProcess = 4;
+    centre = 7; #NCEP kwbc
 }

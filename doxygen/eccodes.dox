@@ -19,7 +19,7 @@ For GRIB encoding and decoding, the GRIB-API functionality is provided fully in 
 Interfaces for C, Fortran 90 and Python are all maintained as in GRIB-API.  However, the GRIB-API Fortran 77 interface is no longer available.
 
 In addition, a new set of functions with the prefix "codes_" is provided to operate on all the supported message formats.
-These functions have the same interface and behaviour as the "grib_" functions. 
+These functions have the same interface and behaviour as the "grib_" functions.
 
 A selection of GRIB-API tools has been included in %ecCodes (<a href="https://software.ecmwf.int/wiki/display/ECC/GRIB+tools">ecCodes GRIB tools</a>),
 while new tools are available for the BUFR (<a href="https://software.ecmwf.int/wiki/display/ECC/BUFR+tools">ecCodes BUFR tools</a>) and GTS formats.
@@ -35,7 +35,7 @@ For further details see <a href="https://software.ecmwf.int/wiki/display/ECC/GRI
 it is planned to replace GRIB-API by %ecCodes.\n The functions with the "grib_" prefix will, however, be maintained in %ecCodes.
 
 #########
-Reference manuals are also provided for the C library (organized in \ref modules), for the 
+Reference manuals are also provided for the C library (organized in \ref modules), for the
 \ref eccodes "Fortran 90 interface" and for the \ref ecCodes "Python interface".
 
 <a href="https://software.ecmwf.int/wiki/display/ECC/ecCodes+installation">Installation instructions</a> are also provided.

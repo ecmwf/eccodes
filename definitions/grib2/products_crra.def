@@ -108,6 +108,9 @@ concept marsStream(unknown) {
     oper = {
       productDefinitionTemplateNumber = 8;
     }
+    oper = {
+      productDefinitionTemplateNumber = 113;
+    }
     enda = {
       productDefinitionTemplateNumber = 11;
     }
@@ -125,6 +128,10 @@ concept marsStream(unknown) {
       productDefinitionTemplateNumber = 8;
       outerLoopTypeOfTimeIncrement = 1;
     }
+    moda = {
+      productDefinitionTemplateNumber = 113;
+      outerLoopTypeOfTimeIncrement = 1;
+    }
     # avgd, mind, maxd
     dame = {
       productDefinitionTemplateNumber = 8;
@@ -134,6 +141,17 @@ concept marsStream(unknown) {
     # accumd
     dame = {
       productDefinitionTemplateNumber = 8;
+      outerLoopTypeOfTimeIncrement = 1;
+      outerLoopLengthOfTimeRange = 24;
+    }
+    dame = {
+      productDefinitionTemplateNumber = 113;
+      outerLoopTypeOfTimeIncrement = 1;
+      outerLoopLengthOfTimeRange = 21;
+    }
+    # accumd
+    dame = {
+      productDefinitionTemplateNumber = 113;
       outerLoopTypeOfTimeIncrement = 1;
       outerLoopLengthOfTimeRange = 24;
     }

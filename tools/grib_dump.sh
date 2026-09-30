@@ -1,5 +1,5 @@
 #!/bin/sh
-set -e 
+set -e
 
 echo "-# To dump in a WMO documentation style with hexadecimal octet values (-H).\\n"
 echo "\\verbatim"
@@ -21,4 +21,3 @@ echo "\\endverbatim\\n"
 #echo ">grib_dump -C ../data/regular_latlon_surface.grib1"
 #./grib_dump -C ../data/regular_latlon_surface.grib1
 #echo "\\endcode\\n"
-

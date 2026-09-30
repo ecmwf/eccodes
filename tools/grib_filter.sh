@@ -11,9 +11,9 @@ echo "Applying this rules_file to the \"../data/tigge_pf_ecmwf.grib2\" grib file
 echo " fields split according to their key values\\n "
 echo "\\verbatim"
 
-if [[ -d ../data/split ]] 
+if [[ -d ../data/split ]]
 then
- rm -f ../data/split/* 
+ rm -f ../data/split/*
 else
  mkdir ../data/split
 fi
@@ -44,9 +44,9 @@ echo "\\endverbatim\\n"
 echo "Running the same command again we obtain a different list of files.\\n"
 echo "\\verbatim"
 
-if [[ -d ../data/split ]] 
+if [[ -d ../data/split ]]
 then
- rm -f ../data/split/* 
+ rm -f ../data/split/*
 else
  mkdir ../data/split
 fi
@@ -76,7 +76,7 @@ echo "  - missing(keyname) to check if the value of the key is set to MISSING (N
 echo "  - To set a key value to MISSING, use 'set key=MISSING;' (note the case)"
 echo "  - You can also make an assertion with 'assert(condition)'. If condition is false, it will abort the filter."
 echo "  ."
-echo "A complex example of grib_filter rules is the following to change temperature in a grib edition 1 file." 
+echo "A complex example of grib_filter rules is the following to change temperature in a grib edition 1 file."
 echo "\\verbatim"
 
 echo "# Temperature"

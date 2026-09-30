@@ -102,9 +102,9 @@ meta unexpandedDescriptors unexpanded_descriptors(unexpandedDescriptorsEncoded,c
 concept bufrTemplate (unknown,"BufrTemplate.def",templatesMasterDir,templatesLocalDir) : no_copy;
 alias BufrTemplate=bufrTemplate;
 
-meta elementsTable bufr_elements_table("element.table",tablesMasterDir,tablesLocalDir) : hidden,no_copy; 
+meta elementsTable bufr_elements_table("element.table",tablesMasterDir,tablesLocalDir) : hidden,no_copy;
 
-meta expandedCodes      expanded_descriptors(elementsTable,expandedCodes,0,unexpandedDescriptors,sequences) : no_copy; 
+meta expandedCodes      expanded_descriptors(elementsTable,expandedCodes,0,unexpandedDescriptors,sequences) : no_copy;
 alias expandedDescriptors=expandedCodes;
 #meta expandedReferences expanded_descriptors(elemetsTable,expandedCodes,2);
 #meta expandedWidths     expanded_descriptors(elemetsTable,expandedCodes,3);

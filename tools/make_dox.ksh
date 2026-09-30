@@ -6,7 +6,7 @@ export DOXYGEN_USAGE=1
 cat tools_head.dox > tools.dox
 
 for tool in ${tools[@]}
-do 
+do
   set +e
   ./$tool > ${tool}.dox
   set -e

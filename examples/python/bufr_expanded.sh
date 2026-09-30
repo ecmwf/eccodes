@@ -19,7 +19,7 @@ rm -f $fTmp | true
 #-----------------------------------------------------
 # Test reading the expanded values
 #----------------------------------------------------
-  
+
 #f=${data_dir}/bufr/syno_1.bufr
 REDIRECT=/dev/null
 
@@ -27,7 +27,7 @@ REDIRECT=/dev/null
 #hardcoded in the example
 
 #Write the values into a file
-$PYTHON $examples_src/bufr_expanded.py  >$fTmp 2> $REDIRECT 
+$PYTHON $examples_src/bufr_expanded.py  >$fTmp 2> $REDIRECT
 
 #TODO: add a better check. It could be compared against the bufrdc
 # references.
@@ -35,8 +35,7 @@ $PYTHON $examples_src/bufr_expanded.py  >$fTmp 2> $REDIRECT
 #Check if there is any output
 [ -s ${fTmp} ]
 
-#cat $fTmp 
+#cat $fTmp
 
 #Clean up
 rm -f ${fTmp}
-

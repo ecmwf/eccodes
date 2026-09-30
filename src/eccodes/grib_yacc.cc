@@ -2391,7 +2391,7 @@ grib_yyreduce:
     {
   case 2: /* all: empty  */
 #line 295 "griby.y"
-                  { grib_parser_all_actions = 0;grib_parser_concept=0; 
+                  { grib_parser_all_actions = 0;grib_parser_concept=0;
                             grib_parser_hash_array=0;grib_parser_rules=0; }
 #line 2397 "y.tab.c"
     break;
@@ -2422,7 +2422,7 @@ grib_yyreduce:
 
   case 7: /* all: error  */
 #line 302 "griby.y"
-                      { grib_parser_all_actions = 0; grib_parser_concept=0; 
+                      { grib_parser_all_actions = 0; grib_parser_concept=0;
 	                    grib_parser_hash_array=0; grib_parser_rules=0; }
 #line 2428 "y.tab.c"
     break;
@@ -2975,7 +2975,7 @@ grib_yyreduce:
   case 112: /* simple: UNALIAS IDENT '.' IDENT  */
 #line 594 "griby.y"
         {
-         (grib_yyval.act) = grib_action_create_alias(grib_parser_context,(grib_yyvsp[0].str),NULL,(grib_yyvsp[-2].str),0);  free((grib_yyvsp[-2].str)); free((grib_yyvsp[0].str)); 
+         (grib_yyval.act) = grib_action_create_alias(grib_parser_context,(grib_yyvsp[0].str),NULL,(grib_yyvsp[-2].str),0);  free((grib_yyvsp[-2].str)); free((grib_yyvsp[0].str));
     }
 #line 2981 "y.tab.c"
     break;

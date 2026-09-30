@@ -1,7 +1,7 @@
 #!/usr/bin/ksh
 
 rm -f grib_rgauss_*
-for fname in rgauss_*.h 
+for fname in rgauss_*.h
   do
      nfname=grib_$fname
 	 cat $fname | sed -n '/REAL/!p' | sed 's/DATA QG/int grib_rg_/g' | sed 's/ \// };/g' | sed 's/\//[] = {/g' | sed 's/X//g'   > $nfname
@@ -12,12 +12,12 @@ rm -f $all
 
 count=-1
 integer order
-for fname in grib_rgauss_*.h 
+for fname in grib_rgauss_*.h
   do
 	 count=$(( ${count} + 1 ))
      subarr[count]=`cat $fname | head -1 | sed 's/^[ \t]*//'  | sed 's/int//g' | sed 's/\[\] = {//g'`
 	 order[count]=`echo ${subarr[count]} | sed 's/grib_rg_//g`
-	 cat $fname >> $all 
+	 cat $fname >> $all
 done
 
 echo 'int* grib_rg[] = {' >> $all
@@ -43,4 +43,3 @@ echo '};' >> $all
 echo '' >> $all
 echo '#define GRIB_MAX_RG_GRIDS  '$count >> $all
 echo '' >> $all
-

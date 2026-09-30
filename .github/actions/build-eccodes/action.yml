@@ -1,0 +1,59 @@
+name: Build eccodes from source
+description: >
+  Builds and installs the checked-out eccodes with
+  ecmwf/ci-infrastructure/actions/cmake-build, which documents the common inputs.
+
+inputs:
+  cmake-prefix-path:
+    description: 'Prefixes of the resolved deps'
+    required: true
+  c-compiler:
+    description: 'C compiler, e.g. clang-18, gcc-13'
+    required: true
+  cxx-compiler:
+    description: 'C++ compiler, e.g. clang++-18, g++-13'
+    required: true
+  fortran-compiler:
+    description: >
+      Fortran compiler, e.g. gfortran-13. Empty builds without the Fortran
+      interface, for images that ship no Fortran compiler: the clang image does
+      not, because gfortran-N depends on gcc-N and would put an unnamed GNU C
+      compiler in it.
+    required: false
+    default: ''
+  build-type:
+    description: 'CMake build type'
+    required: true
+  options:
+    description: >
+      Named feature configuration for this leg: the configure preset in
+      CMakePresets.json to use. Empty selects the `ci` preset. "eckit-geo" turns
+      on the eckit-backed geography backend, and is the only configuration for
+      which eckit is a dependency at all (see the `when` predicate on the eckit
+      [[deps]] entry in .ci/manifest.toml).
+    required: false
+    default: ''
+
+outputs:
+  install-path:
+    description: 'Absolute path where eccodes is installed'
+    value: ${{ steps.build.outputs.install-path }}
+  build-dir:
+    description: 'Absolute path of the build tree, for ctest'
+    value: ${{ steps.build.outputs.build-dir }}
+
+runs:
+  using: composite
+  steps:
+    - id: build
+      uses: ecmwf/ci-infrastructure/actions/cmake-build@main
+      with:
+        package: eccodes
+        cmake-prefix-path: ${{ inputs.cmake-prefix-path }}
+        c-compiler: ${{ inputs.c-compiler }}
+        cxx-compiler: ${{ inputs.cxx-compiler }}
+        fortran-compiler: ${{ inputs.fortran-compiler }}
+        build-type: ${{ inputs.build-type }}
+        preset: ${{ inputs.options || 'ci' }}
+        cmake-args: ${{ inputs.fortran-compiler == '' && '-DENABLE_FORTRAN=OFF' || '' }}
+        cache-key-suffix: ${{ inputs.options }}

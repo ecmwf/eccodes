@@ -19,4 +19,3 @@ LDADD = $(top_builddir)/fortran/libgrib_api_f90.a $(top_builddir)/src/libgrib_ap
 DEPENDENCIES = $(LDADD)
 
 EXTRA_DIST =$(TESTS) include.sh
-

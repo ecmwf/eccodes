@@ -22,9 +22,9 @@ my $name; my $value; my $centre;
 
 my $qh=$dbh->prepare($query);
 $qh->execute();
-$query="select grib.centre,attribute.name,grib.attribute_value,param_version 
-		from grib,attribute where edition=1 and grib.param_id=? 
-		 and ( grib.attribute_id=3 or grib.attribute_id=1) and attribute.id=grib.attribute_id  
+$query="select grib.centre,attribute.name,grib.attribute_value,param_version
+		from grib,attribute where edition=1 and grib.param_id=?
+		 and ( grib.attribute_id=3 or grib.attribute_id=1) and attribute.id=grib.attribute_id
 		order by grib.centre,param_version,attribute_id";
 my $qh1=$dbh->prepare($query);
 my %values;
@@ -54,7 +54,7 @@ while (my ($paramId,$shortName)=$qh->fetchrow_array )
 				%grib1=();
 			}
 		}
-		$grib1{$name}=$value;	
+		$grib1{$name}=$value;
 	}
 
 	if (exists $grib1{"indicatorOfParameter"} && exists $grib1{"table2Version"}) {
@@ -74,7 +74,7 @@ foreach my $k ( sort keys %values ) {
 }
 
 close $mars_param_out or die " mars_param.table: $!";
- 
+
 open(my $param_id_out,"> param_id.table")
                 or die "unable to open param_id.table: $!";
 

@@ -41,7 +41,7 @@ module grib_api
     module procedure grib_new_from_message_int4
     module procedure grib_new_from_message_char
   end interface grib_new_from_message
-  
+
 
   !> Create a message pointing to an character array containing the coded message.
   !>
@@ -54,7 +54,7 @@ module grib_api
   !>
   !> @param gribid      id of the grib loaded in memory
   !> @param message     array containing the coded message
-  !> @param status      GRIB_SUCCESS if OK, integer value on error  
+  !> @param status      GRIB_SUCCESS if OK, integer value on error
   interface grib_new_from_message_no_copy
     module procedure grib_new_from_message_no_copy_int4
     module procedure grib_new_from_message_no_copy_char
@@ -154,4 +154,3 @@ module grib_api
     module procedure grib_get_data_real4, &
       grib_get_data_real8
   end interface grib_get_data
-

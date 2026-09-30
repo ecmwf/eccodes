@@ -70,4 +70,3 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
 
     return GRIB_SUCCESS;
 }
-

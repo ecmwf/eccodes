@@ -3,7 +3,7 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
+#
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
@@ -35,10 +35,10 @@ do
   rm -f ${output}
   ${tools_dir}/grib_set -s editionNumber=1 ${file}.grib2 ${output} 2> $REDIRECT > $REDIRECT
 
-  grib1Statistics=`${tools_dir}/grib_get -fp numberOfValues,numberOfPoints,max,min,average,numberOfMissing ${output}` 
-  grib2Statistics=`${tools_dir}/grib_get -fp numberOfValues,numberOfPoints,max,min,average,numberOfMissing ${file}.grib2` 
+  grib1Statistics=`${tools_dir}/grib_get -fp numberOfValues,numberOfPoints,max,min,average,numberOfMissing ${output}`
+  grib2Statistics=`${tools_dir}/grib_get -fp numberOfValues,numberOfPoints,max,min,average,numberOfMissing ${file}.grib2`
 
-  if [ "$grib1Statistics" != "$grib2Statistics" ]; then 
+  if [ "$grib1Statistics" != "$grib2Statistics" ]; then
     exit 1
   fi
 

@@ -1,4 +1,4 @@
-    if (substr(g,0,1) is "R" && ( substr(g,3,1) is "/" || substr(g,3,2) is "C/" 
+    if (substr(g,0,1) is "R" && ( substr(g,3,1) is "/" || substr(g,3,2) is "C/"
 				|| substr(g,3,2) is "L/" || substr(g,3,2) is "R/") ) {
         rename(g,RVR2);
         group g : dump; non_alpha na;
@@ -31,7 +31,7 @@
 								} else {
 										oneMinuteMeanMaximumRVR2=to_string(RVR2_1,5,4);
 								}
-						} 
+						}
 				}
 				if (substr(RVR2,-1,1) is "U" ) { constant pastTendencyRVR2="UPWARD"; }
 				if (substr(RVR2,-1,1) is "D" ) { constant pastTendencyRVR2="DOWNWARD"; }

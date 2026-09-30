@@ -158,4 +158,3 @@ program kind_h
   print *, "integer,public,parameter :: sizeOfReal8=", size
 
 end program kind_h
-

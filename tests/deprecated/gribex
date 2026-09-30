@@ -11,7 +11,7 @@ EMOS_BIN=~emos/bin/$ARCH
 
 $GRIB_TOOLS_DIR/grib_dump -v -f "10%.25f" $1 > $1.dump
 
-$GRIB_TOOLS_DIR/grib_gen $1.dump $1.gen 
+$GRIB_TOOLS_DIR/grib_gen $1.dump $1.gen
 
 # gribex compare
 $EMOS_BIN/compareGribFiles -fail $1 $1.gen

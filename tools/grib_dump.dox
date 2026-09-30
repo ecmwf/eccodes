@@ -1,12 +1,12 @@
 /*!  \page grib_dump grib_dump
-\section DESCRIPTION 
+\section DESCRIPTION
  Dump the content of a GRIB file in different formats.
 
-\section USAGE 
- grib_dump 
+\section USAGE
+ grib_dump
  [options] grib_file grib_file ...
 
-\section OPTIONS 
+\section OPTIONS
 -O  \n Octet mode. WMO documentation style dump.
  \n \n -D  \n Debug mode.
  \n \n -d  \n Print all data values.
@@ -14,13 +14,13 @@
  \n \n -t  \n Print type information.
  \n \n -H  \n Print octet content in hexadecimal format.
  \n \n -a  \n Dump aliases.
- \n \n -w key[:{s/d/i}]{=/!=}value,key[:{s/d/i}]{=/!=}value,... \n 
+ \n \n -w key[:{s/d/i}]{=/!=}value,key[:{s/d/i}]{=/!=}value,... \n
 		Where clause.
 		Messages are processed only if they match all the key/value constraints.
 		A valid constraint is of type key=value or key!=value.
 		For each key a string (key:s), a double (key:d) or an integer (key:i)
 		type can be specified. Default type is string.
- \n \n -s key[:{s/d/i}]=value,key[:{s/d/i}]=value,... \n 
+ \n \n -s key[:{s/d/i}]=value,key[:{s/d/i}]=value,... \n
 		Key/values to set.
 		For each key a string (key:s), a double (key:d) or an integer (key:i)
 		type can be defined. By default the native type is set.
@@ -29,10 +29,10 @@
 			The input file is interpreted according to the message type.
  \n \n -7  \n Does not fail when the message has wrong length
  \n \n -V  \n Version.
- \n \n -X offset \n 
+ \n \n -X offset \n
 		Input file offset in bytes. Processing of the input file will start from "offset".
  \n \n -x  \n Fast parsing option, only headers are loaded.
- \n \n 
+ \n \n
 \section grib_dump_examples grib_dump examples
 -# To dump in a WMO documentation style with hexadecimal octet values (-H).\n
 \verbatim
@@ -43,7 +43,7 @@
 >grib_dump -OtaH ../data/reduced_gaussian_model_level.grib1
 \endverbatim\n
 -# To obtain all the key names (computed keys included) available in a GRIB file.\n
-\verbatim 
+\verbatim
 > grib_dump -D ../data/regular_latlon_surface.grib1
 \endverbatim\n
 */

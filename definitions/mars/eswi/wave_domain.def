@@ -22,5 +22,3 @@
 'n'={latitudeOfFirstGridPoint=81000;longitudeOfFirstGridPoint=0;latitudeOfLastGridPoint=0;longitudeOfLastGridPoint=359500;}
 's'={latitudeOfFirstGridPoint=-500;longitudeOfFirstGridPoint=0;latitudeOfLastGridPoint=-81000;longitudeOfLastGridPoint=359500;}
 'g'={latitudeOfFirstGridPoint=90000;longitudeOfFirstGridPoint=0;latitudeOfLastGridPoint=-90000;longitudeOfLastGridPoint=359750;}
-
-

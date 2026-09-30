@@ -2706,7 +2706,7 @@ int grib_f_set_string_(int* gid, char* key, char* val, int len, int len2)
     size_t lsize = len2;
 
     if(!h) return GRIB_INVALID_GRIB;
-    
+
     /* For BUFR, the value may contain spaces e.g. stationOrSiteName='CAMPO NOVO' */
     /* So do not use cast_char. cast_char_no_cut does not stop at first space */
     val_str = cast_char_no_cut(buf2,val,len2);

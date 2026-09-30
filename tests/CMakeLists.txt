@@ -78,6 +78,8 @@ list(APPEND test_c_bins
     grib_sh_imag
     grib_spectral
     grib_lam_bf
+    grib_grib2mars_replay
+    grib_shape_of_the_earth
     grib_lam_gp)
 
 if( eccodes_HAVE_ECKIT_GEO AND eccodes_HAVE_GEOGRAPHY )
@@ -170,6 +172,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-2317
         grib_ecc-2319
         grib_ecc-2332
+        grib_ecc-2339
         bufr_ecc-1028
         bufr_ecc-912
         bufr_ecc-1195
@@ -185,6 +188,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_ecc-2011
         bufr_ecc-2153
         bufr_ecc-2300
+        bufr_delayed_replication
         grib_efas
         grib_sh_imag
         grib_spectral
@@ -209,6 +213,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-2264
         grib_ecc-2265
         grib_ecc-2338
+        grib_shape_of_the_earth
     )
 
     # These tests require data downloads
@@ -447,6 +452,8 @@ if( HAVE_BUILD_TOOLS )
         grib_local_NCEP
         grib_neg_fctime
         codes_split_file
+        grib_lc-gcr
+        grib_grib2mars_replay
         grib_mars_keys1
         grib_mars_keys2)
 
@@ -512,8 +519,13 @@ if( HAVE_BUILD_TOOLS )
                       RESOURCES asca_139.t1.ref
                       TEST_DEPENDS eccodes_download_gribs eccodes_download_tigge_gribs
                                    eccodes_download_bufrs eccodes_download_bufr_refs
-                                   eccodes_download_metars eccodes_download_gts )
+                                   eccodes_download_metars eccodes_download_gts
+                                   eccodes_download_lcgcr_gribs eccodes_download_gridspec_gribs )
     endforeach()
+
+    if( ENABLE_EXTRA_TESTS )
+        set_tests_properties( eccodes_t_grib_grib2mars_replay PROPERTIES DISABLED TRUE)
+    endif()
 
     if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
         set_tests_properties( eccodes_t_bufr_dump_encode_fortran PROPERTIES TIMEOUT 2500 )
@@ -553,10 +565,17 @@ if( HAVE_BUILD_TOOLS )
 
 
     if( ENABLE_EXTRA_TESTS AND (HAVE_ECCODES_THREADS OR HAVE_ECCODES_OMP_THREADS) )
+        # These carry their own #pragma omp, so they need the flag on their own
+        # compile line; linking eccodes PRIVATE does not propagate it.
+        set( eccodes_thread_test_libs eccodes ${CMAKE_THREAD_LIBS_INIT} )
+        if( HAVE_ECCODES_OMP_THREADS )
+            list( APPEND eccodes_thread_test_libs OpenMP::OpenMP_CXX )
+        endif()
+
         ecbuild_add_executable( TARGET    grib_encode_threads
                                 NOINSTALL
                                 SOURCES   grib_encode_threads.cc
-                                LIBS      eccodes ${CMAKE_THREAD_LIBS_INIT} )
+                                LIBS      ${eccodes_thread_test_libs} )
         ecbuild_add_test( TARGET eccodes_t_grib_encode_threads
                           TYPE SCRIPT
                           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_encode_threads.sh )
@@ -565,7 +584,7 @@ if( HAVE_BUILD_TOOLS )
             ecbuild_add_executable( TARGET    ${test}
                                     NOINSTALL
                                     SOURCES   ${test}.cc
-                                    LIBS      eccodes ${CMAKE_THREAD_LIBS_INIT} )
+                                    LIBS      ${eccodes_thread_test_libs} )
         endforeach()
         ecbuild_add_test( TARGET eccodes_t_grib_encode_threads2
                           TYPE SCRIPT
@@ -662,12 +681,11 @@ endif()
 if( eccodes_HAVE_ECKIT_GEO AND eccodes_HAVE_GEOGRAPHY )
     target_link_libraries(grib_geo_iterator eckit_geo)
 
-    foreach( test
-            grib_from_gridspec
-            grib_to_gridspec )
-        ecbuild_add_test( TARGET eccodes_t_${test}
-                          SOURCES ${test}.cc
-                          LIBS eccodes eckit_geo
-                          WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} )
-    endforeach()
+    ecbuild_add_test( TARGET eccodes_t_gridspec
+                      SOURCES gridspec.cc
+                      CONDITION ENABLE_EXTRA_TESTS
+                      LIBS eccodes eckit_geo
+                      TEST_DEPENDS eccodes_download_gridspec_gribs
+                      ARGS "${TESTS_DATA_DIR}"
+                      ENVIRONMENT ECCODES_ECKIT_GEO=1 )
 endif()

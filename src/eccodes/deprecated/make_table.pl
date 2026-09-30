@@ -79,7 +79,7 @@ if ($ARGV[0] =~ /^[-+].+/)
                print STDERR "\n";
                print STDERR "Unrecognized Grib table: $x\n";
                exit(1);
-            } 
+            }
          }
        last SWITCH;
     }
@@ -121,21 +121,21 @@ foreach my $version (@versions)
 
       my $param  = '0' x 3;
       my $offset = length($param) - length($x[0]);
-      substr($param, $offset, length($x[0])) = $x[0]; 
+      substr($param, $offset, length($x[0])) = $x[0];
 
         $offset = 1;
       $x[1] = 'None' unless( $x[1] );
       my $abbr = ' ' x 6;
-      substr($abbr, $offset, length($x[1])) = $x[1]; 
+      substr($abbr, $offset, length($x[1])) = $x[1];
 
       my $long = ' ' x 70;
-      substr($long, $offset, length($x[2])) = $x[2]; 
+      substr($long, $offset, length($x[2])) = $x[2];
 
       $x[3] = '-' unless( $x[3] );
       my $unit = ' ' x 30;
-      substr($unit, $offset, length($x[3])) = $x[3]; 
+      substr($unit, $offset, length($x[3])) = $x[3];
 
-      printf G "%s   %s   %s   %s \n",$param,$abbr,$long,$unit; 
+      printf G "%s   %s   %s   %s \n",$param,$abbr,$long,$unit;
 
    }
 }
