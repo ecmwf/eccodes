@@ -834,8 +834,8 @@ void cache_set(GribToSpec::cache_type& cache, const std::string& name, const T& 
 }  // namespace
 
 
-GribToSpec::GribToSpec(codes_handle* h) :
-    handle_(h)
+GribToSpec::GribToSpec(codes_handle* h, bool rotated) :
+    handle_(h), rotated_(rotated)
 {
     ASSERT(handle_ != nullptr);
 
@@ -923,7 +923,7 @@ bool GribToSpec::has(const std::string& name) const
     if (name == "rotation") {
         // [lat, lon] of the south pole (as the MARS key)
         std::vector<double> rotation;
-        return get(name, rotation);
+        return rotated_ && get(name, rotation);
     }
 
     const auto* key = get_key(name, handle_);
@@ -1211,6 +1211,10 @@ bool GribToSpec::get(const std::string& name, std::vector<float>& value) const
 bool GribToSpec::get(const std::string& name, std::vector<double>& value) const
 {
     lock_type lock;
+
+    if (name == "rotation" && !rotated_) {
+        return false;
+    }
 
     const auto* key = get_key(name, handle_);
 

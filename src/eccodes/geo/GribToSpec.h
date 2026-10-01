@@ -31,7 +31,8 @@ class GribToSpec final : public eccodes::Spec
 public:
     using cache_type = std::map<std::string, eckit::spec::Custom::value_type>;
 
-    explicit GribToSpec(codes_handle*);
+    // rotated: interpret the grid rotation if set (or not, for eg. for iterating in the rotated frame)
+    explicit GribToSpec(codes_handle*, bool rotated = true);
 
     bool has(const std::string& name) const override;
 
@@ -55,6 +56,7 @@ public:
 private:
     mutable cache_type cache_;
     codes_handle* handle_;
+    const bool rotated_;
 
     void pl_expand_to_global(std::vector<long>&) const;
 
