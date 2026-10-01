@@ -1,0 +1,109 @@
+name: publish
+
+on:
+  # Publish the Rust crates when a GitHub release is published
+  release:
+    types: [published]
+
+  # Trigger the workflow manually (dry-run by default)
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: Run cargo publish in dry-run mode only.
+        type: boolean
+        default: true
+
+jobs:
+  check-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Verify release tag matches crate versions and VERSION file
+        if: github.event_name == 'release'
+        env:
+          PRERELEASE: ${{ github.event.release.prerelease }}
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          # `publish = false` packages (the example) carry their own version.
+          versions=$(cargo metadata --manifest-path rust/Cargo.toml --format-version 1 --no-deps | jq -r '.packages[] | select(.publish != []) | .version' | sort -u)
+          if [ "$(wc -l <<<"${versions}")" -ne 1 ]; then
+            echo "::error::Workspace crates have differing versions: $(tr '\n' ' ' <<<"${versions}")"
+            exit 1
+          fi
+          if [ "${versions}" != "${tag}" ]; then
+            echo "::error::Release tag ${GITHUB_REF_NAME} does not match crate version ${versions}."
+            exit 1
+          fi
+          file_version=$(tr -d '[:space:]' < VERSION)
+          if [ "${versions}" != "${file_version}" ]; then
+            echo "::error::Crate version ${versions} does not match VERSION file ${file_version}."
+            exit 1
+          fi
+          if [ "${PRERELEASE}" = "true" ] && [[ "${versions}" != *-* ]]; then
+            echo "::error::GitHub pre-release ${GITHUB_REF_NAME} would publish final crate version ${versions}."
+            exit 1
+          fi
+          if [ "${PRERELEASE}" != "true" ] && [[ "${versions}" == *-* ]]; then
+            echo "::error::GitHub release ${GITHUB_REF_NAME} would publish pre-release crate version ${versions}."
+            exit 1
+          fi
+
+  checks:
+    runs-on: ubuntu-latest
+    # Cargo resolves `.cargo/config.toml` against the working directory, not
+    # the manifest — run from `rust/` or the workspace lint flags are lost.
+    defaults:
+      run:
+        working-directory: rust
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: stable
+          components: rustfmt, clippy
+
+      - name: Cache cargo artifacts
+        uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
+        with:
+          workspaces: rust
+
+      - name: Run formatting check
+        run: cargo fmt --all --check
+
+      # Default features only: `--all-features` would enable the mutually
+      # exclusive build strategies and threading backends, and would need
+      # NetCDF on the runner.
+      - name: Run clippy
+        run: cargo clippy --workspace --all-targets -- -D warnings
+
+      - name: Run tests
+        run: cargo test --workspace
+
+  # The crates are interdependent, so they publish sequentially: eccodes
+  # resolves eccodes-sys from crates.io and must come second.
+  publish-eccodes-sys:
+    needs: [check-version, checks]
+    uses: ecmwf/reusable-workflows/.github/workflows/publish-rust-crate.yml@v2
+    with:
+      manifest-path: rust/crates/eccodes-sys/Cargo.toml
+      dry-run: ${{ github.event_name == 'workflow_dispatch' && inputs.dry-run }}
+      run-checks: false
+      locked: false
+    secrets:
+      cargo_registry_token: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+
+  publish-eccodes:
+    needs: [publish-eccodes-sys]
+    uses: ecmwf/reusable-workflows/.github/workflows/publish-rust-crate.yml@v2
+    with:
+      manifest-path: rust/crates/eccodes/Cargo.toml
+      dry-run: ${{ github.event_name == 'workflow_dispatch' && inputs.dry-run }}
+      run-checks: false
+      locked: false
+    secrets:
+      cargo_registry_token: ${{ secrets.CARGO_REGISTRY_TOKEN }}
