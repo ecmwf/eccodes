@@ -32,6 +32,7 @@ namespace eccodes::tests
 
 bool difference(const std::string& label, const std::vector<double>& l1, const std::vector<double>& l2)
 {
+    // not using PointLonLat::EPS because src/eccodes/geo/grib_geography.cc:unrotate is currently rounding to the 6th decimal place
     bool result = false;
     ASSERT(l1.size() == l2.size());
 
