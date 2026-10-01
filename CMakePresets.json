@@ -21,5 +21,24 @@
         "ENABLE_ECKIT_GEO": "ON"
       }
     }
+  ],
+  "testPresets": [
+    {
+      "name": "eckit-geo-0",
+      "configurePreset": "eckit-geo",
+      "output": {
+        "outputOnFailure": true
+      },
+      "environment": {
+        "ECCODES_ECKIT_GEO": "0"
+      }
+    },
+    {
+      "name": "eckit-geo-1",
+      "inherits": "eckit-geo-0",
+      "environment": {
+        "ECCODES_ECKIT_GEO": "1"
+      }
+    }
   ]
 }

@@ -10,7 +10,16 @@ export ECCODES_SAMPLES_PATH="$build/share/eccodes/samples"
 # Fetch the test data first; a download failure otherwise surfaces as dozens of
 # unrelated test failures.
 ctest --test-dir "$build" --output-on-failure -L download_data -j 6
+{% if options == "eckit-geo" %}
+cd "$CI_SOURCE_DIR"
+failed=0
+for preset in eckit-geo-0 eckit-geo-1; do
+  ctest --preset "$preset" --test-dir "$build" -LE download_data -j "$jobs" || failed=1
+done
+[ "$failed" -eq 0 ]
+{% else %}
 ctest --test-dir "$build" --output-on-failure -LE download_data -j "$jobs"
+{% endif %}
 {% endblock %}
 {% block install %}
 # ~24k small definition files: installing straight onto shared scratch is
