@@ -9,6 +9,7 @@
  */
 
 #include "grib_api_internal.h"
+#include "accessor/Variable.h"
 
 #if defined DEBUG && ! defined GRIB_PTHREADS
   #define MY_DEBUG
@@ -169,6 +170,15 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
     // abbreviations of "sfc" etc which clash! So we mark it with this flag to revert to integers which are unique
     if ( ga->flags_ & GRIB_ACCESSOR_FLAG_COPY_AS_LONG ) {
         ga_type = GRIB_TYPE_LONG;
+    }
+
+    // Transient keys take the type of the value they hold, so copy them with the original key's type: e.g. changing
+    // edition, a missingValue=-1e30 (double) is otherwise truncated into the new message's missingValue=9999 (long)
+    if (ga_type == GRIB_TYPE_LONG && dynamic_cast<eccodes::accessor::Variable*>(ga) != nullptr) {
+        int type = GRIB_TYPE_UNDEFINED;
+        if (grib_get_native_type(h, name, &type) == GRIB_SUCCESS && type == GRIB_TYPE_DOUBLE) {
+            ga_type = GRIB_TYPE_DOUBLE;
+        }
     }
 
     switch (ga_type) {
