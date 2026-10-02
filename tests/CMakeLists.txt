@@ -698,3 +698,12 @@ if( eccodes_HAVE_ECKIT_GEO AND eccodes_HAVE_GEOGRAPHY )
                           ENVIRONMENT ECCODES_ECKIT_GEO=${_eckit_geo} )
     endforeach()
 endif()
+
+# The tests read the definitions and samples of the build tree, as include.ctest.sh
+# does for the .sh ones: the compiled-in path is the install prefix, empty before install.
+get_property( _eccodes_tests DIRECTORY PROPERTY TESTS )
+if( _eccodes_tests )
+    set_property( TEST ${_eccodes_tests} APPEND PROPERTY ENVIRONMENT
+                  "ECCODES_DEFINITION_PATH=${CMAKE_BINARY_DIR}/${ECCODES_DEFINITION_SUFF}"
+                  "ECCODES_SAMPLES_PATH=${CMAKE_BINARY_DIR}/${ECCODES_SAMPLES_SUFF}" )
+endif()
