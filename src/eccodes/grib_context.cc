@@ -16,6 +16,7 @@
 #include <stdlib.h>
 
 #ifndef ECCODES_ON_WINDOWS
+ #include <dlfcn.h>
  #include <unistd.h>
 #else
  #include <fcntl.h> /* Windows: for _O_BINARY */
@@ -356,6 +357,25 @@ static grib_context default_grib_context = {
 /* Hopefully big enough. Note: Definitions and samples path environment variables can contain SEVERAL colon-separated directories */
 #define ECC_PATH_MAXLEN 8192
 
+/* Default data path: <dir of the ecCodes library>/<relpath> if that exists, so that a
+ * relocated installation finds its own data. Otherwise the compiled-in path */
+static char* codes_default_data_path(const char* relpath, const char* compiled_path)
+{
+#if !defined(ECCODES_ON_WINDOWS) && !defined(HAVE_MEMFS)
+    Dl_info info;
+    if (dladdr((void*)&codes_default_data_path, &info) && info.dli_fname) {
+        const char* slash = strrchr(info.dli_fname, '/');
+        if (slash) {
+            char buffer[ECC_PATH_MAXLEN] = {0,};
+            snprintf(buffer, ECC_PATH_MAXLEN, "%.*s/%s", (int)(slash - info.dli_fname), info.dli_fname, relpath);
+            if (codes_access(buffer, F_OK) == 0)
+                return strdup(buffer);
+        }
+    }
+#endif
+    return strdup(compiled_path);
+}
+
 static grib_context* grib_context_get_default_()
 {
     eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
@@ -440,14 +460,16 @@ static grib_context* grib_context_get_default_()
         }
 
 #ifdef ECCODES_SAMPLES_PATH
+        char* default_samples_path = codes_default_data_path(ECCODES_SAMPLES_RELPATH, ECCODES_SAMPLES_PATH);
         if (!default_grib_context.grib_samples_path)
-            default_grib_context.grib_samples_path = (char*)ECCODES_SAMPLES_PATH;
+            default_grib_context.grib_samples_path = default_samples_path;
 #endif
 
         default_grib_context.grib_definition_files_path = codes_getenv("ECCODES_DEFINITION_PATH");
 #ifdef ECCODES_DEFINITION_PATH
+        char* default_definition_path = codes_default_data_path(ECCODES_DEFINITION_RELPATH, ECCODES_DEFINITION_PATH);
         if (!default_grib_context.grib_definition_files_path) {
-            default_grib_context.grib_definition_files_path = strdup(ECCODES_DEFINITION_PATH);
+            default_grib_context.grib_definition_files_path = strdup(default_definition_path);
         }
         else {
             default_grib_context.grib_definition_files_path = strdup(default_grib_context.grib_definition_files_path);
@@ -493,10 +515,10 @@ static grib_context* grib_context_get_default_()
 #ifdef ECCODES_DEFINITION_PATH
         {
             /* ECC-1088 */
-            if (strstr(default_grib_context.grib_definition_files_path, ECCODES_DEFINITION_PATH) == NULL) {
+            if (strstr(default_grib_context.grib_definition_files_path, default_definition_path) == NULL) {
                 char buffer[ECC_PATH_MAXLEN]= {0,};
                 snprintf(buffer, ECC_PATH_MAXLEN, "%s%c%s", default_grib_context.grib_definition_files_path,
-                             ECC_PATH_DELIMITER_CHAR, ECCODES_DEFINITION_PATH);
+                             ECC_PATH_DELIMITER_CHAR, default_definition_path);
                 free(default_grib_context.grib_definition_files_path);
                 default_grib_context.grib_definition_files_path = strdup(buffer);
             }
@@ -514,10 +536,10 @@ static grib_context* grib_context_get_default_()
         }
 #ifdef ECCODES_SAMPLES_PATH
         {
-            if (strstr(default_grib_context.grib_samples_path, ECCODES_SAMPLES_PATH) == NULL) {
+            if (strstr(default_grib_context.grib_samples_path, default_samples_path) == NULL) {
                 char buffer[ECC_PATH_MAXLEN] = {0,};
                 snprintf(buffer, ECC_PATH_MAXLEN, "%s%c%s", default_grib_context.grib_samples_path,
-                             ECC_PATH_DELIMITER_CHAR, ECCODES_SAMPLES_PATH);
+                             ECC_PATH_DELIMITER_CHAR, default_samples_path);
                 default_grib_context.grib_samples_path = strdup(buffer);
             }
         }

@@ -2,11 +2,6 @@
    SPDX-License-Identifier: Apache-2.0 #}
 {% extends "ci-infrastructure/cmake-atos.sh.j2" %}
 {% block test %}
-# The install prefix is never populated here (see install below), so point the
-# C++ tests at the build tree, as include.ctest.sh does for the .sh ones. Without
-# this, eccodes_t_grib_{from,to}_gridspec abort on "Unable to find boot.def".
-export ECCODES_DEFINITION_PATH="$build/share/eccodes/definitions"
-export ECCODES_SAMPLES_PATH="$build/share/eccodes/samples"
 # Fetch the test data first; a download failure otherwise surfaces as dozens of
 # unrelated test failures.
 ctest --test-dir "$build" --output-on-failure -L download_data -j 6
