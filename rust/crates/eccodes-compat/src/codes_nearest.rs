@@ -1,4 +1,4 @@
-//! `CodesNearest` over the official crate's [`Nearest`](eccodes::Nearest) search.
+//! `CodesNearest` over the official crate's [`Nearest`] search.
 
 use std::fmt::{self, Debug};
 
