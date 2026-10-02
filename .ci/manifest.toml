@@ -26,6 +26,7 @@ when = { options = ["eckit-geo"] }
 # No fortran-compiler: the clang image ships no Fortran, because gfortran-N
 # depends on gcc-N. The Fortran interface is covered by the g++-13 legs and HPC.
 [matrix.build.defaults]
+job-script = "./.ci/build.sh.j2"
 build-type = "RelWithDebInfo"
 runs-on = "arc-runner-very-large"
 
@@ -52,9 +53,6 @@ platform = "ubuntu-24.04"
 
 [matrix.build]
 triggers = ["upstream-change", "rebuild-request"]
-action = "./.github/actions/build-eccodes"
-forwarded-inputs = ["c-compiler", "cxx-compiler", "fortran-compiler", "build-type", "options"]
-forwarded-deps-outputs = ["cmake-prefix-path"]
 
 [matrix.build-hpc.defaults]
 cxx-compiler = "g++-8"
@@ -80,7 +78,7 @@ options = ""
 options = "eckit-geo"
 
 [matrix.build-hpc]
-execution = "hpc"
+execution = "hpc-atos"
 container-credentials = true
 triggers = ["upstream-change", "rebuild-request"]
 forwarded-deps-outputs = ["cmake-prefix-path"]
