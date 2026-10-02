@@ -12,6 +12,7 @@
 
 #include "eccodes/geo/GribFromSpec.h"
 
+#include <algorithm>
 #include <memory>
 #include <cmath>
 
@@ -106,16 +107,13 @@ struct BoundingBox
         const auto points = grid.to_points();
         ASSERT(!points.empty());
 
-        // invert rotation if necessary, as encoded bounding box is unrotated
-        auto unrotate = grid.projection().type() == "rotation";
-
         auto n = std::get<PointLonLat>(points.front()).lat();
         auto w = std::get<PointLonLat>(points.front()).lon();
         auto s = n;
         auto e = w;
 
         for (const auto& point : points) {
-            auto p = std::get<PointLonLat>(unrotate ? grid.projection().inv(point) : point);
+            const auto& p = std::get<PointLonLat>(point);
 
             if (n < p.lat()) {
                 n = p.lat();
@@ -165,10 +163,6 @@ struct Rotation
 
     void fillGrib(grib_info& info) const
     {
-        // Warning: scanning mode not considered
-
-        info.grid.grid_type = CODES_UTIL_GRID_SPEC_ROTATED_LL;
-
         info.grid.latitudeOfSouthernPoleInDegrees  = south_pole_lat_;
         info.grid.longitudeOfSouthernPoleInDegrees = south_pole_lon_;
         info.grid.angleOfRotationInDegrees = south_pole_angle_;
@@ -303,16 +297,12 @@ void set_grid_type_regular_ll(grib_info& info, const Grid& grid, const BasicAngl
     info.grid.Ni = static_cast<long>(g.nx());
     info.grid.Nj = static_cast<long>(g.ny());
 
-    if (rotated) {
-        BoundingBox bbox(std::get<PointLonLat>(grid.projection().inv(g.first_point())), std::get<PointLonLat>(grid.projection().inv(g.last_point())));
-        bbox.fillGrib(info);
+    BoundingBox bbox(std::get<PointLonLat>(g.first_point()), std::get<PointLonLat>(g.last_point()));
+    bbox.fillGrib(info);
 
+    if (rotated) {
         Rotation rotation(dynamic_cast<const ::eckit::geo::projection::Rotation&>(grid.projection()));
         rotation.fillGrib(info);
-    }
-    else {
-        BoundingBox bbox(std::get<PointLonLat>(g.first_point()), std::get<PointLonLat>(g.last_point()));
-        bbox.fillGrib(info);
     }
 
     if (basic_angle.num != 0) {
@@ -342,16 +332,12 @@ void set_grid_type_regular_gg(grib_info& info, const Grid& grid)
     info.grid.Ni = static_cast<long>(g.nx());
     info.grid.Nj = static_cast<long>(g.ny());
 
-    if (rotated) {
-        BoundingBox bbox(std::get<PointLonLat>(grid.projection().inv(g.first_point())), std::get<PointLonLat>(grid.projection().inv(g.last_point())));
-        bbox.fillGrib(info);
+    BoundingBox bbox(std::get<PointLonLat>(g.first_point()), std::get<PointLonLat>(g.last_point()));
+    bbox.fillGrib(info);
 
+    if (rotated) {
         Rotation rotation(dynamic_cast<const ::eckit::geo::projection::Rotation&>(grid.projection()));
         rotation.fillGrib(info);
-    }
-    else {
-        BoundingBox bbox(std::get<PointLonLat>(g.first_point()), std::get<PointLonLat>(g.last_point()));
-        bbox.fillGrib(info);
     }
 
     Shape shape(grid.figure());
@@ -401,12 +387,24 @@ void set_grid_type_reduced_gg(grib_info& info, const Grid& grid)
     info.grid.Nj = static_cast<long>(g.ny());
 
     if (rotated) {
+        // first/last grid points are in the unrotated frame, as encoded
+        const auto first = std::get<PointLonLat>(g.first_point());
+        auto west        = first.lon();
+        auto east        = g.longitudes(0).back();
+        for (size_t j = 1; j < g.ny(); ++j) {
+            if (const auto& lons = g.longitudes(j); !lons.empty()) {
+                west = std::min(west, lons.front());
+                east = std::max(east, lons.back());
+            }
+        }
+        BoundingBox(first.lat(), west, g.latitudes().back(), east).fillGrib(info);
+
         Rotation rotation(dynamic_cast<const ::eckit::geo::projection::Rotation&>(grid.projection()));
         rotation.fillGrib(info);
     }
-
-    auto bbox = BoundingBox::make_from_points_minmax(g);
-    bbox.fillGrib(info);
+    else {
+        BoundingBox::make_from_points_minmax(g).fillGrib(info);
+    }
 
     Shape shape(grid.figure());
     shape.fillGrib(info);

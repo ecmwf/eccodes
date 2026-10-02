@@ -525,13 +525,11 @@ if( HAVE_BUILD_TOOLS )
 
     if( ENABLE_EXTRA_TESTS )
         set_tests_properties( eccodes_t_grib_grib2mars_replay PROPERTIES DISABLED TRUE)
-    endif()
-
-    if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
-        set_tests_properties( eccodes_t_bufr_dump_encode_fortran PROPERTIES TIMEOUT 2500 )
-    endif()
-    if( ENABLE_EXTRA_TESTS )
         set_tests_properties( eccodes_t_bufr_dump_encode_C PROPERTIES TIMEOUT 2500 )
+
+        if( HAVE_FORTRAN )
+            set_tests_properties( eccodes_t_bufr_dump_encode_fortran PROPERTIES TIMEOUT 2500 )
+        endif()
     endif()
 
 
@@ -688,4 +686,15 @@ if( eccodes_HAVE_ECKIT_GEO AND eccodes_HAVE_GEOGRAPHY )
                       TEST_DEPENDS eccodes_download_gridspec_gribs
                       ARGS "${TESTS_DATA_DIR}"
                       ENVIRONMENT ECCODES_ECKIT_GEO=1 )
+
+    # ECC-600: nearest neighbour for rotated lat/lon grids, without and with eckit::geo
+    foreach( _eckit_geo 0 1 )
+        ecbuild_add_test( TARGET eccodes_t_grib_nearest_rotated_eckit_geo_${_eckit_geo}
+                          SOURCES grib_nearest_rotated.cc
+                          CONDITION ENABLE_EXTRA_TESTS
+                          LIBS eccodes eckit
+                          TEST_DEPENDS eccodes_download_tigge_gribs
+                          ARGS "${TESTS_DATA_DIR}"
+                          ENVIRONMENT ECCODES_ECKIT_GEO=${_eckit_geo} )
+    endforeach()
 endif()
