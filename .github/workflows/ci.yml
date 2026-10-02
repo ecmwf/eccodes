@@ -98,21 +98,12 @@ jobs:
 
       - name: Build eccodes
         id: build
-        uses: ./.github/actions/build-eccodes
+        uses: ecmwf/ci-infrastructure/actions/run-job-script@main
         with:
+          job-script: ${{ matrix.job-script }}
+          matrix-leg: ${{ toJSON(matrix) }}
+          package: eccodes
           cmake-prefix-path: ${{ steps.deps.outputs.cmake-prefix-path }}
-          c-compiler: ${{ matrix.c-compiler }}
-          cxx-compiler: ${{ matrix.cxx-compiler }}
-          fortran-compiler: ${{ matrix.fortran-compiler }}
-          build-type: ${{ matrix.build-type }}
-          options: ${{ matrix.options }}
-
-      # Invocation comes from .ci/manifest.toml's [matrix.build], the same place
-      # the generated cross-repo-trigger.yml renders its Test step from. Spelling
-      # it out again here is how the two lanes drift apart.
-      - name: Test
-        if: ${{ matrix._resolved.ctest }}
-        run: ctest --test-dir "${{ steps.build.outputs.build-dir }}" --output-on-failure ${{ matrix._resolved['ctest-args'] }}
 
       - name: Publish eccodes
         uses: ecmwf/ci-infrastructure/actions/publish-artifact@main

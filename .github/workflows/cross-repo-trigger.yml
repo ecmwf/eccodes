@@ -173,19 +173,9 @@ jobs:
           fi
           printf '%s' "$val"
         }
-        c_compiler=$(require '."c-compiler"' c-compiler)
-        cxx_compiler=$(require '."cxx-compiler"' cxx-compiler)
-        fortran_compiler=$(jq -r '."fortran-compiler" // ""' <<<"$leg")
-        build_type=$(require '."build-type"' build-type)
-        options=$(jq -r '."options" // ""' <<<"$leg")
         deps_json=$(require '._resolved.deps | tojson' '_resolved.deps')
         own_artifact_name=$(require '._resolved."own-artifact-name"' '_resolved.own-artifact-name')
         {
-          echo "c-compiler=${c_compiler}"
-          echo "cxx-compiler=${cxx_compiler}"
-          echo "fortran-compiler=${fortran_compiler}"
-          echo "build-type=${build_type}"
-          echo "options=${options}"
           echo "deps-json=${deps_json}"
           echo "own-artifact-name=${own_artifact_name}"
         } >> "$GITHUB_OUTPUT"
@@ -197,14 +187,12 @@ jobs:
         token: ${{ steps.mint.outputs.token }}
     - name: Build
       id: build
-      uses: ./.github/actions/build-eccodes
+      uses: ecmwf/ci-infrastructure/actions/run-job-script@main
       with:
+        job-script: ${{ matrix.job-script }}
+        matrix-leg: ${{ toJSON(matrix) }}
+        package: eccodes
         cmake-prefix-path: ${{ steps.deps.outputs.cmake-prefix-path }}
-        c-compiler: ${{ steps.m.outputs.c-compiler }}
-        cxx-compiler: ${{ steps.m.outputs.cxx-compiler }}
-        fortran-compiler: ${{ steps.m.outputs.fortran-compiler }}
-        build-type: ${{ steps.m.outputs.build-type }}
-        options: ${{ steps.m.outputs.options }}
     - name: Publish
       uses: ecmwf/ci-infrastructure/actions/publish-artifact@main
       with:

@@ -68,7 +68,7 @@ on:
         type: string
         default: main
 concurrency:
-  group: cross-repo-trigger-hpc-eccodes-${{ github.ref }}
+  group: cross-repo-trigger-hpc-atos-eccodes-${{ github.ref }}
   cancel-in-progress: false
 env:
   ARTIFACT_POLL_INTERVAL: ${{ vars.ARTIFACT_POLL_INTERVAL || '60' }}
