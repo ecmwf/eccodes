@@ -54,7 +54,7 @@ The mapping is mechanical:
 `Iterator<Item = Result<GribMessage>>`, so `for` loops and the whole
 `Iterator` adapter family apply:
 
-```rust
+```rust,ignore
 // before
 while let Some(msg) = handle.ref_message_iter().next()? {
     let short_name: String = msg.read_key("shortName")?;
@@ -76,7 +76,7 @@ there is no equivalent of the shared cursor to reason about.
 `GribMessage` is owned, independent of its file, `Send`, and writable; the
 lifetime juggling and the `try_clone()`-before-edit step disappear:
 
-```rust
+```rust,ignore
 // before: clone to edit, ArcMessage to cross threads
 let mut editable = msg.try_clone()?;
 editable.write_key_unchecked("level", 850)?;
@@ -94,7 +94,7 @@ ecCodes handles do not support concurrent access.
 
 There is no `DynamicKeyType`. Ask the key what it is, then read it typed:
 
-```rust
+```rust,ignore
 use eccodes::KeyType;
 
 let key = msg.key("values");
@@ -115,7 +115,7 @@ Missing values become `Option`: `msg.get::<Option<f64>>("level")?` returns
 `Error` carries a `Code` (the `CODES_*` value), the key or path involved,
 and any underlying `io::Error`:
 
-```rust
+```rust,ignore
 // before
 match err { CodesError::Internal(CodesInternal::CodesNotFound) => ..., _ => ... }
 
@@ -129,7 +129,7 @@ The official crate does not depend on `ndarray`. Either keep using this
 compat crate for `to_ndarray()`, or reshape directly; the conversion is the
 same three keys the 0.15 implementation read:
 
-```rust
+```rust,ignore
 let (ni, nj): (usize, usize) = (msg.get::<i64>("Ni")? as usize, msg.get::<i64>("Nj")? as usize);
 let values = ndarray::Array2::from_shape_vec((nj, ni), msg.get::<Vec<f64>>("values")?)?;
 ```
