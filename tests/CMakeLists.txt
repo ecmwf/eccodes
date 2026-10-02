@@ -530,10 +530,6 @@ if( HAVE_BUILD_TOOLS )
         if( HAVE_FORTRAN )
             set_tests_properties( eccodes_t_bufr_dump_encode_fortran PROPERTIES TIMEOUT 2500 )
         endif()
-
-        if( eccodes_HAVE_ECKIT_GEO AND eccodes_HAVE_GEOGRAPHY )
-            set_tests_properties( eccodes_t_grib_geo_iterator PROPERTIES ENVIRONMENT ECCODES_ECKIT_GEO=1 )
-        endif()
     endif()
 
 

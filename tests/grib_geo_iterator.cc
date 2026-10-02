@@ -98,12 +98,5 @@ CASE("coordinates(eccodes) == coordinates(eckit::geo::Grid)")
 
 int main(int argc, char* argv[])
 {
-    const auto* ev_name = "ECCODES_ECKIT_GEO";
-    const auto* ev_val  = std::getenv(ev_name);
-    if (ev_val == nullptr || std::atol(ev_val) == 0) {
-        std::printf("%s: This test is disabled (env. variable %s is not set)", argv[0], ev_name);
-        return 0;
-    }
-
     return eckit::testing::run_tests(argc, argv);
 }
