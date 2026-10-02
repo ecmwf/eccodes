@@ -387,6 +387,10 @@ set( ECCODES_DEFINITION_PATH  ${the_default_data_prefix}/${ECCODES_DEFINITION_SU
 set( ECCODES_SAMPLES_PATH     ${the_default_data_prefix}/${ECCODES_SAMPLES_SUFF} )
 set( ECCODES_IFS_SAMPLES_PATH ${the_default_data_prefix}/${ECCODES_IFS_SAMPLES_SUFF} )
 
+# Data dirs relative to the library dir, so a relocated install still finds its data
+file( RELATIVE_PATH ECCODES_DEFINITION_RELPATH /${INSTALL_LIB_DIR} /${ECCODES_DEFINITION_SUFF} )
+file( RELATIVE_PATH ECCODES_SAMPLES_RELPATH    /${INSTALL_LIB_DIR} /${ECCODES_SAMPLES_SUFF} )
+
 ###############################################################################
 ### config header
 
