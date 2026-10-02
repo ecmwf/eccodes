@@ -62,8 +62,8 @@ extract_array()
             if (index($0, "}") > 0) inb = 0
         }
         END {
-            sub(/.*{/, "", buf)
-            sub(/}.*/, "", buf)
+            sub(/.*[{]/, "", buf)
+            sub(/[}].*/, "", buf)
             gsub(/[ \t]/, "", buf)
             print buf
         }
