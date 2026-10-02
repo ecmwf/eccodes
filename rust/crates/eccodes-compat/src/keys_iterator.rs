@@ -1,4 +1,4 @@
-//! `KeysIterator` over the official crate's [`Keys`](eccodes::Keys) iterator.
+//! `KeysIterator` over the official crate's [`Keys`] iterator.
 
 use std::fmt::{self, Debug};
 

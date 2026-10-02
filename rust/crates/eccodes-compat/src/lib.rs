@@ -11,7 +11,13 @@
 //!
 //! New code should use the official [`eccodes`] crate directly; this layer
 //! exists to make the transition gradual, and its API stays frozen at the
-//! 0.15 surface.
+//! 0.15 surface. The [`migration`] module maps every 0.15 call to its
+//! official equivalent.
+
+/// How to move from these bindings to the official `eccodes` crate.
+#[doc = include_str!("../MIGRATION.md")]
+#[cfg(doc)]
+pub mod migration {}
 
 pub mod codes_file;
 pub mod codes_message;
