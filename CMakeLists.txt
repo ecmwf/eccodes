@@ -407,9 +407,11 @@ if( CMAKE_CXX_COMPILER_ID MATCHES IntelLLVM )
 endif()
 
 
-# gfortran 10 has become stricter with argument matching
+# gfortran 10 has become stricter with argument matching.  Do not make
+# configuration fail when a user-provided FFLAGS value causes this optional
+# compatibility flag to be rejected (see #514).
 if( HAVE_FORTRAN AND CMAKE_Fortran_COMPILER_ID MATCHES "GNU" AND NOT CMAKE_Fortran_COMPILER_VERSION VERSION_LESS 10 )
-    ecbuild_add_fortran_flags("-fallow-argument-mismatch")
+    ecbuild_add_fortran_flags("-fallow-argument-mismatch" NO_FAIL)
 endif()
 
 if(GIT_FOUND AND NOT ${GIT_EXECUTABLE} STREQUAL "")
