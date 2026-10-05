@@ -81,4 +81,3 @@ options = "eckit-geo"
 execution = "hpc-atos"
 container-credentials = true
 triggers = ["upstream-change", "rebuild-request"]
-forwarded-deps-outputs = ["cmake-prefix-path"]
