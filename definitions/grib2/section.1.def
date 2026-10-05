@@ -106,7 +106,9 @@ meta is_chemical_srcsink g2_chemical(productDefinitionTemplateNumber, stepType, 
 meta is_aerosol           g2_aerosol(productDefinitionTemplateNumber, stepType, 0);
 meta is_aerosol_optical   g2_aerosol(productDefinitionTemplateNumber, stepType, 1);
 
-meta is_probability_fcst  g2_probability(productDefinitionTemplateNumber, stepType);
+meta is_probability_fcst  g2_probability(productDefinitionTemplateNumber, stepType, 0);
+meta is_referenceperiod_probability g2_probability(productDefinitionTemplateNumber, stepType, 1);
+meta is_referenceperiod   g2_referenceperiod(productDefinitionTemplateNumber);
 meta is_wave_period_range g2_wave_period_range(productDefinitionTemplateNumber, stepType);
 
 transient setCalendarId = 0 ;

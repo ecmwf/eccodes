@@ -65,6 +65,15 @@ int SelectStepTemplate::pack_long(const long* val, size_t* len)
             case 14:
                 productDefinitionTemplateNumberNew = 4;
                 break;
+            case 105:
+                productDefinitionTemplateNumberNew = 128;
+                break;
+            case 106:
+                productDefinitionTemplateNumberNew = 129;
+                break;
+            case 112:
+                productDefinitionTemplateNumberNew = 131;
+                break;
             case 42:  // DET chemical
                 productDefinitionTemplateNumberNew = 40;
                 break;
@@ -137,6 +146,15 @@ int SelectStepTemplate::pack_long(const long* val, size_t* len)
                 break;
             case 6:
                 productDefinitionTemplateNumberNew = 10;
+                break;
+            case 128:
+                productDefinitionTemplateNumberNew = 105;
+                break;
+            case 129:
+                productDefinitionTemplateNumberNew = 106;
+                break;
+            case 131:
+                productDefinitionTemplateNumberNew = 112;
                 break;
             case 40:  // DET chemical
                 productDefinitionTemplateNumberNew = 42;

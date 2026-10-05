@@ -266,30 +266,12 @@ static int rectify_concept_apply(grib_handle* h, const char* key, const grib_val
     //
     int ret = GRIB_NOT_FOUND;
 
-    // ECC-2332
-    // PDTN selection workaround. It can be removed once the general selection mechanism is in place.
-    // If both probabilityType and typeOfRelationToReferenceDataset are present
-    // in the concept being applied, select the reference-period probability PDTN.
     const bool has_probability_type = concept_values_contains_key(values, count, "probabilityType");
     const bool has_relation_type    = concept_values_contains_key(values, count, "typeOfRelationToReferenceDataset");
     if ((STR_EQUAL(key, "probabilityType") || STR_EQUAL(key, "typeOfRelationToReferenceDataset")) &&
         has_probability_type && has_relation_type)
     {
-        long pdt_new = 131; // point-in-time
-        char stepType[32] = {0,};
-        size_t stepTypeLen = sizeof(stepType);
-        if (grib_get_string(h, "stepType", stepType, &stepTypeLen) == GRIB_SUCCESS &&
-            !STR_EQUAL(stepType, "instant"))
-        {
-            pdt_new = 112; // time-interval based
-        }
-        grib_context_log(h->context, GRIB_LOG_DEBUG,
-                         "Concept: Key %s not found, setting productDefinitionTemplateNumber to %ld",
-                         key, pdt_new);
-        ret = grib_set_long(h, "productDefinitionTemplateNumber", pdt_new);
-        if (ret == GRIB_SUCCESS) {
-            return ret;
-        }
+        return grib_set_long(h, "is_referenceperiod_probability", 1);
     }
 
     static const std::map<std::string_view, std::pair<std::string_view, long>> keyMap = {
@@ -299,7 +281,8 @@ static int rectify_concept_apply(grib_handle* h, const char* key, const grib_val
         { "aerosolType",                       { "is_aerosol", 1 }                        },
         { "sourceSinkChemicalPhysicalProcess", { "is_chemical_srcsink", 1 }               },
         { "randomFieldNumber",                 { "productDefinitionTemplateNumber", 143 } },
-        { "probabilityType",                   { "is_probability_fcst", 1 }               }
+        { "probabilityType",                   { "is_probability_fcst", 1 }               },
+        { "typeOfRelationToReferenceDataset",  { "is_referenceperiod", 1 }                }
     };
     const auto mapIter = keyMap.find(key);
     if (mapIter != keyMap.end()) {

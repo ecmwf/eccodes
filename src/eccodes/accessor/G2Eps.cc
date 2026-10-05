@@ -69,6 +69,8 @@ int G2Eps::pack_long(const long* val, size_t* len)
     grib_get_string(hand, stepType_, stepType, &slen);
     if (!strcmp(stepType, "instant"))
         isInstant = 1;
+    if (grib_is_defined(hand, "typeOfRelationToReferenceDataset"))
+        isInstant = !grib_is_defined(hand, "numberOfTimeRanges");
     grib_get_long(hand, "is_chemical", &chemical);
     grib_get_long(hand, "is_aerosol", &aerosol);
     if (chemical == 1 && aerosol == 1) {
