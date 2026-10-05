@@ -4388,7 +4388,7 @@
 	 typeOfRelationToReferenceDataset = 0 ;
 	}
 #Soil temperature anomaly
-'sot' = {
+'sota' = {
 	 discipline = 2 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 8 ;
@@ -8987,7 +8987,7 @@
 	 typeOfRelationToReferenceDataset = 2 ;
 	}
 #Soil temperature significance
-'sot' = {
+'sots' = {
 	 discipline = 2 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 8 ;
