@@ -16379,7 +16379,7 @@
 	 table2Version = 210 ;
 	 indicatorOfParameter = 98 ;
 	}
-#Wildfire radiative power
+#Wildfire radiative power density
 'frpfire' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 99 ;
