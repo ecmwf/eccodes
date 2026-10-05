@@ -14,21 +14,46 @@ tempGrib=temp.$label.grib
 tempText=temp.$label.txt
 tempFilt=temp.$label.filt
 
-grib_check_key_equals $ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl isMessageValid 1
-grib_check_key_equals $ECCODES_SAMPLES_PATH/GRIB2.tmpl                  isMessageValid 1
-grib_check_key_equals $ECCODES_SAMPLES_PATH/reduced_ll_sfc_grib1.tmpl   isMessageValid 1
-grib_check_key_equals $ECCODES_SAMPLES_PATH/reduced_ll_sfc_grib2.tmpl   isMessageValid 1
-grib_check_key_equals $ECCODES_SAMPLES_PATH/sh_ml_grib2.tmpl            isMessageValid 1
+# Every GRIB sample we ship must be valid
+# ---------------------------------------
+# All the checks are enabled, including the decoding of the data section.
+# All the files are checked and the invalid ones are listed at the end
+num_checked=0
+failed=""
+for sample in $ECCODES_SAMPLES_PATH/*.tmpl ${proj_dir}/ifs_samples/*/*.tmpl; do
+    # Skip the samples of other products (BUFR etc)
+    if [ "`head -c 4 $sample`" != "GRIB" ]; then continue; fi
 
-if [ $ECCODES_ON_WINDOWS -eq 0 ]; then
-   grib_check_key_equals $ECCODES_SAMPLES_PATH/lambert_bf_grib2.tmpl    isMessageValid 1
+    # Exclusions
+    if [ $ECCODES_ON_WINDOWS -eq 1 -a `basename $sample` = "lambert_bf_grib2.tmpl" ]; then continue; fi
+    if [ `basename $sample` = "gg_sfc_grib2.tmpl" ]; then continue; fi
+
+    # The values can only be decoded if the packing library was enabled
+    checks="all"
+    packingType=`${tools_dir}/grib_get -p packingType $sample`
+    if [ "$packingType" = "grid_jpeg" -a $HAVE_JPEG -eq 0 ]; then checks="default"; fi
+    if [ "$packingType" = "grid_ccsds" -a $HAVE_AEC -eq 0 ]; then checks="default"; fi
+
+    set +e
+    result=`${tools_dir}/grib_get -s messageValidityChecks=$checks -p isMessageValid $sample 2>$tempText`
+    status=$?
+    set -e
+    if [ $status -ne 0 -o "$result" != "1" ]; then
+        echo "INVALID: $sample"
+        cat $tempText
+        failed="$failed $sample"
+    fi
+    num_checked=$((num_checked+1))
+done
+echo "GRIB samples checked: $num_checked"
+[ $num_checked -gt 0 ]
+if [ -n "$failed" ]; then
+    echo "The following samples are not valid:"
+    for f in $failed; do
+        echo "   $f"
+    done
+    exit 1
 fi
-
-
-IFS_SAMPLES_ROOT=${proj_dir}/ifs_samples
-grib_check_key_equals $IFS_SAMPLES_ROOT/grib1_mlgrib2_ccsds/gg_ml.tmpl        isMessageValid 1
-grib_check_key_equals $IFS_SAMPLES_ROOT/grib1_mlgrib2_ccsds/gg_sfc_grib2.tmpl isMessageValid 1
-grib_check_key_equals $IFS_SAMPLES_ROOT/grib1_mlgrib2_ccsds/sh_ml.tmpl        isMessageValid 1
 
 # Do it with debug enabled
 ECCODES_DEBUG=-1  ${tools_dir}/grib_get -p isMessageValid $ECCODES_SAMPLES_PATH/GRIB2.tmpl
