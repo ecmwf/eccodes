@@ -4319,6 +4319,565 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 40 ;
 	}
+#Lake mix-layer temperature anomaly
+'171024' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 166 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Lake ice depth anomaly
+'171025' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 5 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 176 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Low cloud cover anomaly
+'171256' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 3 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Medium cloud cover anomaly
+'171257' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 4 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#High cloud cover anomaly
+'171258' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 5 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Total cloud cover anomaly
+'171259' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Total column integrated ozone anomaly
+'171260' = {
+	 discipline = 0 ;
+	 parameterCategory = 14 ;
+	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Volumetric soil moisture anomaly
+'171261' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 25 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Soil temperature anomaly
+'171262' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 8 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Snow depth water equivalent anomaly
+'171263' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 60 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Wind speed anomaly
+'171264' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 1 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Forecast albedo anomaly
+'171265' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 1 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#U-component of surface momentum flux into ocean anomaly
+'171266' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 90 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#V-component of surface momentum flux into ocean anomaly
+'171267' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 91 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Wave turbulent energy flux into ocean anomaly
+'171268' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 92 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Significant wave height of all waves with periods within the inclusive range from 10 to 12 seconds anomaly
+'171269' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 10 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 12 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Significant wave height of all waves with periods within the inclusive range from 12 to 14 seconds anomaly
+'171270' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 12 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 14 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Significant wave height of all waves with periods within the inclusive range from 14 to 17 seconds anomaly
+'171271' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 14 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 17 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Significant wave height of all waves with periods within the inclusive range from 17 to 21 seconds anomaly
+'171272' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 17 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 21 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Significant wave height of all waves with periods within the inclusive range from 21 to 25 seconds anomaly
+'171273' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 21 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 25 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Significant wave height of all waves with periods within the inclusive range from 25 to 30 seconds anomaly
+'171274' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 25 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 30 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Significant height of combined wind waves and swell anomaly
+'171275' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Peak wave period anomaly
+'171276' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 34 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Mean wave period anomaly
+'171277' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 15 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Coefficient of drag with waves anomaly
+'171278' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 16 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Mean square slope of waves anomaly
+'171279' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 20 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#10 metre wind speed anomaly
+'171280' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 40 ;
+	 typeOfFirstFixedSurface = 102 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Sea ice area fraction anomaly
+'171281' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Eastward sea ice velocity anomaly
+'171282' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 4 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 176 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Northward sea ice velocity anomaly
+'171283' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 5 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 176 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Sea ice albedo anomaly
+'171284' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 14 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Sea ice growth anomaly
+'171285' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 176 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Sea ice volume per unit area anomaly
+'171286' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 15 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 176 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Snow volume over sea ice per unit area anomaly
+'171287' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 16 ;
+	 typeOfFirstFixedSurface = 173 ;
+	 typeOfSecondFixedSurface = 175 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Sea surface practical salinity anomaly
+'171288' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 3 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Sea surface temperature anomaly
+'171289' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Surface downward heat flux anomaly
+'171290' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 4 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Ocean mixed layer depth defined by sigma theta 0.125 kg m-3 anomaly
+'171291' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 14 ;
+	 typeOfFirstFixedSurface = 169 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 125 ;
+	 scaleFactorOfFirstFixedSurface = 3 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Ocean mixed layer depth defined by temperature 0.2 C anomaly
+'171292' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 14 ;
+	 typeOfFirstFixedSurface = 170 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 1 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Total column heat content anomaly
+'171293' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 22 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 9 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Steric change in sea surface height anomaly
+'171294' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 11 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Net surface upward water flux anomaly
+'171295' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 13 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Northward surface sea water velocity anomaly
+'171296' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 15 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Eastward surface sea water velocity anomaly
+'171297' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 14 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Sea water practical salinity anomaly
+'171298' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 21 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Sea water potential temperature anomaly
+'171299' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 18 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Northward sea water velocity anomaly
+'171300' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 24 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Eastward sea water velocity anomaly
+'171301' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 23 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Sea water potential temperature tendency due to newtonian relaxation anomaly
+'171302' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 34 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Sea water salinity tendency due to newtonian relaxation anomaly
+'171303' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 35 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Snow depth anomaly
+'171323' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 11 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Mean surface runoff rate anomaly
+'173256' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 51 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Mean sub-surface runoff rate anomaly
+'173257' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Mean runoff rate anomaly
+'173258' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 42 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Mean stratiform precipitation (large-scale precipitation) rate anomaly
+'173259' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 54 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Mean convective precipitation rate anomaly
+'173260' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 37 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Mean snowfall (convective + stratiform) rate anomaly
+'173261' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 53 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Mean evaporation rate anomaly
+'173262' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 79 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Mean total precipitation rate anomaly
+'173263' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
 #2 metre specific humidity
 '174096' = {
 	 discipline = 0 ;
@@ -8107,6 +8666,924 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 1 ;
+	}
+#Stream function significance
+'234001' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 4 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Velocity potential significance
+'234002' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 5 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Potential temperature significance
+'234003' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 2 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Lake mix-layer temperature significance
+'234024' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 166 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Lake ice depth significance
+'234025' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 5 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 176 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Sea-ice cover significance
+'234031' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 0 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Snow density significance
+'234033' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 61 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Sea surface temperature significance
+'234034' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#10 metre wind gust significance
+'234049' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 22 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Convective available potential energy significance
+'234059' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Potential vorticity significance
+'234060' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 14 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Total column liquid water significance
+'234078' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 69 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Total column ice water significance
+'234079' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 70 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Geopotential significance
+'234129' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 4 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Temperature significance
+'234130' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#U component of wind significance
+'234131' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 2 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#V component of wind significance
+'234132' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 3 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Specific humidity significance
+'234133' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 0 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Total column water significance
+'234136' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 51 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Total column water vapour significance
+'234137' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 64 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Relative vorticity significance
+'234138' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 12 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Relative divergence significance
+'234155' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 13 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#10 metre U wind component significance
+'234165' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#10 metre V wind component significance
+'234166' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 3 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#2 metre dewpoint temperature significance
+'234168' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Surface solar radiation downwards significance
+'234169' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 7 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Maximum temperature at 2 metres significance
+'234201' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Minimum temperature at 2 metres significance
+'234202' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Ozone mass mixing ratio significance
+'234203' = {
+	 discipline = 0 ;
+	 parameterCategory = 14 ;
+	 parameterNumber = 1 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#10 metre wind speed significance
+'234207' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Instantaneous X surface stress significance
+'234229' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 62 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Instantaneous Y surface stress significance
+'234230' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 63 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Skin temperature significance
+'234235' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 17 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Low cloud cover significance
+'234256' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 3 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Medium cloud cover significance
+'234257' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 4 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#High cloud cover significance
+'234258' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 5 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Total cloud cover significance
+'234259' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Total column integrated ozone significance
+'234260' = {
+	 discipline = 0 ;
+	 parameterCategory = 14 ;
+	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Volumetric soil moisture significance
+'234261' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 25 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Soil temperature significance
+'234262' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 8 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Snow depth water equivalent significance
+'234263' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 60 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Wind speed significance
+'234264' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 1 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Forecast albedo significance
+'234265' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 1 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#U-component of surface momentum flux into ocean significance
+'234266' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 90 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#V-component of surface momentum flux into ocean significance
+'234267' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 91 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Wave turbulent energy flux into ocean significance
+'234268' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 92 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Significant wave height of all waves with periods within the inclusive range from 10 to 12 seconds significance
+'234269' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 10 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 12 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Significant wave height of all waves with periods within the inclusive range from 12 to 14 seconds significance
+'234270' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 12 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 14 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Significant wave height of all waves with periods within the inclusive range from 14 to 17 seconds significance
+'234271' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 14 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 17 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Significant wave height of all waves with periods within the inclusive range from 17 to 21 seconds significance
+'234272' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 17 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 21 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Significant wave height of all waves with periods within the inclusive range from 21 to 25 seconds significance
+'234273' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 21 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 25 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Significant wave height of all waves with periods within the inclusive range from 25 to 30 seconds significance
+'234274' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 25 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 30 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Significant height of combined wind waves and swell significance
+'234275' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Peak wave period significance
+'234276' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 34 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Mean wave period significance
+'234277' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 15 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Coefficient of drag with waves significance
+'234278' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 16 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Mean square slope of waves significance
+'234279' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 20 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#10 metre wind speed significance
+'234280' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 40 ;
+	 typeOfFirstFixedSurface = 102 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Sea ice area fraction significance
+'234281' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Eastward sea ice velocity significance
+'234282' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 4 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 176 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Northward sea ice velocity significance
+'234283' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 5 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 176 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Sea ice albedo significance
+'234284' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 14 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Sea ice growth significance
+'234285' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 176 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Sea ice volume per unit area significance
+'234286' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 15 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 176 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Snow volume over sea ice per unit area significance
+'234287' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 16 ;
+	 typeOfFirstFixedSurface = 173 ;
+	 typeOfSecondFixedSurface = 175 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Sea surface practical salinity significance
+'234288' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 3 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Sea surface temperature significance
+'234289' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Surface downward heat flux significance
+'234290' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 4 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Ocean mixed layer depth defined by sigma theta 0.125 kg m-3 significance
+'234291' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 14 ;
+	 typeOfFirstFixedSurface = 169 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 125 ;
+	 scaleFactorOfFirstFixedSurface = 3 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Ocean mixed layer depth defined by temperature 0.2 C significance
+'234292' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 14 ;
+	 typeOfFirstFixedSurface = 170 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 1 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Total column heat content significance
+'234293' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 22 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 9 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Steric change in sea surface height significance
+'234294' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 11 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Net surface upward water flux significance
+'234295' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 13 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Northward surface sea water velocity significance
+'234296' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 15 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Eastward surface sea water velocity significance
+'234297' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 14 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Sea water practical salinity significance
+'234298' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 21 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Sea water potential temperature significance
+'234299' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 18 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Northward sea water velocity significance
+'234300' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 24 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Eastward sea water velocity significance
+'234301' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 23 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Sea water potential temperature tendency due to newtonian relaxation significance
+'234302' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 34 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Sea water salinity tendency due to newtonian relaxation significance
+'234303' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 35 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Mean surface sensible heat flux significance
+'234304' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 11 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Mean surface latent heat flux significance
+'234305' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 10 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Mean surface short-wave (solar) radiation downward flux significance
+'234306' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 7 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Mean surface long-wave (thermal) radiation downward flux significance
+'234307' = {
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 3 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Mean surface short-wave (solar) radiation flux significance
+'234308' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 9 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Mean surface long-wave (thermal) radiation flux significance
+'234309' = {
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 5 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Mean top short-wave (solar) radiation flux significance
+'234310' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 9 ;
+	 typeOfFirstFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Mean top long-wave (thermal) radiation flux significance
+'234311' = {
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 5 ;
+	 typeOfFirstFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Mean east-west surface stress significance
+'234312' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 62 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Mean north-south surface stress significance
+'234313' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 63 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Mean sunshine duration significance
+'234314' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 24 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Mean solar insolation flux significance
+'234315' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 7 ;
+	 typeOfFirstFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Mean surface runoff rate significance
+'234316' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 51 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Mean sub-surface runoff rate significance
+'234317' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Mean runoff rate significance
+'234318' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 42 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Mean stratiform precipitation (large-scale precipitation) rate significance
+'234319' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 54 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Mean convective precipitation rate significance
+'234320' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 37 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Mean snowfall (convective + stratiform) rate significance
+'234321' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 53 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Mean evaporation rate significance
+'234322' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 79 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Mean total precipitation rate significance
+'234323' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#Snow depth significance
+'234324' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 11 ;
+	 typeOfRelationToReferenceDataset = 2 ;
 	}
 #Time-mean temperature tendency due to short-wave radiation
 '235001' = {
@@ -18889,18 +20366,6 @@
 	 typeOfFirstFixedSurface = 28 ;
 	 typeOfSecondFixedSurface = 29 ;
 	}
-#Fire combustion rate per unit area
-'260703' = {
-	 discipline = 2 ;
-	 parameterCategory = 4 ;
-	 parameterNumber = 47 ;
-	}
-#Fire radiative power density
-'260704' = {
-	 discipline = 2 ;
-	 parameterCategory = 4 ;
-	 parameterNumber = 48 ;
-	}
 #Universal thermal climate index
 '261001' = {
 	 discipline = 20 ;
@@ -25394,6 +26859,189 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 19 ;
 	}
+#2m temperature anomaly of at least +2K
+'131001' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfLowerLimit = 2 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#2m temperature anomaly of at least +1K
+'131002' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfLowerLimit = 1 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#2m temperature anomaly of at least 0K
+'131003' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfLowerLimit = 0 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#2m temperature anomaly of at most -1K
+'131004' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfLowerLimit = -1 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 5 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#2m temperature anomaly of at most -2K
+'131005' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfLowerLimit = -2 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 5 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Total precipitation anomaly of at least 20 mm
+'131006' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 scaledValueOfLowerLimit = 20 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Total precipitation anomaly of at least 10 mm
+'131007' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 scaledValueOfLowerLimit = 10 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Total precipitation anomaly of at least 0 mm
+'131008' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 scaledValueOfLowerLimit = 0 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Surface temperature anomaly of at least 0K
+'131009' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 scaledValueOfLowerLimit = 0 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Mean sea level pressure anomaly of at least 0 Pa
+'131010' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 101 ;
+	 scaledValueOfLowerLimit = 0 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Temperature anomaly less than -2 K
+'131020' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 scaledValueOfLowerLimit = 2 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 0 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Temperature anomaly of at least +2 K
+'131021' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 scaledValueOfLowerLimit = 2 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Temperature anomaly less than -8 K
+'131022' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 scaledValueOfLowerLimit = -8 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 0 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Temperature anomaly less than -4 K
+'131023' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 scaledValueOfLowerLimit = -4 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 0 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Temperature anomaly greater than +4 K
+'131024' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 scaledValueOfLowerLimit = 4 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Temperature anomaly greater than +8 K
+'131025' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 scaledValueOfLowerLimit = 8 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
 #Total precipitation less than 0.1 mm
 '131064' = {
 	 discipline = 0 ;
@@ -26129,11 +27777,400 @@
 	 parameterNumber = 40 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
+#Stream function anomaly
+'171001' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 4 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Velocity potential anomaly
+'171002' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 5 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Potential temperature anomaly
+'171003' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 2 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Sea-ice cover anomaly
+'171031' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 0 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Snow density anomaly
+'171033' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 61 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Sea surface temperature anomaly
+'171034' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#10 metre wind gust anomaly
+'171049' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 22 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Convective available potential energy anomaly
+'171059' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Potential vorticity anomaly
+'171060' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 14 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Total column liquid water anomaly
+'171078' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 69 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Total column ice water anomaly
+'171079' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 70 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Geopotential anomaly
+'171129' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 4 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Temperature anomaly
+'171130' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#U component of wind anomaly
+'171131' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 2 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#V component of wind anomaly
+'171132' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 3 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Specific humidity anomaly
+'171133' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 0 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Total column water anomaly
+'171136' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 51 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Total column water vapour anomaly
+'171137' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 64 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Relative vorticity anomaly
+'171138' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 12 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Mean sea level pressure anomaly
+'171151' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 101 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Relative divergence anomaly
+'171155' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 13 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#10 metre U wind component anomaly
+'171165' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#10 metre V wind component anomaly
+'171166' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 3 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#2 metre temperature anomaly
+'171167' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#2 metre dewpoint temperature anomaly
+'171168' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Surface solar radiation downwards anomaly
+'171169' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 7 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Maximum temperature at 2 metres anomaly
+'171201' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Minimum temperature at 2 metres anomaly
+'171202' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Ozone mass mixing ratio anomaly
+'171203' = {
+	 discipline = 0 ;
+	 parameterCategory = 14 ;
+	 parameterNumber = 1 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#10 metre wind speed anomaly
+'171207' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Instantaneous X surface stress anomaly
+'171229' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 62 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Instantaneous Y surface stress anomaly
+'171230' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 63 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Skin temperature anomaly
+'171235' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 17 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Surface sensible heat flux anomalous rate of accumulation
+'173146' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 11 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Surface latent heat flux anomalous rate of accumulation
+'173147' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 10 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Surface solar radiation downwards anomalous rate of accumulation
+'173169' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 7 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Surface thermal radiation downwards anomalous rate of accumulation
+'173175' = {
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 3 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Surface solar radiation anomalous rate of accumulation
+'173176' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 9 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Surface thermal radiation anomalous rate of accumulation
+'173177' = {
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 5 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Top solar radiation anomalous rate of accumulation
+'173178' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 9 ;
+	 typeOfFirstFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Top thermal radiation anomalous rate of accumulation
+'173179' = {
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 5 ;
+	 typeOfFirstFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#East-West surface stress anomalous rate of accumulation
+'173180' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 62 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#North-South surface stress anomalous rate of accumulation
+'173181' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 63 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Sunshine duration anomalous rate of accumulation
+'173189' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 24 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
+#Solar insolation anomalous rate of accumulation
+'173212' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 7 ;
+	 typeOfFirstFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	}
 #Surface runoff
 '174008' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 34 ;
+	}
+#Wildfire radiative power density
+'210099' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 48 ;
+	}
+#Wildfire combustion rate
+'210100' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 47 ;
 	}
 #Nitrogen dioxide mass mixing ratio
 '210121' = {
@@ -26415,6 +28452,24 @@
 	 parameterNumber = 52 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
+	}
+#Mean sea level pressure significance
+'234151' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 101 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	}
+#2 metre temperature significance
+'234167' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfRelationToReferenceDataset = 2 ;
 	}
 #U-component surface stokes drift
 '140215' = {
