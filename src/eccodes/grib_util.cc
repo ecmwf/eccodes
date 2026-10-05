@@ -1068,7 +1068,9 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
     }
 
     // ECC-2336: Reset the direction increments given flags, flags will be set correctly later when a direction increment is actually set.
-    if (grib_is_defined(h, "resolutionAndComponentFlags") != 0) {
+    // The values are applied after gridType is changed, so decide on the output grid type and not on the input handle:
+    // spectral and unstructured grids do not have the resolutionAndComponentFlags key
+    if (spec->grid_type != GRIB_UTIL_GRID_SPEC_SH && spec->grid_type != GRIB_UTIL_GRID_SPEC_UNSTRUCTURED) {
         SET_LONG_VALUE("resolutionAndComponentFlags", 0);
     }
 
@@ -1583,7 +1585,9 @@ static grib_handle* grib_util_set_spec_(grib_handle* h,
     }
 
     // ECC-2336: Reset the direction increments given flags, flags will be set correctly later when a direction increment is actually set.
-    if (grib_is_defined(h, "resolutionAndComponentFlags") != 0) {
+    // The values are applied after gridType is changed, so decide on the output grid type and not on the input handle:
+    // spectral and unstructured grids do not have the resolutionAndComponentFlags key
+    if (spec->grid_type != GRIB_UTIL_GRID_SPEC_SH && spec->grid_type != GRIB_UTIL_GRID_SPEC_UNSTRUCTURED) {
         SET_LONG_VALUE("resolutionAndComponentFlags", 0);
     }
 
