@@ -150,7 +150,7 @@ fn missing_expansion_and_attributes() -> eccodes::Result<()> {
     // bufr_attributes.c: attributes hang off data keys via `->`.
     assert_eq!(reread.get::<i64>("year->code")?, 4001);
     let units = reread.get::<String>("year->units")?;
-    assert!(!units.is_empty());
+    assert_ne!(units, "");
     Ok(())
 }
 
