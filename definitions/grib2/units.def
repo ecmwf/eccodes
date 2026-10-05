@@ -4391,7 +4391,7 @@
 'K' = {
 	 discipline = 2 ;
 	 parameterCategory = 3 ;
-	 parameterNumber = 8 ;
+	 parameterNumber = 18 ;
 	 typeOfRelationToReferenceDataset = 0 ;
 	}
 #Snow depth water equivalent anomaly
@@ -8924,7 +8924,7 @@
 'K' = {
 	 discipline = 2 ;
 	 parameterCategory = 3 ;
-	 parameterNumber = 8 ;
+	 parameterNumber = 18 ;
 	 typeOfRelationToReferenceDataset = 2 ;
 	}
 #Snow depth water equivalent significance
