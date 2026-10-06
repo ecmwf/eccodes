@@ -28,14 +28,8 @@ for sample in $ECCODES_SAMPLES_PATH/*.tmpl ${proj_dir}/ifs_samples/*/*.tmpl; do
     if [ $ECCODES_ON_WINDOWS -eq 1 -a `basename $sample` = "lambert_bf_grib2.tmpl" ]; then continue; fi
     if [ `basename $sample` = "gg_sfc_grib2.tmpl" ]; then continue; fi
 
-    # The values can only be decoded if the packing library was enabled
-    checks="all"
-    packingType=`${tools_dir}/grib_get -p packingType $sample`
-    if [ "$packingType" = "grid_jpeg" -a $HAVE_JPEG -eq 0 ]; then checks="default"; fi
-    if [ "$packingType" = "grid_ccsds" -a $HAVE_AEC -eq 0 ]; then checks="default"; fi
-
     set +e
-    result=`${tools_dir}/grib_get -s messageValidityChecks=$checks -p isMessageValid $sample 2>$tempText`
+    result=`${tools_dir}/grib_get -p isMessageValid $sample 2>$tempText`
     status=$?
     set -e
     if [ $status -ne 0 -o "$result" != "1" ]; then
