@@ -4348,6 +4348,22 @@
 	 parameterNumber = 3 ;
 	 typeOfRelationToReferenceDataset = 0 ;
 	}
+#Low cloud cover anomaly
+'171256' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 3 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	 productDefinitionTemplateNumber = 105 ;
+	}
+#Low cloud cover anomaly
+'171256' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 3 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	 productDefinitionTemplateNumber = 106 ;
+	}
 #Medium cloud cover anomaly
 '171257' = {
 	 discipline = 0 ;

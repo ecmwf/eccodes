@@ -37,13 +37,13 @@ ${tools_dir}/grib_set -s tablesVersion=37,stepType=instant,paramId=171256 $sampl
 grib_check_key_equals $temp_instant productDefinitionTemplateNumber,stepType,paramId,typeOfRelationToReferenceDataset '128 instant 171256 0'
 
 ${tools_dir}/grib_set -s tablesVersion=37,stepType=avg,paramId=171256 $sample_grib2 $temp_interval
-grib_check_key_equals $temp_interval productDefinitionTemplateNumber,stepType,parameterNumber,typeOfRelationToReferenceDataset '105 avg 3 0'
+grib_check_key_equals $temp_interval productDefinitionTemplateNumber,stepType,paramId,typeOfRelationToReferenceDataset '105 avg 171256 0'
 
 ${tools_dir}/grib_set -s tablesVersion=37,productDefinitionTemplateNumber=1,perturbationNumber=7,stepType=instant,paramId=171256 $sample_grib2 $temp_instant
 grib_check_key_equals $temp_instant productDefinitionTemplateNumber,stepType,paramId,typeOfRelationToReferenceDataset,perturbationNumber '129 instant 171256 0 7'
 
 ${tools_dir}/grib_set -s tablesVersion=37,productDefinitionTemplateNumber=1,perturbationNumber=7,stepType=avg,paramId=171256 $sample_grib2 $temp_interval
-grib_check_key_equals $temp_interval productDefinitionTemplateNumber,stepType,parameterNumber,typeOfRelationToReferenceDataset,perturbationNumber '106 avg 3 0 7'
+grib_check_key_equals $temp_interval productDefinitionTemplateNumber,stepType,paramId,typeOfRelationToReferenceDataset,perturbationNumber '106 avg 171256 0 7'
 
 ${tools_dir}/grib_set -s tablesVersion=37,productDefinitionTemplateNumber=8,paramId=171256 $sample_grib2 $temp_interval
 grib_check_key_equals $temp_interval productDefinitionTemplateNumber '105'
