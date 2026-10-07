@@ -27,7 +27,7 @@ int G2ReferencePeriod::pack_long(const long* val, size_t* len)
     const bool is_ensemble = grib_is_defined(handle, "perturbationNumber");
     const bool is_probability = grib_is_defined(handle, "probabilityType");
     long template_number = is_interval ? (is_ensemble ? 106 : 105) : (is_ensemble ? 129 : 128);
-    if (is_interval && grib_is_defined(handle, "derivedForecast")) {
+    if (grib_is_defined(handle, "derivedForecast")) {
         template_number = is_interval ? 107 : 130;
     }
     if (is_probability) {
