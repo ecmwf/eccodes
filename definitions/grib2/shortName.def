@@ -4327,6 +4327,7 @@
 	 typeOfFirstFixedSurface = 166 ;
 	 typeOfSecondFixedSurface = 255 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Lake ice depth anomaly
 'licda' = {
@@ -4340,6 +4341,7 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Low cloud cover anomaly
 'lcca' = {
@@ -4347,6 +4349,7 @@
 	 parameterCategory = 6 ;
 	 parameterNumber = 3 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Medium cloud cover anomaly
 'mcca' = {
@@ -4354,6 +4357,7 @@
 	 parameterCategory = 6 ;
 	 parameterNumber = 4 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #High cloud cover anomaly
 'hcca' = {
@@ -4361,6 +4365,7 @@
 	 parameterCategory = 6 ;
 	 parameterNumber = 5 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Total cloud cover anomaly
 'tcca' = {
@@ -4370,6 +4375,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Total column integrated ozone anomaly
 'tcioza' = {
@@ -4379,6 +4385,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Volumetric soil moisture anomaly
 'vswa' = {
@@ -4386,6 +4393,7 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 25 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Soil temperature anomaly
 'sota' = {
@@ -4393,6 +4401,7 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 18 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Snow depth water equivalent anomaly
 'sda' = {
@@ -4400,6 +4409,7 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 60 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Wind speed anomaly
 'sia' = {
@@ -4407,6 +4417,7 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 1 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Forecast albedo anomaly
 'fala' = {
@@ -4414,6 +4425,7 @@
 	 parameterCategory = 19 ;
 	 parameterNumber = 1 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #U-component of surface momentum flux into ocean anomaly
 'utauoa' = {
@@ -4422,6 +4434,7 @@
 	 parameterNumber = 90 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #V-component of surface momentum flux into ocean anomaly
 'vtauoa' = {
@@ -4430,6 +4443,7 @@
 	 parameterNumber = 91 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Wave turbulent energy flux into ocean anomaly
 'wphioa' = {
@@ -4437,6 +4451,7 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 92 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Significant height of combined wind waves and swell anomaly
 'swha' = {
@@ -4444,6 +4459,7 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Peak wave period anomaly
 'pp1da' = {
@@ -4451,6 +4467,7 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 34 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Mean wave period anomaly
 'mwpa' = {
@@ -4458,6 +4475,7 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 15 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Coefficient of drag with waves anomaly
 'cdwwa' = {
@@ -4465,6 +4483,7 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 16 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Mean square slope of waves anomaly
 'msqsa' = {
@@ -4472,6 +4491,7 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 20 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #10 metre wind speed anomaly
 'winda' = {
@@ -4482,6 +4502,7 @@
 	 scaledValueOfFirstFixedSurface = 10 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Sea ice area fraction anomaly
 'siconca' = {
@@ -4495,6 +4516,7 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Eastward sea ice velocity anomaly
 'siuea' = {
@@ -4508,6 +4530,7 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Northward sea ice velocity anomaly
 'sivna' = {
@@ -4521,6 +4544,7 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Sea ice albedo anomaly
 'sialba' = {
@@ -4534,6 +4558,7 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Sea ice growth anomaly
 'sigrowtha' = {
@@ -4547,6 +4572,7 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Sea ice volume per unit area anomaly
 'sivola' = {
@@ -4560,6 +4586,7 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Snow volume over sea ice per unit area anomaly
 'snvola' = {
@@ -4573,6 +4600,7 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Sea surface practical salinity anomaly
 'sosa' = {
@@ -4580,6 +4608,7 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 3 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Sea surface temperature anomaly
 'tosa' = {
@@ -4593,6 +4622,7 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Surface downward heat flux anomaly
 'hfdsa' = {
@@ -4600,6 +4630,7 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 4 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Ocean mixed layer depth defined by sigma theta 0.125 kg m-3 anomaly
 'mlotst125a' = {
@@ -4613,6 +4644,7 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Ocean mixed layer depth defined by temperature 0.2 C anomaly
 'mlott02a' = {
@@ -4626,6 +4658,7 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Total column heat content anomaly
 'hcbtma' = {
@@ -4639,6 +4672,7 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Steric change in sea surface height anomaly
 'stheiga' = {
@@ -4652,6 +4686,7 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Net surface upward water flux anomaly
 'swfupa' = {
@@ -4665,6 +4700,7 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Northward surface sea water velocity anomaly
 'svna' = {
@@ -4672,6 +4708,7 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 15 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Eastward surface sea water velocity anomaly
 'svea' = {
@@ -4679,6 +4716,7 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 14 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Sea water practical salinity anomaly
 'soa' = {
@@ -4688,6 +4726,7 @@
 	 typeOfFirstFixedSurface = 168 ;
 	 typeOfSecondFixedSurface = 168 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Sea water potential temperature anomaly
 'thetaoa' = {
@@ -4697,6 +4736,7 @@
 	 typeOfFirstFixedSurface = 168 ;
 	 typeOfSecondFixedSurface = 168 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Northward sea water velocity anomaly
 'vona' = {
@@ -4706,6 +4746,7 @@
 	 typeOfFirstFixedSurface = 168 ;
 	 typeOfSecondFixedSurface = 168 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Eastward sea water velocity anomaly
 'uoea' = {
@@ -4715,6 +4756,7 @@
 	 typeOfFirstFixedSurface = 168 ;
 	 typeOfSecondFixedSurface = 168 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Sea water potential temperature tendency due to newtonian relaxation anomaly
 'thetaodmpa' = {
@@ -4724,6 +4766,7 @@
 	 typeOfFirstFixedSurface = 168 ;
 	 typeOfSecondFixedSurface = 168 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Sea water salinity tendency due to newtonian relaxation anomaly
 'sodma' = {
@@ -4733,6 +4776,7 @@
 	 typeOfFirstFixedSurface = 168 ;
 	 typeOfSecondFixedSurface = 168 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Snow depth anomaly
 'sdea' = {
@@ -4740,6 +4784,7 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 11 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Mean surface runoff rate anomaly
 'msrora' = {
@@ -4749,6 +4794,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Mean sub-surface runoff rate anomaly
 'mssrora' = {
@@ -4758,6 +4804,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Mean runoff rate anomaly
 'roara' = {
@@ -4766,6 +4813,7 @@
 	 parameterNumber = 42 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Mean stratiform precipitation (large-scale precipitation) rate anomaly
 'lspara' = {
@@ -4775,6 +4823,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Mean convective precipitation rate anomaly
 'mcpra' = {
@@ -4784,6 +4833,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Mean snowfall (convective + stratiform) rate anomaly
 'sfara' = {
@@ -4793,6 +4843,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Mean evaporation rate anomaly
 'evara' = {
@@ -4802,6 +4853,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Mean total precipitation rate anomaly
 'tpara' = {
@@ -4811,6 +4863,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #2 metre specific humidity
 '2sh' = {
@@ -8607,6 +8660,7 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 4 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Velocity potential significance
 'vpots' = {
@@ -8614,6 +8668,7 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 5 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Potential temperature significance
 'pts' = {
@@ -8621,6 +8676,7 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 2 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Lake mix-layer temperature significance
 'lmlts' = {
@@ -8630,6 +8686,7 @@
 	 typeOfFirstFixedSurface = 166 ;
 	 typeOfSecondFixedSurface = 255 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Lake ice depth significance
 'licds' = {
@@ -8643,6 +8700,7 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Sea-ice cover significance
 'sics' = {
@@ -8650,6 +8708,7 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 0 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Snow density significance
 'rsns' = {
@@ -8657,6 +8716,7 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 61 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Sea surface temperature significance
 'ssts' = {
@@ -8665,6 +8725,7 @@
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #10 metre wind gust significance
 '10fgs' = {
@@ -8676,6 +8737,7 @@
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 1 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Convective available potential energy significance
 'capes' = {
@@ -8685,6 +8747,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Potential vorticity significance
 'pvs' = {
@@ -8692,6 +8755,7 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 14 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Total column liquid water significance
 'tclws' = {
@@ -8701,6 +8765,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Total column ice water significance
 'tciws' = {
@@ -8710,6 +8775,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Geopotential significance
 'zs' = {
@@ -8717,6 +8783,7 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 4 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Temperature significance
 'ts' = {
@@ -8724,6 +8791,7 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #U component of wind significance
 'us' = {
@@ -8731,6 +8799,7 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 2 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #V component of wind significance
 'vs' = {
@@ -8738,6 +8807,7 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 3 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Specific humidity significance
 'qs' = {
@@ -8745,6 +8815,7 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 0 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Total column water significance
 'tcws' = {
@@ -8754,6 +8825,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Total column water vapour significance
 'tcwvs' = {
@@ -8763,6 +8835,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Relative vorticity significance
 'vos' = {
@@ -8770,6 +8843,7 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 12 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Relative divergence significance
 'ds' = {
@@ -8777,6 +8851,7 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 13 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #10 metre U wind component significance
 '10us' = {
@@ -8787,6 +8862,7 @@
 	 scaledValueOfFirstFixedSurface = 10 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #10 metre V wind component significance
 '10vs' = {
@@ -8797,6 +8873,7 @@
 	 scaledValueOfFirstFixedSurface = 10 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #2 metre dewpoint temperature significance
 '2ds' = {
@@ -8807,6 +8884,7 @@
 	 scaledValueOfFirstFixedSurface = 2 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Surface solar radiation downwards significance
 'ssrds' = {
@@ -8816,6 +8894,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Maximum temperature at 2 metres significance
 'mx2ts' = {
@@ -8824,6 +8903,7 @@
 	 parameterNumber = 0 ;
 	 typeOfStatisticalProcessing = 2 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Minimum temperature at 2 metres significance
 'mn2ts' = {
@@ -8832,6 +8912,7 @@
 	 parameterNumber = 0 ;
 	 typeOfStatisticalProcessing = 3 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Ozone mass mixing ratio significance
 'o3s' = {
@@ -8839,6 +8920,7 @@
 	 parameterCategory = 14 ;
 	 parameterNumber = 1 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #10 metre wind speed significance
 '10sis' = {
@@ -8849,6 +8931,7 @@
 	 scaledValueOfFirstFixedSurface = 10 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Instantaneous X surface stress significance
 'iewss' = {
@@ -8857,6 +8940,7 @@
 	 parameterNumber = 62 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Instantaneous Y surface stress significance
 'insss' = {
@@ -8865,6 +8949,7 @@
 	 parameterNumber = 63 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Skin temperature significance
 'skts' = {
@@ -8873,6 +8958,7 @@
 	 parameterNumber = 17 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Low cloud cover significance
 'lccs' = {
@@ -8880,6 +8966,7 @@
 	 parameterCategory = 6 ;
 	 parameterNumber = 3 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Medium cloud cover significance
 'mccs' = {
@@ -8887,6 +8974,7 @@
 	 parameterCategory = 6 ;
 	 parameterNumber = 4 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #High cloud cover significance
 'hccs' = {
@@ -8894,6 +8982,7 @@
 	 parameterCategory = 6 ;
 	 parameterNumber = 5 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Total cloud cover significance
 'tccs' = {
@@ -8903,6 +8992,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Total column integrated ozone significance
 'tciozs' = {
@@ -8912,6 +9002,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Volumetric soil moisture significance
 'vsws' = {
@@ -8919,6 +9010,7 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 25 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Soil temperature significance
 'sots' = {
@@ -8926,6 +9018,7 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 18 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Snow depth water equivalent significance
 'sds' = {
@@ -8933,6 +9026,7 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 60 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Wind speed significance
 'sis' = {
@@ -8940,6 +9034,7 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 1 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Forecast albedo significance
 'fals' = {
@@ -8947,6 +9042,7 @@
 	 parameterCategory = 19 ;
 	 parameterNumber = 1 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #U-component of surface momentum flux into ocean significance
 'utauos' = {
@@ -8955,6 +9051,7 @@
 	 parameterNumber = 90 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #V-component of surface momentum flux into ocean significance
 'vtauos' = {
@@ -8963,6 +9060,7 @@
 	 parameterNumber = 91 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Wave turbulent energy flux into ocean significance
 'wphios' = {
@@ -8970,6 +9068,7 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 92 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Significant height of combined wind waves and swell significance
 'swhs' = {
@@ -8977,6 +9076,7 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Peak wave period significance
 'pp1ds' = {
@@ -8984,6 +9084,7 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 34 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Mean wave period significance
 'mwps' = {
@@ -8991,6 +9092,7 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 15 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Coefficient of drag with waves significance
 'cdwws' = {
@@ -8998,6 +9100,7 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 16 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Mean square slope of waves significance
 'msqss' = {
@@ -9005,6 +9108,7 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 20 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #10 metre wind speed significance
 'winds' = {
@@ -9015,6 +9119,7 @@
 	 scaledValueOfFirstFixedSurface = 10 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Sea ice area fraction significance
 'siconcs' = {
@@ -9028,6 +9133,7 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Eastward sea ice velocity significance
 'siues' = {
@@ -9041,6 +9147,7 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Northward sea ice velocity significance
 'sivns' = {
@@ -9054,6 +9161,7 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Sea ice albedo significance
 'sialbs' = {
@@ -9067,6 +9175,7 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Sea ice growth significance
 'sigrowths' = {
@@ -9080,6 +9189,7 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Sea ice volume per unit area significance
 'sivols' = {
@@ -9093,6 +9203,7 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Snow volume over sea ice per unit area significance
 'snvols' = {
@@ -9106,6 +9217,7 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Sea surface practical salinity significance
 'soss' = {
@@ -9113,6 +9225,7 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 3 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Sea surface temperature significance
 'toss' = {
@@ -9126,6 +9239,7 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Surface downward heat flux significance
 'hfdss' = {
@@ -9133,6 +9247,7 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 4 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Ocean mixed layer depth defined by sigma theta 0.125 kg m-3 significance
 'mlotst125s' = {
@@ -9146,6 +9261,7 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Ocean mixed layer depth defined by temperature 0.2 C significance
 'mlott02s' = {
@@ -9159,6 +9275,7 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Total column heat content significance
 'hcbtms' = {
@@ -9172,6 +9289,7 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Steric change in sea surface height significance
 'stheigs' = {
@@ -9185,6 +9303,7 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Net surface upward water flux significance
 'swfups' = {
@@ -9198,6 +9317,7 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Northward surface sea water velocity significance
 'svns' = {
@@ -9205,6 +9325,7 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 15 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Eastward surface sea water velocity significance
 'sves' = {
@@ -9212,6 +9333,7 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 14 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Sea water practical salinity significance
 'sos' = {
@@ -9221,6 +9343,7 @@
 	 typeOfFirstFixedSurface = 168 ;
 	 typeOfSecondFixedSurface = 168 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Sea water potential temperature significance
 'thetaos' = {
@@ -9230,6 +9353,7 @@
 	 typeOfFirstFixedSurface = 168 ;
 	 typeOfSecondFixedSurface = 168 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Northward sea water velocity significance
 'vons' = {
@@ -9239,6 +9363,7 @@
 	 typeOfFirstFixedSurface = 168 ;
 	 typeOfSecondFixedSurface = 168 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Eastward sea water velocity significance
 'uoes' = {
@@ -9248,6 +9373,7 @@
 	 typeOfFirstFixedSurface = 168 ;
 	 typeOfSecondFixedSurface = 168 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Sea water potential temperature tendency due to newtonian relaxation significance
 'thetaodmps' = {
@@ -9257,6 +9383,7 @@
 	 typeOfFirstFixedSurface = 168 ;
 	 typeOfSecondFixedSurface = 168 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Sea water salinity tendency due to newtonian relaxation significance
 'sodms' = {
@@ -9266,6 +9393,7 @@
 	 typeOfFirstFixedSurface = 168 ;
 	 typeOfSecondFixedSurface = 168 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Mean surface sensible heat flux significance
 'sshfars' = {
@@ -9275,6 +9403,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Mean surface latent heat flux significance
 'slhfars' = {
@@ -9284,6 +9413,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Mean surface short-wave (solar) radiation downward flux significance
 'ssrdars' = {
@@ -9293,6 +9423,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Mean surface long-wave (thermal) radiation downward flux significance
 'strdars' = {
@@ -9302,6 +9433,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Mean surface short-wave (solar) radiation flux significance
 'ssrars' = {
@@ -9311,6 +9443,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Mean surface long-wave (thermal) radiation flux significance
 'strars' = {
@@ -9320,6 +9453,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Mean top short-wave (solar) radiation flux significance
 'tsrars' = {
@@ -9329,6 +9463,7 @@
 	 typeOfFirstFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Mean top long-wave (thermal) radiation flux significance
 'ttrars' = {
@@ -9338,6 +9473,7 @@
 	 typeOfFirstFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Mean east-west surface stress significance
 'ewssars' = {
@@ -9347,6 +9483,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Mean north-south surface stress significance
 'nsssars' = {
@@ -9356,6 +9493,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Mean sunshine duration significance
 'sundars' = {
@@ -9365,6 +9503,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Mean solar insolation flux significance
 'soiars' = {
@@ -9374,6 +9513,7 @@
 	 typeOfFirstFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Mean surface runoff rate significance
 'msrors' = {
@@ -9383,6 +9523,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Mean sub-surface runoff rate significance
 'mssrors' = {
@@ -9392,6 +9533,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Mean runoff rate significance
 'roars' = {
@@ -9400,6 +9542,7 @@
 	 parameterNumber = 42 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Mean stratiform precipitation (large-scale precipitation) rate significance
 'lspars' = {
@@ -9409,6 +9552,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Mean convective precipitation rate significance
 'mcprs' = {
@@ -9418,6 +9562,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Mean snowfall (convective + stratiform) rate significance
 'sfars' = {
@@ -9427,6 +9572,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Mean evaporation rate significance
 'evars' = {
@@ -9436,6 +9582,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Mean total precipitation rate significance
 'tpars' = {
@@ -9445,6 +9592,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Snow depth significance
 'sdes' = {
@@ -9452,6 +9600,7 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 11 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Time-mean temperature tendency due to short-wave radiation
 'avg_ttswr' = {
@@ -27651,6 +27800,7 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 4 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Velocity potential anomaly
 'vpota' = {
@@ -27658,6 +27808,7 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 5 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Potential temperature anomaly
 'pta' = {
@@ -27665,6 +27816,7 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 2 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Sea-ice cover anomaly
 'sica' = {
@@ -27672,6 +27824,7 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 0 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Snow density anomaly
 'rsna' = {
@@ -27679,6 +27832,7 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 61 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Sea surface temperature anomaly
 'ssta' = {
@@ -27687,6 +27841,7 @@
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #10 metre wind gust anomaly
 '10fga' = {
@@ -27698,6 +27853,7 @@
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 1 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Convective available potential energy anomaly
 'capea' = {
@@ -27707,6 +27863,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Potential vorticity anomaly
 'pva' = {
@@ -27714,6 +27871,7 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 14 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Total column liquid water anomaly
 'tclwa' = {
@@ -27723,6 +27881,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Total column ice water anomaly
 'tciwa' = {
@@ -27732,6 +27891,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Geopotential anomaly
 'za' = {
@@ -27739,6 +27899,7 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 4 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Temperature anomaly
 'ta' = {
@@ -27746,6 +27907,7 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #U component of wind anomaly
 'ua' = {
@@ -27753,6 +27915,7 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 2 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #V component of wind anomaly
 'va' = {
@@ -27760,6 +27923,7 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 3 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Specific humidity anomaly
 'qa' = {
@@ -27767,6 +27931,7 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 0 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Total column water anomaly
 'tcwa' = {
@@ -27776,6 +27941,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Total column water vapour anomaly
 'tcwva' = {
@@ -27785,6 +27951,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Relative vorticity anomaly
 'voa' = {
@@ -27792,6 +27959,7 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 12 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Mean sea level pressure anomaly
 'msla' = {
@@ -27800,6 +27968,7 @@
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 101 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Relative divergence anomaly
 'da' = {
@@ -27807,6 +27976,7 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 13 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #10 metre U wind component anomaly
 '10ua' = {
@@ -27817,6 +27987,7 @@
 	 scaledValueOfFirstFixedSurface = 10 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #10 metre V wind component anomaly
 '10va' = {
@@ -27827,6 +27998,7 @@
 	 scaledValueOfFirstFixedSurface = 10 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #2 metre temperature anomaly
 '2ta' = {
@@ -27837,6 +28009,7 @@
 	 scaledValueOfFirstFixedSurface = 2 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #2 metre dewpoint temperature anomaly
 '2da' = {
@@ -27847,6 +28020,7 @@
 	 scaledValueOfFirstFixedSurface = 2 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Surface solar radiation downwards anomaly
 'ssrda' = {
@@ -27856,6 +28030,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Maximum temperature at 2 metres anomaly
 'mx2ta' = {
@@ -27864,6 +28039,7 @@
 	 parameterNumber = 0 ;
 	 typeOfStatisticalProcessing = 2 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Minimum temperature at 2 metres anomaly
 'mn2ta' = {
@@ -27872,6 +28048,7 @@
 	 parameterNumber = 0 ;
 	 typeOfStatisticalProcessing = 3 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Ozone mass mixing ratio anomaly
 'o3a' = {
@@ -27879,6 +28056,7 @@
 	 parameterCategory = 14 ;
 	 parameterNumber = 1 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #10 metre wind speed anomaly
 '10sia' = {
@@ -27889,6 +28067,7 @@
 	 scaledValueOfFirstFixedSurface = 10 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Instantaneous X surface stress anomaly
 'iewsa' = {
@@ -27897,6 +28076,7 @@
 	 parameterNumber = 62 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Instantaneous Y surface stress anomaly
 'inssa' = {
@@ -27905,6 +28085,7 @@
 	 parameterNumber = 63 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Skin temperature anomaly
 'skta' = {
@@ -27913,6 +28094,7 @@
 	 parameterNumber = 17 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Surface sensible heat flux anomalous rate of accumulation
 'sshfara' = {
@@ -27922,6 +28104,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Surface latent heat flux anomalous rate of accumulation
 'slhfara' = {
@@ -27931,6 +28114,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Surface solar radiation downwards anomalous rate of accumulation
 'ssrdara' = {
@@ -27940,6 +28124,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Surface thermal radiation downwards anomalous rate of accumulation
 'strdara' = {
@@ -27949,6 +28134,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Surface solar radiation anomalous rate of accumulation
 'ssrara' = {
@@ -27958,6 +28144,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Surface thermal radiation anomalous rate of accumulation
 'strara' = {
@@ -27967,6 +28154,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Top solar radiation anomalous rate of accumulation
 'tsrara' = {
@@ -27976,6 +28164,7 @@
 	 typeOfFirstFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Top thermal radiation anomalous rate of accumulation
 'ttrara' = {
@@ -27985,6 +28174,7 @@
 	 typeOfFirstFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #East-West surface stress anomalous rate of accumulation
 'ewssara' = {
@@ -27994,6 +28184,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #North-South surface stress anomalous rate of accumulation
 'nsssara' = {
@@ -28003,6 +28194,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Sunshine duration anomalous rate of accumulation
 'sundara' = {
@@ -28012,6 +28204,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Solar insolation anomalous rate of accumulation
 'soiara' = {
@@ -28021,6 +28214,7 @@
 	 typeOfFirstFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Surface runoff
 'sro' = {
@@ -28328,6 +28522,7 @@
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 101 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #2 metre temperature significance
 '2ts' = {
@@ -28338,6 +28533,7 @@
 	 scaledValueOfFirstFixedSurface = 2 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #U-component surface stokes drift
 'ust' = {
