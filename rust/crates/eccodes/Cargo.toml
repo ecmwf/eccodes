@@ -5,7 +5,10 @@ edition      .workspace = true
 license      .workspace = true
 repository   .workspace = true
 rust-version .workspace = true
+keywords     .workspace = true
+categories   .workspace = true
 description  = "Safe Rust wrapper for ECMWF's eccodes (GRIB/BUFR)"
+readme       = "README.md"
 
 [features]
 default = ["vendored"]
