@@ -28,6 +28,7 @@ public:
 private:
     const char* productDefinitionTemplateNumber_ = nullptr;
     const char* stepType_ = nullptr;
+    long referencePeriod_ = 0;
 
 public:
     static inline const AccessorType accessor_type_{"g2_probability"};
