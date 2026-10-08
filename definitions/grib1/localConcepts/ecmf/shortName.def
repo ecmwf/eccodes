@@ -14285,7 +14285,7 @@
 	 indicatorOfParameter = 129 ;
 	}
 #Temperature anomaly
-'ta' = {
+'t_a' = {
 	 table2Version = 171 ;
 	 indicatorOfParameter = 130 ;
 	}

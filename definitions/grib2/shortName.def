@@ -8671,7 +8671,7 @@
 	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Potential temperature significance
-'pts' = {
+'pt_s' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 2 ;
@@ -8740,7 +8740,7 @@
 	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Convective available potential energy significance
-'capes' = {
+'cape_s' = {
 	 discipline = 0 ;
 	 parameterCategory = 7 ;
 	 parameterNumber = 6 ;
@@ -9079,7 +9079,7 @@
 	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Peak wave period significance
-'pp1ds' = {
+'pp1d_s' = {
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 34 ;
@@ -9336,7 +9336,7 @@
 	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Sea water practical salinity significance
-'sos' = {
+'so_s' = {
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 21 ;
@@ -27902,7 +27902,7 @@
 	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Temperature anomaly
-'ta' = {
+'t_a' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;

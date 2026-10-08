@@ -2506,7 +2506,7 @@
 	 parameterNumber = 129 ;
 	}
 #Temperature anomaly
-'ta' = {
+'t_a' = {
 	 discipline = 192 ;
 	 parameterCategory = 171 ;
 	 parameterNumber = 130 ;
