@@ -202,20 +202,40 @@
           true = (element(lengthOfTimeRange,0) == 168) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
           true = (element(typeOfStatisticalProcessing,0) == 0) ; }
+# Mean - 7 days
+'7dav' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 7) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
+          true = (element(typeOfStatisticalProcessing,0) == 0) ; }
 # Max - 168 hours
 '7dmx' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 168) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 2) ; }
+# Max - 7 days
+'7dmx' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 7) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
           true = (element(typeOfStatisticalProcessing,0) == 2) ; }
 # Min - 168 hours
 '7dmn' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 168) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
           true = (element(typeOfStatisticalProcessing,0) == 3) ; }
+# Min - 7 days
+'7dmn' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 7) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
+          true = (element(typeOfStatisticalProcessing,0) == 3) ; }
 # Stdev - 168 hours
 '7dsd' = {true = is_one_of(numberOfTimeRanges,1,2) ;
           true = (element(lengthOfTimeRange,0) == 168) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 6) ; }
+# Stdev - 7 days
+'7dsd' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 7) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
           true = (element(typeOfStatisticalProcessing,0) == 6) ; }
 
 ############################################
