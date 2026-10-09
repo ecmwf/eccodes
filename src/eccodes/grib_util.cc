@@ -2556,6 +2556,13 @@ int grib2_choose_PDTN(int current_PDTN, bool is_det, bool is_instant)
         if (is_interval && is_det) return 8;
     }
 
+    if (current_PDTN == 105 || current_PDTN == 106 || current_PDTN == 128 || current_PDTN == 129) {
+        if (is_instant  && is_ens) return 129;
+        if (is_instant  && is_det) return 128;
+        if (is_interval && is_ens) return 106;
+        if (is_interval && is_det) return 105;
+    }
+
     if (grib2_is_PDTN_Chemical(current_PDTN)) {
         if (is_instant  && is_ens) return 41;
         if (is_instant  && is_det) return 40;

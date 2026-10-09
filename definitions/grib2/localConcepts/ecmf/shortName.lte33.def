@@ -14951,66 +14951,6 @@
 	 parameterCategory = 130 ;
 	 parameterNumber = 231 ;
 	}
-#2m temperature anomaly of at least +2K
-'2tag2' = {
-	 discipline = 192 ;
-	 parameterCategory = 131 ;
-	 parameterNumber = 1 ;
-	}
-#2m temperature anomaly of at least +1K
-'2tag1' = {
-	 discipline = 192 ;
-	 parameterCategory = 131 ;
-	 parameterNumber = 2 ;
-	}
-#2m temperature anomaly of at least 0K
-'2tag0' = {
-	 discipline = 192 ;
-	 parameterCategory = 131 ;
-	 parameterNumber = 3 ;
-	}
-#2m temperature anomaly of at most -1K
-'2talm1' = {
-	 discipline = 192 ;
-	 parameterCategory = 131 ;
-	 parameterNumber = 4 ;
-	}
-#2m temperature anomaly of at most -2K
-'2talm2' = {
-	 discipline = 192 ;
-	 parameterCategory = 131 ;
-	 parameterNumber = 5 ;
-	}
-#Total precipitation anomaly of at least 20 mm
-'tpag20' = {
-	 discipline = 192 ;
-	 parameterCategory = 131 ;
-	 parameterNumber = 6 ;
-	}
-#Total precipitation anomaly of at least 10 mm
-'tpag10' = {
-	 discipline = 192 ;
-	 parameterCategory = 131 ;
-	 parameterNumber = 7 ;
-	}
-#Total precipitation anomaly of at least 0 mm
-'tpag0' = {
-	 discipline = 192 ;
-	 parameterCategory = 131 ;
-	 parameterNumber = 8 ;
-	}
-#Surface temperature anomaly of at least 0K
-'stag0' = {
-	 discipline = 192 ;
-	 parameterCategory = 131 ;
-	 parameterNumber = 9 ;
-	}
-#Mean sea level pressure anomaly of at least 0 Pa
-'mslag0' = {
-	 discipline = 192 ;
-	 parameterCategory = 131 ;
-	 parameterNumber = 10 ;
-	}
 #Height of 0 degree isotherm probability
 'h0dip' = {
 	 discipline = 192 ;
@@ -15034,42 +14974,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 131 ;
 	 parameterNumber = 18 ;
-	}
-#Temperature anomaly less than -2 K
-'talm2' = {
-	 discipline = 192 ;
-	 parameterCategory = 131 ;
-	 parameterNumber = 20 ;
-	}
-#Temperature anomaly of at least +2 K
-'tag2' = {
-	 discipline = 192 ;
-	 parameterCategory = 131 ;
-	 parameterNumber = 21 ;
-	}
-#Temperature anomaly less than -8 K
-'talm8' = {
-	 discipline = 192 ;
-	 parameterCategory = 131 ;
-	 parameterNumber = 22 ;
-	}
-#Temperature anomaly less than -4 K
-'talm4' = {
-	 discipline = 192 ;
-	 parameterCategory = 131 ;
-	 parameterNumber = 23 ;
-	}
-#Temperature anomaly greater than +4 K
-'tag4' = {
-	 discipline = 192 ;
-	 parameterCategory = 131 ;
-	 parameterNumber = 24 ;
-	}
-#Temperature anomaly greater than +8 K
-'tag8' = {
-	 discipline = 192 ;
-	 parameterCategory = 131 ;
-	 parameterNumber = 25 ;
 	}
 #10 metre wind gust probability
 '10gp' = {
@@ -16722,24 +16626,6 @@
 	 parameterCategory = 170 ;
 	 parameterNumber = 179 ;
 	}
-#Stream function anomaly
-'strfa' = {
-	 discipline = 192 ;
-	 parameterCategory = 171 ;
-	 parameterNumber = 1 ;
-	}
-#Velocity potential anomaly
-'vpota' = {
-	 discipline = 192 ;
-	 parameterCategory = 171 ;
-	 parameterNumber = 2 ;
-	}
-#Potential temperature anomaly
-'pta' = {
-	 discipline = 192 ;
-	 parameterCategory = 171 ;
-	 parameterNumber = 3 ;
-	}
 #Equivalent potential temperature anomaly
 'epta' = {
 	 discipline = 192 ;
@@ -16824,29 +16710,11 @@
 	 parameterCategory = 171 ;
 	 parameterNumber = 30 ;
 	}
-#Sea-ice cover anomaly
-'sica' = {
-	 discipline = 192 ;
-	 parameterCategory = 171 ;
-	 parameterNumber = 31 ;
-	}
 #Snow albedo anomaly
 'asna' = {
 	 discipline = 192 ;
 	 parameterCategory = 171 ;
 	 parameterNumber = 32 ;
-	}
-#Snow density anomaly
-'rsna' = {
-	 discipline = 192 ;
-	 parameterCategory = 171 ;
-	 parameterNumber = 33 ;
-	}
-#Sea surface temperature anomaly
-'ssta' = {
-	 discipline = 192 ;
-	 parameterCategory = 171 ;
-	 parameterNumber = 34 ;
 	}
 #Ice surface temperature anomaly layer 1
 'istal1' = {
@@ -16932,12 +16800,6 @@
 	 parameterCategory = 171 ;
 	 parameterNumber = 48 ;
 	}
-#10 metre wind gust anomaly
-'10fga' = {
-	 discipline = 192 ;
-	 parameterCategory = 171 ;
-	 parameterNumber = 49 ;
-	}
 #Large-scale precipitation fraction anomaly
 'lspfa' = {
 	 discipline = 192 ;
@@ -16992,18 +16854,6 @@
 	 parameterCategory = 171 ;
 	 parameterNumber = 58 ;
 	}
-#Convective available potential energy anomaly
-'capea' = {
-	 discipline = 192 ;
-	 parameterCategory = 171 ;
-	 parameterNumber = 59 ;
-	}
-#Potential vorticity anomaly
-'pva' = {
-	 discipline = 192 ;
-	 parameterCategory = 171 ;
-	 parameterNumber = 60 ;
-	}
 #Total precipitation from observations anomaly
 'tpoa' = {
 	 discipline = 192 ;
@@ -17034,18 +16884,6 @@
 	 parameterCategory = 171 ;
 	 parameterNumber = 65 ;
 	}
-#Total column liquid water anomaly
-'tclwa' = {
-	 discipline = 192 ;
-	 parameterCategory = 171 ;
-	 parameterNumber = 78 ;
-	}
-#Total column ice water anomaly
-'tciwa' = {
-	 discipline = 192 ;
-	 parameterCategory = 171 ;
-	 parameterNumber = 79 ;
-	}
 #Vertically integrated total energy anomaly
 'vitea' = {
 	 discipline = 192 ;
@@ -17070,36 +16908,6 @@
 	 parameterCategory = 171 ;
 	 parameterNumber = 128 ;
 	}
-#Geopotential anomaly
-'za' = {
-	 discipline = 192 ;
-	 parameterCategory = 171 ;
-	 parameterNumber = 129 ;
-	}
-#Temperature anomaly
-'ta' = {
-	 discipline = 192 ;
-	 parameterCategory = 171 ;
-	 parameterNumber = 130 ;
-	}
-#U component of wind anomaly
-'ua' = {
-	 discipline = 192 ;
-	 parameterCategory = 171 ;
-	 parameterNumber = 131 ;
-	}
-#V component of wind anomaly
-'va' = {
-	 discipline = 192 ;
-	 parameterCategory = 171 ;
-	 parameterNumber = 132 ;
-	}
-#Specific humidity anomaly
-'qa' = {
-	 discipline = 192 ;
-	 parameterCategory = 171 ;
-	 parameterNumber = 133 ;
-	}
 #Surface pressure anomaly
 'spa' = {
 	 discipline = 192 ;
@@ -17111,24 +16919,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 171 ;
 	 parameterNumber = 135 ;
-	}
-#Total column water anomaly
-'tcwa' = {
-	 discipline = 192 ;
-	 parameterCategory = 171 ;
-	 parameterNumber = 136 ;
-	}
-#Total column water vapour anomaly
-'tcwva' = {
-	 discipline = 192 ;
-	 parameterCategory = 171 ;
-	 parameterNumber = 137 ;
-	}
-#Relative vorticity anomaly
-'voa' = {
-	 discipline = 192 ;
-	 parameterCategory = 171 ;
-	 parameterNumber = 138 ;
 	}
 #Soil temperature anomaly level 1
 'stal1' = {
@@ -17202,12 +16992,6 @@
 	 parameterCategory = 171 ;
 	 parameterNumber = 150 ;
 	}
-#Mean sea level pressure anomaly
-'msla' = {
-	 discipline = 192 ;
-	 parameterCategory = 171 ;
-	 parameterNumber = 151 ;
-	}
 #Logarithm of surface pressure anomaly
 'lspa' = {
 	 discipline = 192 ;
@@ -17225,12 +17009,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 171 ;
 	 parameterNumber = 154 ;
-	}
-#Relative divergence anomaly
-'da' = {
-	 discipline = 192 ;
-	 parameterCategory = 171 ;
-	 parameterNumber = 155 ;
 	}
 #Height anomaly
 'gha' = {
@@ -17285,36 +17063,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 171 ;
 	 parameterNumber = 164 ;
-	}
-#10 metre U wind component anomaly
-'10ua' = {
-	 discipline = 192 ;
-	 parameterCategory = 171 ;
-	 parameterNumber = 165 ;
-	}
-#10 metre V wind component anomaly
-'10va' = {
-	 discipline = 192 ;
-	 parameterCategory = 171 ;
-	 parameterNumber = 166 ;
-	}
-#2 metre temperature anomaly
-'2ta' = {
-	 discipline = 192 ;
-	 parameterCategory = 171 ;
-	 parameterNumber = 167 ;
-	}
-#2 metre dewpoint temperature anomaly
-'2da' = {
-	 discipline = 192 ;
-	 parameterCategory = 171 ;
-	 parameterNumber = 168 ;
-	}
-#Surface solar radiation downwards anomaly
-'ssrda' = {
-	 discipline = 192 ;
-	 parameterCategory = 171 ;
-	 parameterNumber = 169 ;
 	}
 #Soil temperature anomaly level 2
 'stal2' = {
@@ -17496,24 +17244,6 @@
 	 parameterCategory = 171 ;
 	 parameterNumber = 200 ;
 	}
-#Maximum temperature at 2 metres anomaly
-'mx2ta' = {
-	 discipline = 192 ;
-	 parameterCategory = 171 ;
-	 parameterNumber = 201 ;
-	}
-#Minimum temperature at 2 metres anomaly
-'mn2ta' = {
-	 discipline = 192 ;
-	 parameterCategory = 171 ;
-	 parameterNumber = 202 ;
-	}
-#Ozone mass mixing ratio anomaly
-'o3a' = {
-	 discipline = 192 ;
-	 parameterCategory = 171 ;
-	 parameterNumber = 203 ;
-	}
 #Precipitation analysis weights anomaly
 'pawa' = {
 	 discipline = 192 ;
@@ -17531,12 +17261,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 171 ;
 	 parameterNumber = 206 ;
-	}
-#10 metre wind speed anomaly
-'10sia' = {
-	 discipline = 192 ;
-	 parameterCategory = 171 ;
-	 parameterNumber = 207 ;
 	}
 #Top net solar radiation clear sky anomaly
 'tsrca' = {
@@ -17658,18 +17382,6 @@
 	 parameterCategory = 171 ;
 	 parameterNumber = 228 ;
 	}
-#Instantaneous X surface stress anomaly
-'iewsa' = {
-	 discipline = 192 ;
-	 parameterCategory = 171 ;
-	 parameterNumber = 229 ;
-	}
-#Instantaneous Y surface stress anomaly
-'inssa' = {
-	 discipline = 192 ;
-	 parameterCategory = 171 ;
-	 parameterNumber = 230 ;
-	}
 #Instantaneous surface heat flux anomaly
 'ishfa' = {
 	 discipline = 192 ;
@@ -17693,12 +17405,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 171 ;
 	 parameterNumber = 234 ;
-	}
-#Skin temperature anomaly
-'skta' = {
-	 discipline = 192 ;
-	 parameterCategory = 171 ;
-	 parameterNumber = 235 ;
 	}
 #Soil temperature level 4 anomaly
 'stal4' = {
@@ -17964,18 +17670,6 @@
 	 parameterCategory = 173 ;
 	 parameterNumber = 145 ;
 	}
-#Surface sensible heat flux anomalous rate of accumulation
-'sshfara' = {
-	 discipline = 192 ;
-	 parameterCategory = 173 ;
-	 parameterNumber = 146 ;
-	}
-#Surface latent heat flux anomalous rate of accumulation
-'slhfara' = {
-	 discipline = 192 ;
-	 parameterCategory = 173 ;
-	 parameterNumber = 147 ;
-	}
 #Surface net radiation anomaly
 '~' = {
 	 discipline = 192 ;
@@ -17994,65 +17688,11 @@
 	 parameterCategory = 173 ;
 	 parameterNumber = 154 ;
 	}
-#Surface solar radiation downwards anomalous rate of accumulation
-'ssrdara' = {
-	 discipline = 192 ;
-	 parameterCategory = 173 ;
-	 parameterNumber = 169 ;
-	}
-#Surface thermal radiation downwards anomalous rate of accumulation
-'strdara' = {
-	 discipline = 192 ;
-	 parameterCategory = 173 ;
-	 parameterNumber = 175 ;
-	}
-#Surface solar radiation anomalous rate of accumulation
-'ssrara' = {
-	 discipline = 192 ;
-	 parameterCategory = 173 ;
-	 parameterNumber = 176 ;
-	}
-#Surface thermal radiation anomalous rate of accumulation
-'strara' = {
-	 discipline = 192 ;
-	 parameterCategory = 173 ;
-	 parameterNumber = 177 ;
-	}
-#Top solar radiation anomalous rate of accumulation
-'tsrara' = {
-	 discipline = 192 ;
-	 parameterCategory = 173 ;
-	 parameterNumber = 178 ;
-	}
-#Top thermal radiation anomalous rate of accumulation
-'ttrara' = {
-	 discipline = 192 ;
-	 parameterCategory = 173 ;
-	 parameterNumber = 179 ;
-	}
-#East-West surface stress anomalous rate of accumulation
-'ewssara' = {
-	 discipline = 192 ;
-	 parameterCategory = 173 ;
-	 parameterNumber = 180 ;
-	}
-#North-South surface stress anomalous rate of accumulation
-'nsssara' = {
-	 discipline = 192 ;
-	 parameterCategory = 173 ;
-	 parameterNumber = 181 ;
-	}
 #Time-mean evaporation anomalous rate of accumulation
 'evara' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 182 ;
-	}
-#Sunshine duration anomalous rate of accumulation
-'sundara' = {
-	 discipline = 192 ;
-	 parameterCategory = 173 ;
-	 parameterNumber = 189 ;
 	}
 #Longitudinal component of gravity wave stress anomaly
 '~' = {
@@ -18101,12 +17741,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 211 ;
-	}
-#Solar insolation anomalous rate of accumulation
-'soiara' = {
-	 discipline = 192 ;
-	 parameterCategory = 173 ;
-	 parameterNumber = 212 ;
 	}
 #Total precipitation anomalous rate of accumulation
 'tpara' = {
@@ -20547,30 +20181,6 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 0 ;
-	}
-#Surface temperature significance
-'sts' = {
-	 discipline = 192 ;
-	 parameterCategory = 234 ;
-	 parameterNumber = 139 ;
-	}
-#Mean sea level pressure significance
-'msls' = {
-	 discipline = 192 ;
-	 parameterCategory = 234 ;
-	 parameterNumber = 151 ;
-	}
-#2 metre temperature significance
-'2ts' = {
-	 discipline = 192 ;
-	 parameterCategory = 234 ;
-	 parameterNumber = 167 ;
-	}
-#Total precipitation significance
-'tps' = {
-	 discipline = 192 ;
-	 parameterCategory = 234 ;
-	 parameterNumber = 228 ;
 	}
 #Wildfire radiative power maximum
 'maxfrpfire' = {
