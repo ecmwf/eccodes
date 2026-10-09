@@ -87,7 +87,6 @@ container = "eccr.ecmwf.int/public-ci-images/ubuntu24.04-gcc13-gfortran13:latest
 platform = "ubuntu-24.04"
 
 [[matrix.fortran.include]]
-options = ""
 
 [matrix.fortran]
 packages = ["eccodes-fortran"]
@@ -109,7 +108,6 @@ time = "01:30:00"
 job-script = "./.ci/build.sh.j2"
 
 [[matrix.build-hpc.include]]
-options = ""
 
 [[matrix.build-hpc.include]]
 options = "eckit-geo"
@@ -136,7 +134,6 @@ time = "01:30:00"
 job-script = "./.ci/build.sh.j2"
 
 [[matrix.fortran-hpc.include]]
-options = ""
 
 [matrix.fortran-hpc]
 packages = ["eccodes-fortran"]
