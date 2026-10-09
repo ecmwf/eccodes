@@ -201,7 +201,7 @@ foreach( atest ${tests_sanity} )
     ecbuild_add_test( TARGET          eccodes_f_${atest}
                       TYPE            SCRIPT
                       CONDITION       HAVE_FORTRAN
-                      LABELS          "sanity"
+                      LABELS          sanity fortran
                       RESOURCES       bufr_read_scatterometer_f.ref
                       COMMAND         ${CMAKE_CURRENT_SOURCE_DIR}/${atest}.sh )
 endforeach()
@@ -214,6 +214,7 @@ endif()
 foreach( atest ${tests_extra} )
     ecbuild_add_test( TARGET          eccodes_f_${atest}
                       CONDITION       HAVE_FORTRAN AND ENABLE_EXTRA_TESTS
+                      LABELS          fortran
                       RESOURCES       bufr_read_scatterometer_f.ref
                       COMMAND         ${CMAKE_CURRENT_SOURCE_DIR}/${atest}.sh
                       TEST_DEPENDS    eccodes_download_gribs eccodes_download_bufrs eccodes_download_bufr_refs )
@@ -228,6 +229,7 @@ if( HAVE_BUILD_TOOLS AND HAVE_AEC AND HAVE_FORTRAN )
                             LIBS            eccodes_f90 eccodes )
 
     ecbuild_add_test( TARGET   eccodes_f_grib_set_packing
+                      LABELS   fortran
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_set_packing.sh )
 endif()
 

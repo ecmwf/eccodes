@@ -1,20 +1,21 @@
 {# SPDX-FileCopyrightText: 2005- European Centre for Medium-Range Weather Forecasts (ECMWF)
    SPDX-License-Identifier: Apache-2.0 #}
 {% extends "ci-infrastructure/cmake-all-lanes.sh.j2" %}
+{% set fortran = "eccodes-fortran" in ci_packages %}
 {% block cmake_args %}
-{% if not fortran_compiler_binary %}
-  -DENABLE_FORTRAN=OFF \
-{% endif %}
+  -DENABLE_FORTRAN={{ "ON" if fortran else "OFF" }} \
 {% endblock %}
 {% block test %}
 # Fetch the test data first; a download failure otherwise surfaces as dozens of
 # unrelated test failures.
 ctest --test-dir "$build" --output-on-failure -L download_data -j 6
-{% if options == "eckit-geo" %}
-cd "$CI_SOURCE_DIR"
+{% if fortran %}
+# The rest is the same build as plain eccodes', tested there.
+ctest --test-dir "$build" --output-on-failure --no-tests=error -L fortran -j "$jobs"
+{% elif options == "eckit-geo" %}
 failed=0
-for preset in eckit-geo-0 eckit-geo-1; do
-  ctest --preset "$preset" --test-dir "$build" -LE download_data -j "$jobs" || failed=1
+for geo in 0 1; do
+  ECCODES_ECKIT_GEO=$geo ctest --test-dir "$build" --output-on-failure -LE download_data -j "$jobs" || failed=1
 done
 [ "$failed" -eq 0 ]
 {% else %}

@@ -530,6 +530,8 @@ if( HAVE_BUILD_TOOLS )
 
         if( HAVE_FORTRAN )
             set_tests_properties( eccodes_t_bufr_dump_encode_fortran PROPERTIES TIMEOUT 2500 )
+            set_property( TEST eccodes_t_bufr_dump_encode_fortran eccodes_t_bufr_dump_decode_fortran
+                          APPEND PROPERTY LABELS fortran )
         endif()
     endif()
 

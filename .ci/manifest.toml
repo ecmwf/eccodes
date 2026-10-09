@@ -2,7 +2,7 @@
 name = "eccodes"
 repo = "ecmwf/eccodes"
 visibility = "public"
-compiler-inputs = ["cxx-compiler", "fortran-compiler"]
+compiler-inputs = ["cxx-compiler"]
 
 [[deps]]
 repo = "ecmwf/ecbuild"
@@ -23,8 +23,31 @@ ref = "develop"
 compiler-inputs = ["cxx-compiler"]
 when = { options = ["eckit-geo"] }
 
-# No fortran-compiler: the clang image ships no Fortran, because gfortran-N
-# depends on gcc-N. The Fortran interface is covered by the g++-13 legs and HPC.
+# eccodes with its Fortran interface, named by the Fortran compiler too, since
+# Fortran modules only work with the compiler that wrote them. Plain eccodes is
+# built without Fortran.
+[packages.eccodes-fortran]
+compiler-inputs = ["cxx-compiler", "fortran-compiler"]
+
+[[packages.eccodes-fortran.deps]]
+repo = "ecmwf/ecbuild"
+package = "ecbuild"
+ref = "develop"
+compiler-inputs = []
+
+[[packages.eccodes-fortran.deps]]
+repo = "ecmwf/stack-dependencies"
+package = ["libaec", "netcdf"]
+ref = "master"
+compiler-inputs = ["cxx-compiler"]
+
+[[packages.eccodes-fortran.deps]]
+repo = "ecmwf/eckit"
+package = "eckit"
+ref = "develop"
+compiler-inputs = ["cxx-compiler"]
+when = { options = ["eckit-geo"] }
+
 [matrix.build.defaults]
 job-script = "./.ci/build.sh.j2"
 build-type = "RelWithDebInfo"
@@ -39,24 +62,42 @@ platform = "ubuntu-24.04"
 [[matrix.build.include]]
 cxx-compiler = "g++-13"
 c-compiler = "gcc-13"
-fortran-compiler = "gfortran-13"
 container = "eccr.ecmwf.int/public-ci-images/ubuntu24.04-gcc13-gfortran13:latest"
 platform = "ubuntu-24.04"
 
 [[matrix.build.include]]
 cxx-compiler = "g++-13"
 c-compiler = "gcc-13"
-fortran-compiler = "gfortran-13"
 options = "eckit-geo"
 container = "eccr.ecmwf.int/public-ci-images/ubuntu24.04-gcc13-gfortran13:latest"
 platform = "ubuntu-24.04"
 
 [matrix.build]
+packages = ["eccodes"]
+triggers = ["upstream-change", "rebuild-request"]
+
+[matrix.fortran.defaults]
+job-script = "./.ci/build.sh.j2"
+build-type = "RelWithDebInfo"
+runs-on = "arc-runner-very-large"
+cxx-compiler = "g++-13"
+c-compiler = "gcc-13"
+fortran-compiler = "gfortran-13"
+container = "eccr.ecmwf.int/public-ci-images/ubuntu24.04-gcc13-gfortran13:latest"
+platform = "ubuntu-24.04"
+
+[[matrix.fortran.include]]
+options = ""
+
+[[matrix.fortran.include]]
+options = "eckit-geo"
+
+[matrix.fortran]
+packages = ["eccodes-fortran"]
 triggers = ["upstream-change", "rebuild-request"]
 
 [matrix.build-hpc.defaults]
 cxx-compiler = "g++-8"
-fortran-compiler = "gfortran-8"
 build-type = "RelWithDebInfo"
 runs-on = "hpc-submit"
 container = "eccr.ecmwf.int/private-ci-images/ubuntu24.04-internal-tools:latest"
@@ -67,7 +108,6 @@ platform = "hpc-atos-gnu"
 modules = ["load prgenv/gnu", "unload gcc", "load gcc/old", "load cmake", "load ninja"]
 c-compiler-binary = "gcc"
 cxx-compiler-binary = "g++"
-fortran-compiler-binary = "gfortran"
 time = "01:30:00"
 job-script = "./.ci/build.sh.j2"
 
@@ -78,6 +118,18 @@ options = ""
 options = "eckit-geo"
 
 [matrix.build-hpc]
+packages = ["eccodes"]
 execution = "hpc-atos"
 container-credentials = true
 triggers = ["upstream-change", "rebuild-request"]
+
+[matrix.fortran-hpc]
+packages = ["eccodes-fortran"]
+reuse-matrix = "build-hpc"
+execution = "hpc-atos"
+container-credentials = true
+triggers = ["upstream-change", "rebuild-request"]
+
+[matrix.fortran-hpc.defaults]
+fortran-compiler = "gfortran-8"
+fortran-compiler-binary = "gfortran"
