@@ -131,6 +131,7 @@
 1268 ldst Land data-assimilation system statistics (near real time)
 1269 ldsb Land data-assimilation system statistics behind real time
 1270 frcd Forcing data
+1271 eest Extended ensemble statistics
 2231 cnrm Meteo France climate centre
 2232 mpic Max Plank Institute
 2233 ukmo UKMO climate centre
