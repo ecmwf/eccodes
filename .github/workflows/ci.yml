@@ -17,6 +17,7 @@ concurrency:
 
 env:
   ARTIFACT_POLL_INTERVAL: ${{ vars.ARTIFACT_POLL_INTERVAL || '60' }}
+  ARTIFACT_WAIT_TIMEOUT: ${{ vars.ARTIFACT_WAIT_TIMEOUT || '1800' }}
   ARTIFACT_S3_ENDPOINT: ${{ secrets.ARTIFACT_S3_ENDPOINT }}
   ARTIFACT_S3_BUCKET: ${{ secrets.ARTIFACT_S3_BUCKET }}
   SCCACHE_BUCKET: ${{ secrets.SCCACHE_BUCKET }}
@@ -51,6 +52,7 @@ jobs:
     outputs:
       build-matrix: ${{ steps.r.outputs.matrix-build }}
       build-hpc-matrix: ${{ steps.r.outputs.matrix-build-hpc }}
+      rust-matrix: ${{ toJSON(fromJSON(steps.r.outputs.json).rust) }}
       # resolve-deps declares matrix-<kind> outputs only for some kinds; json holds them all.
       fortran-matrix: ${{ toJSON(fromJSON(steps.r.outputs.json).fortran) }}
       fortran-hpc-matrix: ${{ toJSON(fromJSON(steps.r.outputs.json)['fortran-hpc']) }}
@@ -67,7 +69,7 @@ jobs:
       - id: r
         uses: ecmwf/ci-infrastructure/actions/resolve-deps@main
         with:
-          matrix: build,build-hpc,fortran,fortran-hpc
+          matrix: build,build-hpc,fortran,fortran-hpc,rust
           token: ${{ steps.mint.outputs.token }}
           client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
           app-private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
@@ -113,6 +115,58 @@ jobs:
         with:
           install-path: ${{ steps.build.outputs.install-path }}
           artifact-name: ${{ matrix._resolved.own-artifact-name }}
+
+      - name: Print dependency table
+        if: always()
+        uses: ecmwf/ci-infrastructure/actions/print-dep-table@main
+        with:
+          resolved: ${{ toJSON(matrix._resolved) }}
+
+  rust:
+    needs: [ci-approval, resolve, build]
+    name: rust (${{ matrix._resolved['job-name'] }})
+    runs-on: ${{ matrix['runs-on'] }}
+    container:
+      image: ${{ matrix.container || '' }}
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.resolve.outputs.rust-matrix) }}
+    steps:
+      - name: Announce image
+        uses: ecmwf/ci-infrastructure/actions/announce-image@main
+      - id: mint
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+      - uses: actions/checkout@v6
+
+      - name: Fetch resolved deps
+        id: deps
+        uses: ecmwf/ci-infrastructure/actions/fetch-deps@main
+        with:
+          deps-json: ${{ toJSON(matrix._resolved.deps) }}
+          token: ${{ steps.mint.outputs.token }}
+
+      - id: git-read
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: bindman
+          permission-contents: read
+
+      - name: Check the Rust bindings
+        id: build
+        uses: ecmwf/ci-infrastructure/actions/run-job-script@main
+        with:
+          job-script: ${{ matrix.job-script }}
+          matrix-leg: ${{ toJSON(matrix) }}
+          package: eccodes-rust
+          cmake-prefix-path: ${{ steps.deps.outputs.cmake-prefix-path }}
+          git-token: ${{ steps.git-read.outputs.token }}
 
       - name: Print dependency table
         if: always()
