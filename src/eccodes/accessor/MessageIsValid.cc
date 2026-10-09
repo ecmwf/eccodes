@@ -9,7 +9,9 @@
  */
 
 #include "MessageIsValid.h"
+#include "step.h"
 #include <cstdio>
+#include <exception>
 
 eccodes::AccessorBuilder<eccodes::accessor::MessageIsValid> _grib_accessor_message_is_valid_builder{};
 
@@ -656,6 +658,65 @@ int MessageIsValid::check_steps()
     return GRIB_SUCCESS;
 }
 
+// ECC-2342: The time range specifications are nested loops and the first one is the outermost
+int MessageIsValid::check_time_ranges()
+{
+    if (!product_enabled()) {
+        return GRIB_SUCCESS;  // product-related checks disabled
+    }
+
+    if (handle_->context->debug)
+        fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
+
+    if (edition_ != 2) return GRIB_SUCCESS;
+
+    if (!grib_is_defined(handle_, "numberOfTimeRanges"))
+        return GRIB_SUCCESS;
+
+    long numberOfTimeRanges = 0;
+    int err = grib_get_long_internal(handle_, "numberOfTimeRanges", &numberOfTimeRanges);
+    if (err) return err;
+    if (numberOfTimeRanges != 2) return GRIB_SUCCESS;
+
+    long typeOfTimeIncrement[2] = {0,};
+    long indicatorOfUnitForTimeRange[2] = {0,};
+    long lengthOfTimeRange[2] = {0,};
+    size_t count = 2;
+    err = grib_get_long_array_internal(handle_, "typeOfTimeIncrement", typeOfTimeIncrement, &count);
+    if (err) return err;
+    count = 2;
+    err = grib_get_long_array_internal(handle_, "indicatorOfUnitForTimeRange", indicatorOfUnitForTimeRange, &count);
+    if (err) return err;
+    count = 2;
+    err = grib_get_long_array_internal(handle_, "lengthOfTimeRange", lengthOfTimeRange, &count);
+    if (err) return err;
+
+    int result = GRIB_SUCCESS;
+    if (typeOfTimeIncrement[0] == 2 && typeOfTimeIncrement[1] == 1) {
+        grib_context_log(handle_->context, GRIB_LOG_ERROR,
+                         "%s: Invalid time ranges: typeOfTimeIncrement={2, 1}", TITLE);
+        result = GRIB_WRONG_STEP;
+    }
+
+    bool lengthsOrdered = true;
+    try {
+        const eccodes::Step outer{ lengthOfTimeRange[0], indicatorOfUnitForTimeRange[0] };
+        const eccodes::Step inner{ lengthOfTimeRange[1], indicatorOfUnitForTimeRange[1] };
+        lengthsOrdered = !(outer < inner);
+    }
+    catch (std::exception&) {
+        // The two time ranges cannot be compared e.g., missing unit
+    }
+    if (!lengthsOrdered) {
+        grib_context_log(handle_->context, GRIB_LOG_ERROR,
+                         "%s: Invalid time ranges: lengthOfTimeRange of the first time range is less than the second (%ld < %ld)",
+                         TITLE, lengthOfTimeRange[0], lengthOfTimeRange[1]);
+        result = GRIB_WRONG_STEP;
+    }
+
+    return result;
+}
+
 int MessageIsValid::check_deprecation()
 {
     if (!product_enabled()) {
@@ -794,6 +855,7 @@ int MessageIsValid::unpack_long(long* val, size_t* len)
         &MessageIsValid::check_geoiterator,
         &MessageIsValid::check_surface_keys,
         &MessageIsValid::check_steps,
+        &MessageIsValid::check_time_ranges,
         &MessageIsValid::check_deprecation,
         &MessageIsValid::check_namespace_keys,
         &MessageIsValid::check_parameter,
