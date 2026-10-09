@@ -72,6 +72,7 @@ concurrency:
   cancel-in-progress: false
 env:
   ARTIFACT_POLL_INTERVAL: ${{ vars.ARTIFACT_POLL_INTERVAL || '60' }}
+  ARTIFACT_WAIT_TIMEOUT: ${{ vars.ARTIFACT_WAIT_TIMEOUT || '1800' }}
   ARTIFACT_S3_ENDPOINT: ${{ secrets.ARTIFACT_S3_ENDPOINT }}
   ARTIFACT_S3_BUCKET: ${{ secrets.ARTIFACT_S3_BUCKET }}
   SCCACHE_BUCKET: ${{ secrets.SCCACHE_BUCKET }}
@@ -86,6 +87,7 @@ jobs:
     outputs:
       ref: ${{ steps.pick.outputs.ref }}
       matrix-build: ${{ steps.r.outputs.matrix-build }}
+      matrix-fortran: ${{ steps.r.outputs.matrix-fortran }}
     steps:
     - name: Announce image
       uses: ecmwf/ci-infrastructure/actions/announce-image@main
@@ -112,7 +114,7 @@ jobs:
       with:
         current-branch: ${{ steps.pick.outputs.ref }}
         pin: ${{ !inputs.rebuild-request && format('{0}@{1}', inputs.from-repo, inputs.from-sha) || '' }}
-        matrix: build
+        matrix: build,fortran
         token: ${{ steps.mint.outputs.token }}
         client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
         app-private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
@@ -206,6 +208,100 @@ jobs:
         head-repo: ${{ inputs.from-repo }}
         head-sha: ${{ inputs.from-sha }}
         name: eccodes/build (${{ matrix._resolved['job-name'] }})
+        details-url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        phase: finish
+        conclusion: ${{ job.status }}
+        check-run-id: ${{ steps.check_start.outputs.check-run-id }}
+  eccodes__fortran:
+    needs:
+    - resolve
+    if: contains(fromJSON(inputs.from-jobs), 'ecbuild/build') || contains(fromJSON(inputs.from-jobs), 'stack-deps/build') || contains(fromJSON(inputs.from-jobs), 'eckit/build') || inputs.rebuild-request
+    name: eccodes/fortran (${{ matrix._resolved['job-name'] }})
+    runs-on: ${{ matrix['runs-on'] }}
+    container:
+      image: ${{ matrix.container || '' }}
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.resolve.outputs.matrix-fortran) }}
+    steps:
+    - id: mint
+      uses: actions/create-github-app-token@v3
+      with:
+        client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
+        private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
+        owner: ${{ github.repository_owner }}
+    - id: check_start
+      if: ${{ github.event_name == 'workflow_dispatch' && inputs.from-jobs != '[]' }}
+      uses: ecmwf/ci-infrastructure/actions/report-check-run@main
+      with:
+        token: ${{ steps.mint.outputs.token }}
+        head-repo: ${{ inputs.from-repo }}
+        head-sha: ${{ inputs.from-sha }}
+        name: eccodes/fortran (${{ matrix._resolved['job-name'] }})
+        details-url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        phase: start
+    - name: Announce image
+      uses: ecmwf/ci-infrastructure/actions/announce-image@main
+    - uses: actions/checkout@v6
+      with:
+        repository: ecmwf/eccodes
+        ref: ${{ needs.resolve.outputs.ref }}
+        token: ${{ steps.mint.outputs.token }}
+    - name: Decode matrix-leg
+      id: m
+      shell: bash
+      env:
+        MATRIX_LEG: ${{ toJSON(matrix) }}
+      run: |
+        set -euo pipefail
+        shopt -s inherit_errexit 2>/dev/null || true
+        command -v jq >/dev/null || {
+          echo "::error::jq is required but not installed in this runner/image." >&2
+          exit 1
+        }
+        leg="$MATRIX_LEG"
+        require() {
+          local val
+          val=$(jq -r "$1" <<<"$leg")
+          if [ -z "$val" ] || [ "$val" = "null" ]; then
+            echo "::error::matrix-leg field '$2' empty or null (jq -r '$1' returned '$val')." >&2
+            exit 1
+          fi
+          printf '%s' "$val"
+        }
+        deps_json=$(require '._resolved.deps | tojson' '_resolved.deps')
+        own_artifact_name=$(require '._resolved."own-artifact-name"' '_resolved.own-artifact-name')
+        {
+          echo "deps-json=${deps_json}"
+          echo "own-artifact-name=${own_artifact_name}"
+        } >> "$GITHUB_OUTPUT"
+    - name: Fetch resolved deps
+      id: deps
+      uses: ecmwf/ci-infrastructure/actions/fetch-deps@main
+      with:
+        deps-json: ${{ steps.m.outputs.deps-json }}
+        token: ${{ steps.mint.outputs.token }}
+    - name: Build
+      id: build
+      uses: ecmwf/ci-infrastructure/actions/run-job-script@main
+      with:
+        job-script: ${{ matrix.job-script }}
+        matrix-leg: ${{ toJSON(matrix) }}
+        package: eccodes
+        cmake-prefix-path: ${{ steps.deps.outputs.cmake-prefix-path }}
+    - name: Publish
+      uses: ecmwf/ci-infrastructure/actions/publish-artifact@main
+      with:
+        install-path: ${{ steps.build.outputs.install-path }}
+        artifact-name: ${{ steps.m.outputs.own-artifact-name }}
+    - name: Report check-run conclusion
+      if: ${{ always() && github.event_name == 'workflow_dispatch' && inputs.from-jobs != '[]' }}
+      uses: ecmwf/ci-infrastructure/actions/report-check-run@main
+      with:
+        token: ${{ steps.mint.outputs.token }}
+        head-repo: ${{ inputs.from-repo }}
+        head-sha: ${{ inputs.from-sha }}
+        name: eccodes/fortran (${{ matrix._resolved['job-name'] }})
         details-url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         phase: finish
         conclusion: ${{ job.status }}
