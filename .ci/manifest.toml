@@ -12,7 +12,7 @@ compiler-inputs = []
 
 [[deps]]
 repo = "ecmwf/stack-dependencies"
-package = "libaec"
+package = ["libaec", "netcdf"]
 ref = "master"
 compiler-inputs = ["cxx-compiler"]
 
