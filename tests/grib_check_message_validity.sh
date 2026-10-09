@@ -131,6 +131,63 @@ grib_check_key_equals $tempGrib isMessageValid 0 2>$tempText
 grep -q "Invalid steps: stepType=accum but startStep=endStep" $tempText
 
 
+# Check time ranges (ECC-2342)
+# ------------------------------
+${tools_dir}/grib_set -s productDefinitionTemplateNumber=8,numberOfTimeRanges=2 $ECCODES_SAMPLES_PATH/GRIB2.tmpl $tempGrib
+
+# The first time range is the outermost loop
+cat >$tempFilt<<EOF
+ set typeOfTimeIncrement = {1, 2};
+ set indicatorOfUnitForTimeRange = {"h", "h"};
+ set lengthOfTimeRange = {744, 24};
+ assert( isMessageValid == 1 );
+ set lengthOfTimeRange = {24, 24};
+ assert( isMessageValid == 1 );
+ set indicatorOfUnitForTimeRange = {"D", "h"};
+ set lengthOfTimeRange = {1, 24};
+ assert( isMessageValid == 1 );
+EOF
+${tools_dir}/grib_filter $tempFilt $tempGrib
+
+cat >$tempFilt<<EOF
+ set typeOfTimeIncrement = {1, 2};
+ set indicatorOfUnitForTimeRange = {"h", "h"};
+ set lengthOfTimeRange = {24, 744};
+ assert( isMessageValid == 0 );
+EOF
+${tools_dir}/grib_filter $tempFilt $tempGrib 2>$tempText
+grep -q "Invalid time ranges: lengthOfTimeRange of the first time range is less than the second (24 < 744)" $tempText
+
+# Different units
+cat >$tempFilt<<EOF
+ set typeOfTimeIncrement = {1, 2};
+ set indicatorOfUnitForTimeRange = {"h", "D"};
+ set lengthOfTimeRange = {24, 2};
+ assert( isMessageValid == 0 );
+EOF
+${tools_dir}/grib_filter $tempFilt $tempGrib 2>$tempText
+grep -q "Invalid time ranges: lengthOfTimeRange" $tempText
+
+cat >$tempFilt<<EOF
+ set typeOfTimeIncrement = {2, 1};
+ set indicatorOfUnitForTimeRange = {"h", "h"};
+ set lengthOfTimeRange = {744, 24};
+ assert( isMessageValid == 0 );
+EOF
+${tools_dir}/grib_filter $tempFilt $tempGrib 2>$tempText
+grep -q "Invalid time ranges: typeOfTimeIncrement={2, 1}" $tempText
+
+# Disable the product checks
+cat >$tempFilt<<EOF
+ set typeOfTimeIncrement = {2, 1};
+ set indicatorOfUnitForTimeRange = {"h", "h"};
+ set lengthOfTimeRange = {24, 744};
+ set messageValidityChecks = "grid";
+ assert( isMessageValid == 1 );
+EOF
+${tools_dir}/grib_filter $tempFilt $tempGrib
+
+
 # Check regular lat/lon
 # ------------------------------
 if [ $HAVE_GEOGRAPHY -eq 1 ]; then
