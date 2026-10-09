@@ -9,10 +9,7 @@
 # Fetch the test data first; a download failure otherwise surfaces as dozens of
 # unrelated test failures.
 ctest --test-dir "$build" --output-on-failure -L download_data -j 6
-{% if fortran %}
-# The rest is the same build as plain eccodes', tested there.
-ctest --test-dir "$build" --output-on-failure --no-tests=error -L fortran -j "$jobs"
-{% elif options == "eckit-geo" %}
+{% if options == "eckit-geo" %}
 failed=0
 for geo in 0 1; do
   ECCODES_ECKIT_GEO=$geo ctest --test-dir "$build" --output-on-failure -LE download_data -j "$jobs" || failed=1
