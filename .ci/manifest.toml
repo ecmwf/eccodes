@@ -86,12 +86,6 @@ fortran-compiler = "gfortran-13"
 container = "eccr.ecmwf.int/public-ci-images/ubuntu24.04-gcc13-gfortran13:latest"
 platform = "ubuntu-24.04"
 
-[[matrix.fortran.include]]
-options = ""
-
-[[matrix.fortran.include]]
-options = "eckit-geo"
-
 [matrix.fortran]
 packages = ["eccodes-fortran"]
 triggers = ["upstream-change", "rebuild-request"]
@@ -110,12 +104,6 @@ c-compiler-binary = "gcc"
 cxx-compiler-binary = "g++"
 time = "01:30:00"
 job-script = "./.ci/build.sh.j2"
-
-[[matrix.build-hpc.include]]
-options = ""
-
-[[matrix.build-hpc.include]]
-options = "eckit-geo"
 
 [matrix.build-hpc]
 packages = ["eccodes"]
