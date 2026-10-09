@@ -1,4 +1,2 @@
-'v1' = { generatingProcessIdentifier = 1; }
-'v2' = { generatingProcessIdentifier = 2; }
-'v3' = { generatingProcessIdentifier = 3; }
-'v3.1' = { generatingProcessIdentifier = 4; }
+'aifs-compo-single-mse-v0.1' = { generatingProcessIdentifier = 1; }
+'aifs-compo-single-mse-v0.2' = { generatingProcessIdentifier = 2; }
