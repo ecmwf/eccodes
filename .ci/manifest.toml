@@ -2,7 +2,7 @@
 name = "eccodes"
 repo = "ecmwf/eccodes"
 visibility = "public"
-compiler-inputs = ["cxx-compiler"]
+compiler-inputs = ["cxx-compiler", "fortran-compiler"]
 
 [[deps]]
 repo = "ecmwf/ecbuild"
