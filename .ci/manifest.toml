@@ -29,6 +29,10 @@ when = { options = ["eckit-geo"] }
 [packages.eccodes-fortran]
 compiler-inputs = ["cxx-compiler", "fortran-compiler"]
 
+# A second full eccodes build, so it needs eccodes' own deps rather than eccodes.
+# Once the Fortran interface builds against an installed eccodes, it depends on
+# eccodes alone: https://github.com/ecmwf/eccodes/issues/597
+
 [[packages.eccodes-fortran.deps]]
 repo = "ecmwf/ecbuild"
 package = "ecbuild"
