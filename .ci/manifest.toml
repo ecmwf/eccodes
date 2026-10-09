@@ -86,6 +86,9 @@ fortran-compiler = "gfortran-13"
 container = "eccr.ecmwf.int/public-ci-images/ubuntu24.04-gcc13-gfortran13:latest"
 platform = "ubuntu-24.04"
 
+[[matrix.fortran.include]]
+options = ""
+
 [matrix.fortran]
 packages = ["eccodes-fortran"]
 triggers = ["upstream-change", "rebuild-request"]
@@ -105,19 +108,38 @@ cxx-compiler-binary = "g++"
 time = "01:30:00"
 job-script = "./.ci/build.sh.j2"
 
+[[matrix.build-hpc.include]]
+options = ""
+
+[[matrix.build-hpc.include]]
+options = "eckit-geo"
+
 [matrix.build-hpc]
 packages = ["eccodes"]
 execution = "hpc-atos"
 container-credentials = true
 triggers = ["upstream-change", "rebuild-request"]
 
+[matrix.fortran-hpc.defaults]
+cxx-compiler = "g++-8"
+fortran-compiler = "gfortran-8"
+build-type = "RelWithDebInfo"
+runs-on = "hpc-submit"
+container = "eccr.ecmwf.int/private-ci-images/ubuntu24.04-internal-tools:latest"
+site = "hpc-batch"
+platform = "hpc-atos-gnu"
+modules = ["load prgenv/gnu", "unload gcc", "load gcc/old", "load cmake", "load ninja"]
+c-compiler-binary = "gcc"
+cxx-compiler-binary = "g++"
+fortran-compiler-binary = "gfortran"
+time = "01:30:00"
+job-script = "./.ci/build.sh.j2"
+
+[[matrix.fortran-hpc.include]]
+options = ""
+
 [matrix.fortran-hpc]
 packages = ["eccodes-fortran"]
-reuse-matrix = "build-hpc"
 execution = "hpc-atos"
 container-credentials = true
 triggers = ["upstream-change", "rebuild-request"]
-
-[matrix.fortran-hpc.defaults]
-fortran-compiler = "gfortran-8"
-fortran-compiler-binary = "gfortran"
