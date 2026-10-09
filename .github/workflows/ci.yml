@@ -51,8 +51,9 @@ jobs:
     outputs:
       build-matrix: ${{ steps.r.outputs.matrix-build }}
       build-hpc-matrix: ${{ steps.r.outputs.matrix-build-hpc }}
-      fortran-matrix: ${{ steps.r.outputs.matrix-fortran }}
-      fortran-hpc-matrix: ${{ steps.r.outputs.matrix-fortran-hpc }}
+      # resolve-deps declares matrix-<kind> outputs only for some kinds; json holds them all.
+      fortran-matrix: ${{ toJSON(fromJSON(steps.r.outputs.json).fortran) }}
+      fortran-hpc-matrix: ${{ toJSON(fromJSON(steps.r.outputs.json)['fortran-hpc']) }}
     steps:
       - name: Announce image
         uses: ecmwf/ci-infrastructure/actions/announce-image@main
