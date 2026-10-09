@@ -4,6 +4,7 @@ repo = "ecmwf/eccodes"
 visibility = "public"
 compiler-inputs = ["cxx-compiler"]
 git-read = ["ecmwf/bindman"]
+add-to-path = ["bin"]
 
 [[deps]]
 repo = "ecmwf/ecbuild"
