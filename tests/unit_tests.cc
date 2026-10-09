@@ -13,7 +13,9 @@
 #include "step.h"
 #include "ExceptionHandler.h"
 
+#include <cfloat>
 #include <iostream>
+#include <vector>
 
 #define NUMBER(x) (sizeof(x) / sizeof(x[0]))
 
@@ -470,6 +472,39 @@ static void test_data_quality_checks()
     grib_context_set_data_quality_checks(c, 1);//warning
     grib_context_set_data_quality_checks(c, 2);//error
     grib_context_set_data_quality_checks(c, 0);//no checks
+}
+
+static void test_edition_change_missing_value()
+{
+    // Changing edition=1 to 2 keeps a non-default missingValue (and the bitmap), even if not representable as a long
+    printf("Running %s ...\n", __func__);
+
+    for (const double missingValue : { -DBL_MAX, -1e30, 9999. }) {
+        grib_handle* h = grib_handle_new_from_samples(NULL, "regular_ll_sfc_grib1");
+        ECCODES_ASSERT(h);
+
+        size_t n = 0;
+        ECCODES_ASSERT(CODES_SUCCESS == codes_get_size(h, "values", &n));
+
+        std::vector<double> values(n, 1.);
+        values[0] = missingValue;
+
+        ECCODES_ASSERT(CODES_SUCCESS == codes_set_double(h, "missingValue", missingValue));
+        ECCODES_ASSERT(CODES_SUCCESS == codes_set_long(h, "bitmapPresent", 1));
+        ECCODES_ASSERT(CODES_SUCCESS == codes_set_double_array(h, "values", values.data(), n));
+
+        ECCODES_ASSERT(CODES_SUCCESS == codes_set_long(h, "edition", 2));
+
+        double mv = 0;
+        long numberOfMissing = 0;
+        ECCODES_ASSERT(CODES_SUCCESS == codes_get_double(h, "missingValue", &mv));
+        ECCODES_ASSERT(CODES_SUCCESS == codes_get_long(h, "numberOfMissing", &numberOfMissing));
+
+        ECCODES_ASSERT(mv == missingValue);
+        ECCODES_ASSERT(numberOfMissing == 1);
+
+        codes_handle_delete(h);
+    }
 }
 
 static void test_bufr_multi_element_constant_arrays()
@@ -1190,6 +1225,7 @@ int main(int argc, char** argv)
     test_gts_header_mode();
     test_bufr_multi_element_constant_arrays();
     test_data_quality_checks();
+    test_edition_change_missing_value();
 
     test_concept_condition_strings();
 
