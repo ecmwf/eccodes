@@ -3,6 +3,7 @@ name = "eccodes"
 repo = "ecmwf/eccodes"
 visibility = "public"
 compiler-inputs = ["cxx-compiler"]
+git-read = ["ecmwf/bindman"]
 
 [[deps]]
 repo = "ecmwf/ecbuild"
@@ -193,3 +194,32 @@ packages = ["eccodes-fortran"]
 execution = "hpc-atos"
 container-credentials = true
 triggers = ["upstream-change", "rebuild-request"]
+
+[packages.eccodes-rust]
+compiler-inputs = ["cxx-compiler"]
+
+[[packages.eccodes-rust.deps]]
+package = "eccodes"
+options-input = "options"
+
+[[packages.eccodes-rust.deps]]
+repo = "ecmwf/eckit"
+package = "eckit"
+ref = "develop"
+compiler-inputs = ["cxx-compiler"]
+
+[matrix.rust]
+packages = ["eccodes-rust"]
+publishes = false
+
+[matrix.rust.defaults]
+job-script = "./.ci/rust.sh.j2"
+runs-on = "arc-runner-normal"
+build-type = "RelWithDebInfo"
+cxx-compiler = "g++-13"
+c-compiler = "gcc-13"
+container = "eccr.ecmwf.int/public-ci-images/ubuntu24.04-gcc13-gfortran13-boost-qt6-rust1.90"
+platform = "ubuntu-24.04"
+
+[[matrix.rust.include]]
+rust-compiler = "rust-1.90"
