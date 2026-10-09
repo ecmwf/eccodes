@@ -80,6 +80,17 @@ for file in $files; do
    fi
 done
 
+sample_files="
+sh_pl_grib1.tmpl
+sh_pl_grib2.tmpl
+"
+
+for file in $sample_files; do
+   if [ -f ${samp_dir}/$file ]; then
+      ${tools_dir}/grib_dump -D ${samp_dir}/$file 2> $REDIRECT > $REDIRECT
+   fi
+done
+
 
 # Test for dumping a section
 # ---------------------------
