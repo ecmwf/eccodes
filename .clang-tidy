@@ -1,0 +1,12 @@
+---
+Checks: >
+  -*,
+  bugprone-*,
+  clang-analyzer-*,
+  performance-*,
+  cert-err33-c,
+  concurrency-mt-unsafe,
+  misc-redundant-expression,
+  readability-misleading-indentation
+WarningsAsErrors: '*'
+...

@@ -48,6 +48,25 @@ ref = "develop"
 compiler-inputs = ["cxx-compiler"]
 when = { options = ["eckit-geo"] }
 
+# Debug eccodes for the analysis lanes. Upstreams publish no Debug artifacts,
+# so the deps resolve by deps-build-type instead of the leg's build-type.
+[packages.eccodes-analysis]
+compiler-inputs = ["cxx-compiler"]
+
+[[packages.eccodes-analysis.deps]]
+repo = "ecmwf/ecbuild"
+package = "ecbuild"
+ref = "develop"
+compiler-inputs = []
+build-type-input = "deps-build-type"
+
+[[packages.eccodes-analysis.deps]]
+repo = "ecmwf/stack-dependencies"
+package = ["libaec", "netcdf"]
+ref = "master"
+compiler-inputs = ["cxx-compiler"]
+build-type-input = "deps-build-type"
+
 [matrix.build.defaults]
 job-script = "./.ci/build.sh.j2"
 build-type = "RelWithDebInfo"
@@ -140,3 +159,56 @@ packages = ["eccodes-fortran"]
 execution = "hpc-atos"
 container-credentials = true
 triggers = ["upstream-change", "rebuild-request"]
+
+# Strict warnings, clang-tidy, cppcheck, valgrind, sanitizers and coverage, run
+# only by hand from analysis.yml. No triggers, so never downstream.
+[matrix.analysis.defaults]
+job-script = "./.ci/analysis.sh.j2"
+build-type = "Debug"
+deps-build-type = "RelWithDebInfo"
+runs-on = "arc-runner-very-large"
+cxx-compiler = "g++-13"
+c-compiler = "gcc-13"
+container = "eccr.ecmwf.int/public-ci-images/ubuntu24.04-gcc13-gfortran13:latest"
+platform = "ubuntu-24.04"
+
+[[matrix.analysis.include]]
+options = "strict"
+tests = false
+
+[[matrix.analysis.include]]
+options = "strict"
+tests = false
+cxx-compiler = "clang++-18"
+c-compiler = "clang-18"
+container = "eccr.ecmwf.int/public-ci-images/ubuntu24.04-clang18:latest"
+
+[[matrix.analysis.include]]
+options = "clang-tidy"
+tests = false
+cxx-compiler = "clang++-18"
+c-compiler = "clang-18"
+container = "eccr.ecmwf.int/public-ci-images/ubuntu24.04-clang18:latest"
+
+[[matrix.analysis.include]]
+options = "cppcheck"
+tests = false
+apt-packages = "cppcheck"
+
+[[matrix.analysis.include]]
+options = "valgrind"
+apt-packages = "valgrind"
+
+[[matrix.analysis.include]]
+options = "asan-ubsan"
+
+[[matrix.analysis.include]]
+options = "tsan"
+
+[[matrix.analysis.include]]
+options = "coverage"
+apt-packages = "gcovr"
+
+[matrix.analysis]
+packages = ["eccodes-analysis"]
+publishes = false
