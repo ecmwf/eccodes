@@ -4,6 +4,8 @@ name: Analysis
 # [matrix.analysis] lanes of .ci/manifest.toml. Not yet clean, so by hand only.
 on:
   workflow_dispatch:
+  push:
+    branches: [ci/analysis]
 
 env:
   ARTIFACT_POLL_INTERVAL: ${{ vars.ARTIFACT_POLL_INTERVAL || '60' }}
