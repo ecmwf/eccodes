@@ -43,6 +43,7 @@ ctest --test-dir "$build" --output-on-failure -LE download_data -j "$jobs" || tr
 mkdir -p "$build/coverage"
 gcovr --root "$CI_SOURCE_DIR" --object-directory "$build" --filter "$CI_SOURCE_DIR/src/" \
   --gcov-executable {{ c_compiler_binary | replace("gcc", "gcov") | sh }} -j "$jobs" --print-summary \
+  --gcov-ignore-errors=no_working_dir_found \
   --html-details "$build/coverage/index.html" --cobertura "$build/coverage/coverage.xml"
 {% else %}
 wrap=""
