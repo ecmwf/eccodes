@@ -1,7 +1,5 @@
 #include "G2ReferencePeriod.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::G2ReferencePeriod> _grib_accessor_g2_referenceperiod_builder{};
-
 namespace eccodes::accessor
 {
 

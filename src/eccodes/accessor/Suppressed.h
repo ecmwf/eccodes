@@ -34,7 +34,7 @@ private:
     void log_message();
 
 public:
-    static inline const AccessorType accessor_type_{"suppressed"};
+    static constexpr AccessorType accessor_type_{"suppressed"};
 };
 
 }  // namespace eccodes::accessor

@@ -10,8 +10,6 @@
 
 #include "DivDouble.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::DivDouble> _grib_accessor_divdouble_builder{};
-
 namespace eccodes::accessor
 {
 

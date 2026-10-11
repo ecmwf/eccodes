@@ -10,8 +10,6 @@
 
 #include "ChangeScanningDirection.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::ChangeScanningDirection> _grib_accessor_change_scanning_direction_builder{};
-
 namespace eccodes::accessor
 {
 

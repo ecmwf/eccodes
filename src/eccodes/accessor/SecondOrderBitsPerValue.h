@@ -32,7 +32,7 @@ private:
     long bitsPerValue_ = 0;
 
 public:
-    static inline const AccessorType accessor_type_{"second_order_bits_per_value"};
+    static constexpr AccessorType accessor_type_{"second_order_bits_per_value"};
 };
 
 }  // namespace eccodes::accessor

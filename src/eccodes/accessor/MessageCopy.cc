@@ -10,8 +10,6 @@
 
 #include "MessageCopy.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::MessageCopy> _grib_accessor_message_copy_builder{};
-
 namespace eccodes::accessor
 {
 

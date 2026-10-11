@@ -10,8 +10,6 @@
 
 #include "Sum.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::Sum> _grib_accessor_sum_builder{};
-
 namespace eccodes::accessor
 {
 

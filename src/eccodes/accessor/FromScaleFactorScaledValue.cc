@@ -11,8 +11,6 @@
 #include "FromScaleFactorScaledValue.h"
 #include "ecc_numeric_limits.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::FromScaleFactorScaledValue> _grib_accessor_from_scale_factor_scaled_value_builder{};
-
 namespace eccodes::accessor
 {
 

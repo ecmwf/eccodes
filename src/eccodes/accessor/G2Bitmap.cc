@@ -10,8 +10,6 @@
 
 #include "G2Bitmap.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::G2Bitmap> _grib_accessor_g2bitmap_builder{};
-
 namespace eccodes::accessor
 {
 

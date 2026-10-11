@@ -34,7 +34,7 @@ private:
     const char* day_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"validity_date"};
+    static constexpr AccessorType accessor_type_{"validity_date"};
 };
 
 }  // namespace eccodes::accessor

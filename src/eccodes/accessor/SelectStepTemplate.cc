@@ -10,8 +10,6 @@
 
 #include "SelectStepTemplate.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::SelectStepTemplate> _grib_accessor_select_step_template_builder{};
-
 namespace eccodes::accessor
 {
 

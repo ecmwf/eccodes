@@ -38,7 +38,7 @@ private:
     long isLongitude_ = 0;
 
 public:
-    static inline const AccessorType accessor_type_{"latlon_increment"};
+    static constexpr AccessorType accessor_type_{"latlon_increment"};
 };
 
 }  // namespace eccodes::accessor

@@ -50,7 +50,7 @@ private:
     long edition_ = 0;
 
 public:
-    static inline const AccessorType accessor_type_{"message_is_valid"};
+    static constexpr AccessorType accessor_type_{"message_is_valid"};
 
     // bitwise OR of GRIB_SECTION_PRODUCT, GRIB_SECTION_GRID, GRIB_SECTION_DATA etc
     unsigned int enabledChecks_ = 0;

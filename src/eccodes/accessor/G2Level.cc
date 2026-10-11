@@ -10,8 +10,6 @@
 
 #include "G2Level.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::G2Level> _grib_accessor_g2level_builder{};
-
 namespace eccodes::accessor
 {
 

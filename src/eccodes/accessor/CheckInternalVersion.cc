@@ -10,8 +10,6 @@
 
 #include "CheckInternalVersion.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::CheckInternalVersion> _grib_accessor_check_internal_version_builder{};
-
 namespace eccodes::accessor
 {
 

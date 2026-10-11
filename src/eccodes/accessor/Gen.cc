@@ -12,8 +12,6 @@
 #include "Gen.h"
 #include <stdexcept>
 
-eccodes::AccessorBuilder<eccodes::accessor::Gen> _grib_accessor_gen_builder{};
-
 namespace eccodes::accessor
 {
 

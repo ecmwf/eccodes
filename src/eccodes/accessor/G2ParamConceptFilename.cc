@@ -10,8 +10,6 @@
 
 #include "G2ParamConceptFilename.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::G2ParamConceptFilename> _grib_accessor_g2_param_concept_filename_builder{};
-
 namespace eccodes::accessor
 {
 

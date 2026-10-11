@@ -32,7 +32,7 @@ private:
     int chemical_type_ = 0;
 
 public:
-    static inline const AccessorType accessor_type_{"g2_chemical"};
+    static constexpr AccessorType accessor_type_{"g2_chemical"};
 };
 
 }  // namespace eccodes::accessor

@@ -46,7 +46,7 @@ private:
     int error_on_units_ = 0;
 
 public:
-    static inline const AccessorType accessor_type_{"g1step_range"};
+    static constexpr AccessorType accessor_type_{"g1step_range"};
 };
 
 }  // namespace eccodes::accessor

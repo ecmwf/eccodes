@@ -30,8 +30,6 @@ int bufr_descriptor_is_marker(bufr_descriptor* d)
     return isMarker;
 }
 
-eccodes::AccessorBuilder<eccodes::accessor::BufrElementsTable> _grib_accessor_bufr_elements_table_builder{};
-
 namespace eccodes::accessor
 {
 

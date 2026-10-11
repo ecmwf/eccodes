@@ -10,8 +10,6 @@
 
 #include "G1Section4Length.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::G1Section4Length> _grib_accessor_g1_section4_length_builder{};
-
 namespace eccodes::accessor
 {
 

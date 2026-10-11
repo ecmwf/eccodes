@@ -11,8 +11,6 @@
 #include "Vector.h"
 #include "AbstractVector.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::Vector> _grib_accessor_vector_builder{};
-
 namespace eccodes::accessor
 {
 

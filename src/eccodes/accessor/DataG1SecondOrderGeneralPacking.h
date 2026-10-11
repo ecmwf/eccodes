@@ -49,7 +49,7 @@ private:
     template <typename T> int unpack_real(T* values, size_t* len);
 
 public:
-    static inline const AccessorType accessor_type_{"data_g1second_order_general_packing"};
+    static constexpr AccessorType accessor_type_{"data_g1second_order_general_packing"};
 };
 
 }  // namespace eccodes::accessor

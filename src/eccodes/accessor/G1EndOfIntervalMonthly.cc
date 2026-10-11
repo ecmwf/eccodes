@@ -10,8 +10,6 @@
 
 #include "G1EndOfIntervalMonthly.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::G1EndOfIntervalMonthly> _grib_accessor_g1end_of_interval_monthly_builder{};
-
 namespace eccodes::accessor
 {
 

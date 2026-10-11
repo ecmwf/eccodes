@@ -40,7 +40,7 @@ private:
     size_t str_length_ = 0;
 
 public:
-    static inline const AccessorType accessor_type_{"to_integer"};
+    static constexpr AccessorType accessor_type_{"to_integer"};
 };
 
 }  // namespace eccodes::accessor

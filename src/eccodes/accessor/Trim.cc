@@ -10,8 +10,6 @@
 
 #include "Trim.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::Trim> _grib_accessor_trim_builder{};
-
 namespace eccodes::accessor
 {
 

@@ -9,6 +9,7 @@
  */
 
 #include "grib_api_internal.h"
+#include <algorithm>
 
 // Compare two strings ignoring case.
 // strcasecmp is not in the C standard. However, it's defined by

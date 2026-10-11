@@ -30,7 +30,7 @@ private:
     const char* values_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"sum"};
+    static constexpr AccessorType accessor_type_{"sum"};
 };
 
 }  // namespace eccodes::accessor

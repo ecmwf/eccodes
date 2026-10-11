@@ -24,7 +24,9 @@ namespace eccodes
 
 using AccessorFactory = CodesFactory<Accessor>;
 using AccessorType = AccessorFactory::Type;
-template<class T> using AccessorBuilder = Builder<grib_accessor, T>;
+
+// Registers all accessors. Defined in the generated AccessorRegistry.cc
+template <> CodesFactory<Accessor>::CodesFactory();
 
 class Accessor {
 public:

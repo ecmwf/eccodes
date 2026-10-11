@@ -35,7 +35,7 @@ private:
     const char* second_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"julian_day"};
+    static constexpr AccessorType accessor_type_{"julian_day"};
 };
 
 }  // namespace eccodes::accessor

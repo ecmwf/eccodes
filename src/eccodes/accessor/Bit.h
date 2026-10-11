@@ -30,7 +30,7 @@ private:
     int bit_index_ = 0;
 
 public:
-    static inline const AccessorType accessor_type_{"bit"};
+    static constexpr AccessorType accessor_type_{"bit"};
 };
 
 }  // namespace eccodes::accessor

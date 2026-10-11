@@ -10,8 +10,6 @@
 
 #include "DataG1ComplexPacking.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::DataG1ComplexPacking> _grib_accessor_data_g1complex_packing_builder{};
-
 namespace eccodes::accessor
 {
 

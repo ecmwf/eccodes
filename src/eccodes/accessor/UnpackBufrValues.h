@@ -38,7 +38,7 @@ private:
     BufrDataArray* data_accessor_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"unpack_bufr_values"};
+    static constexpr AccessorType accessor_type_{"unpack_bufr_values"};
 };
 
 }  // namespace eccodes::accessor

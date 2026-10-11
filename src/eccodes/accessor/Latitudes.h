@@ -33,7 +33,7 @@ private:
     int save_ = 0;
 
 public:
-    static inline const AccessorType accessor_type_{"latitudes"};
+    static constexpr AccessorType accessor_type_{"latitudes"};
 };
 
 }  // namespace eccodes::accessor

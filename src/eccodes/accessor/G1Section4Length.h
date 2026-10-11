@@ -29,7 +29,7 @@ private:
     const char* total_length_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"g1_section4_length"};
+    static constexpr AccessorType accessor_type_{"g1_section4_length"};
 };
 
 }  // namespace eccodes::accessor

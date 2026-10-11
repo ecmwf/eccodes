@@ -30,7 +30,7 @@ private:
     const char* stepType_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"g2_wave_period_range"};
+    static constexpr AccessorType accessor_type_{"g2_wave_period_range"};
 };
 
 }  // namespace eccodes::accessor

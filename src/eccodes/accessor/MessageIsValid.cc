@@ -11,8 +11,6 @@
 #include "MessageIsValid.h"
 #include <cstdio>
 
-eccodes::AccessorBuilder<eccodes::accessor::MessageIsValid> _grib_accessor_message_is_valid_builder{};
-
 namespace eccodes::accessor
 {
 

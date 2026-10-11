@@ -89,7 +89,7 @@ private:
     int unpack_helper(grib_accessor* a, T* v, size_t* len);
 
 public:
-    static inline const AccessorType accessor_type_{"gen"};
+    static constexpr AccessorType accessor_type_{"gen"};
 };
 
 

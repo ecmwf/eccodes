@@ -10,8 +10,6 @@
 
 #include "AbstractLongVector.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::AbstractLongVector> _grib_accessor_abstract_long_vector_builder{};
-
 namespace eccodes::accessor
 {
 

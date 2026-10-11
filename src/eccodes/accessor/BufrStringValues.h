@@ -35,7 +35,7 @@ private:
     grib_accessor* get_accessor();
 
 public:
-    static inline const AccessorType accessor_type_{"bufr_string_values"};
+    static constexpr AccessorType accessor_type_{"bufr_string_values"};
 };
 
 }  // namespace eccodes::accessor

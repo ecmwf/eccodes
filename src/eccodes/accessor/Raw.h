@@ -36,7 +36,7 @@ private:
     long relativeOffset_ = 0;
 
 public:
-    static inline const AccessorType accessor_type_{"raw"};
+    static constexpr AccessorType accessor_type_{"raw"};
 };
 
 }  // namespace eccodes::accessor

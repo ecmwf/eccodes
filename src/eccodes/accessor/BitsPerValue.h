@@ -30,7 +30,7 @@ private:
     const char* bits_per_value_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"bits_per_value"};
+    static constexpr AccessorType accessor_type_{"bits_per_value"};
 };
 
 }  // namespace eccodes::accessor

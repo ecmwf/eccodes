@@ -26,7 +26,7 @@ public:
     int value_count(long*) override;
     void init(const long, grib_arguments*) override;
 
-    static inline const AccessorType accessor_type_{"data_g2simple_packing"};
+    static constexpr AccessorType accessor_type_{"data_g2simple_packing"};
 };
 
 }  // namespace eccodes::accessor

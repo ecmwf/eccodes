@@ -10,8 +10,6 @@
 
 #include "Bytes.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::Bytes> _grib_accessor_bytes_builder{};
-
 namespace eccodes::accessor
 {
 

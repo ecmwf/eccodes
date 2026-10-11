@@ -29,7 +29,7 @@ private:
     const char* floatType_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"reference_value_error"};
+    static constexpr AccessorType accessor_type_{"reference_value_error"};
 };
 
 }  // namespace eccodes::accessor

@@ -32,7 +32,7 @@ private:
     const char* unusedBits_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"g1number_of_coded_values_sh_simple"};
+    static constexpr AccessorType accessor_type_{"g1number_of_coded_values_sh_simple"};
 };
 
 }  // namespace eccodes::accessor

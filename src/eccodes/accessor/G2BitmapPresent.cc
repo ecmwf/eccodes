@@ -10,8 +10,6 @@
 
 #include "G2BitmapPresent.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::G2BitmapPresent> _grib_accessor_g2bitmap_present_builder{};
-
 namespace eccodes::accessor
 {
 

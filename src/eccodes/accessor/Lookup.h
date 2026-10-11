@@ -37,7 +37,7 @@ private:
     grib_expression* real_name_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"lookup"};
+    static constexpr AccessorType accessor_type_{"lookup"};
 };
 
 }  // namespace eccodes::accessor
