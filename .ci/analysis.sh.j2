@@ -4,6 +4,9 @@
    The analysis lanes of .github/workflows/analysis.yml; `options` names both the
    CMake preset and the analysis. #}
 {% extends "ci-infrastructure/cmake-runner.sh.j2" %}
+{% block cmake_args %}
+  -DENABLE_FORTRAN=OFF \
+{% endblock %}
 {% block build %}
 status=0
 {% if options == "cppcheck" %}
