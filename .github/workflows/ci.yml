@@ -253,7 +253,7 @@ jobs:
           token: ${{ steps.mint.outputs.token }}
           # Stage the dep prefixes for shipment without installing anything
           # here: they are consumed on the compute node, not in this container.
-          install-python-deps: 'false'
+          stage-only: 'true'
 
       - name: Build eccodes on HPC
         id: build
@@ -307,7 +307,7 @@ jobs:
           token: ${{ steps.mint.outputs.token }}
           # Stage the dep prefixes for shipment without installing anything
           # here: they are consumed on the compute node, not in this container.
-          install-python-deps: 'false'
+          stage-only: 'true'
 
       - name: Build eccodes-fortran on HPC
         id: build
