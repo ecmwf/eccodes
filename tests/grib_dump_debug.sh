@@ -9,6 +9,7 @@
 #
 
 . ./include.ctest.sh
+REDIRECT=/dev/null
 label="grib_dump_debug_test"
 temp=temp.$label.txt
 temp2=temp.2.$label.txt
@@ -119,6 +120,18 @@ grep -q "unsigned hoursAfterDataCutoff = 0 (can be missing)" $temp
 grep -q "unsigned iDirectionIncrement = 2000000 (can be missing)" $temp
 grep -q "constant zero = 0 (read-only)" $temp
 grep -q "unsigned reserved = MISSING (can be missing) (read-only)" $temp
+
+# Increase SH code coverage
+sample_files="
+sh_pl_grib1.tmpl
+sh_pl_grib2.tmpl
+"
+
+for file in $sample_files; do
+   if [ -f ${samp_dir}/$file ]; then
+      ${tools_dir}/grib_dump -D ${samp_dir}/$file 2> $REDIRECT > $REDIRECT
+   fi
+done
 
 # Debug dump a BUFR using -TB switch
 infile=${data_dir}/bufr/pgps_110.bufr
