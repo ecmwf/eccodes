@@ -9,6 +9,7 @@
 #
 
 . ./include.ctest.sh
+REDIRECT=/dev/null
 label="grib_dump_debug_test"
 temp=temp.$label.txt
 temp2=temp.2.$label.txt
@@ -70,12 +71,6 @@ fi
 
 for file in $files; do
    if [ -f ${data_dir}/$file ]; then
-      # Skip if message is invalid
-      ${tools_dir}/grib_get -p isMessageValid ${data_dir}/$file
-      if [ $? -eq 0 ]; then
-         echo "File $file: skipping invalid message"
-         continue
-      fi
       ${tools_dir}/grib_dump -w count=1 -Da ${data_dir}/$file > $temp 2>&1
       set +e
       # Look for the word ERROR in output. We should not find any
@@ -92,12 +87,6 @@ done
 if [ $HAVE_JPEG -eq 1 ]; then
     files="jpeg.grib2 v.grib2 multi.grib2 gfs.c255.grib2 missing.grib2 test_uuid.grib2"
     for file in $files; do
-        # Skip if message is invalid
-        ${tools_dir}/grib_get -p isMessageValid ${data_dir}/$file
-        if [ $? -eq 0 ]; then
-            echo "File $file: skipping invalid message"
-            continue
-        fi
         ${tools_dir}/grib_dump -w count=1 -Da ${data_dir}/$file > $temp 2>&1
         set +e
         grep -q 'ERROR ' $temp | grep -v "Message Validity Checks" > $temp2
@@ -119,6 +108,18 @@ grep -q "unsigned hoursAfterDataCutoff = 0 (can be missing)" $temp
 grep -q "unsigned iDirectionIncrement = 2000000 (can be missing)" $temp
 grep -q "constant zero = 0 (read-only)" $temp
 grep -q "unsigned reserved = MISSING (can be missing) (read-only)" $temp
+
+# Increase SH code coverage
+sample_files="
+sh_pl_grib1.tmpl
+sh_pl_grib2.tmpl
+"
+
+for file in $sample_files; do
+   if [ -f ${samp_dir}/$file ]; then
+      ${tools_dir}/grib_dump -D ${samp_dir}/$file 2> $REDIRECT > $REDIRECT
+   fi
+done
 
 # Debug dump a BUFR using -TB switch
 infile=${data_dir}/bufr/pgps_110.bufr

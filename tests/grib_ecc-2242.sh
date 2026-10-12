@@ -30,7 +30,7 @@ set stream="ldas";
 set offsetToEndOf4DvarWindow=3;
 set targetFcstSystem="oper";
 set backgroundProcess=246;
-set generatingProcessIdentifier=162;
+set generatingProcessIdentifier=2;
 write;
 EOF
 ${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample_grib2

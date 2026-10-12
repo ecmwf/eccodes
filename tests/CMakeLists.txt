@@ -198,7 +198,6 @@ if( HAVE_BUILD_TOOLS )
         grib_grid_lambert_conformal
         grib_grid_polar_stereographic
         grib_grid_healpix
-        grib_ij_direction_increment
         grib_g1day_of_the_year_date
         grib_paramid_chemid_split
         grib_cmp_paramtype
@@ -214,6 +213,8 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-2264
         grib_ecc-2265
         grib_ecc-2338
+        grib_ecc-2352
+        grib_ecc-2342
         grib_shape_of_the_earth
     )
 
