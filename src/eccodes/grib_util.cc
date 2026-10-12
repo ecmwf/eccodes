@@ -1105,7 +1105,14 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
 
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
-            SET_LONG_VALUE("ijDirectionIncrementGiven", 1);
+            // ECC-2336: Gaussian grids give Di but not Dj (N replaces it); GRIB1 has a single bit for both
+            if (editionNumber == 1) {
+                SET_LONG_VALUE("ijDirectionIncrementGiven", 1);
+            }
+            else {
+                SET_LONG_VALUE("iDirectionIncrementGiven", 1);
+                SET_LONG_VALUE("jDirectionIncrementGiven", 0);
+            }
 
             COPY_SPEC_LONG(Ni);
             COPY_SPEC_DOUBLE(iDirectionIncrementInDegrees);
@@ -1198,6 +1205,8 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
             COPY_SPEC_LONG(N); // Nside
             COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
+            // ECC-2336: HEALPix gives neither Di nor Dj
+            SET_LONG_VALUE("resolutionAndComponentFlags", 0);
             break;
 
         case GRIB_UTIL_GRID_SPEC_REDUCED_GG:
@@ -1626,7 +1635,14 @@ static grib_handle* grib_util_set_spec_(grib_handle* h,
 
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
-            SET_LONG_VALUE("ijDirectionIncrementGiven", 1);
+            // ECC-2336: Gaussian grids give Di but not Dj (N replaces it); GRIB1 has a single bit for both
+            if (editionNumber == 1) {
+                SET_LONG_VALUE("ijDirectionIncrementGiven", 1);
+            }
+            else {
+                SET_LONG_VALUE("iDirectionIncrementGiven", 1);
+                SET_LONG_VALUE("jDirectionIncrementGiven", 0);
+            }
 
             // TODO(masn): add ECCODES_ASSERT
             COPY_SPEC_LONG(Ni);
@@ -1728,6 +1744,8 @@ static grib_handle* grib_util_set_spec_(grib_handle* h,
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
             COPY_SPEC_LONG(N); // Nside
             COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
+            // ECC-2336: HEALPix gives neither Di nor Dj
+            SET_LONG_VALUE("resolutionAndComponentFlags", 0);
             break;
 
         case GRIB_UTIL_GRID_SPEC_REDUCED_GG:
