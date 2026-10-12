@@ -214,6 +214,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-2265
         grib_ecc-2338
         grib_ecc-2352
+        grib_ecc-2342
         grib_shape_of_the_earth
     )
 

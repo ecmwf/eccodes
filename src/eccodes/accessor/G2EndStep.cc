@@ -236,10 +236,35 @@ int G2EndStep::unpack_multiple_time_ranges_long_(long* val, size_t* len)
     if ((err = grib_get_long_array(h, time_range_value_, arr_coded_time_range, &count)))
         return err;
 
-    /* Look in the array of typeOfTimeIncrements for first entry whose typeOfTimeIncrement == 2 */
-    for (size_t i = 0; i < count; i++) {
-        if (arr_typeOfTimeIncrement[i] == 2) {
-            /* Found the required time range. Get the other two keys from it */
+    long MTG2Switch = 0, typeOfTimeIncrementSwitch = 0;
+    if ((err = grib_get_long_internal(h, "MTG2Switch", &MTG2Switch)))
+        return err;
+    if ((err = grib_get_long_internal(h, "typeOfTimeIncrementSwitch", &typeOfTimeIncrementSwitch)))
+        return err;
+
+    if (MTG2Switch == 0 && typeOfTimeIncrementSwitch == 0) {
+        /* Look in the array of typeOfTimeIncrements for first entry whose typeOfTimeIncrement == 2 */
+        for (size_t i = 0; i < count; i++) {
+            if (arr_typeOfTimeIncrement[i] == 2) {
+                /* Found the required time range. Get the other two keys from it */
+                long the_coded_unit       = arr_coded_unit[i];
+                long the_coded_time_range = arr_coded_time_range[i];
+
+                err = convert_time_range_long_(h, step_units, the_coded_unit, &the_coded_time_range);
+                if (err != GRIB_SUCCESS)
+                    return err;
+
+                *val = start_step_value + the_coded_time_range;
+                return GRIB_SUCCESS;
+            }
+        }
+    }
+    else {
+        /* The largest time range with typeOfTimeIncrement 1, 2, 3, 4 or 5 wins */
+        bool found = false;
+        for (size_t i = 0; i < count; i++) {
+            if (arr_typeOfTimeIncrement[i] < 1 || arr_typeOfTimeIncrement[i] > 5)
+                continue;
             long the_coded_unit       = arr_coded_unit[i];
             long the_coded_time_range = arr_coded_time_range[i];
 
@@ -247,9 +272,12 @@ int G2EndStep::unpack_multiple_time_ranges_long_(long* val, size_t* len)
             if (err != GRIB_SUCCESS)
                 return err;
 
-            *val = start_step_value + the_coded_time_range;
-            return GRIB_SUCCESS;
+            if (!found || start_step_value + the_coded_time_range > *val)
+                *val = start_step_value + the_coded_time_range;
+            found = true;
         }
+        if (found)
+            return GRIB_SUCCESS;
     }
 
     grib_context_log(h->context, GRIB_LOG_ERROR,
@@ -297,18 +325,44 @@ int G2EndStep::unpack_multiple_time_ranges_double_(double* val, size_t* len)
     if ((err = grib_get_long_array(h, time_range_value_, arr_coded_time_range, &count)))
         return err;
 
-    /* Look in the array of typeOfTimeIncrements for first entry whose typeOfTimeIncrement == 2 */
-    for (size_t i = 0; i < count; i++) {
-        if (arr_typeOfTimeIncrement[i] == 2) {
-            /* Found the required time range. Get the other two keys from it */
+    long MTG2Switch = 0, typeOfTimeIncrementSwitch = 0;
+    if ((err = grib_get_long_internal(h, "MTG2Switch", &MTG2Switch)))
+        return err;
+    if ((err = grib_get_long_internal(h, "typeOfTimeIncrementSwitch", &typeOfTimeIncrementSwitch)))
+        return err;
+
+    if (MTG2Switch == 0 && typeOfTimeIncrementSwitch == 0) {
+        /* Look in the array of typeOfTimeIncrements for first entry whose typeOfTimeIncrement == 2 */
+        for (size_t i = 0; i < count; i++) {
+            if (arr_typeOfTimeIncrement[i] == 2) {
+                /* Found the required time range. Get the other two keys from it */
+                long the_coded_unit       = arr_coded_unit[i];
+                long the_coded_time_range = arr_coded_time_range[i];
+
+                eccodes::Step time_range{ the_coded_time_range, the_coded_unit };
+                *val = (start_step + time_range).value<double>(eccodes::Unit(step_units));
+
+                return GRIB_SUCCESS;
+            }
+        }
+    }
+    else {
+        /* The largest time range with typeOfTimeIncrement 1, 2, 3, 4 or 5 wins */
+        bool found = false;
+        for (size_t i = 0; i < count; i++) {
+            if (arr_typeOfTimeIncrement[i] < 1 || arr_typeOfTimeIncrement[i] > 5)
+                continue;
             long the_coded_unit       = arr_coded_unit[i];
             long the_coded_time_range = arr_coded_time_range[i];
 
             eccodes::Step time_range{ the_coded_time_range, the_coded_unit };
-            *val = (start_step + time_range).value<double>(eccodes::Unit(step_units));
-
-            return GRIB_SUCCESS;
+            double end_step = (start_step + time_range).value<double>(eccodes::Unit(step_units));
+            if (!found || end_step > *val)
+                *val = end_step;
+            found = true;
         }
+        if (found)
+            return GRIB_SUCCESS;
     }
 
     grib_context_log(h->context, GRIB_LOG_ERROR,
