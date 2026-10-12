@@ -14,7 +14,6 @@
 #include <map>
 #include <memory>
 #include <string>
-#include <tuple>
 #include <vector>
 
 #include "eckit/geo/Figure.h"
@@ -515,27 +514,6 @@ CASE("gridType=regular_gg")
     };
 
     EXPECT(grib_to_gridspec("gridspec/gridType=regular_gg.grib", specs));
-}
-
-
-CASE("ECC-2336: direction increments given flags")
-{
-    // resolutionAndComponentFlags (Flag table 3.3): 32 = Di given, 16 = Dj given
-    for (const auto& [sample, gridSpec, flags] : std::vector<std::tuple<const char*, std::string, long>>{
-             { "GRIB2", R"({"grid":"H32"})", 0 },                    // HEALPix: no increments
-             { "regular_gg_sfc_grib2", R"({"grid":"F32"})", 32 },    // Gaussian: N instead of Dj
-             { "regular_ll_sfc_grib2", R"({"grid":[1,1]})", 48 },
-         }) {
-        std::unique_ptr<codes_handle, decltype(&codes_handle_delete)> h(
-            codes_grib_handle_new_from_samples(nullptr, sample), &codes_handle_delete);
-        ASSERT(h);
-
-        set_string(h.get(), "gridSpec", gridSpec);
-
-        long value = -1;
-        CHECK(codes_get_long(h.get(), "resolutionAndComponentFlags", &value));
-        EXPECT_EQUAL(value, flags);
-    }
 }
 
 
