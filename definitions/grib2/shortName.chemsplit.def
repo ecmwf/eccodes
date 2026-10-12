@@ -21831,6 +21831,34 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 18 ;
 	}
+#Time-mean potential of hydrogen
+'avg_pH' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 18 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum potential of hydrogen
+'max_pH' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 18 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum potential of hydrogen
+'min_pH' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 18 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation potential of hydrogen
+'std_pH' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 18 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Stratospheric aerosol optical thickness
 'strataod' = {
 	 discipline = 0 ;
@@ -21839,6 +21867,42 @@
 	 typeOfFirstFixedSurface = 7 ;
 	 typeOfSecondFixedSurface = 36 ;
 	}
+#Time-mean stratospheric aerosol optical thickness
+'avg_strataod' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 102 ;
+	 typeOfFirstFixedSurface = 7 ;
+	 typeOfSecondFixedSurface = 36 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum stratospheric aerosol optical thickness
+'max_strataod' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 102 ;
+	 typeOfFirstFixedSurface = 7 ;
+	 typeOfSecondFixedSurface = 36 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum stratospheric aerosol optical thickness
+'min_strataod' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 102 ;
+	 typeOfFirstFixedSurface = 7 ;
+	 typeOfSecondFixedSurface = 36 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation stratospheric aerosol optical thickness
+'std_strataod' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 102 ;
+	 typeOfFirstFixedSurface = 7 ;
+	 typeOfSecondFixedSurface = 36 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Emission mass flux from lightning
 'emi_mflx_lightn' = {
 	 discipline = 0 ;
@@ -21846,11 +21910,71 @@
 	 parameterNumber = 77 ;
 	 sourceSinkChemicalPhysicalProcess = 2 ;
 	}
+#Time-mean emission mass flux from lightning
+'avg_emi_mflx_lightn' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 sourceSinkChemicalPhysicalProcess = 2 ;
+	}
+#Time-maximum emission mass flux from lightning
+'max_emi_mflx_lightn' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 sourceSinkChemicalPhysicalProcess = 2 ;
+	}
+#Time-minimum emission mass flux from lightning
+'min_emi_mflx_lightn' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 sourceSinkChemicalPhysicalProcess = 2 ;
+	}
+#Time-standard-deviation emission mass flux from lightning
+'std_emi_mflx_lightn' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 6 ;
+	 sourceSinkChemicalPhysicalProcess = 2 ;
+	}
 #Loss rate due to OH
 'lsroh' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 19 ;
+	}
+#Time-mean loss rate due to OH
+'avg_lsroh' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 19 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum loss rate due to OH
+'max_lsroh' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 19 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum loss rate due to OH
+'min_lsroh' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 19 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation loss rate due to OH
+'std_lsroh' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 19 ;
+	 typeOfStatisticalProcessing = 6 ;
 	}
 #Photolysis rate
 'jrate' = {
