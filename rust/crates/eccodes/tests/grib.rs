@@ -240,6 +240,35 @@ fn grid_iteration_and_missing_values() -> eccodes::Result<()> {
     Ok(())
 }
 
+/// CCSDS (`grid_ccsds`) is the packing of operational ECMWF GRIB2 and
+/// needs libaec, so the default build must encode and decode it. Pins the
+/// `aec` feature staying in the defaults — without it ecCodes refuses the
+/// packing with `FunctionalityNotEnabled`.
+#[test]
+fn ccsds_packing_round_trip() -> eccodes::Result<()> {
+    let Some(path) = sample("GRIB2.tmpl") else {
+        return Ok(());
+    };
+
+    let mut message = first_message(&path)?;
+    let ramp = set_ramp(&mut message)?;
+    message.set("packingType", "grid_ccsds")?;
+    assert_eq!(message.get::<String>("packingType")?, "grid_ccsds");
+
+    // Through bytes, so a fresh message really unpacks the AEC stream.
+    let reread = GribMessage::from_bytes(&message.to_vec()?)?;
+    assert_eq!(reread.get::<String>("packingType")?, "grid_ccsds");
+    let decoded = reread.values()?;
+    assert_eq!(decoded.len(), ramp.len());
+    for (i, (decoded, ramp)) in decoded.iter().zip(&ramp).enumerate() {
+        assert!(
+            (decoded - ramp).abs() < 1e-3,
+            "value {i}: {decoded} vs {ramp}"
+        );
+    }
+    Ok(())
+}
+
 /// Port of `examples/C/grib_nearest.c` + `grib_nearest_multiple.c` (the
 /// fieldset part is not wrapped). Query points are taken from the grid
 /// itself, so nothing here depends on the sample's geometry.

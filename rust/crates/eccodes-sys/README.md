@@ -49,7 +49,8 @@ which follows the same strategy.
 ### Compression codecs
 
 - `jpg` (default) - JPEG 2000 packing.
-- `aec` - Adaptive Entropy Coding; builds libaec from source.
+- `aec` (default) - Adaptive Entropy Coding, the CCSDS packing of operational
+  ECMWF GRIB2; builds libaec from source.
 - `png` - PNG packing.
 
 ### Optional
