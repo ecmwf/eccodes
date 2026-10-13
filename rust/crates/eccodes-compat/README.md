@@ -11,6 +11,14 @@ line, with no source changes:
 eccodes = { package = "eccodes-compat", version = "0.1" }
 ```
 
+Like the ScaleWeather crate, the default build links a preinstalled
+libeccodes (located via CMake `find_package`; set `ECCODES_DIR` for a
+non-standard prefix). To build the C library from source instead:
+
+```toml
+eccodes = { package = "eccodes-compat", version = "0.1", default-features = false, features = ["ndarray", "vendored"] }
+```
+
 This crate is frozen at the 0.15 surface and maintained for migration only.
 New code should depend on the official `eccodes` crate directly;
 [MIGRATION.md](MIGRATION.md) maps every 0.15 call to its official equivalent.
