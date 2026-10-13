@@ -5,6 +5,9 @@ if (!defined(class)) {
   constant marsClass = 'lr';
 }
 
+# ECC-2342 to have endStep computed for post MTG2 data as in this case
+transient typeOfTimeIncrementSwitch = 1;
+
 alias mars.class  = marsClass;
 alias mars.param = paramId;
 alias mars.expver = marsExpver;
