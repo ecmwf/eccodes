@@ -93,7 +93,7 @@ ${tools_dir}/grib_get_data -s Latin1=5000,Latin2=-5000 $tempGrib > $tempOut 2>&1
 status=$?
 set -e
 [ $status -ne 0 ]
-grep -q "Cannot have equal latitudes for standard parallels on opposite sides of equator" $tempOut
+grep -q "standard parallels on opposite sides of equator" $tempOut  # (eccodes and eckit::geo)
 
 
 set +e

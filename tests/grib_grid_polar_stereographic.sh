@@ -39,15 +39,21 @@ grib_check_key_equals $input_grib1 bipolarAndSymmetricProjection 0
 grib_check_key_equals $input_grib2 bipolarAndSymmetricProjection 0
 
 
-# Failing case
+# Oblate earth: not supported by the eccodes iterator, supported by eckit::geo (the first grid point as given)
 # -------------
 ${tools_dir}/grib_set -s shapeOfTheEarth=2 $input $tempGrib  # oblate earth
 set +e
-${tools_dir}/grib_get_data $tempGrib > $tempOut 2>&1
+${tools_dir}/grib_get_data -L "%.6f %.6f" $tempGrib > $tempOut 2>&1
 status=$?
 set -e
-[ $status -ne 0 ]
-grep -q "Only supported for spherical earth" $tempOut
+if [ "${ECCODES_ECKIT_GEO:-0}" -eq 0 ]; then
+    [ $status -ne 0 ]
+    grep -q "Only supported for spherical earth" $tempOut
+else
+    [ $status -eq 0 ]
+    first=$(${tools_dir}/grib_get -F "%.6f" -p latitudeOfFirstGridPointInDegrees,longitudeOfFirstGridPointInDegrees $tempGrib)
+    [ "$(sed -n 2p $tempOut | awk '{ print $1, $2 }')" = "$first" ]
+fi
 
 # Bad geography
 set +e

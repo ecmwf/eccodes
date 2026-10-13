@@ -27,6 +27,10 @@ for sample in $ECCODES_SAMPLES_PATH/*.tmpl ${proj_dir}/ifs_samples/*/*.tmpl; do
     # Exclusions
     if [ $ECCODES_ON_WINDOWS -eq 1 -a `basename $sample` = "lambert_bf_grib2.tmpl" ]; then continue; fi
     if [ `basename $sample` = "gg_sfc_grib2.tmpl" ]; then continue; fi
+    # (with eckit::geo) samples of zero grid lengths: their points coincide, not a valid grid
+    case `basename $sample` in
+      polar_stereographic_sfc_grib[12].tmpl|polar_stereographic_pl_grib1.tmpl) [ "${ECCODES_ECKIT_GEO:-0}" -eq 0 ] || continue;;
+    esac
 
     set +e
     result=`${tools_dir}/grib_get -p isMessageValid $sample 2>$tempText`

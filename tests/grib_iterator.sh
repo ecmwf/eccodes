@@ -84,7 +84,17 @@ ${tools_dir}/grib_get_data -p scaleFactorOfEarthMajorAxis $input > $tempText
 # ------------------------------------------------------------------------------
 input=$data_dir/reduced_gaussian_sub_area.legacy.grib1
 if [ -f "$input" ]; then
-  ${tools_dir}/grib_get_data $input > $tempText
+  if [ "${ECCODES_ECKIT_GEO:-0}" -eq 0 ]; then
+    ${tools_dir}/grib_get_data $input > $tempText
+  else
+    # (with eckit::geo) its number of points is not the grid's (legacy rounding of each row): an error
+    set +e
+    ${tools_dir}/grib_get_data $input > $tempText 2>&1
+    status=$?
+    set -e
+    [ $status -ne 0 ]
+    grep -q "Wrong number of points" $tempText
+  fi
   grib_check_key_equals $input legacyGaussSubarea 1
 
   ECCODES_DEBUG=-1 ${tools_dir}/grib_ls -p numberOfDataPoints $input > $tempText 2>&1

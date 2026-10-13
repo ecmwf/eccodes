@@ -85,6 +85,7 @@ list(APPEND test_c_bins
 if( eccodes_HAVE_ECKIT_GEO AND eccodes_HAVE_GEOGRAPHY )
     foreach( tool
         grib_eckit_geo_projection
+        grib_eckit_geo_proj_string
         grib_geo_iterator)
         list(APPEND test_c_bins ${tool})
     endforeach()
@@ -682,6 +683,7 @@ endif()
 
 if( eccodes_HAVE_ECKIT_GEO AND eccodes_HAVE_GEOGRAPHY )
     target_link_libraries(grib_eckit_geo_projection eckit_geo)
+    target_link_libraries(grib_eckit_geo_proj_string eckit_geo)
     target_link_libraries(grib_geo_iterator eckit_geo)
 
     ecbuild_add_test( TARGET eccodes_t_gridspec
