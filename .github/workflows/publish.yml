@@ -79,17 +79,12 @@ jobs:
 
       # Default features only: `--all-features` would enable the mutually
       # exclusive build strategies and threading backends, and would need
-      # NetCDF on the runner. eccodes-compat defaults to `system`, which
-      # needs a preinstalled libeccodes — it is checked as `vendored`.
+      # NetCDF on the runner.
       - name: Run clippy
-        run: |
-          cargo clippy --workspace --exclude eccodes-compat --all-targets -- -D warnings
-          cargo clippy -p eccodes-compat --no-default-features --features ndarray,vendored --all-targets -- -D warnings
+        run: cargo clippy --workspace --all-targets -- -D warnings
 
       - name: Run tests
-        run: |
-          cargo test --workspace --exclude eccodes-compat
-          cargo test -p eccodes-compat --no-default-features --features ndarray,vendored
+        run: cargo test --workspace
 
   # The crates are interdependent, so they publish sequentially: eccodes
   # resolves eccodes-sys from crates.io and must come second.

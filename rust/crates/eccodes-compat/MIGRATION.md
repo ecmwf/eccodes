@@ -13,10 +13,6 @@ eccodes = { package = "eccodes-compat", version = "0.1" }
 
 Your source stays as it is. Everything now runs on the official bindings
 underneath, and you receive new ecCodes versions through this crate's updates.
-As before, the build links your installed libeccodes — found via CMake
-`find_package` rather than pkg-config, so set `ECCODES_DIR` if yours is in a
-non-standard prefix. A `vendored` feature builds the C library from source
-instead (`default-features = false, features = ["ndarray", "vendored"]`).
 
 ## Step 2: move to the official API
 
