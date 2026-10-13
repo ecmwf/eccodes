@@ -266,7 +266,7 @@ fn era5_keys_dynamic() -> Result<()> {
     let mut key_names = vec![];
     let mut kiter = msg.default_keys_iterator()?;
     while let Some(key_name) = kiter.next()? {
-        assert!(!key_name.is_empty());
+        assert_ne!(key_name, "");
         key_names.push(key_name);
     }
     drop(kiter);
@@ -484,7 +484,7 @@ fn keys_iterator_parameters() -> Result<()> {
 
     assert!(kiter.next()?.is_some());
     while let Some(key_name) = kiter.next()? {
-        assert!(!key_name.is_empty());
+        assert_ne!(key_name, "");
     }
     Ok(())
 }
@@ -496,7 +496,7 @@ fn invalid_namespace() -> Result<()> {
 
     let mut kiter = msg.new_keys_iterator(&[KeysIteratorFlags::AllKeys], "blabla")?;
     while let Some(key_name) = kiter.next()? {
-        assert!(!key_name.is_empty());
+        assert_ne!(key_name, "");
     }
     Ok(())
 }
