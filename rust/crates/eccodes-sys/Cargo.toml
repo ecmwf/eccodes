@@ -15,7 +15,7 @@ build        = "build.rs"
 [features]
 # Defaults mirror eccodes CMake defaults except `vendored`, `netcdf`,
 # and `memfs` — which require extra setup or external libs.
-default = ["product-grib", "product-bufr", "geography", "jpg", "vendored"]
+default = ["product-grib", "product-bufr", "geography", "aec", "jpg", "vendored"]
 
 # Build strategy (mutually exclusive)
 system   = ["eckit-sys/system"]

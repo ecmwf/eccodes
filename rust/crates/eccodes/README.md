@@ -60,6 +60,9 @@ fn main() -> eccodes::Result<()> {
 - `system` - Link against a system-installed eccodes (forwards
   `eccodes-sys/system`). `threads` is a no-op here — it is on you to link a
   library built with it.
+- `aec` (default) - CCSDS packing via libaec (forwards `eccodes-sys/aec`),
+  the packing of operational ECMWF GRIB2. Vendored builds compile libaec
+  from source; for `system` builds it is a no-op, like `threads`.
 - `raw` - Expose `Message::as_raw` and re-export `eccodes_sys` as `sys`, for
   handing a message to another library built on eccodes.
 

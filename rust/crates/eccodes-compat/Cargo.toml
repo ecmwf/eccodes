@@ -25,11 +25,14 @@ anyhow    = "1"
 float-cmp = "0.10"
 
 [features]
-default = ["ndarray", "vendored"]
+default = ["ndarray", "vendored", "aec"]
 
 # Pass-through of the official crate's build strategy.
 system   = ["eccodes/system"]
 vendored = ["eccodes/vendored"]
+
+# CCSDS packing via libaec — the operational packing of ECMWF GRIB2.
+aec = ["eccodes/aec"]
 
 ndarray = ["dep:ndarray"]
 
