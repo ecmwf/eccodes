@@ -197,6 +197,12 @@ long Variable::get_native_type()
     return type_;
 }
 
+bool Variable::accepts_native_type(long type)
+{
+    // The type is not fixed, it follows the value last packed
+    return type == GRIB_TYPE_LONG || type == GRIB_TYPE_DOUBLE || type == GRIB_TYPE_STRING;
+}
+
 void Variable::destroy(grib_context* c)
 {
     int i = 0;

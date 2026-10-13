@@ -28,6 +28,7 @@ public:
     void init_accessor(const long, grib_arguments*) override;  // TODO: Implement
     grib_section* sub_section() override;
     long get_native_type() override;
+    bool accepts_native_type(long type) override;
     int pack_missing() override;
     int is_missing() override;
     int is_missing_internal() override;  // TODO: Implement
