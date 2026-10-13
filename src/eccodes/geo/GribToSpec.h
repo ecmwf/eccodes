@@ -13,6 +13,7 @@
 #pragma once
 
 #include <map>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -32,7 +33,9 @@ public:
     using cache_type = std::map<std::string, eckit::spec::Custom::value_type>;
 
     // rotated: interpret the grid rotation if set (or not, for eg. for iterating in the rotated frame)
-    explicit GribToSpec(codes_handle*, bool rotated = true);
+    // projected grids are on the projection plane (x, y, false easting/northing and the projection from (x, y))
+    // check_grid: validate the grid geometry (number of points, grid lengths), not necessary for the projection only
+    explicit GribToSpec(codes_handle*, bool rotated = true, bool check_grid = true);
 
     bool has(const std::string& name) const override;
 
@@ -53,8 +56,11 @@ public:
     bool get(const std::string& name, std::vector<double>& value) const override;
     bool get(const std::string& name, std::vector<std::string>& value) const override;
 
+    const Spec& spec(const std::string& name) const override;
+
 private:
     mutable cache_type cache_;
+    std::unique_ptr<const eckit::spec::Custom> spec_;
     codes_handle* handle_;
     const bool rotated_;
 

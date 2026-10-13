@@ -20,11 +20,15 @@
 #include <initializer_list>
 #include <memory>
 #include <ostream>
+#include <set>
 #include <sstream>
 #include <vector>
 
 #include "eckit/geo/Exceptions.h"
+#include "eckit/geo/Figure.h"
+#include "eckit/geo/Point.h"
 #include "eckit/geo/PointLonLat.h"
+#include "eckit/geo/Projection.h"
 #include "eckit/geo/util/mutex.h"
 #include "eckit/log/JSON.h"
 #include "eckit/spec/Custom.h"
@@ -248,6 +252,9 @@ bool get_figure(codes_handle* h, std::string& value)
     long code = 0;
     if (codes_get_long(h, "shapeOfTheEarth", &code) != CODES_SUCCESS) {
         value = "earth";
+    }
+    else if (long oblate = 0; code == 0 && codes_get_long(h, "earthIsOblate", &oblate) == CODES_SUCCESS && oblate != 0) {
+        value = "iau1965";  // GRIB1 oblate spheroid (resolution and component flags)
     }
     else if (code == 1) {
         double R = 0;
@@ -919,13 +926,269 @@ void cache_set(GribToSpec::cache_type& cache, const std::string& name, const T& 
 }
 
 
+using Custom = eckit::spec::Custom;
+
+
+double get_double(codes_handle* h, const char* key)
+{
+    double value = 0;
+    CHECK_CALL(codes_get_double(h, key, &value));
+    return value;
+}
+
+
+long get_long(codes_handle* h, const char* key)
+{
+    long value = 0;
+    CHECK_CALL(codes_get_long(h, key, &value));
+    return value;
+}
+
+
+/// False easting/northing to millimetres
+double millimetres(double value)
+{
+    return std::round(value * 1000.) / 1000.;
+}
+
+
+/// Projected grids: the projection (as PROJ) from (lon, lat), and the grid lengths [m]
+struct Projected
+{
+    std::function<Custom*(codes_handle*)> projection;
+    const char* dx;
+    const char* dy;
+};
+
+
+const std::map<std::string, Projected>& projected()
+{
+    auto lcc = [](codes_handle* h) {
+        return new Custom{ { "type", "lcc" },
+                           { "lat_0", get_double(h, "LaDInDegrees") },
+                           { "lat_1", get_double(h, "Latin1InDegrees") },
+                           { "lat_2", get_double(h, "Latin2InDegrees") },
+                           { "lon_0", get_double(h, "LoVInDegrees") } };
+    };
+
+    static const std::map<std::string, Projected> PROJECTED{
+        { "albers",
+          { [](codes_handle* h) {
+               return new Custom{ { "type", "aea" },
+                                  { "lat_0", get_double(h, "LaDInDegrees") },
+                                  { "lat_1", get_double(h, "Latin1InDegrees") },
+                                  { "lat_2", get_double(h, "Latin2InDegrees") },
+                                  { "lon_0", get_double(h, "LoVInDegrees") } };
+           },
+            "DxInMetres", "DyInMetres" } },
+        { "lambert", { lcc, "DxInMetres", "DyInMetres" } },
+        { "lambert_lam", { lcc, "DxInMetres", "DyInMetres" } },
+        { "mercator",
+          { [](codes_handle* h) { return new Custom{ { "type", "merc" }, { "lat_ts", get_double(h, "LaDInDegrees") } }; },
+            "DiInMetres", "DjInMetres" } },
+        { "polar_stereographic",
+          { [](codes_handle* h) {
+               return new Custom{ { "type", "stere" },
+                                  { "lat_0", (get_long(h, "projectionCentreFlag") & 128) != 0 ? -90. : 90. },
+                                  { "lat_ts", get_double(h, "LaDInDegrees") },
+                                  { "lon_0", get_double(h, "orientationOfTheGridInDegrees") } };
+           },
+            "DxInMetres", "DyInMetres" } },
+        { "lambert_azimuthal_equal_area",
+          { [](codes_handle* h) {
+               return new Custom{ { "type", "laea" },
+                                  { "lat_0", get_double(h, "standardParallelInDegrees") },
+                                  { "lon_0", get_double(h, "centralLongitudeInDegrees") } };
+           },
+            "xDirectionGridLengthInMetres", "yDirectionGridLengthInMetres" } },
+    };
+
+    return PROJECTED;
+}
+
+
+void set_figure(codes_handle* h, Custom& projection)
+{
+    if (std::string figure; get_figure(h, figure)) {
+        projection.set("figure", figure);
+    }
+}
+
+
+/// Known GRIB messages (by md5GridSection) with the first grid point at the bottom left, whatever the scanning mode (as
+/// mir, grib-input.yaml: first_point_bottom_left)
+bool first_point_bottom_left(codes_handle* h)
+{
+    if (!eckit_geo_use_grib_fixes(h)) {
+        return false;
+    }
+
+    static const std::set<std::string> MD5{
+        "6ae0076681a2541abe053ab52fa60f30",  // Lambert conformal conic, non-standard interpretation (centre=lfpw)
+    };
+
+    char buffer[34];
+    auto size = sizeof(buffer);
+    return codes_get_string(h, "md5GridSection", buffer, &size) == CODES_SUCCESS && MD5.count(buffer) != 0;
+}
+
+
+/// Scanning order (eckit::geo::order::Scan) of the grid lengths dx, dy (directions) and the scanning mode, empty if as
+/// the directions (i then j, not alternating)
+std::string scanning_order(codes_handle* h, double dx, double dy)
+{
+    const auto alternating = get_long(h, "alternativeRowScanning") != 0;
+    const auto j_first     = get_long(h, "jPointsAreConsecutive") != 0;
+    if (!alternating && !j_first) {
+        return {};
+    }
+
+    // the first (consecutive) index alternates direction
+    auto sign = [](double d, bool alternate) { return std::string(d > 0 ? "+" : "-") + (alternate ? (d > 0 ? "-" : "+") : ""); };
+    return j_first ? "j" + sign(dy, alternating) + "i" + sign(dx, false)
+                   : "i" + sign(dx, alternating) + "j" + sign(dy, false);
+}
+
+
+/// Projected grids: Ni*Nj == numberOfDataPoints (ECC-1642)
+void check_number_of_points(codes_handle* h)
+{
+    if (const auto Ni = get_long(h, "Ni"), Nj = get_long(h, "Nj"), N = get_long(h, "numberOfDataPoints"); Ni * Nj != N) {
+        wrongly_encoded_grib_error("GribToSpec: Wrong number of points: Ni*Nj!=numberOfDataPoints (" +
+                                   std::to_string(Ni) + "*" + std::to_string(Nj) + "!=" + std::to_string(N) + ")");
+    }
+}
+
+
+/// The grid on the projection plane; the false easting/northing places the first grid point at (0, 0), to millimetres
+Custom* make_projected_spec(codes_handle* h, const Projected& p, bool check_grid)
+{
+    if (check_grid) {
+        check_number_of_points(h);
+
+        if (!(get_double(h, p.dx) > 0.) || !(get_double(h, p.dy) > 0.)) {
+            throw eckit::geo::exception::SpecError(
+                "GribToSpec: Keys " + std::string{ p.dx } + " and " + std::string{ p.dy } + " must be greater than zero", Here());
+        }
+    }
+
+    std::unique_ptr<Custom> projection(p.projection(h));
+    set_figure(h, *projection);
+
+    std::unique_ptr<const eckit::geo::Projection> to_xy(eckit::geo::ProjectionFactory::build(*projection));
+    const auto first = std::get<eckit::geo::PointXY>(to_xy->fwd(eckit::geo::PointLonLat{
+        get_double(h, "longitudeOfFirstGridPointInDegrees"), get_double(h, "latitudeOfFirstGridPointInDegrees") }));
+
+    if (!std::isfinite(first.X()) || !std::isfinite(first.Y())) {
+        throw eckit::geo::exception::ProjectionError("GribToSpec: first grid point is not projectable", Here());
+    }
+
+    const auto bottom_left = first_point_bottom_left(h);
+    const auto dx          = !bottom_left && get_long(h, "iScansNegatively") != 0 ? -get_double(h, p.dx) : get_double(h, p.dx);
+    const auto dy          = bottom_left || get_long(h, "jScansPositively") != 0 ? get_double(h, p.dy) : -get_double(h, p.dy);
+    const auto nx          = static_cast<double>(get_long(h, "Ni"));
+    const auto ny          = static_cast<double>(get_long(h, "Nj"));
+
+    projection->set("reverse", true);
+
+    auto* spec = new Custom{ { "x", std::vector<double>{ 0., (nx - 1.) * dx, dx } },
+                             { "y", std::vector<double>{ 0., (ny - 1.) * dy, dy } },
+                             { "false", std::vector<double>{ millimetres(-first.X()), millimetres(-first.Y()) } } };
+    spec->set("projection", projection.release());
+
+    if (const auto order = scanning_order(h, dx, dy); !order.empty()) {
+        spec->set("order", order);
+    }
+
+    return spec;
+}
+
+
+/// The satellite at Nr Earth (equatorial) radii from the centre, (x, y) as scanning angles [m] (on the projection
+/// plane): dx, dy are the apparent Earth diameters in grid lengths, Xp, Yp the sub-satellite point and Xo, Yo the
+/// first grid point, in grid lengths along the scanning directions
+Custom* make_space_view_spec(codes_handle* h, bool check_grid)
+{
+    // as the eccodes iterator
+    if (check_grid) {
+        check_number_of_points(h);
+
+        if (!(get_double(h, "dx") > 0.) || !(get_double(h, "dy") > 0.)) {
+            throw eckit::geo::exception::SpecError("GribToSpec: Keys dx and dy must be greater than zero", Here());
+        }
+    }
+
+    if (int err = 0; codes_is_missing(h, "Nr", &err) != 0) {
+        throw eckit::geo::exception::SpecError("GribToSpec: Orthographic view (Nr missing) not supported", Here());
+    }
+
+    const auto Nr = get_double(h, "NrInRadiusOfEarthScaled");
+    if (!(Nr > 0.)) {
+        throw eckit::geo::exception::SpecError("GribToSpec: Key NrInRadiusOfEarthScaled must be greater than zero", Here());
+    }
+
+    if (!(Nr > 1.)) {
+        throw eckit::geo::exception::SpecError(
+            "GribToSpec: Key NrInRadiusOfEarthScaled must be greater than one (the satellite outside the Earth)", Here());
+    }
+
+    if (get_double(h, "latitudeOfSubSatellitePointInDegrees") != 0.) {
+        throw eckit::geo::exception::SpecError(
+            "GribToSpec: Key latitudeOfSubSatellitePointInDegrees must be 0 (satellite must be located in the equator "
+            "plane)",
+            Here());
+    }
+
+    std::unique_ptr<Custom> projection(
+        new Custom{ { "type", "space_view" }, { "lon_0", get_double(h, "longitudeOfSubSatellitePointInDegrees") } });
+    set_figure(h, *projection);
+
+    std::unique_ptr<const eckit::geo::Figure> figure(eckit::geo::FigureFactory::build(*projection));
+    const auto height = (Nr - 1.) * figure->a();
+    const auto angle  = 2. * std::asin(1. / Nr) * height;
+    projection->set("h", height);
+    projection->set("reverse", true);
+
+    const auto nx = static_cast<double>(get_long(h, "Nx"));
+    const auto ny = static_cast<double>(get_long(h, "Ny"));
+    const auto dx = (get_long(h, "iScansNegatively") != 0 ? -angle : angle) / get_double(h, "dx");
+    const auto dy = (get_long(h, "jScansPositively") != 0 ? angle : -angle) * figure->b() / figure->a() / get_double(h, "dy");
+    const auto xp = get_double(h, "XpInGridLengths") - get_double(h, "Xo");
+    const auto yp = get_double(h, "YpInGridLengths") - get_double(h, "Yo");
+
+    // the false easting/northing places the first grid point at (0, 0), to millimetres
+    auto* spec = new Custom{ { "x", std::vector<double>{ 0., (nx - 1.) * dx, dx } },
+                             { "y", std::vector<double>{ 0., (ny - 1.) * dy, dy } },
+                             { "false", std::vector<double>{ millimetres(xp * dx), millimetres(yp * dy) } } };
+    spec->set("projection", projection.release());
+
+    if (const auto order = scanning_order(h, dx, dy); !order.empty()) {
+        spec->set("order", order);
+    }
+
+    return spec;
+}
+
+
 }  // namespace
 
 
-GribToSpec::GribToSpec(codes_handle* h, bool rotated) :
+GribToSpec::GribToSpec(codes_handle* h, bool rotated, bool check_grid) :
     handle_(h), rotated_(rotated)
 {
     ASSERT(handle_ != nullptr);
+
+    if (std::string type; get("gridType", type)) {
+        if (const auto& p = projected().find(type); p != projected().end()) {
+            spec_.reset(make_projected_spec(h, p->second, check_grid));
+            return;
+        }
+
+        if (type == "space_view") {
+            spec_.reset(make_space_view_spec(h, check_grid));
+            return;
+        }
+    }
 
     if (eckit_geo_use_grib_fixes(h)) {
         using fixes_type = std::map<std::string, const cache_type>;
@@ -1005,6 +1268,10 @@ GribToSpec::GribToSpec(codes_handle* h, bool rotated) :
 
 bool GribToSpec::has(const std::string& name) const
 {
+    if (spec_) {
+        return spec_->has(name);
+    }
+
     lock_type lock;
 
     if (name == "ni") {
@@ -1040,6 +1307,10 @@ bool GribToSpec::has(const std::string& name) const
 
 bool GribToSpec::get(const std::string& name, std::string& value) const
 {
+    if (spec_) {
+        return spec_->get(name, value);
+    }
+
     lock_type lock;
 
     if (name == "figure") {
@@ -1086,6 +1357,10 @@ bool GribToSpec::get(const std::string& name, std::string& value) const
 
 bool GribToSpec::get(const std::string& name, bool& value) const
 {
+    if (spec_) {
+        return spec_->get(name, value);
+    }
+
     lock_type lock;
 
     const auto* key = get_key(name, handle_);
@@ -1128,6 +1403,10 @@ bool GribToSpec::get(const std::string& name, int& value) const
 
 bool GribToSpec::get(const std::string& name, long& value) const
 {
+    if (spec_) {
+        return spec_->get(name, value);
+    }
+
     lock_type lock;
 
     if (name == "ni") {
@@ -1196,6 +1475,10 @@ bool GribToSpec::get(const std::string& name, float& value) const
 
 bool GribToSpec::get(const std::string& name, double& value) const
 {
+    if (spec_) {
+        return spec_->get(name, value);
+    }
+
     lock_type lock;
 
     ASSERT(name != "grid");
@@ -1254,6 +1537,10 @@ bool GribToSpec::get(const std::string& /*name*/, std::vector<int>& /*value*/) c
 
 bool GribToSpec::get(const std::string& name, std::vector<long>& value) const
 {
+    if (spec_) {
+        return spec_->get(name, value);
+    }
+
     lock_type lock;
 
     const auto* key = get_key(name, handle_);
@@ -1326,6 +1613,10 @@ bool GribToSpec::get(const std::string& name, std::vector<float>& value) const
 
 bool GribToSpec::get(const std::string& name, std::vector<double>& value) const
 {
+    if (spec_) {
+        return spec_->get(name, value);
+    }
+
     lock_type lock;
 
     if (name == "rotation" && !rotated_) {
@@ -1420,8 +1711,19 @@ void GribToSpec::pl_expand_to_global(std::vector<long>& pl) const
 }
 
 
+const Spec& GribToSpec::spec(const std::string& name) const
+{
+    return spec_ ? spec_->spec(name) : Spec::spec(name);
+}
+
+
 void GribToSpec::json(eckit::JSON& j) const
 {
+    if (spec_) {
+        spec_->json(j);
+        return;
+    }
+
     j.startObject();
 
     auto* kit = codes_keys_iterator_new(

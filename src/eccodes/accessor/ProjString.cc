@@ -16,7 +16,9 @@
     #include <cstdio>
     #include <memory>
 
+    #include "eckit/geo/Figure.h"
     #include "eckit/geo/Grid.h"
+    #include "eckit/geo/Projection.h"
     #include "eckit/geo/Exceptions.h"
 
     #include "geo/GribToSpec.h"
@@ -250,20 +252,26 @@ int ProjString::unpack_string(char* v, size_t* len)
         eccodes::geo::eckit_main_init();
         grib_context_log(h->context, GRIB_LOG_DEBUG, "ProjString: using eckit/geo");
         try {
-            geo::GribToSpec spec(h);
-            std::unique_ptr<const eckit::geo::Grid> grid(eckit::geo::GridFactory::build(spec));
+            // the projection only (not the grid geometry)
+            std::unique_ptr<const Spec> spec(new geo::GribToSpec(h, true, false));
+            std::unique_ptr<const eckit::geo::Grid> grid(eckit::geo::GridFactory::build(*spec));
 
-            auto proj_str = grid->projection().proj_str();
+            // source: (lon, lat) on the figure, target: the coordinate reference system of the grid
+            const auto& projection = grid->projection();
+            auto proj_str          = endpoint_ == ENDPOINT_SOURCE ? "+proj=longlat " + projection.figure().proj_str()
+                                                                  : projection.proj_str();
 
-            auto buf_size = *len;
-            if (*len = std::snprintf(v, buf_size, "%s", proj_str.c_str()); *len >= buf_size) {
+            // length including the terminating null character (as below)
+            const auto buf_size = *len;
+            *len                = proj_str.size() + 1;
+            if (buf_size < *len) {
                 grib_context_log(h->context, GRIB_LOG_ERROR,
                                  "%s: Buffer too small for %s. It is at least %zu bytes long (len=%zu)",
                                  class_name_, name_, *len, buf_size);
-                *len = buf_size;
                 return GRIB_BUFFER_TOO_SMALL;
             }
 
+            std::snprintf(v, buf_size, "%s", proj_str.c_str());
             return CODES_SUCCESS;
         }
         catch (eckit::geo::Exception& e) {

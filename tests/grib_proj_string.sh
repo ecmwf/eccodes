@@ -29,8 +29,13 @@ fi
 
 for f in `echo $files`; do
     file=${data_dir}/$f
+    # (lon, lat): as WGS84 (EPSG:4326), or on the message figure (eckit::geo)
     ps=`${tools_dir}/grib_get -wcount=1 -p projSourceString $file`
-    [ "$ps" = "EPSG:4326" ]
+    case $ps in
+      EPSG:4326) [ "${ECCODES_ECKIT_GEO:-0}" -eq 0 ];;
+      "+proj=longlat "*) [ "${ECCODES_ECKIT_GEO:-0}" -ne 0 ];;
+      *) echo "ERROR: File: $file. Invalid proj source string: |$ps|"; exit 1;;
+    esac
     ps=`${tools_dir}/grib_get -wcount=1 -p projTargetString $file`
     # Check length of result is nonzero
     [ -n "$ps" ]
@@ -55,10 +60,13 @@ done
 # grep -q "Key/value not found" $tempText
 rm -f $tempText
 
+# Unprojected grids: as WGS84, or on the message figure (eckit::geo)
+longlat="+proj=longlat +datum=WGS84"
+[ "${ECCODES_ECKIT_GEO:-0}" -eq 0 ] || longlat="+proj=longlat +R="
 ${tools_dir}/grib_get -p projString $grib2_sample > $tempText
-grep -q "+proj=longlat +datum=WGS84" $tempText
+grep -q "$longlat" $tempText
 ${tools_dir}/grib_get -p projString $ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl > $tempText
-grep -q "+proj=longlat +datum=WGS84" $tempText
+grep -q "$longlat" $tempText
 
 # ${tools_dir}/grib_get -p projString $ECCODES_SAMPLES_PATH/regular_ll_pl_grib2.tmpl > $tempText
 # grep -q "proj=longlat +R=6371229" $tempText
@@ -72,7 +80,8 @@ ${tools_dir}/grib_set -s gridType=lambert_azimuthal_equal_area $grib2_sample $te
 ${tools_dir}/grib_get -p projString $tempGrib > $tempText
 grep -q "proj=laea" $tempText
 
-${tools_dir}/grib_set -s gridType=lambert $grib2_sample $tempGrib
+# (conic projections with standard parallels, not the equator: as PROJ)
+${tools_dir}/grib_set -s gridType=lambert,Latin1InDegrees=45,Latin2InDegrees=45 $grib2_sample $tempGrib
 ${tools_dir}/grib_get -p projString $tempGrib > $tempText
 grep -q "proj=lcc" $tempText
 
@@ -98,7 +107,7 @@ grep -q "ERROR.*Cannot unpack.*projTargetString.* as double" $tempText
 grep -q "Hint: Try unpacking as string" $tempText
 
 # Albers
-${tools_dir}/grib_set -s gridType=albers $grib2_sample $tempGrib
+${tools_dir}/grib_set -s gridType=albers,Latin1InDegrees=30,Latin2InDegrees=60 $grib2_sample $tempGrib
 ${tools_dir}/grib_get -p projString $tempGrib
 
 # Unsupported grids
@@ -110,7 +119,8 @@ for ug in $unsupported_grids; do
   status=$?
   set -e
   [ $status -ne 0 ]
-  grep -q "not yet implemented" $tempText
+  # (eccodes, or eckit::geo)
+  grep -q -e "not yet implemented" -e "projString (Problem with calculation of geographic attributes)" $tempText
 done
 
 # Clean up
