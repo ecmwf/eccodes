@@ -10,8 +10,6 @@
 
 #include "ValidityDate.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::ValidityDate> _grib_accessor_validity_date_builder{};
-
 namespace eccodes::accessor
 {
 

@@ -10,8 +10,6 @@
 
 #include "ScaleValues.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::ScaleValues> _grib_accessor_scale_values_builder{};
-
 namespace eccodes::accessor
 {
 

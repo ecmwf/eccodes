@@ -14,8 +14,6 @@
 #include <utility>
 #include <map>
 
-eccodes::AccessorBuilder<eccodes::accessor::Concept> _grib_accessor_concept_builder{};
-
 namespace eccodes::accessor
 {
 

@@ -10,8 +10,6 @@
 
 #include "Codeflag.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::Codeflag> _grib_accessor_codeflag_builder{};
-
 static int test_bit(long a, long b)
 {
     if (b < 0) return 0;

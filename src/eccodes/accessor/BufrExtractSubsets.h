@@ -34,7 +34,7 @@ private:
     void get_accessors();
 
 public:
-    static inline const AccessorType accessor_type_{"bufr_extract_subsets"};
+    static constexpr AccessorType accessor_type_{"bufr_extract_subsets"};
 };
 
 }  // namespace eccodes::accessor

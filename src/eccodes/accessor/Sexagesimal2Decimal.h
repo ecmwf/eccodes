@@ -26,7 +26,7 @@ public:
     void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;
 
-    static inline const AccessorType accessor_type_{"sexagesimal2decimal"};
+    static constexpr AccessorType accessor_type_{"sexagesimal2decimal"};
 };
 
 }  // namespace eccodes::accessor

@@ -10,115 +10,61 @@
 
 #pragma once
 
-#include "grib_api_internal.h"
 #include "AccessorUtils/NamedType.h"
-#include "sync/Mutex.h"
-#include <algorithm>
-#include <stdexcept>
 #include <string>
 #include <unordered_map>
 #include <vector>
 
 namespace eccodes {
 
+// Logs the unknown type together with the most similar known types, then throws
+[[noreturn]] void throwNoCreator(const char* type, const std::vector<const char*>& knownTypes);
+
+// Creates objects of the classes derived from T, by the name of their type.
+//
+// To use it for a new T, define the constructor and register every class in it:
+//
+//     template <> CodesFactory<T>::CodesFactory() { add<A>(); add<B>(); }
+//
+// and declare this specialisation wherever the factory is used.
+// The classes are registered explicitly, in one place, because classes which register
+// themselves from their own source files get lost when the library is static: the linker
+// drops the object files that nothing refers to.
 template <class T>
 class CodesFactory
 {
 public:
-    static CodesFactory& instance();
-    using Ptr     = T*;
-    using Type    = NamedType<std::string, struct TypeTag>;
-    using Creator = Ptr(*)();
+    // The name of a type. It refers to a string literal, so it is a compile-time constant
+    using Type = NamedType<const char*, struct TypeTag>;
 
-    void add(Type const& type, Creator creator);
-    void remove(Type const& type);
-    Ptr build(Type const& type);
+    // The factory with all classes registered
+    static const CodesFactory& instance()
+    {
+        static const CodesFactory theOne;
+        return theOne;
+    }
+
+    // Throws if no class is registered under this type
+    T* build(const Type& type) const
+    {
+        if (auto it = creators_.find(type); it != creators_.end()) {
+            return it->second();
+        }
+        std::vector<const char*> knownTypes;
+        for (const auto& entry : creators_) {
+            knownTypes.push_back(entry.first.c_str());
+        }
+        throwNoCreator(type.c_str(), knownTypes);
+    }
 
 private:
-    CodesFactory() {}
-    std::unordered_map<Type, Creator> creators_;
-    sync::Mutex mutex_;
+    CodesFactory();
+
+    // Registers the class C under the type C::accessor_type_
+    template <class C>
+    void add() { creators_[C::accessor_type_] = []() -> T* { return new C(); }; }
+
+    std::unordered_map<Type, T* (*)()> creators_;
 };
-
-
-template <class T>
-CodesFactory<T>& CodesFactory<T>::instance()
-{
-    static CodesFactory theOne;
-    return theOne;
-}
-
-template <class T>
-void CodesFactory<T>::add(Type const& type, Creator creator)
-{
-    sync::LockGuard<sync::Mutex> guard(mutex_);
-    creators_[type] = creator;
-}
-
-template <class T>
-void CodesFactory<T>::remove(Type const& type)
-{
-    sync::LockGuard<sync::Mutex> guard(mutex_);
-    creators_.erase(type);
-}
-
-template <class T>
-typename CodesFactory<T>::Ptr CodesFactory<T>::build(Type const& type)
-{
-    sync::LockGuard<sync::Mutex> guard(mutex_);
-
-    if (auto it = creators_.find(type); it == creators_.end()) {
-        const grib_context* context = grib_context_get_default();
-        grib_context_log(context, GRIB_LOG_ERROR, "No creator for type %s", type.c_str());
-
-        // Find the 5 most similar registered types using Levenshtein distance
-        constexpr size_t maxSuggestions = 5;
-        std::vector<std::pair<size_t, const char*>> candidates;
-        candidates.reserve(creators_.size());
-        for (auto const& entry : creators_) {
-            size_t dist = levenshteinDistance(type.c_str(), entry.first.c_str());
-            candidates.push_back({dist, entry.first.c_str()});
-        }
-        std::partial_sort(candidates.begin(),
-                          candidates.begin() + std::min(maxSuggestions, candidates.size()),
-                          candidates.end(),
-                          [](auto const& a, auto const& b) { return a.first < b.first; });
-        size_t n = std::min(maxSuggestions, candidates.size());
-        if (n > 0) {
-            grib_context_log(context, GRIB_LOG_ERROR, "Did you mean:");
-            for (size_t i = 0; i < n; ++i) {
-                grib_context_log(context, GRIB_LOG_ERROR, "  %s", candidates[i].second);
-            }
-        }
-        throw std::runtime_error(std::string("No creator for type ") + type.c_str());
-    }
-    else {
-        return it->second();
-    }
-}
-
-
-template <class T, class ConcreteType>
-class Registrar
-{
-    using Type = typename CodesFactory<T>::Type;
-    Type type_;
-
-    static T* create() { return new ConcreteType(); }
-
-public:
-    Registrar() : type_(ConcreteType::accessor_type_)
-    {
-        CodesFactory<T>::instance().add(type_, &create);
-    }
-    ~Registrar()
-    {
-        CodesFactory<T>::instance().remove(type_);
-    }
-};
-
-// Backward-compatible alias
-template <class T, class ConcreteType>
-using Builder = Registrar<T, ConcreteType>;
 
 } // namespace eccodes

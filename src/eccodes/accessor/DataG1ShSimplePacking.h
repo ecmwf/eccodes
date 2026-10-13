@@ -24,7 +24,7 @@ public:
     int unpack_double(double* val, size_t* len) override;
     int value_count(long*) override;
 
-    static inline const AccessorType accessor_type_{"data_g1shsimple_packing"};
+    static constexpr AccessorType accessor_type_{"data_g1shsimple_packing"};
 };
 
 }  // namespace eccodes::accessor

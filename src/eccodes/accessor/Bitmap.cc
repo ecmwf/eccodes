@@ -10,8 +10,6 @@
 
 #include "Bitmap.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::Bitmap> _grib_accessor_bitmap_builder{};
-
 namespace eccodes::accessor
 {
 

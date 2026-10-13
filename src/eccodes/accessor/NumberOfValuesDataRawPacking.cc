@@ -10,8 +10,6 @@
 
 #include "NumberOfValuesDataRawPacking.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::NumberOfValuesDataRawPacking> _grib_accessor_number_of_values_data_raw_packing_builder{};
-
 namespace eccodes::accessor
 {
 

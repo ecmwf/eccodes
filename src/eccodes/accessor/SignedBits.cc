@@ -10,8 +10,6 @@
 
 #include "SignedBits.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::SignedBits> _grib_accessor_signed_bits_builder{};
-
 namespace eccodes::accessor
 {
 

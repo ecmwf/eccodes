@@ -33,7 +33,7 @@ private:
     const char* numberOfCodedValues_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"number_of_values"};
+    static constexpr AccessorType accessor_type_{"number_of_values"};
 };
 
 }  // namespace eccodes::accessor

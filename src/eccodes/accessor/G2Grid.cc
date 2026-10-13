@@ -10,8 +10,6 @@
 
 #include "G2Grid.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::G2Grid> _grib_accessor_g2grid_builder{};
-
 namespace eccodes::accessor
 {
 

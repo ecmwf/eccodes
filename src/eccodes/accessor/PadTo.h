@@ -29,7 +29,7 @@ private:
     grib_expression* expression_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"padto"};
+    static constexpr AccessorType accessor_type_{"padto"};
 };
 
 }  // namespace eccodes::accessor

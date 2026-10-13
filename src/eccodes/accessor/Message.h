@@ -28,7 +28,7 @@ public:
     void update_size(size_t) override;
     void resize(size_t) override;
 
-    static inline const AccessorType accessor_type_{"message"};
+    static constexpr AccessorType accessor_type_{"message"};
 };
 
 }  // namespace eccodes::accessor

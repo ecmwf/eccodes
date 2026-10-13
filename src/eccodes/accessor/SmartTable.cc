@@ -12,8 +12,6 @@
 #include "sync/Mutex.h"
 #include <cctype>
 
-eccodes::AccessorBuilder<eccodes::accessor::SmartTable> _grib_accessor_smart_table_builder{};
-
 void grib_smart_table_delete(grib_context* c)
 {
     grib_smart_table* t = c->smart_table;

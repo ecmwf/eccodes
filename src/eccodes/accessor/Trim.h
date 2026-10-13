@@ -32,7 +32,7 @@ private:
     int trim_right_ = 0;
 
 public:
-    static inline const AccessorType accessor_type_{"trim"};
+    static constexpr AccessorType accessor_type_{"trim"};
 };
 
 }  // namespace eccodes::accessor

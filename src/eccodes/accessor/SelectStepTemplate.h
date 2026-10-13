@@ -31,7 +31,7 @@ private:
     int instant_ = 0;
 
 public:
-    static inline const AccessorType accessor_type_{"select_step_template"};
+    static constexpr AccessorType accessor_type_{"select_step_template"};
 };
 
 }  // namespace eccodes::accessor

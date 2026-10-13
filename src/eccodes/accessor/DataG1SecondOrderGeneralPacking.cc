@@ -10,8 +10,6 @@
 
 #include "DataG1SecondOrderGeneralPacking.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::DataG1SecondOrderGeneralPacking> _grib_accessor_data_g1second_order_general_packing_builder{};
-
 namespace eccodes::accessor
 {
 

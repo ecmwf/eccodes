@@ -34,7 +34,7 @@ private:
     grib_string_list* blocklist_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"md5"};
+    static constexpr AccessorType accessor_type_{"md5"};
 };
 
 }  // namespace eccodes::accessor

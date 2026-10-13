@@ -40,7 +40,7 @@ private:
     int pack_long_new_(const long start_step_value, const long start_step_unit, const long force_step_units);
 
 public:
-    static inline const AccessorType accessor_type_{"step_in_units"};
+    static constexpr AccessorType accessor_type_{"step_in_units"};
 };
 
 }  // namespace eccodes::accessor

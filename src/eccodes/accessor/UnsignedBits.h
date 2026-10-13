@@ -37,7 +37,7 @@ private:
     long compute_byte_count();
 
 public:
-    static inline const AccessorType accessor_type_{"unsigned_bits"};
+    static constexpr AccessorType accessor_type_{"unsigned_bits"};
 };
 
 }  // namespace eccodes::accessor

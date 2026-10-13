@@ -29,7 +29,7 @@ private:
     grib_expression* multiple_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"padtomultiple"};
+    static constexpr AccessorType accessor_type_{"padtomultiple"};
 };
 
 }  // namespace eccodes::accessor

@@ -32,7 +32,7 @@ private:
     const char* floatType_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"simple_packing_error"};
+    static constexpr AccessorType accessor_type_{"simple_packing_error"};
 };
 
 }  // namespace eccodes::accessor

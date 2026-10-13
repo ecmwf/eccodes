@@ -48,7 +48,7 @@ private:
     int get_table_codes();
 
 public:
-    static inline const AccessorType accessor_type_{"smart_table"};
+    static constexpr AccessorType accessor_type_{"smart_table"};
 };
 
 }  // namespace eccodes::accessor

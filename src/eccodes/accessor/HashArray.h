@@ -42,7 +42,7 @@ private:
     grib_hash_array_value* find_hash_value(int* err);
 
 public:
-    static inline const AccessorType accessor_type_{"hash_array"};
+    static constexpr AccessorType accessor_type_{"hash_array"};
 };
 
 }  // namespace eccodes::accessor

@@ -31,7 +31,7 @@ private:
     const char* day_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"budgdate"};
+    static constexpr AccessorType accessor_type_{"budgdate"};
 };
 
 }  // namespace eccodes::accessor

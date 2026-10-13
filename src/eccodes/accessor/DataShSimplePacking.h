@@ -31,7 +31,7 @@ protected:
     const char* real_part_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"data_shsimple_packing"};
+    static constexpr AccessorType accessor_type_{"data_shsimple_packing"};
 };
 
 }  // namespace eccodes::accessor

@@ -56,6 +56,29 @@ int grib_lookup_long_from_handle(grib_context* gc, grib_loader* loader, const ch
     return GRIB_SUCCESS;
 }
 
+// The type in which to copy the value of the original key 'name' into the accessor ga:
+//  - promotion: if ga accepts the native type of the original key, the value is copied as is and ga takes that type,
+//    e.g. changing edition, a transient missingValue=-1e30 (double) is otherwise truncated into the new message's
+//    missingValue=9999 (long)
+//  - conversion: otherwise the original key is unpacked as (so converted to) the native type of ga
+static long get_copy_type(grib_handle* h, const char* name, grib_accessor* ga, long ga_type)
+{
+    int type = GRIB_TYPE_UNDEFINED;
+    if (grib_get_native_type(h, name, &type) != GRIB_SUCCESS || type == ga_type) {
+        return ga_type;
+    }
+
+    if (ga->accepts_native_type(type)) {
+        grib_context_log(h->context, GRIB_LOG_DEBUG, "Copying %s as %s (promoted from %s)",
+                         name, grib_get_type_name(type), grib_get_type_name(ga_type));
+        return type;
+    }
+
+    grib_context_log(h->context, GRIB_LOG_DEBUG, "Copying %s as %s (converted from %s)",
+                     name, grib_get_type_name(ga_type), grib_get_type_name(type));
+    return ga_type;
+}
+
 int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_arguments* default_value)
 {
     grib_handle* h      = (grib_handle*)loader->data;
@@ -169,6 +192,10 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
     // abbreviations of "sfc" etc which clash! So we mark it with this flag to revert to integers which are unique
     if ( ga->flags_ & GRIB_ACCESSOR_FLAG_COPY_AS_LONG ) {
         ga_type = GRIB_TYPE_LONG;
+    }
+    else {
+        // Promote or convert to target type, if possible
+        ga_type = get_copy_type(h, name, ga, ga_type);
     }
 
     switch (ga_type) {

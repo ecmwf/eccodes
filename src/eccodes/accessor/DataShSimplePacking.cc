@@ -10,8 +10,6 @@
 
 #include "DataShSimplePacking.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::DataShSimplePacking> _grib_accessor_data_shsimple_packing_builder{};
-
 namespace eccodes::accessor
 {
 

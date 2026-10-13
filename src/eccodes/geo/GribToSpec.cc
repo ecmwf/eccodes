@@ -850,7 +850,11 @@ GribToSpec::GribToSpec(codes_handle* h, bool rotated) :
             { "8a6f6c4cc9ad3f64546773b87566bc72", { { "latitudeOfFirstGridPointInDegrees", 89.973 }, { "latitudeOfLastGridPointInDegrees", -89.973 } } },
 
             // gridName=O640, edition=1, experimentVersionNumber=h5wk/h6en/hc9k
-            { "f5dc74ec36353f4c83f7de3bf46e1aef", { { "latitudeOfFirstGridPointInDegrees", 89.892 }, { "latitudeOfLastGridPointInDegrees", -89.892 } } },
+            { "f5dc74ec36353f4c83f7de3bf46e1aef", { { "latitudeOfFirstGridPointInDegrees", 89.892396 }, { "latitudeOfLastGridPointInDegrees", -89.892396 } } },
+
+            // COPINT-1137: specific wrong dates/times (centre=ecmf)
+            // gridName=N256, centre:i=98, edition=2, experimentVersionNumber=0080
+            { "45ec9d2d5e7a14306a0d0f89ffc59fc7", { { "latitudeOfFirstGridPointInDegrees", 89.731149 }, { "latitudeOfLastGridPointInDegrees", -89.731149 } } },
 
             // gridType=regular_ll, edition=2, centre=egrr (Arakawa C-grid UM)
             { "026edb6c52792bc15957072536dbe7c2", { { "longitudeOfLastGridPointInDegrees", 359.0625 } } },                                                   // N96, T

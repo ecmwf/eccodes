@@ -10,8 +10,6 @@
 
 #include "Group.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::Group> _grib_accessor_group_builder{};
-
 namespace eccodes::accessor
 {
 

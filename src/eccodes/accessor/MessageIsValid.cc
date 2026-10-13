@@ -13,8 +13,6 @@
 #include <cstdio>
 #include <exception>
 
-eccodes::AccessorBuilder<eccodes::accessor::MessageIsValid> _grib_accessor_message_is_valid_builder{};
-
 namespace eccodes::accessor
 {
 

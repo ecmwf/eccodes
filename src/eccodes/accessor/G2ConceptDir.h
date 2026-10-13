@@ -33,7 +33,7 @@ private:
     int mode_                    = 0;  // 1=conceptsDir1 or 2=conceptsDir2
 
 public:
-    static inline const AccessorType accessor_type_{"g2_concept_dir"};
+    static constexpr AccessorType accessor_type_{"g2_concept_dir"};
 };
 
 }  // namespace eccodes::accessor

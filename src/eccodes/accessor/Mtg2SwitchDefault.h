@@ -32,7 +32,7 @@ private:
     const char* MTG2SwitchViaTablesVersion_  = nullptr;  //int
 
 public:
-    static inline const AccessorType accessor_type_{"mtg2_switch_default"};
+    static constexpr AccessorType accessor_type_{"mtg2_switch_default"};
 };
 
 }  // namespace eccodes::accessor

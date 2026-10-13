@@ -24,7 +24,7 @@ public:
     long get_native_type() override;
     int unpack_long(long* val, size_t* len) override;
 
-    static inline const AccessorType accessor_type_{"uint8"};
+    static constexpr AccessorType accessor_type_{"uint8"};
 };
 
 }  // namespace eccodes::accessor

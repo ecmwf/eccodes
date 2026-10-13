@@ -10,8 +10,6 @@
 
 #include "OctahedralGaussian.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::OctahedralGaussian> _grib_accessor_octahedral_gaussian_builder{};
-
 namespace eccodes::accessor
 {
 

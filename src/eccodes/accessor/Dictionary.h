@@ -39,7 +39,7 @@ private:
     grib_trie* load_dictionary(int* err);
 
 public:
-    static inline const AccessorType accessor_type_{"dictionary"};
+    static constexpr AccessorType accessor_type_{"dictionary"};
 };
 
 }  // namespace eccodes::accessor

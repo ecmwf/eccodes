@@ -44,7 +44,7 @@ private:
     void compute_size();
 
 public:
-    static inline const AccessorType accessor_type_{"bitmap"};
+    static constexpr AccessorType accessor_type_{"bitmap"};
 };
 
 }  // namespace eccodes::accessor

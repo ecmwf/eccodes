@@ -10,8 +10,6 @@
 
 #include "NumberOfCodedValues.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::NumberOfCodedValues> _grib_accessor_number_of_coded_values_builder{};
-
 namespace eccodes::accessor
 {
 

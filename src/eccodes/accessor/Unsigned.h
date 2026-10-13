@@ -43,7 +43,7 @@ private:
 
 
 public:
-    static inline const AccessorType accessor_type_{"unsigned"};
+    static constexpr AccessorType accessor_type_{"unsigned"};
 };
 
 }  // namespace eccodes::accessor

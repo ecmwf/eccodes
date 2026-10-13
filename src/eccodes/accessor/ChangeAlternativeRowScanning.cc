@@ -10,8 +10,6 @@
 
 #include "ChangeAlternativeRowScanning.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::ChangeAlternativeRowScanning> _grib_accessor_change_alternative_row_scanning_builder{};
-
 namespace eccodes::accessor
 {
 

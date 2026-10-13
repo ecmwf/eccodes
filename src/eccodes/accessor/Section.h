@@ -31,7 +31,7 @@ public:
     grib_section* sub_section() override;
     grib_accessor* next(grib_accessor*, int) override;
 
-    static inline const AccessorType accessor_type_{"section"};
+    static constexpr AccessorType accessor_type_{"section"};
 };
 
 }  // namespace eccodes::accessor

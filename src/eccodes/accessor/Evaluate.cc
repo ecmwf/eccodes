@@ -10,8 +10,6 @@
 
 #include "Evaluate.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::Evaluate> _grib_accessor_evaluate_builder{};
-
 namespace eccodes::accessor
 {
 

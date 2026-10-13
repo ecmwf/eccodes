@@ -30,7 +30,7 @@ private:
     int endpoint_ = 0;
 
 public:
-    static inline const AccessorType accessor_type_{"proj_string"};
+    static constexpr AccessorType accessor_type_{"proj_string"};
 };
 
 }  // namespace eccodes::accessor

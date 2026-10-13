@@ -33,7 +33,7 @@ private:
     const char* missing_value_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"statistics"};
+    static constexpr AccessorType accessor_type_{"statistics"};
 };
 
 }  // namespace eccodes::accessor

@@ -10,8 +10,6 @@
 
 #include "Constant.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::Constant> _grib_accessor_constant_builder{};
-
 namespace eccodes::accessor
 {
 

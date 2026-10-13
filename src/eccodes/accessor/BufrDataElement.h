@@ -62,7 +62,7 @@ private:
     char* cname_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"bufr_data_element"};
+    static constexpr AccessorType accessor_type_{"bufr_data_element"};
 };
 
 }  // namespace eccodes::accessor

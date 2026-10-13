@@ -39,7 +39,7 @@ private:
     const char* subdivision_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"global_gaussian"};
+    static constexpr AccessorType accessor_type_{"global_gaussian"};
 };
 
 }  // namespace eccodes::accessor

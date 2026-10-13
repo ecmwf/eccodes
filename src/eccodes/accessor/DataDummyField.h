@@ -32,7 +32,7 @@ private:
     const char* bitmap_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"data_dummy_field"};
+    static constexpr AccessorType accessor_type_{"data_dummy_field"};
 };
 
 }  // namespace eccodes::accessor
