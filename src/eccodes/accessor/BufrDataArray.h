@@ -144,7 +144,7 @@ private:
     friend int encode_replication(grib_context*, BufrDataArray*, int, grib_buffer*, unsigned char*, long*, int, long, grib_darray*, long*);
 
 public:
-    static inline const AccessorType accessor_type_{"bufr_data_array"};
+    static constexpr AccessorType accessor_type_{"bufr_data_array"};
 };
 
 }  // namespace eccodes::accessor

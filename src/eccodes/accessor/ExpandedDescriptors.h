@@ -59,7 +59,7 @@ private:
     bufr_descriptors_array* do_expand(bufr_descriptors_array* unexpanded, change_coding_params* ccp, int* err);
 
 public:
-    static inline const AccessorType accessor_type_{"expanded_descriptors"};
+    static constexpr AccessorType accessor_type_{"expanded_descriptors"};
 };
 
 }  // namespace eccodes::accessor

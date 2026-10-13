@@ -25,7 +25,7 @@ public:
     int value_count(long*) override;
     void init(const long, grib_arguments*) override;
 
-    static inline const AccessorType accessor_type_{"check_internal_version"};
+    static constexpr AccessorType accessor_type_{"check_internal_version"};
 };
 
 }  // namespace eccodes::accessor

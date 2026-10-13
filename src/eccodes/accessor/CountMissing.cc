@@ -10,8 +10,6 @@
 
 #include "CountMissing.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::CountMissing> _grib_accessor_count_missing_builder{};
-
 namespace eccodes::accessor
 {
 

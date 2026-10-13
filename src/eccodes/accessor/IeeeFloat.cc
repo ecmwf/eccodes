@@ -10,8 +10,6 @@
 
 #include "IeeeFloat.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::IeeeFloat> _grib_accessor_ieeefloat_builder{};
-
 namespace eccodes::accessor
 {
 

@@ -41,7 +41,7 @@ private:
     const char* scanning_mode_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"data_png_packing"};
+    static constexpr AccessorType accessor_type_{"data_png_packing"};
 };
 
 }  // namespace eccodes::accessor

@@ -31,7 +31,7 @@ private:
     const char* verifyingMonth_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"g1end_of_interval_monthly"};
+    static constexpr AccessorType accessor_type_{"g1end_of_interval_monthly"};
 };
 
 }  // namespace eccodes::accessor

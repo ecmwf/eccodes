@@ -32,7 +32,7 @@ private:
     const char* values_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"gds_is_present"};
+    static constexpr AccessorType accessor_type_{"gds_is_present"};
 };
 
 }  // namespace eccodes::accessor

@@ -37,7 +37,7 @@ private:
     const char* sub_division_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"g2grid"};
+    static constexpr AccessorType accessor_type_{"g2grid"};
 };
 
 }  // namespace eccodes::accessor

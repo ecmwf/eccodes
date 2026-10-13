@@ -35,7 +35,7 @@ private:
     const char* stepType_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"mars_step"};
+    static constexpr AccessorType accessor_type_{"mars_step"};
 };
 
 }  // namespace eccodes::accessor

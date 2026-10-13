@@ -10,8 +10,6 @@
 
 #include "Sexagesimal2Decimal.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::Sexagesimal2Decimal> _grib_accessor_sexagesimal2decimal_builder{};
-
 namespace eccodes::accessor
 {
 

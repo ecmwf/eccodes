@@ -40,7 +40,7 @@ private:
     double scale_ = 0.;
 
 public:
-    static inline const AccessorType accessor_type_{"bits"};
+    static constexpr AccessorType accessor_type_{"bits"};
 };
 
 }  // namespace eccodes::accessor

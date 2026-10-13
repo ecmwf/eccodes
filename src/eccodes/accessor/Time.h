@@ -32,7 +32,7 @@ private:
     const char* second_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"time"};
+    static constexpr AccessorType accessor_type_{"time"};
 };
 
 }  // namespace eccodes::accessor

@@ -30,7 +30,7 @@ private:
     const char* step_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"step_human_readable"};
+    static constexpr AccessorType accessor_type_{"step_human_readable"};
 };
 
 }  // namespace eccodes::accessor

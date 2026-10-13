@@ -10,8 +10,6 @@
 
 #include "Long.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::Long> _grib_accessor_long_builder{};
-
 namespace eccodes::accessor
 {
 

@@ -49,7 +49,7 @@ private:
     int type_ = 0;
 
 public:
-    static inline const AccessorType accessor_type_{"variable"};
+    static constexpr AccessorType accessor_type_{"variable"};
 };
 
 }  // namespace eccodes::accessor

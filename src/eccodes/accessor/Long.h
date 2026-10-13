@@ -30,7 +30,7 @@ public:
     void dump(eccodes::Dumper*) override;
     int compare(grib_accessor*) override;
 
-    static inline const AccessorType accessor_type_{"long"};
+    static constexpr AccessorType accessor_type_{"long"};
 };
 
 }  // namespace eccodes::accessor

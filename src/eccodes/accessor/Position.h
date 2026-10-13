@@ -26,7 +26,7 @@ public:
     void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;
 
-    static inline const AccessorType accessor_type_{"position"};
+    static constexpr AccessorType accessor_type_{"position"};
 };
 
 }  // namespace eccodes::accessor

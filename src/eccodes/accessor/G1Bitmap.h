@@ -30,7 +30,7 @@ private:
     const char* unusedBits_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"g1bitmap"};
+    static constexpr AccessorType accessor_type_{"g1bitmap"};
 };
 
 }  // namespace eccodes::accessor

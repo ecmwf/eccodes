@@ -29,7 +29,7 @@ private:
     double multiplier_ = 0.;
 
 public:
-    static inline const AccessorType accessor_type_{"multdouble"};
+    static constexpr AccessorType accessor_type_{"multdouble"};
 };
 
 }  // namespace eccodes::accessor

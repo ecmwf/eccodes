@@ -10,8 +10,6 @@
 
 #include "PadTo.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::PadTo> _grib_accessor_padto_builder{};
-
 namespace eccodes::accessor
 {
 

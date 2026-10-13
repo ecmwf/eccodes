@@ -10,8 +10,6 @@
 
 #include "MarsStep.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::MarsStep> _grib_accessor_mars_step_builder{};
-
 namespace eccodes::accessor
 {
 

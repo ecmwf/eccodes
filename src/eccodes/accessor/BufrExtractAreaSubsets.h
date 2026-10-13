@@ -40,7 +40,7 @@ private:
     int select_area();
 
 public:
-    static inline const AccessorType accessor_type_{"bufr_extract_area_subsets"};
+    static constexpr AccessorType accessor_type_{"bufr_extract_area_subsets"};
 };
 
 }  // namespace eccodes::accessor

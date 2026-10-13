@@ -31,7 +31,7 @@ private:
     const char* pl_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"number_of_points"};
+    static constexpr AccessorType accessor_type_{"number_of_points"};
 };
 
 }  // namespace eccodes::accessor

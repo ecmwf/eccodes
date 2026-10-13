@@ -30,7 +30,7 @@ private:
     const char* step_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"g1verificationdate"};
+    static constexpr AccessorType accessor_type_{"g1verificationdate"};
 };
 
 }  // namespace eccodes::accessor

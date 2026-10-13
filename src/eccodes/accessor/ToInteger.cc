@@ -10,8 +10,6 @@
 
 #include "ToInteger.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::ToInteger> _grib_accessor_to_integer_builder{};
-
 namespace eccodes::accessor
 {
 

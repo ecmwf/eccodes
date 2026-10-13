@@ -10,8 +10,6 @@
 
 #include "PadToMultiple.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::PadToMultiple> _grib_accessor_padtomultiple_builder{};
-
 namespace eccodes::accessor
 {
 

@@ -30,7 +30,7 @@ private:
     long right_ = 0;
 
 public:
-    static inline const AccessorType accessor_type_{"octet_number"};
+    static constexpr AccessorType accessor_type_{"octet_number"};
 };
 
 }  // namespace eccodes::accessor

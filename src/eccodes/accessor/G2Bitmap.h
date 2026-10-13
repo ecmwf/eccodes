@@ -29,7 +29,7 @@ private:
     const char* numberOfValues_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"g2bitmap"};
+    static constexpr AccessorType accessor_type_{"g2bitmap"};
 };
 
 }  // namespace eccodes::accessor

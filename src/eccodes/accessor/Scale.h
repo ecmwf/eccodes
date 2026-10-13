@@ -34,7 +34,7 @@ private:
     const char* truncating_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"scale"};
+    static constexpr AccessorType accessor_type_{"scale"};
 };
 
 }  // namespace eccodes::accessor

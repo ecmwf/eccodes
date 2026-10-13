@@ -29,7 +29,7 @@ public:
     void resize(size_t) override;
     int compare(grib_accessor*) override;
 
-    static inline const AccessorType accessor_type_{"padding"};
+    static constexpr AccessorType accessor_type_{"padding"};
 };
 
 }  // namespace eccodes::accessor

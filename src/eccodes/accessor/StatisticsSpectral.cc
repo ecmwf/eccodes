@@ -10,8 +10,6 @@
 
 #include "StatisticsSpectral.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::StatisticsSpectral> _grib_accessor_statistics_spectral_builder{};
-
 namespace eccodes::accessor
 {
 

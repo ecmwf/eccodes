@@ -28,27 +28,34 @@ constexpr std::size_t fnv1a_hash(const char* str)
     return hash;
 }
 
+namespace detail
+{
+constexpr const char* c_str(const char* value) { return value; }
+inline const char* c_str(const std::string& value) { return value.c_str(); }
+} // namespace detail
+
+// With T = const char* the type is a compile-time constant (constexpr). It then does not
+// own the string: the string must outlive it, as a string literal does.
 template <typename T, typename Parameter>
 class NamedType
 {
 public:
-    explicit NamedType(const char* value) : value_(value), uid_(fnv1a_hash(value)) {}
-    explicit NamedType(T const& value) : value_(value), uid_(fnv1a_hash(value.c_str())) {}
-    explicit NamedType(T&& value) : value_(std::move(value)), uid_(fnv1a_hash(value_.c_str())) {}
+    explicit constexpr NamedType(T const& value) : value_(value), uid_(fnv1a_hash(detail::c_str(value_))) {}
+    explicit constexpr NamedType(T&& value) : value_(std::move(value)), uid_(fnv1a_hash(detail::c_str(value_))) {}
 
     T& get() { return value_; }
-    T const& get() const { return value_; }
-    const char* c_str() const { return value_.c_str(); }
-    std::size_t uid() const { return uid_; }
+    constexpr T const& get() const { return value_; }
+    constexpr const char* c_str() const { return detail::c_str(value_); }
+    constexpr std::size_t uid() const { return uid_; }
 
-    friend bool operator==(const NamedType& l, const NamedType& r) { return l.uid_ == r.uid_; }
-    friend bool operator!=(const NamedType& l, const NamedType& r) { return l.uid_ != r.uid_; }
-    friend bool operator<(const NamedType& l, const NamedType& r) { return l.uid_ < r.uid_; }
+    friend constexpr bool operator==(const NamedType& l, const NamedType& r) { return l.uid_ == r.uid_; }
+    friend constexpr bool operator!=(const NamedType& l, const NamedType& r) { return l.uid_ != r.uid_; }
+    friend constexpr bool operator<(const NamedType& l, const NamedType& r) { return l.uid_ < r.uid_; }
 
-    friend bool operator==(const NamedType& l, const char* r) { return l.uid_ == fnv1a_hash(r); }
-    friend bool operator==(const char* l, const NamedType& r) { return fnv1a_hash(l) == r.uid_; }
-    friend bool operator!=(const NamedType& l, const char* r) { return l.uid_ != fnv1a_hash(r); }
-    friend bool operator!=(const char* l, const NamedType& r) { return fnv1a_hash(l) != r.uid_; }
+    friend constexpr bool operator==(const NamedType& l, const char* r) { return l.uid_ == fnv1a_hash(r); }
+    friend constexpr bool operator==(const char* l, const NamedType& r) { return fnv1a_hash(l) == r.uid_; }
+    friend constexpr bool operator!=(const NamedType& l, const char* r) { return l.uid_ != fnv1a_hash(r); }
+    friend constexpr bool operator!=(const char* l, const NamedType& r) { return fnv1a_hash(l) != r.uid_; }
 
 private:
     T value_;

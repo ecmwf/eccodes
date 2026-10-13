@@ -10,8 +10,6 @@
 
 #include "BitsPerValue.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::BitsPerValue> _grib_accessor_bits_per_value_builder{};
-
 namespace eccodes::accessor
 {
 

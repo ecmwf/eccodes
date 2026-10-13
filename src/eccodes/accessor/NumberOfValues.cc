@@ -10,8 +10,6 @@
 
 #include "NumberOfValues.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::NumberOfValues> _grib_accessor_number_of_values_builder{};
-
 namespace eccodes::accessor
 {
 

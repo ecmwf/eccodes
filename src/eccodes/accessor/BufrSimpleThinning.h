@@ -36,7 +36,7 @@ private:
     int apply_thinning();
 
 public:
-    static inline const AccessorType accessor_type_{"bufr_simple_thinning"};
+    static constexpr AccessorType accessor_type_{"bufr_simple_thinning"};
 };
 
 }  // namespace eccodes::accessor

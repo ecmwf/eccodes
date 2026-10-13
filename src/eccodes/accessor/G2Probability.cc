@@ -10,8 +10,6 @@
 
 #include "G2Probability.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::G2Probability> _grib_accessor_g2_probability_builder{};
-
 namespace eccodes::accessor
 {
 

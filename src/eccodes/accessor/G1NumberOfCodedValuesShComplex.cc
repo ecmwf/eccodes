@@ -10,8 +10,6 @@
 
 #include "G1NumberOfCodedValuesShComplex.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::G1NumberOfCodedValuesShComplex> _grib_accessor_g1number_of_coded_values_sh_complex_builder{};
-
 namespace eccodes::accessor
 {
 

@@ -376,6 +376,7 @@ list( APPEND eccodes_src_files
     grib_api_internal.h
     eccodes_prototypes.h
     grib_accessor_factory.cc
+    CodesFactory.cc
     grib_dumper_factory.cc
     grib_iterator_factory.cc
     grib_nearest_factory.cc
@@ -403,6 +404,21 @@ if(UNIX)
 endif()
 configure_file( grib_api_version.cc.in grib_api_version.cc @ONLY )
 configure_file( eccodes_version.h.in eccodes_version.h @ONLY )
+
+# Generate the explicit registration of all accessors with the accessor factory.
+# Without it, a static libeccodes loses most accessors at link time (ECC-2355)
+set( eccodes_accessor_includes "" )
+set( eccodes_accessor_registrations "" )
+foreach( _src ${eccodes_src_files} )
+    if( _src MATCHES "^accessor/([A-Z][A-Za-z0-9]*)\\.cc$" )
+        set( _class ${CMAKE_MATCH_1} )
+        if( NOT _class STREQUAL "Accessor" ) # the base class
+            string( APPEND eccodes_accessor_includes "#include \"accessor/${_class}.h\"\n" )
+            string( APPEND eccodes_accessor_registrations "    add<accessor::${_class}>();\n" )
+        endif()
+    endif()
+endforeach()
+configure_file( accessor/AccessorRegistry.cc.in AccessorRegistry.cc @ONLY )
 
 # We ship our own generated lex/yacc C files
 #ecbuild_generate_yy(YYPREFIX  grib_yy
@@ -442,6 +458,7 @@ ecbuild_add_library(
     TARGET    eccodes
     SOURCES
         ${CMAKE_CURRENT_BINARY_DIR}/grib_api_version.cc
+        ${CMAKE_CURRENT_BINARY_DIR}/AccessorRegistry.cc
         ${eccodes_src_files}
     PRIVATE_INCLUDES "${PNG_INCLUDE_DIRS}"
     PRIVATE_LIBS

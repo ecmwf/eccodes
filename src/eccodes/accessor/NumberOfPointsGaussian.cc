@@ -10,8 +10,6 @@
 
 #include "NumberOfPointsGaussian.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::NumberOfPointsGaussian> _grib_accessor_number_of_points_gaussian_builder{};
-
 namespace eccodes::accessor
 {
 

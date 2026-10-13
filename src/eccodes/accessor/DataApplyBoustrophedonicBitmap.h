@@ -40,7 +40,7 @@ private:
     const char* numberOfPoints_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"data_apply_boustrophedonic_bitmap"};
+    static constexpr AccessorType accessor_type_{"data_apply_boustrophedonic_bitmap"};
 };
 
 }  // namespace eccodes::accessor

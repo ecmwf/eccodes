@@ -32,7 +32,7 @@ private:
     const char* tablesVersionMTG2Switch_ = nullptr;  // int: e.g. 33
 
 public:
-    static inline const AccessorType accessor_type_{"g2_param_concept_filename"};
+    static constexpr AccessorType accessor_type_{"g2_param_concept_filename"};
 };
 
 }  // namespace eccodes::accessor

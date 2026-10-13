@@ -14,8 +14,6 @@
 #include <float.h>
 #include <type_traits>
 
-eccodes::AccessorBuilder<eccodes::accessor::DataSimplePacking> _grib_accessor_data_simple_packing_builder{};
-
 namespace eccodes::accessor
 {
 

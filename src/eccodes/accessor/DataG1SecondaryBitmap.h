@@ -29,7 +29,7 @@ private:
     const char* number_of_ones_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"data_g1secondary_bitmap"};
+    static constexpr AccessorType accessor_type_{"data_g1secondary_bitmap"};
 };
 
 }  // namespace eccodes::accessor

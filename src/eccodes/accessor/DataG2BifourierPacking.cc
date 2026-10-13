@@ -12,8 +12,6 @@
 #include "grib_scaling.h"
 #include <algorithm>
 
-eccodes::AccessorBuilder<eccodes::accessor::DataG2BifourierPacking> _grib_accessor_data_g2bifourier_packing_builder{};
-
 namespace eccodes::accessor
 {
 

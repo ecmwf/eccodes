@@ -10,8 +10,6 @@
 
 #include "RdbTimeGuessDate.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::RdbTimeGuessDate> _grib_accessor_rdbtime_guess_date_builder{};
-
 namespace eccodes::accessor
 {
 

@@ -10,8 +10,6 @@
 
 #include "MultDouble.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::MultDouble> _grib_accessor_multdouble_builder{};
-
 namespace eccodes::accessor
 {
 

@@ -10,8 +10,6 @@
 
 #include "G2Eps.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::G2Eps> _grib_accessor_g2_eps_builder{};
-
 namespace eccodes::accessor
 {
 

@@ -48,7 +48,7 @@ private:
     const char* groupWidth_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"data_g1second_order_constant_width_packing"};
+    static constexpr AccessorType accessor_type_{"data_g1second_order_constant_width_packing"};
 };
 
 }  // namespace eccodes::accessor

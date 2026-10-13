@@ -10,8 +10,6 @@
 
 #include "DecimalPrecision.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::DecimalPrecision> _grib_accessor_decimal_precision_builder{};
-
 namespace eccodes::accessor
 {
 

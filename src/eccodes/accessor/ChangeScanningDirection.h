@@ -37,7 +37,7 @@ private:
     const char* axis_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"change_scanning_direction"};
+    static constexpr AccessorType accessor_type_{"change_scanning_direction"};
 };
 
 }  // namespace eccodes::accessor

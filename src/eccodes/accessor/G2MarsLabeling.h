@@ -44,7 +44,7 @@ private:
     int extra_set(long val);
 
 public:
-    static inline const AccessorType accessor_type_{"g2_mars_labeling"};
+    static constexpr AccessorType accessor_type_{"g2_mars_labeling"};
 };
 
 }  // namespace eccodes::accessor

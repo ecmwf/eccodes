@@ -10,8 +10,6 @@
 
 #include "DataApplyBoustrophedonic.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::DataApplyBoustrophedonic> _grib_accessor_data_apply_boustrophedonic_builder{};
-
 namespace eccodes::accessor
 {
 

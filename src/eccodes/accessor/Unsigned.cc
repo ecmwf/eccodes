@@ -11,8 +11,6 @@
 #include "Unsigned.h"
 #include "ecc_numeric_limits.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::Unsigned> _grib_accessor_unsigned_builder{};
-
 namespace eccodes::accessor
 {
 

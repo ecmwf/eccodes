@@ -28,7 +28,7 @@ public:
     long pack_index_ = 0;
     int number_of_elements_ = 0;
 
-    static inline const AccessorType accessor_type_{"abstract_long_vector"};
+    static constexpr AccessorType accessor_type_{"abstract_long_vector"};
 };
 
 }  // namespace eccodes::accessor

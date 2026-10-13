@@ -10,8 +10,6 @@
 
 #include "G2ConceptDir.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::G2ConceptDir> _grib_accessor_g2_concept_dir_builder{};
-
 namespace eccodes::accessor
 {
 
