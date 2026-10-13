@@ -120,6 +120,11 @@ long Gen::get_native_type()
     return GRIB_TYPE_UNDEFINED;
 }
 
+bool Gen::accepts_native_type(long type)
+{
+    return type == get_native_type();
+}
+
 long Gen::byte_offset()
 {
     return offset_;

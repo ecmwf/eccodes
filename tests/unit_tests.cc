@@ -479,7 +479,7 @@ static void test_edition_change_missing_value()
     // Changing edition=1 to 2 keeps a non-default missingValue (and the bitmap), even if not representable as a long
     printf("Running %s ...\n", __func__);
 
-    for (const double missingValue : { -DBL_MAX, -1e30, 9999. }) {
+    for (const double missingValue : { -DBL_MAX, -1e30, 1.5, 9999. }) {
         grib_handle* h = grib_handle_new_from_samples(NULL, "regular_ll_sfc_grib1");
         ECCODES_ASSERT(h);
 
@@ -493,7 +493,14 @@ static void test_edition_change_missing_value()
         ECCODES_ASSERT(CODES_SUCCESS == codes_set_long(h, "bitmapPresent", 1));
         ECCODES_ASSERT(CODES_SUCCESS == codes_set_double_array(h, "values", values.data(), n));
 
+        int typeBefore = 0, typeAfter = 0;
+        ECCODES_ASSERT(CODES_SUCCESS == codes_get_native_type(h, "missingValue", &typeBefore));
+
         ECCODES_ASSERT(CODES_SUCCESS == codes_set_long(h, "edition", 2));
+
+        ECCODES_ASSERT(CODES_SUCCESS == codes_get_native_type(h, "missingValue", &typeAfter));
+        ECCODES_ASSERT(typeAfter == typeBefore);
+        printf("\tmissingValue=%g: %s -> %s\n", missingValue, codes_get_type_name(typeBefore), codes_get_type_name(typeAfter));
 
         double mv = 0;
         long numberOfMissing = 0;

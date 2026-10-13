@@ -9,7 +9,6 @@
  */
 
 #include "grib_api_internal.h"
-#include "accessor/Variable.h"
 
 #if defined DEBUG && ! defined GRIB_PTHREADS
   #define MY_DEBUG
@@ -55,6 +54,29 @@ int grib_lookup_long_from_handle(grib_context* gc, grib_loader* loader, const ch
     /* TODO: fix me. For now, we don't fail on a lookup. */
     *value = -1;
     return GRIB_SUCCESS;
+}
+
+// The type in which to copy the value of the original key 'name' into the accessor ga:
+//  - promotion: if ga accepts the native type of the original key, the value is copied as is and ga takes that type,
+//    e.g. changing edition, a transient missingValue=-1e30 (double) is otherwise truncated into the new message's
+//    missingValue=9999 (long)
+//  - conversion: otherwise the original key is unpacked as (so converted to) the native type of ga
+static long get_copy_type(grib_handle* h, const char* name, grib_accessor* ga, long ga_type)
+{
+    int type = GRIB_TYPE_UNDEFINED;
+    if (grib_get_native_type(h, name, &type) != GRIB_SUCCESS || type == ga_type) {
+        return ga_type;
+    }
+
+    if (ga->accepts_native_type(type)) {
+        grib_context_log(h->context, GRIB_LOG_DEBUG, "Copying %s as %s (promoted from %s)",
+                         name, grib_get_type_name(type), grib_get_type_name(ga_type));
+        return type;
+    }
+
+    grib_context_log(h->context, GRIB_LOG_DEBUG, "Copying %s as %s (converted from %s)",
+                     name, grib_get_type_name(ga_type), grib_get_type_name(type));
+    return ga_type;
 }
 
 int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_arguments* default_value)
@@ -171,14 +193,9 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
     if ( ga->flags_ & GRIB_ACCESSOR_FLAG_COPY_AS_LONG ) {
         ga_type = GRIB_TYPE_LONG;
     }
-
-    // Transient keys take the type of the value they hold, so copy them with the original key's type: e.g. changing
-    // edition, a missingValue=-1e30 (double) is otherwise truncated into the new message's missingValue=9999 (long)
-    if (ga_type == GRIB_TYPE_LONG && dynamic_cast<eccodes::accessor::Variable*>(ga) != nullptr) {
-        int type = GRIB_TYPE_UNDEFINED;
-        if (grib_get_native_type(h, name, &type) == GRIB_SUCCESS && type == GRIB_TYPE_DOUBLE) {
-            ga_type = GRIB_TYPE_DOUBLE;
-        }
+    else {
+        // Promote or convert to target type, if possible
+        ga_type = get_copy_type(h, name, ga, ga_type);
     }
 
     switch (ga_type) {

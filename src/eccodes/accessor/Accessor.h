@@ -93,6 +93,7 @@ public:
     virtual int unpack_string_array(char** v, size_t* len) = 0;
     virtual int unpack_long(long* v, size_t* len) = 0;
     virtual long get_native_type() = 0;
+    virtual bool accepts_native_type(long type) = 0;
     virtual long get_next_position_offset() = 0;
     virtual size_t string_length() = 0;
     virtual long byte_offset() = 0;
