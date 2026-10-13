@@ -25,16 +25,13 @@ anyhow    = "1"
 float-cmp = "0.10"
 
 [features]
-# `system` by default: this crate exists for ScaleWeather migrators, whose
-# builds link a preinstalled libeccodes.
-default = ["ndarray", "system"]
+default = ["ndarray", "vendored", "aec"]
 
-# Pass-through of the official crate's build strategy. `vendored` carries
-# `aec` so a self-built library reads CCSDS (operational ECMWF GRIB2), as
-# the official crate's defaults do.
+# Pass-through of the official crate's build strategy.
 system   = ["eccodes/system"]
-vendored = ["eccodes/vendored", "eccodes/aec"]
+vendored = ["eccodes/vendored"]
 
+# CCSDS packing via libaec — the operational packing of ECMWF GRIB2.
 aec = ["eccodes/aec"]
 
 ndarray = ["dep:ndarray"]
