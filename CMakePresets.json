@@ -10,7 +10,8 @@
       "name": "ci",
       "cacheVariables": {
         "ENABLE_EXTRA_TESTS": "ON",
-        "ENABLE_ECCODES_OMP_THREADS": "ON"
+        "ENABLE_ECCODES_THREADS": "ON"
+
       }
     },
     {
