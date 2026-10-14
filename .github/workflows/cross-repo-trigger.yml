@@ -187,6 +187,14 @@ jobs:
       with:
         deps-json: ${{ steps.m.outputs.deps-json }}
         token: ${{ steps.mint.outputs.token }}
+    - id: git-read
+      uses: actions/create-github-app-token@v3
+      with:
+        client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
+        private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
+        owner: ${{ github.repository_owner }}
+        repositories: bindman
+        permission-contents: read
     - name: Build
       id: build
       uses: ecmwf/ci-infrastructure/actions/run-job-script@main
@@ -195,6 +203,7 @@ jobs:
         matrix-leg: ${{ toJSON(matrix) }}
         package: eccodes
         cmake-prefix-path: ${{ steps.deps.outputs.cmake-prefix-path }}
+        git-token: ${{ steps.git-read.outputs.token }}
     - name: Publish
       uses: ecmwf/ci-infrastructure/actions/publish-artifact@main
       with:
@@ -281,6 +290,14 @@ jobs:
       with:
         deps-json: ${{ steps.m.outputs.deps-json }}
         token: ${{ steps.mint.outputs.token }}
+    - id: git-read
+      uses: actions/create-github-app-token@v3
+      with:
+        client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
+        private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
+        owner: ${{ github.repository_owner }}
+        repositories: bindman
+        permission-contents: read
     - name: Build
       id: build
       uses: ecmwf/ci-infrastructure/actions/run-job-script@main
@@ -289,6 +306,7 @@ jobs:
         matrix-leg: ${{ toJSON(matrix) }}
         package: eccodes
         cmake-prefix-path: ${{ steps.deps.outputs.cmake-prefix-path }}
+        git-token: ${{ steps.git-read.outputs.token }}
     - name: Publish
       uses: ecmwf/ci-infrastructure/actions/publish-artifact@main
       with:
