@@ -1,6 +1,6 @@
 # eccodes-sys
 
-Raw FFI bindings to ECMWF's [eccodes](https://github.com/ecmwf/eccodes) C
+Raw FFI bindings to ECMWF's [ecCodes](https://github.com/ecmwf/eccodes) C
 library.
 
 The bindings are generated with [bindgen](https://rust-lang.github.io/rust-bindgen/)
@@ -9,26 +9,25 @@ higher-level [`eccodes`](https://crates.io/crates/eccodes) crate.
 
 ## Installation
 
-```toml
-[dependencies]
-eccodes-sys = "2.49"
+```sh
+cargo add eccodes-sys
 ```
 
-The crate version tracks the eccodes release it builds.
+The crate version tracks the ecCodes release it builds.
 
 ## Cargo build features
 
-These flags control what the underlying C eccodes library is compiled with.
-Defaults mirror the eccodes CMake defaults, except that `netcdf` and `memfs`
+These flags control what the underlying ecCodes C library is compiled with.
+Defaults mirror the ecCodes CMake defaults, except that `netcdf` and `memfs`
 are off — they need external libraries or extra setup.
 
 ### Build strategy (mutually exclusive)
 
-- `vendored` (default) - Clone and build eccodes, ecbuild and (with `aec`)
-  libaec from source. The eccodes tag cloned is the crate version; inside a
-  checkout of the eccodes repository the in-tree sources are built instead,
+- `vendored` (default) - Clone and build ecCodes, ecbuild and (with `aec`)
+  libaec from source. The ecCodes tag cloned is the crate version; inside a
+  checkout of the ecCodes repository the in-tree sources are built instead,
   so branch changes take effect without a network round-trip.
-- `system` - Link against a system-installed eccodes, located via CMake
+- `system` - Link against a system-installed ecCodes, located via CMake
   `find_package(eccodes)` (2.20.0 or newer). Honours `ECCODES_DIR` and
   `CMAKE_PREFIX_PATH`.
 
@@ -66,7 +65,7 @@ which follows the same strategy.
 
 ## Environment variables
 
-- `ECCODES_DIR` - Install prefix of an eccodes build, used by `system` mode.
+- `ECCODES_DIR` - Install prefix of an ecCodes build, used by `system` mode.
 - `CMAKE_PREFIX_PATH` - Additional CMake search paths.
 - `DOCS_RS` - When set, the native build is skipped and the bindings are
   generated from the headers under `docs-headers/` (for docs.rs).
