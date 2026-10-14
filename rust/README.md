@@ -1,11 +1,11 @@
-# eccodes Rust bindings
+# ecCodes Rust bindings
 
-Rust bindings for ECMWF's [eccodes](https://github.com/ecmwf/eccodes) C
+Rust bindings for ECMWF's [ecCodes](https://github.com/ecmwf/eccodes) C
 library.
 
 ## Overview
 
-eccodes decodes and encodes the WMO formats ECMWF distributes its data in —
+ecCodes decodes and encodes the WMO formats ECMWF distributes its data in —
 GRIB editions 1 and 2, BUFR editions 3 and 4. These crates make it usable
 from Rust: the C library is built from source (or located on the system) at
 build time, and its messages, keys, grids and indexes are exposed through a
@@ -13,32 +13,30 @@ safe API.
 
 ## Installation
 
-Add the safe wrapper to your `Cargo.toml`:
+Add the safe wrapper to your project:
 
-```toml
-[dependencies]
-eccodes = "2.49"
+```sh
+cargo add eccodes
 ```
 
-Building requires CMake and a C compiler. To link against an existing eccodes
+Building requires CMake and a C compiler. To link against an existing ecCodes
 installation instead of building from source, use the `system` feature:
 
-```toml
-[dependencies]
-eccodes = { version = "2.49", default-features = false, features = ["system"] }
+```sh
+cargo add eccodes --no-default-features --features system
 ```
 
 ## Crates
 
 - **eccodes**: the safe API. Message files, typed key access, grids,
-  nearest-point search, indexes, and eccodes return codes surfaced as typed
+  nearest-point search, indexes, and ecCodes return codes surfaced as typed
   Rust errors.
 - **eccodes-sys**: the low-level FFI layer, generated with bindgen. Builds
-  the eccodes C library from source (`vendored`, default) or links against a
+  the ecCodes C library from source (`vendored`, default) or links against a
   system installation (`system`). Its Cargo features control which parts of
   the C library are compiled.
 
-Both are versioned to track the eccodes release they build, and depend on
+Both are versioned to track the ecCodes release they build, and depend on
 [`eckit-sys`](https://crates.io/crates/eckit-sys) for the eckit C++ library
 underneath.
 

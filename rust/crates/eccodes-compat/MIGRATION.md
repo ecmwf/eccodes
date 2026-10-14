@@ -1,8 +1,16 @@
 # Migrating from the unofficial bindings
 
-This guide is for users of the [ScaleWeather `eccodes`](https://github.com/ScaleWeather/eccodes)
-crate (0.15 API) moving to the official `eccodes` crate. Migration has two
-independent steps; you can stop after the first.
+Rust bindings for ecCodes began as the community-maintained
+[ScaleWeather `eccodes`](https://github.com/ScaleWeather/eccodes) crate.
+Since ecCodes 2.50.0 the bindings are developed in the ecCodes repository
+itself and released by ECMWF in lockstep with the C library, so every new
+ecCodes release ships with matching crates, and the API covers more of the
+library than the unofficial crate's 0.15 surface does.
+
+This guide is for users of the ScaleWeather crate (0.15 API) moving to the
+official `eccodes` crate. Migration has two independent steps; you can stop
+after the first: `eccodes-compat`, published alongside the official crates
+from ecCodes 2.50.0 on, keeps the 0.15 API working on top of them.
 
 ## Step 1: switch the implementation, keep your code
 
@@ -17,11 +25,11 @@ underneath, and you receive new ecCodes versions through this crate's updates.
 ## Step 2: move to the official API
 
 Drop the package rename; the official crate's versions track the ecCodes C
-library:
+library, and any release from 2.50 up works:
 
 ```toml
 [dependencies]
-eccodes = "2.49"
+eccodes = "2.50"
 ```
 
 The official crate covers everything the 0.15 API does, plus BUFR, indexes,
