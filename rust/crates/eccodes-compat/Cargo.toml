@@ -11,7 +11,7 @@ description  = "ScaleWeather eccodes 0.15 API as a drop-in layer over the offici
 readme       = "README.md"
 
 [dependencies]
-eccodes = { version = "2.49", path = "../eccodes", default-features = false }
+eccodes = { version = "2.50", path = "../eccodes", default-features = false }
 
 fallible-iterator = "0.3"
 thiserror         = "2"
