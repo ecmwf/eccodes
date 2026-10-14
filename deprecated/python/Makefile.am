@@ -124,4 +124,3 @@ gribapi_swig_wrap.c: swig_wrap_array.c
 	cp -f swig_wrap_array.c gribapi_swig_wrap.c
 
 endif
-

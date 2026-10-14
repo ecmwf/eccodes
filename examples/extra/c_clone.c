@@ -3,7 +3,7 @@
 #include "grib_api.h"
 
 void usage(char *app) {
-	fprintf(stderr,"Usage is: %s input_file ouput_file \n",app); 
+	fprintf(stderr,"Usage is: %s input_file ouput_file \n",app);
 }
 
 int main(int argc, char *argv[]) {
@@ -18,7 +18,7 @@ int main(int argc, char *argv[]) {
 
 	/* check number of arguments */
 	if (argc != 3) {
-		usage(argv[0]);	
+		usage(argv[0]);
 		return 1;
 	}
 

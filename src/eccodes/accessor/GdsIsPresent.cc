@@ -10,8 +10,6 @@
 
 #include "GdsIsPresent.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::GdsIsPresent> _grib_accessor_gds_is_present_builder{};
-
 namespace eccodes::accessor
 {
 

@@ -128,7 +128,7 @@
 143 143 Random fields used in an ensemble forecast, at a horizontal level or in a horizontal layer at a point in time
 144 144 Analysis or forecast at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval for waves selected by period range
 145 145 Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval for waves selected by period range
-146 146 Verification scores for analysis or forecast at a horizontal level or in a horizontal layer at a point in time 
+146 146 Verification scores for analysis or forecast at a horizontal level or in a horizontal layer at a point in time
 147 147 Verification scores for average, accumulation, and/or extreme values or other statistically processed values at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval
 148 148 Verification scores for individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time
 149 149 Verification scores for individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval

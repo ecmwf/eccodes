@@ -38,7 +38,7 @@ foreach my $att ('class', 'type', 'stream') {
 
     while (my @row = $sth->fetchrow_array) {
         #print Data::Dumper->Dump(\@row);
-        
+
         # NOTE:
         # The parameter DB type table has extra entries which cannot fit into
         # an octet (range of values of mars.type is 0->255) so we skip these

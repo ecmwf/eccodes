@@ -16,4 +16,3 @@ include "grib2/templates/template.4.quantile.def"
 # MARS includes
 
 include "mars/mars.wavelength.def"
-

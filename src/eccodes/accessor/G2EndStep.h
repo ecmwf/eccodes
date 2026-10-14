@@ -57,7 +57,7 @@ private:
     int pack_long_(const long end_step_value, const long end_step_unit);
 
 public:
-    static inline const AccessorType accessor_type_{"g2end_step"};
+    static constexpr AccessorType accessor_type_{"g2end_step"};
 };
 
 }  // namespace eccodes::accessor

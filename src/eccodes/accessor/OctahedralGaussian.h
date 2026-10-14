@@ -32,7 +32,7 @@ private:
     const char* pl_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"octahedral_gaussian"};
+    static constexpr AccessorType accessor_type_{"octahedral_gaussian"};
 };
 
 }  // namespace eccodes::accessor

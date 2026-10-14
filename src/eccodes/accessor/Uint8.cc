@@ -10,8 +10,6 @@
 
 #include "Uint8.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::Uint8> _grib_accessor_uint8_builder{};
-
 namespace eccodes::accessor
 {
 

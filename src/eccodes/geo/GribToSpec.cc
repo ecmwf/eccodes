@@ -26,6 +26,7 @@
 #include "eckit/geo/PointLonLat.h"
 #include "eckit/geo/util/mutex.h"
 #include "eckit/log/JSON.h"
+#include "eckit/spec/Custom.h"
 #include "eckit/types/FloatCompare.h"
 #include "eckit/types/Fraction.h"
 #include "eckit/utils/SafeCasts.h"
@@ -243,23 +244,30 @@ bool get_figure(codes_handle* h, std::string& value)
         { 11, "sun" },          // Sun, R = 695 990 000 m
     };
 
-    // 'shapeOfTheEarth' is a GRIB edition 2 concept (in edition 1 it is a hidden transient)
-    if (long edition = 0; codes_get_long(h, "edition", &edition) != CODES_SUCCESS || edition < 2) {
-        return false;
-    }
-
     long code = 0;
     if (codes_get_long(h, "shapeOfTheEarth", &code) != CODES_SUCCESS) {
+        value = "earth";
+    }
+    else if (code == 1) {
+        double R = 0;
+        ASSERT(CODES_SUCCESS == codes_get_double(h, "radiusInMetres", &R));
+        value = eckit::spec::Custom{ { "R", R } }.str();
+    }
+    else if (code == 3 || code == 7 || code == 9) {
+        double a = 0;
+        double b = 0;
+        ASSERT(CODES_SUCCESS == codes_get_double(h, "earthMajorAxisInMetres", &a));
+        ASSERT(CODES_SUCCESS == codes_get_double(h, "earthMinorAxisInMetres", &b));
+        value = eckit::spec::Custom{ { "a", a }, { "b", b } }.str();
+    }
+    else if (auto it = NAMED.find(code); it != NAMED.end()) {
+        value = it->second;
+    }
+    else {
         return false;
     }
 
-    // codes that are not tabulated are described by their size ('radius'/'semi_major_axis'/'semi_minor_axis')
-    if (auto it = NAMED.find(code); it != NAMED.end()) {
-        value = it->second;
-        return true;
-    }
-
-    return false;
+    return true;
 }
 
 
@@ -317,6 +325,7 @@ const char* get_key(const std::string& name, codes_handle* h)
         { "south_pole_latitude", "latitudeOfSouthernPoleInDegrees" },
         { "south_pole_longitude", "longitudeOfSouthernPoleInDegrees" },
         { "south_pole_rotation_angle", "angleOfRotationInDegrees" },
+        { "rotation_angle", "angleOfRotationInDegrees" },
 
         { "proj", "projTargetString" },
         { "projSource", "projSourceString" },
@@ -825,8 +834,8 @@ void cache_set(GribToSpec::cache_type& cache, const std::string& name, const T& 
 }  // namespace
 
 
-GribToSpec::GribToSpec(codes_handle* h) :
-    handle_(h)
+GribToSpec::GribToSpec(codes_handle* h, bool rotated) :
+    handle_(h), rotated_(rotated)
 {
     ASSERT(handle_ != nullptr);
 
@@ -841,7 +850,11 @@ GribToSpec::GribToSpec(codes_handle* h) :
             { "8a6f6c4cc9ad3f64546773b87566bc72", { { "latitudeOfFirstGridPointInDegrees", 89.973 }, { "latitudeOfLastGridPointInDegrees", -89.973 } } },
 
             // gridName=O640, edition=1, experimentVersionNumber=h5wk/h6en/hc9k
-            { "f5dc74ec36353f4c83f7de3bf46e1aef", { { "latitudeOfFirstGridPointInDegrees", 89.892 }, { "latitudeOfLastGridPointInDegrees", -89.892 } } },
+            { "f5dc74ec36353f4c83f7de3bf46e1aef", { { "latitudeOfFirstGridPointInDegrees", 89.892396 }, { "latitudeOfLastGridPointInDegrees", -89.892396 } } },
+
+            // COPINT-1137: specific wrong dates/times (centre=ecmf)
+            // gridName=N256, centre:i=98, edition=2, experimentVersionNumber=0080
+            { "45ec9d2d5e7a14306a0d0f89ffc59fc7", { { "latitudeOfFirstGridPointInDegrees", 89.731149 }, { "latitudeOfLastGridPointInDegrees", -89.731149 } } },
 
             // gridType=regular_ll, edition=2, centre=egrr (Arakawa C-grid UM)
             { "026edb6c52792bc15957072536dbe7c2", { { "longitudeOfLastGridPointInDegrees", 359.0625 } } },                                                   // N96, T
@@ -909,6 +922,12 @@ bool GribToSpec::has(const std::string& name) const
     if (name == "figure") {
         std::string figure;
         return get_figure(handle_, figure);
+    }
+
+    if (name == "rotation") {
+        // [lat, lon] of the south pole (as the MARS key)
+        std::vector<double> rotation;
+        return rotated_ && get(name, rotation);
     }
 
     const auto* key = get_key(name, handle_);
@@ -1196,6 +1215,10 @@ bool GribToSpec::get(const std::string& name, std::vector<float>& value) const
 bool GribToSpec::get(const std::string& name, std::vector<double>& value) const
 {
     lock_type lock;
+
+    if (name == "rotation" && !rotated_) {
+        return false;
+    }
 
     const auto* key = get_key(name, handle_);
 

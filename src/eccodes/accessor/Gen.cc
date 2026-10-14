@@ -12,8 +12,6 @@
 #include "Gen.h"
 #include <stdexcept>
 
-eccodes::AccessorBuilder<eccodes::accessor::Gen> _grib_accessor_gen_builder{};
-
 namespace eccodes::accessor
 {
 
@@ -118,6 +116,11 @@ long Gen::get_native_type()
                      name_,
                      accessor_type().c_str());
     return GRIB_TYPE_UNDEFINED;
+}
+
+bool Gen::accepts_native_type(long type)
+{
+    return type == get_native_type();
 }
 
 long Gen::byte_offset()

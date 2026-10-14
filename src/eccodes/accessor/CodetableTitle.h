@@ -29,7 +29,7 @@ private:
     const char* codetable_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"codetable_title"};
+    static constexpr AccessorType accessor_type_{"codetable_title"};
 };
 
 }  // namespace eccodes::accessor

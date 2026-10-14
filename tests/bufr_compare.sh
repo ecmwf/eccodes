@@ -3,7 +3,7 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
+#
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
@@ -70,7 +70,7 @@ f="syno_1.bufr"
 echo "Test: comparing with and without the -b switch" >> $fLog
 echo "file: $f" >> $fLog
 
-# Alter a key in the file 
+# Alter a key in the file
 ${tools_dir}/bufr_set -s dataCategory=2 $f ${fBufrTmp} >> $fLog
 
 set +e
@@ -88,7 +88,7 @@ ${tools_dir}/bufr_compare -b dataCategory $f ${fBufrTmp}>> $fLog
 # Test: comparing with the -r switch
 #----------------------------------------------------
 # Create a bufr file with various message types
-#cat syno_multi.bufr temp_101.bufr > $fBufrInput1 
+#cat syno_multi.bufr temp_101.bufr > $fBufrInput1
 #cat temp_101.bufr syno_multi.bufr > $fBufrInput2
 
 #set +e

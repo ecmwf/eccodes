@@ -34,7 +34,7 @@ private:
     const char* derivedForecast_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"g2_eps"};
+    static constexpr AccessorType accessor_type_{"g2_eps"};
 };
 
 }  // namespace eccodes::accessor

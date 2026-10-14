@@ -11,10 +11,10 @@
 /*
  * C Implementation: grib_debug
  *
- * Description: 
+ * Description:
  *
  */
- 
+
 #include "grib_api_internal.h"
 void usage(const char* p)
 {
@@ -41,7 +41,7 @@ void try_this(const char* txt,double v,double ref,long bscale,long dscale)
 	double x;
 	if(txt) printf("%-18s  : ",txt);
 	x = unpack(pack(v,ref,bscale,dscale),ref,bscale,dscale);
-	printf("%g (err=%g)\n",x,v-x); 
+	printf("%g (err=%g)\n",x,v-x);
 }
 
 int main(int argc, char *argv[])
@@ -143,5 +143,3 @@ int main(int argc, char *argv[])
 
 	return 0;
 }
-
-

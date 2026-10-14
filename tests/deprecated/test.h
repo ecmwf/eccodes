@@ -17,4 +17,3 @@ void get_max_relative_error(double* v1,double* v2,int count,double* maxError,int
 
 extern long readany(FILE*,char*,long*);
 extern   char *get_current_dir_name(void);
-

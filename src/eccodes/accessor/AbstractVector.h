@@ -27,7 +27,7 @@ public:
     double* v_ = nullptr;
     int number_of_elements_ = 0;
 
-    static inline const AccessorType accessor_type_{"abstract_vector"};
+    static constexpr AccessorType accessor_type_{"abstract_vector"};
 };
 
 }  // namespace eccodes::accessor

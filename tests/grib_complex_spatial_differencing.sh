@@ -3,7 +3,7 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
+#
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
@@ -78,7 +78,7 @@ check_complex_packing() {
   if [ "$order" -ne 0 ]; then
     args="$args,orderOfSpatialDifferencing=$order"
   fi
-  ${tools_dir}/grib_set -s $args $input $temp1 
+  ${tools_dir}/grib_set -s $args $input $temp1
 
   grib_check_key_equals $temp1 packingType "$alg"
   stats1=`${tools_dir}/grib_get -M -F%.0f -n statistics $input`
@@ -122,7 +122,7 @@ ${tools_dir}/grib_compare $infile $temp2
 
 # Simple to grid_complex
 tempComplex=temp.$label.complex.grib
-#${tools_dir}/grib_set -r -s packingType=grid_complex  $tempSimple $tempComplex # TODO: fix re-packing 
+#${tools_dir}/grib_set -r -s packingType=grid_complex  $tempSimple $tempComplex # TODO: fix re-packing
 ${tools_dir}/grib_set -s packingType=grid_complex  $tempSimple $tempComplex
 grib_check_key_equals $tempComplex packingType,bitmapPresent,numberOfMissing,numberOfValues,numberOfPoints "grid_complex 1 556901 481339 1038240"
 stats=`${tools_dir}/grib_get -F%.2f -p max,min,avg $tempComplex`

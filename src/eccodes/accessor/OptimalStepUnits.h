@@ -40,7 +40,7 @@ private:
     long overwriteStepUnits_ = 0;
 
 public:
-    static inline const AccessorType accessor_type_{"optimal_step_units"};
+    static constexpr AccessorType accessor_type_{"optimal_step_units"};
 };
 
 }  // namespace eccodes::accessor

@@ -28,7 +28,7 @@ private:
     const char* accessor_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"size"};
+    static constexpr AccessorType accessor_type_{"size"};
 };
 
 }  // namespace eccodes::accessor

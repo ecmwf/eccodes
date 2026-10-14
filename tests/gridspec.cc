@@ -18,6 +18,7 @@
 
 #include "eckit/geo/Figure.h"
 #include "eckit/geo/Grid.h"
+#include "eckit/geo/Point.h"
 #include "eckit/spec/Custom.h"
 #include "eckit/testing/Test.h"
 #include "eckit/types/FloatCompare.h"
@@ -129,6 +130,31 @@ bool grib_to_gridspec(const std::string& path, const map_count_spec_t& specs)
     }
 
     return true;
+}
+
+
+// gridSpec -> GRIB (from sample) -> gridSpec, with first/last grid points [lat1, lon1, lat2, lon2] (in the grid frame)
+void gridspec_to_grib(const char* sample, const std::string& gridSpec, const std::string& gridType,
+                      const std::vector<double>& first_last, const std::string& gridSpecBack)
+{
+    std::unique_ptr<codes_handle, decltype(&codes_handle_delete)> h(
+        codes_grib_handle_new_from_samples(nullptr, sample), &codes_handle_delete);
+    ASSERT(h);
+
+    set_string(h.get(), "gridSpec", gridSpec);
+
+    std::string value;
+    EXPECT(get_string(h.get(), "gridType", value) && value == gridType);
+
+    size_t i = 0;
+    for (const auto* key : { "latitudeOfFirstGridPointInDegrees", "longitudeOfFirstGridPointInDegrees",
+                             "latitudeOfLastGridPointInDegrees", "longitudeOfLastGridPointInDegrees" }) {
+        double x = 0;
+        CHECK(codes_get_double(h.get(), key, &x));
+        EXPECT(eckit::types::is_approximately_equal(x, first_last.at(i++), 1e-6));
+    }
+
+    EXPECT(get_string(h.get(), "gridSpec", value) && value == gridSpecBack);
 }
 
 
@@ -445,16 +471,28 @@ CASE("gridType=reduced_ll")
 }
 
 
-#if 0
 CASE("gridType=reduced_rotated_gg")
 {
-    const map_count_spec_t specs{
-        { 0, "" },
-    };
+    SECTION("GRIB to gridSpec")
+    {
+        const map_count_spec_t specs{
+            { 0, R"({"grid":"N80","projection":{"south_pole":[30,30],"type":"rotation"}})" },
+            { 1, R"({"grid":"N80"})" },
+            { 2, R"({"grid":"O80","projection":{"south_pole":[30,30],"type":"rotation"}})" },
+            { 3, R"({"grid":"O80"})" },
+            { 4, R"({"area":[27.9625200060835,0,-13.9110027017923,40],"grid":"N320","projection":{"south_pole":[-40,-22],"type":"rotation"}})" },
+        };
 
-    EXPECT(grib_to_gridspec("gridspec/gridType=reduced_rotated_gg.grib", specs));
+        EXPECT(grib_to_gridspec("gridspec/gridType=reduced_rotated_gg.grib", specs));
+    }
+
+
+    SECTION("gridSpec to GRIB")
+    {
+        const std::string spec = R"({"grid":"O80","projection":{"south_pole":[30,30],"type":"rotation"}})";
+        gridspec_to_grib("reduced_gg_pl_80_grib2", spec, "reduced_rotated_gg", { 89.141519, 0, -89.141519, 358.928571 }, spec);
+    }
 }
-#endif
 
 
 CASE("gridType=regular_gg")
@@ -666,28 +704,85 @@ CASE("gridType=regular_ll")
 }
 
 
-#if 0
 CASE("gridType=rotated_gg")
 {
-    const map_count_spec_t specs{
-        { 0, "" },
-    };
+    SECTION("GRIB to gridSpec")
+    {
+        const map_count_spec_t specs{
+            { 0, R"({"grid":"F48","projection":{"south_pole":[30,30],"type":"rotation"}})" },
+            { 1, R"({"grid":"F48"})" },
+            { 2, R"({"grid":"F80"})" },
+            { 3, R"({"grid":"F80","projection":{"south_pole":[30,30],"type":"rotation"}})" },
+        };
 
-    EXPECT(grib_to_gridspec("gridspec/gridType=rotated_gg.grib", specs));
+        EXPECT(grib_to_gridspec("gridspec/gridType=rotated_gg.grib", specs));
+    }
+
+
+    SECTION("gridSpec to GRIB")
+    {
+        const std::string spec = R"({"grid":"F48","projection":{"south_pole":[30,30],"type":"rotation"}})";
+        gridspec_to_grib("regular_gg_sfc_grib2", spec, "rotated_gg", { 88.572169, 0, -88.572169, 358.125 }, spec);
+    }
+
+
+    SECTION("coordinates")
+    {
+        // first points of the first message (F48, south pole at [30,30])
+        const std::vector<::eckit::geo::PointLonLat> points_ref{
+            { -150.00000000000000, -28.57216851400726 },
+            { -150.05319064425672, -28.57292230625801 },
+            { -150.10632666115495, -28.57518290821670 },
+            { -150.15935347266884, -28.57894799620847 },
+            { -150.21221659941676, -28.58421369979395 },
+            { -150.26486170993135, -28.59097460529629 },
+            { -150.31723466986631, -28.59922376073626 },
+            { -150.36928159111906, -28.60895268217335 },
+            { -150.42094888084813, -28.62015136144922 },
+            { -150.47218329036292, -28.63280827532991 },
+        };
+
+        grib_file_t file("gridspec/gridType=rotated_gg.grib");
+        ASSERT(file.next());
+
+        std::unique_ptr<const ::eckit::geo::Grid> grid(
+            ::eckit::geo::GridFactory::build(eccodes::geo::GribToSpec(file.handle.get())));
+        ASSERT(grid);
+
+        const auto points = grid->to_points();
+        for (size_t i = 0; i < points_ref.size(); ++i) {
+            EXPECT(::eckit::geo::points_equal(points[i], points_ref[i], 1e-6));
+        }
+    }
 }
-#endif
 
 
-#if 0
 CASE("gridType=rotated_ll")
 {
-    const map_count_spec_t specs{
-        { 0, "" },
-    };
+    SECTION("GRIB to gridSpec")
+    {
+        // south pole at [0,-90] is not a rotation
+        const map_count_spec_t specs{
+            { 0, R"({"area":[90,0,-78,360],"grid":[3,3]})" },
+            { 1, R"({"area":[69,-60,21,60],"grid":[3,3]})" },
+            { 2, R"({"area":[90,0,-78,360],"grid":[3,3],"projection":{"south_pole":[30,30],"type":"rotation"}})" },
+            { 3, R"({"area":[69,-60,21,60],"grid":[3,3],"projection":{"south_pole":[30,30],"type":"rotation"}})" },
+            { 4, R"({"area":[5.5,-3.8,-8.5,7.7],"grid":[0.02,0.02],"order":"i+j+","projection":{"south_pole":[10,-47],"type":"rotation"}})" },
+            { 5, R"({"grid":[3,3]})" },
+            { 6, R"({"grid":[3,3],"projection":{"south_pole":[30,30],"type":"rotation"}})" },
+        };
 
-    EXPECT(grib_to_gridspec("gridspec/gridType=rotated_ll.grib", specs));
+        EXPECT(grib_to_gridspec("gridspec/gridType=rotated_ll.grib", specs));
+    }
+
+
+    SECTION("gridSpec to GRIB")
+    {
+        const std::string spec = R"({"area":[26.65,5.75,-13.25,30.45],"grid":[0.1,0.1],"projection":{"south_pole":[320,-22],"type":"rotation"}})";
+        gridspec_to_grib("regular_ll_sfc_grib2", spec, "rotated_ll", { 26.65, 5.75, -13.25, 30.45 },
+                         R"({"area":[26.65,5.75,-13.25,30.45],"grid":[0.1,0.1],"projection":{"south_pole":[320,-22],"type":"rotation"},"reference":[0.05,0.05]})");
+    }
 }
-#endif
 
 
 CASE("gridType=sh")
@@ -733,9 +828,7 @@ CASE("shapeOfTheEarth")
         };
 
         auto figure_spec = [](const std::string& figure) {
-            return figure.empty()          ? R"({"figure":"earth"})"
-                   : figure.front() == '{' ? figure
-                                           : R"({"figure":)" + figure + "}";
+            return R"({"figure":)" + (figure.empty() ? R"("earth")" : figure) + "}";
         };
 
         const auto user = gridspec_with(test.figure);
@@ -777,6 +870,75 @@ CASE("shapeOfTheEarth")
         ASSERT(CODES_SUCCESS == codes_get_long(h2.get(), "shapeOfTheEarth", &shapeOfTheEarth2));
 
         EXPECT_EQUAL(shapeOfTheEarth2, test.shapeOfTheEarth_back);
+    }
+}
+
+
+CASE("figure")
+{
+    struct test_t
+    {
+        const std::string path;
+        const std::vector<std::pair<size_t, std::string>> figures;  // [(count, figure), (count, figure), ...]
+    };
+
+    for (const auto& test : std::vector<test_t>{
+             { "gridType=healpix.grib", { { 4, R"("grib1")" }, { 1, R"("earth")" } } },
+             { "gridType=reduced_gg,N320.area.grib", { { 1, R"("earth")" } } },
+             { "gridType=reduced_ll.grib", { { 4, R"("grib1")" } } },
+             { "gridType=reduced_rotated_gg.grib", { { 5, R"("grib1")" } } },
+             { "gridType=regular_gg.grib", { { 7, R"("grib1")" }, { 1, R"("earth")" }, { 5, R"("grib1")" } } },
+             { "gridType=regular_ll,isECMWFPostGRIB2MigrationMessage=1.grib", { { 1, R"("grib1")" } } },
+             { "gridType=regular_ll,scanningMode=96.grib", { { 1, R"("earth")" } } },
+             { "gridType=regular_ll.grib", { { 2, R"("grib1")" }, { 1, R"("earth")" }, { 1, R"("grib1")" }, { 1, R"("earth")" }, { 1, R"("grib1")" }, { 1, R"("earth")" }, { 1, R"("grib1")" }, { 1, R"("earth")" }, { 2, R"("grib1")" }, { 1, R"("earth")" }, { 2, R"("grib1")" }, { 1, R"("earth")" }, { 7, R"("grib1")" }, { 1, R"("earth")" }, { 2, R"("grib1")" }, { 1, R"("earth")" }, { 1, R"("grib1")" }, { 1, R"("earth")" }, { 7, R"("grib1")" }, { 2, R"("earth")" }, { 5, R"("grib1")" }, { 1, R"("earth")" }, { 1, R"("grib1")" }, { 3, R"({"R":6371229})" }, { 1, R"("earth")" }, { 2, R"({"R":6371229})" }, { 3, R"("grib1")" } } },
+             { "gridType=rotated_gg.grib", { { 4, R"("grib1")" } } },
+             { "gridType=sh.grib", { { 1, R"("grib1")" } } },
+             { "gridType=unstructured_grid,icon.grib", { { 1, R"("earth")" } } },
+             { "gridType=unstructured_grid,orca.grib", { { 6, R"("earth")" } } },
+         }) {
+        std::vector<std::string> figures;
+        for (const auto& [n, figure] : test.figures) {
+            figures.insert(figures.end(), n, figure);
+        }
+
+        size_t count = 0;
+        for (grib_file_t file("gridspec/" + test.path); file.next(); ++count) {
+            ASSERT(count < figures.size());
+            auto* h = file.handle.get();
+
+            std::unique_ptr<const ::eckit::geo::Figure> expected(
+                ::eckit::geo::FigureFactory::make_from_string(R"({"figure":)" + figures[count] + "}"));
+            ASSERT(expected);
+
+            // the figure, as decoded from the GRIB
+            long edition = 0;
+            CHECK(codes_get_long(h, "edition", &edition));
+
+            eccodes::geo::GribToSpec spec(h);
+            EXPECT(spec.has("figure"));
+
+            std::unique_ptr<const ::eckit::geo::Figure> figure(::eckit::geo::FigureFactory::build(spec));
+            ASSERT(figure);
+
+            EXPECT(*figure == *expected);
+            EXPECT(edition == 2 || figure->is_default());
+
+            // the figure, as part of the gridSpec (only if not a default figure)
+            std::string gridSpec;
+            EXPECT(get_string(h, "gridSpec", gridSpec));
+
+            const bool has_figure = gridSpec.find(R"("figure":)") != std::string::npos;
+            EXPECT(has_figure == !expected->is_default());
+
+            if (has_figure) {
+                std::unique_ptr<const ::eckit::geo::Grid> grid(::eckit::geo::GridFactory::make_from_string(gridSpec));
+                ASSERT(grid);
+
+                EXPECT(grid->figure() == *expected);
+            }
+        }
+
+        EXPECT_EQUAL(count, figures.size());
     }
 }
 

@@ -10,8 +10,6 @@
 
 #include "Mtg2SwitchDefault.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::Mtg2SwitchDefault> _grib_accessor_mtg2_switch_default_builder{};
-
 namespace eccodes::accessor
 {
 

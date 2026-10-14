@@ -9,4 +9,3 @@ meta  geography.longitudeOfStretchingPoleInDegrees
       scale(longitudeOfStretchingPole,oneConstant,grib1divider,truncateDegrees) : dump;
 ibmfloat stretchingFactor : dump;
 alias geography.stretchingFactor=stretchingFactor;
-

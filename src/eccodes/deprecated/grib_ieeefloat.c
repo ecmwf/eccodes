@@ -166,7 +166,7 @@ unsigned long grib_ieee_to_long(double x)
 #ifdef IEEE
 
 
-/* 
+/*
  * To make these two routines consistent to grib_ieee_to_long and grib_long_to_ieee,
  * we should not do any byte swapping but rather perform a raw copy.
  * Byte swapping is actually implemented in grib_decode_unsigned_long and

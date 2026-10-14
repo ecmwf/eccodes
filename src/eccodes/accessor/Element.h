@@ -32,7 +32,7 @@ private:
     long element_ = 0;
 
 public:
-    static inline const AccessorType accessor_type_{"element"};
+    static constexpr AccessorType accessor_type_{"element"};
 };
 
 }  // namespace eccodes::accessor

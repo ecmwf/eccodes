@@ -18,10 +18,10 @@ int main(int argc, char* argv[]) {
 
 	if (argc==3) {
 		editionToSearch=atoi(argv[1]);
-		file=argv[2];	
+		file=argv[2];
 	} else {
 		editionToSearch=0;
-		file=argv[1];	
+		file=argv[1];
 	}
 
 	fh=fopen(file,"r");

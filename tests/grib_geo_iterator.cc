@@ -32,11 +32,12 @@ namespace eccodes::tests
 
 bool difference(const std::string& label, const std::vector<double>& l1, const std::vector<double>& l2)
 {
+    // not using PointLonLat::EPS because src/eccodes/geo/grib_geography.cc:unrotate is currently rounding to the 6th decimal place
     bool result = false;
     ASSERT(l1.size() == l2.size());
 
     for (size_t i = 0; i < l1.size(); ++i) {
-        if (!eckit::types::is_approximately_equal(l1[i], l2[i], eckit::geo::PointLonLat::EPS)) {
+        if (!eckit::types::is_approximately_equal(l1[i], l2[i], 1e-5)) {
             std::printf("%s: index %zu:\t%.16g\t- %.16g\t= %.16g\n", label.c_str(), i, l1[i], l2[i], l2[i] - l1[i]);
             result = true;
         }
@@ -46,51 +47,48 @@ bool difference(const std::string& label, const std::vector<double>& l1, const s
 }
 
 
-CASE("reduced_gg")
+CASE("coordinates(eccodes) == coordinates(eckit::geo::Grid)")
 {
-    SECTION("coordinates(eccodes) == coordinates(eckit::geo::Grid)")
-    {
-        for (int i = 1; i < eckit::Main::instance().argc(); ++i) {
-            const auto& path = eckit::Main::instance().argv(i);
+    for (int i = 1; i < eckit::Main::instance().argc(); ++i) {
+        const auto& path = eckit::Main::instance().argv(i);
 
-            auto* in = std::fopen(path.c_str(), "rb");
-            ASSERT(in != nullptr);
+        auto* in = std::fopen(path.c_str(), "rb");
+        ASSERT(in != nullptr);
 
-            int err   = 0;
-            for (grib_handle* h = nullptr; nullptr != (h = codes_handle_new_from_file(nullptr, in, PRODUCT_GRIB, &err));) {
-                ASSERT(err == CODES_SUCCESS);
-                ASSERT(h != nullptr);
+        int err = 0;
+        for (grib_handle* h = nullptr; nullptr != (h = codes_handle_new_from_file(nullptr, in, PRODUCT_GRIB, &err));) {
+            ASSERT(err == CODES_SUCCESS);
+            ASSERT(h != nullptr);
 
-                std::unique_ptr<const eckit::geo::Grid> grid(eckit::geo::GridFactory::build(geo::GribToSpec(h)));
-                ASSERT(grid);
+            std::unique_ptr<const eckit::geo::Grid> grid(eckit::geo::GridFactory::build(geo::GribToSpec(h)));
+            ASSERT(grid);
 
-                auto [ekg_lats, ekg_lons] = grid->to_latlons();
-                ASSERT(grid->size() == ekg_lats.size());
-                ASSERT(grid->size() == ekg_lons.size());
+            auto [ekg_lats, ekg_lons] = grid->to_latlons();
+            ASSERT(grid->size() == ekg_lats.size());
+            ASSERT(grid->size() == ekg_lons.size());
 
-                long N = 0;
-                CODES_CHECK(codes_get_long(h, "numberOfDataPoints", &N), 0);
-                EXPECT(grid->size() == N);
+            long N = 0;
+            CODES_CHECK(codes_get_long(h, "numberOfDataPoints", &N), 0);
+            EXPECT(grid->size() == N);
 
-                struct iterator_t : std::unique_ptr<geo_iterator::Iterator, decltype(&geo_iterator::gribIteratorDelete)>
-                {
-                    explicit iterator_t(element_type* ptr) : unique_ptr(ptr, &geo_iterator::gribIteratorDelete) {}
-                } it(geo_iterator::gribIteratorNew(h, 0, &err));
-                ASSERT(err == CODES_SUCCESS);
-                ASSERT(it);
+            struct iterator_t : std::unique_ptr<geo_iterator::Iterator, decltype(&geo_iterator::gribIteratorDelete)>
+            {
+                explicit iterator_t(element_type* ptr) : unique_ptr(ptr, &geo_iterator::gribIteratorDelete) {}
+            } it(geo_iterator::gribIteratorNew(h, 0, &err));
+            ASSERT(err == CODES_SUCCESS);
+            ASSERT(it);
 
-                long n = 0;
-                std::vector<double> ecc_lats(N);
-                std::vector<double> ecc_lons(N);
-                for (auto *lat = ecc_lats.data(), *lon = ecc_lons.data(); n < N && it->next(lat++, lon++, nullptr) != 0; n++) {}
-                ASSERT(n == N);
+            long n = 0;
+            std::vector<double> ecc_lats(N);
+            std::vector<double> ecc_lons(N);
+            for (auto *lat = ecc_lats.data(), *lon = ecc_lons.data(); n < N && it->next(lat++, lon++, nullptr) != 0; n++) {}
+            ASSERT(n == N);
 
-                EXPECT_NOT(difference(path + " latitudes (eccodes - eckit::geo::Grid)", ecc_lats, ekg_lats));
-                EXPECT_NOT(difference(path + " longitudes (eccodes - eckit::geo::Grid)", ecc_lons, ekg_lons));
-            }
-
-            std::fclose(in);
+            EXPECT_NOT(difference(path + " latitudes (eccodes - eckit::geo::Grid)", ecc_lats, ekg_lats));
+            EXPECT_NOT(difference(path + " longitudes (eccodes - eckit::geo::Grid)", ecc_lons, ekg_lons));
         }
+
+        std::fclose(in);
     }
 }
 
@@ -100,12 +98,5 @@ CASE("reduced_gg")
 
 int main(int argc, char* argv[])
 {
-    const auto* ev_name = "ECCODES_ECKIT_GEO";
-    const auto* ev_val  = std::getenv(ev_name);
-    if (ev_val == nullptr || std::atol(ev_val) == 0) {
-        std::printf("%s: This test is disabled (env. variable %s is not set)", argv[0], ev_name);
-        return 0;
-    }
-
     return eckit::testing::run_tests(argc, argv);
 }

@@ -15,4 +15,3 @@ if (MTG2Switch != 0) {
   alias ls.wavelength = wavelengthRange ;
  }
 }
-

@@ -32,7 +32,7 @@ private:
     const char* scaledValue_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"from_scale_factor_scaled_value"};
+    static constexpr AccessorType accessor_type_{"from_scale_factor_scaled_value"};
 };
 
 }  // namespace eccodes::accessor

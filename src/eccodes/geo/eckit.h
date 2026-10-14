@@ -31,7 +31,6 @@ enum EckitGeoLevel
 void eckit_main_init();
 
 bool eckit_geo_use_for_iterator(const grib_handle*);
-bool eckit_geo_use_for_gridspec(const grib_handle*);
 bool eckit_geo_use_for_projstring(const grib_handle*);
 bool eckit_geo_use_grib_fixes(const grib_handle*);
 

@@ -49,10 +49,10 @@ do
   rm -f ${output}
   ${tools_dir}/grib_set -s editionNumber=3 ${file}.grib1 ${output}
 
-  #statsBefore=`${tools_dir}/grib_get -fp numberOfValues,numberOfPoints,max,min,average,numberOfMissing ${file}.grib1` 
-  #statsAfter=`${tools_dir}/grib_get -M -fp numberOfValues,numberOfPoints,max,min,average,numberOfMissing ${output}` 
+  #statsBefore=`${tools_dir}/grib_get -fp numberOfValues,numberOfPoints,max,min,average,numberOfMissing ${file}.grib1`
+  #statsAfter=`${tools_dir}/grib_get -M -fp numberOfValues,numberOfPoints,max,min,average,numberOfMissing ${output}`
 
-  #if [ "$statsBefore" != "$statsAfter" ]; then 
+  #if [ "$statsBefore" != "$statsAfter" ]; then
   #  exit 1
   #fi
 

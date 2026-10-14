@@ -39,7 +39,7 @@ private:
     int bufr_get_from_table(bufr_descriptor* v);
 
 public:
-    static inline const AccessorType accessor_type_{"bufr_elements_table"};
+    static constexpr AccessorType accessor_type_{"bufr_elements_table"};
 };
 
 }  // namespace eccodes::accessor

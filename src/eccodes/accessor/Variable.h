@@ -22,6 +22,7 @@ public:
         Gen() { }
     const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     long get_native_type() override;
+    bool accepts_native_type(long type) override;
     int pack_double(const double* val, size_t* len) override;
     int pack_float(const float* val, size_t* len) override;
     int pack_long(const long* val, size_t* len) override;
@@ -48,7 +49,7 @@ private:
     int type_ = 0;
 
 public:
-    static inline const AccessorType accessor_type_{"variable"};
+    static constexpr AccessorType accessor_type_{"variable"};
 };
 
 }  // namespace eccodes::accessor

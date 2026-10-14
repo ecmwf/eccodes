@@ -32,7 +32,7 @@ private:
     const char* packing_type_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"packing_type"};
+    static constexpr AccessorType accessor_type_{"packing_type"};
 };
 
 }  // namespace eccodes::accessor

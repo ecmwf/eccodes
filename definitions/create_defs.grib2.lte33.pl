@@ -396,10 +396,10 @@ sub create_cfVarName {
         units.id=param.units_id and
         grib_encoding.edition = 2 and
         (grib_encoding.centre_id=0 or grib_encoding.centre_id=98 or grib_encoding.centre_id < 0) and
-#        grib_encoding.is_mtg2_switch_0 = 1 
+#        grib_encoding.is_mtg2_switch_0 = 1
 #        grib_encoding.is_mtg2_switch_0 = 1 and
 #        grib_encoding.is_mtg2_switch_1 = 0 and
-#        grib_encoding.is_mtg2_switch_2 = 0 
+#        grib_encoding.is_mtg2_switch_2 = 0
         cfVarName IS NOT NULL
         order by edition,centre_id,param.o,param.id,grib_encoding.param_version,attribute.o;
 EOF
@@ -568,4 +568,3 @@ create_def("units");
 #create_cfVarName("cfVarName");
 #create_cfName("cfName");
 #create_cfName_legacy("cfName");
-

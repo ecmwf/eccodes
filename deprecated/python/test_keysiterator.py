@@ -28,5 +28,3 @@ for i in range(count):
     grib_release(gid)
 
 fid.close()
-
-

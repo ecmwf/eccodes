@@ -12,8 +12,6 @@ if ( defined(stattype) && is_one_of(stattype,"moav","momn","momx","mosd") ) {
  alias monthlyVerificationDate = dataDate;
 }
 
-unalias mars.step;
-
 meta ldas_configuration sprintf("%s-%s", modelVersion, targetFcstSystem ) : no_copy;
 
 alias mars.configuration = ldas_configuration ;

@@ -4,4 +4,3 @@
 'd' = { northLatitudeOfDomainOfTubing=57500; westLongitudeOfDomainOfTubing=2500;   southLatitudeOfDomainOfTubing=32500; eastLongitudeOfDomainOfTubing=42500;  }
 'e' = { northLatitudeOfDomainOfTubing=75000; westLongitudeOfDomainOfTubing=340000; southLatitudeOfDomainOfTubing=30000; eastLongitudeOfDomainOfTubing=45000;  }
 'f' = { northLatitudeOfDomainOfTubing=60000; westLongitudeOfDomainOfTubing=310000; southLatitudeOfDomainOfTubing=40000; eastLongitudeOfDomainOfTubing=0;  }
-

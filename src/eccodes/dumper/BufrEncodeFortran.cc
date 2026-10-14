@@ -863,4 +863,3 @@ void BufrEncodeFortran::footer(const grib_handle* h) const
 }
 
 }  // namespace eccodes::dumper
-

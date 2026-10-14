@@ -3,7 +3,7 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
+#
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 
@@ -36,7 +36,7 @@ set Ny = 10;
 set values = {2};
 set numberOfDataPoints = 100;
 
-set shapeOfTheEarth = 1; # Earth assumed spherical with radius specified (in m) by data producer 
+set shapeOfTheEarth = 1; # Earth assumed spherical with radius specified (in m) by data producer
 set scaleFactorOfRadiusOfSphericalEarth = 0;
 set scaledValueOfRadiusOfSphericalEarth = 6378388;
 

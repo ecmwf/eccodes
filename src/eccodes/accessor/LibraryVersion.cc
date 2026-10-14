@@ -10,8 +10,6 @@
 
 #include "LibraryVersion.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::LibraryVersion> _grib_accessor_library_version_builder{};
-
 namespace eccodes::accessor
 {
 

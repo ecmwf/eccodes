@@ -11,9 +11,9 @@ int main(int argc, char *argv[])
 	grib_associative_array* ar;
 	grib_context* gc;
 	grib_handle* gh;
-	
 
-	
+
+
 	gc = grib_context_get_default();
 	ar=grib_associative_array_new(gc);
 	if (argc > 1) {
@@ -28,21 +28,21 @@ int main(int argc, char *argv[])
 	} else {
 		grib_file_to_array(f,ar);
 	}
-	
+
 	gh=grib_handle_new_from_array(ar);
-	
+
 	grib_associative_array_destroy(ar);
-	
-  if (gh) { 
+
+  if (gh) {
 
   	grib_dump_content(gh,stdout,NULL,0,NULL);
-		grib_set_long(gh,"editionNumber",2,NULL); 
+		grib_set_long(gh,"editionNumber",2,NULL);
 		grib_dump_content(gh,stdout,NULL,0,NULL);
 	} else  {
 		printf("Error: unable to create grib_handle\n");
 	}
   return ret;
-	
+
 #else
 	grib_handle* gh = grib_handle_new_from_samples(NULL,"latlon");
 	grib_set_long(gh,"editionNumber",2);

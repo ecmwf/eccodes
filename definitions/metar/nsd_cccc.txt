@@ -4914,7 +4914,7 @@ MHLC|78|705|La Ceiba Airport ||Honduras|4|15-44N|086-52W|||3|26|P
 MHLE|78|719|La Esperanza||Honduras|4|14-19N|088-09W|||1100|1674|
 MHLM|78|708|La Mesa San Pedro Sula ||Honduras|4|15-27N|087-56W|||31|31|P
 MHNJ|78|701|Guanaja||Honduras|4|16-28N|085-55W|16-28N|085-55W|2|2|P
-MHNO|78|701|Guanaja||Honduras|4|16-28N|086-04W|||2|| 
+MHNO|78|701|Guanaja||Honduras|4|16-28N|086-04W|||2||
 MHPL|78|711|Puerto Lempira||Honduras|4|15-13N|083-48W|||13|13|P
 MHRO|78|703|Roatan||Honduras|4|16-19N|086-31W|||5|2|P
 MHSC|78|718|Coronel Enrique Soto Cano Air Base||Honduras|4|14-23N|087-37W|14-23N|087-37W|628|628|

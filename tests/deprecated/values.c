@@ -46,9 +46,9 @@ int main(int argc,char** argv)
 		fprintf(stderr,"Value class is %s\n",result_class_name?result_class_name:"NONE");
 
 		if(result_class_name && (strcmp(result_class_name,"data_2order_packing") == 0 ||
-		
+
 			strcmp(result_class_name,"data_g22order_packing") == 0)
-		
+
 		)
 		{
 			cnt++;
@@ -67,7 +67,7 @@ int main(int argc,char** argv)
 
 		if(sample) save_message(g,"values.grib");
 
-		if(compare_with_gribex(g))	
+		if(compare_with_gribex(g))
 			exit(11);
 
 

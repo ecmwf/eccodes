@@ -38,4 +38,3 @@
 'flood_ice_itcw_itcs' = {attributeOfTile = [3,4,5,6];}
 
 'snow_flood_ice_itcw_itcs' = {attributeOfTile = [2,3,4,5,6];}
-

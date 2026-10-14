@@ -10,8 +10,6 @@
 
 #include "Message.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::Message> _grib_accessor_message_builder{};
-
 namespace eccodes::accessor
 {
 

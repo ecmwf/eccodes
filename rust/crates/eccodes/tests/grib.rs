@@ -103,7 +103,7 @@ fn set_get_round_trip() -> eccodes::Result<()> {
     message.set("centre", 80_i64)?;
     assert_eq!(message.get::<i64>("centre")?, 80);
     // The C example also reads centre back as a string.
-    assert!(!message.get::<String>("centre")?.is_empty());
+    assert_ne!(message.get::<String>("centre")?, "");
 
     message.set("shortName", "2t")?;
     assert_eq!(message.get::<String>("shortName")?, "2t");
@@ -873,7 +873,7 @@ fn counting_tells_an_empty_file_from_a_broken_one() -> eccodes::Result<()> {
 
     // No GRIB message in sight: zero, not an error.
     assert_eq!(GribFile::open(&bufr_path)?.count()?, 0);
-    assert!(GribFile::open(&bufr_path)?.offsets()?.is_empty());
+    assert_eq!(GribFile::open(&bufr_path)?.offsets()?, Vec::<u64>::new());
     let empty_path = dir.join("empty.grib2");
     std::fs::write(&empty_path, b"")?;
     assert_eq!(GribFile::open(&empty_path)?.count()?, 0);

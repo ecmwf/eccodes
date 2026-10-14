@@ -38,6 +38,7 @@ private:
     int check_geoiterator();
     int check_surface_keys();
     int check_steps();
+    int check_time_ranges();
     int check_deprecation();
     int check_section_numbers(const int* sec_nums, size_t N);
     int check_namespace_keys();
@@ -50,7 +51,7 @@ private:
     long edition_ = 0;
 
 public:
-    static inline const AccessorType accessor_type_{"message_is_valid"};
+    static constexpr AccessorType accessor_type_{"message_is_valid"};
 
     // bitwise OR of GRIB_SECTION_PRODUCT, GRIB_SECTION_GRID, GRIB_SECTION_DATA etc
     unsigned int enabledChecks_ = 0;

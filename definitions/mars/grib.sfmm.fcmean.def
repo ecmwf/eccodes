@@ -5,5 +5,3 @@ unalias mars.step;
 alias mars.method = methodNumber;
 alias mars.number = perturbationNumber;
 if (class is "od") { alias mars.system = systemNumber; }
-
-

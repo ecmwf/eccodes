@@ -18,7 +18,7 @@
    SUPER      = grib_accessor_class_values
    IMPLEMENTS = init
    IMPLEMENTS = unpack_double
-   IMPLEMENTS = value_count 
+   IMPLEMENTS = value_count
    IMPLEMENTS = pack_double
    MEMBERS=const char*  ni
    MEMBERS=const char*  nj

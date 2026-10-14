@@ -14,5 +14,3 @@ set -e
 ./iterator
 ./keys_iterator
 ./precision
-
-

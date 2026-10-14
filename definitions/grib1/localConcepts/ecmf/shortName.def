@@ -3599,7 +3599,7 @@
 	 table2Version = 162 ;
 	 indicatorOfParameter = 90 ;
 	}
-#Total column vertically-integrated northward cloud frozen water flux 
+#Total column vertically-integrated northward cloud frozen water flux
 'viiwn' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 91 ;
@@ -14285,7 +14285,7 @@
 	 indicatorOfParameter = 129 ;
 	}
 #Temperature anomaly
-'ta' = {
+'t_a' = {
 	 table2Version = 171 ;
 	 indicatorOfParameter = 130 ;
 	}
@@ -16379,7 +16379,7 @@
 	 table2Version = 210 ;
 	 indicatorOfParameter = 98 ;
 	}
-#Wildfire radiative power
+#Wildfire radiative power density
 'frpfire' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 99 ;

@@ -104,7 +104,7 @@ grep -q "particleDepolarizationRatio=MISSING" $fDump
 grep -q "particleDepolarizationRatio1=MISSING" $fDump
 grep -q "scalingVectorMultiplyingTheAPrioriVectorInOrderToDefineTheRetrievedVector=MISSING" $fDump
 set +e
-# The old name should not be there 
+# The old name should not be there
 grep -q "scalingVectorMultiplyingTheAPrioriCoVectorInOrderToDefineTheRetrievedCoVector" $fDump
 status=$?
 set -e

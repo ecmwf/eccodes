@@ -13,4 +13,3 @@ if (g is "CCB") {
     modify ccb : hidden;
     group g : dump ; non_alpha na;
 }
-

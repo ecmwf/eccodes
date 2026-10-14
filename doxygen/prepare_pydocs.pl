@@ -5,13 +5,13 @@
 # Updated: 08/07/2010
 #
 # Description:
-# Since I could not find a way to tell doxygen not to include 
+# Since I could not find a way to tell doxygen not to include
 # some functions into the documentation, I have written this script
 # to remove all the function I do not want documented from the source file
 # before feeding it as input to doxygen. Such a pain.
 #
 # Update: Doxygen can be told to ignore some sections in the documentation
-# by using the @cond,@endcond block, however that does not work with the 
+# by using the @cond,@endcond block, however that does not work with the
 # current version of doxygen used at the moment to create the documentation.
 
 use strict; use warnings;

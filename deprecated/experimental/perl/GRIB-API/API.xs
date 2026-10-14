@@ -162,7 +162,7 @@ typedef grib_handle   *GRIB__API;
 typedef grib_iterator *GRIB__API__Iterator;
 
 
-MODULE = GRIB::API		PACKAGE = GRIB::API		
+MODULE = GRIB::API		PACKAGE = GRIB::API
 
 PROTOTYPES: ENABLE
 
@@ -221,7 +221,7 @@ clone(h)
 		RETVAL = grib_handle_clone(h);
 	OUTPUT:
 		RETVAL
-		
+
 
 void
 DESTROY(h)
@@ -254,7 +254,7 @@ Write(h,file)
 void fail_on_error(f = 1)
 	long f
 
-	PPCODE: 
+	PPCODE:
 		_fail_on_error = f;
 		XPUSHs(&PL_sv_yes);
 
@@ -280,7 +280,7 @@ get_long(h,what)
 	PPCODE:
 		XPUSHs(get_long(h,what));
 
-	
+
 void
 get_double(h,what)
 	GRIB::API h
@@ -377,7 +377,7 @@ set_values(h,ref)
 						vals[size].string_value = buffer;
 						/* printf("-- %d %d %s\n",size,vals[size].type,vals[size].string_value); */
 					}
-					else if(!SvOK(value) || (value == &PL_sv_undef)) 
+					else if(!SvOK(value) || (value == &PL_sv_undef))
 					{
 						/* TODO: support other missing */
 						vals[size].type       = GRIB_TYPE_LONG;
@@ -432,7 +432,7 @@ get_double_array(h,what)
 		else {
 
 			double *values = 0;
-			
+
 			Newz(0,values,size,double);
 
 			if(values)
@@ -483,7 +483,7 @@ set_double_array(h,what,list)
 
 		if(!SvROK(list))
 			croak("Argument 2 is not an ARRAY reference");
-		
+
 		if(SvTYPE(SvRV(list))!=SVt_PVAV)
 			croak("Argument 2 is not an ARRAY reference");
 
@@ -493,11 +493,11 @@ set_double_array(h,what,list)
 
 		size   = av_len(av) + 1;
 		/* printf("set_double_array: %d\n",size); */
-		
+
 
 	PPCODE:
 
-			
+
 		Newz(0,values,size,double);
 
 		if(!values)
@@ -539,7 +539,7 @@ set_long_array(h,what,list)
 
 		if(!SvROK(list))
 			croak("Argument 2 is not an ARRAY reference");
-		
+
 		if(SvTYPE(SvRV(list))!=SVt_PVAV)
 			croak("Argument 2 is not an ARRAY reference");
 
@@ -548,7 +548,7 @@ set_long_array(h,what,list)
 			croak("list has negative size ");
 
 		size   = av_len(av);
-		
+
 
 	PPCODE:
 
@@ -557,7 +557,7 @@ set_long_array(h,what,list)
 		else {
 
 			long *values = 0;
-			
+
 			Newz(0,values,size,long);
 
 			if(values)
@@ -610,7 +610,7 @@ get_long_array(h,what)
 		else {
 
 			long *values = 0;
-			
+
 			Newz(0,values,size,long);
 
 			if(values)
@@ -671,7 +671,7 @@ get_size(h,what)
 
 		if( error(grib_get_size(h,what,&size)) != 0)
 			XPUSHs(&PL_sv_undef);
-		else 
+		else
 			XPUSHs(sv_2mortal(newSViv(size)));
 
 void
@@ -684,7 +684,7 @@ get_type(h,what)
 	PPCODE:
 		if( error(grib_get_native_type(h,what,&type)) != 0)
 			XPUSHs(&PL_sv_undef);
-		else 
+		else
 			XPUSHs(sv_2mortal(newSViv(type)));
 
 void
@@ -758,13 +758,13 @@ get(h,what)
 				default:
 						/* result = get_bytes(h,what); */
 					break;
-					
+
 			}
 		}
 		XPUSHs(result);
 
 
-SV* 
+SV*
 get_gaussian_latitudes(n)
 	int n
 	PREINIT:
@@ -951,7 +951,7 @@ get_keys(h,name_space = NULL)
 
 			XPUSHs(newRV_noinc((SV*)av));
 		}
-		grib_keys_iterator_delete(ks); 
+		grib_keys_iterator_delete(ks);
 
 
 GRIB::API::Iterator
@@ -975,13 +975,10 @@ next(i)
 	PPCODE:
 		if(grib_iterator_next(i,&lat,&lon,&value))
 		{
-			
+
 			XPUSHs(sv_2mortal(newSVnv(lat)));
 			XPUSHs(sv_2mortal(newSVnv(lon)));
 			XPUSHs(sv_2mortal(newSVnv(value)));
 		}
 		/* else */
 			/* XPUSHs(&PL_sv_undef); */
-			
-		
-	

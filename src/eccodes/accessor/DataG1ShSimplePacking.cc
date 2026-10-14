@@ -10,8 +10,6 @@
 
 #include "DataG1ShSimplePacking.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::DataG1ShSimplePacking> _grib_accessor_data_g1shsimple_packing_builder{};
-
 namespace eccodes::accessor
 {
 

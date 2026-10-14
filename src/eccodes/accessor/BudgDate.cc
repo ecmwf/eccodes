@@ -10,8 +10,6 @@
 
 #include "BudgDate.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::BudgDate> _grib_accessor_budgdate_builder{};
-
 namespace eccodes::accessor
 {
 

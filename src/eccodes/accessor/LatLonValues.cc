@@ -10,8 +10,6 @@
 
 #include "LatLonValues.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::LatLonValues> _grib_accessor_latlonvalues_builder{};
-
 namespace eccodes::accessor
 {
 

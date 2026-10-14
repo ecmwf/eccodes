@@ -10,8 +10,6 @@
 
 #include "Uint64LittleEndian.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::Uint64LittleEndian> _grib_accessor_uint64_little_endian_builder{};
-
 namespace eccodes::accessor
 {
 

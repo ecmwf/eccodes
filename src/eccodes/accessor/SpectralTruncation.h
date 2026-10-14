@@ -31,7 +31,7 @@ private:
     const char* T_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"spectral_truncation"};
+    static constexpr AccessorType accessor_type_{"spectral_truncation"};
 };
 
 }  // namespace eccodes::accessor

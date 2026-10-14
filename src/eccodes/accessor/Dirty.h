@@ -29,7 +29,7 @@ private:
     const char* accessor_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"dirty"};
+    static constexpr AccessorType accessor_type_{"dirty"};
 };
 
 }  // namespace eccodes::accessor

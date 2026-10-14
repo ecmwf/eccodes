@@ -292,14 +292,14 @@ static grib_hash_array_value *_reverse_hash_array(grib_hash_array_value *r,grib_
 
 %%
 
-all: empty        { grib_parser_all_actions = 0;grib_parser_concept=0; 
+all: empty        { grib_parser_all_actions = 0;grib_parser_concept=0;
                             grib_parser_hash_array=0;grib_parser_rules=0; }
            | concept_list { grib_parser_concept     = reverse_concept($1); }
            | hash_array_list { grib_parser_hash_array     = reverse_hash_array($1); }
            | instructions { grib_parser_all_actions = $1; }
            | rules        { grib_parser_rules       = $1; }
        /* memory leak here */
-       | error        { grib_parser_all_actions = 0; grib_parser_concept=0; 
+       | error        { grib_parser_all_actions = 0; grib_parser_concept=0;
 	                    grib_parser_hash_array=0; grib_parser_rules=0; }
    ;
 
@@ -430,7 +430,7 @@ simple: UNSIGNED '[' INTEGER ']'   IDENT   default flags
 	| CODETABLE '[' INTEGER ']' IDENT  argument   default SET '(' IDENT ')' flags
 	{ $$ = grib_action_create_gen(grib_parser_context,$5,"codetable",$3, $6,$7,$12,NULL,$10);
            free($5);free($10); }
-    
+
     | CODETABLE '[' INTEGER ']' IDENT  '(' argument_list ')'   default flags
 	{ $$ = grib_action_create_gen(grib_parser_context,$5,"codetable",$3, $7,$9,$10,NULL,NULL);    free($5); }
 
@@ -445,7 +445,7 @@ simple: UNSIGNED '[' INTEGER ']'   IDENT   default flags
 
     | COMPLEX_CODETABLE '[' INTEGER ']' IDENT  argument   default flags
 	{ $$ = grib_action_create_gen(grib_parser_context,$5,"complex_codetable",$3, $6,$7,$8,NULL,NULL);    free($5); }
-    
+
     | COMPLEX_CODETABLE '[' INTEGER ']' IDENT  '(' argument_list ')'   default flags
 	{ $$ = grib_action_create_gen(grib_parser_context,$5,"complex_codetable",$3, $7,$9,$10,NULL,NULL);    free($5); }
 
@@ -528,7 +528,7 @@ simple: UNSIGNED '[' INTEGER ']'   IDENT   default flags
 
     | TRANS       IDENT   '=' argument  flags
         { $$ = grib_action_create_variable(grib_parser_context,$2,"transient",0,$4,$4,$5,NULL);   free($2); }
-    | TRANS       IDENT   '=' '{' dvalues '}' flags 
+    | TRANS       IDENT   '=' '{' dvalues '}' flags
         { $$ = grib_action_create_transient_darray(grib_parser_context,$2,$5,$7); free($2); }
 
     | FLOAT       IDENT    default   flags
@@ -583,7 +583,7 @@ simple: UNSIGNED '[' INTEGER ']'   IDENT   default flags
     | ALIAS  IDENT '=' IDENT flags
         { $$ = grib_action_create_alias(grib_parser_context,$2,$4,NULL,$5);  free($2); free($4); }
 
-    | UNALIAS  IDENT 
+    | UNALIAS  IDENT
         { $$ = grib_action_create_alias(grib_parser_context,$2,NULL,NULL,0);  free($2); }
 
     | ALIAS  IDENT '.' IDENT '=' IDENT flags
@@ -592,7 +592,7 @@ simple: UNSIGNED '[' INTEGER ']'   IDENT   default flags
     }
     | UNALIAS  IDENT '.' IDENT
         {
-         $$ = grib_action_create_alias(grib_parser_context,$4,NULL,$2,0);  free($2); free($4); 
+         $$ = grib_action_create_alias(grib_parser_context,$4,NULL,$2,0);  free($2); free($4);
     }
     | META IDENT  IDENT '(' argument_list ')'  default flags
         { $$ = grib_action_create_meta(grib_parser_context,$2,$3,$5,$7,$8,NULL); free($2);free($3);}
@@ -657,7 +657,7 @@ simple: UNSIGNED '[' INTEGER ']'   IDENT   default flags
 
   | SET_NOFAIL IDENT '=' expression { $$ = grib_action_create_set(grib_parser_context,$2,$4,1); free($2); }
 
-  
+
   | WRITE STRING { $$ = grib_action_create_write(grib_parser_context,$2,0,0); free($2);}
   | WRITE { $$ = grib_action_create_write(grib_parser_context,"",0,0); }
   | WRITE '(' INTEGER ')' STRING { $$ = grib_action_create_write(grib_parser_context,$5,0,$3); free($5);}
@@ -756,7 +756,7 @@ concept_block: CONCEPT IDENT '{' concept_list '}' flags { $$ = grib_action_creat
    | CONCEPT_NOFAIL IDENT '.' IDENT '(' IDENT ',' STRING ',' IDENT ')' flags { $$ = grib_action_create_concept(grib_parser_context,$4,0,$8,$2,$6,$10,0,0,$12,1);  free($4);free($8);free($6);free($10); free($2);}
    | CONCEPT_NOFAIL IDENT '.' IDENT '{' concept_list '}' flags { $$ = grib_action_create_concept(grib_parser_context,$4,$6,0,$2,0,0,0,0,$8,1);  free($2);free($4); }
    | CONCEPT_NOFAIL IDENT '.' IDENT '(' IDENT ')' '{' concept_list '}' flags { $$ = grib_action_create_concept(grib_parser_context,$4,$9,0,$2,$6,0,0,0,$11,1);  free($2);free($4);free($6); }
-   
+
    ;
 
 concept_list: concept_value

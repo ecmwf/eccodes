@@ -41,4 +41,3 @@ if (! presentWeather3Present ) {
     alias presentWeather3Present=one;
   }
 }
-

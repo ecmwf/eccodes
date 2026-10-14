@@ -34,7 +34,7 @@ protected:
     const char* day_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"g1date"};
+    static constexpr AccessorType accessor_type_{"g1date"};
 };
 
 }  // namespace eccodes::accessor

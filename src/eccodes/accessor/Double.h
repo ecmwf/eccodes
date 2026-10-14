@@ -27,7 +27,7 @@ public:
     void dump(eccodes::Dumper*) override;
     int compare(grib_accessor*) override;
 
-    static inline const AccessorType accessor_type_{"double"};
+    static constexpr AccessorType accessor_type_{"double"};
 };
 
 }  // namespace eccodes::accessor

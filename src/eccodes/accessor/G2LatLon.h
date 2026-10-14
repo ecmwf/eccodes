@@ -33,7 +33,7 @@ private:
     const char* given_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"g2latlon"};
+    static constexpr AccessorType accessor_type_{"g2latlon"};
 };
 
 }  // namespace eccodes::accessor

@@ -31,7 +31,7 @@ private:
     int gts_length_ = 0;
 
 public:
-    static inline const AccessorType accessor_type_{"gts_header"};
+    static constexpr AccessorType accessor_type_{"gts_header"};
 };
 
 }  // namespace eccodes::accessor

@@ -10,8 +10,6 @@
 
 #include "Element.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::Element> _grib_accessor_element_builder{};
-
 namespace eccodes::accessor
 {
 

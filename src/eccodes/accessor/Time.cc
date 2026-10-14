@@ -10,8 +10,6 @@
 
 #include "Time.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::Time> _grib_accessor_time_builder{};
-
 namespace eccodes::accessor
 {
 

@@ -1,17 +1,17 @@
 #!/usr/local/bin/perl56
 
-# feeds all static infos into psql tigge_test   
-# such as: - title, 
-#          - name, 
+# feeds all static infos into psql tigge_test
+# such as: - title,
+#          - name,
 #          - abbreviation
-#          - unit           
-# 
-# the information comes from master.info except for unit   
-# 
-# an evironmental variable ECCODES_DEFINITION_PATH must exist 
+#          - unit
+#
+# the information comes from master.info except for unit
+#
+# an evironmental variable ECCODES_DEFINITION_PATH must exist
 # master.info is in ECCODES_DEFINITION_PATH/../parameters
 # the units are taken from ECCODES_DEFINITION_PATH/definitions/*
-# 
+#
 # a table parameters with the above columns must exist
 #
 
@@ -34,11 +34,11 @@ open( IN, "<$path/master.info" ) or die "can not open file master.info";
 my @master_info = <IN>;
 close( IN );
 
-while( my ( $levtype, $grib1_numbers ) = $sth->fetchrow_array() ) { 
+while( my ( $levtype, $grib1_numbers ) = $sth->fetchrow_array() ) {
 	my @parameter = grep(/^$grib1_numbers\s+/, @master_info);
     @parameter    = grep(/\s+$levtype\s+/,@parameter);
 
-	die "more than one match for levtype = $levtype and grib1_numbers = $grib1_numbers" if( scalar( @parameter ) > 1 ); 
+	die "more than one match for levtype = $levtype and grib1_numbers = $grib1_numbers" if( scalar( @parameter ) > 1 );
 	die "no match found for levtype = $levtype and grib1_numbers = $grib1_numbers" unless( @parameter );
 
 	my @entries = split(" ", $parameter[0] );
@@ -48,22 +48,22 @@ while( my ( $levtype, $grib1_numbers ) = $sth->fetchrow_array() ) {
 	my $title        = get_title( $name );
 	my $unit         = get_unit( $entries[4], $entries[5], $entries[6], $entries[13] );
 
-    # check whether parameter entry exists 
+    # check whether parameter entry exists
 	my $prepare = "select levtype, grib1_numbers from parameters where levtype=? and grib1_numbers=?";
 	my $sth = $DHB->prepare( $prepare );
 	$sth->execute( $levtype, $grib1_numbers);
 
     if( $sth->fetchrow_array() ) {
-	
-        print "updating $title ( $name ): $unit and $abbreviation\n"; 
-	
+
+        print "updating $title ( $name ): $unit and $abbreviation\n";
+
 		my @strings = ( "title='$title'", "name='$name'", "unit='$unit'", "abbreviation='$abbreviation'" );
 		foreach my $string ( @strings ) {
 			my $prepare = "update parameters set $string where levtype=? and grib1_numbers=?";
 			my $sth = $DHB->prepare( $prepare );
 			$sth->execute( $levtype, $grib1_numbers);
 		}
-	}    
+	}
 }
 
 
@@ -92,12 +92,12 @@ sub get_unit {
 
     my ( $unit ) = ( $what =~ /^\s*$num\s+.+\s+\(([\w|\s|\-|%]*)\)\Z/ );
     $unit        = "unknown" unless( $unit );
-    $unit        = "" if( $unit eq "Numeric" ); 
+    $unit        = "" if( $unit eq "Numeric" );
 	chomp( $unit );
 
 	if( $stat_proc == 1 ) {
 		if( $unit !~ /\ss/ ) {
-			$unit = $unit . " s"; 
+			$unit = $unit . " s";
 		}
 		elsif( $unit =~ /\ss-1/ ) {
 			$unit =~ s/s-1//
@@ -110,6 +110,5 @@ sub get_unit {
 		}
 	}
 
-    return $unit 
+    return $unit
 }
-

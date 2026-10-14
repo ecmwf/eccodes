@@ -10,8 +10,6 @@
 
 #include "Pad.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::Pad> _grib_accessor_pad_builder{};
-
 namespace eccodes::accessor
 {
 

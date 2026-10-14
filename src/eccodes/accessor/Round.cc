@@ -10,8 +10,6 @@
 
 #include "Round.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::Round> _grib_accessor_round_builder{};
-
 namespace eccodes::accessor
 {
 

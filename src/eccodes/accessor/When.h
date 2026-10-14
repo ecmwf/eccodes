@@ -26,7 +26,7 @@ public:
     void init(const long, grib_arguments*) override;
     int notify_change(grib_accessor* changed) override;
 
-    static inline const AccessorType accessor_type_{"when"};
+    static constexpr AccessorType accessor_type_{"when"};
 };
 
 }  // namespace eccodes::accessor

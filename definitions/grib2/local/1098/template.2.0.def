@@ -16,4 +16,3 @@ concept tiggeLAMName {
   "OMSZ- ALADIN-EPS" = {tiggeCentre=10;tiggeModel=11;}
   "OMSZ- ALADIN-EPS" = {tiggeCentre=11;tiggeModel=11;}
 }
-

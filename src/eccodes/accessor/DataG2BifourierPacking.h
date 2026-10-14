@@ -73,7 +73,7 @@ private:
     bif_trunc_t* new_bif_trunc();
 
 public:
-    static inline const AccessorType accessor_type_{"data_g2bifourier_packing"};
+    static constexpr AccessorType accessor_type_{"data_g2bifourier_packing"};
 };
 
 }  // namespace eccodes::accessor

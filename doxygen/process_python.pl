@@ -102,6 +102,6 @@ while (<>) {
     s/\bgrib_set_samples_path\b/codes_set_samples_path/;
 
     s/\bGribInternalError\b/CodesInternalError/;
-    
+
     print;
 }

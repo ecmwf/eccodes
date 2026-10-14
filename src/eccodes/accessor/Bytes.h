@@ -27,7 +27,7 @@ public:
     void init(const long, grib_arguments*) override;
     int compare(grib_accessor*) override;
 
-    static inline const AccessorType accessor_type_{"bytes"};
+    static constexpr AccessorType accessor_type_{"bytes"};
 };
 
 }  // namespace eccodes::accessor

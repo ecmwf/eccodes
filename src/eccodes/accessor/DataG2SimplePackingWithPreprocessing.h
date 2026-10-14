@@ -31,7 +31,7 @@ private:
     const char* pre_processing_parameter_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"data_g2simple_packing_with_preprocessing"};
+    static constexpr AccessorType accessor_type_{"data_g2simple_packing_with_preprocessing"};
 };
 
 }  // namespace eccodes::accessor

@@ -56,7 +56,7 @@
 #if (TL_CPLUSPLUS > 201103L) && !defined(TL_EXPECTED_GCC49)
 #include <cassert>
 #define TL_ASSERT(x) assert(x)
-#else 
+#else
 #define TL_ASSERT(x)
 #endif
 #endif
@@ -132,7 +132,7 @@ struct is_trivially_copy_constructible<std::vector<T, A>> : std::false_type {};
 #define TL_EXPECTED_11_CONSTEXPR constexpr
 #endif
 
-#if TL_CPLUSPLUS >= 201703L 
+#if TL_CPLUSPLUS >= 201703L
 #define TL_EXPECTED_NODISCARD [[nodiscard]]
 #else
 #define TL_EXPECTED_NODISCARD
@@ -534,7 +534,7 @@ template <class T, class E> struct expected_storage_base<T, E, true, true> {
                                            Args &&...args)
       : m_unexpect(il, std::forward<Args>(args)...), m_has_val(false) {}
 
-  expected_storage_base(const expected_storage_base &) = default;     
+  expected_storage_base(const expected_storage_base &) = default;
   expected_storage_base(expected_storage_base &&) = default;
   expected_storage_base &operator=(const expected_storage_base &) = default;
   expected_storage_base &operator=(expected_storage_base &&) = default;
@@ -651,9 +651,9 @@ template <class E> struct expected_storage_base<void, E, false, true> {
   //no constexpr for GCC 4/5 bug
   #else
   TL_EXPECTED_MSVC2015_CONSTEXPR
-  #endif 
+  #endif
   expected_storage_base() : m_has_val(true) {}
-     
+
   constexpr expected_storage_base(no_init_t) : m_val(), m_has_val(false) {}
 
   constexpr expected_storage_base(in_place_t) : m_has_val(true) {}
