@@ -14,6 +14,6 @@ categories   = ["science", "api-bindings"]
 [workspace.dependencies]
 bindman-utils = "0.2"
 
-eccodes-sys = { version = "2.49", path = "crates/eccodes-sys", default-features = false, features = ["product-grib", "product-bufr", "geography", "jpg"] }
+eccodes-sys = { version = "2.50", path = "crates/eccodes-sys", default-features = false, features = ["product-grib", "product-bufr", "geography", "jpg"] }
 
 eckit-sys = { version = "2.5", default-features = false }
