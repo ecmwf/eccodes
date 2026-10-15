@@ -288,6 +288,33 @@ int grib_index_write(grib_index* index, const char* filename);
 grib_index* grib_index_read(grib_context* c, const char* filename, int* err);
 
 /**
+ *  Index one message handle into the index at the given file offset.
+ *
+ *  All key extraction is performed from the in-memory handle 'h'; the file
+ *  content is NOT read by this function.  The file must already exist and be
+ *  openable so its name can be registered in the index, but it does not need
+ *  to contain the message yet.
+ *
+ *  Typical usage:
+ *    offset = ftell(fp);
+ *    grib_write_message(h, fp);           // write the message
+ *    codes_index_add_message(idx, h, path, offset); // index immediately
+ *    // ... continue writing more messages ...
+ *    // Flush before reading back through the index:
+ *    fflush(fp);
+ *    grib_handle_new_from_index(idx, &err);
+ *
+ *  The handle's product kind must match the index product kind.
+ *
+ * @param index       : index
+ * @param h           : handle of the message to index
+ * @param filename    : path of the file the message is being written to (must exist)
+ * @param offset      : byte offset of the message within the file
+ * @return            0 if OK, integer value on error
+ */
+int codes_index_add_message(grib_index* index, grib_handle* h, const char* filename, off_t offset);
+
+/**
  *  Get the number of distinct values of the key in argument contained in the index. The key must belong to the index.
  *
  * @param index       : an index created from a file.
