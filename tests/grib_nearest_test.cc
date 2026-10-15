@@ -29,13 +29,13 @@ int main(int argc, char** argv)
     codes_fieldset* set = NULL;
     const int max_numfiles = 100;
     codes_handle* h           = NULL;
-    char param[20]            = {0,};
+    char param[20]            = {0};
     size_t len     = 20;
-    double lats[4] = {0,};
-    double lons[4] = {0,};
-    double values[4] = {0,};
-    double distances[4] = {0,};
-    int indexes[4] = {0,};
+    double lats[4] = {0};
+    double lons[4] = {0};
+    double values[4] = {0};
+    double distances[4] = {0};
+    int indexes[4] = {0};
     const char* order_by  = "param,step";
     double* pValues = values; /* Default: decode the values */
 

@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
     const void* buffer = NULL;
     char* in_filename = NULL;
     char* out_filename = NULL;
-    char packingType[50] = {0,};
+    char packingType[50] = {0};
     bool do_compare = true;
 
     ECCODES_ASSERT(argc == 3);

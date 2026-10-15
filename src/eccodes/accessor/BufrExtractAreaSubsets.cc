@@ -61,8 +61,8 @@ int BufrExtractAreaSubsets::select_area()
     long numberOfSubsets, i, latRank, lonRank;
     grib_iarray* subsets = NULL;
     size_t nsubsets = 0;
-    char latstr[32] = {0,};
-    char lonstr[32] = {0,};
+    char latstr[32] = {0};
+    char lonstr[32] = {0};
 
     ret = grib_get_long(h, "compressedData", &compressed);
     if (ret) return ret;

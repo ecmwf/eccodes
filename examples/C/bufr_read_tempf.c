@@ -75,10 +75,10 @@ int main(int argc, char* argv[])
     long year, month, day, hour, minute, second, ymd, hms, sondeType;
     long *timeVal = NULL, *vssVal = NULL;
     const char* infile = "../../data/bufr/PraticaTemp.bufr";
-    char statid[128]   = {0,};
-    char dropid[128]   = {0,};
-    char rsnumber[16] = {0,};
-    char rssoftware[16] = {0,};
+    char statid[128]   = {0};
+    char dropid[128]   = {0};
+    char rsnumber[16] = {0};
+    char rssoftware[16] = {0};
 
     in = fopen(infile, "rb");
     if (!in) {

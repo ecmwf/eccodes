@@ -47,7 +47,7 @@ static void usage(const char* prog)
 /* Print an error message and optionally die */
 static void error(const char* filename, int msg_num, const char* fmt, ...)
 {
-    char buf[1024] = {0,};
+    char buf[1024] = {0};
     va_list list;
     va_start(list, fmt);
     if (verbose)
@@ -95,7 +95,7 @@ static int process_file(const char* filename)
         size_t len = 0, sizeOfValuesArray = 0;
         double* lats       = NULL;
         long* pl           = NULL;
-        char gridType[128] = {0,};
+        char gridType[128] = {0};
         double angular_tolerance, lat1, lon1, lat2, lon2, expected_lon2;
 
         if (err != GRIB_SUCCESS)

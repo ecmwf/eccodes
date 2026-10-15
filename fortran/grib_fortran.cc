@@ -929,7 +929,7 @@ void grib_f_write_on_fail(int* gid)
 {
     grib_context* c = grib_context_get_default();
     if (c->write_on_fail) {
-        char filename[100]={0,};
+        char filename[100]={0};
         grib_handle* h=NULL;
         pid_t pid=getpid();
 
@@ -1183,7 +1183,7 @@ int grib_f_keys_iterator_get_name_(int* iterid,char* name,int len)
 {
     size_t input_len = len;
     size_t lsize = len;
-    char buf[1024]={0,};
+    char buf[1024]={0};
 
     grib_keys_iterator* kiter=get_keys_iterator(*iterid);
 
@@ -1252,7 +1252,7 @@ int codes_f_bufr_keys_iterator_get_name_(int* iterid, char* name, int len)
 {
     size_t input_len = len;
     size_t lsize = len;
-    char buf[1024] = {0,};
+    char buf[1024] = {0};
 
     bufr_keys_iterator* kiter = get_bufr_keys_iterator(*iterid);
 
@@ -1393,7 +1393,7 @@ int grib_f_copy_key_(int* gidsrc, char* key, int* giddest, int len)
     grib_handle *dest = get_handle(*giddest);
 
     if(src && dest) {
-        char buf[1024]={0,};
+        char buf[1024]={0};
         char* ckey = (char*)key;
         const int type = GRIB_TYPE_UNDEFINED; /* will be computed */
         return codes_copy_key(src, dest, cast_char(buf,ckey,len), type);
@@ -1422,7 +1422,7 @@ int grib_f_util_sections_copy_(int* gidfrom, int* gidto, int* what, int* gidout)
 /*****************************************************************************/
 int grib_f_copy_namespace_(int* gidsrc,char* name,int* giddest,int len)
 {
-    char buf[1024]={0,};
+    char buf[1024]={0};
     grib_handle *src  = get_handle(*gidsrc);
     grib_handle *dest = get_handle(*giddest);
 
@@ -1692,8 +1692,8 @@ int grib_f_new_from_index_(int* index_id, int* gid)
 int grib_f_index_new_from_file_(char* file, char* keys, int* gid, int lfile, int lkeys)
 {
     int err = 0;
-    char fname[1024] = {0,};
-    char knames[1024] = {0,};
+    char fname[1024] = {0};
+    char knames[1024] = {0};
     grib_index *i = NULL;
 
     if (*file){
@@ -1729,7 +1729,7 @@ int grib_f_index_add_file_(int* index_id, char* file, int lfile)
 int grib_f_index_read_(char* file, int* gid, int lfile)
 {
     int err = 0;
-    char fname[1024]={0,};
+    char fname[1024]={0};
 
     grib_index *i = NULL;
 
@@ -2434,7 +2434,7 @@ int grib_f_index_select_int_(int* index_id, char* key, int* val, int len)
 {
     grib_index *h = get_index(*index_id);
     long lval = *val;
-    char buf[1024] = {0,};
+    char buf[1024] = {0};
 
     if (!h) return GRIB_INVALID_GRIB;
     return grib_index_select_long(h, cast_char(buf, key, len), lval);
@@ -2444,7 +2444,7 @@ int grib_f_index_select_int_(int* index_id, char* key, int* val, int len)
 int grib_f_index_select_long_(int* index_id, char* key, long* val, int len)
 {
     grib_index *h = get_index(*index_id);
-    char buf[1024] = {0,};
+    char buf[1024] = {0};
 
     if (!h) return GRIB_INVALID_GRIB;
     return grib_index_select_long(h, cast_char(buf, key, len), *val);
@@ -2701,8 +2701,8 @@ int grib_f_set_string_(int* gid, char* key, char* val, int len, int len2)
     grib_handle *h = get_handle(*gid);
     char* val_str = NULL;
 
-    char buf[1024]={0,};
-    char buf2[1024]={0,};
+    char buf[1024]={0};
+    char buf2[1024]={0};
     size_t lsize = len2;
 
     if(!h) return GRIB_INVALID_GRIB;
@@ -2785,8 +2785,8 @@ int grib_f_copy_message_(int* gid, void* mess, size_t* len)
 /*****************************************************************************/
 void grib_f_check_(int* err,char* call,char* str,int lencall,int lenstr)
 {
-    char bufstr[1024]={0,};
-    char bufcall[1024]={0,};
+    char bufstr[1024]={0};
+    char bufcall[1024]={0};
     grib_context* c=grib_context_get_default();
     if ( *err == GRIB_SUCCESS || *err == GRIB_END_OF_FILE ) return;
     cast_char(bufcall,call,lencall);

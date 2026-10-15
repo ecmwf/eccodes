@@ -42,7 +42,7 @@ int Section::notify_change(grib_accessor* notified,
     DEBUG_ASSERT(context_);
 
     if (context_->debug > 0) {
-        char debug_str[1024] = {0, };
+        char debug_str[1024] = {0};
         if (debug_info_) {
             snprintf(debug_str, 1024, " (%s)", debug_info_);
         }

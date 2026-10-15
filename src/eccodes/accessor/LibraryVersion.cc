@@ -15,7 +15,7 @@ namespace eccodes::accessor
 
 int LibraryVersion::unpack_string(char* val, size_t* len)
 {
-    char result[30] = {0,};
+    char result[30] = {0};
     size_t size = 0;
 
     int major    = ECCODES_MAJOR_VERSION;

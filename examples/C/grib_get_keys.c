@@ -131,7 +131,7 @@ int main(int argc, char** argv)
     {
         int eq = 0;
         /* now retrieve the value of the key "file" */
-        char file[256] = {0,};
+        char file[256] = {0};
         CODES_CHECK(codes_get_length(h, "file", &len), 0);
         assert(len == 1 + strlen(filename));
         codes_get_string(h, "file", file, &len);

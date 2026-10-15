@@ -87,7 +87,7 @@ int MessageIsValid::check_spectral()
     if (handle_->context->debug)
         fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
 
-    char gridType[128] = {0,};
+    char gridType[128] = {0};
     size_t len = sizeof(gridType);
     int err = grib_get_string_internal(handle_, "gridType", gridType, &len);
     if (err) return err;
@@ -111,7 +111,7 @@ int MessageIsValid::check_spectral()
 
     // ECC-2126
     if (edition_ == 2) {
-        char packingType[128] = {0,};
+        char packingType[128] = {0};
         len = sizeof(packingType);
         err = grib_get_string_internal(handle_, "packingType", packingType, &len);
         if (err) return err;
@@ -144,7 +144,7 @@ int MessageIsValid::check_grid_and_packing_type()
     if (handle_->context->debug)
         fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
 
-    char gridType[128] = {0,};
+    char gridType[128] = {0};
     size_t len = sizeof(gridType);
     int err = grib_get_string_internal(handle_, "gridType", gridType, &len);
     if (err) return err;
@@ -153,7 +153,7 @@ int MessageIsValid::check_grid_and_packing_type()
         return GRIB_GEOCALCULUS_PROBLEM;
     }
 
-    char packingType[128] = {0,};
+    char packingType[128] = {0};
     len = sizeof(packingType);
     err = grib_get_string_internal(handle_, "packingType", packingType, &len);
     if (err) return err;
@@ -247,7 +247,7 @@ int MessageIsValid::check_number_of_missing()
     if (!err && missingValueManagementUsed == 1)
         return GRIB_SUCCESS;
 
-    char packingType[100] = {0,};
+    char packingType[100] = {0};
     size_t len = sizeof(packingType);
     err = grib_get_string(handle_, "packingType", packingType, &len);
     if (!err && STR_EQUAL(packingType, "grid_run_length"))
@@ -302,7 +302,7 @@ int MessageIsValid::check_grid_pl_array()
     if (err != GRIB_SUCCESS || plpresent == 0)
         return GRIB_SUCCESS;  // No PL array. So nothing to do
 
-    char gridType[128] = {0,};
+    char gridType[128] = {0};
     size_t len = 128;
     err = grib_get_string_internal(handle_, "gridType", gridType, &len);
     if (err != GRIB_SUCCESS) return err;
@@ -520,7 +520,7 @@ int MessageIsValid::check_surface_keys()
         int required_val = codes_grib_surface_type_requires_value(edition_, stype, &err);
         if (err) return err;
         if (required_val && (sfac_missing || sval_missing)) {
-            char name[128] = {0,};
+            char name[128] = {0};
             size_t len = 128;
             grib_get_string(handle_, "nameOfFirstFixedSurface", name, &len);
             grib_context_log(c, GRIB_LOG_ERROR, "%s: First fixed surface: Type %ld (%s) requires a level", TITLE, stype, name);
@@ -550,7 +550,7 @@ int MessageIsValid::check_surface_keys()
         int required_val = codes_grib_surface_type_requires_value(edition_, stype, &err);
         if (err) return err;
         if (required_val && (sfac_missing || sval_missing)) {
-            char name[128] = {0,};
+            char name[128] = {0};
             size_t len = 128;
             grib_get_string(handle_, "nameOfSecondFixedSurface", name, &len);
             grib_context_log(c, GRIB_LOG_ERROR, "%s: Second fixed surface: Type %ld (%s) requires a level", TITLE, stype, name);
@@ -570,7 +570,7 @@ int MessageIsValid::check_steps()
     if (handle_->context->debug)
         fprintf(stderr, "ECCODES DEBUG %s: %s\n", TITLE, __func__);
 
-    char stepType[32] = {0,};
+    char stepType[32] = {0};
     size_t size = sizeof(stepType) / sizeof(*stepType);
     int err = grib_get_string_internal(handle_, "stepType", stepType, &size);
     if (err) return err;
@@ -619,9 +619,9 @@ int MessageIsValid::check_time_ranges()
     if (err) return err;
     if (numberOfTimeRanges != 2) return GRIB_SUCCESS;
 
-    long typeOfTimeIncrement[2] = {0,};
-    long indicatorOfUnitForTimeRange[2] = {0,};
-    long lengthOfTimeRange[2] = {0,};
+    long typeOfTimeIncrement[2] = {0};
+    long indicatorOfUnitForTimeRange[2] = {0};
+    long lengthOfTimeRange[2] = {0};
     size_t count = 2;
     err = grib_get_long_array_internal(handle_, "typeOfTimeIncrement", typeOfTimeIncrement, &count);
     if (err) return err;
@@ -680,7 +680,7 @@ int MessageIsValid::check_deprecation()
 int MessageIsValid::check_section_numbers(const int* sec_nums, size_t N)
 {
     for (size_t i = 0; i < N; ++i) {
-        char sname[16] = {0,};
+        char sname[16] = {0};
         const int sec_num = sec_nums[i];
         snprintf(sname, sizeof(sname), "section_%d", sec_num);
         if (!grib_is_defined(handle_, sname)) {
@@ -808,7 +808,7 @@ int MessageIsValid::unpack_long(long* val, size_t* len)
     *len = 1;
     *val = 1;  // Assume message is valid
 
-    char product[32] = {0,};
+    char product[32] = {0};
     size_t size = sizeof(product) / sizeof(*product);
     err = grib_get_string_internal(handle_, product_, product, &size);
     if (err) return err;

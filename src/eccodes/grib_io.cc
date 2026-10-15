@@ -939,7 +939,7 @@ static int read_any_gts(reader* r)
     unsigned long magic     = 0;
     unsigned long start     = 0x010d0d0a; /* SOH CR CR LF */
     unsigned long theEnd    = 0x0d0d0a03; /* CR CR LF ETX */
-    unsigned char tmp[16384] = {0,}; /* See ECC-735 */
+    unsigned char tmp[16384] = {0}; /* See ECC-735 */
     size_t message_size = 0;
     size_t already_read = 0;
     int i               = 0;
@@ -1001,7 +1001,7 @@ static int read_any_taf(reader* r)
     unsigned char* buffer   = NULL;
     unsigned long magic     = 0;
     unsigned long start     = 0x54414620; // 4 chars: TAF plus a space
-    unsigned char tmp[1000] = {0,}; /* Should be enough */
+    unsigned char tmp[1000] = {0}; /* Should be enough */
     size_t message_size = 0;
     size_t already_read = 0;
     int i               = 0;
@@ -1052,7 +1052,7 @@ static int read_any_metar(reader* r)
     unsigned char* buffer = NULL;
     unsigned long magic   = 0;
     unsigned long start   = 0x4d455441; // 4 chars: META
-    unsigned char tmp[32] = {0,}; /* Should be enough */
+    unsigned char tmp[32] = {0}; /* Should be enough */
     size_t message_size = 0;
     size_t already_read = 0;
     int i               = 0;
@@ -1213,26 +1213,26 @@ int wmo_read_bufr_from_file(FILE* f, void* buffer, size_t* len)
 // Fast versions
 int wmo_read_any_from_file_fast(FILE* f, size_t* msg_len, off_t* msg_offset)
 {
-    unsigned char buffer[64] = {0,};
+    unsigned char buffer[64] = {0};
     *msg_len = sizeof(buffer);
     return ecc_wmo_read_any_from_file(f, buffer, msg_len, msg_offset, /*no_alloc=*/1, 1, 1, 1, 1);
 }
 int wmo_read_grib_from_file_fast(FILE* f, size_t* msg_len, off_t* msg_offset)
 {
-    unsigned char buffer[64] = {0,};
+    unsigned char buffer[64] = {0};
     *msg_len = sizeof(buffer);
     return ecc_wmo_read_any_from_file(f, buffer, msg_len, msg_offset, /*no_alloc=*/1, 1, 0, 0, 0);
 }
 int wmo_read_bufr_from_file_fast(FILE* f, size_t* msg_len, off_t* msg_offset)
 {
-    unsigned char buffer[64] = {0,};
+    unsigned char buffer[64] = {0};
     *msg_len = sizeof(buffer);
     return ecc_wmo_read_any_from_file(f, buffer, msg_len, msg_offset, /*no_alloc=*/1, 0, 1, 0, 0);
 }
 int wmo_read_gts_from_file_fast(FILE* f, size_t* msg_len, off_t* msg_offset)
 {
     //TODO(masn): Needs proper implementation; no malloc
-    //unsigned char buffer[1024] = {0,};
+    //unsigned char buffer[1024] = {0};
     void* mesg   = NULL;
     int err      = GRIB_SUCCESS;
     grib_context* c = grib_context_get_default();

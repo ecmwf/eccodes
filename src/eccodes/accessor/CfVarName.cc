@@ -23,7 +23,7 @@ void CfVarName::init(const long l, grib_arguments* arg)
 int CfVarName::unpack_string(char* val, size_t* len)
 {
     grib_handle* h       = get_enclosing_handle();
-    char defaultKey[256] = {0,};
+    char defaultKey[256] = {0};
     size_t size       = sizeof(defaultKey) / sizeof(*defaultKey);
     char* pDefaultKey = defaultKey;
 

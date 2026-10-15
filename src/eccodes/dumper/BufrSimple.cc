@@ -532,7 +532,7 @@ void BufrSimple::dump_string_array(grib_accessor* a, const char* comment)
 #define MAX_STRING_SIZE 4096
 void BufrSimple::dump_string(grib_accessor* a, const char* comment)
 {
-    char value[MAX_STRING_SIZE] = {0, }; /* See ECC-710 */
+    char value[MAX_STRING_SIZE] = {0}; /* See ECC-710 */
     char* p              = NULL;
     size_t size          = MAX_STRING_SIZE;
     grib_context* c      = a->context_;

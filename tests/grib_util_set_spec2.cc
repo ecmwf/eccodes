@@ -21,8 +21,8 @@ static grib_handle* lamb_conf_grib1()
 {
     fprintf(stderr, "Doing test %s\n-----------------\n", __func__);
     int err = 0;
-    grib_util_grid_spec spec = {0,};
-    grib_util_packing_spec packing_spec = {0,};
+    grib_util_grid_spec spec = {0};
+    grib_util_packing_spec packing_spec = {0};
     int set_spec_flags = 0;
 
     size_t outlen  = 0; // test passing in no values
@@ -52,8 +52,8 @@ static grib_handle* lamb_conf_grib2()
 {
     fprintf(stderr, "Doing test %s\n-----------------\n", __func__);
     int err = 0;
-    grib_util_grid_spec spec = {0,};
-    grib_util_packing_spec packing_spec = {0,};
+    grib_util_grid_spec spec = {0};
+    grib_util_packing_spec packing_spec = {0};
     double values[4]   = { 1.1, 2.2, 3.3, 0.4 };
     int set_spec_flags = 0;
     size_t outlen      = 4;
@@ -84,8 +84,8 @@ static grib_handle* lamb_az()
 {
     fprintf(stderr, "Doing test %s\n-----------------\n", __func__);
     int err = 0;
-    grib_util_grid_spec spec = {0,};
-    grib_util_packing_spec packing_spec = {0,};
+    grib_util_grid_spec spec = {0};
+    grib_util_packing_spec packing_spec = {0};
     double values[4]   = { 1.1, 2.2, 3.3, 0.4 };
     int set_spec_flags = 0;
     size_t outlen      = 4;
@@ -106,8 +106,8 @@ static grib_handle* healpix()
 {
     fprintf(stderr, "Doing test %s\n-----------------\n", __func__);
     int err = 0;
-    grib_util_grid_spec spec = {0,};
-    grib_util_packing_spec packing_spec = {0,};
+    grib_util_grid_spec spec = {0};
+    grib_util_packing_spec packing_spec = {0};
     double values[4]   = { 1.1, 2.2, 3.3, 0.4 };
     int set_spec_flags = 0;
     size_t outlen      = 4;
@@ -132,8 +132,8 @@ static grib_handle* spectral()
 {
     fprintf(stderr, "Doing test %s\n-----------------\n", __func__);
     int err = 0;
-    grib_util_grid_spec spec = {0,};
-    grib_util_packing_spec packing_spec = {0,};
+    grib_util_grid_spec spec = {0};
+    grib_util_packing_spec packing_spec = {0};
     int set_spec_flags = 0;
 
     size_t outlen  = 0; // test passing in no values
@@ -162,8 +162,8 @@ static grib_handle* polar_stereo()
 {
     fprintf(stderr, "Doing test %s\n-----------------\n", __func__);
     int err = 0;
-    grib_util_grid_spec spec = {0,};
-    grib_util_packing_spec packing_spec = {0,};
+    grib_util_grid_spec spec = {0};
+    grib_util_packing_spec packing_spec = {0};
     double values[4]   = { 1.1, 2.2, 3.3, 0.4 };
     int set_spec_flags = 0;
     size_t outlen      = 0;
@@ -191,8 +191,8 @@ static grib_handle* regular_gg()
 {
     fprintf(stderr, "Doing test %s\n-----------------\n", __func__);
     int err = 0;
-    grib_util_grid_spec spec = {0,};
-    grib_util_packing_spec packing_spec = {0,};
+    grib_util_grid_spec spec = {0};
+    grib_util_packing_spec packing_spec = {0};
     double values[4]   = { 1.1, 2.2, 3.3, 0.4 };
     int set_spec_flags = 0;
     size_t outlen      = 0;
@@ -220,8 +220,8 @@ static grib_handle* reduced_ll()
 {
     fprintf(stderr, "Doing test %s\n-----------------\n", __func__);
     int err = 0;
-    grib_util_grid_spec spec = {0,};
-    grib_util_packing_spec packing_spec = {0,};
+    grib_util_grid_spec spec = {0};
+    grib_util_packing_spec packing_spec = {0};
     double values[4]   = { 1.1, 2.2, 3.3, 0.4 };
     int set_spec_flags = 0;
     size_t outlen      = 0;
@@ -243,8 +243,8 @@ static grib_handle* unstruct()
 {
     fprintf(stderr, "Doing test %s\n-----------------\n", __func__);
     int err = 0;
-    grib_util_grid_spec spec = {0,};
-    grib_util_packing_spec packing_spec = {0,};
+    grib_util_grid_spec spec = {0};
+    grib_util_packing_spec packing_spec = {0};
     double values[4]   = { 1.1, 2.2, 3.3, 0.4 };
     int set_spec_flags = 0;
     size_t outlen      = 4;

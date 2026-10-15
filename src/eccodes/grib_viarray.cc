@@ -14,7 +14,7 @@
 void grib_viarray_print(const char* title, const grib_viarray* viarray)
 {
     size_t i;
-    char text[100] = {0,};
+    char text[100] = {0};
     const size_t textLen = sizeof(text);
     ECCODES_ASSERT(viarray);
     printf("%s: viarray.n=%zu\n", title, viarray->n);

@@ -576,7 +576,7 @@ static int determine_product_kind(grib_handle* h, ProductKind* prod_kind)
     size_t len = 0;
     err        = grib_get_length(h, "identifier", &len);
     if (!err) {
-        char id_str[64] = {0,};
+        char id_str[64] = {0};
         err = grib_get_string(h, "identifier", id_str, &len);
         if (grib_inline_strcmp(id_str, "GRIB") == 0)
             *prod_kind = PRODUCT_GRIB;
@@ -1675,7 +1675,7 @@ static int grib_get_message_(const grib_handle* ch, const void** msg, size_t* si
         *size = totalLength;
 
     if (h->context->gts_header_on && h->gts_header) {
-        char strbuf[10] = {0,};
+        char strbuf[10] = {0};
         snprintf(strbuf, sizeof(strbuf), "%.8d", (int)(h->buffer->ulength + h->gts_header_len - 6));
         memcpy(h->gts_header, strbuf, 8);
     }

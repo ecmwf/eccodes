@@ -35,7 +35,7 @@ const char* tool_description =
 const char* tool_name        = "grib_to_netcdf";
 const char* tool_online_doc  = "https://confluence.ecmwf.int/display/ECC/grib_to_netcdf";
 const char* tool_usage       = "[options] -o output_file grib_file grib_file ... ";
-static char argvString[2048] = {0,};
+static char argvString[2048] = {0};
 
 /*=====================================================================*/
 
@@ -541,7 +541,7 @@ static err handle_to_request(request* r, grib_handle* g)
 {
     grib_keys_iterator* ks;
     char name[256];
-    char value[256] = {0,};
+    char value[256] = {0};
     size_t len = sizeof(value);
     int e      = 0;
 
@@ -2917,7 +2917,7 @@ static int define_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid, datase
     int var_id          = 0; /* Variable ID */
     int dims[1024];
 
-    size_t chunks[NC_MAX_DIMS] = {0,}; /* For chunking */
+    size_t chunks[NC_MAX_DIMS] = {0}; /* For chunking */
     err e = 0;
 
     long ni;
@@ -4115,7 +4115,7 @@ int grib_tool_init(grib_runtime_options* options)
 
 int grib_tool_new_filename_action(grib_runtime_options* options, const char* filename)
 {
-    char buf[1024] = {0,};
+    char buf[1024] = {0};
     int e           = 0;
     int i           = 0;
     grib_handle* h  = NULL;

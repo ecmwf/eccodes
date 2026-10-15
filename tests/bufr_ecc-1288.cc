@@ -24,7 +24,7 @@ int main(int argc, char* argv[])
     codes_handle* h = NULL;
     int err = 0;
     size_t i = 0, slen = 0;
-    char buf[1024] = {0,};
+    char buf[1024] = {0};
     char** strArray    = NULL; /* array of strings */
 
     const char* infile = argv[1];

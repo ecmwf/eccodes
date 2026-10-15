@@ -25,7 +25,7 @@ int MarsStep::pack_string(const char* val, size_t* len)
 {
     char stepType[100];
     size_t stepTypeLen = 100;
-    char buf[100]      = {0,};
+    char buf[100]      = {0};
     int ret;
     grib_accessor* stepRangeAcc = grib_find_accessor(get_enclosing_handle(), stepRange_);
 
@@ -48,7 +48,7 @@ int MarsStep::pack_string(const char* val, size_t* len)
 int MarsStep::unpack_string(char* val, size_t* len)
 {
     int ret       = 0;
-    char buf[100] = {0,};
+    char buf[100] = {0};
     char* p       = NULL;
     size_t buflen = 100;
     long step;
@@ -83,7 +83,7 @@ int MarsStep::unpack_string(char* val, size_t* len)
 
 int MarsStep::pack_long(const long* val, size_t* len)
 {
-    char buff[100] = {0,};
+    char buff[100] = {0};
     size_t bufflen = 100;
 
     snprintf(buff, sizeof(buff), "%ld", *val);

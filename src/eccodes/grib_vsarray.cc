@@ -14,7 +14,7 @@
 void grib_vsarray_print(const char* title, const grib_vsarray* vsarray)
 {
     size_t i = 0;
-    char text[64] = {0,};
+    char text[64] = {0};
     if(!vsarray) {
         printf("%s: vsarray=NULL\n", title);
         return;

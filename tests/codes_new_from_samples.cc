@@ -42,7 +42,7 @@ int main(int argc, char** argv)
 
     for (i=0; i<NUMBER(samples); ++i) {
         const char* name = samples[i].sample_name;
-        char identifier[254] = {0,};
+        char identifier[254] = {0};
         size_t len = 254;
 
         printf("Testing codes_handle_new_from_samples on %s\n", name);

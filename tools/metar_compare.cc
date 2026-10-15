@@ -227,7 +227,7 @@ int grib_tool_init(grib_runtime_options* options)
     if (infile) {
         if (path_is_directory(infile->name)) {
             // Take the filename of the 1st file and append to dir
-            char bufr[2048] = {0,};
+            char bufr[2048] = {0};
             // options->infile_extra->name is the 1st file
             snprintf(bufr, 2048, "%s%c%s",
                      infile->name,

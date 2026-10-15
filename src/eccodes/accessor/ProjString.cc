@@ -86,7 +86,7 @@ static int proj_space_view(grib_handle* h, char* result)
 {
     return GRIB_NOT_IMPLEMENTED;
     //     int err        = 0;
-    //     char shape[128] = {0,};
+    //     char shape[128] = {0};
     //     double latOfSubSatellitePointInDegrees, lonOfSubSatellitePointInDegrees;
     //     if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS)
     //         return err;
@@ -102,7 +102,7 @@ static int proj_space_view(grib_handle* h, char* result)
 static int proj_albers(grib_handle* h, char* result)
 {
     int err = 0;
-    char shape[128] = {0,};
+    char shape[128] = {0};
     double LoVInDegrees = 0, LaDInDegrees = 0, Latin1InDegrees = 0, Latin2InDegrees = 0;
 
     if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS)
@@ -132,7 +132,7 @@ static int proj_equatorial_azimuthal_equidistant(grib_handle* h, char* result)
 static int proj_lambert_conformal(grib_handle* h, char* result)
 {
     int err         = 0;
-    char shape[128] = {0,};
+    char shape[128] = {0};
     double LoVInDegrees = 0, LaDInDegrees = 0, Latin1InDegrees = 0, Latin2InDegrees = 0;
 
     if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS)
@@ -153,7 +153,7 @@ static int proj_lambert_conformal(grib_handle* h, char* result)
 static int proj_lambert_azimuthal_equal_area(grib_handle* h, char* result)
 {
     int err         = 0;
-    char shape[128] = {0,};
+    char shape[128] = {0};
     double standardParallel = 0, centralLongitude = 0;
 
     if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS)
@@ -173,7 +173,7 @@ static int proj_polar_stereographic(grib_handle* h, char* result)
     double centralLongitude = 0, centralLatitude = 0;
     int has_northPole         = 0;
     long projectionCentreFlag = 0;
-    char shape[128]           = {0,};
+    char shape[128]           = {0};
 
     if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS)
         return err;
@@ -194,7 +194,7 @@ static int proj_polar_stereographic(grib_handle* h, char* result)
 static int proj_unprojected(grib_handle* h, char* result)
 {
     int err = 0;
-    // char shape[128] = {0,};
+    // char shape[128] = {0};
     // if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS) return err;
     // snprintf(result, 1024, "+proj=longlat %s", shape);
     snprintf(result, 1024, "+proj=longlat +datum=WGS84 +no_defs +type=crs");
@@ -206,7 +206,7 @@ static int proj_mercator(grib_handle* h, char* result)
 {
     int err             = 0;
     double LaDInDegrees = 0;
-    char shape[128]     = {0,};
+    char shape[128]     = {0};
 
     if ((err = grib_get_double_internal(h, "LaDInDegrees", &LaDInDegrees)) != GRIB_SUCCESS)
         return err;
@@ -239,7 +239,7 @@ int ProjString::unpack_string(char* v, size_t* len)
 {
     int err = 0, found = 0;
     size_t i           = 0;
-    char grid_type[64] = {0,};
+    char grid_type[64] = {0};
     grib_handle* h = get_enclosing_handle();
     size_t size    = sizeof(grid_type) / sizeof(*grid_type);
 

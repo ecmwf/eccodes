@@ -62,17 +62,17 @@ static grib_runtime_options global_options = {
     0,  /* name_space */
     0,  /* print_number */
     1,  /* print_statistics */
-    {{0,},}, /* grib_values requested_print_keys[MAX_KEYS] */
+    {0}, /* grib_values requested_print_keys[MAX_KEYS] */
     0, /* requested_print_keys_count */
-    {{0,},}, /* grib_values print_keys[MAX_KEYS] */
+    {0}, /* grib_values print_keys[MAX_KEYS] */
     0, /* print_keys_count  */
     0, /* strict            */
     0, /* multi_support     */
     0, /* set_values_count  */
-    {{0,},}, /* grib_values set_values[MAX_KEYS] */
-    {{0,},}, /* grib_values constraints[MAX_KEYS] */
+    {0}, /* grib_values set_values[MAX_KEYS] */
+    {0}, /* grib_values constraints[MAX_KEYS] */
     0, /* constraints_count */
-    {{0,},}, /* grib_values compare[MAX_KEYS] */
+    {0}, /* grib_values compare[MAX_KEYS] */
     0, /* compare_count */
     0, /* handle_count      */
     0, /* filter_handle_count */
@@ -89,15 +89,15 @@ static grib_runtime_options global_options = {
     0, /* gts    */
     0, /* orderby    */
     0, /* latlon    */
-    {0,}, /* double lats[4] */
-    {0,}, /* double lons[4] */
-    {0,}, /* double values[4] */
-    {0,}, /* double distances[4] */
-    {0,},  /* int indexes[4] */
+    {0}, /* double lats[4] */
+    {0}, /* double lons[4] */
+    {0}, /* double values[4] */
+    {0}, /* double distances[4] */
+    {0},  /* int indexes[4] */
     4,  /* int latlon_mode */
     0,  /* char* latlon_mask */
     -1, /* int latlon_idx */
-    {0,}, /* double mask_values[4] */
+    {0}, /* double mask_values[4] */
     0, /* index */
     0, /* index_on */
     0, /* constant */
@@ -115,7 +115,7 @@ static grib_runtime_options global_options = {
     0, /* mode  */
     0, /* headers_only  */
     0, /* skip_all  */
-    {{0,},}, /* grib_values tolerance[MAX_KEYS] */
+    {0}, /* grib_values tolerance[MAX_KEYS] */
     0, /* infile_offset */
     0  /* JSON output */
 };
@@ -322,7 +322,7 @@ static char iobuf[1024 * 1024];
 static std::string guess_file_product(const std::string& filename)
 {
     std::string result;
-    char buffer[5] = {0,};
+    char buffer[5] = {0};
     FILE* fin = fopen(filename.c_str(), "rb");
     if (fin) {
         size_t bytes = fread(buffer, 1, sizeof(buffer), fin);
@@ -835,7 +835,7 @@ static int to_skip(grib_runtime_options* options, grib_handle* h, grib_values* v
     double dvalue              = 0;
     int ret                    = 0;
     long lvalue                = 0;
-    char value[MAX_STRING_LEN] = {0,};
+    char value[MAX_STRING_LEN] = {0};
     size_t len = MAX_STRING_LEN;
     *err       = 0;
 
@@ -1111,7 +1111,7 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
     int strlenvalue = 0;
     double dvalue   = 0;
     long lvalue     = 0;
-    char value[MAX_STRING_LEN] = {0,};
+    char value[MAX_STRING_LEN] = {0};
     const char* notfound = "not_found";
     int written_to_dump  = 0; /* boolean */
     grib_accessor* acc   = NULL;
@@ -1384,7 +1384,7 @@ void grib_tools_write_message(grib_runtime_options* options, grib_handle* h)
     size_t size;
     grib_file* of       = NULL;
     int err             = 0;
-    char filename[1024] = {0,};
+    char filename[1024] = {0};
     ECCODES_ASSERT(options->outfile != NULL && options->outfile->name != NULL);
 
     /* See ECC-1086

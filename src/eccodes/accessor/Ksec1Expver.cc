@@ -90,7 +90,7 @@ int Ksec1Expver::pack_string(const char* val, size_t* len)
 
 int Ksec1Expver::pack_long(const long* val, size_t* len)
 {
-    char sval[5] = {0,};
+    char sval[5] = {0};
     size_t slen = 4;
     snprintf(sval, sizeof(sval), "%04d", (int)(*val));
     return pack_string(sval, &slen);

@@ -215,8 +215,8 @@ static grib_handle* grib_sections_copy_internal(grib_handle* hfrom, grib_handle*
     unsigned char* buffer;
     unsigned char* p;
     long edition                          = 0;
-    long section_length[MAX_NUM_SECTIONS] = {0,};
-    long section_offset[MAX_NUM_SECTIONS] = {0,};
+    long section_length[MAX_NUM_SECTIONS] = {0};
+    long section_offset[MAX_NUM_SECTIONS] = {0};
     long off = 0;
     grib_handle* h;
     char section_length_str[64] = "section0Length";
@@ -354,7 +354,7 @@ static grib_handle* grib_util_sections_copy_(grib_handle* hfrom, grib_handle* ht
     long edition_from                      = 0;
     long edition_to                        = 0;
     long localDefinitionNumber             = -1;
-    int sections_to_copy[MAX_NUM_SECTIONS] = {0,};
+    int sections_to_copy[MAX_NUM_SECTIONS] = {0};
 
     *err = grib_get_long(hfrom, "edition", &edition_from);
     if (*err)
@@ -596,7 +596,7 @@ static int angle_can_be_encoded(const grib_handle* h, const double angle)
     int ret              = 0;
     int retval           = 1;
     grib_handle* h2      = NULL;
-    char sample_name[16] = {0,};
+    char sample_name[16] = {0};
     long angle_subdivisions = 0; // e.g. 1e3 for grib1 and 1e6 for grib2
     long edition = 0, coded = 0;
     double expanded, diff;
@@ -724,7 +724,7 @@ static int check_geometry(grib_handle* handle, const grib_util_grid_spec* spec,
     if (spec->pl && spec->pl_size != 0 &&
         (spec->grid_type == GRIB_UTIL_GRID_SPEC_REDUCED_GG || spec->grid_type == GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG)) {
         if (specified_as_global) {
-            char msg[100] = {0,};
+            char msg[100] = {0};
             size_t sum = 0;
             strcpy(msg, "Specified to be global (in spec)");
             sum = sum_of_pl_array(spec->pl, spec->pl_size);
@@ -1026,11 +1026,11 @@ static int get_grib_sample_name(grib_handle* h, long editionNumber,
 int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, const grib_util_packing_spec* packing_spec)
 {
     int err = 0;
-    grib_values values[1024] = {{0,},};
+    grib_values values[1024] = {0};
     const grib_context* c = grib_context_get_default();
     const char* grid_type = NULL;
     char input_grid_type[100];
-    char input_packing_type[100] = {0,};
+    char input_packing_type[100] = {0};
     long editionNumber = 0;
     size_t count = 0, len = 100, input_grid_type_len = 100;
     double laplacianOperator;
@@ -1491,14 +1491,14 @@ static grib_handle* grib_util_set_spec_(grib_handle* h,
                                  size_t data_values_count,
                                  int* err)
 {
-    grib_values values[1024] = {{0,},};
+    grib_values values[1024] = {0};
     const grib_context* c = grib_context_get_default();
     grib_handle* h_out    = NULL;
     grib_handle* h_sample = NULL;
     const char* grid_type = NULL;
-    char sample_name[1024] = {0,}; // name of the GRIB sample file
+    char sample_name[1024] = {0}; // name of the GRIB sample file
     char input_grid_type[100];
-    char input_packing_type[100] = {0,};
+    char input_packing_type[100] = {0};
     long editionNumber = 0;
     size_t count = 0, len = 100, slen = 20, input_grid_type_len = 100;
     double laplacianOperator;
@@ -2266,7 +2266,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
 static void set_value(grib_values* value, char* str, int equal)
 {
     char *p = 0, *q = 0, *s = 0;
-    char buf[1000] = {0,};
+    char buf[1000] = {0};
     const grib_context* c = grib_context_get_default();
 
     value->equal = equal;
@@ -2819,9 +2819,9 @@ int grib_producing_large_constant_fields(const grib_handle* h, int edition)
 static std::string grib_data_quality_check_extra_info(const grib_handle* h)
 {
     char step[32]       = "unknown";
-    char marsClass[32]  = {0,};
-    char marsStream[32] = {0,};
-    char marsType[32]   = {0,};
+    char marsClass[32]  = {0};
+    char marsStream[32] = {0};
+    char marsType[32]   = {0};
     std::string result;
     std::stringstream ss;
     size_t len = 32;
@@ -2847,9 +2847,9 @@ int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max
     long paramId           = 0;
     const grib_context* ctx = h->context;
     bool is_error          = true;
-    char description[1024] = {0,};
-    char shortName[64]     = {0,};
-    char name[526]         = {0,};
+    char description[1024] = {0};
+    char shortName[64]     = {0};
+    char name[526]         = {0};
     size_t len             = 0;
     const char* invalid_shortName = "unknown";
     const char* invalid_name      = "Experimental product";

@@ -16,7 +16,7 @@ namespace eccodes::expression {
 grib_trie* IsInList::load_list(grib_context* c,  int* err) const
 {
     char* filename  = NULL;
-    char line[1024] = {0,};
+    char line[1024] = {0};
     grib_trie* list = NULL;
     FILE* f         = NULL;
 
@@ -75,7 +75,7 @@ const char* IsInList::get_name() const
 int IsInList::evaluate_long(grib_handle* h, long* result) const
 {
     int err = 0;
-    char mybuf[1024] = {0,};
+    char mybuf[1024] = {0};
     size_t size = 1024;
 
     grib_trie* list = load_list(h->context, &err);
@@ -96,7 +96,7 @@ int IsInList::evaluate_double(grib_handle* h, double* result) const
     return GRIB_NOT_IMPLEMENTED;
     // grib_expression_is_in_list* e = (grib_expression_is_in_list*)g;
     // int err                       = 0;
-    // char mybuf[1024]              = {0,};
+    // char mybuf[1024]              = {0};
     // size_t size = 1024;
     // grib_trie* list = load_list(h->context, g, &err);
     // if ((err = grib_get_string_internal(h, name_, mybuf, &size)) != GRIB_SUCCESS)
@@ -110,7 +110,7 @@ int IsInList::evaluate_double(grib_handle* h, double* result) const
 
 const char* IsInList::evaluate_string(grib_handle* h, char* buf, size_t* size, int* err) const
 {
-    char mybuf[1024] = {0,};
+    char mybuf[1024] = {0};
     size_t sizebuf = 1024;
     long result;
 

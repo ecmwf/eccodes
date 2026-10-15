@@ -26,7 +26,7 @@ static void usage(const char* prog)
     printf("       E.g., %s -s GRIB2.tmpl sample.grib2\n", prog);
     printf("       E.g., %s -d grib2/boot.def grib2_boot.txt\n", prog);
 
-    char v[32] = {0,};
+    char v[32] = {0};
     snprintf(v, sizeof(v), "%d.%d.%d", ECCODES_MAJOR_VERSION, ECCODES_MINOR_VERSION, ECCODES_REVISION_VERSION);
     printf("\nTo access all the definitions/samples for ecCodes version %s:\n", v);
     printf("\tgit clone --depth=1 git@github.com:ecmwf/eccodes -b %s eccodes_v%s\n", v, v);
@@ -47,7 +47,7 @@ int main(int argc, char* argv[])
     grib_context* c            = grib_context_get_default();
     FILE* fin                  = NULL;
     FILE* fout                 = NULL;
-    char buffer[SIZE]          = {0,};
+    char buffer[SIZE]          = {0};
     size_t bytes = 0;
 
     if (argc != 4) usage(argv[0]);

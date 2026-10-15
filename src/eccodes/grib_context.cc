@@ -332,10 +332,10 @@ static grib_context default_grib_context = {
     0,              /* large_constant_fields      */
     0,              /* concepts_index             */
     0,              /* concepts_count             */
-    {0,},           /* concepts                   */
+    {0},           /* concepts                   */
     0,              /* hash_array_index           */
     0,              /* hash_array_count           */
-    {0,},           /* hash_array                 */
+    {0},           /* hash_array                 */
     0,              /* def_files                  */
     0,              /* blocklist                  */
     0,              /* ieee_packing               */
@@ -460,7 +460,7 @@ static grib_context* grib_context_get_default_()
             const char* test_defs = codes_getenv("_ECCODES_ECMWF_TEST_DEFINITION_PATH");
             const char* test_samp = codes_getenv("_ECCODES_ECMWF_TEST_SAMPLES_PATH");
             if (test_defs) {
-                char buffer[ECC_PATH_MAXLEN]= {0,};
+                char buffer[ECC_PATH_MAXLEN]= {0};
                 if (default_grib_context.grib_definition_files_path) {
                     strcpy(buffer, default_grib_context.grib_definition_files_path);
                     strcat(buffer, ":");
@@ -470,7 +470,7 @@ static grib_context* grib_context_get_default_()
                 default_grib_context.grib_definition_files_path = strdup(buffer);
             }
             if (test_samp) {
-                char buffer[ECC_PATH_MAXLEN]= {0,};
+                char buffer[ECC_PATH_MAXLEN]= {0};
                 if (default_grib_context.grib_samples_path) {
                     strcpy(buffer, default_grib_context.grib_samples_path);
                     strcat(buffer, ":");
@@ -484,7 +484,7 @@ static grib_context* grib_context_get_default_()
         {
             const char* defs_extra = getenv("ECCODES_EXTRA_DEFINITION_PATH");
             if (defs_extra) {
-                char buffer[ECC_PATH_MAXLEN]= {0,};
+                char buffer[ECC_PATH_MAXLEN]= {0};
                 snprintf(buffer, ECC_PATH_MAXLEN, "%s%c%s", defs_extra, ECC_PATH_DELIMITER_CHAR, default_grib_context.grib_definition_files_path);
                 free(default_grib_context.grib_definition_files_path);
                 default_grib_context.grib_definition_files_path = strdup(buffer);
@@ -494,7 +494,7 @@ static grib_context* grib_context_get_default_()
         {
             /* ECC-1088 */
             if (strstr(default_grib_context.grib_definition_files_path, ECCODES_DEFINITION_PATH) == NULL) {
-                char buffer[ECC_PATH_MAXLEN]= {0,};
+                char buffer[ECC_PATH_MAXLEN]= {0};
                 snprintf(buffer, ECC_PATH_MAXLEN, "%s%c%s", default_grib_context.grib_definition_files_path,
                              ECC_PATH_DELIMITER_CHAR, ECCODES_DEFINITION_PATH);
                 free(default_grib_context.grib_definition_files_path);
@@ -507,7 +507,7 @@ static grib_context* grib_context_get_default_()
         {
             const char* samples_extra = getenv("ECCODES_EXTRA_SAMPLES_PATH");
             if (samples_extra) {
-                char buffer[ECC_PATH_MAXLEN] = {0,};
+                char buffer[ECC_PATH_MAXLEN] = {0};
                 snprintf(buffer, ECC_PATH_MAXLEN, "%s%c%s", samples_extra, ECC_PATH_DELIMITER_CHAR, default_grib_context.grib_samples_path);
                 default_grib_context.grib_samples_path = strdup(buffer);
             }
@@ -515,7 +515,7 @@ static grib_context* grib_context_get_default_()
 #ifdef ECCODES_SAMPLES_PATH
         {
             if (strstr(default_grib_context.grib_samples_path, ECCODES_SAMPLES_PATH) == NULL) {
-                char buffer[ECC_PATH_MAXLEN] = {0,};
+                char buffer[ECC_PATH_MAXLEN] = {0};
                 snprintf(buffer, ECC_PATH_MAXLEN, "%s%c%s", default_grib_context.grib_samples_path,
                              ECC_PATH_DELIMITER_CHAR, ECCODES_SAMPLES_PATH);
                 default_grib_context.grib_samples_path = strdup(buffer);
@@ -667,7 +667,7 @@ static int init_definition_files_dir(grib_context* c)
 char* grib_context_full_defs_path(grib_context* c, const char* basename)
 {
     int err         = 0;
-    char full[1024] = {0,};
+    char full[1024] = {0};
     grib_string_list* dir      = NULL;
     grib_string_list* fullpath = 0;
     if (!c) c = grib_context_get_default();
@@ -1184,7 +1184,7 @@ void codes_assertion_failed(const char* message, const char* file, int line)
         }
     }
     else {
-        char buffer[10240] = {0,};
+        char buffer[10240] = {0};
         snprintf(buffer, sizeof(buffer), "ecCodes assertion failed: `%s' in %s:%d", message, file, line);
         assertion(buffer);
     }

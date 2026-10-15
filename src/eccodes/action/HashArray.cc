@@ -84,17 +84,17 @@ void HashArray::dump(FILE* f, int lvl)
 
 grib_hash_array_value* HashArray::get_hash_array_impl(grib_handle* h)
 {
-    char buf[4096]       = {0, };
-    char master[1024]    = {0, };
-    char local[1024]     = {0, };
-    char ecmf[1024]      = {0, };
-    char masterDir[1024] = {0, };
+    char buf[4096]       = {0};
+    char master[1024]    = {0};
+    char local[1024]     = {0};
+    char ecmf[1024]      = {0};
+    char masterDir[1024] = {0};
     size_t lenMasterDir  = 1024;
-    char localDir[1024]  = {0, };
+    char localDir[1024]  = {0};
     size_t lenLocalDir   = 1024;
-    char ecmfDir[1024]   = {0, };
+    char ecmfDir[1024]   = {0};
     size_t lenEcmfDir    = 1024;
-    char key[4096]       = {0, };
+    char key[4096]       = {0};
     char* full           = 0;
     int id;
 

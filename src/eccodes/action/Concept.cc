@@ -94,12 +94,12 @@ void Concept::dump(FILE* f, int lvl)
 
 grib_concept_value* Concept::get_concept_impl(grib_handle* h)
 {
-    char buf[4096]        = {0, };
-    char master[1024]     = {0, };
-    char local[1024]      = {0, };
-    char masterDir[1024]  = {0, };
+    char buf[4096]        = {0};
+    char master[1024]     = {0};
+    char local[1024]      = {0};
+    char masterDir[1024]  = {0};
     size_t lenMasterDir   = sizeof(masterDir);
-    char key[4096]        = {0, };
+    char key[4096]        = {0};
     char* full            = 0;
     const size_t bufLen   = sizeof(buf);
     const size_t keyLen   = sizeof(key);
@@ -115,7 +115,7 @@ grib_concept_value* Concept::get_concept_impl(grib_handle* h)
     // See ECC-1920: The basename could be a key or a string
     char* basename = basename_; // default is a string
     ECCODES_ASSERT(basename);
-    char baseNameValue[1024] = {0, }; // its value if a key
+    char baseNameValue[1024] = {0}; // its value if a key
     size_t lenBaseName = sizeof(baseNameValue);
     // All concept files have the .def extension so they are plain strings
     if (!string_ends_with(basename_, ".def")) {
@@ -128,7 +128,7 @@ grib_concept_value* Concept::get_concept_impl(grib_handle* h)
     grib_recompose_name(h, NULL, buf, master, 1);
 
     if (localDir_) {
-        char localDir[1024] = {0, };
+        char localDir[1024] = {0};
         size_t lenLocalDir = 1024;
         grib_get_string(h, localDir_, localDir, &lenLocalDir);
         snprintf(buf, bufLen, "%s/%s", localDir, basename);
@@ -223,8 +223,8 @@ static int concept_condition_expression_true(grib_handle* h, grib_concept_condit
 
         case GRIB_TYPE_STRING: {
             const char* cval;
-            char buf[256] = {0,};
-            char tmp[256] = {0,};
+            char buf[256] = {0};
+            char tmp[256] = {0};
             size_t len  = sizeof(buf);
             size_t size = sizeof(tmp);
 
@@ -254,8 +254,8 @@ int get_concept_condition_string(grib_handle* h, const char* key, const char* va
 {
     int err         = 0;
     int length      = 0;
-    char strVal[64] = {0, };
-    char exprVal[256] = {0, };
+    char strVal[64] = {0};
+    char exprVal[256] = {0};
     const char* pValue                = value;
     size_t len                        = sizeof(strVal);
     grib_concept_value* concept_value = NULL;

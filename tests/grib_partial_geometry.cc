@@ -20,7 +20,7 @@ const int verbose = 1;
 
 static int print_keys(grib_handle* h)
 {
-    char value[MAX_VAL_LEN] = {0,};
+    char value[MAX_VAL_LEN] = {0};
     size_t vlen = sizeof(value);
     int err = grib_get_string(h, "gridSpec", value, &vlen);
     if (!err) {
@@ -31,7 +31,7 @@ static int print_keys(grib_handle* h)
         while (grib_keys_iterator_next(kiter)) {
             const char* name = grib_keys_iterator_get_name(kiter);
             if (strcmp(name, "pl")==0) continue; // this one is an array!
-            char value[MAX_VAL_LEN] = {0,};
+            char value[MAX_VAL_LEN] = {0};
             size_t vlen = sizeof(value);
             int err = grib_get_string(h, name, value, &vlen);
             if (!err) printf("%s = %s \n", name, value);

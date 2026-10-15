@@ -53,7 +53,7 @@ int main(int argc, char* argv[])
 
         // fast
         size_t vlen2 = 0;
-        char value2[512] = {0,};
+        char value2[512] = {0};
         err = codes_bufr_header_get_string(&header_array[0], kname, value2, &vlen2);
         if (err) {
             fprintf(stderr, "ERROR: Key=%s: codes_bufr_header_get_string failed\n", kname);

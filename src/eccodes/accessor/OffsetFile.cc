@@ -31,7 +31,7 @@ int OffsetFile::unpack_string(char* v, size_t* len)
 {
     double val        = 0;
     size_t l          = 1;
-    char repres[1024] = {0,};
+    char repres[1024] = {0};
     int err = 0;
 
     err = unpack_double(&val, &l);

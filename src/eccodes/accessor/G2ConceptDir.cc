@@ -39,9 +39,9 @@ int G2ConceptDir::unpack_string(char* v, size_t* len)
     grib_handle* h = get_enclosing_handle();
     int err = 0;
     long preferLocal = 0;
-    char masterDir[128] = {0,};
-    char localDir[128] = {0,};
-    char datasetForLocal[128] = {0,};
+    char masterDir[128] = {0};
+    char localDir[128] = {0};
+    char datasetForLocal[128] = {0};
 
     err = grib_get_long(h, preferLocal_, &preferLocal);
     if (err) return err;

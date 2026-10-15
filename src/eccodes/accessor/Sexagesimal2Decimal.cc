@@ -32,7 +32,7 @@ long Sexagesimal2Decimal::get_native_type()
 int Sexagesimal2Decimal::unpack_string(char* val, size_t* len)
 {
     int err        = 0;
-    char buff[512] = {0,};
+    char buff[512] = {0};
     size_t length = 0;
     size_t size   = sizeof(buff);
     char* p       = 0;

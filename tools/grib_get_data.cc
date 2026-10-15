@@ -82,8 +82,8 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     int i                   = 0;
     grib_values* values     = NULL;
     grib_iterator* iter     = NULL;
-    char format_values[32]  = {0,};
-    char format_latlons[32] = {0,};
+    char format_values[32]  = {0};
+    char format_latlons[32] = {0};
     const char* default_format_values  = "%.10e";
     const char* default_format_latlons = "%9.3f%9.3f";
     int print_keys               = grib_options_on("p:");
@@ -306,7 +306,7 @@ static grib_values* get_key_values(grib_runtime_options* options, grib_handle* h
 {
     int i                      = 0;
     int ret                    = 0;
-    char value[MAX_STRING_LEN] = {0,};
+    char value[MAX_STRING_LEN] = {0};
     const char* notfound = "not found";
 
     for (i = 0; i < options->print_keys_count; i++) {

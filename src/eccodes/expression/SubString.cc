@@ -35,7 +35,7 @@ void SubString::add_dependency(grib_accessor* observer)
 
 SubString::SubString(grib_context* c, const char* value, size_t start, size_t length)
 {
-    char v[1024] = {0,};
+    char v[1024] = {0};
 
     memcpy(v, value + start, length);
     value_ = grib_context_strdup_persistent(c, v);

@@ -66,7 +66,7 @@ void Debug::default_long_value(grib_accessor* a, long actualValue)
 //     const int type = grib_expression_native_type(h, expression);
 //     DEBUG_ASSERT(type == GRIB_TYPE_STRING);
 //     if (type == GRIB_TYPE_STRING) {
-//         char tmp[1024] = {0,};
+//         char tmp[1024] = {0};
 //         size_t s_len = sizeof(tmp);
 //         int err = 0;
 //         const char* p = grib_expression_evaluate_string(h, expression, tmp, &s_len, &err);

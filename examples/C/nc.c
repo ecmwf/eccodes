@@ -20,7 +20,7 @@ int main(int argc, char* argv[])
     char* file;
     int err = 0;
     codes_handle* h;
-    char identifier[7] = {0,};
+    char identifier[7] = {0};
     size_t len       = 7;
     codes_context* c = codes_context_get_default();
 

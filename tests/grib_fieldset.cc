@@ -22,9 +22,9 @@ int main(int argc, char** argv)
     const char* keys[] = { "step:i", "date", "paramId", "levelType" };
     grib_fieldset* set = NULL;
     grib_handle* h = NULL;
-    char param[20] = {0,};
-    char typeOfLevel[50] = {0,};
-    char date[10] = {0,};
+    char param[20] = {0};
+    char typeOfLevel[50] = {0};
+    char date[10] = {0};
     size_t lenDate  = 10, lenParam = 20, lenLevel = 50;
     char* order_by  = NULL;
 

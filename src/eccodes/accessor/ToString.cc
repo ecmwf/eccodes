@@ -59,7 +59,7 @@ long ToString::get_native_type()
 int ToString::unpack_string(char* val, size_t* len)
 {
     int err        = 0;
-    char buff[512] = {0,};
+    char buff[512] = {0};
     size_t length = string_length();
 
     if (*len < length + 1) {
@@ -88,7 +88,7 @@ int ToString::unpack_string(char* val, size_t* len)
 
 int ToString::unpack_long(long* v, size_t* len)
 {
-    char val[1024] = {0,};
+    char val[1024] = {0};
     size_t l   = sizeof(val);
     char* last = NULL;
     int err    = unpack_string(val, &l);

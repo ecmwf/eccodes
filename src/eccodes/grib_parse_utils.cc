@@ -33,11 +33,11 @@ static eccodes::sync::Mutex mutex_parse;
 int grib_recompose_name(grib_handle* h, grib_accessor* observer, const char* uname, char* fname, int fail)
 {
     grib_accessor* a;
-    char loc[1024] = {0,};
+    char loc[1024] = {0};
     int i          = 0;
     int ret        = 0;
     int mode       = -1;
-    char val[1024] = {0,};
+    char val[1024] = {0};
     double dval        = 0;
     long lval          = 0;
     int type           = GRIB_TYPE_STRING;
@@ -139,7 +139,7 @@ int grib_recompose_name(grib_handle* h, grib_accessor* observer, const char* una
 //     char* p         = NULL;
 //     double* dval    = 0;
 //     long* lval      = 0;
-//     char sbuf[1024] = {0,};
+//     char sbuf[1024] = {0};
 //     size_t replen            = 0;
 //     int ret                  = 0;
 //     char* myformat           = NULL;
@@ -286,7 +286,7 @@ int grib_accessors_list_print(grib_handle* h, grib_accessors_list* al, const cha
         case GRIB_TYPE_STRING:
             myseparator = separator ? (char*)separator : default_separator;
             if (size == 1) {
-                char sbuf[1024] = {0,};
+                char sbuf[1024] = {0};
                 len = sizeof(sbuf);
                 ret = al->accessor->unpack_string(sbuf, &len);
                 if (grib_is_missing_string(al->accessor, (unsigned char*)sbuf, len)) {
@@ -397,8 +397,8 @@ int grib_recompose_print(grib_handle* h, grib_accessor* observer, const char* un
     char* separator = NULL;
     int equal = 0; // See ECC-1878
     int l;
-    char buff[10] = {0,};
-    char buff1[1024] = {0,};
+    char buff[10] = {0};
+    char buff1[1024] = {0};
     int maxcolsd = 8;
     int maxcols;
     long numcols           = 0;
@@ -641,7 +641,7 @@ void grib_parser_include(const char* included_fname)
     /* printf("PARSING %s\n",parse_file); */
 
     if (f == NULL) {
-        char buffer[1024]={0,};
+        char buffer[1024]={0};
         grib_context_log(grib_parser_context, (GRIB_LOG_ERROR) | (GRIB_LOG_PERROR), "Parser include: cannot open: '%s'", parse_file);
         snprintf(buffer, sizeof(buffer), "Cannot include file: '%s'", parse_file);
         grib_yyerror(buffer);

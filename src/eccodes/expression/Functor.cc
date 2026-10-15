@@ -225,7 +225,7 @@ int Functor::evaluate_long(grib_handle* h, long* lres) const
         int err = grib_get_native_type(h, keyName, &type);
         if (err) return err;
         if (type == GRIB_TYPE_STRING) {
-            char keyValue[254] = {0,};
+            char keyValue[254] = {0};
             size_t len = sizeof(keyValue);
             err = grib_get_string(h, keyName, keyValue, &len);
             if (err) return err;
@@ -253,7 +253,7 @@ int Functor::evaluate_long(grib_handle* h, long* lres) const
         if (err) return err;
         int n = args_->get_count();
         if (type == GRIB_TYPE_STRING) {
-            char keyValue[254] = {0,};
+            char keyValue[254] = {0};
             size_t len = sizeof(keyValue);
             err = grib_get_string(h, keyName, keyValue, &len);
             if (err) return err;

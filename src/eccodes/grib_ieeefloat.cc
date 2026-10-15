@@ -246,7 +246,7 @@ template <>
 int grib_ieee_decode_array<double> (grib_context* c, unsigned char* buf, size_t nvals, int bytes, double* val)
 {
     int err = 0, j = 0;
-    unsigned char s[8] = {0,};
+    unsigned char s[8] = {0};
     float fval;
     double* pval = val;
 
@@ -290,7 +290,7 @@ template <>
 int grib_ieee_decode_array<float>(grib_context* c, unsigned char* buf, size_t nvals, int bytes, float* val)
 {
     int err = 0, j = 0;
-    unsigned char s[4] = {0,};
+    unsigned char s[4] = {0};
 
     switch (bytes) {
         case 4:

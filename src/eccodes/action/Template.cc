@@ -80,7 +80,7 @@ int Template::create_accessor(grib_section* p, grib_loader* h)
     grib_accessor* as = NULL;
     grib_section* gs  = NULL;
 
-    char fname[1024] = {0, };
+    char fname[1024] = {0};
     char* fpath = 0;
 
     as = grib_accessor_factory(p, this, 0, NULL);

@@ -108,7 +108,7 @@ static int split_file_by_subtype(FILE* in, const char* filename, unsigned long* 
     size_t size          = 0;
     off_t offset         = 0;
     int err              = GRIB_SUCCESS;
-    char ofilename[2048] = {0,};
+    char ofilename[2048] = {0};
     grib_context* c = grib_context_get_default();
 
     if (!in)

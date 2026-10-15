@@ -30,7 +30,7 @@ int Trim::unpack_string(char* val, size_t* len)
 {
     int err         = 0;
     grib_handle* h  = get_enclosing_handle();
-    char input[256] = {0,};
+    char input[256] = {0};
     size_t size  = sizeof(input) / sizeof(*input);
     char* pInput = input;
 
@@ -46,10 +46,10 @@ int Trim::unpack_string(char* val, size_t* len)
 
 int Trim::pack_string(const char* val, size_t* len)
 {
-    char input[256] = {0,};
+    char input[256] = {0};
 
     size_t inputLen = 256;
-    char buf[256]   = {0,};
+    char buf[256]   = {0};
     char* pBuf = NULL;
     int err = 0;
     grib_handle* h                = get_enclosing_handle();

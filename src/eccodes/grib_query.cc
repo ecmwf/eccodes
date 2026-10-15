@@ -357,7 +357,7 @@ static int condition_true(grib_accessor* a, codes_condition* condition)
 
 static void search_from_accessors_list(grib_accessors_list* al, const grib_accessors_list* end, const char* name, grib_accessors_list* result)
 {
-    char attribute_name[200] = {0,};
+    char attribute_name[200] = {0};
     grib_accessor* accessor_result = 0;
     grib_context* c = al->accessor->context_;
     int doFree = 1;
@@ -567,7 +567,7 @@ grib_accessor* grib_find_accessor(const grib_handle* h, const char* name)
         aret = _grib_find_accessor(h, name); /* ECC-144: Performance */
     }
     else {
-        char attribute_name[512] = {0,};
+        char attribute_name[512] = {0};
         grib_accessor* a = NULL;
 
         char* accessor_name = grib_split_name_attribute(h->context, name, attribute_name);

@@ -20,7 +20,7 @@ int main(int argc, char** argv)
 {
     int err = 0, is_missing = 0;
     double* values    = NULL;
-    char format[1024] = {0,};
+    char format[1024] = {0};
     size_t values_len = 0, i = 0;
     long Ni        = 0;
     FILE* in       = NULL;

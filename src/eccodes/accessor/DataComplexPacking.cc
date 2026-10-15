@@ -288,7 +288,7 @@ int DataComplexPacking::pack_double(const double* val, size_t* len)
     // See definitions/grib2/templates/template.7.50.def
     //    transient numberOfPackedValues = numberOfValues - 1 : no_copy;
     if ( (size_t)n_vals == *len + 1) {
-        char convertingFrom[128] = {0,};
+        char convertingFrom[128] = {0};
         size_t slen = sizeof(convertingFrom);
         if (grib_get_string(gh, "convertingFrom", convertingFrom, &slen) == GRIB_SUCCESS &&
             STR_EQUAL(convertingFrom, "spectral_simple"))

@@ -1710,7 +1710,7 @@ int DataG22OrderPacking::unpack(T* val, size_t* len)
 
     if (orderOfSpatialDifferencing) {
         long bias = 0;
-        unsigned long extras[2] = {0,};
+        unsigned long extras[2] = {0};
         ref_p = 0;
 
         // For Complex packing, order == 0

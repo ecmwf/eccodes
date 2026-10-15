@@ -60,8 +60,8 @@ int main(int argc, char* argv[])
         name[j++] = 0;
 
         printf("static grib_action* %s(grib_context *ctx) {\n", name);
-        printf("grib_action* a[%d] = {0,};\n\n", compiler.max);
-        printf("grib_action* b[%d] = {0,};\n\n", compiler.max);
+        printf("grib_action* a[%d] = {0};\n\n", compiler.max);
+        printf("grib_action* b[%d] = {0};\n\n", compiler.max);
 
         compiler.cnt = 0;
 

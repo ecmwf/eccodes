@@ -76,7 +76,7 @@ int main(int argc, char** argv)
     {
         // Test getting the previous value from a geoiterator.
         // Note: Only implemented for regular grids
-        char gridType[128] = {0,};
+        char gridType[128] = {0};
         size_t len = sizeof(gridType);
         GRIB_CHECK(grib_get_string(h, "gridType", gridType, &len), 0);
         if (strstr(gridType, "regular_")) {

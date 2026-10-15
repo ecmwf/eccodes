@@ -29,7 +29,7 @@ int Accessor::evaluate_double(grib_handle* h, double* result) const
 
 const char* Accessor::evaluate_string(grib_handle* h, char* buf, size_t* size, int* err) const
 {
-    char mybuf[1024] = {0,};
+    char mybuf[1024] = {0};
     long start = start_;
     if (length_ > sizeof(mybuf)) {
         *err = GRIB_INVALID_ARGUMENT;
@@ -67,7 +67,7 @@ void Accessor::print(grib_context* c, grib_handle* hand, FILE* out) const
     if (hand) {
         const int ntype = native_type(hand);
         if (ntype == GRIB_TYPE_STRING) {
-            char buf[256] = {0,};
+            char buf[256] = {0};
             size_t len = sizeof(buf);
             err = grib_get_string(hand, name_, buf, &len);
             if (!err) fprintf(out, "=%s", buf);

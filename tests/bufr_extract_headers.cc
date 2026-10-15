@@ -44,7 +44,7 @@ int main(int argc, char* argv[])
         int j;
         for (j = 0; j < requested_print_keys_count; ++j) {
             size_t vlen     = 0;
-            char value[512] = {0,};
+            char value[512] = {0};
             CODES_CHECK(codes_bufr_header_get_string(&header_array[i], requested_print_keys[j].name, value, &vlen), 0);
             assert(vlen > 0);
             if (j > 0) printf(" ");

@@ -281,7 +281,7 @@ static int bufr_decode_extra_rdb_keys(const void* message, long offset_section2,
         size_t i = 0;
         unsigned long lValue = 0;
         char* pTemp = NULL;
-        char temp[IDENT_LEN] = {0,};
+        char temp[IDENT_LEN] = {0};
 
         start               = 72;
         lValue              = grib_decode_unsigned_long(pKeyData, &start, 25);
@@ -925,7 +925,7 @@ static const char* codes_bufr_header_get_centre_name(long centre_code)
 // TODO(masn): Not efficient as it opens the code table every time
 static char* codes_bufr_header_get_centre_name(long edition, long centre_code)
 {
-    char full_path[2014] = {0,};
+    char full_path[2014] = {0};
     char line[1024];
     FILE *f = NULL;
     const char* defs_path = grib_definition_path(NULL);
@@ -940,7 +940,7 @@ static char* codes_bufr_header_get_centre_name(long edition, long centre_code)
     while(fgets(line,sizeof(line)-1,f)) {
         char* p = line;
         int code = 0;
-        char abbreviation[32] = {0,};
+        char abbreviation[32] = {0};
         char* q = abbreviation;
 
         line[strlen(line)-1] = 0;

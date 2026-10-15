@@ -104,8 +104,8 @@ int Codeflag::value_count(long* count)
 void Codeflag::dump(eccodes::Dumper* dumper)
 {
     long v              = 0;
-    char flagname[1024] = {0,};
-    char fname[1024] = {0,};
+    char flagname[1024] = {0};
+    char fname[1024] = {0};
 
     size_t llen = 1;
 
