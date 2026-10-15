@@ -30,7 +30,7 @@ int main(int argc, char* argv[])
     assert(h);
     assert(!err);
 
-    char product[32] = {0,};
+    char product[32] = {0};
     size_t size = sizeof(product) / sizeof(*product);
     err = codes_get_string(h, "kindOfProduct", product, &size);
     if (!err && strcmp(product, "BUFR")==0) {

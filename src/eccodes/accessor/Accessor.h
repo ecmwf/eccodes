@@ -148,15 +148,15 @@ public:
     unsigned long flags_       = 0;        // Various flags
     grib_section* sub_section_ = nullptr;
 
-    const char* all_names_[MAX_ACCESSOR_NAMES] = {0,};  // name of the accessor
-    const char* all_name_spaces_[MAX_ACCESSOR_NAMES] = {0,};  // namespace to which the accessor belongs
+    const char* all_names_[MAX_ACCESSOR_NAMES] = {0};  // name of the accessor
+    const char* all_name_spaces_[MAX_ACCESSOR_NAMES] = {0};  // namespace to which the accessor belongs
     int dirty_ = 0;
 
     grib_accessor* same_ = nullptr;  // accessors with the same name
     long loop_ = 0;        // used in lists
     grib_virtual_value* vvalue_ = nullptr;  // virtual value used when transient flag on
     const char* set_ = nullptr;
-    grib_accessor* attributes_[MAX_ACCESSOR_ATTRIBUTES] = {0,};  // attributes are accessors
+    grib_accessor* attributes_[MAX_ACCESSOR_ATTRIBUTES] = {0};  // attributes are accessors
     grib_accessor* parent_as_attribute_ = nullptr;
 };
 

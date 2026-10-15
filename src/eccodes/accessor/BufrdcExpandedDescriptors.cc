@@ -66,7 +66,7 @@ int BufrdcExpandedDescriptors::unpack_string_array(char** buffer, size_t* len)
     long lenall                = 0;
     size_t i                   = 0;
     long* v                    = 0;
-    char buf[25]               = {0,};
+    char buf[25]               = {0};
     grib_context* c = context_;
 
     descriptors = get_accessor();

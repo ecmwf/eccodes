@@ -36,7 +36,7 @@ long GaussianGridName::get_native_type()
 int GaussianGridName::unpack_string(char* v, size_t* len)
 {
     long N = 0, Ni = 0;
-    char tmp[MAX_GRIDNAME_LEN] = {0,};
+    char tmp[MAX_GRIDNAME_LEN] = {0};
     size_t length = 0;
     int ret       = GRIB_SUCCESS;
 

@@ -85,7 +85,7 @@ static int grib_check_param_concepts(const char* key, const char* filename)
             }
         }
         while (concept_condition) {
-            char condition_value[512] = {0, };
+            char condition_value[512] = {0};
             eccodes::Expression* expression = concept_condition->expression;
             if(expression) {
                 const char* condition_name  = concept_condition->name;

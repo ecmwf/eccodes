@@ -31,7 +31,7 @@ int main(int argc, char** argv)
 {
     char* filename  = NULL;
     FILE* fp        = NULL;
-    char line[1024] = {0,};
+    char line[1024] = {0};
     char** list = NULL;
     size_t i = 0, line_number = 0;
     long lValue     = 0;

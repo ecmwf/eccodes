@@ -31,7 +31,7 @@ void HashArray::dump(eccodes::Dumper* dumper)
 
 int HashArray::pack_double(const double* val, size_t* len)
 {
-    char s[200] = {0,};
+    char s[200] = {0};
     snprintf(s, sizeof(s), "%g", *val);
     key_ = grib_context_strdup(context_, s);
     ha_  = 0;
@@ -40,7 +40,7 @@ int HashArray::pack_double(const double* val, size_t* len)
 
 int HashArray::pack_long(const long* val, size_t* len)
 {
-    char s[200] = {0,};
+    char s[200] = {0};
     snprintf(s, sizeof(s), "%ld", *val);
     if (key_)
         grib_context_free(context_, key_);

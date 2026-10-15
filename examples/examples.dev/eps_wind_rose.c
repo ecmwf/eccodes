@@ -37,7 +37,7 @@ int main(int argc, char** argv) {
   double* values_dir=0;
   double* values_int=0;
   size_t size=0;
-  char* ofile[100]={0,};
+  char* ofile[100]={0};
   size_t values_count=0;
   char* wind_rose[8]={"nord","nord_east",
                       "east","south_east",
@@ -47,15 +47,15 @@ int main(int argc, char** argv) {
   char* sea_state[9]={"calm","smooth","slight",
                       "moderate","rough","very_rough",
                       "high","very_high","phenomenal"};
-  double* values[72]={0,};
+  double* values[72]={0};
   size_t sea_state_count=sizeof(sea_state);
   int eps_members=0,steps=0;
   long member=0,step=0,ltmp=0;
   int new_step=0;
   int handle_count=0;
-  char short_name_dir[10]={0,};
-  char short_name_int[10]={0,};
-  char tmp[10]={0,};
+  char short_name_dir[10]={0};
+  char short_name_int[10]={0};
+  char tmp[10]={0};
   size_t len=0;
   int err1=0,err2=0;
 

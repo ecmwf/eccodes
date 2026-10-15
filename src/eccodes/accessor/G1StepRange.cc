@@ -88,7 +88,7 @@ int G1StepRange::grib_g1_step_get_steps(long* start, long* theEnd)
     int err                            = 0;
     long p1 = 0, p2 = 0, unit = 0, timeRangeIndicator = 0, timeRangeIndicatorFromStepRange = 0;
     long step_unit    = 1;
-    char stepType[20] = {0,};
+    char stepType[20] = {0};
     size_t stepTypeLen = 20;
     long newstart, newend;
     int factor = 1;
@@ -180,13 +180,13 @@ int G1StepRange::grib_g1_step_get_steps(long* start, long* theEnd)
 
 int G1StepRange::unpack_string(char* val, size_t* len)
 {
-    char buf[100] = {0,};
+    char buf[100] = {0};
     size_t size = 0;
     long start = 0, theEnd = 0;
     long timeRangeIndicator = 0;
     long unit;
     int err           = 0;
-    char stepType[20] = {0,};
+    char stepType[20] = {0};
     size_t stepTypeLen = 20;
     grib_handle* hand  = get_enclosing_handle();
 
@@ -338,7 +338,7 @@ int G1StepRange::pack_string(const char* val, size_t* len)
     long end_sec, start_sec;
     char *p = NULL, *q = NULL;
     int instant       = 0;
-    char stepType[20] = {0,};
+    char stepType[20] = {0};
     size_t stepTypeLen = 20;
 
     if (stepType_) {
@@ -520,12 +520,12 @@ size_t G1StepRange::string_length()
 
 int G1StepRange::pack_long(const long* val, size_t* len)
 {
-    char buff[256] = {0,};
+    char buff[256] = {0};
     size_t bufflen    = 100;
     char sval[100]    = { 0 };
     char* p           = sval;
     size_t svallen    = 100;
-    char stepType[20] = {0,};
+    char stepType[20] = {0};
     size_t stepTypeLen = 20;
     long step_unit     = 0;
     int err            = 0;
@@ -595,7 +595,7 @@ int G1StepRange::pack_long(const long* val, size_t* len)
 
 int G1StepRange::unpack_long(long* val, size_t* len)
 {
-    char buff[100] = {0,};
+    char buff[100] = {0};
     size_t bufflen = 100;
     long start, theEnd;
     char* p = buff;

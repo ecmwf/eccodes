@@ -259,11 +259,11 @@ grib_codetable* Codetable::load_table()
     grib_codetable* t          = NULL;
     grib_codetable* next       = NULL;
     const char* filename       = 0;
-    char recomposed[1024]      = {0,};
-    char localRecomposed[1024] = {0,};
+    char recomposed[1024]      = {0};
+    char localRecomposed[1024] = {0};
     const char* localFilename  = 0;
-    char masterDir[1024]       = {0,};
-    char localDir[1024]        = {0,};
+    char masterDir[1024]       = {0};
+    char localDir[1024]        = {0};
     size_t len                 = 1024;
 
     if (masterDir_ != NULL)
@@ -274,7 +274,7 @@ grib_codetable* Codetable::load_table()
         grib_get_string(h, localDir_, localDir, &len);
 
     if (*masterDir != 0) {
-        char name[2048] = {0,};
+        char name[2048] = {0};
         snprintf(name, sizeof(name), "%s/%s", masterDir, tablename_);
         grib_recompose_name(h, NULL, name, recomposed, 0);
         filename = grib_context_full_defs_path(c, recomposed);
@@ -285,7 +285,7 @@ grib_codetable* Codetable::load_table()
     }
 
     if (*localDir != 0) {
-        char localName[2048] = {0,};
+        char localName[2048] = {0};
         snprintf(localName, sizeof(localName), "%s/%s", localDir, tablename_);
         grib_recompose_name(h, NULL, localName, localRecomposed, 0);
         localFilename = grib_context_full_defs_path(c, localRecomposed);
@@ -372,8 +372,8 @@ static int grib_load_codetable(grib_context* c, const char* filename,
     while (fgets(line, sizeof(line) - 1, f)) {
         char* p                 = line;
         int code                = 0;
-        char abbreviation[1024] = {0,};
-        char title[1024] = {0,};
+        char abbreviation[1024] = {0};
+        char title[1024] = {0};
         char* pAbbrev         = abbreviation;
         char* pTitle          = title;
         char* units           = 0;
@@ -653,7 +653,7 @@ int Codetable::pack_string(const char* buffer, size_t* len)
             long l         = 0;
             int ret        = 0;
             double d       = 0;
-            char tmp[1024] = {0,};
+            char tmp[1024] = {0};
             grib_expression* expression = act->default_value_->get_expression(get_enclosing_handle(), 0);
             int type                    = expression->native_type(get_enclosing_handle());
             switch (type) {

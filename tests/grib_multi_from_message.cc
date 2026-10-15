@@ -15,7 +15,7 @@
 int main(int argc, char* argv[])
 {
     struct stat finfo;
-    char shortName[20] = {0,};
+    char shortName[20] = {0};
     size_t len;
     grib_handle* h = NULL;
     size_t fsize;

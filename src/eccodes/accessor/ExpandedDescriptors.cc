@@ -94,7 +94,7 @@ void ExpandedDescriptors::__expand(bufr_descriptors_array* unexpanded, bufr_desc
     bufr_descriptor* vv = NULL;
     /* ECC-1422: 'ur' is the array of bufr_descriptor pointers for replications.
      * Its max size is X (from FXY) which is 6 bits so no need for malloc */
-    bufr_descriptor* ur[65] = {0,};
+    bufr_descriptor* ur[65] = {0};
     bufr_descriptor* urc                     = NULL;
     size_t idx                               = 0;
     bufr_descriptor* u0                      = NULL;
@@ -477,7 +477,7 @@ int ExpandedDescriptors::expand()
     /* grib_iarray* unexp=0; */
     int i;
     long* u      = 0;
-    char key[50] = {0,};
+    char key[50] = {0};
     long centre, masterTablesVersionNumber, localTablesVersionNumber, masterTablesNumber;
     change_coding_params ccp;
     bufr_descriptors_array* unexpanded      = NULL;
@@ -699,7 +699,7 @@ int ExpandedDescriptors::unpack_string_array(char** buffer, size_t* len)
 {
     int err      = 0;
     long* v      = NULL;
-    char buf[25] = {0,};
+    char buf[25] = {0};
     long llen = 0;
     size_t i = 0, size = 0;
     const grib_context* c = context_;

@@ -99,7 +99,7 @@ void GribEncodeC::dump_bits(grib_accessor* a, const char* comment)
     size_t size = 1;
     int err = a->unpack_long(&value, &size);
     int i;
-    char buf[1024] = {0,};
+    char buf[1024] = {0};
 
     buf[0] = 0;
 
@@ -150,7 +150,7 @@ void GribEncodeC::dump_string(grib_accessor* a, const char* comment)
     if (a->length_ == 0)
         return;
 
-    char value[1024] = {0,};
+    char value[1024] = {0};
     size_t size = sizeof(value);
     int err = a->unpack_string(value, &size);
 

@@ -57,7 +57,7 @@ int G2Chemical::pack_long(const long* val, size_t* len)
     // long type=-1;
     // long stream=-1;
     long eps          = -1;
-    char stepType[15] = {0,};
+    char stepType[15] = {0};
     size_t slen = 15;
     // int chemical = *val;
     int isInstant = 0;

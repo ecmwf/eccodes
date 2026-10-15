@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
     FILE* in = fopen(infile, "rb");
     assert(in);
     char* key = argv[3];
-    char kvalue[2] = {0,}; // deliberately short
+    char kvalue[2] = {0}; // deliberately short
     ProductKind productKind = PRODUCT_GRIB;
     if (strcmp(prod, "BUFR")==0) productKind = PRODUCT_BUFR;
     if (strcmp(prod, "GTS")==0) productKind = PRODUCT_GTS;

@@ -35,13 +35,13 @@ int main(int argc, char** argv)
     int i               = 0;
     codes_fieldset* set = NULL;
     codes_handle* h     = NULL;
-    char shortName[20]      = {0,};
+    char shortName[20]      = {0};
     size_t len     = 20;
-    double lats[4] = {0,};
-    double lons[4] = {0,};
-    double values[4] = {0,};
-    double distances[4] = {0,};
-    int indexes[4] = {0,};
+    double lats[4] = {0};
+    double lons[4] = {0};
+    double values[4] = {0};
+    double distances[4] = {0};
+    int indexes[4] = {0};
     const char* order_by = "shortName,step:i";
 
     size_t size = 4;

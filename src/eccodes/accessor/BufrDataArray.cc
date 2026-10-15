@@ -1804,7 +1804,7 @@ grib_accessor* BufrDataArray::create_accessor_from_descriptor(grib_accessor* att
                                                             long ide, long subset, int add_dump_flag, int add_coord_flag,
                                                             int count, int add_extra_attributes)
 {
-    char code[10] = {0,};
+    char code[10] = {0};
     char* temp_str              = NULL;
     int idx                     = 0;
     unsigned long flags         = GRIB_ACCESSOR_FLAG_READ_ONLY;
@@ -2294,13 +2294,13 @@ int BufrDataArray::create_keys(long onlySubset, long startSubset, long endSubset
 
     grib_accessor* gaGroup   = 0;
     grib_action creatorGroup;
-    grib_accessor* significanceQualifierGroup[NUMBER_OF_QUALIFIERS_PER_CATEGORY * NUMBER_OF_QUALIFIERS_CATEGORIES] = {0,};
-    int significanceQualifierDepth[NUMBER_OF_QUALIFIERS_PER_CATEGORY * NUMBER_OF_QUALIFIERS_CATEGORIES] = {0,};
+    grib_accessor* significanceQualifierGroup[NUMBER_OF_QUALIFIERS_PER_CATEGORY * NUMBER_OF_QUALIFIERS_CATEGORIES] = {0};
+    int significanceQualifierDepth[NUMBER_OF_QUALIFIERS_PER_CATEGORY * NUMBER_OF_QUALIFIERS_CATEGORIES] = {0};
 
-    grib_accessor* bitmapGroup[MAX_NUMBER_OF_BITMAPS] = {0,};
-    int bitmapDepth[MAX_NUMBER_OF_BITMAPS] = {0,};
-    int bitmapSize[MAX_NUMBER_OF_BITMAPS] = {0,};
-    grib_accessors_list* bitmapStart[MAX_NUMBER_OF_BITMAPS] = {0,};
+    grib_accessor* bitmapGroup[MAX_NUMBER_OF_BITMAPS] = {0};
+    int bitmapDepth[MAX_NUMBER_OF_BITMAPS] = {0};
+    int bitmapSize[MAX_NUMBER_OF_BITMAPS] = {0};
+    grib_accessors_list* bitmapStart[MAX_NUMBER_OF_BITMAPS] = {0};
     grib_accessors_list* lastAccessorInList = NULL;
     int bitmapIndex                         = -1;
     int incrementBitmapIndex                = 1;
@@ -2684,10 +2684,10 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
 {
     int err = 0;
     long d;
-    long nReps[MAX_NESTED_REPLICATIONS] = {0,};
-    long numberOfElementsToRepeat[MAX_NESTED_REPLICATIONS] = {0,};
-    long numberOfRepetitions[MAX_NESTED_REPLICATIONS] = {0,};
-    long startRepetition[MAX_NESTED_REPLICATIONS] = {0,};
+    long nReps[MAX_NESTED_REPLICATIONS] = {0};
+    long numberOfElementsToRepeat[MAX_NESTED_REPLICATIONS] = {0};
+    long numberOfRepetitions[MAX_NESTED_REPLICATIONS] = {0};
+    long startRepetition[MAX_NESTED_REPLICATIONS] = {0};
     long depth = 0;
     unsigned char* data            = 0;
     size_t subsetListSize          = 0;

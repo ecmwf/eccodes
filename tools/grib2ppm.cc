@@ -20,7 +20,7 @@ typedef struct map
 } map;
 
 map cmap[CMAP_MAX];
-unsigned long last[CMAP_MAX] = {0,};
+unsigned long last[CMAP_MAX] = {0};
 
 /*
 unsigned char unused(char c)

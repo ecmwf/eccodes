@@ -325,7 +325,7 @@ static void test_concept_condition_strings()
     printf("Running %s ...\n", __func__);
 
     int err           = 0;
-    char result[1024] = {0,};
+    char result[1024] = {0};
     grib_context* context = NULL;
     grib_handle* h = grib_handle_new_from_samples(context, "GRIB2");
     if (!h) return;
@@ -422,7 +422,7 @@ static void test_string_replace_char()
 {
     printf("Running %s ...\n", __func__);
 
-    char input[32] = {0,};
+    char input[32] = {0};
     strncpy(input, "Mask Of Zoro", sizeof(input));
     string_replace_char(input, ' ', '-');
     ECCODES_ASSERT(STR_EQUAL(input, "Mask-Of-Zoro"));
@@ -555,9 +555,9 @@ static void test_parse_keyval_string()
     int err = 0;
     int values_required = 1;
     int count = 0;
-    grib_values values1[128] = {{0},};
-    grib_values values2[128] = {{0},};
-    grib_values values3[128] = {{0},};
+    grib_values values1[128] = {0};
+    grib_values values2[128] = {0};
+    grib_values values3[128] = {0};
     const int max_count = 128;
     char input1[] = "key1=value1,key2!=value2";
     char input2[] = "x=14";

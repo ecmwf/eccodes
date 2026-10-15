@@ -44,7 +44,7 @@ int G2WavePeriodRange::pack_long(const long* val, size_t* len)
     grib_handle* hand = get_enclosing_handle();
     long productDefinitionTemplateNumber    = -1;
     long productDefinitionTemplateNumberNew = -1;
-    char stepType[15] = {0,};
+    char stepType[15] = {0};
     size_t slen = 15;
     int isInstant = 0;
 

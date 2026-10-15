@@ -43,7 +43,7 @@
 //     int64_t v[128];
 // } bits_all_one_t;
 //
-// static bits_all_one_t bits_all_one = { 0, 0, {0,} };
+// static bits_all_one_t bits_all_one = { 0, 0, {0} };
 //
 // static void init_bits_all_one()
 // {
@@ -111,7 +111,7 @@ int grib_encode_string(unsigned char* bitStream, long* bitOffset, size_t numberO
     unsigned char* p;
     const unsigned char mask[]    = { 0, 0x80, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC, 0xFE };
     int remainderComplement = 8 - remainder;
-    char str[512]           = {0,};
+    char str[512]           = {0};
     char* s = str;
 
     ECCODES_ASSERT(numberOfCharacters < 512);

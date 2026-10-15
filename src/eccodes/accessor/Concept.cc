@@ -108,8 +108,8 @@ static int concept_condition_expression_true(
 
         case GRIB_TYPE_STRING: {
             const char* cval;
-            char buf[80] = {0,};
-            char tmp[80] = {0,};
+            char buf[80] = {0};
+            char tmp[80] = {0};
             size_t len  = sizeof(buf);
             size_t size = sizeof(tmp);
 
@@ -375,7 +375,7 @@ static void print_user_friendly_message(grib_handle* h, const char* name, grib_c
 {
     size_t i = 0, concept_count = 0;
     long dummy = 0, editionNumber = 0;
-    char centre_s[32] = {0,};
+    char centre_s[32] = {0};
     size_t centre_len = sizeof(centre_s);
     char* all_concept_vals[MAX_NUM_CONCEPT_VALUES] = {NULL,}; // sorted array containing concept values
     const grib_concept_value* pCon = concepts;
@@ -449,7 +449,7 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
     int err = 0;
     int count = 0;
     grib_concept_condition* e = NULL;
-    grib_values values[1024] = {{0},}; // key/value pair array
+    grib_values values[1024] = {0}; // key/value pair array
     grib_sarray* sa       = NULL;
     grib_concept_value* c = NULL;
     grib_concept_value* concepts = action_concept_get_concept(a);
@@ -523,7 +523,7 @@ int Concept::pack_double(const double* val, size_t* len)
 
 int Concept::pack_long(const long* val, size_t* len)
 {
-    char buf[80] = {0,};
+    char buf[80] = {0};
     size_t s;
     snprintf(buf, sizeof(buf), "%ld", *val);
 
@@ -659,7 +659,7 @@ int Concept::unpack_string(char* val, size_t* len)
 
     //     if (context_ ->debug==1) {
     //         int err = 0;
-    //         char result[1024] = {0,};
+    //         char result[1024] = {0};
     //         err = get_concept_condition_string(get_enclosing_handle(), name_ , val, result);
     //         if (!err) fprintf(stderr, "ECCODES DEBUG concept name=%s, value=%s, conditions=%s\n", name_ , val, result);
     //     }

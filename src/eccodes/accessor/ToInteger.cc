@@ -60,7 +60,7 @@ long ToInteger::get_native_type()
 int ToInteger::unpack_string(char* val, size_t* len)
 {
     int err        = 0;
-    char buff[512] = {0,};
+    char buff[512] = {0};
     size_t size = sizeof(buff);
     size_t length = string_length();
 
@@ -106,7 +106,7 @@ int ToInteger::pack_double(const double* v, size_t* len)
 
 int ToInteger::unpack_long(long* v, size_t* len)
 {
-    char val[1024] = {0,};
+    char val[1024] = {0};
     size_t l   = sizeof(val);
     char* last = NULL;
     int err    = unpack_string(val, &l);

@@ -186,7 +186,7 @@ int grib_index_compress(grib_index* index)
 {
     int err           = 0;
     grib_context* c   = index->context;
-    int compress[200] = {0,};
+    int compress[200] = {0};
 
     if (!index->keys->next)
         return 0;
@@ -986,7 +986,7 @@ grib_index* grib_index_read(grib_context* c, const char* filename, int* err)
 int grib_index_search_same(grib_index* index, grib_handle* h)
 {
     int err        = 0;
-    char buf[STRING_VALUE_LEN] = {0,};
+    char buf[STRING_VALUE_LEN] = {0};
     size_t buflen = STRING_VALUE_LEN;
     grib_index_key* keys;
     long lval   = 0;
@@ -1078,7 +1078,7 @@ static int codes_index_add_file_internal(grib_index* index, const char* filename
     size_t svallen;
     size_t message_count = 0;
     long length, lval;
-    char buf[1024] = {0,};
+    char buf[1024] = {0};
     int err = 0;
     grib_file* indfile;
 
@@ -1298,7 +1298,7 @@ static int codes_index_add_file_internal(grib_index* index, const char* filename
 //     double dval;
 //     size_t svallen;
 //     long length,lval;
-//     char buf[1024]={0,};
+//     char buf[1024]={0};
 //     int err=0;
 //     grib_file* indfile;
 //     grib_file* newfile;
@@ -2084,7 +2084,7 @@ int codes_index_set_unpack_bufr(grib_index* index, int unpack)
 int is_index_file(const char* filename)
 {
     FILE* fh;
-    char buf[8] = {0,};
+    char buf[8] = {0};
     /* Only read the first 6 characters of identifier. Exclude version */
     const size_t numChars = 6;
     const char* id_grib   = "GRBIDX";

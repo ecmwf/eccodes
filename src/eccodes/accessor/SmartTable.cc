@@ -80,14 +80,14 @@ grib_smart_table* SmartTable::load_table()
     grib_smart_table* next = NULL;
     char* filename         = 0;
 
-    char recomposed[1024]      = {0,};
-    char localRecomposed[1024] = {0,};
+    char recomposed[1024]      = {0};
+    char localRecomposed[1024] = {0};
     char* localFilename        = 0;
-    char extraRecomposed[1024] = {0,};
+    char extraRecomposed[1024] = {0};
     char* extraFilename        = 0;
-    char masterDir[1024] = {0,};
-    char localDir[1024]  = {0,};
-    char extraDir[1024]  = {0,};
+    char masterDir[1024] = {0};
+    char localDir[1024]  = {0};
+    char extraDir[1024]  = {0};
     size_t len = 1024;
 
     if (masterDir_ != NULL) {
@@ -105,7 +105,7 @@ grib_smart_table* SmartTable::load_table()
     }
 
     if (*masterDir != 0) {
-        char name[2048] = {0,};
+        char name[2048] = {0};
         snprintf(name, sizeof(name), "%s/%s", masterDir, tablename_);
         grib_recompose_name(h, NULL, name, recomposed, 0);
         filename = grib_context_full_defs_path(c, recomposed);
@@ -116,14 +116,14 @@ grib_smart_table* SmartTable::load_table()
     }
 
     if (*localDir != 0) {
-        char localName[2048] = {0,};
+        char localName[2048] = {0};
         snprintf(localName, sizeof(localName), "%s/%s", localDir, tablename_);
         grib_recompose_name(h, NULL, localName, localRecomposed, 0);
         localFilename = grib_context_full_defs_path(c, localRecomposed);
     }
 
     if (*extraDir != 0) {
-        char extraTable[2048] = {0,};
+        char extraTable[2048] = {0};
         snprintf(extraTable, sizeof(extraTable), "%s/%s", extraDir, extraTable_);
         grib_recompose_name(h, NULL, extraTable, extraRecomposed, 0);
         extraFilename = grib_context_full_defs_path(c, extraRecomposed);
@@ -169,7 +169,7 @@ grib_smart_table* SmartTable::load_table()
 static int grib_load_smart_table(grib_context* c, const char* filename,
                                  const char* recomposed_name, size_t size, grib_smart_table* t)
 {
-    char line[1024] = {0,};
+    char line[1024] = {0};
     FILE* f = NULL;
     // int lineNumber;
     int numberOfColumns, code;

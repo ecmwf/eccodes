@@ -53,7 +53,7 @@ int main(int argc, char* argv[])
             printf("%s = %s (%d)\n", name, type_name, type);
 
             if (STR_EQUAL(type_name, "label")) {
-                char value[MAX_VAL_LEN] = {0,};
+                char value[MAX_VAL_LEN] = {0};
                 size_t vlen = MAX_VAL_LEN;
                 GRIB_CHECK(grib_get_string(h, name, value, &vlen), name);
                 ECCODES_ASSERT( strlen(value) > 0 );

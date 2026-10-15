@@ -435,7 +435,7 @@ int grib_set_string_internal(grib_handle* h, const char* name,
 static int preprocess_packingType_change(grib_handle* h, const char* keyname, const char* keyval)
 {
     int err = 0;
-    char input_packing_type[100] = {0,};
+    char input_packing_type[100] = {0};
     size_t len = sizeof(input_packing_type);
 
     if (grib_inline_strcmp(keyname, "packingType") == 0) {
@@ -946,7 +946,7 @@ static int __grib_set_double_array(grib_handle* h, const char* name, const doubl
             }
         }
         if (constant) {
-            char packingType[50] = {0,};
+            char packingType[50] = {0};
             size_t slen = 50;
 
             grib_get_string(h, "packingType", packingType, &slen);
@@ -2017,7 +2017,7 @@ int grib_get_long_array(const grib_handle* h, const char* name, long* val, size_
 //     int ret = 0;
 //     int i   = 0;
 //     for (i = 0; i < count; i++) {
-//         char buff[1024] = {0,};
+//         char buff[1024] = {0};
 //         size_t len = sizeof(buff) / sizeof(*buff);
 //         if (!args[i].name) {
 //             args[i].error = GRIB_INVALID_ARGUMENT;
@@ -2191,8 +2191,8 @@ static int grib_values_check_(grib_handle* h, grib_values* values, int count)
     int i = 0;
     long long_value;
     double double_value;
-    unsigned char ubuff[1024] = {0,};
-    char buff[1024] = {0,};
+    unsigned char ubuff[1024] = {0};
+    char buff[1024] = {0};
     size_t len = 1024;
 
     for (i = 0; i < count; i++) {

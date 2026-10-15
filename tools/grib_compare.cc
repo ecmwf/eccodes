@@ -159,7 +159,7 @@ static void write_message(grib_handle* h, const char* str)
 {
     const void* m;
     size_t s;
-    char fname[1024] = {0,};
+    char fname[1024] = {0};
     FILE* fh;
 
     grib_get_message(h, &m, &s);
@@ -378,7 +378,7 @@ int grib_tool_init(grib_runtime_options* options)
     if (infile) {
         if (path_is_directory(infile->name)) {
             // Take the filename of the 1st file and append to dir
-            char bufr[2048] = {0,};
+            char bufr[2048] = {0};
             // options->infile_extra->name is the 1st file
             snprintf(bufr, sizeof(bufr), "%s%c%s",
                      infile->name,
@@ -402,15 +402,15 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
 
 static void printInfo(grib_handle* h)
 {
-    char shortName[254] = {0,};
-    char levelType[254] = {0,};
-    char level[254] = {0,};
-    char paramId[254] = {0,};
-    char packingType[254] = {0,};
-    char gridType[254] = {0,};
-    char identifier[254] = {0,};
+    char shortName[254] = {0};
+    char levelType[254] = {0};
+    char level[254] = {0};
+    char paramId[254] = {0};
+    char packingType[254] = {0};
+    char gridType[254] = {0};
+    char identifier[254] = {0};
     size_t len          = 254;
-    char stepRange[254] = {0,};
+    char stepRange[254] = {0};
     if (lastPrint == count)
         return;
 
@@ -880,8 +880,8 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
                     save_error(c, name);
                     err1 = GRIB_VALUE_MISMATCH;
                     if (len1 == 1) {
-                        char buf1[128] = {0,}; /* buffers to store the binary representation of codeflags */
-                        char buf2[128] = {0,};
+                        char buf1[128] = {0}; /* buffers to store the binary representation of codeflags */
+                        char buf2[128] = {0};
                         grib_accessor* acc1 = grib_find_accessor(h1, name);
                         grib_accessor* acc2 = grib_find_accessor(h2, name);
                         printf("long [%s]: [%ld] != [%ld]", name, *lval1, *lval2);

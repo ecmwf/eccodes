@@ -103,7 +103,7 @@ static char* break_line(grib_context* c, const char* input)
             strcat(result, a_token);
         }
         else {
-            char tmp[256] = {0, };
+            char tmp[256] = {0};
             snprintf(tmp, sizeof(tmp), "->&\n    &%s", a_token);
             strcat(result, tmp);
         }

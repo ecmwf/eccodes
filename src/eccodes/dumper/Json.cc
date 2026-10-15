@@ -362,7 +362,7 @@ void Json::dump_string_array(grib_accessor* a, const char* comment)
 #define MAX_STRING_SIZE 4096
 void Json::dump_string(grib_accessor* a, const char* comment)
 {
-    char value[MAX_STRING_SIZE] = {0, }; /* See ECC-710 */
+    char value[MAX_STRING_SIZE] = {0}; /* See ECC-710 */
     size_t size          = MAX_STRING_SIZE;
     char* p              = NULL;
     int is_missing       = 0;

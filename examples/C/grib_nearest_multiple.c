@@ -36,8 +36,8 @@ int main(int argc, char** argv)
     double *outlats, *outlons, *values, *lsm_values, *distances;
     int* indexes;
     /*long step=0;
-    char time[10]={0,};
-    char date[10]={0,};
+    char time[10]={0};
+    char date[10]={0};
     long parameter=0;
     size_t len=0;*/
     long iid         = 0;

@@ -50,9 +50,9 @@ int main(int argc, char* argv[])
             char* name = codes_bufr_keys_iterator_get_name(kiter);
             if (strcmp(name, "subsetNumber") == 0) continue;
             if (!codes_bufr_key_is_header(h, name, &err) && !err) {
-                char name1[256] = {0,};
-                char scode[256] = {0,};
-                char X[3] = {0,}; // the 'X' part of FXY
+                char name1[256] = {0};
+                char scode[256] = {0};
+                char X[3] = {0}; // the 'X' part of FXY
                 size_t slen     = 256;
                 snprintf(name1, 256, "%s->code", name);
                 int error = codes_get_string(h, name1, scode, &slen);

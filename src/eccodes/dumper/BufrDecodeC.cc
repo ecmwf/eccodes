@@ -439,7 +439,7 @@ void BufrDecodeC::dump_string_array(grib_accessor* a, const char* comment)
 #define MAX_STRING_SIZE 4096
 void BufrDecodeC::dump_string(grib_accessor* a, const char* comment)
 {
-    char value[MAX_STRING_SIZE] = {0, }; /* See ECC-710 */
+    char value[MAX_STRING_SIZE] = {0}; /* See ECC-710 */
     size_t size     = MAX_STRING_SIZE;
     char* p         = NULL;
     grib_context* c = a->context_;
@@ -596,7 +596,7 @@ void BufrDecodeC::header(const grib_handle* h) const
         fprintf(out_, "  codes_handle*  h = NULL;\n");
         fprintf(out_, "  long           iVal = 0;\n");
         fprintf(out_, "  double         dVal = 0.0;\n");
-        fprintf(out_, "  char           sVal[1024] = {0,};\n");
+        fprintf(out_, "  char           sVal[1024] = {0};\n");
         fprintf(out_, "  long*          iValues = NULL;\n");
         fprintf(out_, "  char**         sValues = NULL;\n");
         fprintf(out_, "  double*        dValues = NULL;\n");

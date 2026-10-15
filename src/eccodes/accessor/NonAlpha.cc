@@ -72,7 +72,7 @@ int NonAlpha::unpack_string(char* val, size_t* len)
 
 int NonAlpha::unpack_long(long* v, size_t* len)
 {
-    char val[1024] = {0,};
+    char val[1024] = {0};
     size_t l   = sizeof(val);
     size_t i   = 0;
     char* last = NULL;
@@ -98,7 +98,7 @@ int NonAlpha::unpack_long(long* v, size_t* len)
 
 int NonAlpha::unpack_double(double* v, size_t* len)
 {
-    char val[1024] = {0,};
+    char val[1024] = {0};
     size_t l = sizeof(val);
     char* last = NULL;
     unpack_string(val, &l);

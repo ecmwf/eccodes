@@ -127,7 +127,7 @@ void Serialize::dump_double(grib_accessor* a, const char* comment)
 
 void Serialize::dump_string(grib_accessor* a, const char* comment)
 {
-    char value[1024] = {0, };
+    char value[1024] = {0};
     size_t size = sizeof(value);
     int err     = a->unpack_string(value, &size);
     int i;

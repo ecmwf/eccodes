@@ -46,12 +46,12 @@ static void test_reduced_gg(int remove_local_def, int edition, const char* packi
     FILE* in           = NULL;
     FILE* out          = NULL;
     const void* buffer = NULL;
-    char gridType[128] = {0,};
+    char gridType[128] = {0};
 
     grib_handle* handle     = 0;
     grib_handle* finalh     = 0;
-    grib_util_grid_spec spec = {0,};
-    grib_util_packing_spec packing_spec = {0,};
+    grib_util_grid_spec spec = {0};
+    grib_util_packing_spec packing_spec = {0};
 
     ECCODES_ASSERT(input_filename);
     in = fopen(input_filename, "rb");
@@ -167,13 +167,13 @@ static void test_regular_ll(int remove_local_def, int edition, const char* packi
     FILE* in           = NULL;
     FILE* out          = NULL;
     const void* buffer = NULL;
-    char gridType[128] = {0,};
+    char gridType[128] = {0};
     long input_edition = 0;
 
     grib_handle* handle     = 0;
     grib_handle* finalh     = 0;
-    grib_util_grid_spec spec = {0,};
-    grib_util_packing_spec packing_spec = {0,};
+    grib_util_grid_spec spec = {0};
+    grib_util_packing_spec packing_spec = {0};
 
     ECCODES_ASSERT(input_filename);
     in = fopen(input_filename, "rb");
@@ -283,13 +283,13 @@ static void test_grid_complex_spatial_differencing(int remove_local_def, int edi
     FILE* in = NULL;
     FILE* out = NULL;
     const void* buffer = NULL;
-    char gridType[128] = {0,};
+    char gridType[128] = {0};
     double theMax,theMin,theAverage;
 
     grib_handle *handle = 0;
     grib_handle *finalh = 0;
-    grib_util_grid_spec spec={0,};
-    grib_util_packing_spec packing_spec={0,};
+    grib_util_grid_spec spec={0};
+    grib_util_packing_spec packing_spec={0};
 
     in = fopen(input_filename,"rb");     ECCODES_ASSERT(in);
     handle = grib_handle_new_from_file(0, in, &err);    ECCODES_ASSERT(handle);

@@ -175,7 +175,7 @@ int BufrDataElement::unpack_string(char* val, size_t* len)
     grib_context* c = context_;
 
     if (type_ != BUFR_DESCRIPTOR_TYPE_STRING) {
-        char sval[32] = {0,};
+        char sval[32] = {0};
         err = unpack_double(&dval, &dlen);
         if (err) return err;
         snprintf(sval, sizeof(sval), "%g", dval);
@@ -538,7 +538,7 @@ int BufrDataElement::is_missing()
             grib_context_free(c, values);
         }
         else {
-            char value[MAX_STRING_SIZE] = {0,}; /* See ECC-710 */
+            char value[MAX_STRING_SIZE] = {0}; /* See ECC-710 */
             size = MAX_STRING_SIZE;
             err  = unpack_string(value, &size);
             if (err) return 0; /* TODO: no way of propagating the error up */

@@ -48,7 +48,7 @@ int Mtg2SwitchDefault::unpack_long(long* val, size_t* len)
     grib_handle* h     = get_enclosing_handle();
     int err            = 0;
     long tablesVersion = 0, tablesVersionMTG2Switch = 0;
-    char marsClass[32] = {0,};
+    char marsClass[32] = {0};
 
     err = grib_get_long(h, tablesVersion_, &tablesVersion);
     if (err) return err;

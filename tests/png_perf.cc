@@ -64,20 +64,20 @@ int main(int argc, char* argv[])
     size_t grid_png_l    = strlen(grid_png);
     char grid_simple[]   = "grid_simple";
     size_t grid_simple_l = strlen(grid_simple);
-    char packingType[50] = {0,};
+    char packingType[50] = {0};
     size_t len     = 50;
-    char param[50] = {0,};
-    char gridType[50] = {0,};
-    char outfilename[255] = {0,};
+    char param[50] = {0};
+    char gridType[50] = {0};
+    char outfilename[255] = {0};
     size_t filesize_png    = 0;
     size_t filesize_simple = 0;
     double perc            = 0;
     long bitsPerValue      = 0;
     int iarg               = 1;
-    char grid[40]          = {0,};
-    char shortName[20] = {0,};
+    char grid[40]          = {0};
+    char shortName[20] = {0};
     long level;
-    char levelType[20] = {0,};
+    char levelType[20] = {0};
 
     tes = grib_get_timer(0, "encoding simple", 0, 0);
     tds = grib_get_timer(0, "decoding simple", 0, 0);

@@ -22,7 +22,7 @@
 int main(int argc, char** argv)
 {
     grib_handle* h       = NULL;
-    char full_path[2048] = {0,};
+    char full_path[2048] = {0};
     const char* sample_name = NULL;
     const char* new_dir     = NULL;
     grib_context* c         = NULL;

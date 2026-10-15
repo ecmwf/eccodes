@@ -52,8 +52,8 @@ void G2EndStep::dump(eccodes::Dumper* dumper)
 // See GRIB-488
 static bool is_special_expver(const grib_handle* h)
 {
-    char strMarsExpVer[50] = {0,};
-    char strMarsClass[50] = {0,};
+    char strMarsExpVer[50] = {0};
+    char strMarsClass[50] = {0};
     size_t slen = 50;
     int ret = grib_get_string(h, "mars.class", strMarsClass, &slen);
     if (ret == GRIB_SUCCESS && STR_EQUAL(strMarsClass, "em")) {
@@ -210,9 +210,9 @@ int G2EndStep::unpack_multiple_time_ranges_long_(long* val, size_t* len)
     long numberOfTimeRanges = 0, step_units = 0, start_step_value = 0;
 
     size_t count = 0;
-    long arr_typeOfTimeIncrement[MAX_NUM_TIME_RANGES] = {0,};
-    long arr_coded_unit[MAX_NUM_TIME_RANGES] = {0,};
-    long arr_coded_time_range[MAX_NUM_TIME_RANGES] = {0,};
+    long arr_typeOfTimeIncrement[MAX_NUM_TIME_RANGES] = {0};
+    long arr_coded_unit[MAX_NUM_TIME_RANGES] = {0};
+    long arr_coded_time_range[MAX_NUM_TIME_RANGES] = {0};
 
     if ((err = grib_get_long_internal(h, start_step_value_, &start_step_value)))
         return err;
@@ -293,9 +293,9 @@ int G2EndStep::unpack_multiple_time_ranges_double_(double* val, size_t* len)
     long start_step_unit    = 0;
 
     size_t count = 0;
-    long arr_typeOfTimeIncrement[MAX_NUM_TIME_RANGES] = {0,};
-    long arr_coded_unit[MAX_NUM_TIME_RANGES] = {0,};
-    long arr_coded_time_range[MAX_NUM_TIME_RANGES] = {0,};
+    long arr_typeOfTimeIncrement[MAX_NUM_TIME_RANGES] = {0};
+    long arr_coded_unit[MAX_NUM_TIME_RANGES] = {0};
+    long arr_coded_time_range[MAX_NUM_TIME_RANGES] = {0};
 
     if ((err = grib_get_long_internal(h, start_step_value_, &start_step_value)))
         return err;

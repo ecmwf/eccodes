@@ -32,9 +32,9 @@ void Lookup::post_init()
 
 void Lookup::dump(eccodes::Dumper* dumper)
 {
-    unsigned char bytes[1024] = {0,};
-    char msg[1024] = {0,};
-    char buf[2048] = {0,};
+    unsigned char bytes[1024] = {0};
+    char msg[1024] = {0};
+    char buf[2048] = {0};
     unsigned long v = 0;
 
     size_t llen = llength_;
@@ -55,7 +55,7 @@ void Lookup::dump(eccodes::Dumper* dumper)
 
 int Lookup::unpack_string(char* v, size_t* len)
 {
-    unsigned char bytes[1024] = {0,};
+    unsigned char bytes[1024] = {0};
 
     size_t llen = llength_;
     unpack_bytes(bytes, &llen);
