@@ -9,6 +9,7 @@ keywords     .workspace = true
 categories   .workspace = true
 description  = "Safe Rust wrapper for ECMWF's eccodes (GRIB/BUFR)"
 readme       = "README.md"
+build        = "build.rs"
 
 [features]
 default = ["vendored", "aec"]
@@ -43,6 +44,9 @@ log       = "0.4"
 # Dates and times in the public API: `time::Date`/`Time` are what message
 # keys decode to. Chosen over chrono/jiff for native Julian-day support.
 time      = "0.3"
+
+[build-dependencies]
+bindman-utils.workspace = true
 
 [dev-dependencies]
 # Fetches optional golden-value fixtures from the ECMWF test-data server.
