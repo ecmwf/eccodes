@@ -16,7 +16,7 @@ namespace eccodes::accessor
 int DataG1ShSimplePacking::value_count(long* count)
 {
     size_t len = 0;
-    int err    = 0;
+    int err = 0;
 
     err = grib_get_size(get_enclosing_handle(), coded_values_, &len);
     len += 1;
@@ -30,7 +30,7 @@ int DataG1ShSimplePacking::unpack_double(double* val, size_t* len)
     int err = GRIB_SUCCESS;
 
     size_t coded_n_vals = 0;
-    size_t n_vals       = 0;
+    size_t n_vals = 0;
 
     if ((err = grib_get_size(get_enclosing_handle(), coded_values_, &coded_n_vals)) != GRIB_SUCCESS)
         return err;

@@ -10,9 +10,11 @@
 
 #include "String.h"
 
-namespace eccodes::expression {
+namespace eccodes::expression
+{
 
-String::String(grib_context* c, const char* value) {
+String::String(grib_context* c, const char* value)
+{
     value_ = grib_context_strdup_persistent(c, value);
 }
 
@@ -42,8 +44,9 @@ int String::native_type(grib_handle* h) const
     return GRIB_TYPE_STRING;
 }
 
-} // namespace eccodes::expression
+}  // namespace eccodes::expression
 
-grib_expression* new_string_expression(grib_context* c, const char* value) {
+grib_expression* new_string_expression(grib_context* c, const char* value)
+{
     return new eccodes::expression::String(c, value);
 }

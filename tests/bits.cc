@@ -13,10 +13,10 @@
 
 #include "grib_api_internal.h"
 
-#define NO_PRINT 1
-#define PRINT_ALL (1 << 1)
-#define PRINT_ROUND_ERRORS (1 << 2)
-#define PRINT_TRUNCATION (1 << 3)
+#define NO_PRINT                     1
+#define PRINT_ALL                    (1 << 1)
+#define PRINT_ROUND_ERRORS           (1 << 2)
+#define PRINT_TRUNCATION             (1 << 3)
 #define NO_NEAREST_SMALLER_IBM_FLOAT (1 << 4)
 
 void test_bits(double x, unsigned long mode)
@@ -26,21 +26,21 @@ void test_bits(double x, unsigned long mode)
     double dy = 0, dz = 0, dw = 0, dt = 0;
     unsigned long i = 0, j = 0, k = 0, l = 0;
 
-    i  = grib_ibm_to_long(x);
-    y  = grib_long_to_ibm(i);
+    i = grib_ibm_to_long(x);
+    y = grib_long_to_ibm(i);
     dy = y - x;
 
-    z  = grib_long_to_ibm(j);
+    z = grib_long_to_ibm(j);
     dz = z - x;
 
-    k  = grib_ibm_nearest_smaller_to_long(x);
-    w  = grib_long_to_ibm(k);
+    k = grib_ibm_nearest_smaller_to_long(x);
+    w = grib_long_to_ibm(k);
     dw = w - x;
 
     if (!(mode & NO_NEAREST_SMALLER_IBM_FLOAT)) {
-        err  = grib_nearest_smaller_ibm_float(x, &t);
+        err = grib_nearest_smaller_ibm_float(x, &t);
         ECCODES_ASSERT(!err);
-        l  = grib_ibm_to_long(y);
+        l = grib_ibm_to_long(y);
         dt = t - x;
     }
 
@@ -104,13 +104,13 @@ int main(int argc, char* argv[])
     unsigned long A;
     int k, cc;
 
-    dminp  = grib_long_to_ibm(iminp);
+    dminp = grib_long_to_ibm(iminp);
     dminpn = grib_long_to_ibm(iminp + 1);
-    dmaxp  = grib_long_to_ibm(imaxp);
+    dmaxp = grib_long_to_ibm(imaxp);
     dmaxpp = grib_long_to_ibm(imaxp - 1);
-    dminn  = grib_long_to_ibm(iminn);
+    dminn = grib_long_to_ibm(iminn);
     dminnn = grib_long_to_ibm(iminn + 1);
-    dmaxn  = grib_long_to_ibm(imaxn);
+    dmaxn = grib_long_to_ibm(imaxn);
     dmaxnp = grib_long_to_ibm(imaxn - 1);
 
     x = -1.33642013258103330000e-83;
@@ -217,9 +217,9 @@ int main(int argc, char* argv[])
     nc = ((imaxn - iminp)) / 100;
     printf("imaxn=%lu iminp=%lu nc=%lu\n", imaxn, iminp, nc);
     fflush(stdout);
-    c  = 0;
+    c = 0;
     cc = 1;
-    i  = 0xCC100000;
+    i = 0xCC100000;
     /* for (i=0x7F100000 ;i<imaxn;i++)  */
     for (i = iminp; i < imaxn; i++) {
         if ((i & 0x00100000) == 0 &&
@@ -236,7 +236,7 @@ int main(int argc, char* argv[])
             cc++;
         }
 
-        A   = (i & 0x7f000000) >> 24;
+        A = (i & 0x7f000000) >> 24;
         /*e   = A - 70;*/
         eps = 1;
         /*m   = (i & 0xffffff);*/

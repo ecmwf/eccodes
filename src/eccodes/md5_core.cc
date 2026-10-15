@@ -16,7 +16,7 @@
 
 /* On CRAY, disable all automatic optimisations for this module */
 #if _CRAYC
-#pragma _CRI noopt
+    #pragma _CRI noopt
 #endif
 
 static const unsigned long r[] = {
@@ -44,33 +44,33 @@ static const unsigned long k[] = {
 #define ECC_H(x, y, z) (x ^ y ^ z)
 #define ECC_I(x, y, z) (y ^ (x | (~z)))
 
-#define F_(A, B, C, D, g, i)        \
+#define F_(A, B, C, D, g, i)           \
     A += ECC_F(B, C, D) + w[g] + k[i]; \
-    A &= 0xffffffff;                \
-    A = ROT(A, r[i]);               \
+    A &= 0xffffffff;                   \
+    A = ROT(A, r[i]);                  \
     A += B;
-#define G_(A, B, C, D, g, i)        \
+#define G_(A, B, C, D, g, i)           \
     A += ECC_G(B, C, D) + w[g] + k[i]; \
-    A &= 0xffffffff;                \
-    A = ROT(A, r[i]);               \
+    A &= 0xffffffff;                   \
+    A = ROT(A, r[i]);                  \
     A += B;
-#define H_(A, B, C, D, g, i)        \
+#define H_(A, B, C, D, g, i)           \
     A += ECC_H(B, C, D) + w[g] + k[i]; \
-    A &= 0xffffffff;                \
-    A = ROT(A, r[i]);               \
+    A &= 0xffffffff;                   \
+    A = ROT(A, r[i]);                  \
     A += B;
-#define I_(A, B, C, D, g, i)        \
+#define I_(A, B, C, D, g, i)           \
     A += ECC_I(B, C, D) + w[g] + k[i]; \
-    A &= 0xffffffff;                \
-    A = ROT(A, r[i]);               \
+    A &= 0xffffffff;                   \
+    A = ROT(A, r[i]);                  \
     A += B;
 
 static void grib_md5_flush(grib_md5_state* s)
 {
-    unsigned long a  = s->h0;
-    unsigned long b  = s->h1;
-    unsigned long c  = s->h2;
-    unsigned long d  = s->h3;
+    unsigned long a = s->h0;
+    unsigned long b = s->h1;
+    unsigned long c = s->h2;
+    unsigned long d = s->h3;
     unsigned long* w = &s->words[0];
 
     F_(a, b, c, d, 0, 0);
@@ -181,7 +181,7 @@ void grib_md5_add(grib_md5_state* s, const void* data, size_t len)
 
         if (s->byte_count == 4) {
             s->words[s->word_count++] = (s->bytes[3] << 24) | (s->bytes[2] << 16) | (s->bytes[1] << 8) | (s->bytes[0]);
-            s->byte_count             = 0;
+            s->byte_count = 0;
 
             if (s->word_count == 16)
                 grib_md5_flush(s);
@@ -199,7 +199,7 @@ void grib_md5_end(grib_md5_state* s, char* digest)
     grib_md5_add(s, &c, 1);
 
     bits = s->size * h;
-    c    = 0;
+    c = 0;
     while ((bits % 512) != 448) {
         grib_md5_add(s, &c, 1);
         bits = s->size * h;
@@ -214,41 +214,40 @@ void grib_md5_end(grib_md5_state* s, char* digest)
 #define U(x) ((unsigned int)(x))
 
     snprintf(digest, 1024, "%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",
-            U(s->h0 & 0xff), U((s->h0 >> 8) & 0xff), U((s->h0 >> 16) & 0xff), U((s->h0 >> 24) & 0xff),
-            U(s->h1 & 0xff), U((s->h1 >> 8) & 0xff), U((s->h1 >> 16) & 0xff), U((s->h1 >> 24) & 0xff),
-            U(s->h2 & 0xff), U((s->h2 >> 8) & 0xff), U((s->h2 >> 16) & 0xff), U((s->h2 >> 24) & 0xff),
-            U(s->h3 & 0xff), U((s->h3 >> 8) & 0xff), U((s->h3 >> 16) & 0xff), U((s->h3 >> 24) & 0xff));
+             U(s->h0 & 0xff), U((s->h0 >> 8) & 0xff), U((s->h0 >> 16) & 0xff), U((s->h0 >> 24) & 0xff),
+             U(s->h1 & 0xff), U((s->h1 >> 8) & 0xff), U((s->h1 >> 16) & 0xff), U((s->h1 >> 24) & 0xff),
+             U(s->h2 & 0xff), U((s->h2 >> 8) & 0xff), U((s->h2 >> 16) & 0xff), U((s->h2 >> 24) & 0xff),
+             U(s->h3 & 0xff), U((s->h3 >> 8) & 0xff), U((s->h3 >> 16) & 0xff), U((s->h3 >> 24) & 0xff));
 }
 
 #if defined(TESTING_MD5)
 
-main(int argc, char **argv)
+main(int argc, char** argv)
 {
     char digest[1024];
 
     const char* p = "The quick brown fox jumps over the lazy dog";
     grib_md5_state s;
     grib_md5_init(&s);
-    if(argc>1) {
-        char buffer[10240] = {0};
+    if (argc > 1) {
+        char buffer[10240] = { 0 };
         long len = 0;
-        FILE* f = fopen64(argv[1],"r");
-        if(!f) {
+        FILE* f = fopen64(argv[1], "r");
+        if (!f) {
             perror(argv[1]);
             return 1;
         }
-        while((len = fread(buffer, 1, sizeof(buffer), f)) > 0) {
-            grib_md5_add(&s,buffer,len);
+        while ((len = fread(buffer, 1, sizeof(buffer), f)) > 0) {
+            grib_md5_add(&s, buffer, len);
         }
         fclose(f);
     }
-    else
-    {
-        grib_md5_add(&s,p,strlen(p));
+    else {
+        grib_md5_add(&s, p, strlen(p));
     }
     grib_md5_end(&s, digest);
 
-    printf("%s\n",digest);
+    printf("%s\n", digest);
 }
 
 #endif

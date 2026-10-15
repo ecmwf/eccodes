@@ -47,9 +47,9 @@ const char* tool_description =
     "Sets key/value pairs in the input GRIB file(s) and writes"
     "\n\teach message to the output_grib_file."
     "\n\tIt fails when an error occurs (e.g. key not found).";
-const char* tool_name       = "grib_set";
+const char* tool_name = "grib_set";
 const char* tool_online_doc = "https://confluence.ecmwf.int/display/ECC/grib_set";
-const char* tool_usage      = "[options] grib_file grib_file ... output_grib_file";
+const char* tool_usage = "[options] grib_file grib_file ... output_grib_file";
 
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 
@@ -72,7 +72,7 @@ int grib_tool_init(grib_runtime_options* options)
     if (options->verbose)
         options->print_header = 1;
 
-    if (grib_options_on("p:")) { // ECC-2018
+    if (grib_options_on("p:")) {  // ECC-2018
         if (grib_options_get_option("p:")) {
             options->verbose = 1;
             options->print_header = 0;
@@ -114,10 +114,10 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
 int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 {
     size_t i = 0;
-    int err  = 0;
+    int err = 0;
 
     if (!options->skip) {
-        double* v   = NULL;
+        double* v = NULL;
         size_t size = 0;
         if (options->repack) {
             GRIB_CHECK_NOLINE(grib_get_size(h, "values", &size), 0);

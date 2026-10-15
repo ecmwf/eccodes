@@ -16,19 +16,19 @@ namespace eccodes::accessor
 void G2MarsLabeling::init(const long l, grib_arguments* c)
 {
     Gen::init(l, c);
-    int n             = 0;
+    int n = 0;
     grib_handle* hand = get_enclosing_handle();
 
-    index_                           = c->get_long(hand, n++);
-    the_class_                       = c->get_name(hand, n++);
-    type_                            = c->get_name(hand, n++);
-    stream_                          = c->get_name(hand, n++);
-    expver_                          = c->get_name(hand, n++);
-    typeOfProcessedData_             = c->get_name(hand, n++);
+    index_ = c->get_long(hand, n++);
+    the_class_ = c->get_name(hand, n++);
+    type_ = c->get_name(hand, n++);
+    stream_ = c->get_name(hand, n++);
+    expver_ = c->get_name(hand, n++);
+    typeOfProcessedData_ = c->get_name(hand, n++);
     productDefinitionTemplateNumber_ = c->get_name(hand, n++);
-    stepType_                        = c->get_name(hand, n++);
-    derivedForecast_                 = c->get_name(hand, n++);
-    typeOfGeneratingProcess_         = c->get_name(hand, n++);
+    stepType_ = c->get_name(hand, n++);
+    derivedForecast_ = c->get_name(hand, n++);
+    typeOfGeneratingProcess_ = c->get_name(hand, n++);
 }
 
 int G2MarsLabeling::unpack_long(long* val, size_t* len)
@@ -79,22 +79,22 @@ int G2MarsLabeling::unpack_string(char* val, size_t* len)
 
 int G2MarsLabeling::extra_set(long val)
 {
-    int ret                                = 0;
-    grib_handle* hand                      = get_enclosing_handle();
-    char stepType[30]                      = {0};
-    size_t stepTypelen                      = 30;
-    long derivedForecast                    = -1;
+    int ret = 0;
+    grib_handle* hand = get_enclosing_handle();
+    char stepType[30] = { 0 };
+    size_t stepTypelen = 30;
+    long derivedForecast = -1;
     long productDefinitionTemplateNumberNew = -1;
     long productDefinitionTemplateNumber;
-    long typeOfProcessedData     = -1;
+    long typeOfProcessedData = -1;
     long typeOfGeneratingProcess = -1;
-    int is_eps                   = -1;
-    int is_instant               = -1;
-    long is_chemical             = 0;
-    long is_chemical_distfn      = 0;
-    long is_chemical_srcsink     = 0;
-    long is_aerosol              = 0;
-    long is_aerosol_optical      = 0;
+    int is_eps = -1;
+    int is_instant = -1;
+    long is_chemical = 0;
+    long is_chemical_distfn = 0;
+    long is_chemical_srcsink = 0;
+    long is_aerosol = 0;
+    long is_aerosol_optical = 0;
 
     grib_get_long(hand, "is_chemical", &is_chemical);
     grib_get_long(hand, "is_chemical_srcsink", &is_chemical_srcsink);
@@ -102,7 +102,7 @@ int G2MarsLabeling::extra_set(long val)
     grib_get_long(hand, "is_aerosol", &is_aerosol);
     grib_get_long(hand, "is_aerosol_optical", &is_aerosol_optical);
 
-    const int is_wave        = grib_is_defined(hand, "waveDirectionNumber");
+    const int is_wave = grib_is_defined(hand, "waveDirectionNumber");
     const int is_wave_prange = grib_is_defined(hand, "typeOfWavePeriodInterval");
     const int is_random_field = grib_is_defined(hand, "randomFieldNumber");
 
@@ -114,12 +114,12 @@ int G2MarsLabeling::extra_set(long val)
             /* type */
             switch (val) {
                 case 0: /* Unknown       (0) */
-                    typeOfProcessedData     = 255;
+                    typeOfProcessedData = 255;
                     typeOfGeneratingProcess = 255;
                     break;
                 case 1: /* First guess          (fg) */
                 case 3: /* Initialised analysis (ia) */
-                    typeOfProcessedData     = 0;
+                    typeOfProcessedData = 0;
                     typeOfGeneratingProcess = 1;
                     break;
                 case 2:  /* Analysis                    (an) */
@@ -129,33 +129,33 @@ int G2MarsLabeling::extra_set(long val)
                 case 7:  /* 3d variational gradients    (3g) */
                 case 8:  /* 4d variational gradients    (4g) */
                 case 90: /* Gridded analysis input     (gai) */
-                    typeOfProcessedData     = 0;
+                    typeOfProcessedData = 0;
                     typeOfGeneratingProcess = 0;
                     break;
                 case 9: /* Forecast  (fc) */
-                    typeOfProcessedData     = 1;
+                    typeOfProcessedData = 1;
                     typeOfGeneratingProcess = 2;
                     break;
                 case 10: /* Control forecast  (cf) */
-                    typeOfProcessedData     = 3;
+                    typeOfProcessedData = 3;
                     typeOfGeneratingProcess = 4;
                     break;
                 case 11: /* Perturbed forecast    (pf) */
-                    typeOfProcessedData     = 4;
+                    typeOfProcessedData = 4;
                     typeOfGeneratingProcess = 4;
                     break;
                 case 12: /* Errors in first guess  (ef) */
                 case 13: /* Errors in analysis     (ea) */
-                    typeOfProcessedData     = 255;
+                    typeOfProcessedData = 255;
                     typeOfGeneratingProcess = 7;
                     break;
                 case 14: /* Cluster means              (cm) */
                 case 15: /* Cluster std deviations     (cs) */
-                    typeOfProcessedData     = 255;
+                    typeOfProcessedData = 255;
                     typeOfGeneratingProcess = 4;
                     break;
                 case 16: /* Forecast probability  (fp) */
-                    typeOfProcessedData     = 8;
+                    typeOfProcessedData = 8;
                     typeOfGeneratingProcess = 5;
                     break;
                 case 17: /* Ensemble mean  (em) */
@@ -167,7 +167,7 @@ int G2MarsLabeling::extra_set(long val)
                     else {
                         productDefinitionTemplateNumberNew = 12;
                     }
-                    typeOfProcessedData     = 255;
+                    typeOfProcessedData = 255;
                     typeOfGeneratingProcess = 4;
                     break;
                 case 18: /* Ensemble standard deviation     (es) */
@@ -179,7 +179,7 @@ int G2MarsLabeling::extra_set(long val)
                     else {
                         productDefinitionTemplateNumberNew = 12;
                     }
-                    typeOfProcessedData     = 255;
+                    typeOfProcessedData = 255;
                     typeOfGeneratingProcess = 4;
                     break;
                 case 19: /* Forecast accumulation           (fa)  */
@@ -193,15 +193,15 @@ int G2MarsLabeling::extra_set(long val)
                 case 27: /* Extreme forecast index          (efi) */
                 case 28: /* Extreme forecast index control  (efic)*/
                 case 29: /* Probability boundaries          (pb)  */
-                    typeOfProcessedData     = 255;
+                    typeOfProcessedData = 255;
                     typeOfGeneratingProcess = 255;
                     break;
                 case 30: /* Event probability      (ep) */
-                    typeOfProcessedData     = 8;
+                    typeOfProcessedData = 8;
                     typeOfGeneratingProcess = 5;
                     break;
                 case 31: /* Bias-corrected forecast      (bf) */
-                    typeOfProcessedData     = 1;
+                    typeOfProcessedData = 1;
                     typeOfGeneratingProcess = 3;
                     break;
                 case 32: /* Climate distribution      (cd)  */
@@ -214,7 +214,7 @@ int G2MarsLabeling::extra_set(long val)
                 case 39: /* Ensemble data assimilation model errors */
                 case 40: /* Images                    (im)  */
                 case 42: /* Simulated images          (sim) */
-                    typeOfProcessedData     = 255;
+                    typeOfProcessedData = 255;
                     typeOfGeneratingProcess = 255;
                     break;
                 case 43: /* Weighted ensemble mean                   (wem)  */
@@ -223,7 +223,7 @@ int G2MarsLabeling::extra_set(long val)
                 case 46: /* Scaled ensemble standard deviation       (ses)  */
                 case 47: /* Time average ensemble mean               (taem) */
                 case 48: /* Time average ensemble standard deviation (taes) */
-                    typeOfProcessedData     = 255;
+                    typeOfProcessedData = 255;
                     typeOfGeneratingProcess = 4;
                     break;
                 case 50: /* Sensitivity gradient            (sg)   */
@@ -233,11 +233,11 @@ int G2MarsLabeling::extra_set(long val)
                 case 62: /* Singular vector                 (sv)   */
                 case 63: /* Adjoint singular vector         (as)   */
                 case 64: /* Signal variance                 (svar) */
-                    typeOfProcessedData     = 255;
+                    typeOfProcessedData = 255;
                     typeOfGeneratingProcess = 255;
                     break;
                 case 65: /* Calibration/Validation forecast  (cv) */
-                    typeOfProcessedData     = 5;
+                    typeOfProcessedData = 5;
                     typeOfGeneratingProcess = 4;
                     break;
                 case 70: /* Ocean reanalysis     (or) */
@@ -252,7 +252,7 @@ int G2MarsLabeling::extra_set(long val)
                 case 87: /* Simulated satellite data */
                 case 88: /* Gridded satellite data */
                 case 89: /* GFAS analysis */
-                    typeOfProcessedData     = 255;
+                    typeOfProcessedData = 255;
                     typeOfGeneratingProcess = 255;
                     break;
                 default:
@@ -269,7 +269,7 @@ int G2MarsLabeling::extra_set(long val)
                 case 1259:      /* xwda */
                     is_eps = 1; /* These streams are all for ensembles */
                     grib_get_string(hand, stepType_, stepType, &stepTypelen);
-                    is_instant                         = (strcmp(stepType, "instant") == 0);
+                    is_instant = (strcmp(stepType, "instant") == 0);
                     productDefinitionTemplateNumberNew = grib2_select_PDTN(
                         is_eps, is_instant,
                         is_chemical,
@@ -313,7 +313,7 @@ int G2MarsLabeling::extra_set(long val)
 int G2MarsLabeling::pack_string(const char* val, size_t* len)
 {
     char* key = NULL;
-    int ret   = 0;
+    int ret = 0;
     long lval = 0;
 
     switch (index_) {
@@ -346,7 +346,7 @@ int G2MarsLabeling::pack_string(const char* val, size_t* len)
 int G2MarsLabeling::pack_long(const long* val, size_t* len)
 {
     char* key = NULL;
-    int ret   = 0;
+    int ret = 0;
 
     switch (index_) {
         case 0:
@@ -380,8 +380,8 @@ int G2MarsLabeling::value_count(long* count)
 long G2MarsLabeling::get_native_type()
 {
     char* key = NULL;
-    int ret   = 0;
-    int type  = 0;
+    int ret = 0;
+    int type = 0;
 
     switch (index_) {
         case 0:

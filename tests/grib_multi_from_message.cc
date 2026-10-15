@@ -15,20 +15,20 @@
 int main(int argc, char* argv[])
 {
     struct stat finfo;
-    char shortName[20] = {0};
+    char shortName[20] = { 0 };
     size_t len;
     grib_handle* h = NULL;
     size_t fsize;
     unsigned char* data = NULL;
-    unsigned char* p    = NULL;
-    void* pdata         = NULL;
-    int error           = 0;
-    int count           = 0;
-    char* filename      = NULL;
-    FILE* f             = NULL;
-    long level          = 0;
-    grib_context* c     = grib_context_get_default();
-    int multi_support   = 0;
+    unsigned char* p = NULL;
+    void* pdata = NULL;
+    int error = 0;
+    int count = 0;
+    char* filename = NULL;
+    FILE* f = NULL;
+    long level = 0;
+    grib_context* c = grib_context_get_default();
+    int multi_support = 0;
 
     if (argc == 3 && !strcmp(argv[1], "-m")) {
         grib_multi_support_on(c);
@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
     fsize = finfo.st_size;
 
     data = (unsigned char*)malloc(fsize);
-    p    = data;
+    p = data;
     ECCODES_ASSERT(data);
 
     if (fread(data, 1, fsize, f) != fsize) {

@@ -12,9 +12,11 @@
 
 #include "Expression.h"
 
-namespace eccodes::expression {
+namespace eccodes::expression
+{
 
-class Binop : public Expression {
+class Binop : public Expression
+{
 public:
     Binop(grib_context*, BinopLongProc, BinopDoubleProc, Expression*, Expression*);
 

@@ -20,7 +20,7 @@ void SmartTableColumn::init(const long len, grib_arguments* params)
     int n = 0;
 
     smartTable_ = params->get_name(get_enclosing_handle(), n++);
-    index_      = params->get_long(get_enclosing_handle(), n++);
+    index_ = params->get_long(get_enclosing_handle(), n++);
 
     length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
@@ -48,7 +48,7 @@ int SmartTableColumn::unpack_string_array(char** buffer, size_t* len)
     size_t size = 1;
     long* code;
     int err = GRIB_SUCCESS;
-    char tmp[1024] = {0};
+    char tmp[1024] = { 0 };
 
     tableAccessor = (SmartTable*)grib_find_accessor(get_enclosing_handle(), smartTable_);
     if (!tableAccessor) {
@@ -146,8 +146,8 @@ int SmartTableColumn::unpack_long(long* val, size_t* len)
 int SmartTableColumn::value_count(long* count)
 {
     size_t size = 0;
-    int err     = 0;
-    *count      = 0;
+    int err = 0;
+    *count = 0;
 
     if (!smartTable_)
         return 0;

@@ -66,11 +66,11 @@ CASE("ECC-600")
         }
 
         for (const auto& test : tests) {
-            double lat      = 0;
-            double lon      = 0;
-            double value    = 0;
+            double lat = 0;
+            double lon = 0;
+            double value = 0;
             double distance = 0;
-            int index       = 0;
+            int index = 0;
             EXPECT(codes_grib_nearest_find_multiple(h.get(), 0, &test.lat, &test.lon, 1, &lat, &lon, &value, &distance,
                                                     &index) == CODES_SUCCESS);
 
@@ -90,7 +90,7 @@ int main(int argc, char* argv[])
     // Usage: grib_nearest_rotated [<test-data-directory>]
     if (argc > 1) {
         DATA_DIR = argv[1];
-        argc     = 1;  // consume it, the rest is for eckit's test runner
+        argc = 1;  // consume it, the rest is for eckit's test runner
     }
 
     return eckit::testing::run_tests(argc, argv);

@@ -58,7 +58,7 @@ int Ascii::unpack_string(char* val, size_t* len)
     for (i = 0; i < alen; i++)
         val[i] = hand->buffer->data[offset_ + i];
     val[i] = 0;
-    *len   = i;
+    *len = i;
     return GRIB_SUCCESS;
 }
 
@@ -118,11 +118,11 @@ int Ascii::pack_double(const double* v, size_t* len)
 
 int Ascii::unpack_long(long* v, size_t* len)
 {
-    char val[1024] = {0};
-    size_t l   = sizeof(val);
-    size_t i   = 0;
+    char val[1024] = { 0 };
+    size_t l = sizeof(val);
+    size_t i = 0;
     char* last = NULL;
-    int err    = unpack_string(val, &l);
+    int err = unpack_string(val, &l);
     if (err)
         return err;
 
@@ -145,8 +145,8 @@ int Ascii::unpack_long(long* v, size_t* len)
 
 int Ascii::unpack_double(double* v, size_t* len)
 {
-    char val[1024] = {0};
-    size_t l   = sizeof(val);
+    char val[1024] = { 0 };
+    size_t l = sizeof(val);
     char* last = NULL;
 
     int err = unpack_string(val, &l);
@@ -169,7 +169,7 @@ int Ascii::compare(grib_accessor* b)
     int retval = 0;
     char* aval = 0;
     char* bval = 0;
-    int err    = 0;
+    int err = 0;
 
     size_t alen = length_ + 1;
     size_t blen = b->length_ + 1;

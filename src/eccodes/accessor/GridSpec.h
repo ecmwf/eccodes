@@ -19,15 +19,20 @@ class GridSpec : public Gen
 {
 public:
     GridSpec() :
-      Gen() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        Gen() {}
+    const AccessorType& accessor_type() const override
+    {
+        {
+            return accessor_type_;
+        }
+    }
     long get_native_type() override;
     int unpack_string(char*, size_t* len) override;
     int pack_string(const char*, size_t* len) override;
     void init(const long, grib_arguments*) override;
 
 
-    static constexpr AccessorType accessor_type_{"grid_spec"};
+    static constexpr AccessorType accessor_type_{ "grid_spec" };
 
 private:
     void print_warning_feature_not_implemented();

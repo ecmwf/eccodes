@@ -16,22 +16,22 @@ namespace eccodes::accessor
 void G1StepRange::init(const long l, grib_arguments* c)
 {
     AbstractLongVector::init(l, c);
-    grib_handle* h      = get_enclosing_handle();
-    int n               = 0;
-    p1_                 = c->get_name(h, n++);
-    p2_                 = c->get_name(h, n++);
+    grib_handle* h = get_enclosing_handle();
+    int n = 0;
+    p1_ = c->get_name(h, n++);
+    p2_ = c->get_name(h, n++);
     timeRangeIndicator_ = c->get_name(h, n++);
-    unit_               = c->get_name(h, n++);
-    step_unit_          = c->get_name(h, n++);
-    stepType_           = c->get_name(h, n++);
-    patch_fp_precip_    = c->get_name(h, n++);
-    error_on_units_     = 1;
+    unit_ = c->get_name(h, n++);
+    step_unit_ = c->get_name(h, n++);
+    stepType_ = c->get_name(h, n++);
+    patch_fp_precip_ = c->get_name(h, n++);
+    error_on_units_ = 1;
 
     number_of_elements_ = 2;
-    v_                  = (long*)grib_context_malloc_clear(h->context,
-                                                           sizeof(long) * number_of_elements_);
-    pack_index_         = -1;
-    dirty_              = 1;
+    v_ = (long*)grib_context_malloc_clear(h->context,
+                                          sizeof(long) * number_of_elements_);
+    pack_index_ = -1;
+    dirty_ = 1;
 
     length_ = 0;
 }
@@ -85,10 +85,10 @@ static const int u2s[] = {
 
 int G1StepRange::grib_g1_step_get_steps(long* start, long* theEnd)
 {
-    int err                            = 0;
+    int err = 0;
     long p1 = 0, p2 = 0, unit = 0, timeRangeIndicator = 0, timeRangeIndicatorFromStepRange = 0;
-    long step_unit    = 1;
-    char stepType[20] = {0};
+    long step_unit = 1;
+    char stepType[20] = { 0 };
     size_t stepTypeLen = 20;
     long newstart, newend;
     int factor = 1;
@@ -134,7 +134,7 @@ int G1StepRange::grib_g1_step_get_steps(long* start, long* theEnd)
     else
         snprintf(stepType, sizeof(stepType), "unknown");
 
-    *start  = p1;
+    *start = p1;
     *theEnd = p2;
 
     if (timeRangeIndicator == 10)
@@ -142,7 +142,7 @@ int G1StepRange::grib_g1_step_get_steps(long* start, long* theEnd)
     else if (!strcmp(stepType, "instant"))
         *start = *theEnd = p1;
     else if (!strcmp(stepType, "accum") && timeRangeIndicator == 0) {
-        *start  = 0;
+        *start = 0;
         *theEnd = p1;
     }
 
@@ -150,15 +150,15 @@ int G1StepRange::grib_g1_step_get_steps(long* start, long* theEnd)
         return 0;
 
     newstart = (*start) * u2s1[unit];
-    newend   = (*theEnd) * u2s1[unit];
+    newend = (*theEnd) * u2s1[unit];
 
     if (newstart < 0 || newend < 0) {
         factor = 60;
-        u2sf   = u2s1[unit] / factor;
+        u2sf = u2s1[unit] / factor;
         if (u2s1[unit] % factor)
             return GRIB_DECODING_ERROR;
-        newstart       = (*start) * u2sf;
-        newend         = (*theEnd) * u2sf;
+        newstart = (*start) * u2sf;
+        newend = (*theEnd) * u2sf;
         u2sf_step_unit = u2s[step_unit] / factor;
         if (u2s[step_unit] % factor)
             return GRIB_DECODING_ERROR;
@@ -171,7 +171,7 @@ int G1StepRange::grib_g1_step_get_steps(long* start, long* theEnd)
         return GRIB_DECODING_ERROR;
     }
     else {
-        *start  = newstart / u2sf_step_unit;
+        *start = newstart / u2sf_step_unit;
         *theEnd = newend / u2sf_step_unit;
     }
 
@@ -180,15 +180,15 @@ int G1StepRange::grib_g1_step_get_steps(long* start, long* theEnd)
 
 int G1StepRange::unpack_string(char* val, size_t* len)
 {
-    char buf[100] = {0};
+    char buf[100] = { 0 };
     size_t size = 0;
     long start = 0, theEnd = 0;
     long timeRangeIndicator = 0;
     long unit;
-    int err           = 0;
-    char stepType[20] = {0};
+    int err = 0;
+    char stepType[20] = { 0 };
     size_t stepTypeLen = 20;
-    grib_handle* hand  = get_enclosing_handle();
+    grib_handle* hand = get_enclosing_handle();
 
     if ((err = grib_g1_step_get_steps(&start, &theEnd)) != GRIB_SUCCESS) {
         size_t step_unit_string_len = 10;
@@ -281,14 +281,14 @@ static int grib_g1_step_apply_units(
 {
     int j = 0;
     long start_sec, end_sec;
-    int index     = 0;
+    int index = 0;
     int max_index = sizeof(units_index) / sizeof(*units_index);
 
     while (*unit != units_index[index] && index != max_index)
         index++;
 
     start_sec = *start * u2s[*step_unit];
-    *P2       = 0;
+    *P2 = 0;
 
     if (instant) {
         *unit = units_index[0];
@@ -307,7 +307,7 @@ static int grib_g1_step_apply_units(
     }
     else {
         end_sec = *theEnd * u2s[*step_unit];
-        *unit   = units_index[0];
+        *unit = units_index[0];
         for (j = index; j < max_index; j++) {
             if (start_sec % u2s1[*unit] == 0 &&
                 end_sec % u2s1[*unit] == 0 &&
@@ -331,14 +331,14 @@ static int grib_g1_step_apply_units(
 
 int G1StepRange::pack_string(const char* val, size_t* len)
 {
-    grib_handle* h          = get_enclosing_handle();
+    grib_handle* h = get_enclosing_handle();
     long timeRangeIndicator = 0, P1 = 0, P2 = 0;
     long start = 0, theEnd = -1, unit = 0, ounit = 0, step_unit = 1;
     int ret = 0;
     long end_sec, start_sec;
     char *p = NULL, *q = NULL;
-    int instant       = 0;
-    char stepType[20] = {0};
+    int instant = 0;
+    char stepType[20] = { 0 };
     size_t stepTypeLen = 20;
 
     if (stepType_) {
@@ -369,7 +369,7 @@ int G1StepRange::pack_string(const char* val, size_t* len)
 
     ounit = unit;
 
-    start  = strtol(val, &p, 10);
+    start = strtol(val, &p, 10);
     theEnd = start;
     if (*p != 0)
         theEnd = strtol(++p, &q, 10);
@@ -380,7 +380,7 @@ int G1StepRange::pack_string(const char* val, size_t* len)
         ret = grib_set_long_internal(h, p2_, theEnd);
         return ret;
     }
-    end_sec   = theEnd * u2s[step_unit];
+    end_sec = theEnd * u2s[step_unit];
     start_sec = start * u2s[step_unit];
 
     if ((end_sec > 918000 || start_sec > 918000) &&
@@ -396,7 +396,7 @@ int G1StepRange::pack_string(const char* val, size_t* len)
         /*
          * timeRangeIndicator = 10 means 'P1 occupies octets 19 and 20' i.e. 16 bits
          */
-        long off                   = 0;
+        long off = 0;
         grib_accessor* p1_accessor = NULL;
         if (theEnd != start && !h->context->gribex_mode_on) {
             if (h->context->gribex_mode_on == 0) {
@@ -440,7 +440,7 @@ int G1StepRange::pack_string(const char* val, size_t* len)
 
     if ((ret = grib_g1_step_apply_units(&start, &theEnd, &step_unit, &P1, &P2, &unit, 255, instant)) != GRIB_SUCCESS) {
         if (instant || h->context->gribex_mode_on) {
-            long off                   = 0;
+            long off = 0;
             grib_accessor* p1_accessor = NULL;
             if ((ret = grib_set_long_internal(h, timeRangeIndicator_, 10)))
                 return ret;
@@ -500,8 +500,8 @@ int G1StepRange::pack_string(const char* val, size_t* len)
     if ((ret = grib_set_long_internal(h, p2_, P2)) != GRIB_SUCCESS)
         return ret;
 
-    v_[0]  = start;
-    v_[1]  = theEnd;
+    v_[0] = start;
+    v_[1] = theEnd;
     dirty_ = 0;
 
     return 0;
@@ -520,15 +520,15 @@ size_t G1StepRange::string_length()
 
 int G1StepRange::pack_long(const long* val, size_t* len)
 {
-    char buff[256] = {0};
-    size_t bufflen    = 100;
-    char sval[100]    = { 0 };
-    char* p           = sval;
-    size_t svallen    = 100;
-    char stepType[20] = {0};
+    char buff[256] = { 0 };
+    size_t bufflen = 100;
+    char sval[100] = { 0 };
+    char* p = sval;
+    size_t svallen = 100;
+    char stepType[20] = { 0 };
     size_t stepTypeLen = 20;
-    long step_unit     = 0;
-    int err            = 0;
+    long step_unit = 0;
+    int err = 0;
 
     if (stepType_) {
         err = grib_get_string_internal(get_enclosing_handle(), stepType_, stepType, &stepTypeLen);
@@ -547,7 +547,7 @@ int G1StepRange::pack_long(const long* val, size_t* len)
             snprintf(buff, sizeof(buff), "%ld", *val);
             return pack_string(buff, &bufflen);
         case 0:
-            pack_index_     = -1;
+            pack_index_ = -1;
             error_on_units_ = 0;
             unpack_string(sval, &svallen);
             error_on_units_ = 1;
@@ -566,7 +566,7 @@ int G1StepRange::pack_long(const long* val, size_t* len)
             }
             return pack_string(buff, &bufflen);
         case 1:
-            pack_index_     = -1;
+            pack_index_ = -1;
             error_on_units_ = 0;
             unpack_string(sval, &svallen);
             error_on_units_ = 1;
@@ -595,7 +595,7 @@ int G1StepRange::pack_long(const long* val, size_t* len)
 
 int G1StepRange::unpack_long(long* val, size_t* len)
 {
-    char buff[100] = {0};
+    char buff[100] = { 0 };
     size_t bufflen = 100;
     long start, theEnd;
     char* p = buff;
@@ -605,7 +605,7 @@ int G1StepRange::unpack_long(long* val, size_t* len)
     if ((err = unpack_string(buff, &bufflen)) != GRIB_SUCCESS)
         return err;
 
-    start  = strtol(buff, &p, 10);
+    start = strtol(buff, &p, 10);
     theEnd = start;
     if (*p != 0)
         theEnd = strtol(++p, &q, 10);
@@ -615,15 +615,15 @@ int G1StepRange::unpack_long(long* val, size_t* len)
     else
         *val = theEnd;
 
-    v_[0]  = start;
-    v_[1]  = theEnd;
+    v_[0] = start;
+    v_[1] = theEnd;
     dirty_ = 0;
 
     if (start > theEnd) {
         // For now just a warning. Will later change to an error
         fprintf(stderr, "ECCODES WARNING :  endStep < startStep (%ld < %ld)\n", theEnd, start);
-        //grib_context_log(context_, GRIB_LOG_ERROR, "endStep < startStep (%ld < %ld)", theEnd, start);
-        //return GRIB_WRONG_STEP;
+        // grib_context_log(context_, GRIB_LOG_ERROR, "endStep < startStep (%ld < %ld)", theEnd, start);
+        // return GRIB_WRONG_STEP;
     }
     return GRIB_SUCCESS;
 }

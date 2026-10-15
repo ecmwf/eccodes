@@ -12,9 +12,11 @@
 
 #include "Expression.h"
 
-namespace eccodes::expression {
+namespace eccodes::expression
+{
 
-class Unop : public Expression {
+class Unop : public Expression
+{
 public:
     Unop(grib_context*, UnopLongProc, UnopDoubleProc, Expression*);
 
@@ -29,8 +31,8 @@ public:
     const char* class_name() const override { return "unop"; };
 
 private:
-    Expression* exp_            = nullptr;
-    UnopLongProc long_func_     = nullptr;
+    Expression* exp_ = nullptr;
+    UnopLongProc long_func_ = nullptr;
     UnopDoubleProc double_func_ = nullptr;
 };
 

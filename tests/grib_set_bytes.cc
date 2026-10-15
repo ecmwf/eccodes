@@ -17,35 +17,35 @@ int main(int argc, char** argv)
 {
     int err = 0;
     size_t size = 0;
-    FILE* in            = NULL;
-    const char* infile  = "../data/test_uuid.grib2";
-    FILE* out           = NULL;
+    FILE* in = NULL;
+    const char* infile = "../data/test_uuid.grib2";
+    FILE* out = NULL;
     const char* outfile = "temp.grib_set_bytes_test.grib";
-    grib_handle* h     = NULL;
-    const void* buffer  = NULL;
+    grib_handle* h = NULL;
+    const void* buffer = NULL;
 
     unsigned char uuid_short[] = { /* not enough bytes */
-        0x07, 0x20, 0x40, 0x51,
-        0x07, 0x20, 0x40, 0x51,
-        0x07, 0x20, 0x40, 0x52,
-        0x07, 0x20, 0x40
+                                   0x07, 0x20, 0x40, 0x51,
+                                   0x07, 0x20, 0x40, 0x51,
+                                   0x07, 0x20, 0x40, 0x52,
+                                   0x07, 0x20, 0x40
     };
     unsigned char uuid_good[] = { /* Just the right size i.e. 16 bytes */
-        0x07, 0x20, 0x40, 0x51,
-        0x07, 0x20, 0x40, 0x51,
-        0x07, 0x20, 0x40, 0x52,
-        0x07, 0x20, 0x40, 0x53
+                                  0x07, 0x20, 0x40, 0x51,
+                                  0x07, 0x20, 0x40, 0x51,
+                                  0x07, 0x20, 0x40, 0x52,
+                                  0x07, 0x20, 0x40, 0x53
     };
     unsigned char uuid_long[] = { /* Too many bytes */
-        0x07, 0x20, 0x40, 0x51,
-        0x07, 0x20, 0x40, 0x51,
-        0x07, 0x20, 0x40, 0x52,
-        0x07, 0x20, 0x40, 0x53,
-        0x00, 0x01
+                                  0x07, 0x20, 0x40, 0x51,
+                                  0x07, 0x20, 0x40, 0x51,
+                                  0x07, 0x20, 0x40, 0x52,
+                                  0x07, 0x20, 0x40, 0x53,
+                                  0x00, 0x01
     };
-    size_t uuid_short_len = sizeof (uuid_short);
-    size_t uuid_good_len = sizeof (uuid_good);
-    size_t uuid_long_len = sizeof (uuid_long);
+    size_t uuid_short_len = sizeof(uuid_short);
+    size_t uuid_good_len = sizeof(uuid_good);
+    size_t uuid_long_len = sizeof(uuid_long);
 
     in = fopen(infile, "rb");
     ECCODES_ASSERT(in);

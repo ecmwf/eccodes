@@ -21,11 +21,11 @@ namespace eccodes::action
 SetMissing::SetMissing(grib_context* context, const char* name)
 {
     class_name_ = "action_class_set_missing";
-    op_         = grib_context_strdup_persistent(context, "set_missing");
-    context_    = context;
-    name2_      = grib_context_strdup_persistent(context, name);
+    op_ = grib_context_strdup_persistent(context, "set_missing");
+    context_ = context;
+    name2_ = grib_context_strdup_persistent(context, name);
 
-    char buf[1024] = {0};
+    char buf[1024] = { 0 };
     snprintf(buf, sizeof(buf), "set_missing_%s", name);
 
     name_ = grib_context_strdup_persistent(context, buf);

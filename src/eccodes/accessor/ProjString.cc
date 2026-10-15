@@ -32,8 +32,8 @@ void ProjString::init(const long len, grib_arguments* arg)
     grib_handle* h = get_enclosing_handle();
 
     grid_type_ = arg->get_name(h, 0);
-    endpoint_  = arg->get_long(h, 1);
-    length_    = 0;
+    endpoint_ = arg->get_long(h, 1);
+    length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
 }
@@ -71,7 +71,7 @@ static int get_major_minor_axes(grib_handle* h, double* pMajor, double* pMinor)
 // Caller must have allocated enough space in the 'result' argument
 static int get_earth_shape(grib_handle* h, char* result)
 {
-    int err      = 0;
+    int err = 0;
     double major = 0, minor = 0;
     if ((err = get_major_minor_axes(h, &major, &minor)) != GRIB_SUCCESS)
         return err;
@@ -102,7 +102,7 @@ static int proj_space_view(grib_handle* h, char* result)
 static int proj_albers(grib_handle* h, char* result)
 {
     int err = 0;
-    char shape[128] = {0};
+    char shape[128] = { 0 };
     double LoVInDegrees = 0, LaDInDegrees = 0, Latin1InDegrees = 0, Latin2InDegrees = 0;
 
     if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS)
@@ -131,8 +131,8 @@ static int proj_equatorial_azimuthal_equidistant(grib_handle* h, char* result)
 
 static int proj_lambert_conformal(grib_handle* h, char* result)
 {
-    int err         = 0;
-    char shape[128] = {0};
+    int err = 0;
+    char shape[128] = { 0 };
     double LoVInDegrees = 0, LaDInDegrees = 0, Latin1InDegrees = 0, Latin2InDegrees = 0;
 
     if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS)
@@ -152,8 +152,8 @@ static int proj_lambert_conformal(grib_handle* h, char* result)
 
 static int proj_lambert_azimuthal_equal_area(grib_handle* h, char* result)
 {
-    int err         = 0;
-    char shape[128] = {0};
+    int err = 0;
+    char shape[128] = { 0 };
     double standardParallel = 0, centralLongitude = 0;
 
     if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS)
@@ -169,11 +169,11 @@ static int proj_lambert_azimuthal_equal_area(grib_handle* h, char* result)
 
 static int proj_polar_stereographic(grib_handle* h, char* result)
 {
-    int err                 = 0;
+    int err = 0;
     double centralLongitude = 0, centralLatitude = 0;
-    int has_northPole         = 0;
+    int has_northPole = 0;
     long projectionCentreFlag = 0;
-    char shape[128]           = {0};
+    char shape[128] = { 0 };
 
     if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS)
         return err;
@@ -204,9 +204,9 @@ static int proj_unprojected(grib_handle* h, char* result)
 
 static int proj_mercator(grib_handle* h, char* result)
 {
-    int err             = 0;
+    int err = 0;
     double LaDInDegrees = 0;
-    char shape[128]     = {0};
+    char shape[128] = { 0 };
 
     if ((err = grib_get_double_internal(h, "LaDInDegrees", &LaDInDegrees)) != GRIB_SUCCESS)
         return err;
@@ -238,10 +238,10 @@ static proj_mapping proj_mappings[] = {
 int ProjString::unpack_string(char* v, size_t* len)
 {
     int err = 0, found = 0;
-    size_t i           = 0;
-    char grid_type[64] = {0};
+    size_t i = 0;
+    char grid_type[64] = { 0 };
     grib_handle* h = get_enclosing_handle();
-    size_t size    = sizeof(grid_type) / sizeof(*grid_type);
+    size_t size = sizeof(grid_type) / sizeof(*grid_type);
 
     ECCODES_ASSERT(endpoint_ == ENDPOINT_SOURCE || endpoint_ == ENDPOINT_TARGET);
 

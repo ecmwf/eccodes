@@ -22,12 +22,12 @@ namespace eccodes::action
 SetSArray::SetSArray(grib_context* context, const char* name, grib_sarray* sarray)
 {
     class_name_ = "action_class_set_sarray";
-    op_         = grib_context_strdup_persistent(context, "section");
-    context_    = context;
-    sarray_     = sarray;
-    name2_      = grib_context_strdup_persistent(context, name);
+    op_ = grib_context_strdup_persistent(context, "section");
+    context_ = context;
+    sarray_ = sarray;
+    name2_ = grib_context_strdup_persistent(context, name);
 
-    char buf[1024] = {0};
+    char buf[1024] = { 0 };
     snprintf(buf, sizeof(buf), "set_sarray%p", (void*)sarray);
 
     name_ = grib_context_strdup_persistent(context, buf);

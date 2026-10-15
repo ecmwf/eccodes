@@ -17,17 +17,17 @@ int main(int argc, char* argv[])
 {
     char *filename, *keys;
     int i, err = 0;
-    int num_messages                = 0;
+    int num_messages = 0;
     codes_bufr_header* header_array = NULL;
-    codes_context* c                = codes_context_get_default();
-    const int strict_mode           = 1;
-    int requested_print_keys_count  = MAX_KEYS;
+    codes_context* c = codes_context_get_default();
+    const int strict_mode = 1;
+    int requested_print_keys_count = MAX_KEYS;
     codes_values requested_print_keys[MAX_KEYS];
 
     /* Usage: prog keys file */
     assert(argc == 3);
 
-    keys     = argv[1]; /* comma-separated like bufr_ls/bufr_get */
+    keys = argv[1]; /* comma-separated like bufr_ls/bufr_get */
     filename = argv[2];
 
     err = codes_bufr_extract_headers_malloc(c, filename, &header_array, &num_messages, strict_mode);
@@ -43,8 +43,8 @@ int main(int argc, char* argv[])
     for (i = 0; i < num_messages; ++i) {
         int j;
         for (j = 0; j < requested_print_keys_count; ++j) {
-            size_t vlen     = 0;
-            char value[512] = {0};
+            size_t vlen = 0;
+            char value[512] = { 0 };
             CODES_CHECK(codes_bufr_header_get_string(&header_array[i], requested_print_keys[j].name, value, &vlen), 0);
             assert(vlen > 0);
             if (j > 0) printf(" ");

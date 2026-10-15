@@ -16,7 +16,7 @@ namespace eccodes::accessor
 void Evaluate::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
-    arg_ = c; // the expression to be evaluated
+    arg_ = c;  // the expression to be evaluated
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
@@ -28,7 +28,7 @@ int Evaluate::unpack_long(long* val, size_t* len)
     grib_expression* e = arg_->get_expression(h, 0);
 
     int ret = e->evaluate_long(h, val);
-    *len    = 1;
+    *len = 1;
 
     return ret;
 }

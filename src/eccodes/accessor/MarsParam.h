@@ -19,8 +19,13 @@ class MarsParam : public Ascii
 {
 public:
     MarsParam() :
-        Ascii() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        Ascii() {}
+    const AccessorType& accessor_type() const override
+    {
+        {
+            return accessor_type_;
+        }
+    }
     int unpack_string(char*, size_t* len) override;
     size_t string_length() override;
     void init(const long, grib_arguments*) override;
@@ -31,7 +36,7 @@ private:
     const char* param_ = nullptr;
 
 public:
-    static constexpr AccessorType accessor_type_{"mars_param"};
+    static constexpr AccessorType accessor_type_{ "mars_param" };
 };
 
 }  // namespace eccodes::accessor

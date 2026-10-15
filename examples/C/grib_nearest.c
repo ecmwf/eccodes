@@ -29,19 +29,19 @@ static void usage(const char* prog)
 
 int main(int argc, char** argv)
 {
-    int err   = 0;
+    int err = 0;
     long step = 0;
     size_t nfiles;
-    int i               = 0;
+    int i = 0;
     codes_fieldset* set = NULL;
-    codes_handle* h     = NULL;
-    char shortName[20]      = {0};
-    size_t len     = 20;
-    double lats[4] = {0};
-    double lons[4] = {0};
-    double values[4] = {0};
-    double distances[4] = {0};
-    int indexes[4] = {0};
+    codes_handle* h = NULL;
+    char shortName[20] = { 0 };
+    size_t len = 20;
+    double lats[4] = { 0 };
+    double lons[4] = { 0 };
+    double values[4] = { 0 };
+    double distances[4] = { 0 };
+    int indexes[4] = { 0 };
     const char* order_by = "shortName,step:i";
 
     size_t size = 4;
@@ -53,7 +53,7 @@ int main(int argc, char** argv)
 
     if (argc < 2) usage(argv[0]);
 
-    nfiles    = argc - 1;
+    nfiles = argc - 1;
     filenames = (const char**)malloc(sizeof(char*) * nfiles);
     for (i = 0; i < nfiles; i++)
         filenames[i] = strdup(argv[i + 1]);
@@ -64,7 +64,7 @@ int main(int argc, char** argv)
     printf("\nordering by %s\n", order_by);
     printf("\n%d fields in the fieldset\n", codes_fieldset_count(set));
 
-    mode  = CODES_NEAREST_SAME_GRID | CODES_NEAREST_SAME_POINT;
+    mode = CODES_NEAREST_SAME_GRID | CODES_NEAREST_SAME_POINT;
     count = 1;
 
     while ((h = codes_fieldset_next_handle(set, &err)) != NULL) {

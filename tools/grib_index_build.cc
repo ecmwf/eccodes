@@ -11,10 +11,10 @@
 #include "grib_tools.h"
 
 const char* tool_description = "Build an index file for a set of input GRIB files.";
-const char* tool_name        = "grib_index_build";
-const char* tool_online_doc  = "https://confluence.ecmwf.int/display/ECC/grib_index_build";
-const char* tool_usage       = "[options] grib_file grib_file ... ";
-static grib_index* idx       = NULL;
+const char* tool_name = "grib_index_build";
+const char* tool_online_doc = "https://confluence.ecmwf.int/display/ECC/grib_index_build";
+const char* tool_usage = "[options] grib_file grib_file ... ";
+static grib_index* idx = NULL;
 static const char* keys;
 static const char* default_keys = "mars";
 
@@ -53,7 +53,7 @@ int grib_tool_before_getopt(grib_runtime_options* options)
 
 int grib_tool_init(grib_runtime_options* options)
 {
-    int ret         = 0;
+    int ret = 0;
     grib_context* c = grib_context_get_default();
 
     if (grib_options_on("N"))
@@ -125,19 +125,19 @@ int grib_tool_finalise_action(grib_runtime_options* options)
             printf(", ");
         printf("%s", the_keys->name);
         the_keys = the_keys->next;
-        first    = false;
+        first = false;
     }
     printf("\n");
     the_keys = idx->keys;
     while (the_keys) {
         printf("--- %s = { ", the_keys->name);
         values = the_keys->values;
-        first  = true;
+        first = true;
         while (values) {
             if (!first)
                 printf(", ");
             printf("%s", values->value);
-            first  = false;
+            first = false;
             values = values->next;
         }
         printf(" }\n");

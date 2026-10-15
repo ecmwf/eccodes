@@ -30,9 +30,9 @@ public:
     int execute(grib_handle* h) override;
 
     grib_expression* expression_ = nullptr;
-    grib_action* block_true_     = nullptr;
-    grib_action* block_false_    = nullptr;
-    int transient_               = 0;
+    grib_action* block_true_ = nullptr;
+    grib_action* block_false_ = nullptr;
+    int transient_ = 0;
 };
 
 }  // namespace eccodes::action

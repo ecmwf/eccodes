@@ -13,7 +13,8 @@
 eccodes::geo_nearest::Healpix _grib_nearest_healpix{};
 eccodes::geo_nearest::Nearest* grib_nearest_healpix = &_grib_nearest_healpix;
 
-namespace eccodes::geo_nearest {
+namespace eccodes::geo_nearest
+{
 
 int Healpix::init(grib_handle* h, grib_arguments* args)
 {
@@ -23,28 +24,28 @@ int Healpix::init(grib_handle* h, grib_arguments* args)
 
     Ni_ = args->get_name(h, cargs_++);
     Nj_ = args->get_name(h, cargs_++);
-    i_  = (size_t*)grib_context_malloc(h->context, 2 * sizeof(size_t));
-    j_  = (size_t*)grib_context_malloc(h->context, 2 * sizeof(size_t));
+    i_ = (size_t*)grib_context_malloc(h->context, 2 * sizeof(size_t));
+    j_ = (size_t*)grib_context_malloc(h->context, 2 * sizeof(size_t));
 
     return ret;
 }
 
 int Healpix::find(grib_handle* h,
-                double inlat, double inlon, unsigned long flags,
-                double* outlats, double* outlons,
-                double* values, double* distances, int* indexes, size_t* len)
+                  double inlat, double inlon, unsigned long flags,
+                  double* outlats, double* outlons,
+                  double* values, double* distances, int* indexes, size_t* len)
 {
     return grib_nearest_find_generic(
         h, inlat, inlon, flags, /* inputs */
 
-        values_key_,  /* outputs to set the 'self' object */
+        values_key_, /* outputs to set the 'self' object */
         &(lats_),
         &(lats_count_),
         &(lons_),
         &(lons_count_),
         &(distances_),
 
-        outlats, outlons,  /* outputs of the find function */
+        outlats, outlons, /* outputs of the find function */
         values, distances, indexes, len);
 }
 

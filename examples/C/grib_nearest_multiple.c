@@ -26,8 +26,8 @@ static void usage(const char* prog)
 
 int main(int argc, char** argv)
 {
-    FILE* fin   = 0;
-    int ret     = 0;
+    FILE* fin = 0;
+    int ret = 0;
     char* fname = 0;
     float lat, lon;
     double *vlat, *vlon;
@@ -40,8 +40,8 @@ int main(int argc, char** argv)
     char date[10]={0};
     long parameter=0;
     size_t len=0;*/
-    long iid         = 0;
-    long* id         = NULL;
+    long iid = 0;
+    long* id = NULL;
     const int is_lsm = 1;
 
     if (argc < 2) usage(argv[0]);
@@ -50,7 +50,7 @@ int main(int argc, char** argv)
      *   number   latitude  longitude
      */
     fname = argv[1];
-    fin   = fopen(fname, "r"); /* open in text mode */
+    fin = fopen(fname, "r"); /* open in text mode */
     if (!fin) {
         perror(fname);
         exit(1);
@@ -59,7 +59,7 @@ int main(int argc, char** argv)
     while (fscanf(fin, "%ld %g %g", &iid, &lat, &lon) != EOF)
         npoints++;
     fclose(fin);
-    if (npoints==0) {
+    if (npoints == 0) {
         fprintf(stderr, "No input points found!\n");
         exit(1);
     }
@@ -111,14 +111,14 @@ int main(int argc, char** argv)
     }
 
     fname = argv[1];
-    fin   = fopen(fname, "r"); /* open in text mode */
+    fin = fopen(fname, "r"); /* open in text mode */
     if (!fin) {
         perror(fname);
         exit(1);
     }
     i = 0;
     while (i < npoints && fscanf(fin, "%ld %g %g", &iid, &lat, &lon) != EOF) {
-        id[i]   = iid;
+        id[i] = iid;
         vlat[i] = lat;
         while (lon < 0)
             lon += 360;
@@ -129,7 +129,7 @@ int main(int argc, char** argv)
 
     /* the first GRIB file on the arguments is treated as the land-sea mask file */
     fname = argv[2];
-    fin   = fopen(fname, "rb"); /* open GRIB in binary mode */
+    fin = fopen(fname, "rb"); /* open GRIB in binary mode */
     if (!fin) {
         perror(fname);
         exit(1);
@@ -149,7 +149,7 @@ int main(int argc, char** argv)
 
     for (n = 3; n <= argc - 1; n++) {
         fname = argv[n];
-        fin   = fopen(fname, "r");
+        fin = fopen(fname, "r");
         if (!fin) {
             perror(fname);
             exit(1);

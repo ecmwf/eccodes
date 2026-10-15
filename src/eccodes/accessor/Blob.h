@@ -19,14 +19,19 @@ class Blob : public Gen
 {
 public:
     Blob() :
-        Gen() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        Gen() {}
+    const AccessorType& accessor_type() const override
+    {
+        {
+            return accessor_type_;
+        }
+    }
     long get_native_type() override;
     int unpack_bytes(unsigned char*, size_t* len) override;
     void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;
 
-    static constexpr AccessorType accessor_type_{"blob"};
+    static constexpr AccessorType accessor_type_{ "blob" };
 };
 
 }  // namespace eccodes::accessor

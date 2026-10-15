@@ -13,7 +13,8 @@
 eccodes::geo_iterator::Mercator _grib_iterator_mercator{};
 eccodes::geo_iterator::Iterator* grib_iterator_mercator = &_grib_iterator_mercator;
 
-namespace eccodes::geo_iterator {
+namespace eccodes::geo_iterator
+{
 
 #define ITER    "Mercator Geoiterator"
 #define EPSILON 1.0e-10
@@ -57,11 +58,11 @@ static double compute_phi(
     int i, MAX_ITER = 15;
 
     eccnth = 0.5 * eccent;
-    phi    = M_PI_2 - 2 * atan(ts);
+    phi = M_PI_2 - 2 * atan(ts);
     for (i = 0; i <= MAX_ITER; i++) {
         sinpi = sin(phi);
-        con   = eccent * sinpi;
-        dphi  = M_PI_2 - 2 * atan(ts * (pow(((1.0 - con) / (1.0 + con)), eccnth))) - phi;
+        con = eccent * sinpi;
+        dphi = M_PI_2 - 2 * atan(ts * (pow(((1.0 - con) / (1.0 + con)), eccnth))) - phi;
         phi += dphi;
         if (fabs(dphi) <= EPSILON)
             return phi;
@@ -78,7 +79,7 @@ static double compute_t(
 {
     double con = eccent * sinphi;
     double com = 0.5 * eccent;
-    con        = pow(((1.0 - con) / (1.0 + con)), com);
+    con = pow(((1.0 - con) / (1.0 + con)), com);
     return (tan(0.5 * (M_PI_2 - phi)) / con);
 }
 
@@ -98,9 +99,9 @@ int Mercator::init_mercator(grib_handle* h,
     double temp, e, es;
 
     temp = earthMinorAxisInMetres / earthMajorAxisInMetres;
-    es   = 1.0 - (temp * temp);
-    e    = sqrt(es);
-    m1   = cos(LaDInRadians) / (sqrt(1.0 - es * sin(LaDInRadians) * sin(LaDInRadians)));
+    es = 1.0 - (temp * temp);
+    e = sqrt(es);
+    m1 = cos(LaDInRadians) / (sqrt(1.0 - es * sin(LaDInRadians) * sin(LaDInRadians)));
 
     /* Forward projection: convert lat,lon to x,y */
     if (fabs(fabs(latFirstInRadians) - M_PI_2) <= EPSILON) {
@@ -109,9 +110,9 @@ int Mercator::init_mercator(grib_handle* h,
     }
     else {
         sinphi = sin(latFirstInRadians);
-        ts     = compute_t(e, latFirstInRadians, sinphi);
-        x0     = earthMajorAxisInMetres * m1 * adjust_lon_radians(lonFirstInRadians - orientationInRadians);
-        y0     = 0 - earthMajorAxisInMetres * m1 * log(ts);
+        ts = compute_t(e, latFirstInRadians, sinphi);
+        x0 = earthMajorAxisInMetres * m1 * adjust_lon_radians(lonFirstInRadians - orientationInRadians);
+        y0 = 0 - earthMajorAxisInMetres * m1 * log(ts);
     }
     x0 = -x0;
     y0 = -y0;
@@ -129,7 +130,7 @@ int Mercator::init_mercator(grib_handle* h,
     }
 
     /* Populate our arrays */
-    false_easting  = x0;
+    false_easting = x0;
     false_northing = y0;
     for (j = 0; j < ny; j++) {
         y = j * DjInMetres;
@@ -138,9 +139,9 @@ int Mercator::init_mercator(grib_handle* h,
             double _x, _y;
             x = i * DiInMetres;
             /* Inverse projection to convert from x,y to lat,lon */
-            _x     = x - false_easting;
-            _y     = y - false_northing;
-            ts     = exp(-_y / (earthMajorAxisInMetres * m1));
+            _x = x - false_easting;
+            _y = y - false_northing;
+            ts = exp(-_y / (earthMajorAxisInMetres * m1));
             latRad = compute_phi(e, ts, &err);
             if (err) {
                 grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Failed to compute the latitude angle, phi2, for the inverse", ITER);
@@ -152,8 +153,8 @@ int Mercator::init_mercator(grib_handle* h,
             if (i == 0 && j == 0) {
                 DEBUG_ASSERT(fabs(latFirstInRadians - latRad) <= EPSILON);
             }
-            latDeg       = latRad * RAD2DEG; /* Convert to degrees */
-            lonDeg       = normalise_longitude_in_degrees(lonRad * RAD2DEG);
+            latDeg = latRad * RAD2DEG; /* Convert to degrees */
+            lonDeg = normalise_longitude_in_degrees(lonRad * RAD2DEG);
             lons_[index] = lonDeg;
             lats_[index] = latDeg;
         }
@@ -174,21 +175,21 @@ int Mercator::init(grib_handle* h, grib_arguments* args)
         LaDInRadians, orientationInRadians;
     double earthMajorAxisInMetres = 0, earthMinorAxisInMetres = 0;
 
-    const char* sRadius               = args->get_name(h, carg_++);
-    const char* sNi                   = args->get_name(h, carg_++);
-    const char* sNj                   = args->get_name(h, carg_++);
-    const char* sLatFirstInDegrees    = args->get_name(h, carg_++);
-    const char* sLonFirstInDegrees    = args->get_name(h, carg_++);
-    const char* sLaDInDegrees         = args->get_name(h, carg_++);
-    const char* sLatLastInDegrees     = args->get_name(h, carg_++);
-    const char* sLonLastInDegrees     = args->get_name(h, carg_++);
+    const char* sRadius = args->get_name(h, carg_++);
+    const char* sNi = args->get_name(h, carg_++);
+    const char* sNj = args->get_name(h, carg_++);
+    const char* sLatFirstInDegrees = args->get_name(h, carg_++);
+    const char* sLonFirstInDegrees = args->get_name(h, carg_++);
+    const char* sLaDInDegrees = args->get_name(h, carg_++);
+    const char* sLatLastInDegrees = args->get_name(h, carg_++);
+    const char* sLonLastInDegrees = args->get_name(h, carg_++);
     const char* sOrientationInDegrees = args->get_name(h, carg_++);
     /* Dx and Dy are in Metres */
-    const char* sDi                     = args->get_name(h, carg_++);
-    const char* sDj                     = args->get_name(h, carg_++);
-    const char* siScansNegatively       = args->get_name(h, carg_++);
-    const char* sjScansPositively       = args->get_name(h, carg_++);
-    const char* sjPointsAreConsecutive  = args->get_name(h, carg_++);
+    const char* sDi = args->get_name(h, carg_++);
+    const char* sDj = args->get_name(h, carg_++);
+    const char* siScansNegatively = args->get_name(h, carg_++);
+    const char* sjScansPositively = args->get_name(h, carg_++);
+    const char* sjPointsAreConsecutive = args->get_name(h, carg_++);
     const char* sAlternativeRowScanning = args->get_name(h, carg_++);
 
     if ((err = grib_get_long_internal(h, sNi, &ni)) != GRIB_SUCCESS) return err;
@@ -203,7 +204,7 @@ int Mercator::init(grib_handle* h, grib_arguments* args)
         earthMinorAxisInMetres = earthMajorAxisInMetres = radius;
     }
 
-    if ( nv_ != (size_t) (ni * nj) ) {
+    if (nv_ != (size_t)(ni * nj)) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Wrong number of points (%zu!=%ldx%ld)", ITER, nv_, ni, nj);
         return GRIB_WRONG_GRID;
     }
@@ -234,11 +235,11 @@ int Mercator::init(grib_handle* h, grib_arguments* args)
     if ((err = grib_get_long_internal(h, sAlternativeRowScanning, &alternativeRowScanning)) != GRIB_SUCCESS)
         return err;
 
-    latFirstInRadians    = latFirstInDegrees * DEG2RAD;
-    lonFirstInRadians    = lonFirstInDegrees * DEG2RAD;
-    latLastInRadians     = latLastInDegrees * DEG2RAD;
-    lonLastInRadians     = lonLastInDegrees * DEG2RAD;
-    LaDInRadians         = LaDInDegrees * DEG2RAD;
+    latFirstInRadians = latFirstInDegrees * DEG2RAD;
+    lonFirstInRadians = lonFirstInDegrees * DEG2RAD;
+    latLastInRadians = latLastInDegrees * DEG2RAD;
+    lonLastInRadians = lonLastInDegrees * DEG2RAD;
+    LaDInRadians = LaDInDegrees * DEG2RAD;
     orientationInRadians = orientationInDegrees * DEG2RAD;
 
     err = init_mercator(h, nv_, ni, nj,

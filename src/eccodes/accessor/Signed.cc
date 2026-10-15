@@ -47,12 +47,12 @@ static const long ones[] = {
 int Signed::unpack_long(long* val, size_t* len)
 {
     unsigned long rlen = 0;
-    int err            = 0;
-    long count         = 0;
-    unsigned long i    = 0;
-    grib_handle* hand  = get_enclosing_handle();
-    long pos           = offset_;
-    long missing       = 0;
+    int err = 0;
+    long count = 0;
+    unsigned long i = 0;
+    grib_handle* hand = get_enclosing_handle();
+    long pos = offset_;
+    long missing = 0;
 
     err = value_count(&count);
     if (err)
@@ -84,14 +84,14 @@ int Signed::unpack_long(long* val, size_t* len)
 
 int Signed::pack_long(const long* val, size_t* len)
 {
-    int ret            = 0;
-    long off           = 0;
+    int ret = 0;
+    long off = 0;
     unsigned long rlen = 0;
-    long count         = 0;
-    size_t buflen      = 0;
+    long count = 0;
+    size_t buflen = 0;
     unsigned char* buf = NULL;
-    unsigned long i    = 0;
-    long missing       = 0;
+    unsigned long i = 0;
+    long missing = 0;
 
     int err = value_count(&count);
     if (err)
@@ -117,7 +117,7 @@ int Signed::pack_long(const long* val, size_t* len)
         }
         else {
             // ECC-1605: Check overflow/underflow
-            const int nbits   = nbytes_ * 8;
+            const int nbits = nbytes_ * 8;
             const long minval = NumericLimits<long>::min(nbits);
             const long maxval = NumericLimits<long>::max(nbits);
             // printf("  key=%s: v=%ld  (minval=%ld  maxval=%ld)\n", name_ , v, minval, maxval);
@@ -193,9 +193,9 @@ long Signed::next_offset()
 
 int Signed::is_missing()
 {
-    unsigned char ff     = 0xff;
+    unsigned char ff = 0xff;
     unsigned long offset = offset_;
-    const grib_handle* hand    = get_enclosing_handle();
+    const grib_handle* hand = get_enclosing_handle();
 
     if (length_ == 0) {
         ECCODES_ASSERT(vvalue_ != NULL);

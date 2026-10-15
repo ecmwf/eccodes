@@ -12,11 +12,14 @@
 
 #include "Gen.h"
 
-namespace eccodes::geo_nearest {
+namespace eccodes::geo_nearest
+{
 
-class SpaceView : public Gen {
+class SpaceView : public Gen
+{
 public:
-    SpaceView() {
+    SpaceView()
+    {
         class_name_ = "space_view";
     }
     Nearest* create() override { return new SpaceView(); }

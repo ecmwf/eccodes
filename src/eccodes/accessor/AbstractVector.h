@@ -19,15 +19,20 @@ class AbstractVector : public Double
 {
 public:
     AbstractVector() :
-        Double() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        Double() {}
+    const AccessorType& accessor_type() const override
+    {
+        {
+            return accessor_type_;
+        }
+    }
 
 public:
     // TODO(maee): make private
     double* v_ = nullptr;
     int number_of_elements_ = 0;
 
-    static constexpr AccessorType accessor_type_{"abstract_vector"};
+    static constexpr AccessorType accessor_type_{ "abstract_vector" };
 };
 
 }  // namespace eccodes::accessor

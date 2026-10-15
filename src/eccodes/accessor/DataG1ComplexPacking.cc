@@ -16,26 +16,26 @@ namespace eccodes::accessor
 void DataG1ComplexPacking::init(const long v, grib_arguments* args)
 {
     DataComplexPacking::init(v, args);
-    half_byte_    = args->get_name(get_enclosing_handle(), carg_++);
-    N_            = args->get_name(get_enclosing_handle(), carg_++);
-    packingType_  = args->get_name(get_enclosing_handle(), carg_++);
+    half_byte_ = args->get_name(get_enclosing_handle(), carg_++);
+    N_ = args->get_name(get_enclosing_handle(), carg_++);
+    packingType_ = args->get_name(get_enclosing_handle(), carg_++);
     ieee_packing_ = args->get_name(get_enclosing_handle(), carg_++);
-    precision_    = args->get_name(get_enclosing_handle(), carg_++);
-    edition_      = 1;
+    precision_ = args->get_name(get_enclosing_handle(), carg_++);
+    edition_ = 1;
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
 int DataG1ComplexPacking::pack_double(const double* val, size_t* len)
 {
-    int ret             = GRIB_SUCCESS;
-    long seclen         = 0;
-    long sub_j          = 0;
-    long sub_k          = 0;
-    long sub_m          = 0;
-    long n              = 0;
-    long half_byte      = 0;
+    int ret = GRIB_SUCCESS;
+    long seclen = 0;
+    long sub_j = 0;
+    long sub_k = 0;
+    long sub_m = 0;
+    long n = 0;
+    long half_byte = 0;
     long bits_per_value = 0;
-    size_t buflen       = 0;
+    size_t buflen = 0;
 
     if (*len == 0)
         return GRIB_NO_VALUES;
@@ -96,7 +96,7 @@ int DataG1ComplexPacking::pack_double(const double* val, size_t* len)
         if (ret != GRIB_SUCCESS)
             return ret;
 
-        buflen    = 32 * (sub_k + 1) * (sub_k + 2) + (*len - (sub_k + 1) * (sub_k + 2)) * bits_per_value + 18 * 8;
+        buflen = 32 * (sub_k + 1) * (sub_k + 2) + (*len - (sub_k + 1) * (sub_k + 2)) * bits_per_value + 18 * 8;
         half_byte = seclen * 8 - buflen;
         if (context_->debug == -1) {
             fprintf(stderr, "ECCODES DEBUG: half_byte=%ld\n", half_byte);

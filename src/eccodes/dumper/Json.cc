@@ -22,9 +22,9 @@ namespace eccodes::dumper
 int Json::init()
 {
     section_offset_ = 0;
-    empty_          = 1;
-    isLeaf_         = 0;
-    isAttribute_    = 0;
+    empty_ = 1;
+    isLeaf_ = 0;
+    isAttribute_ = 0;
 
     return GRIB_SUCCESS;
 }
@@ -39,12 +39,12 @@ void Json::dump_values(grib_accessor* a)
     double value = 0;
     size_t size = 1, size2 = 0;
     double* values = NULL;
-    int err        = 0;
+    int err = 0;
     int i;
-    int cols             = 9;
-    long count           = 0;
+    int cols = 9;
+    long count = 0;
     double missing_value = GRIB_MISSING_DOUBLE;
-    grib_handle* h       = NULL;
+    grib_handle* h = NULL;
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0)
         return;
@@ -55,7 +55,7 @@ void Json::dump_values(grib_accessor* a)
 
     if (size > 1) {
         values = (double*)grib_context_malloc_clear(a->context_, sizeof(double) * size);
-        err    = a->unpack_double(values, &size2);
+        err = a->unpack_double(values, &size2);
     }
     else {
         err = a->unpack_double(&value, &size2);
@@ -131,12 +131,12 @@ void Json::dump_values(grib_accessor* a)
 
 void Json::dump_long(grib_accessor* a, const char* comment)
 {
-    long value  = 0;
+    long value = 0;
     size_t size = 1, size2 = 0;
     long* values = NULL;
-    int err      = 0;
+    int err = 0;
     int i;
-    int cols   = 9;
+    int cols = 9;
     long count = 0;
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0)
@@ -147,7 +147,7 @@ void Json::dump_long(grib_accessor* a, const char* comment)
 
     if (size > 1) {
         values = (long*)grib_context_malloc_clear(a->context_, sizeof(long) * size);
-        err    = a->unpack_long(values, &size2);
+        err = a->unpack_long(values, &size2);
     }
     else {
         err = a->unpack_long(&value, &size2);
@@ -170,7 +170,7 @@ void Json::dump_long(grib_accessor* a, const char* comment)
 
     if (size > 1) {
         int doing_unexpandedDescriptors = 0;
-        int icount                      = 0;
+        int icount = 0;
         if (isLeaf_ == 0) {
             fprintf(out_, "%-*s", depth_, " ");
             fprintf(out_, "\"value\" :\n");
@@ -242,7 +242,7 @@ void Json::dump_bits(grib_accessor* a, const char* comment)
 void Json::dump_double(grib_accessor* a, const char* comment)
 {
     double value = 0;
-    size_t size  = 1;
+    size_t size = 1;
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0)
         return;
@@ -285,10 +285,10 @@ void Json::dump_string_array(grib_accessor* a, const char* comment)
     char** values = NULL;
     size_t size = 0, i = 0;
     grib_context* c = NULL;
-    int err         = 0;
-    int is_missing  = 0;
-    long count      = 0;
-    c               = a->context_;
+    int err = 0;
+    int is_missing = 0;
+    long count = 0;
+    c = a->context_;
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0)
         return;
@@ -362,11 +362,11 @@ void Json::dump_string_array(grib_accessor* a, const char* comment)
 #define MAX_STRING_SIZE 4096
 void Json::dump_string(grib_accessor* a, const char* comment)
 {
-    char value[MAX_STRING_SIZE] = {0}; /* See ECC-710 */
-    size_t size          = MAX_STRING_SIZE;
-    char* p              = NULL;
-    int is_missing       = 0;
-    int err              = 0;
+    char value[MAX_STRING_SIZE] = { 0 }; /* See ECC-710 */
+    size_t size = MAX_STRING_SIZE;
+    char* p = NULL;
+    int is_missing = 0;
+    int err = 0;
     const char* acc_name = a->name_;
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0) {
@@ -488,7 +488,7 @@ void Json::dump_section(grib_accessor* a, grib_block_of_accessors* block)
 
 void Json::dump_attributes(grib_accessor* a)
 {
-    int i     = 0;
+    int i = 0;
     FILE* out = out_;
     unsigned long flags;
     while (i < MAX_ACCESSOR_ATTRIBUTES && a->attributes_[i]) {
@@ -517,7 +517,7 @@ void Json::dump_attributes(grib_accessor* a)
         a->attributes_[i]->flags_ = flags;
         i++;
     }
-    isLeaf_      = 0;
+    isLeaf_ = 0;
     isAttribute_ = 0;
 }
 

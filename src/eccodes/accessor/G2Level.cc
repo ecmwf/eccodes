@@ -17,11 +17,11 @@ void G2Level::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
     grib_handle* hand = get_enclosing_handle();
-    int n             = 0;
+    int n = 0;
 
-    type_first_     = c->get_name(hand, n++);
-    scale_first_    = c->get_name(hand, n++);
-    value_first_    = c->get_name(hand, n++);
+    type_first_ = c->get_name(hand, n++);
+    scale_first_ = c->get_name(hand, n++);
+    value_first_ = c->get_name(hand, n++);
     pressure_units_ = c->get_name(hand, n++);
 
     // See ECC-1644
@@ -41,10 +41,10 @@ int G2Level::unpack_double(double* val, size_t* len)
     int ret = 0;
     grib_handle* hand = get_enclosing_handle();
 
-    long type_first  = 0;
+    long type_first = 0;
     long scale_first = 0;
     long value_first = 0;
-    char pressure_units[10] = {0};
+    char pressure_units[10] = { 0 };
     size_t pressure_units_len = 10;
     bool tigge = is_tigge(hand);
 
@@ -97,7 +97,7 @@ int G2Level::unpack_double(double* val, size_t* len)
                 long x = v / 100.0;  // 1 hPa = 100 Pa
                 if (scale_first == 0 && x == 0) {
                     // Switch to Pa instead of hPa as the value is less than a hectoPascal
-                    char pa[]  = "Pa";
+                    char pa[] = "Pa";
                     size_t lpa = strlen(pa);
                     if ((ret = grib_set_string_internal(hand, pressure_units_, pa, &lpa)) != GRIB_SUCCESS)
                         return ret;
@@ -117,7 +117,7 @@ int G2Level::unpack_double(double* val, size_t* len)
 int G2Level::unpack_long(long* val, size_t* len)
 {
     double dval = 0;
-    int ret     = unpack_double(&dval, len);
+    int ret = unpack_double(&dval, len);
     if (ret == GRIB_SUCCESS) {
         *val = (long)(dval + 0.5);  // round up
     }
@@ -126,14 +126,14 @@ int G2Level::unpack_long(long* val, size_t* len)
 
 int G2Level::pack_double(const double* val, size_t* len)
 {
-    grib_handle* hand  = get_enclosing_handle();
-    int ret            = 0;
+    grib_handle* hand = get_enclosing_handle();
+    int ret = 0;
     double value_first = *val;
     // long scale_first           = 0;
-    long type_first         = 0;
-    char pressure_units[10] = {0};
+    long type_first = 0;
+    char pressure_units[10] = { 0 };
     size_t pressure_units_len = 10;
-    const long lval           = (long)value_first;
+    const long lval = (long)value_first;
 
     if (value_first == lval) {  // input is a whole number; process it as an integer
         return pack_long(&lval, len);
@@ -191,8 +191,8 @@ int G2Level::pack_long(const long* val, size_t* len)
     int ret = 0;
     long value_first = *val;
     long scale_first = 0;
-    long type_first  = 0;
-    char pressure_units[10] = {0};
+    long type_first = 0;
+    char pressure_units[10] = { 0 };
     size_t pressure_units_len = 10;
 
     grib_handle* hand = get_enclosing_handle();
@@ -264,7 +264,7 @@ int G2Level::pack_long(const long* val, size_t* len)
 int G2Level::is_missing()
 {
     grib_handle* hand = get_enclosing_handle();
-    int err           = 0;
+    int err = 0;
 
     int ret = grib_is_missing(hand, scale_first_, &err) +
               grib_is_missing(hand, value_first_, &err);

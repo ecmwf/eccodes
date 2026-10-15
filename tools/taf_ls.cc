@@ -39,15 +39,15 @@ grib_option grib_options[] = {
 const char* tool_description =
     "List content of TAF files printing values of "
     "some keys.\n\tIt does not fail when a key is not found.";
-const char* tool_name  = "taf_ls";
+const char* tool_name = "taf_ls";
 const char* tool_online_doc = NULL;
 const char* tool_usage = "[options] file file ...";
 
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
-double lat             = 0;
-double lon             = 0;
-int mode               = 0;
-static int json        = 0;
+double lat = 0;
+double lon = 0;
+int mode = 0;
+static int json = 0;
 
 int main(int argc, char* argv[])
 {
@@ -63,7 +63,7 @@ int grib_tool_init(grib_runtime_options* options)
 {
     if (grib_options_on("j")) {
         options->verbose = 0;
-        json             = 1;
+        json = 1;
     }
     if (json)
         printf("[\n");
@@ -84,10 +84,10 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
 static void print_key_values(grib_runtime_options* options, grib_handle* h)
 {
     int i;
-    int ret       = 0;
-    char* s       = "\"keys\" : {";
+    int ret = 0;
+    char* s = "\"keys\" : {";
     double dvalue = 0;
-    long lvalue   = 0;
+    long lvalue = 0;
     char value[MAX_STRING_LEN];
     size_t len = MAX_STRING_LEN;
     for (i = 0; i < options->print_keys_count; i++) {

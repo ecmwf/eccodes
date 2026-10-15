@@ -29,12 +29,12 @@ int G2WavePeriodRange::unpack_long(long* val, size_t* len)
 {
     long productDefinitionTemplateNumber = 0;
     grib_get_long(get_enclosing_handle(), productDefinitionTemplateNumber_, &productDefinitionTemplateNumber);
-    *val = (productDefinitionTemplateNumber == 103 || // instant det
-            productDefinitionTemplateNumber == 104 || // instant ens
-            productDefinitionTemplateNumber == 139 || // instant hindcast
-            productDefinitionTemplateNumber == 140 || // instant hindcast ens
-            productDefinitionTemplateNumber == 144 || // interval det
-            productDefinitionTemplateNumber == 145);  // interval ens
+    *val = (productDefinitionTemplateNumber == 103 ||  // instant det
+            productDefinitionTemplateNumber == 104 ||  // instant ens
+            productDefinitionTemplateNumber == 139 ||  // instant hindcast
+            productDefinitionTemplateNumber == 140 ||  // instant hindcast ens
+            productDefinitionTemplateNumber == 144 ||  // interval det
+            productDefinitionTemplateNumber == 145);   // interval ens
 
     return GRIB_SUCCESS;
 }
@@ -42,9 +42,9 @@ int G2WavePeriodRange::unpack_long(long* val, size_t* len)
 int G2WavePeriodRange::pack_long(const long* val, size_t* len)
 {
     grib_handle* hand = get_enclosing_handle();
-    long productDefinitionTemplateNumber    = -1;
+    long productDefinitionTemplateNumber = -1;
     long productDefinitionTemplateNumberNew = -1;
-    char stepType[15] = {0};
+    char stepType[15] = { 0 };
     size_t slen = 15;
     int isInstant = 0;
 
@@ -62,19 +62,22 @@ int G2WavePeriodRange::pack_long(const long* val, size_t* len)
     if (!strcmp(stepType, "instant"))
         isInstant = 1;
 
-    if (ensemble == 0) { // deterministic
+    if (ensemble == 0) {  // deterministic
         if (isInstant) {
             productDefinitionTemplateNumberNew = 103;
             if (hindcast) productDefinitionTemplateNumberNew = 139;
-        } else {
+        }
+        else {
             productDefinitionTemplateNumberNew = 144;
         }
-    } else {
+    }
+    else {
         // ensemble
         if (isInstant) {
             productDefinitionTemplateNumberNew = 104;
             if (hindcast) productDefinitionTemplateNumberNew = 140;
-        } else {
+        }
+        else {
             productDefinitionTemplateNumberNew = 145;
         }
     }

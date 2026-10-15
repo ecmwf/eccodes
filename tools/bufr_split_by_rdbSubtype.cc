@@ -18,7 +18,7 @@
 
 #include "grib_api_internal.h"
 
-static int verbose                         = 0;
+static int verbose = 0;
 static const char* OUTPUT_FILENAME_DEFAULT = "split_rdbSubtype.undef.bufr";
 static const char* OUTPUT_FILENAME_SUBTYPE = "split_rdbSubtype.%ld.bufr";
 
@@ -34,21 +34,21 @@ static void usage(const char* prog)
 /* If BUFR message does not have an ECMWF local section, set rdbSubtype to -1 */
 static int decode_rdbSubtype(const void* msg, long* rdbSubtype)
 {
-    int err                         = GRIB_SUCCESS;
-    long edition                    = 0;
-    long pos_edition                = 7 * 8;
-    const long nbits_edition        = 8;
-    long section1Flags              = 0;
-    long nbits_section1Flags        = 1 * 8;
-    long pos_section1Flags          = 17 * 8;
-    long section1Length             = 0;
+    int err = GRIB_SUCCESS;
+    long edition = 0;
+    long pos_edition = 7 * 8;
+    const long nbits_edition = 8;
+    long section1Flags = 0;
+    long nbits_section1Flags = 1 * 8;
+    long pos_section1Flags = 17 * 8;
+    long section1Length = 0;
     const long nbits_section1Length = 24;
 
-    long bufrHeaderCentre       = 0;
+    long bufrHeaderCentre = 0;
     long nbits_bufrHeaderCentre = 2 * 8;
-    long pos_bufrHeaderCentre   = 12 * 8;
+    long pos_bufrHeaderCentre = 12 * 8;
 
-    long pos_section1Length      = 8 * 8;
+    long pos_section1Length = 8 * 8;
     int ecmwfLocalSectionPresent = 0;
     const unsigned char* message = (const unsigned char*)msg;
 
@@ -62,9 +62,9 @@ static int decode_rdbSubtype(const void* msg, long* rdbSubtype)
     }
     section1Length = (long)grib_decode_unsigned_long(message, &pos_section1Length, nbits_section1Length);
     if (edition == 3) {
-        pos_section1Flags      = 15 * 8;
+        pos_section1Flags = 15 * 8;
         nbits_bufrHeaderCentre = 1 * 8;
-        pos_bufrHeaderCentre   = 13 * 8;
+        pos_bufrHeaderCentre = 13 * 8;
     }
     if (edition == 2) {
         pos_section1Flags = 15 * 8;
@@ -81,13 +81,13 @@ static int decode_rdbSubtype(const void* msg, long* rdbSubtype)
 
     /*printf("SPLT: edition=%ld section1Length=%ld bufrHeaderCentre=%ld section1Flags=%ld", edition,section1Length,bufrHeaderCentre,section1Flags);*/
     if (ecmwfLocalSectionPresent) {
-        long oldSubtype           = 0;
-        long newSubtype           = 0;
-        long nbits_oldSubtype     = 1 * 8;
-        long nbits_newSubtype     = 2 * 8;
+        long oldSubtype = 0;
+        long newSubtype = 0;
+        long nbits_oldSubtype = 1 * 8;
+        long nbits_newSubtype = 2 * 8;
         const long section0Length = 8;
-        long pos_oldSubtype       = (section0Length + section1Length + 5) * 8;
-        long pos_newSubtype       = (section0Length + section1Length + 49) * 8;
+        long pos_oldSubtype = (section0Length + section1Length + 5) * 8;
+        long pos_newSubtype = (section0Length + section1Length + 49) * 8;
 
         oldSubtype = (long)grib_decode_unsigned_long(message, &pos_oldSubtype, nbits_oldSubtype);
         newSubtype = (long)grib_decode_unsigned_long(message, &pos_newSubtype, nbits_newSubtype);
@@ -105,10 +105,10 @@ static int split_file_by_subtype(FILE* in, const char* filename, unsigned long* 
 {
     void* mesg = NULL;
     FILE* out;
-    size_t size          = 0;
-    off_t offset         = 0;
-    int err              = GRIB_SUCCESS;
-    char ofilename[2048] = {0};
+    size_t size = 0;
+    off_t offset = 0;
+    int err = GRIB_SUCCESS;
+    char ofilename[2048] = { 0 };
     grib_context* c = grib_context_get_default();
 
     if (!in)
@@ -120,7 +120,7 @@ static int split_file_by_subtype(FILE* in, const char* filename, unsigned long* 
         if (mesg != NULL && err == 0) {
             /* Decode subtype from mesg */
             long rdbSubtype = 0;
-            int status      = decode_rdbSubtype(mesg, &rdbSubtype);
+            int status = decode_rdbSubtype(mesg, &rdbSubtype);
             if (status != GRIB_SUCCESS) {
                 fprintf(stderr, "%s: Failed to decode rdbSubtype from message %lu\n", tool_name, *count);
                 return status;
@@ -163,7 +163,7 @@ int main(int argc, char* argv[])
     FILE* infh = NULL;
     char* filename;
     int i, status = 0;
-    int err             = 0;
+    int err = 0;
     unsigned long count = 0;
 
     if (argc != 2 && argc != 3)
@@ -189,7 +189,7 @@ int main(int argc, char* argv[])
     }
 
     count = 0;
-    err   = split_file_by_subtype(infh, filename, &count);
+    err = split_file_by_subtype(infh, filename, &count);
     if (err) {
         fprintf(stderr, "%s: Failed to split BUFR file %s\n", tool_name, filename);
         status = 1;

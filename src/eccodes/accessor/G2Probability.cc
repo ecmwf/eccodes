@@ -28,10 +28,10 @@ int G2Probability::unpack_long(long* val, size_t* len)
 {
     long productDefinitionTemplateNumber = 0;
     grib_get_long(get_enclosing_handle(), productDefinitionTemplateNumber_, &productDefinitionTemplateNumber);
-        *val = (productDefinitionTemplateNumber == 5 || productDefinitionTemplateNumber == 9 ||
+    *val = (productDefinitionTemplateNumber == 5 || productDefinitionTemplateNumber == 9 ||
             productDefinitionTemplateNumber == 112 || productDefinitionTemplateNumber == 131);
-        if (referencePeriod_)
-            *val = (productDefinitionTemplateNumber == 112 || productDefinitionTemplateNumber == 131);
+    if (referencePeriod_)
+        *val = (productDefinitionTemplateNumber == 112 || productDefinitionTemplateNumber == 131);
 
     return GRIB_SUCCESS;
 }
@@ -39,9 +39,9 @@ int G2Probability::unpack_long(long* val, size_t* len)
 int G2Probability::pack_long(const long* val, size_t* len)
 {
     grib_handle* hand = get_enclosing_handle();
-    long productDefinitionTemplateNumber    = -1;
+    long productDefinitionTemplateNumber = -1;
     long productDefinitionTemplateNumberNew = -1;
-    char stepType[15] = {0};
+    char stepType[15] = { 0 };
     size_t slen = 15;
     int isInstant = 0;
 

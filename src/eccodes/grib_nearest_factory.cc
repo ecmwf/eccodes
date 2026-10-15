@@ -18,15 +18,42 @@ struct table_entry
 };
 
 static const struct table_entry table[] = {
-    { "healpix", &grib_nearest_healpix, },
-    { "lambert_azimuthal_equal_area", &grib_nearest_lambert_azimuthal_equal_area, },
-    { "lambert_conformal", &grib_nearest_lambert_conformal, },
-    { "latlon_reduced", &grib_nearest_latlon_reduced, },
-    { "mercator", &grib_nearest_mercator, },
-    { "polar_stereographic", &grib_nearest_polar_stereographic, },
-    { "reduced", &grib_nearest_reduced, },
-    { "regular", &grib_nearest_regular, },
-    { "space_view", &grib_nearest_space_view, },
+    {
+        "healpix",
+        &grib_nearest_healpix,
+    },
+    {
+        "lambert_azimuthal_equal_area",
+        &grib_nearest_lambert_azimuthal_equal_area,
+    },
+    {
+        "lambert_conformal",
+        &grib_nearest_lambert_conformal,
+    },
+    {
+        "latlon_reduced",
+        &grib_nearest_latlon_reduced,
+    },
+    {
+        "mercator",
+        &grib_nearest_mercator,
+    },
+    {
+        "polar_stereographic",
+        &grib_nearest_polar_stereographic,
+    },
+    {
+        "reduced",
+        &grib_nearest_reduced,
+    },
+    {
+        "regular",
+        &grib_nearest_regular,
+    },
+    {
+        "space_view",
+        &grib_nearest_space_view,
+    },
 };
 
 eccodes::geo_nearest::Nearest* grib_nearest_factory(grib_handle* h, grib_arguments* args, int* error)

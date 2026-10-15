@@ -19,12 +19,17 @@ class BufrGroup : public Variable
 {
 public:
     BufrGroup() :
-        Variable() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        Variable() {}
+    const AccessorType& accessor_type() const override
+    {
+        {
+            return accessor_type_;
+        }
+    }
     void dump(eccodes::Dumper*) override;
     grib_accessor* next(grib_accessor*, int explore) override;
 
-    static constexpr AccessorType accessor_type_{"bufr_group"};
+    static constexpr AccessorType accessor_type_{ "bufr_group" };
 };
 
 }  // namespace eccodes::accessor

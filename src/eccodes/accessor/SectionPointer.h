@@ -19,8 +19,13 @@ class SectionPointer : public Gen
 {
 public:
     SectionPointer() :
-        Gen() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        Gen() {}
+    const AccessorType& accessor_type() const override
+    {
+        {
+            return accessor_type_;
+        }
+    }
     long get_native_type() override;
     int unpack_string(char*, size_t* len) override;
     long byte_count() override;
@@ -33,7 +38,7 @@ private:
     long sectionNumber_ = 0;
 
 public:
-    static constexpr AccessorType accessor_type_{"section_pointer"};
+    static constexpr AccessorType accessor_type_{ "section_pointer" };
 };
 
 }  // namespace eccodes::accessor

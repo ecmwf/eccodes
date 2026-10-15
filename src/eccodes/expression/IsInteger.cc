@@ -10,7 +10,8 @@
 
 #include "IsInteger.h"
 
-namespace eccodes::expression {
+namespace eccodes::expression
+{
 
 const char* IsInteger::get_name() const
 {
@@ -20,9 +21,9 @@ const char* IsInteger::get_name() const
 int IsInteger::evaluate_long(grib_handle* h, long* result) const
 {
     int err = 0;
-    char mybuf[1024] = {0};
+    char mybuf[1024] = { 0 };
     size_t size = 1024;
-    char* p     = 0;
+    char* p = 0;
     char* start = 0;
 
     if ((err = grib_get_string_internal(h, name_, mybuf, &size)) != GRIB_SUCCESS)
@@ -55,7 +56,7 @@ int IsInteger::evaluate_double(grib_handle* h, double* result) const
 
 const char* IsInteger::evaluate_string(grib_handle* h, char* buf, size_t* size, int* err) const
 {
-    long lresult   = 0;
+    long lresult = 0;
     double dresult = 0.0;
 
     switch (native_type(h)) {
@@ -90,7 +91,7 @@ void IsInteger::destroy(grib_context* c)
 
 void IsInteger::add_dependency(grib_accessor* observer)
 {
-    grib_accessor* observed       = grib_find_accessor(observer->get_enclosing_handle(), name_);
+    grib_accessor* observed = grib_find_accessor(observer->get_enclosing_handle(), name_);
 
     if (!observed) {
         /* grib_context_log(observer->context, GRIB_LOG_ERROR, */
@@ -104,9 +105,9 @@ void IsInteger::add_dependency(grib_accessor* observer)
 
 IsInteger::IsInteger(grib_context* c, const char* name, int start, int length)
 {
-    name_     = grib_context_strdup_persistent(c, name);
-    start_    = start;
-    length_   = length;
+    name_ = grib_context_strdup_persistent(c, name);
+    start_ = start;
+    length_ = length;
 }
 
 int IsInteger::native_type(grib_handle* h) const
@@ -116,6 +117,7 @@ int IsInteger::native_type(grib_handle* h) const
 
 }  // namespace eccodes::expression
 
-grib_expression* new_is_integer_expression(grib_context* c, const char* name, int start, int length) {
+grib_expression* new_is_integer_expression(grib_context* c, const char* name, int start, int length)
+{
     return new eccodes::expression::IsInteger(c, name, start, length);
 }

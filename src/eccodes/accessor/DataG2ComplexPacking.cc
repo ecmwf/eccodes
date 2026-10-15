@@ -17,7 +17,7 @@ void DataG2ComplexPacking::init(const long v, grib_arguments* args)
 {
     DataComplexPacking::init(v, args);
     numberOfValues_ = args->get_name(get_enclosing_handle(), carg_++);
-    edition_        = 2;
+    edition_ = 2;
 
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }

@@ -32,11 +32,11 @@ int G2Bitmap::pack_double(const double* val, size_t* len)
 {
     unsigned char* buf = NULL;
     size_t i;
-    int err  = 0;
+    int err = 0;
     long pos = 0;
     // long bmaplen       = 0;
     double miss_values = 0;
-    size_t tlen        = (*len + 7) / 8;
+    size_t tlen = (*len + 7) / 8;
 
     if ((err = grib_get_double_internal(get_enclosing_handle(), missing_value_, &miss_values)) != GRIB_SUCCESS)
         return err;

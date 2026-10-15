@@ -19,8 +19,13 @@ class StatisticsSpectral : public AbstractVector
 {
 public:
     StatisticsSpectral() :
-        AbstractVector() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        AbstractVector() {}
+    const AccessorType& accessor_type() const override
+    {
+        {
+            return accessor_type_;
+        }
+    }
     int unpack_double(double* val, size_t* len) override;
     int value_count(long*) override;
     void destroy(grib_context*) override;
@@ -35,7 +40,7 @@ private:
     const char* JS_ = nullptr;
 
 public:
-    static constexpr AccessorType accessor_type_{"statistics_spectral"};
+    static constexpr AccessorType accessor_type_{ "statistics_spectral" };
 };
 
 }  // namespace eccodes::accessor

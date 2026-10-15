@@ -16,13 +16,13 @@ int main(int argc, char* argv[])
     char* filename;
     FILE* f;
     grib_handle* h = NULL;
-    size_t size    = 0;
+    size_t size = 0;
     size_t bufsize = sizeof(buffer);
     long count, step, edition, totalLength;
     char gridType[50], levelType[50], level[50], shortName[50];
-    size_t gridTypelen  = sizeof(gridType);
+    size_t gridTypelen = sizeof(gridType);
     size_t levelTypelen = sizeof(levelType);
-    size_t levellen     = sizeof(level);
+    size_t levellen = sizeof(level);
     size_t shortNamelen = sizeof(shortName);
     size_t len;
 
@@ -37,7 +37,7 @@ int main(int argc, char* argv[])
     }
     grib_context* c = grib_context_get_default();
 
-    size  = bufsize;
+    size = bufsize;
     count = 1;
     while (grib_read_any_from_file(c, f, buffer, &size) == GRIB_SUCCESS) {
         if ((1)) {

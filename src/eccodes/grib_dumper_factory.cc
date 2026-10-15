@@ -23,21 +23,63 @@ struct table_entry
 };
 
 static struct table_entry table[] = {
-    {"bufr_decode_C",&grib_dumper_bufr_decode_c,},
-    {"bufr_decode_filter",&grib_dumper_bufr_decode_filter,},
-    {"bufr_decode_fortran",&grib_dumper_bufr_decode_fortran,},
-    {"bufr_decode_python",&grib_dumper_bufr_decode_python,},
-    {"bufr_encode_C",&grib_dumper_bufr_encode_c,},
-    {"bufr_encode_filter",&grib_dumper_bufr_encode_filter,},
-    {"bufr_encode_fortran",&grib_dumper_bufr_encode_fortran,},
-    {"bufr_encode_python",&grib_dumper_bufr_encode_python,},
-    {"bufr_simple",&grib_dumper_bufr_simple,},
-    {"debug",&grib_dumper_debug,},
-    {"default",&grib_dumper_default,},
-    {"grib_encode_C",&grib_dumper_grib_encode_c,},
-    {"json",&grib_dumper_json,},
+    {
+        "bufr_decode_C",
+        &grib_dumper_bufr_decode_c,
+    },
+    {
+        "bufr_decode_filter",
+        &grib_dumper_bufr_decode_filter,
+    },
+    {
+        "bufr_decode_fortran",
+        &grib_dumper_bufr_decode_fortran,
+    },
+    {
+        "bufr_decode_python",
+        &grib_dumper_bufr_decode_python,
+    },
+    {
+        "bufr_encode_C",
+        &grib_dumper_bufr_encode_c,
+    },
+    {
+        "bufr_encode_filter",
+        &grib_dumper_bufr_encode_filter,
+    },
+    {
+        "bufr_encode_fortran",
+        &grib_dumper_bufr_encode_fortran,
+    },
+    {
+        "bufr_encode_python",
+        &grib_dumper_bufr_encode_python,
+    },
+    {
+        "bufr_simple",
+        &grib_dumper_bufr_simple,
+    },
+    {
+        "debug",
+        &grib_dumper_debug,
+    },
+    {
+        "default",
+        &grib_dumper_default,
+    },
+    {
+        "grib_encode_C",
+        &grib_dumper_grib_encode_c,
+    },
+    {
+        "json",
+        &grib_dumper_json,
+    },
     // {"serialize",&grib_dumper_serialize,},
-    {"wmo",&grib_dumper_wmo,},
+    {
+        "wmo",
+        &grib_dumper_wmo,
+    },
 };
 
 eccodes::Dumper* grib_dumper_factory(const char* op, const grib_handle* h, FILE* out, unsigned long option_flags, void* arg)
@@ -48,11 +90,11 @@ eccodes::Dumper* grib_dumper_factory(const char* op, const grib_handle* h, FILE*
             eccodes::Dumper* d = *(table[i].dumper);
             {
                 eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
-                d->depth_          = 0;
-                d->context_        = h->context;
-                d->option_flags_   = option_flags;
-                d->arg_            = arg;
-                d->out_            = out;
+                d->depth_ = 0;
+                d->context_ = h->context;
+                d->option_flags_ = option_flags;
+                d->arg_ = arg;
+                d->out_ = out;
                 d->init();
             }
             grib_context_log(
@@ -124,7 +166,7 @@ int grib_print(grib_handle* h, const char* name, eccodes::Dumper* d)
 
 void grib_dump_keys(grib_handle* h, FILE* f, const char* mode, unsigned long flags, void* data, const char** keys, size_t num_keys)
 {
-    grib_accessor* acc  = NULL;
+    grib_accessor* acc = NULL;
     eccodes::Dumper* dumper = grib_dumper_factory(mode ? mode : "default", h, f, flags, data);
     if (!dumper)
         return;

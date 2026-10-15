@@ -20,17 +20,17 @@ void DataG2BifourierPacking::init(const long v, grib_arguments* args)
     DataSimplePacking::init(v, args);
     grib_handle* gh = get_enclosing_handle();
 
-    ieee_floats_                         = args->get_name(gh, carg_++);
-    laplacianOperatorIsSet_              = args->get_name(gh, carg_++);
-    laplacianOperator_                   = args->get_name(gh, carg_++);
-    biFourierTruncationType_             = args->get_name(gh, carg_++);
-    sub_i_                               = args->get_name(gh, carg_++);
-    sub_j_                               = args->get_name(gh, carg_++);
-    bif_i_                               = args->get_name(gh, carg_++);
-    bif_j_                               = args->get_name(gh, carg_++);
-    biFourierSubTruncationType_          = args->get_name(gh, carg_++);
-    biFourierDoNotPackAxes_              = args->get_name(gh, carg_++);
-    biFourierMakeTemplate_               = args->get_name(gh, carg_++);
+    ieee_floats_ = args->get_name(gh, carg_++);
+    laplacianOperatorIsSet_ = args->get_name(gh, carg_++);
+    laplacianOperator_ = args->get_name(gh, carg_++);
+    biFourierTruncationType_ = args->get_name(gh, carg_++);
+    sub_i_ = args->get_name(gh, carg_++);
+    sub_j_ = args->get_name(gh, carg_++);
+    bif_i_ = args->get_name(gh, carg_++);
+    bif_j_ = args->get_name(gh, carg_++);
+    biFourierSubTruncationType_ = args->get_name(gh, carg_++);
+    biFourierDoNotPackAxes_ = args->get_name(gh, carg_++);
+    biFourierMakeTemplate_ = args->get_name(gh, carg_++);
     totalNumberOfValuesInUnpackedSubset_ = args->get_name(gh, carg_++);
     /*numberOfValues             = args->get_name(gh, carg_++);*/
 
@@ -48,7 +48,7 @@ int DataG2BifourierPacking::value_count(long* numberOfValues)
 
 static void ellipse(long ni, long nj, long itrunc[], long jtrunc[])
 {
-    const double zeps   = 1.E-10;
+    const double zeps = 1.E-10;
     const double zauxil = 0.;
     int i, j;
     double zi, zj;
@@ -58,7 +58,7 @@ static void ellipse(long ni, long nj, long itrunc[], long jtrunc[])
      */
 
     for (j = 1; j < nj; j++) {
-        zi        = (double)ni / (double)nj * sqrt(std::max(zauxil, (double)(nj * nj - j * j)));
+        zi = (double)ni / (double)nj * sqrt(std::max(zauxil, (double)(nj * nj - j * j)));
         itrunc[j] = (int)(zi + zeps);
     }
 
@@ -66,7 +66,7 @@ static void ellipse(long ni, long nj, long itrunc[], long jtrunc[])
         itrunc[0] = ni;
     }
     else {
-        itrunc[0]  = ni;
+        itrunc[0] = ni;
         itrunc[nj] = 0;
     }
 
@@ -75,7 +75,7 @@ static void ellipse(long ni, long nj, long itrunc[], long jtrunc[])
      */
 
     for (i = 1; i < ni; i++) {
-        zj        = (double)nj / (double)ni * sqrt(std::max(zauxil, (double)(ni * ni - i * i)));
+        zj = (double)nj / (double)ni * sqrt(std::max(zauxil, (double)(ni * ni - i * i)));
         jtrunc[i] = (int)(zj + zeps);
     }
 
@@ -83,7 +83,7 @@ static void ellipse(long ni, long nj, long itrunc[], long jtrunc[])
         jtrunc[0] = nj;
     }
     else {
-        jtrunc[0]  = nj;
+        jtrunc[0] = nj;
         jtrunc[ni] = 0;
     }
 }
@@ -136,7 +136,7 @@ static void diamond(long ni, long nj, long itrunc[], long jtrunc[])
         if (insub) {                                    \
             int insubi = (i <= bt->itruncation_sub[j]); \
             int insubj = (j <= bt->jtruncation_sub[i]); \
-            insub      = insubi && insubj;              \
+            insub = insubi && insubj;                   \
         }                                               \
         if (bt->keepaxes)                               \
             insub = insub || (i == 0) || (j == 0);      \
@@ -182,7 +182,7 @@ static double laplam(bif_trunc_t* bt, const double val[])
 
     const double zeps = 1E-15;
     double *znorm = NULL, *zw = NULL;
-    int kmax   = 1 + bt->bif_i * bt->bif_i + bt->bif_j * bt->bif_j, lmax;
+    int kmax = 1 + bt->bif_i * bt->bif_i + bt->bif_j * bt->bif_j, lmax;
     int *itab1 = NULL, *itab2 = NULL;
     int i, j, k, l, isp;
     double zxmw, zymw, zwsum, zx, zy, zsum1, zsum2, zbeta1, zp;
@@ -201,7 +201,7 @@ static double laplam(bif_trunc_t* bt, const double val[])
 
         if (!insub) {
             const int kk = i * i + j * j;
-            itab1[kk]    = 1;
+            itab1[kk] = 1;
         }
     }
 
@@ -227,7 +227,7 @@ static double laplam(bif_trunc_t* bt, const double val[])
      * the rank of all i*i+j*j
      */
     znorm = (double*)calloc(lmax, sizeof(double));
-    zw    = (double*)malloc(sizeof(double) * lmax);
+    zw = (double*)malloc(sizeof(double) * lmax);
     if (!zw || !znorm)
         return GRIB_OUT_OF_MEMORY;
 
@@ -264,15 +264,15 @@ static double laplam(bif_trunc_t* bt, const double val[])
         zw[l] = (double)lmax / (double)(l + 1);
         if (znorm[l] < zeps) {
             znorm[l] = zeps;
-            zw[l]    = 100. * zeps;
+            zw[l] = 100. * zeps;
         }
     }
 
     /*
      * Sum weights
      */
-    zxmw  = 0.;
-    zymw  = 0.;
+    zxmw = 0.;
+    zymw = 0.;
     zwsum = 0.;
 
     for (l = 0; l < lmax; l++) {
@@ -286,8 +286,8 @@ static double laplam(bif_trunc_t* bt, const double val[])
     /*
      * Least square regression
      */
-    zxmw  = zxmw / zwsum;
-    zymw  = zymw / zwsum;
+    zxmw = zxmw / zwsum;
+    zymw = zymw / zwsum;
     zsum1 = 0.;
     zsum2 = 0.;
 
@@ -299,8 +299,8 @@ static double laplam(bif_trunc_t* bt, const double val[])
     }
 
     zbeta1 = zsum1 / zsum2;
-    zp     = -zbeta1;
-    zp     = std::max(-9.999, std::min(9.999, zp));
+    zp = -zbeta1;
+    zp = std::max(-9.999, std::min(9.999, zp));
 
     free(itab1);
     free(itab2);
@@ -374,17 +374,17 @@ bif_trunc_t* DataG2BifourierPacking::new_bif_trunc()
         case 0:
             bt->decode_float = grib_long_to_ibm;
             bt->encode_float = grib_ibm_to_long;
-            bt->bytes        = 4;
+            bt->bytes = 4;
             break;
         case 1:
             bt->decode_float = grib_long_to_ieee;
             bt->encode_float = grib_ieee_to_long;
-            bt->bytes        = 4;
+            bt->bytes = 4;
             break;
         case 2:
             bt->decode_float = grib_long_to_ieee64;
             bt->encode_float = grib_ieee64_to_long;
-            bt->bytes        = 8;
+            bt->bytes = 8;
             break;
         default:
             ret = GRIB_NOT_IMPLEMENTED;
@@ -446,7 +446,7 @@ int DataG2BifourierPacking::unpack_double(double* val, size_t* len)
 {
     grib_handle* gh = get_enclosing_handle();
 
-    unsigned char* buf  = NULL;
+    unsigned char* buf = NULL;
     unsigned char* hres = NULL;
     unsigned char* lres = NULL;
     unsigned long packed_offset;
@@ -464,7 +464,7 @@ int DataG2BifourierPacking::unpack_double(double* val, size_t* len)
 
     double s = 0;
     double d = 0;
-    int ret  = GRIB_SUCCESS;
+    int ret = GRIB_SUCCESS;
     int i, j, k;
 
     if ((ret = value_count(&count)) != GRIB_SUCCESS)
@@ -486,7 +486,7 @@ int DataG2BifourierPacking::unpack_double(double* val, size_t* len)
         goto cleanup;
     if (*len < bt->n_vals_bif) {
         *len = (long)bt->n_vals_bif;
-        ret  = GRIB_ARRAY_TOO_SMALL;
+        ret = GRIB_ARRAY_TOO_SMALL;
         goto cleanup;
     }
 
@@ -521,7 +521,7 @@ int DataG2BifourierPacking::unpack_double(double* val, size_t* len)
             }
         else
             for (k = 0; k < 4; k++) {
-                double S     = scals(i, j);
+                double S = scals(i, j);
                 long dec_val = grib_decode_unsigned_long(lres, &lpos, bt->bits_per_value);
                 val[isp + k] = (double)(((dec_val * s) + bt->reference_value) * d) / S;
             }
@@ -543,14 +543,14 @@ int DataG2BifourierPacking::pack_double(const double* val, size_t* len)
 {
     grib_handle* gh = get_enclosing_handle();
 
-    size_t buflen       = 0;
-    size_t hsize        = 0;
-    size_t lsize        = 0;
-    unsigned char* buf  = NULL;
+    size_t buflen = 0;
+    size_t hsize = 0;
+    size_t lsize = 0;
+    unsigned char* buf = NULL;
     unsigned char* hres = NULL;
     unsigned char* lres = NULL;
-    long hpos           = 0;
-    long lpos           = 0;
+    long hpos = 0;
+    long lpos = 0;
     int isp;
     bif_trunc_t* bt = NULL;
 
@@ -647,8 +647,8 @@ int DataG2BifourierPacking::pack_double(const double* val, size_t* len)
     }
     else {
         bt->decimal_scale_factor = 0;
-        bt->binary_scale_factor  = 0;
-        bt->reference_value      = 0.;
+        bt->binary_scale_factor = 0;
+        bt->reference_value = 0.;
     }
 
     /*
@@ -685,7 +685,7 @@ int DataG2BifourierPacking::pack_double(const double* val, size_t* len)
             }
         else
             for (k = 0; k < 4; k++) {
-                double S    = scals(i, j);
+                double S = scals(i, j);
                 current_val = (((((val[isp + k] * d) * S) - bt->reference_value) * s) + 0.5);
 
                 if (current_val < 0)

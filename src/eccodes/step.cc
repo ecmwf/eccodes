@@ -20,7 +20,8 @@
 
 #include "step.h"
 
-namespace eccodes {
+namespace eccodes
+{
 
 Step step_from_string(const std::string& step, const Unit& force_unit)
 {
@@ -32,23 +33,23 @@ Step step_from_string(const std::string& step, const Unit& force_unit)
             std::string unit_str = match[2];
             Unit unit;
             if (unit_str.size() != 0) {
-                if (force_unit == Unit{Unit::Value::MISSING}) {
-                    unit = Unit{unit_str};
+                if (force_unit == Unit{ Unit::Value::MISSING }) {
+                    unit = Unit{ unit_str };
                 }
                 else {
-                    if (Unit{unit_str} == force_unit)
-                        unit = Unit{unit_str};
+                    if (Unit{ unit_str } == force_unit)
+                        unit = Unit{ unit_str };
                     else
                         throw std::runtime_error("Cannot force unit when unit is specified in step string");
                 }
             }
             else {
-                if (force_unit == Unit{Unit::Value::MISSING})
-                    unit = Unit{Unit::Value::HOUR};
+                if (force_unit == Unit{ Unit::Value::MISSING })
+                    unit = Unit{ Unit::Value::HOUR };
                 else
                     unit = force_unit;
             }
-            Step ret{std::stod(value), unit};
+            Step ret{ std::stod(value), unit };
             return ret;
         }
     }
@@ -77,7 +78,7 @@ std::vector<Step> parse_range(const std::string& range_str, const Unit& force_un
             throw std::runtime_error("Could not parse step range for accumulated data: \"" + range_str + "\"");
         }
     }
-    else if(std::regex_match(range_str, match, re2)) {
+    else if (std::regex_match(range_str, match, re2)) {
         if (match.size() == 1) {
             std::string v1 = match[0];
             steps.push_back(step_from_string(v1, force_unit));
@@ -167,7 +168,7 @@ std::pair<Step, Step> find_common_units(const Step& startStep, const Step& endSt
         ECCODES_ASSERT(a.internal_unit_ == b.internal_unit_);
     }
 
-    return {a, b};
+    return { a, b };
 }
 
 void Step::init_long(long value, const Unit& unit)
@@ -181,15 +182,15 @@ void Step::init_double(double value, const Unit& unit)
 {
     auto seconds = Unit::get_converter().unit_to_duration(unit.value<Unit::Value>());
     internal_value_ = value * seconds;
-    internal_unit_ = Unit{Unit::Value::SECOND};
+    internal_unit_ = Unit{ Unit::Value::SECOND };
     unit_ = unit;
 }
 
 Step& Step::optimize_unit()
 {
     if (internal_value_ == 0) {
-        if (unit() > Unit{Unit::Value::HOUR}) {
-            set_unit(Unit{Unit::Value::HOUR});
+        if (unit() > Unit{ Unit::Value::HOUR }) {
+            set_unit(Unit{ Unit::Value::HOUR });
         }
         return *this;
     }
@@ -212,7 +213,8 @@ Step& Step::optimize_unit()
 }
 
 template <>
-std::string Step::value<std::string>(const std::string& format, bool show_hours) const {
+std::string Step::value<std::string>(const std::string& format, bool show_hours) const
+{
     constexpr int MAX_SIZE = 128;
     char output[MAX_SIZE];
     std::string u;
@@ -222,11 +224,11 @@ std::string Step::value<std::string>(const std::string& format, bool show_hours)
     // with previous versions of ecCodes (see ECC-1620). This is a temporary solution.
 
     if (show_hours) {
-        u =  unit_.value<std::string>();
+        u = unit_.value<std::string>();
     }
     else {
         if (unit_ != Unit::Value::HOUR)
-            u =  unit_.value<std::string>();
+            u = unit_.value<std::string>();
     }
 
     if (unit_ == Unit::Value::MINUTES15 ||
@@ -235,8 +237,7 @@ std::string Step::value<std::string>(const std::string& format, bool show_hours)
         unit_ == Unit::Value::HOURS6 ||
         unit_ == Unit::Value::HOURS12 ||
         unit_ == Unit::Value::YEARS10 ||
-        unit_ == Unit::Value::YEARS30
-    )
+        unit_ == Unit::Value::YEARS30)
         err = snprintf(output, MAX_SIZE, (format + "x%s").c_str(), value<double>(), u.c_str());
     else
         err = snprintf(output, MAX_SIZE, (format + "%s").c_str(), value<double>(), u.c_str());

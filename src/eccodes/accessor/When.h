@@ -19,14 +19,19 @@ class When : public Gen
 {
 public:
     When() :
-        Gen() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        Gen() {}
+    const AccessorType& accessor_type() const override
+    {
+        {
+            return accessor_type_;
+        }
+    }
     long get_native_type() override;
     void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;
     int notify_change(grib_accessor* changed) override;
 
-    static constexpr AccessorType accessor_type_{"when"};
+    static constexpr AccessorType accessor_type_{ "when" };
 };
 
 }  // namespace eccodes::accessor

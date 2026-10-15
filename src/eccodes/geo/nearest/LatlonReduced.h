@@ -12,11 +12,14 @@
 
 #include "Gen.h"
 
-namespace eccodes::geo_nearest {
+namespace eccodes::geo_nearest
+{
 
-class LatlonReduced : public Gen {
+class LatlonReduced : public Gen
+{
 public:
-    LatlonReduced() {
+    LatlonReduced()
+    {
         class_name_ = "latlon_reduced";
     }
     Nearest* create() override { return new LatlonReduced(); }

@@ -13,7 +13,8 @@
 eccodes::geo_iterator::Latlon _grib_iterator_latlon{};
 eccodes::geo_iterator::Iterator* grib_iterator_latlon = &_grib_iterator_latlon;
 
-namespace eccodes::geo_iterator {
+namespace eccodes::geo_iterator
+{
 
 int Latlon::next(double* lat, double* lon, double* val) const
 {
@@ -71,19 +72,19 @@ int Latlon::init(grib_handle* h, grib_arguments* args)
     long jScansPositively;
     long lai;
 
-    const char* s_lat1            = args->get_name(h, carg_++);
-    const char* s_jdir            = args->get_name(h, carg_++);
-    const char* s_jScansPos       = args->get_name(h, carg_++);
-    const char* s_jPtsConsec      = args->get_name(h, carg_++);
-    const char* s_isRotatedGrid   = args->get_name(h, carg_++);
+    const char* s_lat1 = args->get_name(h, carg_++);
+    const char* s_jdir = args->get_name(h, carg_++);
+    const char* s_jScansPos = args->get_name(h, carg_++);
+    const char* s_jPtsConsec = args->get_name(h, carg_++);
+    const char* s_isRotatedGrid = args->get_name(h, carg_++);
     const char* s_angleOfRotation = args->get_name(h, carg_++);
     const char* s_latSouthernPole = args->get_name(h, carg_++);
     const char* s_lonSouthernPole = args->get_name(h, carg_++);
 
     angleOfRotation_ = 0;
-    isRotated_       = 0;
-    southPoleLat_    = 0;
-    southPoleLon_    = 0;
+    isRotated_ = 0;
+    southPoleLat_ = 0;
+    southPoleLon_ = 0;
     disableUnrotate_ = 0; /* unrotate enabled by default */
 
     if ((err = grib_get_long(h, s_isRotatedGrid, &isRotated_)))
@@ -128,7 +129,7 @@ int Latlon::init(grib_handle* h, grib_arguments* args)
     if (jScansPositively) {
         north = lat2;
         south = lat1;
-        jdir  = -jdir;
+        jdir = -jdir;
     }
     else {
         north = lat1;

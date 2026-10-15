@@ -19,13 +19,18 @@ class OffsetFile : public Double
 {
 public:
     OffsetFile() :
-        Double() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        Double() {}
+    const AccessorType& accessor_type() const override
+    {
+        {
+            return accessor_type_;
+        }
+    }
     int unpack_double(double* val, size_t* len) override;
     int unpack_string(char*, size_t* len) override;
     void init(const long, grib_arguments*) override;
 
-    static constexpr AccessorType accessor_type_{"offset_file"};
+    static constexpr AccessorType accessor_type_{ "offset_file" };
 };
 
 }  // namespace eccodes::accessor

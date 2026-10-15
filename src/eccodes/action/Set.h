@@ -25,8 +25,8 @@ public:
     int execute(grib_handle* h) override;
 
     grib_expression* expression_ = nullptr;
-    char* name2_                 = nullptr;
-    int nofail_                  = 0;
+    char* name2_ = nullptr;
+    int nofail_ = 0;
 };
 
 }  // namespace eccodes::action

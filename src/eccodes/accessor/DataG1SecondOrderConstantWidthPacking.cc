@@ -19,29 +19,29 @@ void DataG1SecondOrderConstantWidthPacking::init(const long v, grib_arguments* a
     DataSimplePacking::init(v, args);
     grib_handle* hand = get_enclosing_handle();
 
-    half_byte_                       = args->get_name(hand, carg_++);
-    packingType_                     = args->get_name(hand, carg_++);
-    ieee_packing_                    = args->get_name(hand, carg_++);
-    precision_                       = args->get_name(hand, carg_++);
-    widthOfFirstOrderValues_         = args->get_name(hand, carg_++);
-    N1_                              = args->get_name(hand, carg_++);
-    N2_                              = args->get_name(hand, carg_++);
-    numberOfGroups_                  = args->get_name(hand, carg_++);
+    half_byte_ = args->get_name(hand, carg_++);
+    packingType_ = args->get_name(hand, carg_++);
+    ieee_packing_ = args->get_name(hand, carg_++);
+    precision_ = args->get_name(hand, carg_++);
+    widthOfFirstOrderValues_ = args->get_name(hand, carg_++);
+    N1_ = args->get_name(hand, carg_++);
+    N2_ = args->get_name(hand, carg_++);
+    numberOfGroups_ = args->get_name(hand, carg_++);
     numberOfSecondOrderPackedValues_ = args->get_name(hand, carg_++);
-    extraValues_                     = args->get_name(hand, carg_++);
-    Ni_                              = args->get_name(hand, carg_++);
-    Nj_                              = args->get_name(hand, carg_++);
-    pl_                              = args->get_name(hand, carg_++);
-    jPointsAreConsecutive_           = args->get_name(hand, carg_++);
-    bitmap_                          = args->get_name(hand, carg_++);
-    groupWidth_                      = args->get_name(hand, carg_++);
-    edition_                         = 1;
+    extraValues_ = args->get_name(hand, carg_++);
+    Ni_ = args->get_name(hand, carg_++);
+    Nj_ = args->get_name(hand, carg_++);
+    pl_ = args->get_name(hand, carg_++);
+    jPointsAreConsecutive_ = args->get_name(hand, carg_++);
+    bitmap_ = args->get_name(hand, carg_++);
+    groupWidth_ = args->get_name(hand, carg_++);
+    edition_ = 1;
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
 int DataG1SecondOrderConstantWidthPacking::value_count(long* numberOfSecondOrderPackedValues)
 {
-    int err                          = 0;
+    int err = 0;
     *numberOfSecondOrderPackedValues = 0;
 
     err = grib_get_long_internal(get_enclosing_handle(), numberOfSecondOrderPackedValues_, numberOfSecondOrderPackedValues);
@@ -58,11 +58,11 @@ int DataG1SecondOrderConstantWidthPacking::unpack_double(double* values, size_t*
 {
     int ret = 0;
     long numberOfGroups, numberOfSecondOrderPackedValues;
-    long groupWidth              = 0;
-    long* firstOrderValues       = 0;
-    long* X                      = 0;
-    long numberPerRow            = 0;
-    long pos                     = 0;
+    long groupWidth = 0;
+    long* firstOrderValues = 0;
+    long* X = 0;
+    long numberPerRow = 0;
+    long pos = 0;
     long widthOfFirstOrderValues = 0;
     long jPointsAreConsecutive;
     unsigned char* buf = this->get_enclosing_handle()->buffer->data;
@@ -185,9 +185,9 @@ int DataG1SecondOrderConstantWidthPacking::pack_double(const double* cval, size_
 int DataG1SecondOrderConstantWidthPacking::unpack_double_element(size_t idx, double* val)
 {
     grib_handle* hand = get_enclosing_handle();
-    size_t size       = 0;
-    double* values    = NULL;
-    int err           = 0;
+    size_t size = 0;
+    double* values = NULL;
+    int err = 0;
 
     /* TODO(masn): This should be 'codedValues' not 'values'
        but GRIB1 version of this packing does not have that key!! */
@@ -198,7 +198,7 @@ int DataG1SecondOrderConstantWidthPacking::unpack_double_element(size_t idx, dou
         return GRIB_INVALID_ARGUMENT;
 
     values = (double*)grib_context_malloc_clear(context_, size * sizeof(double));
-    err    = grib_get_double_array(hand, "values", values, &size);
+    err = grib_get_double_array(hand, "values", values, &size);
     if (err) {
         grib_context_free(context_, values);
         return err;
@@ -213,7 +213,7 @@ int DataG1SecondOrderConstantWidthPacking::unpack_double_element_set(const size_
     grib_handle* hand = get_enclosing_handle();
     size_t size = 0, i = 0;
     double* values = NULL;
-    int err        = 0;
+    int err = 0;
 
     /* TODO(masn): This should be 'codedValues' not 'values'
        but GRIB1 version of this packing does not have that key!! */
@@ -225,7 +225,7 @@ int DataG1SecondOrderConstantWidthPacking::unpack_double_element_set(const size_
     }
 
     values = (double*)grib_context_malloc_clear(context_, size * sizeof(double));
-    err    = grib_get_double_array(hand, "values", values, &size);
+    err = grib_get_double_array(hand, "values", values, &size);
     if (err) {
         grib_context_free(context_, values);
         return err;

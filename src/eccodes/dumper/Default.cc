@@ -57,10 +57,10 @@ void Default::aliases(grib_accessor* a)
 
 void Default::dump_long(grib_accessor* a, const char* comment)
 {
-    long value  = 0;
+    long value = 0;
     size_t size = 1, size2 = 0;
     long* values = NULL;
-    int err      = 0;
+    int err = 0;
     long count = 0;
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0)
@@ -99,7 +99,7 @@ void Default::dump_long(grib_accessor* a, const char* comment)
         fprintf(out_, "  ");
 
     if (size > 1) {
-        int cols   = 19;
+        int cols = 19;
         int icount = 0;
         fprintf(out_, "%s = { \t", a->name_);
         for (int i = 0; i < size; i++) {
@@ -137,7 +137,7 @@ void Default::dump_bits(grib_accessor* a, const char* comment)
 {
     long lvalue = 0;
     size_t size = 1;
-    int err     = 0;
+    int err = 0;
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0)
         return;
@@ -192,8 +192,8 @@ void Default::dump_bits(grib_accessor* a, const char* comment)
 void Default::dump_double(grib_accessor* a, const char* comment)
 {
     double value = 0;
-    size_t size  = 1;
-    int err      = a->unpack_double(&value, &size);
+    size_t size = 1;
+    int err = a->unpack_double(&value, &size);
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0)
         return;
@@ -236,9 +236,9 @@ void Default::dump_string_array(grib_accessor* a, const char* comment)
     char** values;
     size_t size = 0, i = 0;
     grib_context* c = a->context_;
-    int err         = 0;
-    int tab         = 0;
-    long count      = 0;
+    int err = 0;
+    int tab = 0;
+    long count = 0;
 
     a->value_count(&count);
     size = count;
@@ -297,11 +297,11 @@ void Default::dump_string_array(grib_accessor* a, const char* comment)
 
 void Default::dump_string(grib_accessor* a, const char* comment)
 {
-    char* value     = NULL;
-    char* p         = NULL;
-    size_t size     = 0;
+    char* value = NULL;
+    char* p = NULL;
+    size_t size = 0;
     grib_context* c = a->context_;
-    int err         = 0;
+    int err = 0;
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0) {
         return;
@@ -318,7 +318,7 @@ void Default::dump_string(grib_accessor* a, const char* comment)
     }
 
     err = a->unpack_string(value, &size);
-    p   = value;
+    p = value;
 
     while (*p) {
         if (!isprint(*p))
@@ -363,73 +363,73 @@ void Default::dump_string(grib_accessor* a, const char* comment)
 
 void Default::dump_bytes(grib_accessor* a, const char* comment)
 {
-//     int i,k,err =0;
-//     size_t more = 0;
-//     size_t size = a->length_;
-//     unsigned char* buf = grib_context_malloc(context_,size);
+    //     int i,k,err =0;
+    //     size_t more = 0;
+    //     size_t size = a->length_;
+    //     unsigned char* buf = grib_context_malloc(context_,size);
 
-//     if ( (a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0)
-//         return;
+    //     if ( (a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0)
+    //         return;
 
-//     if (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY)
-//         fprintf(out_,"-READ ONLY- ");
+    //     if (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY)
+    //         fprintf(out_,"-READ ONLY- ");
 
-//     /*for(i = 0; i < depth_ ; i++) fprintf(out_," ");*/
-//     /*print_offset(out_, theEnd_);*/
-//     if ((option_flags_ & GRIB_DUMP_FLAG_TYPE) != 0)
-//         fprintf(out_,"%s ",a->creator_->op);
+    //     /*for(i = 0; i < depth_ ; i++) fprintf(out_," ");*/
+    //     /*print_offset(out_, theEnd_);*/
+    //     if ((option_flags_ & GRIB_DUMP_FLAG_TYPE) != 0)
+    //         fprintf(out_,"%s ",a->creator_->op);
 
-//     fprintf(out_,"%s = %ld",a->name_,a->length_);
-//     aliases(d,a);
-//     fprintf(out_," {");
+    //     fprintf(out_,"%s = %ld",a->name_,a->length_);
+    //     aliases(d,a);
+    //     fprintf(out_," {");
 
-//     if(!buf)
-//     {
-//         if(size == 0)
-//             fprintf(out_,"}\n");
-//         else
-//             fprintf(out_," *** ERR cannot malloc(%ld) }\n",(long)size);
-//         return;
-//     }
+    //     if(!buf)
+    //     {
+    //         if(size == 0)
+    //             fprintf(out_,"}\n");
+    //         else
+    //             fprintf(out_," *** ERR cannot malloc(%ld) }\n",(long)size);
+    //         return;
+    //     }
 
-//     fprintf(out_,"\n");
+    //     fprintf(out_,"\n");
 
-//     err = a->unpack_bytes(buf,&size);
-//     if(err){
-//         grib_context_free(context_,buf);
-//         fprintf(out_," *** ERR=%d (%s)  [grib_dumper_default::dump_bytes]\n}",err,grib_get_error_message(err));
-//         return ;
-//     }
+    //     err = a->unpack_bytes(buf,&size);
+    //     if(err){
+    //         grib_context_free(context_,buf);
+    //         fprintf(out_," *** ERR=%d (%s)  [grib_dumper_default::dump_bytes]\n}",err,grib_get_error_message(err));
+    //         return ;
+    //     }
 
-//     if(size > 100) {
-//         more = size - 100;
-//         size = 100;
-//     }
+    //     if(size > 100) {
+    //         more = size - 100;
+    //         size = 100;
+    //     }
 
-//     k = 0;
-//     /* if(size > 100) size = 100;  */
-//     while(k < size)
-//     {
-//         int j;
-//         for(i = 0; i < depth_ + 3 ; i++) fprintf(out_," ");
-//         for(j = 0; j < 16 && k < size; j++, k++)
-//         {
-//             fprintf(out_,"%02x",buf[k]);
-//             if(k != size-1)
-//                 fprintf(out_,", ");
-//         }
-//         fprintf(out_,"\n");
-//     }
+    //     k = 0;
+    //     /* if(size > 100) size = 100;  */
+    //     while(k < size)
+    //     {
+    //         int j;
+    //         for(i = 0; i < depth_ + 3 ; i++) fprintf(out_," ");
+    //         for(j = 0; j < 16 && k < size; j++, k++)
+    //         {
+    //             fprintf(out_,"%02x",buf[k]);
+    //             if(k != size-1)
+    //                 fprintf(out_,", ");
+    //         }
+    //         fprintf(out_,"\n");
+    //     }
 
-//     if(more)
-//     {
-//         for(i = 0; i < depth_ + 3 ; i++) fprintf(out_," ");
-//         fprintf(out_,"... %lu more values\n", (unsigned long)more);
-//     }
+    //     if(more)
+    //     {
+    //         for(i = 0; i < depth_ + 3 ; i++) fprintf(out_," ");
+    //         fprintf(out_,"... %lu more values\n", (unsigned long)more);
+    //     }
 
-//     for(i = 0; i < depth_ ; i++) fprintf(out_," ");
-//     fprintf(out_,"} # %s %s \n",a->creator_->op, a->name_);
-//     grib_context_free(context_,buf);
+    //     for(i = 0; i < depth_ ; i++) fprintf(out_," ");
+    //     fprintf(out_,"} # %s %s \n",a->creator_->op, a->name_);
+    //     grib_context_free(context_,buf);
 }
 
 void Default::dump_values(grib_accessor* a)
@@ -438,7 +438,7 @@ void Default::dump_values(grib_accessor* a)
     size_t more = 0;
     double* buf = NULL;
     size_t size = 0;
-    long count  = 0;
+    long count = 0;
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0)
         return;
@@ -455,7 +455,7 @@ void Default::dump_values(grib_accessor* a)
     print_offset(out_, a);
 
     if ((option_flags_ & GRIB_DUMP_FLAG_TYPE) != 0) {
-        char type_name[32]     = "";
+        char type_name[32] = "";
         const long native_type = a->get_native_type();
         if (native_type == GRIB_TYPE_LONG)
             strcpy(type_name, "(int)");
@@ -535,17 +535,17 @@ void Default::dump_label(grib_accessor* a, const char* comment)
 void Default::dump_section(grib_accessor* a, grib_block_of_accessors* block)
 {
     int is_default_section = 0;
-    char* upper            = NULL;
+    char* upper = NULL;
     char *p = NULL, *q = NULL;
 
     if (!strncmp(a->name_, "section", 7))
         is_default_section = 1;
 
-//     if (strcmp(a->name_, "groupNumber") == 0)
-//         return;
-//     if (!strcmp(a->creator_->op_, "bufr_group")) {
-//         dump_long(a, NULL);
-//     }
+    //     if (strcmp(a->name_, "groupNumber") == 0)
+    //         return;
+    //     if (!strcmp(a->creator_->op_, "bufr_group")) {
+    //         dump_long(a, NULL);
+    //     }
 
     /*for(i = 0; i < depth_ ; i++) fprintf(out_," ");*/
     if (is_default_section) {
@@ -585,7 +585,7 @@ void Default::print_offset(FILE* out, grib_accessor* a)
     grib_handle* h = a->get_enclosing_handle();
 
     theBegin = a->offset_ - section_offset_ + 1;
-    theEnd   = a->get_next_position_offset() - section_offset_;
+    theEnd = a->get_next_position_offset() - section_offset_;
 
     if ((option_flags_ & GRIB_DUMP_FLAG_HEXADECIMAL) != 0 && a->length_ != 0) {
         if (theBegin == theEnd) {

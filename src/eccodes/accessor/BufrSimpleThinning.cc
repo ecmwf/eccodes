@@ -17,15 +17,15 @@ void BufrSimpleThinning::init(const long len, grib_arguments* arg)
 {
     Gen::init(len, arg);
     grib_handle* h = get_enclosing_handle();
-    int n          = 0;
+    int n = 0;
 
-    length_                      = 0;
-    doExtractSubsets_            = arg->get_name(h, n++);
-    numberOfSubsets_             = arg->get_name(h, n++);
-    extractSubsetList_           = arg->get_name(h, n++);
-    simpleThinningStart_         = arg->get_name(h, n++);
+    length_ = 0;
+    doExtractSubsets_ = arg->get_name(h, n++);
+    numberOfSubsets_ = arg->get_name(h, n++);
+    extractSubsetList_ = arg->get_name(h, n++);
+    simpleThinningStart_ = arg->get_name(h, n++);
     simpleThinningMissingRadius_ = arg->get_name(h, n++);
-    simpleThinningSkip_          = arg->get_name(h, n++);
+    simpleThinningSkip_ = arg->get_name(h, n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
 }
@@ -38,7 +38,7 @@ long BufrSimpleThinning::get_native_type()
 int BufrSimpleThinning::apply_thinning()
 {
     long skip;
-    grib_handle* h  = get_enclosing_handle();
+    grib_handle* h = get_enclosing_handle();
     grib_context* c = h->context;
     long compressed = 0, nsubsets;
     grib_iarray* subsets;
@@ -50,7 +50,7 @@ int BufrSimpleThinning::apply_thinning()
         return ret;
     if (compressed) {
         long numberOfSubsets = 0;
-        ret                  = grib_get_long(h, numberOfSubsets_, &numberOfSubsets);
+        ret = grib_get_long(h, numberOfSubsets_, &numberOfSubsets);
         if (ret)
             return ret;
 
@@ -77,7 +77,7 @@ int BufrSimpleThinning::apply_thinning()
 
         if (nsubsets != 0) {
             subsets_ar = grib_iarray_get_array(subsets);
-            ret        = grib_set_long_array(h, extractSubsetList_, subsets_ar, nsubsets);
+            ret = grib_set_long_array(h, extractSubsetList_, subsets_ar, nsubsets);
             grib_context_free(c, subsets_ar);
             if (ret)
                 return ret;

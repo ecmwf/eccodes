@@ -19,8 +19,13 @@ class JulianDate : public Double
 {
 public:
     JulianDate() :
-        Double() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        Double() {}
+    const AccessorType& accessor_type() const override
+    {
+        {
+            return accessor_type_;
+        }
+    }
     int pack_double(const double* val, size_t* len) override;
     int pack_long(const long* val, size_t* len) override;
     int pack_string(const char*, size_t* len) override;
@@ -32,18 +37,18 @@ public:
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* year_   = nullptr;
-    const char* month_  = nullptr;
-    const char* day_    = nullptr;
-    const char* hour_   = nullptr;
+    const char* year_ = nullptr;
+    const char* month_ = nullptr;
+    const char* day_ = nullptr;
+    const char* hour_ = nullptr;
     const char* minute_ = nullptr;
     const char* second_ = nullptr;
-    const char* ymd_    = nullptr;
-    const char* hms_    = nullptr;
-    char sep_[5]        = {0};
+    const char* ymd_ = nullptr;
+    const char* hms_ = nullptr;
+    char sep_[5] = { 0 };
 
 public:
-    static constexpr AccessorType accessor_type_{"julian_date"};
+    static constexpr AccessorType accessor_type_{ "julian_date" };
 };
 
 }  // namespace eccodes::accessor

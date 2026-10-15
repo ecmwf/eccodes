@@ -16,8 +16,8 @@ grib_hash_array_value* grib_integer_hash_array_value_new(const char* name, grib_
     grib_context* c = grib_context_get_default();
     grib_hash_array_value* v = (grib_hash_array_value*)grib_context_malloc_clear_persistent(c, sizeof(grib_hash_array_value));
 
-    v->name   = grib_context_strdup_persistent(c, name);
-    v->type   = GRIB_HASH_ARRAY_TYPE_INTEGER;
+    v->name = grib_context_strdup_persistent(c, name);
+    v->type = GRIB_HASH_ARRAY_TYPE_INTEGER;
     v->iarray = array;
     return v;
 }

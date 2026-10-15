@@ -21,16 +21,16 @@ void DataPngPacking::init(const long v, grib_arguments* args)
     Values::init(v, args);
     grib_handle* h = get_enclosing_handle();
 
-    number_of_values_      = args->get_name(h, carg_++);
-    reference_value_       = args->get_name(h, carg_++);
-    binary_scale_factor_   = args->get_name(h, carg_++);
-    decimal_scale_factor_  = args->get_name(h, carg_++);
-    bits_per_value_        = args->get_name(h, carg_++);
-    ni_                    = args->get_name(h, carg_++);
-    nj_                    = args->get_name(h, carg_++);
-    list_defining_points_  = args->get_name(h, carg_++);
+    number_of_values_ = args->get_name(h, carg_++);
+    reference_value_ = args->get_name(h, carg_++);
+    binary_scale_factor_ = args->get_name(h, carg_++);
+    decimal_scale_factor_ = args->get_name(h, carg_++);
+    bits_per_value_ = args->get_name(h, carg_++);
+    ni_ = args->get_name(h, carg_++);
+    nj_ = args->get_name(h, carg_++);
+    list_defining_points_ = args->get_name(h, carg_++);
     number_of_data_points_ = args->get_name(h, carg_++);
-    scanning_mode_         = args->get_name(h, carg_++);
+    scanning_mode_ = args->get_name(h, carg_++);
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
@@ -82,16 +82,16 @@ int DataPngPacking::unpack_double(double* val, size_t* len)
 {
     int err = GRIB_SUCCESS;
     int i, j;
-    size_t buflen      = byte_count();
-    double bscale      = 0;
-    double dscale      = 0;
+    size_t buflen = byte_count();
+    double bscale = 0;
+    double dscale = 0;
     unsigned char* buf = NULL;
-    size_t n_vals      = 0;
+    size_t n_vals = 0;
 
-    long binary_scale_factor  = 0;
+    long binary_scale_factor = 0;
     long decimal_scale_factor = 0;
-    double reference_value    = 0;
-    long bits_per_value       = 0;
+    double reference_value = 0;
+    long bits_per_value = 0;
     long bits8;
     long nn = 0;
 
@@ -106,7 +106,7 @@ int DataPngPacking::unpack_double(double* val, size_t* len)
 
     dirty_ = 0;
 
-    err    = value_count(&nn);
+    err = value_count(&nn);
     n_vals = nn;
     if (err) return err;
 
@@ -203,7 +203,7 @@ int DataPngPacking::unpack_double(double* val, size_t* len)
 
     for (j = 0; j < height; j++) {
         png_byte* row = rows[j];
-        long pos      = 0;
+        long pos = 0;
         int k;
         for (k = 0; k < width; k++)
             val[i++] = (double)(((grib_decode_unsigned_long(row, &pos, bits8) * bscale) + reference_value) * dscale);
@@ -220,7 +220,7 @@ cleanup:
 static bool is_constant(const double* values, size_t n_vals)
 {
     bool isConstant = true;
-    double v        = 0;
+    double v = 0;
     size_t i;
     for (i = 0; i < n_vals; i++) {
         if (i == 0)
@@ -240,13 +240,13 @@ int DataPngPacking::pack_double(const double* val, size_t* len)
     int i, j;
     size_t buflen = 0;
 
-    unsigned char* buf     = NULL;
+    unsigned char* buf = NULL;
     unsigned char* encoded = NULL;
-    size_t n_vals          = 0;
+    size_t n_vals = 0;
 
-    long binary_scale_factor  = 0;
+    long binary_scale_factor = 0;
     long decimal_scale_factor = 0;
-    double reference_value    = 0;
+    double reference_value = 0;
     long bits8;
     long bits_per_value = 0;
     double max, min;
@@ -254,7 +254,7 @@ int DataPngPacking::pack_double(const double* val, size_t* len)
     double d;
 
     png_structp png = 0;
-    png_infop info  = 0;
+    png_infop info = 0;
     png_bytepp rows = 0;
     int colour = 0, depth = 0;
 
@@ -336,25 +336,25 @@ int DataPngPacking::pack_double(const double* val, size_t* len)
     if ((err = grib_get_long_internal(get_enclosing_handle(), number_of_data_points_, &number_of_data_points)) != GRIB_SUCCESS)
         return err;
 
-    width  = ni;
+    width = ni;
     height = nj;
 
     // jPointsAreConsecutive
     if ((scanning_mode & (1 << 5)) != 0) {
         long tmp = width;
-        width    = height;
-        height   = tmp;
+        width = height;
+        height = tmp;
     }
 
     /* The grid is not regular */
     if (list_defining_points != 0) {
-        width  = *len;
+        width = *len;
         height = 1;
     }
 
     /* There is a bitmap */
     if (*len != number_of_data_points) {
-        width  = *len;
+        width = *len;
         height = 1;
     }
 
@@ -396,12 +396,12 @@ int DataPngPacking::pack_double(const double* val, size_t* len)
 
     binary_scale_factor = grib_get_binary_scale_fact(max, reference_value, bits_per_value, &err);
     if (err) return err;
-    divisor             = codes_power<double>(-binary_scale_factor, 2);
+    divisor = codes_power<double>(-binary_scale_factor, 2);
 
     #ifndef PNG_ANYBITS
     ECCODES_ASSERT(bits_per_value % 8 == 0);
     #endif
-    bits8   = (bits_per_value + 7) / 8 * 8;
+    bits8 = (bits_per_value + 7) / 8 * 8;
     encoded = (unsigned char*)grib_context_buffer_malloc_clear(context_, bits8 / 8 * n_vals);
     if (!encoded) {
         err = GRIB_OUT_OF_MEMORY;
@@ -409,9 +409,9 @@ int DataPngPacking::pack_double(const double* val, size_t* len)
     }
 
     buflen = 0;
-    p      = encoded;
+    p = encoded;
     for (i = 0; i < n_vals; i++) {
-        long blen                  = bits8;
+        long blen = bits8;
         unsigned long unsigned_val = (unsigned long)((((val[i] * d) - (reference_value)) * divisor) + 0.5);
         while (blen >= 8) {
             blen -= 8;
@@ -482,12 +482,12 @@ int DataPngPacking::pack_double(const double* val, size_t* len)
 
     colour = PNG_COLOR_TYPE_GRAY;
     if (bits8 == 24) {
-        depth  = 8;
+        depth = 8;
         colour = PNG_COLOR_TYPE_RGB;
     }
 
     if (bits8 == 32) {
-        depth  = 8;
+        depth = 8;
         colour = PNG_COLOR_TYPE_RGB_ALPHA;
     }
 
@@ -532,12 +532,12 @@ cleanup:
 int DataPngPacking::unpack_double_element(size_t idx, double* val)
 {
     /* The index idx relates to codedValues NOT values! */
-    grib_handle* hand      = get_enclosing_handle();
-    int err                = 0;
-    size_t size            = 0;
+    grib_handle* hand = get_enclosing_handle();
+    int err = 0;
+    size_t size = 0;
     double reference_value = 0;
-    long bits_per_value    = 0;
-    double* values         = NULL;
+    long bits_per_value = 0;
+    double* values = NULL;
 
     if ((err = grib_get_long_internal(hand, bits_per_value_, &bits_per_value)) != GRIB_SUCCESS)
         return err;
@@ -554,7 +554,7 @@ int DataPngPacking::unpack_double_element(size_t idx, double* val)
     if (idx > size) return GRIB_INVALID_ARGUMENT;
 
     values = (double*)grib_context_malloc_clear(context_, size * sizeof(double));
-    err    = grib_get_double_array(hand, "codedValues", values, &size);
+    err = grib_get_double_array(hand, "codedValues", values, &size);
     if (err) {
         grib_context_free(context_, values);
         return err;
@@ -568,11 +568,11 @@ int DataPngPacking::unpack_double_element_set(const size_t* index_array, size_t 
 {
     /* The index idx relates to codedValues NOT values! */
     grib_handle* hand = get_enclosing_handle();
-    int err           = 0;
+    int err = 0;
     size_t size = 0, i = 0;
     double reference_value = 0;
-    long bits_per_value    = 0;
-    double* values         = NULL;
+    long bits_per_value = 0;
+    double* values = NULL;
 
     if ((err = grib_get_long_internal(hand, bits_per_value_, &bits_per_value)) != GRIB_SUCCESS)
         return err;
@@ -596,7 +596,7 @@ int DataPngPacking::unpack_double_element_set(const size_t* index_array, size_t 
     }
 
     values = (double*)grib_context_malloc_clear(context_, size * sizeof(double));
-    err    = grib_get_double_array(get_enclosing_handle(), "codedValues", values, &size);
+    err = grib_get_double_array(get_enclosing_handle(), "codedValues", values, &size);
     if (err) {
         grib_context_free(context_, values);
         return err;

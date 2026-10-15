@@ -275,15 +275,15 @@ static const int mapping[] = {
 #ifdef DEBUG
 static const size_t NUM_MAPPINGS = sizeof(mapping) / sizeof(mapping[0]);
 
-#define DebugCheckBounds(index, value)                                                                  \
-    do {                                                                                                \
-        if (!((index) >= 0 && (index) < NUM_MAPPINGS)) {                                                \
-            printf("ERROR: string='%s' index=%ld @ %s +%d \n", value, (long)index, __FILE__, __LINE__); \
-            abort();                                                                                    \
-        }                                                                                               \
-    } while (0)
+    #define DebugCheckBounds(index, value)                                                                  \
+        do {                                                                                                \
+            if (!((index) >= 0 && (index) < NUM_MAPPINGS)) {                                                \
+                printf("ERROR: string='%s' index=%ld @ %s +%d \n", value, (long)index, __FILE__, __LINE__); \
+                abort();                                                                                    \
+            }                                                                                               \
+        } while (0)
 #else
-#define DebugCheckBounds(index, value)
+    #define DebugCheckBounds(index, value)
 #endif
 
 
@@ -316,8 +316,8 @@ grib_trie_with_rank* grib_trie_with_rank_new(grib_context* c)
     grib_trie_with_rank* t = (grib_trie_with_rank*)grib_context_malloc_clear(c, sizeof(grib_trie_with_rank));
 #endif
     t->context = c;
-    t->first   = SIZE;
-    t->last    = -1;
+    t->first = SIZE;
+    t->last = -1;
     return t;
 }
 
@@ -356,16 +356,16 @@ void grib_trie_with_rank_delete_container(grib_trie_with_rank* t)
 }
 
 #ifdef TRIE_WITH_RANK_OLD
-static void grib_trie_with_rank_delete_list(grib_context* c,grib_trie_with_rank_list *list)
+static void grib_trie_with_rank_delete_list(grib_context* c, grib_trie_with_rank_list* list)
 {
-  grib_trie_with_rank_list* next=list;
-  grib_trie_with_rank_list* p;
-  while (next) {
-    grib_context_free( c, next->data );
-    p=next;
-    next=next->next;
-    grib_context_free( c, p );
-  }
+    grib_trie_with_rank_list* next = list;
+    grib_trie_with_rank_list* p;
+    while (next) {
+        grib_context_free(c, next->data);
+        p = next;
+        next = next->next;
+        grib_context_free(c, p);
+    }
 }
 
 void grib_trie_with_rank_delete(grib_trie_with_rank* t)
@@ -382,11 +382,11 @@ void grib_trie_with_rank_delete(grib_trie_with_rank* t)
                 /* grib_trie_with_rank_delete_list(t->context, t->next[i]->list ); */
                 grib_trie_with_rank_delete(t->next[i]);
             }
-#ifdef RECYCLE_TRIE
+    #ifdef RECYCLE_TRIE
         grib_context_free_persistent(t->context, t);
-#else
+    #else
         grib_context_free(t->context, t);
-#endif
+    #endif
     }
 }
 
@@ -405,25 +405,27 @@ void grib_trie_with_rank_clear(grib_trie_with_rank* t)
     }
 }
 
-static void grib_trie_with_rank_insert_in_list(grib_trie_with_rank* t,void* data) {
-  if (t->list==NULL) {
-    t->list=grib_context_malloc_clear(t->context,sizeof(grib_trie_with_rank_list));
-    t->list->data=data;
-    t->list->rank=1;
-    t->last_list=t->list;
-  } else {
-    t->last_list->next=grib_context_malloc_clear(t->context,sizeof(grib_trie_with_rank_list));
-    t->last_list=t->last_list->next;
-    t->last_list->data=data;
-    t->last_list->rank++;
-  }
+static void grib_trie_with_rank_insert_in_list(grib_trie_with_rank* t, void* data)
+{
+    if (t->list == NULL) {
+        t->list = grib_context_malloc_clear(t->context, sizeof(grib_trie_with_rank_list));
+        t->list->data = data;
+        t->list->rank = 1;
+        t->last_list = t->list;
+    }
+    else {
+        t->last_list->next = grib_context_malloc_clear(t->context, sizeof(grib_trie_with_rank_list));
+        t->last_list = t->last_list->next;
+        t->last_list->data = data;
+        t->last_list->rank++;
+    }
 }
 #endif
 
 int grib_trie_with_rank_insert(grib_trie_with_rank* t, const char* key, void* data)
 {
     grib_trie_with_rank* last = t;
-    const char* k             = key;
+    const char* k = key;
     DEBUG_ASSERT(t);
     if (!t) return -1;
 

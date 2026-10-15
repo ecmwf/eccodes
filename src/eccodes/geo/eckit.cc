@@ -23,14 +23,17 @@
 #endif
 
 
-namespace eccodes::geo {
+namespace eccodes::geo
+{
 
 
 void eckit_main_init()
 {
 #if defined(HAVE_ECKIT_GEO)
-    struct EckitMainInit {
-        EckitMainInit() {
+    struct EckitMainInit
+    {
+        EckitMainInit()
+        {
             if (!eckit::Main::ready()) {
                 static char* argv[]{ const_cast<char*>("eccodes::geo::eckit_main_init") };
                 eckit::Main::initialise(1, argv);
