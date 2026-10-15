@@ -268,6 +268,7 @@ int SpaceView::init(grib_handle* h, grib_arguments* args)
         c_x[ix] = sqrt(1.0 - s_x[ix] * s_x[ix]);
     }
 
+    // FIXME: iScansNegatively/jScansPositively isn't respected
     /*for (iy = 0; iy < ny; iy++) {*/
     for (iy = ny - 1; iy >= 0; --iy) {
         y     = (iy - yp) * ry;
