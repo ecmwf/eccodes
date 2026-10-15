@@ -28,7 +28,7 @@ are off — they need external libraries or extra setup.
   checkout of the ecCodes repository the in-tree sources are built instead,
   so branch changes take effect without a network round-trip.
 - `system` - Link against a system-installed ecCodes, located via CMake
-  `find_package(eccodes)` (2.20.0 or newer). Honours `ECCODES_DIR` and
+  `find_package(eccodes)` (2.34.0 or newer). Honours `ECCODES_DIR` and
   `CMAKE_PREFIX_PATH`.
 
 Either way, eckit comes from [`eckit-sys`](https://crates.io/crates/eckit-sys),

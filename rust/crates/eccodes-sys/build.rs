@@ -69,9 +69,8 @@ fn configure_version_header(headers: &Path, out_dir: &Path) {
 /// Build using system-installed eccodes via `CMake` `find_package`
 #[cfg(feature = "system")]
 fn build_system(out_dir: &Path) {
-    // Minimum supported system version, independent of the crate version
-    // (which tracks the vendored eccodes release).
-    let (root, include, lib_dir) = bindman_utils::cmake_find_package("eccodes", "2.20.0");
+    // Oldest release containing every allowlisted symbol.
+    let (root, include, lib_dir) = bindman_utils::cmake_find_package("eccodes", "2.34.0");
 
     println!("cargo:rustc-link-search=native={}", lib_dir.display());
     println!("cargo:rustc-link-lib=dylib=eccodes");
