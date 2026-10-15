@@ -19,8 +19,10 @@ src_dir=$proj_dir/src/eccodes
 gribapi_file=$src_dir/grib_api.h
 eccodes_file=$src_dir/eccodes.h
 
-count1=$( awk '/define.*\t-?[0-9]/ {count++} END{print count}' $gribapi_file )
-count2=$( awk '/define.*\tGRIB/    {count++} END{print count}' $eccodes_file )
+# Error codes are the #defines inside the "\defgroup errors" Doxygen block
+error_defines='/defgroup errors/,/@}/ { if (/^#define/)'
+count1=$( awk "$error_defines count++ } END{print count+0}" $gribapi_file )
+count2=$( awk "$error_defines count++ } END{print count+0}" $eccodes_file )
 
 if [ $count1 -ne $count2 ]; then
     echo "Error: Check counts of error codes in $gribapi_file and $eccodes_file"
@@ -31,7 +33,7 @@ fi
 
 # Make sure the codes are unique
 # uniq -d outputs a single copy of each line that is repeated in the input
-awk '/define.*\t-?[0-9]/ {print $3}' $gribapi_file | sort -n | uniq -d > $tempText
+awk "$error_defines print \$3 }" $gribapi_file | sort -n | uniq -d > $tempText
 if [ -s "$tempText" ]; then
     # File exists and has a size greater than zero
     echo "ERROR: Duplicate error code(s) found in $gribapi_file" >&2
