@@ -29,7 +29,7 @@ private:
     double divisor_ = 0.;
 
 public:
-    static inline const AccessorType accessor_type_{"divdouble"};
+    static constexpr AccessorType accessor_type_{"divdouble"};
 };
 
 }  // namespace eccodes::accessor

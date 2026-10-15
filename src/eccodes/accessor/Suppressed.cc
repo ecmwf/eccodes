@@ -10,8 +10,6 @@
 
 #include "Suppressed.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::Suppressed> _grib_accessor_suppressed_builder{};
-
 namespace eccodes::accessor
 {
 

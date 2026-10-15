@@ -11,8 +11,6 @@
 #include "DataRunLengthPacking.h"
 #include "grib_scaling.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::DataRunLengthPacking> _grib_accessor_data_run_length_packing_builder{};
-
 namespace eccodes::accessor
 {
 

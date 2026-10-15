@@ -32,7 +32,7 @@ private:
     int index_ = 0;
 
 public:
-    static inline const AccessorType accessor_type_{"long_vector"};
+    static constexpr AccessorType accessor_type_{"long_vector"};
 };
 
 }  // namespace eccodes::accessor

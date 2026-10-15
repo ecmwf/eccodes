@@ -33,7 +33,7 @@ private:
     const char* default_value_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"getenv"};
+    static constexpr AccessorType accessor_type_{"getenv"};
 };
 
 }  // namespace eccodes::accessor

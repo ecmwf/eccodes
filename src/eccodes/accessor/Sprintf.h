@@ -30,7 +30,7 @@ private:
     grib_arguments* args_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"sprintf"};
+    static constexpr AccessorType accessor_type_{"sprintf"};
 };
 
 }  // namespace eccodes::accessor

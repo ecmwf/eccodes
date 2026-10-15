@@ -34,7 +34,7 @@ private:
     const char* createNewData_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"unexpanded_descriptors"};
+    static constexpr AccessorType accessor_type_{"unexpanded_descriptors"};
 };
 
 }  // namespace eccodes::accessor

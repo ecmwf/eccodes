@@ -32,7 +32,7 @@ private:
     const char* isOctahedral_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"gaussian_grid_name"};
+    static constexpr AccessorType accessor_type_{"gaussian_grid_name"};
 };
 
 }  // namespace eccodes::accessor

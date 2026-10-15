@@ -34,7 +34,7 @@ private:
     grib_accessor* get_accessor();
 
 public:
-    static inline const AccessorType accessor_type_{"bufrdc_expanded_descriptors"};
+    static constexpr AccessorType accessor_type_{"bufrdc_expanded_descriptors"};
 };
 
 }  // namespace eccodes::accessor

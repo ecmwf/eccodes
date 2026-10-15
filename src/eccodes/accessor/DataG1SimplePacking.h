@@ -32,7 +32,7 @@ protected:
     const char* precision_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"data_g1simple_packing"};
+    static constexpr AccessorType accessor_type_{"data_g1simple_packing"};
 };
 
 }  // namespace eccodes::accessor

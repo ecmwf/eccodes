@@ -45,7 +45,7 @@ private:
     grib_codetable* load_table();
 
 public:
-    static inline const AccessorType accessor_type_{"codetable"};
+    static constexpr AccessorType accessor_type_{"codetable"};
 };
 
 }  // namespace eccodes::accessor

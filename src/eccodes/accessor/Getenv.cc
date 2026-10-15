@@ -10,8 +10,6 @@
 
 #include "Getenv.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::Getenv> _grib_accessor_getenv_builder{};
-
 namespace eccodes::accessor
 {
 

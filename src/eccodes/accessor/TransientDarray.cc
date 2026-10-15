@@ -10,8 +10,6 @@
 
 #include "TransientDarray.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::TransientDarray> _grib_accessor_transient_darray_builder{};
-
 namespace eccodes::accessor
 {
 

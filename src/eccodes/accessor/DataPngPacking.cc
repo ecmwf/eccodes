@@ -13,8 +13,6 @@
 
 #define PNG_ANYBITS
 
-eccodes::AccessorBuilder<eccodes::accessor::DataPngPacking> _grib_accessor_data_png_packing_builder{};
-
 namespace eccodes::accessor
 {
 

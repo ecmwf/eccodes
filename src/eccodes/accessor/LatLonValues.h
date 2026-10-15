@@ -29,7 +29,7 @@ private:
     const char* values_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"latlonvalues"};
+    static constexpr AccessorType accessor_type_{"latlonvalues"};
 };
 
 }  // namespace eccodes::accessor

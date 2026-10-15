@@ -8,9 +8,14 @@ rust-version .workspace = true
 description  = "Sample apps for eccodes/eccodes-sys; exercises the cargo install flow"
 publish      = false
 
+[features]
+default  = ["vendored"]
+vendored = ["eccodes/vendored"]
+system   = ["eccodes/system"]
+
 [dependencies]
-eccodes     = { path = "../../crates/eccodes" }
-eccodes-sys = { path = "../../crates/eccodes-sys" }
+eccodes     = { path = "../../crates/eccodes", default-features = false }
+eccodes-sys = { path = "../../crates/eccodes-sys", default-features = false }
 
 [build-dependencies]
 bindman-utils.workspace = true

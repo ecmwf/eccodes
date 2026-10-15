@@ -30,7 +30,7 @@ private:
     friend eccodes::geo_nearest::Nearest* eccodes::geo_nearest::gribNearestNew(const grib_handle* ch, int* error);
 
 public:
-    static inline const AccessorType accessor_type_{"nearest"};
+    static constexpr AccessorType accessor_type_{"nearest"};
 };
 
 }  // namespace eccodes::accessor

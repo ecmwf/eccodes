@@ -37,7 +37,7 @@ private:
     size_t str_length_ = 0;
 
 public:
-    static inline const AccessorType accessor_type_{"to_string"};
+    static constexpr AccessorType accessor_type_{"to_string"};
 };
 
 }  // namespace eccodes::accessor

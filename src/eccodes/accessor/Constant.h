@@ -22,7 +22,7 @@ public:
     void init(const long, grib_arguments*) override;
 
 
-    static inline const AccessorType accessor_type_{"constant"};
+    static constexpr AccessorType accessor_type_{"constant"};
 };
 
 }  // namespace eccodes::accessor

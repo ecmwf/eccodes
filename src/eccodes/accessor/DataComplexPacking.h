@@ -49,7 +49,7 @@ private:
     template <typename T> int unpack_real(T* val, size_t* len);
 
 public:
-    static inline const AccessorType accessor_type_{"data_complex_packing"};
+    static constexpr AccessorType accessor_type_{"data_complex_packing"};
 };
 
 }  // namespace eccodes::accessor

@@ -10,8 +10,6 @@
 
 #include "ToDouble.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::ToDouble> _grib_accessor_to_double_builder{};
-
 namespace eccodes::accessor
 {
 

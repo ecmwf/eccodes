@@ -36,7 +36,7 @@ private:
     const char* end_step_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"g2step_range"};
+    static constexpr AccessorType accessor_type_{"g2step_range"};
 };
 
 }  // namespace eccodes::accessor

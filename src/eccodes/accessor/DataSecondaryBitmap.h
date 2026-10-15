@@ -33,7 +33,7 @@ protected:
     const char* expand_by_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"data_secondary_bitmap"};
+    static constexpr AccessorType accessor_type_{"data_secondary_bitmap"};
 };
 
 }  // namespace eccodes::accessor

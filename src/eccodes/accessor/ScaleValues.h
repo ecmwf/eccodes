@@ -30,7 +30,7 @@ private:
     const char* missingValue_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"scale_values"};
+    static constexpr AccessorType accessor_type_{"scale_values"};
 };
 
 }  // namespace eccodes::accessor

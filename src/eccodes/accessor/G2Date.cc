@@ -10,8 +10,6 @@
 
 #include "G2Date.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::G2Date> _grib_accessor_g2date_builder{};
-
 namespace eccodes::accessor
 {
 

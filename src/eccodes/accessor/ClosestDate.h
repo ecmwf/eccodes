@@ -38,7 +38,7 @@ private:
     const char* second_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"closest_date"};
+    static constexpr AccessorType accessor_type_{"closest_date"};
 };
 
 }  // namespace eccodes::accessor

@@ -10,8 +10,6 @@
 
 #include "Uint64.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::Uint64> _grib_accessor_uint64_builder{};
-
 namespace eccodes::accessor
 {
 

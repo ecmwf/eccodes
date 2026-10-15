@@ -63,7 +63,7 @@ private:
     size_t size_ = 0;
 
 public:
-    static inline const AccessorType accessor_type_{"data_g1second_order_general_extended_packing"};
+    static constexpr AccessorType accessor_type_{"data_g1second_order_general_extended_packing"};
 };
 
 }  // namespace eccodes::accessor

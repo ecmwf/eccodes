@@ -27,7 +27,7 @@ public:
     void init(const long, grib_arguments*) override;
 
 
-    static inline const AccessorType accessor_type_{"grid_spec"};
+    static constexpr AccessorType accessor_type_{"grid_spec"};
 
 private:
     void print_warning_feature_not_implemented();

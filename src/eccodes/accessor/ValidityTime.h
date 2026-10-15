@@ -34,7 +34,7 @@ private:
     const char* minutes_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"validity_time"};
+    static constexpr AccessorType accessor_type_{"validity_time"};
 };
 
 }  // namespace eccodes::accessor

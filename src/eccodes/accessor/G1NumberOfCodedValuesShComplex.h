@@ -35,7 +35,7 @@ private:
     const char* MS_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"g1number_of_coded_values_sh_complex"};
+    static constexpr AccessorType accessor_type_{"g1number_of_coded_values_sh_complex"};
 };
 
 }  // namespace eccodes::accessor

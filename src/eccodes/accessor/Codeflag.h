@@ -31,7 +31,7 @@ private:
     int grib_get_codeflag(long code, char* codename);
 
 public:
-    static inline const AccessorType accessor_type_{"codeflag"};
+    static constexpr AccessorType accessor_type_{"codeflag"};
 };
 
 }  // namespace eccodes::accessor

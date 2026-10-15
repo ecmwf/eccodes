@@ -25,7 +25,7 @@ public:
     size_t string_length() override;
     int value_count(long*) override;
 
-    static inline const AccessorType accessor_type_{"library_version"};
+    static constexpr AccessorType accessor_type_{"library_version"};
 };
 
 }  // namespace eccodes::accessor

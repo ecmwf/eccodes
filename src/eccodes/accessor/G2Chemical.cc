@@ -10,8 +10,6 @@
 
 #include "G2Chemical.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::G2Chemical> _grib_accessor_g2_chemical_builder{};
-
 namespace eccodes::accessor
 {
 

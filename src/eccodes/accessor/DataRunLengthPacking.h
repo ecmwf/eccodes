@@ -35,7 +35,7 @@ private:
     const char* level_values_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"data_run_length_packing"};
+    static constexpr AccessorType accessor_type_{"data_run_length_packing"};
 };
 
 }  // namespace eccodes::accessor

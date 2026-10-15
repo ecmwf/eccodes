@@ -40,7 +40,7 @@ private:
     int unpack_long_with_legacy_support(long* val, size_t* len);
 
 public:
-    static inline const AccessorType accessor_type_{"number_of_points_gaussian"};
+    static constexpr AccessorType accessor_type_{"number_of_points_gaussian"};
 };
 
 }  // namespace eccodes::accessor

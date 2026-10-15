@@ -10,8 +10,6 @@
 
 #include "GdsNotPresentBitmap.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::GdsNotPresentBitmap> _grib_accessor_gds_not_present_bitmap_builder{};
-
 namespace eccodes::accessor
 {
 

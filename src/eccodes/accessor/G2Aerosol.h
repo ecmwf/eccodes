@@ -32,7 +32,7 @@ private:
     int optical_ = 0;
 
 public:
-    static inline const AccessorType accessor_type_{"g2_aerosol"};
+    static constexpr AccessorType accessor_type_{"g2_aerosol"};
 };
 
 }  // namespace eccodes::accessor

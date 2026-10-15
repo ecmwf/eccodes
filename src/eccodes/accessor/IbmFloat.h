@@ -36,7 +36,7 @@ private:
     grib_arguments* arg_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"ibmfloat"};
+    static constexpr AccessorType accessor_type_{"ibmfloat"};
 };
 
 }  // namespace eccodes::accessor

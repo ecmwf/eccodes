@@ -32,7 +32,7 @@ private:
     const char* missingValueManagementUsed_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"count_missing"};
+    static constexpr AccessorType accessor_type_{"count_missing"};
 };
 
 }  // namespace eccodes::accessor

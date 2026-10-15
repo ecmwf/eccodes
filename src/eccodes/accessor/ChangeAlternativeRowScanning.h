@@ -33,7 +33,7 @@ private:
     const char* alternativeRowScanning_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"change_alternative_row_scanning"};
+    static constexpr AccessorType accessor_type_{"change_alternative_row_scanning"};
 };
 
 }  // namespace eccodes::accessor

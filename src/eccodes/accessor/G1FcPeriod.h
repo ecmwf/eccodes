@@ -23,7 +23,7 @@ public:
     const AccessorType& accessor_type() const override {{ return accessor_type_; }}
     int unpack_string(char*, size_t* len) override;
 
-    static inline const AccessorType accessor_type_{"g1fcperiod"};
+    static constexpr AccessorType accessor_type_{"g1fcperiod"};
 };
 
 }  // namespace eccodes::accessor

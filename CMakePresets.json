@@ -10,7 +10,8 @@
       "name": "ci",
       "cacheVariables": {
         "ENABLE_EXTRA_TESTS": "ON",
-        "ENABLE_ECCODES_OMP_THREADS": "ON"
+        "ENABLE_ECCODES_THREADS": "ON"
+
       }
     },
     {
@@ -19,6 +20,13 @@
       "cacheVariables": {
         "ENABLE_GEOGRAPHY": "ON",
         "ENABLE_ECKIT_GEO": "ON"
+      }
+    },
+    {
+      "name": "static",
+      "inherits": "ci",
+      "cacheVariables": {
+        "BUILD_SHARED_LIBS": "OFF"
       }
     }
   ]

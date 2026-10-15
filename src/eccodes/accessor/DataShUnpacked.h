@@ -38,7 +38,7 @@ private:
     const char* pen_m_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"data_sh_unpacked"};
+    static constexpr AccessorType accessor_type_{"data_sh_unpacked"};
 };
 
 }  // namespace eccodes::accessor

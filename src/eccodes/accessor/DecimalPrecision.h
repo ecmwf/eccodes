@@ -32,7 +32,7 @@ private:
     const char* decimal_scale_factor_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"decimal_precision"};
+    static constexpr AccessorType accessor_type_{"decimal_precision"};
 };
 
 }  // namespace eccodes::accessor

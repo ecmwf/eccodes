@@ -34,7 +34,7 @@ private:
     int index_ = 0;
 
 public:
-    static inline const AccessorType accessor_type_{"smart_table_column"};
+    static constexpr AccessorType accessor_type_{"smart_table_column"};
 };
 
 }  // namespace eccodes::accessor

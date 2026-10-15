@@ -29,7 +29,7 @@ private:
     const char* bitmapIndicator_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"g2bitmap_present"};
+    static constexpr AccessorType accessor_type_{"g2bitmap_present"};
 };
 
 }  // namespace eccodes::accessor

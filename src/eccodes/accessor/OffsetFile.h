@@ -25,7 +25,7 @@ public:
     int unpack_string(char*, size_t* len) override;
     void init(const long, grib_arguments*) override;
 
-    static inline const AccessorType accessor_type_{"offset_file"};
+    static constexpr AccessorType accessor_type_{"offset_file"};
 };
 
 }  // namespace eccodes::accessor

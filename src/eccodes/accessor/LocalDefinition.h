@@ -38,7 +38,7 @@ private:
     const char* derivedForecast_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"local_definition"};
+    static constexpr AccessorType accessor_type_{"local_definition"};
 };
 
 }  // namespace eccodes::accessor

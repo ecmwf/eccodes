@@ -10,8 +10,6 @@
 
 #include "StepHumanReadable.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::StepHumanReadable> _grib_accessor_step_human_readable_builder{};
-
 namespace eccodes::accessor
 {
 

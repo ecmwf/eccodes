@@ -11,8 +11,6 @@
 #include "BufrStringValues.h"
 #include "BufrDataArray.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::BufrStringValues> _grib_accessor_bufr_string_values_builder{};
-
 namespace eccodes::accessor
 {
 

@@ -11,8 +11,6 @@
 #include "BufrDataElement.h"
 #include "grib_accessor_factory.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::BufrDataElement> _grib_accessor_bufr_data_element_builder{};
-
 namespace eccodes::accessor
 {
 

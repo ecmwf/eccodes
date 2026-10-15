@@ -35,7 +35,7 @@ private:
     const char* JS_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"statistics_spectral"};
+    static constexpr AccessorType accessor_type_{"statistics_spectral"};
 };
 
 }  // namespace eccodes::accessor

@@ -36,7 +36,7 @@ private:
     char endCharacter_ = 0;
 
 public:
-    static inline const AccessorType accessor_type_{"group"};
+    static constexpr AccessorType accessor_type_{"group"};
 };
 
 }  // namespace eccodes::accessor

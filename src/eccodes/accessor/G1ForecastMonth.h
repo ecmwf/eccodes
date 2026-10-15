@@ -37,7 +37,7 @@ private:
     int unpack_long_edition1(long* val, size_t* len);
 
 public:
-    static inline const AccessorType accessor_type_{"g1forecastmonth"};
+    static constexpr AccessorType accessor_type_{"g1forecastmonth"};
 };
 
 }  // namespace eccodes::accessor

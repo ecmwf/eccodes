@@ -36,7 +36,7 @@ private:
     int type_ = 0;
 
 public:
-    static inline const AccessorType accessor_type_{"transient_darray"};
+    static constexpr AccessorType accessor_type_{"transient_darray"};
 };
 
 }  // namespace eccodes::accessor

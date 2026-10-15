@@ -31,7 +31,7 @@ private:
     const char* param_ = nullptr;
 
 public:
-    static inline const AccessorType accessor_type_{"mars_param"};
+    static constexpr AccessorType accessor_type_{"mars_param"};
 };
 
 }  // namespace eccodes::accessor

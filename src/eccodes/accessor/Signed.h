@@ -37,7 +37,7 @@ private:
     int nbytes_ = 0;
 
 public:
-    static inline const AccessorType accessor_type_{"signed"};
+    static constexpr AccessorType accessor_type_{"signed"};
 };
 
 }  // namespace eccodes::accessor

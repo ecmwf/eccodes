@@ -28,7 +28,7 @@ public:
     void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;
 
-    static inline const AccessorType accessor_type_{"message_copy"};
+    static constexpr AccessorType accessor_type_{"message_copy"};
 };
 
 }  // namespace eccodes::accessor

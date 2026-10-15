@@ -10,8 +10,6 @@
 
 #include "ReferenceValueError.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::ReferenceValueError> _grib_accessor_reference_value_error_builder{};
-
 namespace eccodes::accessor
 {
 

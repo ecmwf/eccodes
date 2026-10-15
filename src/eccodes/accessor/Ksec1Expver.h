@@ -26,7 +26,7 @@ public:
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
 
-    static inline const AccessorType accessor_type_{"ksec1expver"};
+    static constexpr AccessorType accessor_type_{"ksec1expver"};
 };
 
 }  // namespace eccodes::accessor
