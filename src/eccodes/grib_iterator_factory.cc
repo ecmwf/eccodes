@@ -21,6 +21,7 @@ struct table_entry
     eccodes::geo_iterator::Iterator** iterator;
 };
 
+// clang-format off
 static const struct table_entry table[] = {
     { "gaussian", &grib_iterator_gaussian, },
     { "gaussian_reduced", &grib_iterator_gaussian_reduced, },
@@ -35,6 +36,7 @@ static const struct table_entry table[] = {
     { "space_view", &grib_iterator_space_view, },
     // { "unstructured", &grib_iterator_unstructured, },
 };
+// clang-format on
 
 eccodes::geo_iterator::Iterator* grib_iterator_factory(grib_handle* h, grib_arguments* args, unsigned long flags, int* error)
 {

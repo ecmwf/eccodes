@@ -22,6 +22,7 @@ struct table_entry
     eccodes::Dumper** dumper;
 };
 
+// clang-format off
 static struct table_entry table[] = {
     {"bufr_decode_C",&grib_dumper_bufr_decode_c,},
     {"bufr_decode_filter",&grib_dumper_bufr_decode_filter,},
@@ -39,6 +40,7 @@ static struct table_entry table[] = {
     // {"serialize",&grib_dumper_serialize,},
     {"wmo",&grib_dumper_wmo,},
 };
+// clang-format on
 
 eccodes::Dumper* grib_dumper_factory(const char* op, const grib_handle* h, FILE* out, unsigned long option_flags, void* arg)
 {
