@@ -10,6 +10,7 @@ on:
     paths-ignore:
       - "deprecated/**"
   workflow_dispatch:
+  workflow_call:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -29,6 +30,7 @@ permissions:
 
 jobs:
   ci-approval:
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-slim
     permissions:
       pull-requests: write
@@ -41,7 +43,9 @@ jobs:
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
     steps:
-      - uses: actions/checkout@v6
+      - uses: ecmwf/ci-infrastructure/actions/checkout-under-test@main
+        with:
+          allow-unsafe-pr-checkout: ${{ github.event_name == 'pull_request_target' }}
       - uses: ecmwf/ci-infrastructure/actions/pre-commit@main
 
   resolve:
@@ -65,7 +69,9 @@ jobs:
           client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
           private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
-      - uses: actions/checkout@v6
+      - uses: ecmwf/ci-infrastructure/actions/checkout-under-test@main
+        with:
+          allow-unsafe-pr-checkout: ${{ github.event_name == 'pull_request_target' }}
       - id: r
         uses: ecmwf/ci-infrastructure/actions/resolve-deps@main
         with:
@@ -92,7 +98,9 @@ jobs:
           client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
           private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
-      - uses: actions/checkout@v6
+      - uses: ecmwf/ci-infrastructure/actions/checkout-under-test@main
+        with:
+          allow-unsafe-pr-checkout: ${{ github.event_name == 'pull_request_target' }}
 
       - name: Fetch resolved deps
         id: deps
@@ -140,7 +148,9 @@ jobs:
           client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
           private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
-      - uses: actions/checkout@v6
+      - uses: ecmwf/ci-infrastructure/actions/checkout-under-test@main
+        with:
+          allow-unsafe-pr-checkout: ${{ github.event_name == 'pull_request_target' }}
 
       - name: Fetch resolved deps
         id: deps
@@ -192,7 +202,9 @@ jobs:
           client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
           private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
-      - uses: actions/checkout@v6
+      - uses: ecmwf/ci-infrastructure/actions/checkout-under-test@main
+        with:
+          allow-unsafe-pr-checkout: ${{ github.event_name == 'pull_request_target' }}
 
       - name: Fetch resolved deps
         id: deps
@@ -243,7 +255,9 @@ jobs:
           client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
           private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
-      - uses: actions/checkout@v6
+      - uses: ecmwf/ci-infrastructure/actions/checkout-under-test@main
+        with:
+          allow-unsafe-pr-checkout: ${{ github.event_name == 'pull_request_target' }}
 
       - name: Fetch resolved deps
         id: deps
@@ -297,7 +311,9 @@ jobs:
           client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
           private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
-      - uses: actions/checkout@v6
+      - uses: ecmwf/ci-infrastructure/actions/checkout-under-test@main
+        with:
+          allow-unsafe-pr-checkout: ${{ github.event_name == 'pull_request_target' }}
 
       - name: Fetch resolved deps
         id: deps

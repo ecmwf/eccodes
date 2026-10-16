@@ -2,6 +2,7 @@
 name = "eccodes"
 repo = "ecmwf/eccodes"
 visibility = "public"
+fork-pull-requests = true
 compiler-inputs = ["cxx-compiler"]
 git-read = ["ecmwf/bindman"]
 add-to-path = ["bin"]
@@ -186,14 +187,6 @@ cxx-compiler-binary = "g++"
 
 [[matrix.build-hpc.include]]
 options = "eckit-geo"
-cxx-compiler = "icpx"
-platform = "hpc-atos-intel"
-modules = ["load prgenv/intel-llvm", "unload intel", "load intel/2025.3.1", "load cmake", "load ninja"]
-c-compiler-binary = "icx"
-cxx-compiler-binary = "icpx"
-
-[[matrix.build-hpc.include]]
-options = "eckit-geo"
 cxx-compiler = "nvc++-26.1"
 platform = "hpc-atos-nvidia"
 modules = ["load prgenv/nvidia", "unload nvidia", "load nvidia/26.1", "load cmake", "load ninja"]
@@ -202,7 +195,23 @@ cxx-compiler-binary = "nvc++"
 
 [[matrix.build-hpc.include]]
 options = "eckit-geo"
-cxx-compiler = "icpc-2023.2"
+cxx-compiler = "icpx-2025.3.1"
+platform = "hpc-atos-intel"
+modules = ["load prgenv/intel-llvm", "unload intel", "load intel/2025.3.1", "load cmake", "load ninja"]
+c-compiler-binary = "icx"
+cxx-compiler-binary = "icpx"
+
+[[matrix.build-hpc.include]]
+options = "eckit-geo"
+cxx-compiler = "icpx-2023.2.0"
+platform = "hpc-atos-intel"
+modules = ["load prgenv/intel", "unload intel", "load intel/2023.2.0", "load cmake", "load ninja"]
+c-compiler-binary = "icx"
+cxx-compiler-binary = "icpx"
+
+[[matrix.build-hpc.include]]
+options = "eckit-geo"
+cxx-compiler = "icpc-2023.2.0"
 platform = "hpc-atos-intel"
 modules = ["load prgenv/intel", "unload intel", "load intel/2023.2.0", "load cmake", "load ninja"]
 c-compiler-binary = "icc"
