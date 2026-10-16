@@ -18,8 +18,6 @@
 cmake_minimum_required( VERSION 3.12 FATAL_ERROR )
 
 
-message(FATAL_ERROR pew pew)
-
 
 find_package( ecbuild 3.7 HINTS ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../ecbuild)
 if(NOT ecbuild_FOUND)
