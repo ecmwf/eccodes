@@ -19,8 +19,13 @@ class NonAlpha : public Gen
 {
 public:
     NonAlpha() :
-        Gen() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        Gen() {}
+    const AccessorType& accessor_type() const override
+    {
+        {
+            return accessor_type_;
+        }
+    }
     long get_native_type() override;
     int unpack_double(double* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
@@ -31,7 +36,7 @@ public:
     void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;
 
-    static constexpr AccessorType accessor_type_{"non_alpha"};
+    static constexpr AccessorType accessor_type_{ "non_alpha" };
 };
 
 }  // namespace eccodes::accessor

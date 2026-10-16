@@ -24790,10 +24790,10 @@ typedef enum
 // packingStage: either packing_type_before_values or values_before_packing_type
 int main(int argc, char** argv)
 {
-    size_t values_len           = sizeof(values) / sizeof(values[0]);
+    size_t values_len = sizeof(values) / sizeof(values[0]);
     const char* sample_filename = "gg_sfc_grib2";
-    grib_handle* h              = NULL;
-    size_t str_len              = 0;
+    grib_handle* h = NULL;
+    size_t str_len = 0;
     PackingStage packing_stage;
     char* packing_type;
     char* outfile_name;
@@ -24838,7 +24838,7 @@ int main(int argc, char** argv)
     fprintf(stderr, "%s checks on decoded values '%s' (%s) ...\n",
             (check ? "Doing" : "Skipping"), packing_type, argv[2]);
     if (check) {
-        size_t i     = 0;
+        size_t i = 0;
         double* vals = (double*)malloc(sizeof(double) * values_len);
         GRIB_CHECK(grib_get_double_array(h, "values", vals, &values_len), 0);
         for (i = 0; i < values_len; i++) {
@@ -24850,7 +24850,7 @@ int main(int argc, char** argv)
             }
         }
         if (strcmp(packing_type, "grid_simple") == 0 || strcmp(packing_type, "grid_ieee") == 0) {
-            double calc          = 0;
+            double calc = 0;
             long offsetAfterData = 0, offsetBeforeData = 0;
             GRIB_CHECK(grib_get_long(h, "offsetAfterData", &offsetAfterData), 0);
             GRIB_CHECK(grib_get_long(h, "offsetBeforeData", &offsetBeforeData), 0);

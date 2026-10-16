@@ -10,7 +10,8 @@
 
 #include "Expression.h"
 
-namespace eccodes {
+namespace eccodes
+{
 
 int Expression::native_type(grib_handle* h) const
 {

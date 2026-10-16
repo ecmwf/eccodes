@@ -19,8 +19,13 @@ class LatLonIncrement : public Double
 {
 public:
     LatLonIncrement() :
-        Double() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        Double() {}
+    const AccessorType& accessor_type() const override
+    {
+        {
+            return accessor_type_;
+        }
+    }
     int is_missing() override;
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
@@ -38,7 +43,7 @@ private:
     long isLongitude_ = 0;
 
 public:
-    static constexpr AccessorType accessor_type_{"latlon_increment"};
+    static constexpr AccessorType accessor_type_{ "latlon_increment" };
 };
 
 }  // namespace eccodes::accessor

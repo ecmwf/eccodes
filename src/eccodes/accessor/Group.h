@@ -19,8 +19,13 @@ class Group : public Gen
 {
 public:
     Group() :
-        Gen() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        Gen() {}
+    const AccessorType& accessor_type() const override
+    {
+        {
+            return accessor_type_;
+        }
+    }
     long get_native_type() override;
     int unpack_double(double* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
@@ -36,7 +41,7 @@ private:
     char endCharacter_ = 0;
 
 public:
-    static constexpr AccessorType accessor_type_{"group"};
+    static constexpr AccessorType accessor_type_{ "group" };
 };
 
 }  // namespace eccodes::accessor

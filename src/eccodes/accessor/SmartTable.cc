@@ -55,39 +55,39 @@ void SmartTable::init(const long len, grib_arguments* params)
     int n = 0;
     grib_handle* hand = get_enclosing_handle();
 
-    values_      = params->get_name(hand, n++);
-    tablename_   = params->get_string(hand, n++);
-    masterDir_   = params->get_name(hand, n++);
-    localDir_    = params->get_name(hand, n++);
+    values_ = params->get_name(hand, n++);
+    tablename_ = params->get_string(hand, n++);
+    masterDir_ = params->get_name(hand, n++);
+    localDir_ = params->get_name(hand, n++);
     widthOfCode_ = params->get_long(hand, n++);
-    extraDir_    = params->get_name(hand, n++);
-    extraTable_  = params->get_string(hand, n++);
+    extraDir_ = params->get_name(hand, n++);
+    extraTable_ = params->get_string(hand, n++);
 
     Unsigned::length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-    dirty_          = 1;
+    dirty_ = 1;
     tableCodesSize_ = 0;
-    tableCodes_     = 0;
-    table_          = NULL;
+    tableCodes_ = 0;
+    table_ = NULL;
 }
 
 grib_smart_table* SmartTable::load_table()
 {
-    size_t size            = 0;
-    grib_handle* h         = this->parent_->h;
-    grib_context* c        = h->context;
-    grib_smart_table* t    = NULL;
+    size_t size = 0;
+    grib_handle* h = this->parent_->h;
+    grib_context* c = h->context;
+    grib_smart_table* t = NULL;
     grib_smart_table* next = NULL;
-    char* filename         = 0;
+    char* filename = 0;
 
-    char recomposed[1024]      = {0,};
-    char localRecomposed[1024] = {0,};
-    char* localFilename        = 0;
-    char extraRecomposed[1024] = {0,};
-    char* extraFilename        = 0;
-    char masterDir[1024] = {0,};
-    char localDir[1024]  = {0,};
-    char extraDir[1024]  = {0,};
+    char recomposed[1024] = { 0 };
+    char localRecomposed[1024] = { 0 };
+    char* localFilename = 0;
+    char extraRecomposed[1024] = { 0 };
+    char* extraFilename = 0;
+    char masterDir[1024] = { 0 };
+    char localDir[1024] = { 0 };
+    char extraDir[1024] = { 0 };
     size_t len = 1024;
 
     if (masterDir_ != NULL) {
@@ -105,7 +105,7 @@ grib_smart_table* SmartTable::load_table()
     }
 
     if (*masterDir != 0) {
-        char name[2048] = {0,};
+        char name[2048] = { 0 };
         snprintf(name, sizeof(name), "%s/%s", masterDir, tablename_);
         grib_recompose_name(h, NULL, name, recomposed, 0);
         filename = grib_context_full_defs_path(c, recomposed);
@@ -116,14 +116,14 @@ grib_smart_table* SmartTable::load_table()
     }
 
     if (*localDir != 0) {
-        char localName[2048] = {0,};
+        char localName[2048] = { 0 };
         snprintf(localName, sizeof(localName), "%s/%s", localDir, tablename_);
         grib_recompose_name(h, NULL, localName, localRecomposed, 0);
         localFilename = grib_context_full_defs_path(c, localRecomposed);
     }
 
     if (*extraDir != 0) {
-        char extraTable[2048] = {0,};
+        char extraTable[2048] = { 0 };
         snprintf(extraTable, sizeof(extraTable), "%s/%s", extraDir, extraTable_);
         grib_recompose_name(h, NULL, extraTable, extraRecomposed, 0);
         extraFilename = grib_context_full_defs_path(c, extraRecomposed);
@@ -169,7 +169,7 @@ grib_smart_table* SmartTable::load_table()
 static int grib_load_smart_table(grib_context* c, const char* filename,
                                  const char* recomposed_name, size_t size, grib_smart_table* t)
 {
-    char line[1024] = {0,};
+    char line[1024] = { 0 };
     FILE* f = NULL;
     // int lineNumber;
     int numberOfColumns, code;
@@ -183,21 +183,21 @@ static int grib_load_smart_table(grib_context* c, const char* filename,
     ECCODES_ASSERT(t != NULL);
 
     if (t->filename[0] == NULL) {
-        t->filename[0]        = grib_context_strdup_persistent(c, filename);
+        t->filename[0] = grib_context_strdup_persistent(c, filename);
         t->recomposed_name[0] = grib_context_strdup_persistent(c, recomposed_name);
-        t->next               = c->smart_table;
-        t->numberOfEntries    = size;
+        t->next = c->smart_table;
+        t->numberOfEntries = size;
         {
             eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
             c->smart_table = t;
         }
     }
     else if (t->filename[1] == NULL) {
-        t->filename[1]        = grib_context_strdup_persistent(c, filename);
+        t->filename[1] = grib_context_strdup_persistent(c, filename);
         t->recomposed_name[1] = grib_context_strdup_persistent(c, recomposed_name);
     }
     else {
-        t->filename[2]        = grib_context_strdup_persistent(c, filename);
+        t->filename[2] = grib_context_strdup_persistent(c, filename);
         t->recomposed_name[2] = grib_context_strdup_persistent(c, recomposed_name);
     }
 
@@ -289,7 +289,7 @@ int SmartTable::unpack_string(char* buffer, size_t* len)
     }
 
     strcpy(buffer, tmp);
-    *len   = l;
+    *len = l;
     dirty_ = 0;
 
     return GRIB_SUCCESS;
@@ -298,8 +298,8 @@ int SmartTable::unpack_string(char* buffer, size_t* len)
 int SmartTable::get_table_codes()
 {
     size_t size = 0;
-    long* v     = 0;
-    int err     = 0;
+    long* v = 0;
+    int err = 0;
     int count, j;
     size_t i;
 
@@ -349,7 +349,7 @@ int SmartTable::get_table_codes()
 int SmartTable::value_count(long* count)
 {
     int err = 0;
-    *count  = 0;
+    *count = 0;
 
     if (!values_)
         return 0;

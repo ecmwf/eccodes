@@ -20,8 +20,13 @@ class DataSimplePacking : public Values
 {
 public:
     DataSimplePacking() :
-        Values() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        Values() {}
+    const AccessorType& accessor_type() const override
+    {
+        {
+            return accessor_type_;
+        }
+    }
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
     int unpack_float(float* val, size_t* len) override;
@@ -44,11 +49,12 @@ protected:
     const char* optimize_scaling_factor_ = nullptr;
 
 private:
-    template <typename T> int unpack(T* val, size_t* len);
+    template <typename T>
+    int unpack(T* val, size_t* len);
     int _unpack_double(double* val, size_t* len, unsigned char* buf, long pos, size_t n_vals);
 
 public:
-    static constexpr AccessorType accessor_type_{"data_simple_packing"};
+    static constexpr AccessorType accessor_type_{ "data_simple_packing" };
 };
 
 }  // namespace eccodes::accessor

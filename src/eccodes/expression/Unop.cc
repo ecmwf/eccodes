@@ -10,11 +10,14 @@
 
 #include "Unop.h"
 
-namespace eccodes::expression {
+namespace eccodes::expression
+{
 
 Unop::Unop(grib_context* c, Expression::UnopLongProc long_func,
            Expression::UnopDoubleProc double_func,
-           Expression* exp) : exp_(exp), long_func_(long_func), double_func_(double_func) {}
+           Expression* exp) : exp_(exp),
+                              long_func_(long_func),
+                              double_func_(double_func) {}
 
 int Unop::evaluate_long(grib_handle* h, long* lres) const
 {
@@ -65,6 +68,7 @@ int Unop::native_type(grib_handle* h) const
 
 }  // namespace eccodes::expression
 
-grib_expression* new_unop_expression(grib_context* c, grib_unop_long_proc long_func, grib_unop_double_proc double_func, grib_expression* exp) {
+grib_expression* new_unop_expression(grib_context* c, grib_unop_long_proc long_func, grib_unop_double_proc double_func, grib_expression* exp)
+{
     return new eccodes::expression::Unop(c, long_func, double_func, exp);
 }

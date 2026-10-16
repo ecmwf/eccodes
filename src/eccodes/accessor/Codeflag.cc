@@ -22,22 +22,22 @@ namespace eccodes::accessor
 void Codeflag::init(const long len, grib_arguments* param)
 {
     Unsigned::init(len, param);
-    length_    = len;
+    length_ = len;
     tablename_ = param->get_string(get_enclosing_handle(), 0);
     ECCODES_ASSERT(length_ >= 0);
 }
 
 int Codeflag::grib_get_codeflag(long code, char* codename)
 {
-    FILE* f                              = NULL;
+    FILE* f = NULL;
     char fname[1024];
     char bval[50];
     char num[50];
     char* filename = 0;
     char line[1024];
     size_t i = 0;
-    int j    = 0;
-    int err  = 0;
+    int j = 0;
+    int err = 0;
 
     err = grib_recompose_name(get_enclosing_handle(), NULL, tablename_, fname, 1);
     if (err) {
@@ -68,12 +68,12 @@ int Codeflag::grib_get_codeflag(long code, char* codename)
         if (num[0] != '#') {
             if ((test_bit(code, length_ * 8 - atol(num)) > 0) == atol(bval)) {
                 size_t linelen = strlen(line);
-                codename[j++]  = '(';
-                codename[j++]  = num[0];
-                codename[j++]  = '=';
-                codename[j++]  = bval[0];
-                codename[j++]  = ')';
-                codename[j++]  = ' ';
+                codename[j++] = '(';
+                codename[j++] = num[0];
+                codename[j++] = '=';
+                codename[j++] = bval[0];
+                codename[j++] = ')';
+                codename[j++] = ' ';
 
                 for (i = (strlen(num) + strlen(bval) + 2); i < linelen - 1; i++)
                     codename[j++] = line[i];
@@ -103,9 +103,9 @@ int Codeflag::value_count(long* count)
 
 void Codeflag::dump(eccodes::Dumper* dumper)
 {
-    long v              = 0;
-    char flagname[1024] = {0,};
-    char fname[1024] = {0,};
+    long v = 0;
+    char flagname[1024] = { 0 };
+    char fname[1024] = { 0 };
 
     size_t llen = 1;
 

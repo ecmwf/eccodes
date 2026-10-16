@@ -53,8 +53,8 @@ int Message::value_count(long* count)
 
 int Message::unpack_string(char* val, size_t* len)
 {
-    long i         = 0;
-    size_t l       = string_length() + 1;
+    long i = 0;
+    size_t l = string_length() + 1;
     grib_handle* h = get_enclosing_handle();
 
     if (*len < l) {
@@ -68,7 +68,7 @@ int Message::unpack_string(char* val, size_t* len)
     for (i = 0; i < length_; i++)
         val[i] = h->buffer->data[offset_ + i];
     val[i] = 0;
-    *len   = i;
+    *len = i;
     return GRIB_SUCCESS;
 }
 

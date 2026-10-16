@@ -18,22 +18,22 @@ int main(int argc, char** argv)
     int err = 0;
     long step;
     const char** filenames = NULL;
-    size_t nkeys, nfiles, i=0;
+    size_t nkeys, nfiles, i = 0;
     const char* keys[] = { "step:i", "date", "paramId", "levelType" };
     grib_fieldset* set = NULL;
     grib_handle* h = NULL;
-    char param[20] = {0,};
-    char typeOfLevel[50] = {0,};
-    char date[10] = {0,};
-    size_t lenDate  = 10, lenParam = 20, lenLevel = 50;
-    char* order_by  = NULL;
+    char param[20] = { 0 };
+    char typeOfLevel[50] = { 0 };
+    char date[10] = { 0 };
+    size_t lenDate = 10, lenParam = 20, lenLevel = 50;
+    char* order_by = NULL;
 
-    if (argc != 3) return 1; //Usage: prog order_by grib_file grib_file ...
+    if (argc != 3) return 1;  // Usage: prog order_by grib_file grib_file ...
 
-    nkeys    = sizeof(keys) / sizeof(*keys);
+    nkeys = sizeof(keys) / sizeof(*keys);
     order_by = argv[1];
 
-    nfiles    = argc - 2;
+    nfiles = argc - 2;
     filenames = (const char**)malloc(sizeof(char*) * nfiles);
     for (i = 0; i < nfiles; i++)
         filenames[i] = (char*)strdup(argv[i + 2]);
@@ -53,7 +53,7 @@ int main(int argc, char** argv)
     printf("step,date,levelType,levelType\n");
     while ((h = grib_fieldset_next_handle(set, &err)) != NULL) {
         lenParam = sizeof(param);
-        lenDate  = sizeof(date);
+        lenDate = sizeof(date);
         lenLevel = sizeof(typeOfLevel);
         GRIB_CHECK(grib_get_long(h, "step", &step), 0);
         GRIB_CHECK(grib_get_string(h, "date", date, &lenDate), 0);

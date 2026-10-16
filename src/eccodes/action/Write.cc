@@ -22,17 +22,17 @@ namespace eccodes::action
 
 Write::Write(grib_context* context, const char* name, int append, int padtomultiple)
 {
-    char buf[1024] = {0,};
+    char buf[1024] = { 0 };
 
     class_name_ = "action_class_write";
-    op_         = grib_context_strdup_persistent(context, "section");
-    context_    = context;
-    name2_      = grib_context_strdup_persistent(context, name);
+    op_ = grib_context_strdup_persistent(context, "section");
+    context_ = context;
+    name2_ = grib_context_strdup_persistent(context, name);
 
     snprintf(buf, 1024, "write%p", (void*)name_);
 
-    name_          = grib_context_strdup_persistent(context, buf);
-    append_        = append;
+    name_ = grib_context_strdup_persistent(context, buf);
+    append_ = append;
     padtomultiple_ = padtomultiple;
 }
 
@@ -45,11 +45,11 @@ Write::~Write()
 
 int Write::execute(grib_handle* h)
 {
-    int err              = GRIB_SUCCESS;
-    size_t size          = 0;
-    const void* buffer   = NULL;
+    int err = GRIB_SUCCESS;
+    size_t size = 0;
+    const void* buffer = NULL;
     const char* filename = NULL;
-    char string[1024]    = {0, };
+    char string[1024] = { 0 };
 
     grib_file* of = NULL;
 
@@ -59,13 +59,13 @@ int Write::execute(grib_handle* h)
     }
 
     if (strlen(name2_) != 0) {
-        err      = grib_recompose_name(h, NULL, name2_, string, 0);
+        err = grib_recompose_name(h, NULL, name2_, string, 0);
         filename = string;
     }
     else {
         if (context_->outfilename) {
             filename = context_->outfilename;
-            err      = grib_recompose_name(h, NULL, context_->outfilename, string, 0);
+            err = grib_recompose_name(h, NULL, context_->outfilename, string, 0);
             if (!err)
                 filename = string;
         }

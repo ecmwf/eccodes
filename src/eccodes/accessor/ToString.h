@@ -19,8 +19,13 @@ class ToString : public Gen
 {
 public:
     ToString() :
-        Gen() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        Gen() {}
+    const AccessorType& accessor_type() const override
+    {
+        {
+            return accessor_type_;
+        }
+    }
     long get_native_type() override;
     int unpack_double(double* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
@@ -37,7 +42,7 @@ private:
     size_t str_length_ = 0;
 
 public:
-    static constexpr AccessorType accessor_type_{"to_string"};
+    static constexpr AccessorType accessor_type_{ "to_string" };
 };
 
 }  // namespace eccodes::accessor

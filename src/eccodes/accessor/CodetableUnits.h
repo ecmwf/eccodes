@@ -19,8 +19,13 @@ class CodetableUnits : public Gen
 {
 public:
     CodetableUnits() :
-        Gen() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        Gen() {}
+    const AccessorType& accessor_type() const override
+    {
+        {
+            return accessor_type_;
+        }
+    }
     long get_native_type() override;
     int unpack_string(char*, size_t* len) override;
     void init(const long, grib_arguments*) override;
@@ -29,7 +34,7 @@ private:
     const char* codetable_ = nullptr;
 
 public:
-    static constexpr AccessorType accessor_type_{"codetable_units"};
+    static constexpr AccessorType accessor_type_{ "codetable_units" };
 };
 
 }  // namespace eccodes::accessor

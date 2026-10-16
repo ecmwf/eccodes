@@ -61,10 +61,19 @@
 
 struct JsonValue
 {
-    enum Type { Null, Bool, Int, Double, String, Array, Object };
+    enum Type
+    {
+        Null,
+        Bool,
+        Int,
+        Double,
+        String,
+        Array,
+        Object
+    };
 
     Type type = Null;
-    bool bval  = false;
+    bool bval = false;
     long long ival = 0;
     double dval = 0;
     std::string sval;
@@ -105,30 +114,48 @@ private:
     const char* end_;
     std::string error_;
 
-    bool fail(const char* msg) { if (error_.empty()) error_ = msg; return false; }
+    bool fail(const char* msg)
+    {
+        if (error_.empty()) error_ = msg;
+        return false;
+    }
 
     void skipWs()
     {
-        while (p_ < end_ && (*p_ == ' ' || *p_ == '\t' || *p_ == '\n' || *p_ == '\r')) ++p_;
+        while (p_ < end_ && (*p_ == ' ' || *p_ == '\t' || *p_ == '\n' || *p_ == '\r'))
+            ++p_;
     }
 
     bool parseValue(JsonValue& v)
     {
         if (p_ >= end_) return fail("unexpected end of input");
         switch (*p_) {
-            case '{': return parseObject(v);
-            case '[': return parseArray(v);
-            case '"': v.type = JsonValue::String; return parseString(v.sval);
+            case '{':
+                return parseObject(v);
+            case '[':
+                return parseArray(v);
+            case '"':
+                v.type = JsonValue::String;
+                return parseString(v.sval);
             case 't':
                 if (end_ - p_ < 4 || strncmp(p_, "true", 4) != 0) return fail("bad literal");
-                p_ += 4; v.type = JsonValue::Bool; v.bval = true; return true;
+                p_ += 4;
+                v.type = JsonValue::Bool;
+                v.bval = true;
+                return true;
             case 'f':
                 if (end_ - p_ < 5 || strncmp(p_, "false", 5) != 0) return fail("bad literal");
-                p_ += 5; v.type = JsonValue::Bool; v.bval = false; return true;
+                p_ += 5;
+                v.type = JsonValue::Bool;
+                v.bval = false;
+                return true;
             case 'n':
                 if (end_ - p_ < 4 || strncmp(p_, "null", 4) != 0) return fail("bad literal");
-                p_ += 4; v.type = JsonValue::Null; return true;
-            default: return parseNumber(v);
+                p_ += 4;
+                v.type = JsonValue::Null;
+                return true;
+            default:
+                return parseNumber(v);
         }
     }
 
@@ -137,7 +164,10 @@ private:
         v.type = JsonValue::Object;
         ++p_;
         skipWs();
-        if (p_ < end_ && *p_ == '}') { ++p_; return true; }
+        if (p_ < end_ && *p_ == '}') {
+            ++p_;
+            return true;
+        }
         for (;;) {
             skipWs();
             std::string key;
@@ -151,8 +181,14 @@ private:
             v.vals.push_back(JsonValue());
             if (!parseValue(v.vals.back())) return false;
             skipWs();
-            if (p_ < end_ && *p_ == ',') { ++p_; continue; }
-            if (p_ < end_ && *p_ == '}') { ++p_; return true; }
+            if (p_ < end_ && *p_ == ',') {
+                ++p_;
+                continue;
+            }
+            if (p_ < end_ && *p_ == '}') {
+                ++p_;
+                return true;
+            }
             return fail("expected ',' or '}'");
         }
     }
@@ -162,14 +198,23 @@ private:
         v.type = JsonValue::Array;
         ++p_;
         skipWs();
-        if (p_ < end_ && *p_ == ']') { ++p_; return true; }
+        if (p_ < end_ && *p_ == ']') {
+            ++p_;
+            return true;
+        }
         for (;;) {
             skipWs();
             v.items.push_back(JsonValue());
             if (!parseValue(v.items.back())) return false;
             skipWs();
-            if (p_ < end_ && *p_ == ',') { ++p_; continue; }
-            if (p_ < end_ && *p_ == ']') { ++p_; return true; }
+            if (p_ < end_ && *p_ == ',') {
+                ++p_;
+                continue;
+            }
+            if (p_ < end_ && *p_ == ']') {
+                ++p_;
+                return true;
+            }
             return fail("expected ',' or ']'");
         }
     }
@@ -181,41 +226,66 @@ private:
         while (p_ < end_) {
             char c = *p_++;
             if (c == '"') return true;
-            if (c != '\\') { out.push_back(c); continue; }
+            if (c != '\\') {
+                out.push_back(c);
+                continue;
+            }
             if (p_ >= end_) return fail("bad escape");
             char e = *p_++;
             switch (e) {
-                case '"':  out.push_back('"');  break;
-                case '\\': out.push_back('\\'); break;
-                case '/':  out.push_back('/');  break;
-                case 'b':  out.push_back('\b'); break;
-                case 'f':  out.push_back('\f'); break;
-                case 'n':  out.push_back('\n'); break;
-                case 'r':  out.push_back('\r'); break;
-                case 't':  out.push_back('\t'); break;
+                case '"':
+                    out.push_back('"');
+                    break;
+                case '\\':
+                    out.push_back('\\');
+                    break;
+                case '/':
+                    out.push_back('/');
+                    break;
+                case 'b':
+                    out.push_back('\b');
+                    break;
+                case 'f':
+                    out.push_back('\f');
+                    break;
+                case 'n':
+                    out.push_back('\n');
+                    break;
+                case 'r':
+                    out.push_back('\r');
+                    break;
+                case 't':
+                    out.push_back('\t');
+                    break;
                 case 'u': {
                     if (end_ - p_ < 4) return fail("bad \\u escape");
                     unsigned code = 0;
                     for (int i = 0; i < 4; ++i) {
                         char h = *p_++;
                         code <<= 4;
-                        if (h >= '0' && h <= '9')      code |= static_cast<unsigned>(h - '0');
-                        else if (h >= 'a' && h <= 'f') code |= static_cast<unsigned>(h - 'a' + 10);
-                        else if (h >= 'A' && h <= 'F') code |= static_cast<unsigned>(h - 'A' + 10);
-                        else return fail("bad \\u escape");
+                        if (h >= '0' && h <= '9')
+                            code |= static_cast<unsigned>(h - '0');
+                        else if (h >= 'a' && h <= 'f')
+                            code |= static_cast<unsigned>(h - 'a' + 10);
+                        else if (h >= 'A' && h <= 'F')
+                            code |= static_cast<unsigned>(h - 'A' + 10);
+                        else
+                            return fail("bad \\u escape");
                     }
-                    if (code < 0x80)      { out.push_back(static_cast<char>(code)); }
+                    if (code < 0x80) { out.push_back(static_cast<char>(code)); }
                     else if (code < 0x800) {
                         out.push_back(static_cast<char>(0xC0 | (code >> 6)));
                         out.push_back(static_cast<char>(0x80 | (code & 0x3F)));
-                    } else {
+                    }
+                    else {
                         out.push_back(static_cast<char>(0xE0 | (code >> 12)));
                         out.push_back(static_cast<char>(0x80 | ((code >> 6) & 0x3F)));
                         out.push_back(static_cast<char>(0x80 | (code & 0x3F)));
                     }
                     break;
                 }
-                default: return fail("bad escape");
+                default:
+                    return fail("bad escape");
             }
         }
         return fail("unterminated string");
@@ -228,8 +298,15 @@ private:
         if (p_ < end_ && (*p_ == '-' || *p_ == '+')) ++p_;
         while (p_ < end_) {
             char c = *p_;
-            if (isdigit(static_cast<unsigned char>(c))) { ++p_; continue; }
-            if (c == '.' || c == 'e' || c == 'E' || c == '+' || c == '-') { isInt = false; ++p_; continue; }
+            if (isdigit(static_cast<unsigned char>(c))) {
+                ++p_;
+                continue;
+            }
+            if (c == '.' || c == 'e' || c == 'E' || c == '+' || c == '-') {
+                isInt = false;
+                ++p_;
+                continue;
+            }
             break;
         }
         if (p_ == start) return fail("expected a number");
@@ -263,7 +340,7 @@ private:
 static int applySet(codes_handle* h, const JsonValue& args)
 {
     const JsonValue* keyv = args.member("key");
-    const JsonValue* dtv  = args.member("datatype");
+    const JsonValue* dtv = args.member("datatype");
     const JsonValue* valv = args.member("value");
     if (!keyv || keyv->type != JsonValue::String) return CODES_INVALID_ARGUMENT;
     const std::string& key = keyv->sval;
@@ -282,15 +359,17 @@ static int applySet(codes_handle* h, const JsonValue& args)
     if (!valv) return CODES_INVALID_ARGUMENT;
 
     if (rank == 1) {
-        if (valv->type != JsonValue::Array) return CODES_SUCCESS;  /* placeholder */
+        if (valv->type != JsonValue::Array) return CODES_SUCCESS; /* placeholder */
         size_t n = valv->items.size();
         if (dtype == "double") {
             std::vector<double> v(n);
-            for (size_t i = 0; i < n; ++i) v[i] = valv->items[i].asDouble();
+            for (size_t i = 0; i < n; ++i)
+                v[i] = valv->items[i].asDouble();
             return codes_set_double_array(h, key.c_str(), n ? v.data() : nullptr, n);
         }
         std::vector<long> v(n);
-        for (size_t i = 0; i < n; ++i) v[i] = static_cast<long>(valv->items[i].asInt());
+        for (size_t i = 0; i < n; ++i)
+            v[i] = static_cast<long>(valv->items[i].asInt());
         return codes_set_long_array(h, key.c_str(), n ? v.data() : nullptr, n);
     }
 
@@ -345,7 +424,8 @@ static void appendLong(std::string& out, long v)
  *   paramId (level|-) packingType
  * Also return gridType so the caller can pick the right packing prefix.
  */
-struct Got {
+struct Got
+{
     std::string flat;
     std::string gridType;
 };
@@ -355,17 +435,28 @@ static Got extractGot(codes_handle* h, bool hasLevelist)
     Got g;
     g.flat.reserve(96);
 
-    g.flat += getStr(h, "centre");         g.flat += ' ';
-    g.flat += getStr(h, "marsClass");      g.flat += ' ';
-    g.flat += getStr(h, "marsType");       g.flat += ' ';
-    g.flat += getStr(h, "marsStream");     g.flat += ' ';
-    g.flat += getStr(h, "expver");         g.flat += ' ';
-    appendLong(g.flat, getLong(h, "dataDate")); g.flat += ' ';
-    appendLong(g.flat, getLong(h, "dataTime")); g.flat += ' ';
-    appendLong(g.flat, getLong(h, "step"));     g.flat += ' ';
-    appendLong(g.flat, getLong(h, "paramId"));  g.flat += ' ';
-    if (hasLevelist) appendLong(g.flat, getLong(h, "level"));
-    else             g.flat += '-';
+    g.flat += getStr(h, "centre");
+    g.flat += ' ';
+    g.flat += getStr(h, "marsClass");
+    g.flat += ' ';
+    g.flat += getStr(h, "marsType");
+    g.flat += ' ';
+    g.flat += getStr(h, "marsStream");
+    g.flat += ' ';
+    g.flat += getStr(h, "expver");
+    g.flat += ' ';
+    appendLong(g.flat, getLong(h, "dataDate"));
+    g.flat += ' ';
+    appendLong(g.flat, getLong(h, "dataTime"));
+    g.flat += ' ';
+    appendLong(g.flat, getLong(h, "step"));
+    g.flat += ' ';
+    appendLong(g.flat, getLong(h, "paramId"));
+    g.flat += ' ';
+    if (hasLevelist)
+        appendLong(g.flat, getLong(h, "level"));
+    else
+        g.flat += '-';
     g.flat += ' ';
     g.flat += getStr(h, "packingType");
 
@@ -400,25 +491,35 @@ static std::string buildExpected(const JsonValue& mars, bool gridIsSh)
         if (v && v->isNumber()) appendLong(s, static_cast<long>(v->asInt()));
     };
 
-    s += getSv("origin");   s += ' ';
-    s += getSv("class");    s += ' ';
-    s += getSv("type");     s += ' ';
-    s += getSv("stream");   s += ' ';
+    s += getSv("origin");
+    s += ' ';
+    s += getSv("class");
+    s += ' ';
+    s += getSv("type");
+    s += ' ';
+    s += getSv("stream");
+    s += ' ';
 
     /* expver may be a string ("2250") or an integer, depending on the dataset */
     {
         const JsonValue* v = mars.member("expver");
         if (v) {
-            if (v->type == JsonValue::String)      s += v->sval;
-            else if (v->isNumber())                appendLong(s, static_cast<long>(v->asInt()));
+            if (v->type == JsonValue::String)
+                s += v->sval;
+            else if (v->isNumber())
+                appendLong(s, static_cast<long>(v->asInt()));
         }
     }
     s += ' ';
 
-    appendInt("date");      s += ' ';
-    appendInt("time");      s += ' ';
-    appendInt("step");      s += ' ';
-    appendInt("param");     s += ' ';
+    appendInt("date");
+    s += ' ';
+    appendInt("time");
+    s += ' ';
+    appendInt("step");
+    s += ' ';
+    appendInt("param");
+    s += ' ';
 
     {
         const JsonValue* lv = mars.member("levelist");
@@ -445,7 +546,8 @@ static std::string buildExpected(const JsonValue& mars, bool gridIsSh)
 // Per line
 // ---------------------------------------------------------------------------
 
-struct Stats {
+struct Stats
+{
     long processed = 0;
     long mismatches = 0;
     long parseErrors = 0;
@@ -479,8 +581,8 @@ static void processLine(const std::string& line, long lineNo, codes_handle* samp
     }
 
     const JsonValue* mars = doc.member("mars");
-    const JsonValue* out  = doc.member("out");
-    const JsonValue* ops  = out ? out->member("operations") : nullptr;
+    const JsonValue* out = doc.member("out");
+    const JsonValue* ops = out ? out->member("operations") : nullptr;
     if (!mars || mars->type != JsonValue::Object || !ops || ops->type != JsonValue::Array) {
         ++stats.parseErrors;
         if (logFp && (stats.mismatches + stats.parseErrors + stats.setErrors) <= maxLogged) {
@@ -495,7 +597,10 @@ static void processLine(const std::string& line, long lineNo, codes_handle* samp
     }
 
     codes_handle* h = codes_handle_clone(sample);
-    if (!h) { ++stats.setErrors; return; }
+    if (!h) {
+        ++stats.setErrors;
+        return;
+    }
 
     bool setOk = true;
     int setRc = CODES_SUCCESS;
@@ -506,11 +611,15 @@ static void processLine(const std::string& line, long lineNo, codes_handle* samp
         if (op.type != JsonValue::Object || op.keys.empty()) continue;
         const std::string& name = op.keys[0];
         int rc = CODES_SUCCESS;
-        if (name == "set")               rc = applySet(h, op.vals[0]);
-        else if (name == "set_missing")  rc = applySetMissing(h, op.vals[0]);
+        if (name == "set")
+            rc = applySet(h, op.vals[0]);
+        else if (name == "set_missing")
+            rc = applySetMissing(h, op.vals[0]);
         /* make_from_sample and clone are ignored */
         if (rc != CODES_SUCCESS) {
-            setOk = false; setRc = rc; failedOp = i;
+            setOk = false;
+            setRc = rc;
+            failedOp = i;
             const JsonValue* kv = op.vals[0].member("key");
             if (kv && kv->type == JsonValue::String) failedKey = kv->sval;
             break;
@@ -596,13 +705,23 @@ int main(int argc, char* argv[])
     int i = 1;
     for (; i < argc; ++i) {
         std::string a = argv[i];
-        if      (a == "-e"      && i + 1 < argc) maxLogged  = atol(argv[++i]);
-        else if (a == "--log"   && i + 1 < argc) logPath    = argv[++i];
-        else if (a == "--input" && i + 1 < argc) inputName  = argv[++i];
-        else if (a == "-h" || a == "--help")     { usage(argv[0]); return 0; }
-        else break;
+        if (a == "-e" && i + 1 < argc)
+            maxLogged = atol(argv[++i]);
+        else if (a == "--log" && i + 1 < argc)
+            logPath = argv[++i];
+        else if (a == "--input" && i + 1 < argc)
+            inputName = argv[++i];
+        else if (a == "-h" || a == "--help") {
+            usage(argv[0]);
+            return 0;
+        }
+        else
+            break;
     }
-    if (argc - i != 1) { usage(argv[0]); return 1; }
+    if (argc - i != 1) {
+        usage(argv[0]);
+        return 1;
+    }
     std::string samplePath = argv[i];
 
     printf("grib_grib2mars_replay: sample=%s input=%s\n",

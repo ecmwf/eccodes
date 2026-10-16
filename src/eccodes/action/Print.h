@@ -25,7 +25,7 @@ public:
     int execute(grib_handle* h) override;
 
     char* name2_ = nullptr;  // TODO(maee): find a better member variable name
-    char* outname_  = nullptr;
+    char* outname_ = nullptr;
 };
 
 }  // namespace eccodes::action

@@ -31,7 +31,7 @@ static void usage(const char* prog)
 
 static void print_num_messages_written(const char* output_filename, size_t n)
 {
-    printf("Wrote output file %s (%zu message%s)\n", output_filename, n, n==1?"":"s");
+    printf("Wrote output file %s (%zu message%s)\n", output_filename, n, n == 1 ? "" : "s");
 }
 
 static int split_file(FILE* in, const char* filename, const int nchunks, unsigned long* count)
@@ -96,7 +96,7 @@ static int split_file(FILE* in, const char* filename, const int nchunks, unsigne
                     return GRIB_IO_PROBLEM;
                 }
                 read_size = 0;
-                num_msg   = 0;
+                num_msg = 0;
             }
             (*count)++;
         }
@@ -150,7 +150,7 @@ int main(int argc, char* argv[])
     }
 
     count = 0;
-    err   = split_file(infh, filename, nchunks, &count);
+    err = split_file(infh, filename, nchunks, &count);
     if (err) {
         fprintf(stderr, "ERROR: Failed to split file %s", filename);
         fprintf(stderr, "\n");

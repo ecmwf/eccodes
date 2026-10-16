@@ -18,7 +18,7 @@ void DataShSimplePacking::init(const long v, grib_arguments* args)
     Gen::init(v, args);
 
     coded_values_ = args->get_name(get_enclosing_handle(), 0);
-    real_part_    = args->get_name(get_enclosing_handle(), 1);
+    real_part_ = args->get_name(get_enclosing_handle(), 1);
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 
     length_ = 0;
@@ -34,7 +34,7 @@ int DataShSimplePacking::pack_double(const double* val, size_t* len)
     int err = GRIB_SUCCESS;
 
     size_t coded_n_vals = *len - 1;
-    size_t n_vals       = *len;
+    size_t n_vals = *len;
 
     dirty_ = 1;
 

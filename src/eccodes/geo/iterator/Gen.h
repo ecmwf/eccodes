@@ -12,7 +12,8 @@
 
 #include "Iterator.h"
 
-namespace eccodes::geo_iterator {
+namespace eccodes::geo_iterator
+{
 
 class Gen : public Iterator
 {
@@ -34,7 +35,7 @@ protected:
     double* lons_ = nullptr;
 
 private:
-    //int get(double*, double*, double*);
+    // int get(double*, double*, double*);
 };
 
 }  // namespace eccodes::geo_iterator

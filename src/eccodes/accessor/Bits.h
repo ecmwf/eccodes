@@ -19,8 +19,13 @@ class Bits : public Gen
 {
 public:
     Bits() :
-        Gen() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        Gen() {}
+    const AccessorType& accessor_type() const override
+    {
+        {
+            return accessor_type_;
+        }
+    }
     long get_native_type() override;
     int pack_double(const double* val, size_t* len) override;
     int pack_long(const long* val, size_t* len) override;
@@ -40,7 +45,7 @@ private:
     double scale_ = 0.;
 
 public:
-    static constexpr AccessorType accessor_type_{"bits"};
+    static constexpr AccessorType accessor_type_{ "bits" };
 };
 
 }  // namespace eccodes::accessor

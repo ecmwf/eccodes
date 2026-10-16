@@ -16,14 +16,14 @@ namespace eccodes::accessor
 void Bit::init(const long len, grib_arguments* arg)
 {
     Long::init(len, arg);
-    length_    = 0;
-    owner_     = arg->get_name(get_enclosing_handle(), 0);
+    length_ = 0;
+    owner_ = arg->get_name(get_enclosing_handle(), 0);
     bit_index_ = arg->get_long(get_enclosing_handle(), 1);
 }
 
 int Bit::unpack_long(long* val, size_t* len)
 {
-    int ret   = 0;
+    int ret = 0;
     long data = 0;
 
     if (*len < 1) {

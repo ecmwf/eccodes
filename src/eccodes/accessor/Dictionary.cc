@@ -19,10 +19,10 @@ void Dictionary::init(const long len, grib_arguments* params)
     int n = 0;
 
     dictionary_ = params->get_string(get_enclosing_handle(), n++);
-    key_        = params->get_name(get_enclosing_handle(), n++);
-    column_     = params->get_long(get_enclosing_handle(), n++);
-    masterDir_  = params->get_name(get_enclosing_handle(), n++);
-    localDir_   = params->get_name(get_enclosing_handle(), n++);
+    key_ = params->get_name(get_enclosing_handle(), n++);
+    column_ = params->get_long(get_enclosing_handle(), n++);
+    masterDir_ = params->get_name(get_enclosing_handle(), n++);
+    localDir_ = params->get_name(get_enclosing_handle(), n++);
 
     length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
@@ -30,20 +30,20 @@ void Dictionary::init(const long len, grib_arguments* params)
 
 grib_trie* Dictionary::load_dictionary(int* err)
 {
-    char* filename  = NULL;
-    char line[1024] = {0,};
-    char key[1024] = {0,};
-    char masterDir[1024] = {0,};
-    char localDir[1024] = {0,};
-    char dictName[1024] = {0,};
-    const char* localFilename   = 0;
-    char* list            = 0;
-    size_t len            = 1024;
+    char* filename = NULL;
+    char line[1024] = { 0 };
+    char key[1024] = { 0 };
+    char masterDir[1024] = { 0 };
+    char localDir[1024] = { 0 };
+    char dictName[1024] = { 0 };
+    const char* localFilename = 0;
+    char* list = 0;
+    size_t len = 1024;
     grib_trie* dictionary = NULL;
-    FILE* f               = NULL;
-    int i                 = 0;
-    grib_handle* h        = get_enclosing_handle();
-    grib_context* c       = context_;
+    FILE* f = NULL;
+    int i = 0;
+    grib_handle* h = get_enclosing_handle();
+    grib_context* c = context_;
 
     *err = GRIB_SUCCESS;
 
@@ -55,8 +55,8 @@ grib_trie* Dictionary::load_dictionary(int* err)
         grib_get_string(h, localDir_, localDir, &len);
 
     if (*masterDir != 0) {
-        char name[2048] = {0,};
-        char recomposed[2048] = {0,};
+        char name[2048] = { 0 };
+        char recomposed[2048] = { 0 };
         snprintf(name, sizeof(name), "%s/%s", masterDir, dictionary_);
         grib_recompose_name(h, NULL, name, recomposed, 0);
         filename = grib_context_full_defs_path(c, recomposed);
@@ -66,8 +66,8 @@ grib_trie* Dictionary::load_dictionary(int* err)
     }
 
     if (*localDir != 0) {
-        char localName[2048] = {0,};
-        char localRecomposed[1024] = {0,};
+        char localName[2048] = { 0 };
+        char localRecomposed[1024] = { 0 };
         snprintf(localName, sizeof(localName), "%s/%s", localDir, dictionary_);
         grib_recompose_name(h, NULL, localName, localRecomposed, 0);
         localFilename = grib_context_full_defs_path(c, localRecomposed);
@@ -109,7 +109,7 @@ grib_trie* Dictionary::load_dictionary(int* err)
             i++;
         }
         key[i] = 0;
-        list   = (char*)grib_context_malloc_clear(c, strlen(line) + 1);
+        list = (char*)grib_context_malloc_clear(c, strlen(line) + 1);
         memcpy(list, line, strlen(line));
         grib_trie_insert(dictionary, key, list);
     }
@@ -125,19 +125,19 @@ grib_trie* Dictionary::load_dictionary(int* err)
         //     return NULL;
         // }
 
-        //while (fgets(line, sizeof(line) - 1, f)) {
-        //    i = 0;
-        //    while (line[i] != '|' && line[i] != 0) {
-        //        key[i] = line[i];
-        //        i++;
-        //    }
-        //    key[i] = 0;
-        //    list   = (char*)grib_context_malloc_clear(c, strlen(line) + 1);
-        //    memcpy(list, line, strlen(line));
-        //    grib_trie_insert(dictionary, key, list);
-        //}
+        // while (fgets(line, sizeof(line) - 1, f)) {
+        //     i = 0;
+        //     while (line[i] != '|' && line[i] != 0) {
+        //         key[i] = line[i];
+        //         i++;
+        //     }
+        //     key[i] = 0;
+        //     list   = (char*)grib_context_malloc_clear(c, strlen(line) + 1);
+        //     memcpy(list, line, strlen(line));
+        //     grib_trie_insert(dictionary, key, list);
+        // }
 
-        //fclose(f);
+        // fclose(f);
     }
     grib_trie_insert(c->lists, filename, dictionary);
     return dictionary;
@@ -160,14 +160,14 @@ void Dictionary::dump(eccodes::Dumper* dumper)
 
 int Dictionary::unpack_string(char* buffer, size_t* len)
 {
-    int err        = GRIB_SUCCESS;
-    char key[1024] = {0,};
-    size_t size  = 1024;
-    char* list   = NULL;
-    char* start  = NULL;
-    char* end    = NULL;
+    int err = GRIB_SUCCESS;
+    char key[1024] = { 0 };
+    size_t size = 1024;
+    char* list = NULL;
+    char* start = NULL;
+    char* end = NULL;
     size_t rsize = 0;
-    int i        = 0;
+    int i = 0;
 
     grib_trie* dictionary = load_dictionary(&err);
     if (err)
@@ -230,8 +230,8 @@ long Dictionary::get_native_type()
 
 int Dictionary::unpack_long(long* val, size_t* len)
 {
-    int err           = 0;
-    char buffer[1024] = {0,};
+    int err = 0;
+    char buffer[1024] = { 0 };
     size_t size = 1024;
 
     err = unpack_string(buffer, &size);
@@ -246,8 +246,8 @@ int Dictionary::unpack_long(long* val, size_t* len)
 
 int Dictionary::unpack_double(double* val, size_t* len)
 {
-    int err           = 0;
-    char buffer[1024] = {0,};
+    int err = 0;
+    char buffer[1024] = { 0 };
     size_t size = 1024;
 
     err = unpack_string(buffer, &size);

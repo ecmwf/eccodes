@@ -19,8 +19,13 @@ class GtsHeader : public Ascii
 {
 public:
     GtsHeader() :
-        Ascii() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        Ascii() {}
+    const AccessorType& accessor_type() const override
+    {
+        {
+            return accessor_type_;
+        }
+    }
     int unpack_string(char*, size_t* len) override;
     size_t string_length() override;
     int value_count(long*) override;
@@ -31,7 +36,7 @@ private:
     int gts_length_ = 0;
 
 public:
-    static constexpr AccessorType accessor_type_{"gts_header"};
+    static constexpr AccessorType accessor_type_{ "gts_header" };
 };
 
 }  // namespace eccodes::accessor

@@ -34,7 +34,7 @@ int Long::unpack_string(char* v, size_t* len)
     size_t l = 1;
     char repres[1024];
     char format[32] = "%ld";
-    grib_handle* h  = get_enclosing_handle();
+    grib_handle* h = get_enclosing_handle();
 
     unpack_long(&val, &l);
     /* TODO: We should catch all errors but in this case the test ERA_Gen.sh will fail
@@ -79,12 +79,12 @@ int Long::pack_missing()
 
 int Long::unpack_double(double* val, size_t* len)
 {
-    size_t rlen     = 0;
-    long count      = 0;
+    size_t rlen = 0;
+    long count = 0;
     unsigned long i = 0;
-    long* values    = NULL;
-    long oneval     = 0;
-    int ret         = GRIB_SUCCESS;
+    long* values = NULL;
+    long oneval = 0;
+    int ret = GRIB_SUCCESS;
 
     ret = value_count(&count);
     if (ret)
@@ -133,7 +133,7 @@ int Long::compare(grib_accessor* b)
 
     size_t alen = 0;
     size_t blen = 0;
-    int err     = 0;
+    int err = 0;
 
     err = value_count(&count);
     if (err)

@@ -51,7 +51,7 @@ static codes_handle* new_sample()
 static codes_handle* encode_and_reread(codes_handle* h)
 {
     const void* buffer = NULL;
-    size_t size        = 0;
+    size_t size = 0;
     CODES_CHECK(codes_get_message(h, &buffer, &size), 0);
     codes_handle* reread = codes_handle_new_from_message_copy(0, buffer, size);
     assert(reread);
@@ -76,8 +76,8 @@ static int same(double a, double b)
 static void check_spherical(long shape, double expected)
 {
     codes_handle* sample = new_sample();
-    double radius        = 0;
-    int err              = 0;
+    double radius = 0;
+    int err = 0;
 
     CODES_CHECK(codes_set_long(sample, "shapeOfTheEarth", shape), 0);
     codes_handle* h = encode_and_reread(sample);
@@ -110,8 +110,8 @@ static void check_spherical(long shape, double expected)
 static void check_oblate(long shape, double major, double minor)
 {
     codes_handle* sample = new_sample();
-    double value         = 0;
-    int err              = 0;
+    double value = 0;
+    int err = 0;
 
     CODES_CHECK(codes_set_long(sample, "shapeOfTheEarth", shape), 0);
     codes_handle* h = encode_and_reread(sample);
@@ -152,8 +152,8 @@ static void check_oblate(long shape, double major, double minor)
 static void check_radius_follows_shape()
 {
     codes_handle* h = new_sample();
-    long shape1     = 0;
-    double radius1  = 0;
+    long shape1 = 0;
+    double radius1 = 0;
 
     CODES_CHECK(codes_get_long(h, "shapeOfTheEarth", &shape1), 0);
     CODES_CHECK(get_double(h, "radius", &radius1), 0);
@@ -185,7 +185,7 @@ static void check_radius_follows_shape()
 static void check_producer_radius()
 {
     codes_handle* h = new_sample();
-    double radius   = 0;
+    double radius = 0;
 
     CODES_CHECK(codes_set_long(h, "shapeOfTheEarth", 1), 0);
     CODES_CHECK(codes_set_long(h, "scaleFactorOfRadiusOfSphericalEarth", 0), 0);
@@ -216,7 +216,7 @@ static void check_axis_units()
 
     for (size_t i = 0; i < sizeof(cases) / sizeof(cases[0]); i++) {
         codes_handle* h = new_sample();
-        double value    = 0;
+        double value = 0;
 
         CODES_CHECK(codes_set_long(h, "shapeOfTheEarth", cases[i].shape), 0);
         CODES_CHECK(codes_set_long(h, "scaleFactorOfEarthMajorAxis", 3), 0);
@@ -249,9 +249,9 @@ int main(int argc, char* argv[])
     check_producer_radius();
 
     /* Oblate spheroid earth models */
-    check_oblate(2, 6378160.0, 6356775.0);  /* IAU 1965  */
-    check_oblate(4, 6378137.0, 6356752.314); /* IAG-GRS80 */
-    check_oblate(5, 6378137.0, 6356752.314); /* WGS84     */
+    check_oblate(2, 6378160.0, 6356775.0);     /* IAU 1965  */
+    check_oblate(4, 6378137.0, 6356752.314);   /* IAG-GRS80 */
+    check_oblate(5, 6378137.0, 6356752.314);   /* WGS84     */
     check_oblate(9, 6377563.396, 6356256.909); /* Airy 1830 */
 
     check_axis_units();

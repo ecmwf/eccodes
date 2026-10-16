@@ -16,17 +16,17 @@ namespace eccodes::accessor
 void DataApplyBoustrophedonicBitmap::init(const long v, grib_arguments* args)
 {
     Gen::init(v, args);
-    int n           = 0;
+    int n = 0;
     grib_handle* gh = get_enclosing_handle();
 
-    coded_values_        = args->get_name(gh, n++);
-    bitmap_              = args->get_name(gh, n++);
-    missing_value_       = args->get_name(gh, n++);
+    coded_values_ = args->get_name(gh, n++);
+    bitmap_ = args->get_name(gh, n++);
+    missing_value_ = args->get_name(gh, n++);
     binary_scale_factor_ = args->get_name(gh, n++);
 
-    numberOfRows_    = args->get_name(gh, n++);
+    numberOfRows_ = args->get_name(gh, n++);
     numberOfColumns_ = args->get_name(gh, n++);
-    numberOfPoints_  = args->get_name(gh, n++);
+    numberOfPoints_ = args->get_name(gh, n++);
 
     length_ = 0;
 }
@@ -39,13 +39,13 @@ void DataApplyBoustrophedonicBitmap::dump(eccodes::Dumper* dumper)
 int DataApplyBoustrophedonicBitmap::value_count(long* count)
 {
     grib_handle* gh = get_enclosing_handle();
-    size_t len      = 0;
-    int ret         = 0;
+    size_t len = 0;
+    int ret = 0;
 
     /* This accessor is for data with a bitmap after all */
     ECCODES_ASSERT(grib_find_accessor(gh, bitmap_));
 
-    ret    = grib_get_size(gh, bitmap_, &len);
+    ret = grib_get_size(gh, bitmap_, &len);
     *count = len;
     return ret;
 }
@@ -55,14 +55,14 @@ int DataApplyBoustrophedonicBitmap::unpack_double(double* val, size_t* len)
     grib_handle* gh = get_enclosing_handle();
 
     size_t i = 0, j = 0, n_vals = 0, irow = 0;
-    long nn              = 0;
-    int err              = 0;
-    size_t coded_n_vals  = 0;
-    double* coded_vals   = NULL;
+    long nn = 0;
+    int err = 0;
+    size_t coded_n_vals = 0;
+    double* coded_vals = NULL;
     double missing_value = 0;
     long numberOfPoints, numberOfRows, numberOfColumns;
 
-    err    = value_count(&nn);
+    err = value_count(&nn);
     n_vals = nn;
     if (err)
         return err;
@@ -122,15 +122,15 @@ int DataApplyBoustrophedonicBitmap::unpack_double(double* val, size_t* len)
     for (irow = 0; irow < numberOfRows; ++irow) {
         if (irow % 2) {
             /* Reverse bitmap entries */
-            size_t k     = 0;
+            size_t k = 0;
             size_t start = irow * numberOfColumns;
-            size_t end   = start + numberOfColumns - 1;
-            size_t mid   = (numberOfColumns - 1) / 2;
+            size_t end = start + numberOfColumns - 1;
+            size_t mid = (numberOfColumns - 1) / 2;
             for (k = 0; k < mid; ++k) {
                 /* Swap value at either end */
-                double temp    = val[start + k];
+                double temp = val[start + k];
                 val[start + k] = val[end - k];
-                val[end - k]   = temp;
+                val[end - k] = temp;
             }
         }
     }
@@ -203,14 +203,14 @@ int DataApplyBoustrophedonicBitmap::unpack_double_element_set(const size_t* inde
 {
     grib_handle* gh = get_enclosing_handle();
     int err = 0, all_missing = 1;
-    size_t cidx          = 0;    /* index into the coded_values array */
-    size_t* cidx_array   = NULL; /* array of indexes into the coded_values */
-    double* cval_array   = NULL; /* array of values of the coded_values */
+    size_t cidx = 0;           /* index into the coded_values array */
+    size_t* cidx_array = NULL; /* array of indexes into the coded_values */
+    double* cval_array = NULL; /* array of values of the coded_values */
     double missing_value = 0;
     size_t n_vals = 0, i = 0, j = 0, idx = 0, count_1s = 0, ci = 0;
     long nn = 0;
 
-    err    = value_count(&nn);
+    err = value_count(&nn);
     n_vals = nn;
     if (err) return err;
 
@@ -251,7 +251,7 @@ int DataApplyBoustrophedonicBitmap::unpack_double_element_set(const size_t* inde
     ci = 0;
     for (i = 0; i < len; i++) {
         if (val_array[i] == 1) {
-            idx  = index_array[i];
+            idx = index_array[i];
             cidx = 0;
             for (j = 0; j < idx; j++) {
                 cidx += bvals[j];
@@ -280,15 +280,15 @@ int DataApplyBoustrophedonicBitmap::unpack_double_element_set(const size_t* inde
 
 int DataApplyBoustrophedonicBitmap::pack_double(const double* val, size_t* len)
 {
-    grib_handle* gh    = get_enclosing_handle();
-    int err            = 0;
-    size_t bmaplen     = *len;
-    size_t irow        = 0;
-    long coded_n_vals  = 0;
+    grib_handle* gh = get_enclosing_handle();
+    int err = 0;
+    size_t bmaplen = *len;
+    size_t irow = 0;
+    long coded_n_vals = 0;
     double* coded_vals = NULL;
-    double* values     = 0;
-    long i             = 0;
-    long j             = 0;
+    double* values = 0;
+    long i = 0;
+    long j = 0;
     long numberOfPoints, numberOfRows, numberOfColumns;
     double missing_value = 0;
 
@@ -328,14 +328,14 @@ int DataApplyBoustrophedonicBitmap::pack_double(const double* val, size_t* len)
     /* Boustrophedonic ordering must be applied to the bitmap (See GRIB-472) */
     for (irow = 0; irow < numberOfRows; ++irow) {
         if (irow % 2) {
-            size_t k     = 0;
+            size_t k = 0;
             size_t start = irow * numberOfColumns;
-            size_t end   = start + numberOfColumns - 1;
-            size_t mid   = (numberOfColumns - 1) / 2;
+            size_t end = start + numberOfColumns - 1;
+            size_t mid = (numberOfColumns - 1) / 2;
             for (k = 0; k < mid; ++k) {
-                double temp       = values[start + k];
+                double temp = values[start + k];
                 values[start + k] = values[end - k];
-                values[end - k]   = temp;
+                values[end - k] = temp;
             }
         }
     }

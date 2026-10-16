@@ -51,7 +51,8 @@ static void realloc_and_fill(double** arr, size_t newsize, double fillValue)
     size_t i;
     free(*arr);
     *arr = (double*)malloc(newsize * sizeof(double));
-    for(i=0; i<newsize; ++i) *arr[i] = fillValue;
+    for (i = 0; i < newsize; ++i)
+        *arr[i] = fillValue;
 }
 
 int main(int argc, char* argv[])
@@ -65,20 +66,20 @@ int main(int argc, char* argv[])
     double *dlatVal = NULL, *dlonVal = NULL;
     double *tVal = NULL, *tdVal = NULL, *wspVal = NULL, *wdirVal = NULL;
     double htg, htp, htec = 0, balloonwt;
-    int err         = 0;
+    int err = 0;
     int status_rsno = 0, status_ht = 0, status_airt = 0, status_dewt = 0, status_p = 0;
-    int count     = 0;
-    int llskip    = 0;
+    int count = 0;
+    int llskip = 0;
     int llstdonly = 1; /* Set True to list standard levels only */
     size_t i = 0, size = 0, sizews = 0, sizelats = 0;
     long blockNumber, stationNumber;
     long year, month, day, hour, minute, second, ymd, hms, sondeType;
     long *timeVal = NULL, *vssVal = NULL;
     const char* infile = "../../data/bufr/PraticaTemp.bufr";
-    char statid[128]   = {0,};
-    char dropid[128]   = {0,};
-    char rsnumber[16] = {0,};
-    char rssoftware[16] = {0,};
+    char statid[128] = { 0 };
+    char dropid[128] = { 0 };
+    char rsnumber[16] = { 0 };
+    char rssoftware[16] = { 0 };
 
     in = fopen(infile, "rb");
     if (!in) {
@@ -103,10 +104,10 @@ int main(int argc, char* argv[])
         llskip = 0;
 
         size = 1024;
-        err  = codes_get_string(h, "aircraftRegistrationNumberOrOtherIdentification", dropid, &size);
+        err = codes_get_string(h, "aircraftRegistrationNumberOrOtherIdentification", dropid, &size);
         if (err) strcpy(dropid, "UNKNOWN");
         size = 1024;
-        err  = codes_get_string(h, "shipOrMobileLandStationIdentifier", statid, &size);
+        err = codes_get_string(h, "shipOrMobileLandStationIdentifier", statid, &size);
         if (err) strcpy(statid, dropid);
 
         CODES_CHECK(codes_get_long(h, "blockNumber", &blockNumber), 0);
@@ -137,16 +138,16 @@ int main(int argc, char* argv[])
         ymd = year * 10000 + month * 100 + day;
         hms = hour * 10000 + minute * 100 + second;
 
-        size        = 16;
+        size = 16;
         status_rsno = codes_get_string(h, "radiosondeSerialNumber", rsnumber, &size);
-        size        = 16;
+        size = 16;
         codes_get_string(h, "softwareVersionNumber", rssoftware, &size);
 
         err = codes_get_double(h, "weightOfBalloon", &balloonwt);
         if (err) balloonwt = 0;
 
         /* Ascent (skip reports without dtime array for now) */
-        err     = get_long_array(h, "timePeriod", &timeVal, &size);
+        err = get_long_array(h, "timePeriod", &timeVal, &size);
         if (err) {
             printf("Ob: %d %s %ld %ld %g %g %g %g %ld\n",
                    count, statid, ymd, hms, lat[0], lon[0], htg, htp, sondeType);

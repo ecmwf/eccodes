@@ -18,11 +18,11 @@ int grib_decode_long_array(const unsigned char* p, long* bitp, long nbits, size_
     long countOfLeftmostBits = 0, leftmostBits = 0;
     long startBit[size], startByte, off;
     long remainingBits = nbits;
-    long bitpv         = *bitp;
-    int inited         = 0;
+    long bitpv = *bitp;
+    int inited = 0;
     unsigned long uval = 0;
-    long i             = 0, n;
-    unsigned long* pp  = (unsigned long*)p;
+    long i = 0, n;
+    unsigned long* pp = (unsigned long*)p;
     unsigned long* x;
     size_t sizel = (size * nbits) / max_nbits;
     long vaux[size], vaux2[size], vaux3[size];
@@ -55,8 +55,8 @@ b:nbits
             else
                 vaux[i] = ~(GRIB_MASK << nbits);
             startBit[i] = i * nbits;
-            vaux3[i]    = max_nbits - (startBit[i] % max_nbits + nbits);
-            vaux2[i]    = x[startBit[i] / max_nbits];
+            vaux3[i] = max_nbits - (startBit[i] % max_nbits + nbits);
+            vaux2[i] = x[startBit[i] / max_nbits];
         }
         imax = 0;
         for (i = 0; i < size; i++) {
@@ -84,7 +84,7 @@ b:nbits
             off = startBit[i] / max_nbits;
             startBit[i] %= max_nbits;
 
-            remainingBits       = nbits;
+            remainingBits = nbits;
             countOfLeftmostBits = startBit[i] + nbits;
             if (countOfLeftmostBits > max_nbits) {
                 countOfLeftmostBits = max_nbits - startBit[i];
@@ -115,13 +115,13 @@ int grib_decode_double_array(const unsigned char* p, long* bitp, long nbits, dou
     long countOfLeftmostBits = 0, leftmostBits = 0;
     long startBit[size], startByte, off;
     long remainingBits = nbits;
-    long bitpv         = *bitp;
-    int inited         = 0;
+    long bitpv = *bitp;
+    int inited = 0;
     unsigned long uval = 0;
-    double fact        = s * d;
-    double bias        = reference_value * d;
-    long i             = 0, n;
-    unsigned long* pp  = (unsigned long*)p;
+    double fact = s * d;
+    double bias = reference_value * d;
+    long i = 0, n;
+    unsigned long* pp = (unsigned long*)p;
     unsigned long* x;
     size_t sizel = (size * nbits) / max_nbits;
     long vaux[size], vaux2[size], vaux3[size];
@@ -154,8 +154,8 @@ b:nbits
             else
                 vaux[i] = ~(GRIB_MASK << nbits);
             startBit[i] = i * nbits;
-            vaux3[i]    = max_nbits - (startBit[i] % max_nbits + nbits);
-            vaux2[i]    = x[startBit[i] / max_nbits];
+            vaux3[i] = max_nbits - (startBit[i] % max_nbits + nbits);
+            vaux2[i] = x[startBit[i] / max_nbits];
         }
         imax = 0;
         for (i = 0; i < size; i++) {
@@ -184,7 +184,7 @@ b:nbits
             off = startBit[i] / max_nbits;
             startBit[i] %= max_nbits;
 
-            remainingBits       = nbits;
+            remainingBits = nbits;
             countOfLeftmostBits = startBit[i] + nbits;
             if (countOfLeftmostBits > max_nbits) {
                 countOfLeftmostBits = max_nbits - startBit[i];
@@ -211,13 +211,13 @@ b:nbits
 
 int grib_decode_double_array_complex(const unsigned char* p, long* bitp, long nbits, double reference_value, double s, double* restrict d, size_t size, double* restrict val)
 {
-    long i                   = 0;
+    long i = 0;
     long countOfLeftmostBits = 0, leftmostBits = 0;
     long startBit, off;
-    long remainingBits  = nbits;
-    unsigned long* pp   = (unsigned long*)p;
+    long remainingBits = nbits;
+    unsigned long* pp = (unsigned long*)p;
     unsigned long bitpv = *bitp;
-    unsigned long uval  = 0;
+    unsigned long uval = 0;
     unsigned long* x;
     size_t sizel = (size * nbits) / max_nbits;
     if (size * nbits % max_nbits)
@@ -230,7 +230,7 @@ int grib_decode_double_array_complex(const unsigned char* p, long* bitp, long nb
     if ((max_nbits % nbits == 0) && (bitpv % nbits == 0)) {
         for (i = 0; i < size; i++) {
             startBit = i * nbits;
-            val[i]   = ((((VALUE(x[startBit / max_nbits], startBit % max_nbits, nbits)) * s) + reference_value) * d[i / 2]);
+            val[i] = ((((VALUE(x[startBit / max_nbits], startBit % max_nbits, nbits)) * s) + reference_value) * d[i / 2]);
         }
     }
     else {
@@ -240,7 +240,7 @@ int grib_decode_double_array_complex(const unsigned char* p, long* bitp, long nb
             off = startBit / max_nbits;
             startBit %= max_nbits;
 
-            remainingBits       = nbits;
+            remainingBits = nbits;
             countOfLeftmostBits = startBit + nbits;
             if (countOfLeftmostBits > max_nbits) {
                 countOfLeftmostBits = max_nbits - startBit;
@@ -271,8 +271,8 @@ int grib_encode_double_array(size_t size, const double* val, long nbits, double 
     long off;
     size_t nbytes;
     unsigned long uval = 0;
-    size_t i           = 0;
-    size_t sizel       = (size * nbits) / max_nbits;
+    size_t i = 0;
+    size_t sizel = (size * nbits) / max_nbits;
     if (size * nbits % max_nbits)
         sizel++;
 
@@ -282,26 +282,26 @@ int grib_encode_double_array(size_t size, const double* val, long nbits, double 
     if ((max_nbits % nbits == 0)) {
         for (i = 0; i < size; i++) {
             startBit = i * nbits;
-            off      = startBit / max_nbits;
+            off = startBit / max_nbits;
             startBit %= max_nbits;
 
-            uval             = (unsigned long)(((((val[i]) * d) - reference_value) * divisor) + 0.5);
-            rightmostBits    = VALUE(uval, max_nbits - nbits, nbits);
+            uval = (unsigned long)(((((val[i]) * d) - reference_value) * divisor) + 0.5);
+            rightmostBits = VALUE(uval, max_nbits - nbits, nbits);
             destination[off] = (destination[off] & ~MASKVALUE(startBit, nbits)) + (rightmostBits << max_nbits - (nbits + startBit));
         }
     }
     else {
         for (i = 0; i < size; i++) {
             startBit = i * nbits;
-            off      = startBit / max_nbits;
+            off = startBit / max_nbits;
             startBit %= max_nbits;
             remainingBits = nbits;
 
             countOfLeftmostBits = startBit + remainingBits;
-            uval                = (unsigned long)((((val[i] * d) - reference_value) * divisor) + 0.5);
+            uval = (unsigned long)((((val[i] * d) - reference_value) * divisor) + 0.5);
             if (countOfLeftmostBits > max_nbits) {
                 countOfLeftmostBits = max_nbits - startBit;
-                startBit            = max_nbits - remainingBits;
+                startBit = max_nbits - remainingBits;
                 remainingBits -= countOfLeftmostBits;
                 destination[off] = (((destination[off]) >> countOfLeftmostBits)
                                     << countOfLeftmostBits) +
@@ -310,7 +310,7 @@ int grib_encode_double_array(size_t size, const double* val, long nbits, double 
                 off++;
             }
 
-            rightmostBits    = VALUE(uval, max_nbits - remainingBits, remainingBits);
+            rightmostBits = VALUE(uval, max_nbits - remainingBits, remainingBits);
             destination[off] = ((destination[off]) & ~MASKVALUE(startBit, remainingBits)) + (rightmostBits << max_nbits - (remainingBits + startBit));
         }
     }
@@ -331,10 +331,10 @@ int grib_encode_double_array_complex(size_t size, double* restrict val, long nbi
                                      double* restrict scal, double d, double divisor, unsigned char* p, long* bitp)
 {
     unsigned long* restrict destination;
-    double* v                = val;
+    double* v = val;
     long countOfLeftmostBits = 0, startBit = 0, remainingBits = 0, rightmostBits = 0, off = 0;
     unsigned long uval = 0;
-    size_t i           = 0;
+    size_t i = 0;
     size_t nbytes;
     size_t sizel = (size * nbits) / max_nbits;
     if (size * nbits % max_nbits)
@@ -346,26 +346,26 @@ int grib_encode_double_array_complex(size_t size, double* restrict val, long nbi
     if ((max_nbits % nbits == 0)) {
         for (i = 0; i < size; i++) {
             startBit = i * nbits;
-            off      = startBit / max_nbits;
+            off = startBit / max_nbits;
             startBit %= max_nbits;
 
-            uval             = (unsigned long)(((((val[i]) * d * scal[i / 2]) - reference_value) * divisor) + 0.5);
-            rightmostBits    = VALUE(uval, max_nbits - nbits, nbits);
+            uval = (unsigned long)(((((val[i]) * d * scal[i / 2]) - reference_value) * divisor) + 0.5);
+            rightmostBits = VALUE(uval, max_nbits - nbits, nbits);
             destination[off] = (destination[off] & ~MASKVALUE(startBit, nbits)) + (rightmostBits << max_nbits - (nbits + startBit));
         }
     }
     else {
         for (i = 0; i < size; i++) {
             startBit = i * nbits;
-            off      = startBit / max_nbits;
+            off = startBit / max_nbits;
             startBit %= max_nbits;
             remainingBits = nbits;
 
             countOfLeftmostBits = startBit + remainingBits;
-            uval                = (unsigned long)((((val[i] * d * scal[i / 2]) - reference_value) * divisor) + 0.5);
+            uval = (unsigned long)((((val[i] * d * scal[i / 2]) - reference_value) * divisor) + 0.5);
             if (countOfLeftmostBits > max_nbits) {
                 countOfLeftmostBits = max_nbits - startBit;
-                startBit            = max_nbits - remainingBits;
+                startBit = max_nbits - remainingBits;
                 remainingBits -= countOfLeftmostBits;
                 destination[off] = (((destination[off]) >> countOfLeftmostBits)
                                     << countOfLeftmostBits) +
@@ -374,7 +374,7 @@ int grib_encode_double_array_complex(size_t size, double* restrict val, long nbi
                 off++;
             }
 
-            rightmostBits    = VALUE(uval, max_nbits - remainingBits, remainingBits);
+            rightmostBits = VALUE(uval, max_nbits - remainingBits, remainingBits);
             destination[off] = ((destination[off]) & ~MASKVALUE(startBit, remainingBits)) + (rightmostBits << max_nbits - (remainingBits + startBit));
         }
     }

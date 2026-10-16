@@ -19,8 +19,13 @@ class DataApplyBoustrophedonic : public Gen
 {
 public:
     DataApplyBoustrophedonic() :
-        Gen() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        Gen() {}
+    const AccessorType& accessor_type() const override
+    {
+        {
+            return accessor_type_;
+        }
+    }
     long get_native_type() override;
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
@@ -38,10 +43,11 @@ private:
     const char* numberOfPoints_ = nullptr;
     const char* pl_ = nullptr;
 
-    template <typename T> int unpack(T* val, size_t* len);
+    template <typename T>
+    int unpack(T* val, size_t* len);
 
 public:
-    static constexpr AccessorType accessor_type_{"data_apply_boustrophedonic"};
+    static constexpr AccessorType accessor_type_{ "data_apply_boustrophedonic" };
 };
 
 }  // namespace eccodes::accessor

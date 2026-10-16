@@ -22,10 +22,10 @@ static void usage(const char* app)
 
 int main(int argc, char* argv[])
 {
-    FILE* in        = NULL;
+    FILE* in = NULL;
     codes_handle* h = NULL;
-    char* kind      = NULL;
-    size_t len      = 0;
+    char* kind = NULL;
+    size_t len = 0;
     int err = 0, cnt = 0;
     char* infile = NULL;
 
@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
         return 1;
     }
     infile = argv[1];
-    in     = fopen(infile, "rb");
+    in = fopen(infile, "rb");
     if (!in) {
         fprintf(stderr, "Error: unable to open file %s\n", infile);
         return 1;

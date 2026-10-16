@@ -13,7 +13,8 @@
 eccodes::geo_iterator::Regular _grib_iterator_regular{};
 eccodes::geo_iterator::Iterator* grib_iterator_regular = &_grib_iterator_regular;
 
-namespace eccodes::geo_iterator {
+namespace eccodes::geo_iterator
+{
 
 #define ITER "Regular grid Geoiterator"
 
@@ -67,10 +68,10 @@ int Regular::init(grib_handle* h, grib_arguments* args)
     double idir, idir_coded, lon1, lon2;
     long loi;
 
-    const char* s_lon1      = args->get_name(h, carg_++);
-    const char* s_idir      = args->get_name(h, carg_++);
-    const char* s_Ni        = args->get_name(h, carg_++);
-    const char* s_Nj        = args->get_name(h, carg_++);
+    const char* s_lon1 = args->get_name(h, carg_++);
+    const char* s_idir = args->get_name(h, carg_++);
+    const char* s_Ni = args->get_name(h, carg_++);
+    const char* s_Nj = args->get_name(h, carg_++);
     const char* s_iScansNeg = args->get_name(h, carg_++);
 
     if ((ret = grib_get_double_internal(h, s_lon1, &lon1)))
@@ -94,7 +95,7 @@ int Regular::init(grib_handle* h, grib_arguments* args)
         return GRIB_WRONG_GRID;
     }
 
-    if ( (size_t)(Ni * Nj) != nv_ ) {
+    if ((size_t)(Ni * Nj) != nv_) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Ni*Nj!=numberOfDataPoints (%ld*%ld!=%zu)", ITER, Ni, Nj, nv_);
         return GRIB_WRONG_GRID;
     }

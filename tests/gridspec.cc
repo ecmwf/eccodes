@@ -75,7 +75,7 @@ bool get_string(const grib_handle* h, const char* key, std::string& value)
 
     char buffer[10240];
     size_t length = sizeof(buffer);
-    int err       = codes_get_string(h, key, buffer, &length);
+    int err = codes_get_string(h, key, buffer, &length);
 
     if (err == CODES_NOT_FOUND) {
         return false;
@@ -449,7 +449,7 @@ CASE("gridType=reduced_ll")
             get_string(h, "gridType", type);
             EXPECT(type == "reduced_ll");
 
-            long Nj                 = 3;
+            long Nj = 3;
             long numberOfDataPoints = 10;
             CHECK(codes_get_long(h, "Nj", &Nj));
             CHECK(codes_get_long(h, "numberOfDataPoints", &numberOfDataPoints));
@@ -604,8 +604,8 @@ CASE("gridType=regular_ll")
             get_string(h, "gridType", type);
             EXPECT(type == "regular_ll");
 
-            long Ni                 = 0;
-            long Nj                 = 0;
+            long Ni = 0;
+            long Nj = 0;
             long numberOfDataPoints = 0;
             CHECK(codes_get_long(h, "Ni", &Ni));
             CHECK(codes_get_long(h, "Nj", &Nj));
@@ -654,7 +654,7 @@ CASE("gridType=regular_ll")
             EXPECT(test.shape == grid->shape());
             EXPECT(test.spec == grid->spec_str());
 
-            size_t len_user   = test.user.length();
+            size_t len_user = test.user.length();
             size_t len_buffer = 500;
             std::string buffer(len_buffer, '\0');
 
@@ -970,12 +970,12 @@ CASE("gridType=transverse_mercator")
 int main(int argc, char* argv[])
 {
     const auto* ev_name = "ECCODES_ECKIT_GEO";
-    const auto* ev_val  = getenv(ev_name);
+    const auto* ev_val = getenv(ev_name);
     if (ev_val != nullptr && atol(ev_val) != 0) {
         // Usage: gridspec [<test-data-directory>]
         if (argc > 1) {
             DATA_DIR = argv[1];
-            argc     = 1;  // consume it, the rest is for eckit's test runner
+            argc = 1;  // consume it, the rest is for eckit's test runner
         }
 
         return eckit::testing::run_tests(argc, argv);

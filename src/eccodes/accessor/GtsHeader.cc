@@ -24,8 +24,8 @@ void GtsHeader::init(const long l, grib_arguments* c)
 int GtsHeader::unpack_string(char* val, size_t* len)
 {
     grib_handle* h = get_enclosing_handle();
-    int offset     = 0;
-    size_t length  = 0;
+    int offset = 0;
+    size_t length = 0;
 
     if (h->gts_header == NULL || h->gts_header_len < 8) {
         if (*len < 8)

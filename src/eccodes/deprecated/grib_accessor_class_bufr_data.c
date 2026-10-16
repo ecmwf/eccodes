@@ -460,10 +460,10 @@ static int get_descriptors(grib_accessor* a)
 
 static void push_units_accessor(grib_section* section,grib_accessor* a,long groupNumber,long i)
 {
-    char buf[1024]={0,};
+    char buf[1024]={0};
     grib_accessor_bufr_data *self =(grib_accessor_bufr_data*)a;
     grib_accessor* gaUnits=0;
-    grib_action creatorUnits = {0, };
+    grib_action creatorUnits = {0};
     grib_context* c=a->context;
 
     if (self->units[i][0]=='C' && ( !strcmp(self->units[i],"CCITTIA5") ||
@@ -564,8 +564,8 @@ static int decode_elements(grib_accessor* a)
     int startRepetition=0;
     int depth;
     int bitmapIndex[10];
-    /*long bitmapLength[10]={0,};*/
-    long bitmapStartElement[10]={0,};
+    /*long bitmapLength[10]={0};*/
+    long bitmapStartElement[10]={0};
     grib_section* section=0;
     grib_section* sectionUp=0;
     grib_section* groupSection=0;
@@ -575,17 +575,17 @@ static int decode_elements(grib_accessor* a)
     long indexOfReferringElement;
     long indexOfGroupNumber;
     grib_accessor* gaGroup=0;
-    grib_action creatorGroup = {0, };
+    grib_action creatorGroup = {0};
     grib_iarray* groupNumberIndex=0;
-    grib_section* groupNumberSection[1000]={0,};
-    grib_accessor* significanceQualifierGroup[NUMBER_OF_QUALIFIERS_PER_CATEGORY*NUMBER_OF_QUALIFIERS_CATEGORIES]={0,};
-    int significanceQualifierDepth[NUMBER_OF_QUALIFIERS_PER_CATEGORY*NUMBER_OF_QUALIFIERS_CATEGORIES]={0,};
+    grib_section* groupNumberSection[1000]={0};
+    grib_accessor* significanceQualifierGroup[NUMBER_OF_QUALIFIERS_PER_CATEGORY*NUMBER_OF_QUALIFIERS_CATEGORIES]={0};
+    int significanceQualifierDepth[NUMBER_OF_QUALIFIERS_PER_CATEGORY*NUMBER_OF_QUALIFIERS_CATEGORIES]={0};
 
     grib_handle* h=grib_handle_of_accessor(a);
     grib_context* c=h->context;
 
     grib_accessor* ga=0;
-    grib_action creator = {0, };
+    grib_action creator = {0};
     creator.op         = (char*)"bufr_data_element";
     creator.name_space = (char*)"";
     creator.flags     = GRIB_ACCESSOR_FLAG_DUMP;
@@ -720,7 +720,7 @@ static int decode_elements(grib_accessor* a)
             jj=0;
         } else if (self->associatedBitmapNumber[i]) {
             /* bitmap application */
-            char name[1024]={0,};
+            char name[1024]={0};
 
             if (k==-1) {
                 k=bitmapIndex[self->associatedBitmapNumber[i]];

@@ -24,20 +24,20 @@ void G1EndOfIntervalMonthly::init(const long l, grib_arguments* c)
     flags_ |= GRIB_ACCESSOR_FLAG_HIDDEN;
 
     number_of_elements_ = 6;
-    v_                  = (double*)grib_context_malloc(context_, sizeof(double) * number_of_elements_);
+    v_ = (double*)grib_context_malloc(context_, sizeof(double) * number_of_elements_);
 
     length_ = 0;
-    dirty_  = 1;
+    dirty_ = 1;
 }
 
 int G1EndOfIntervalMonthly::unpack_double(double* val, size_t* len)
 {
-    int ret                = 0;
-    char verifyingMonth[7] = {0,};
+    int ret = 0;
+    char verifyingMonth[7] = { 0 };
     size_t slen = 7;
     long year = 0, month = 0, date = 0;
     const long mdays[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-    long days          = 0;
+    long days = 0;
 
     if (!dirty_)
         return GRIB_SUCCESS;
@@ -52,7 +52,7 @@ int G1EndOfIntervalMonthly::unpack_double(double* val, size_t* len)
     if (date < 0) {
         return GRIB_INVALID_ARGUMENT;
     }
-    year  = date / 100;
+    year = date / 100;
     month = date - year * 100;
     if (month == 2) {
         days = 28;
@@ -97,11 +97,11 @@ void G1EndOfIntervalMonthly::destroy(grib_context* c)
 
 int G1EndOfIntervalMonthly::compare(grib_accessor* b)
 {
-    int retval   = GRIB_SUCCESS;
+    int retval = GRIB_SUCCESS;
     double* aval = 0;
     double* bval = 0;
 
-    long count  = 0;
+    long count = 0;
     size_t alen = 0;
     size_t blen = 0;
 
@@ -122,7 +122,7 @@ int G1EndOfIntervalMonthly::compare(grib_accessor* b)
     bval = (double*)grib_context_malloc(b->context_, blen * sizeof(double));
 
     b->dirty_ = 1;
-    dirty_    = 1;
+    dirty_ = 1;
 
     err = unpack_double(aval, &alen);
     if (err) return err;

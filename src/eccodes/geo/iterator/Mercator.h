@@ -12,7 +12,8 @@
 
 #include "Gen.h"
 
-namespace eccodes::geo_iterator {
+namespace eccodes::geo_iterator
+{
 
 class Mercator : public Gen
 {

@@ -23,7 +23,7 @@ public:
 
     int create_accessor(grib_section*, grib_loader*) override;
 
-    long mflags_ = 0; // modified flags
+    long mflags_ = 0;  // modified flags
 };
 
 }  // namespace eccodes::action

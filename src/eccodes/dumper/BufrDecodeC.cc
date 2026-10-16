@@ -15,16 +15,17 @@
 eccodes::dumper::BufrDecodeC _grib_dumper_bufr_decode_c{};
 eccodes::Dumper* grib_dumper_bufr_decode_c = &_grib_dumper_bufr_decode_c;
 
-namespace eccodes::dumper {
+namespace eccodes::dumper
+{
 
 int BufrDecodeC::init()
 {
     section_offset_ = 0;
-    empty_          = 1;
-    count_          = 1;
-    isLeaf_         = 0;
-    isAttribute_    = 0;
-    keys_           = (grib_string_list*)grib_context_malloc_clear(context_, sizeof(grib_string_list));
+    empty_ = 1;
+    count_ = 1;
+    isLeaf_ = 0;
+    isAttribute_ = 0;
+    keys_ = (grib_string_list*)grib_context_malloc_clear(context_, sizeof(grib_string_list));
 
     return GRIB_SUCCESS;
 }
@@ -32,9 +33,9 @@ int BufrDecodeC::init()
 int BufrDecodeC::destroy()
 {
     grib_string_list* next = keys_;
-    grib_string_list* cur  = NULL;
+    grib_string_list* cur = NULL;
     while (next) {
-        cur  = next;
+        cur = next;
         next = next->next;
         grib_context_free(context_, cur->value);
         grib_context_free(context_, cur);
@@ -52,10 +53,10 @@ static char* dval_to_string(grib_context* c, double v)
 void BufrDecodeC::dump_values(grib_accessor* a)
 {
     double value = 0;
-    size_t size  = 0;
-    int err      = 0;
-    int r        = 0;
-    long count   = 0;
+    size_t size = 0;
+    int err = 0;
+    int r = 0;
+    long count = 0;
     char* sval;
     grib_handle* h = a->get_enclosing_handle();
 
@@ -121,10 +122,10 @@ void BufrDecodeC::dump_values(grib_accessor* a)
 
 void BufrDecodeC::dump_values_attribute(grib_accessor* a, const char* prefix)
 {
-    double value    = 0;
-    size_t size     = 0;
-    int err         = 0;
-    long count      = 0;
+    double value = 0;
+    size_t size = 0;
+    int err = 0;
+    long count = 0;
     grib_context* c = a->context_;
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
@@ -177,13 +178,13 @@ void BufrDecodeC::dump_values_attribute(grib_accessor* a, const char* prefix)
 
 void BufrDecodeC::dump_long(grib_accessor* a, const char* comment)
 {
-    long value      = 0;
-    size_t size     = 0;
-    int err         = 0;
-    int r           = 0;
-    long count      = 0;
+    long value = 0;
+    size_t size = 0;
+    int err = 0;
+    int r = 0;
+    long count = 0;
     grib_context* c = a->context_;
-    grib_handle* h  = a->get_enclosing_handle();
+    grib_handle* h = a->get_enclosing_handle();
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0)
         return;
@@ -267,10 +268,10 @@ void BufrDecodeC::dump_long(grib_accessor* a, const char* comment)
 
 void BufrDecodeC::dump_long_attribute(grib_accessor* a, const char* prefix)
 {
-    long value      = 0;
-    size_t size     = 0;
-    int err         = 0;
-    long count      = 0;
+    long value = 0;
+    size_t size = 0;
+    int err = 0;
+    long count = 0;
     grib_context* c = a->context_;
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
@@ -326,10 +327,10 @@ void BufrDecodeC::dump_bits(grib_accessor* a, const char* comment)
 void BufrDecodeC::dump_double(grib_accessor* a, const char* comment)
 {
     double value = 0;
-    size_t size  = 1;
+    size_t size = 1;
     int r;
     char* sval;
-    grib_handle* h  = a->get_enclosing_handle();
+    grib_handle* h = a->get_enclosing_handle();
     grib_context* c = h->context;
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
@@ -373,10 +374,10 @@ void BufrDecodeC::dump_string_array(grib_accessor* a, const char* comment)
     char** values;
     size_t size = 0, i = 0;
     grib_context* c = NULL;
-    int err         = 0;
-    long count      = 0;
-    int r           = 0;
-    grib_handle* h  = a->get_enclosing_handle();
+    int err = 0;
+    long count = 0;
+    int r = 0;
+    grib_handle* h = a->get_enclosing_handle();
 
     c = a->context_;
 
@@ -439,9 +440,9 @@ void BufrDecodeC::dump_string_array(grib_accessor* a, const char* comment)
 #define MAX_STRING_SIZE 4096
 void BufrDecodeC::dump_string(grib_accessor* a, const char* comment)
 {
-    char value[MAX_STRING_SIZE] = {0, }; /* See ECC-710 */
-    size_t size     = MAX_STRING_SIZE;
-    char* p         = NULL;
+    char value[MAX_STRING_SIZE] = { 0 }; /* See ECC-710 */
+    size_t size = MAX_STRING_SIZE;
+    char* p = NULL;
     grib_context* c = a->context_;
     int r = 0, err = 0;
     grib_handle* h = a->get_enclosing_handle();
@@ -452,8 +453,8 @@ void BufrDecodeC::dump_string(grib_accessor* a, const char* comment)
     empty_ = 0;
 
     err = a->unpack_string(value, &size);
-    p   = value;
-    r   = compute_bufr_key_rank(h, keys_, a->name_);
+    p = value;
+    r = compute_bufr_key_rank(h, keys_, a->name_);
     if (grib_is_missing_string(a, (unsigned char*)value, size)) {
         return;
     }
@@ -522,8 +523,8 @@ void BufrDecodeC::dump_section(grib_accessor* a, grib_block_of_accessors* block)
         strcmp(a->name_, "GRIB") == 0 ||
         strcmp(a->name_, "META") == 0) {
         grib_handle* h = a->get_enclosing_handle();
-        depth          = 2;
-        empty_         = 1;
+        depth = 2;
+        empty_ = 1;
         depth += 2;
         _dump_long_array(h, out_, "dataPresentIndicator");
         _dump_long_array(h, out_, "delayedDescriptorReplicationFactor");
@@ -549,7 +550,7 @@ void BufrDecodeC::dump_section(grib_accessor* a, grib_block_of_accessors* block)
 
 void BufrDecodeC::dump_attributes(grib_accessor* a, const char* prefix)
 {
-    int i                           = 0;
+    int i = 0;
     unsigned long flags;
     while (i < MAX_ACCESSOR_ATTRIBUTES && a->attributes_[i]) {
         isAttribute_ = 1;
@@ -558,14 +559,14 @@ void BufrDecodeC::dump_attributes(grib_accessor* a, const char* prefix)
             continue;
         }
         isLeaf_ = a->attributes_[i]->attributes_[0] == NULL ? 1 : 0;
-        flags   = a->attributes_[i]->flags_;
+        flags = a->attributes_[i]->flags_;
         a->attributes_[i]->flags_ |= GRIB_ACCESSOR_FLAG_DUMP;
         switch (a->attributes_[i]->get_native_type()) {
             case GRIB_TYPE_LONG:
                 dump_long_attribute(a->attributes_[i], prefix);
                 break;
             case GRIB_TYPE_DOUBLE:
-                dump_values_attribute( a->attributes_[i], prefix);
+                dump_values_attribute(a->attributes_[i], prefix);
                 break;
             case GRIB_TYPE_STRING:
                 break;
@@ -573,7 +574,7 @@ void BufrDecodeC::dump_attributes(grib_accessor* a, const char* prefix)
         a->attributes_[i]->flags_ = flags;
         i++;
     }
-    isLeaf_      = 0;
+    isLeaf_ = 0;
     isAttribute_ = 0;
 }
 
@@ -596,7 +597,7 @@ void BufrDecodeC::header(const grib_handle* h) const
         fprintf(out_, "  codes_handle*  h = NULL;\n");
         fprintf(out_, "  long           iVal = 0;\n");
         fprintf(out_, "  double         dVal = 0.0;\n");
-        fprintf(out_, "  char           sVal[1024] = {0,};\n");
+        fprintf(out_, "  char           sVal[1024] = {0};\n");
         fprintf(out_, "  long*          iValues = NULL;\n");
         fprintf(out_, "  char**         sValues = NULL;\n");
         fprintf(out_, "  double*        dValues = NULL;\n");
@@ -624,7 +625,6 @@ void BufrDecodeC::header(const grib_handle* h) const
 
 void BufrDecodeC::footer(const grib_handle* h) const
 {
-
     /*fprintf(out_,"  fout = fopen(\"outfile.bufr\", \"w\");");*/
     /*fprintf(out_,"  if (fclose(fout)) {\n");
     fprintf(out_,"    fprintf(stderr, \"Failed to close file handle.\\n\");\n");

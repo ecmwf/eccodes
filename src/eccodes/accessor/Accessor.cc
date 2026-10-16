@@ -33,9 +33,9 @@ namespace eccodes
 
 int Accessor::compare_accessors(Accessor* a2, int compare_flags)
 {
-    int ret           = 0;
-    long type1        = 0;
-    long type2        = 0;
+    int ret = 0;
+    long type1 = 0;
+    long type2 = 0;
     int type_mismatch = 0;
     Accessor* a1 = this;
 
@@ -60,8 +60,8 @@ int Accessor::compare_accessors(Accessor* a2, int compare_flags)
 
 int Accessor::add_attribute(Accessor* attr, int nest_if_clash)
 {
-    int id               = 0;
-    int idx              = 0;
+    int id = 0;
+    int idx = 0;
     Accessor* pSame = NULL;
     Accessor* pAloc = this;
 
@@ -78,7 +78,7 @@ int Accessor::add_attribute(Accessor* attr, int nest_if_clash)
     for (id = 0; id < MAX_ACCESSOR_ATTRIBUTES; id++) {
         if (pAloc->attributes_[id] == NULL) {
             // attr->parent=a->parent;
-            pAloc->attributes_[id]     = attr;
+            pAloc->attributes_[id] = attr;
             attr->parent_as_attribute_ = pAloc;
             if (pAloc->same_)
                 attr->same_ = pAloc->same_->get_attribute_index(attr->name_, &idx);
@@ -110,23 +110,23 @@ int Accessor::has_attributes()
 
 Accessor* Accessor::get_attribute(const char* name_)
 {
-    int index                  = 0;
-    const char* p              = 0;
-    char* basename             = NULL;
+    int index = 0;
+    const char* p = 0;
+    char* basename = NULL;
     const char* attribute_name = NULL;
-    Accessor* acc         = NULL;
-    p                          = name_;
+    Accessor* acc = NULL;
+    p = name_;
     while (*(p + 1) != '\0' && (*p != '-' || *(p + 1) != '>'))
         p++;
     if (*(p + 1) == '\0') {
         return this->get_attribute_index(name_, &index);
     }
     else {
-        size_t size    = p - name_;
+        size_t size = p - name_;
         attribute_name = p + 2;
-        basename       = (char*)grib_context_malloc_clear(this->context_, size + 1);
-        basename       = (char*)memcpy(basename, name_, size);
-        acc            = this->get_attribute_index(basename, &index);
+        basename = (char*)grib_context_malloc_clear(this->context_, size + 1);
+        basename = (char*)memcpy(basename, name_, size);
+        acc = this->get_attribute_index(basename, &index);
         grib_context_free(this->context_, basename);
         if (acc)
             return acc->get_attribute(attribute_name);

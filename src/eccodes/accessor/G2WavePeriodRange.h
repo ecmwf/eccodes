@@ -19,7 +19,12 @@ class G2WavePeriodRange : public Unsigned
 {
 public:
     G2WavePeriodRange() : Unsigned() {}
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+    const AccessorType& accessor_type() const override
+    {
+        {
+            return accessor_type_;
+        }
+    }
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     int value_count(long*) override;
@@ -30,7 +35,7 @@ private:
     const char* stepType_ = nullptr;
 
 public:
-    static constexpr AccessorType accessor_type_{"g2_wave_period_range"};
+    static constexpr AccessorType accessor_type_{ "g2_wave_period_range" };
 };
 
 }  // namespace eccodes::accessor

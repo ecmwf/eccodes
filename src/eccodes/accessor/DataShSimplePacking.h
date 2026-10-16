@@ -19,8 +19,13 @@ class DataShSimplePacking : public Gen
 {
 public:
     DataShSimplePacking() :
-        Gen() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        Gen() {}
+    const AccessorType& accessor_type() const override
+    {
+        {
+            return accessor_type_;
+        }
+    }
     long get_native_type() override;
     int pack_double(const double* val, size_t* len) override;
     void dump(eccodes::Dumper*) override;
@@ -31,7 +36,7 @@ protected:
     const char* real_part_ = nullptr;
 
 public:
-    static constexpr AccessorType accessor_type_{"data_shsimple_packing"};
+    static constexpr AccessorType accessor_type_{ "data_shsimple_packing" };
 };
 
 }  // namespace eccodes::accessor

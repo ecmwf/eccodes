@@ -18,10 +18,10 @@ void GaussianGridName::init(const long len, grib_arguments* arg)
     Gen::init(len, arg);
     int n = 0;
 
-    N_            = arg->get_name(parent_->h, n++);
-    Ni_           = arg->get_name(parent_->h, n++);
+    N_ = arg->get_name(parent_->h, n++);
+    Ni_ = arg->get_name(parent_->h, n++);
     isOctahedral_ = arg->get_name(parent_->h, n++);
-    length_       = 0;
+    length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
 }
@@ -36,9 +36,9 @@ long GaussianGridName::get_native_type()
 int GaussianGridName::unpack_string(char* v, size_t* len)
 {
     long N = 0, Ni = 0;
-    char tmp[MAX_GRIDNAME_LEN] = {0,};
+    char tmp[MAX_GRIDNAME_LEN] = { 0 };
     size_t length = 0;
-    int ret       = GRIB_SUCCESS;
+    int ret = GRIB_SUCCESS;
 
     if ((ret = grib_get_long_internal(parent_->h, N_, &N)) != GRIB_SUCCESS)
         return ret;

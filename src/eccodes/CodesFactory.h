@@ -15,7 +15,8 @@
 #include <unordered_map>
 #include <vector>
 
-namespace eccodes {
+namespace eccodes
+{
 
 // Logs the unknown type together with the most similar known types, then throws
 [[noreturn]] void throwNoCreator(const char* type, const std::vector<const char*>& knownTypes);
@@ -62,9 +63,12 @@ private:
 
     // Registers the class C under the type C::accessor_type_
     template <class C>
-    void add() { creators_[C::accessor_type_] = []() -> T* { return new C(); }; }
+    void add()
+    {
+        creators_[C::accessor_type_] = []() -> T* { return new C(); };
+    }
 
     std::unordered_map<Type, T* (*)()> creators_;
 };
 
-} // namespace eccodes
+}  // namespace eccodes

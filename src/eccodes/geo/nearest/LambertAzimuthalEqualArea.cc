@@ -13,7 +13,8 @@
 eccodes::geo_nearest::LambertAzimuthalEqualArea _grib_nearest_lambert_azimuthal_equal_area{};
 eccodes::geo_nearest::Nearest* grib_nearest_lambert_azimuthal_equal_area = &_grib_nearest_lambert_azimuthal_equal_area;
 
-namespace eccodes::geo_nearest {
+namespace eccodes::geo_nearest
+{
 
 int LambertAzimuthalEqualArea::init(grib_handle* h, grib_arguments* args)
 {
@@ -23,8 +24,8 @@ int LambertAzimuthalEqualArea::init(grib_handle* h, grib_arguments* args)
 
     Ni_ = args->get_name(h, cargs_++);
     Nj_ = args->get_name(h, cargs_++);
-    i_  = (size_t*)grib_context_malloc(h->context, 2 * sizeof(size_t));
-    j_  = (size_t*)grib_context_malloc(h->context, 2 * sizeof(size_t));
+    i_ = (size_t*)grib_context_malloc(h->context, 2 * sizeof(size_t));
+    j_ = (size_t*)grib_context_malloc(h->context, 2 * sizeof(size_t));
 
     return ret;
 }

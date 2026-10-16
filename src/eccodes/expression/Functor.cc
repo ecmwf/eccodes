@@ -20,7 +20,7 @@ namespace eccodes::expression
 static bool string_contains_case(const char* haystack, const char* needle, bool case_sensitive)
 {
     std::string copy_haystack = haystack;
-    std::string copy_needle   = needle;
+    std::string copy_needle = needle;
 
     if (!case_sensitive) {
         // Convert both strings to lowercase if we don't care about case
@@ -75,7 +75,7 @@ int Functor::evaluate_long(grib_handle* h, long* lres) const
         const char* keyName = args_ ? args_->get_name(h, 0) : nullptr;
         if (keyName) {
             long val = 0;
-            int err  = 0;
+            int err = 0;
             if (h->product_kind == PRODUCT_BUFR) {
                 int ismiss = grib_is_missing(h, keyName, &err);
                 if (err) return err;
@@ -183,10 +183,10 @@ int Functor::evaluate_long(grib_handle* h, long* lres) const
         const char* dump_mode = args_->get_string(h, 0);
         if (dump_mode) {
             int dump_flags = 0;
-            if (STR_EQUAL(dump_mode, "wmo")) { // mimic grib_dump -O
+            if (STR_EQUAL(dump_mode, "wmo")) {  // mimic grib_dump -O
                 dump_flags = GRIB_DUMP_FLAG_CODED | GRIB_DUMP_FLAG_OCTET | GRIB_DUMP_FLAG_VALUES | GRIB_DUMP_FLAG_READ_ONLY;
             }
-            if (STR_EQUAL(dump_mode, "debug")) { // mimic grib_dump -Da
+            if (STR_EQUAL(dump_mode, "debug")) {  // mimic grib_dump -Da
                 dump_flags = GRIB_DUMP_FLAG_VALUES | GRIB_DUMP_FLAG_READ_ONLY | GRIB_DUMP_FLAG_ALIASES;
             }
             grib_dump_content(h, stdout, dump_mode, dump_flags, 0);
@@ -225,19 +225,20 @@ int Functor::evaluate_long(grib_handle* h, long* lres) const
         int err = grib_get_native_type(h, keyName, &type);
         if (err) return err;
         if (type == GRIB_TYPE_STRING) {
-            char keyValue[254] = {0,};
+            char keyValue[254] = { 0 };
             size_t len = sizeof(keyValue);
             err = grib_get_string(h, keyName, keyValue, &len);
             if (err) return err;
             const char* sValue = args_->get_string(h, 1);
             if (!sValue) return GRIB_INVALID_ARGUMENT;
-            const bool case_sens = args_->get_long(h, 2) == 0; // 0=case-sensitive, 1=case-insensitive
+            const bool case_sens = args_->get_long(h, 2) == 0;  // 0=case-sensitive, 1=case-insensitive
             const bool contains = string_contains_case(keyValue, sValue, case_sens);
             if (contains) {
                 *lres = 1;
                 return GRIB_SUCCESS;
             }
-        } else {
+        }
+        else {
             // For now only keys of type string supported
             return GRIB_INVALID_ARGUMENT;
         }
@@ -253,11 +254,11 @@ int Functor::evaluate_long(grib_handle* h, long* lres) const
         if (err) return err;
         int n = args_->get_count();
         if (type == GRIB_TYPE_STRING) {
-            char keyValue[254] = {0,};
+            char keyValue[254] = { 0 };
             size_t len = sizeof(keyValue);
             err = grib_get_string(h, keyName, keyValue, &len);
             if (err) return err;
-            for (int i = 1; i < n; ++i) { // skip 1st argument which is the key
+            for (int i = 1; i < n; ++i) {  // skip 1st argument which is the key
                 const char* sValue = args_->get_string(h, i);
                 if (sValue && STR_EQUAL(keyValue, sValue)) {
                     *lres = 1;
@@ -269,7 +270,7 @@ int Functor::evaluate_long(grib_handle* h, long* lres) const
             long keyValue = 0;
             err = grib_get_long(h, keyName, &keyValue);
             if (err) return err;
-            for (int i = 1; i < n; ++i) { // skip 1st argument which is the key
+            for (int i = 1; i < n; ++i) {  // skip 1st argument which is the key
                 long lValue = args_->get_long(h, i);
                 if (keyValue == lValue) {
                     *lres = 1;
@@ -292,7 +293,7 @@ int Functor::evaluate_long(grib_handle* h, long* lres) const
     return GRIB_NOT_IMPLEMENTED;
 }
 
-void Functor::print(grib_context* c,grib_handle* f, FILE* out) const
+void Functor::print(grib_context* c, grib_handle* f, FILE* out) const
 {
     fprintf(out, "%s(", name_);
     // grib_expression_print(c,args_,f);
@@ -325,6 +326,7 @@ int Functor::native_type(grib_handle* h) const
 }  // namespace eccodes::expression
 
 
-grib_expression* new_functor_expression(grib_context* c, const char* name, grib_arguments* args) {
+grib_expression* new_functor_expression(grib_context* c, const char* name, grib_arguments* args)
+{
     return new eccodes::expression::Functor(c, name, args);
 }

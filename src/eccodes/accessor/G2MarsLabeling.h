@@ -19,8 +19,13 @@ class G2MarsLabeling : public Gen
 {
 public:
     G2MarsLabeling() :
-        Gen() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        Gen() {}
+    const AccessorType& accessor_type() const override
+    {
+        {
+            return accessor_type_;
+        }
+    }
     long get_native_type() override;
     int pack_long(const long* val, size_t* len) override;
     int pack_string(const char*, size_t* len) override;
@@ -44,7 +49,7 @@ private:
     int extra_set(long val);
 
 public:
-    static constexpr AccessorType accessor_type_{"g2_mars_labeling"};
+    static constexpr AccessorType accessor_type_{ "g2_mars_labeling" };
 };
 
 }  // namespace eccodes::accessor

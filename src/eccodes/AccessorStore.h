@@ -14,7 +14,8 @@
 #include <cstdint>
 #include <cstring>
 
-namespace eccodes {
+namespace eccodes
+{
 
 class Accessor;
 
@@ -27,19 +28,22 @@ class Accessor;
 // - Thread-safe in the sense that distinct handles can be used from distinct
 //   threads; the same handle must not be shared between threads (matches the
 //   contract of grib_handle in develop branch).
-class AccessorStore {
+class AccessorStore
+{
 public:
     static constexpr std::size_t CAPACITY = 1024;  // power of 2
-    static constexpr std::size_t MASK     = CAPACITY - 1;
+    static constexpr std::size_t MASK = CAPACITY - 1;
 
-    struct Slot {
+    struct Slot
+    {
         std::uint64_t hash;
-        Accessor*     value;
+        Accessor* value;
     };
 
     static_assert((CAPACITY & MASK) == 0, "CAPACITY must be a power of 2");
 
-    static inline std::uint64_t compute_hash(const char* s) {
+    static inline std::uint64_t compute_hash(const char* s)
+    {
         std::uint64_t h = 14695981039346656037ULL;
         for (; *s; ++s) {
             h ^= static_cast<unsigned char>(*s);
@@ -48,7 +52,8 @@ public:
         return h | 1;  // ensure non-zero (0 = empty sentinel)
     }
 
-    inline Accessor* get(const char* name) const {
+    inline Accessor* get(const char* name) const
+    {
         const std::uint64_t h = compute_hash(name);
         std::size_t idx = h & MASK;
         while (slots_[idx].hash) {
@@ -59,12 +64,14 @@ public:
         return nullptr;
     }
 
-    inline void add(const char* name, Accessor* accessor) {
+    inline void add(const char* name, Accessor* accessor)
+    {
         exchange(name, accessor);
     }
 
     // Insert-or-replace; returns the previous value (nullptr if new).
-    inline Accessor* exchange(const char* name, Accessor* new_value) {
+    inline Accessor* exchange(const char* name, Accessor* new_value)
+    {
         const std::uint64_t h = compute_hash(name);
         std::size_t idx = h & MASK;
         while (slots_[idx].hash) {
@@ -75,13 +82,14 @@ public:
             }
             idx = (idx + 1) & MASK;
         }
-        slots_[idx].hash  = h;
+        slots_[idx].hash = h;
         slots_[idx].value = new_value;
         ++size_;
         return nullptr;
     }
 
-    void remove(const char* name) {
+    void remove(const char* name)
+    {
         const std::uint64_t h = compute_hash(name);
         std::size_t idx = h & MASK;
         while (slots_[idx].hash) {
@@ -97,7 +105,7 @@ public:
                         idx = j;
                     }
                 }
-                slots_[idx] = {0, nullptr};
+                slots_[idx] = { 0, nullptr };
                 --size_;
                 return;
             }
@@ -105,13 +113,15 @@ public:
         }
     }
 
-    void clear() {
+    void clear()
+    {
         std::memset(slots_, 0, sizeof(slots_));
         size_ = 0;
     }
 
     template <typename F>
-    void for_each(F&& func) const {
+    void for_each(F&& func) const
+    {
         for (std::size_t i = 0; i < CAPACITY; ++i) {
             if (slots_[i].hash)
                 func(slots_[i].value);
@@ -121,7 +131,7 @@ public:
     std::size_t size() const { return size_; }
 
 private:
-    Slot        slots_[CAPACITY];  // zero-init by calloc = empty table
+    Slot slots_[CAPACITY];  // zero-init by calloc = empty table
     std::size_t size_ = 0;
 };
 

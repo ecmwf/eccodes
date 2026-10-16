@@ -21,16 +21,16 @@ typedef struct bits_all_one_t
     long v[128];
 } bits_all_one_t;
 
-static bits_all_one_t bits_all_one = { 0, 0, {0,} };
+static bits_all_one_t bits_all_one = { 0, 0, { 0 } };
 
 static void init_bits_all_one()
 {
-    int size            = sizeof(long) * 8;
-    long* v             = 0;
+    int size = sizeof(long) * 8;
+    long* v = 0;
     unsigned long cmask = -1;
-    bits_all_one.size   = size;
+    bits_all_one.size = size;
     bits_all_one.inited = 1;
-    v                   = bits_all_one.v + size;
+    v = bits_all_one.v + size;
     /*
      * The result of a shift operation is undefined if the RHS is negative or
      * greater than or equal to the number of bits in the (promoted) shift-expression
@@ -51,12 +51,12 @@ int grib_is_all_bits_one(int64_t val, long nbits)
 int grib_encode_string(unsigned char* bitStream, long* bitOffset, size_t numberOfCharacters, const char* string)
 {
     size_t i;
-    int err         = 0;
+    int err = 0;
     long byteOffset = *bitOffset / 8;
-    int remainder   = *bitOffset % 8;
+    int remainder = *bitOffset % 8;
     unsigned char* p;
     int remainderComplement = 8 - remainder;
-    const char* s           = string;
+    const char* s = string;
 
     ECCODES_ASSERT(numberOfCharacters < 512 && (numberOfCharacters == 0 || string));
 
@@ -68,11 +68,11 @@ int grib_encode_string(unsigned char* bitStream, long* bitOffset, size_t numberO
             memcpy(p, string, numberOfCharacters);
         }
         else {
-            unsigned char mask  = (unsigned char)(0xFF00 >> remainder);
+            unsigned char mask = (unsigned char)(0xFF00 >> remainder);
             unsigned char accum = p[0];
             for (size_t i = 0; i < numberOfCharacters; ++i) {
                 accum |= (s[i] >> remainder) & ~mask;
-                p[i]  = accum;
+                p[i] = accum;
                 accum = (s[i] << remainderComplement) & mask;
             }
             p[numberOfCharacters] = accum;
@@ -86,11 +86,11 @@ char* grib_decode_string(const unsigned char* bitStream, long* bitOffset, size_t
 {
     size_t i;
     long byteOffset = *bitOffset / 8;
-    int remainder   = *bitOffset % 8;
+    int remainder = *bitOffset % 8;
     unsigned char c;
     unsigned char* p;
-    char* s                 = string;
-    const unsigned char mask[]    = { 0, 0x80, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC, 0xFE };
+    char* s = string;
+    const unsigned char mask[] = { 0, 0x80, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC, 0xFE };
     int remainderComplement = 8 - remainder;
 
     if (numberOfCharacters == 0)
@@ -117,10 +117,10 @@ char* grib_decode_string(const unsigned char* bitStream, long* bitOffset, size_t
 unsigned long grib_decode_unsigned_long(const unsigned char* p, long* bitp, long nbits)
 {
     long countOfLeftmostBits = 0, leftmostBits = 0;
-    long startBit      = *bitp;
+    long startBit = *bitp;
     long remainingBits = nbits;
-    long* pp           = (long*)p;
-    unsigned long val  = 0;
+    long* pp = (long*)p;
+    unsigned long val = 0;
 
     if (startBit >= max_nbits) {
         pp += startBit / max_nbits;
@@ -132,7 +132,7 @@ unsigned long grib_decode_unsigned_long(const unsigned char* p, long* bitp, long
         countOfLeftmostBits = max_nbits - startBit;
         remainingBits -= countOfLeftmostBits;
         leftmostBits = (VALUE(*pp, startBit, countOfLeftmostBits)) << remainingBits;
-        startBit     = 0;
+        startBit = 0;
         pp++;
     }
     else
@@ -148,10 +148,10 @@ unsigned long grib_decode_unsigned_long(const unsigned char* p, long* bitp, long
 size_t grib_decode_size_t(const unsigned char* p, long* bitp, long nbits)
 {
     long countOfLeftmostBits = 0, leftmostBits = 0;
-    long startBit      = *bitp;
+    long startBit = *bitp;
     long remainingBits = nbits;
-    long* pp           = (long*)p;
-    size_t val  = 0;
+    long* pp = (long*)p;
+    size_t val = 0;
 
     if (startBit >= max_nbits_size_t) {
         pp += startBit / max_nbits_size_t;
@@ -163,7 +163,7 @@ size_t grib_decode_size_t(const unsigned char* p, long* bitp, long nbits)
         countOfLeftmostBits = max_nbits_size_t - startBit;
         remainingBits -= countOfLeftmostBits;
         leftmostBits = (VALUE_SIZE_T(*pp, startBit, countOfLeftmostBits)) << remainingBits;
-        startBit     = 0;
+        startBit = 0;
         pp++;
     }
     else
@@ -178,10 +178,10 @@ size_t grib_decode_size_t(const unsigned char* p, long* bitp, long nbits)
 
 int grib_encode_unsigned_long(unsigned char* p, unsigned long val, long* bitp, long nbits)
 {
-    long* destination        = (long*)p;
+    long* destination = (long*)p;
     long countOfLeftmostBits = 0, nextWord = 0, startBit = 0, remainingBits = 0, rightmostBits = 0;
 
-    startBit      = *bitp;
+    startBit = *bitp;
     remainingBits = nbits;
 
     if (startBit >= max_nbits) {
@@ -194,7 +194,7 @@ int grib_encode_unsigned_long(unsigned char* p, unsigned long val, long* bitp, l
     countOfLeftmostBits = startBit + remainingBits;
     if (countOfLeftmostBits > max_nbits) {
         countOfLeftmostBits = max_nbits - startBit;
-        startBit            = max_nbits - remainingBits;
+        startBit = max_nbits - remainingBits;
         remainingBits -= countOfLeftmostBits;
         destination[nextWord] =
             ((destination[nextWord] >> countOfLeftmostBits) << countOfLeftmostBits) + (VALUE(val, startBit, countOfLeftmostBits));
@@ -217,10 +217,10 @@ int grib_encode_unsigned_longb(unsigned char* p, unsigned long val, long* bitp, 
 
 int grib_encode_size_t(unsigned char* p, size_t val, long* bitp, long nbits)
 {
-    long* destination        = (long*)p;
+    long* destination = (long*)p;
     long countOfLeftmostBits = 0, nextWord = 0, startBit = 0, remainingBits = 0, rightmostBits = 0;
 
-    startBit      = *bitp;
+    startBit = *bitp;
     remainingBits = nbits;
 
     if (startBit >= max_nbits_size_t) {
@@ -233,7 +233,7 @@ int grib_encode_size_t(unsigned char* p, size_t val, long* bitp, long nbits)
     countOfLeftmostBits = startBit + remainingBits;
     if (countOfLeftmostBits > max_nbits_size_t) {
         countOfLeftmostBits = max_nbits_size_t - startBit;
-        startBit            = max_nbits_size_t - remainingBits;
+        startBit = max_nbits_size_t - remainingBits;
         remainingBits -= countOfLeftmostBits;
         destination[nextWord] =
             ((destination[nextWord] >> countOfLeftmostBits) << countOfLeftmostBits) + (VALUE_SIZE_T(val, startBit, countOfLeftmostBits));
@@ -256,9 +256,9 @@ int grib_encode_size_tb(unsigned char* p, size_t val, long* bitp, long nbits)
 
 
 #if VECTOR
-#include "grib_bits_fast_big_endian_vector.cc" /* Experimental */
+    #include "grib_bits_fast_big_endian_vector.cc" /* Experimental */
 #elif OMP
-#include "grib_bits_fast_big_endian_omp.cc"
+    #include "grib_bits_fast_big_endian_omp.cc"
 #else
-#include "grib_bits_fast_big_endian_simple.cc"
+    #include "grib_bits_fast_big_endian_simple.cc"
 #endif

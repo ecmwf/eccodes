@@ -19,8 +19,13 @@ class Getenv : public Ascii
 {
 public:
     Getenv() :
-        Ascii() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        Ascii() {}
+    const AccessorType& accessor_type() const override
+    {
+        {
+            return accessor_type_;
+        }
+    }
     int pack_string(const char*, size_t* len) override;
     int unpack_string(char*, size_t* len) override;
     size_t string_length() override;
@@ -33,7 +38,7 @@ private:
     const char* default_value_ = nullptr;
 
 public:
-    static constexpr AccessorType accessor_type_{"getenv"};
+    static constexpr AccessorType accessor_type_{ "getenv" };
 };
 
 }  // namespace eccodes::accessor

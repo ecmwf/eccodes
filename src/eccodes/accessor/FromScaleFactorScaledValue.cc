@@ -17,7 +17,7 @@ namespace eccodes::accessor
 void FromScaleFactorScaledValue::init(const long l, grib_arguments* c)
 {
     Double::init(l, c);
-    int n             = 0;
+    int n = 0;
     grib_handle* hand = get_enclosing_handle();
 
     scaleFactor_ = c->get_name(hand, n++);
@@ -32,10 +32,10 @@ int FromScaleFactorScaledValue::pack_double(const double* val, size_t* len)
     // See ECC-979 and ECC-1416
     // Evaluate scaleFactor and scaledValue_ from input double '*val'
     grib_handle* hand = get_enclosing_handle();
-    int err           = 0;
-    int64_t factor    = 0;
-    int64_t value     = 0;
-    double exact      = *val;             // the input
+    int err = 0;
+    int64_t factor = 0;
+    int64_t value = 0;
+    double exact = *val;                  // the input
     int64_t maxval_value, maxval_factor;  // maximum allowable values
     int value_accessor_num_bits = 0, factor_accessor_num_bits = 0;
     grib_accessor *factor_accessor, *value_accessor;
@@ -57,15 +57,15 @@ int FromScaleFactorScaledValue::pack_double(const double* val, size_t* len)
     }
 
     factor_accessor = grib_find_accessor(hand, scaleFactor_);
-    value_accessor  = grib_find_accessor(hand, scaledValue_);
+    value_accessor = grib_find_accessor(hand, scaledValue_);
     if (!factor_accessor || !value_accessor) {
         grib_context_log(context_, GRIB_LOG_ERROR, "Could not access keys %s and %s", scaleFactor_, scaledValue_);
         return GRIB_ENCODING_ERROR;
     }
-    value_accessor_num_bits  = value_accessor->length_ * 8;
+    value_accessor_num_bits = value_accessor->length_ * 8;
     factor_accessor_num_bits = factor_accessor->length_ * 8;
-    maxval_value             = NumericLimits<int64_t>::max(value_accessor_num_bits);  // exclude missing
-    maxval_factor            = NumericLimits<int64_t>::max(factor_accessor_num_bits);  // exclude missing
+    maxval_value = NumericLimits<int64_t>::max(value_accessor_num_bits);    // exclude missing
+    maxval_factor = NumericLimits<int64_t>::max(factor_accessor_num_bits);  // exclude missing
     if (factor_accessor->accessor_type() == "signed") {
         maxval_factor = (1UL << (factor_accessor_num_bits - 1)) - 1;
     }
@@ -86,11 +86,11 @@ int FromScaleFactorScaledValue::pack_double(const double* val, size_t* len)
 
 int FromScaleFactorScaledValue::unpack_double(double* val, size_t* len)
 {
-    int err          = 0;
+    int err = 0;
     long scaleFactor = 0, scaledValue = 0;
     grib_handle* hand = get_enclosing_handle();
-    grib_context* c   = context_;
-    size_t vsize      = 0;
+    grib_context* c = context_;
+    size_t vsize = 0;
 
     if ((err = grib_get_long_internal(hand, scaleFactor_, &scaleFactor)) != GRIB_SUCCESS)
         return err;
@@ -144,7 +144,7 @@ int FromScaleFactorScaledValue::unpack_double(double* val, size_t* len)
         }
         for (i = 0; i < vsize; i++) {
             long sf = scaleFactor;
-            val[i]  = lvalues[i];
+            val[i] = lvalues[i];
             while (sf < 0) {
                 val[i] *= 10;
                 sf++;
@@ -164,7 +164,7 @@ int FromScaleFactorScaledValue::unpack_double(double* val, size_t* len)
 int FromScaleFactorScaledValue::is_missing()
 {
     grib_handle* hand = get_enclosing_handle();
-    int err           = 0;
+    int err = 0;
     long scaleFactor = 0, scaledValue = 0;
 
     if ((err = grib_get_long_internal(hand, scaleFactor_, &scaleFactor)) != GRIB_SUCCESS)
@@ -178,7 +178,7 @@ int FromScaleFactorScaledValue::is_missing()
 
 int FromScaleFactorScaledValue::value_count(long* len)
 {
-    int err           = 0;
+    int err = 0;
     grib_handle* hand = get_enclosing_handle();
     size_t vsize;
 

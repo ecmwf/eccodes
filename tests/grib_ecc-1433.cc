@@ -27,8 +27,8 @@ int main(int argc, char** argv)
     std::default_random_engine re;
     std::uniform_real_distribution<double> unif(flt::min(), flt::min() * 10);
 
-    codes_handle* handle      = codes_grib_handle_new_from_samples(0, "reduced_gg_pl_128_grib2");
-    double* values            = new double[values_len];
+    codes_handle* handle = codes_grib_handle_new_from_samples(0, "reduced_gg_pl_128_grib2");
+    double* values = new double[values_len];
     double* grid_ccsds_values = new double[values_len];
 
     // Initialize with small random values
@@ -38,7 +38,7 @@ int main(int argc, char** argv)
 
     // Test grid_ccsds
     std::string packing_type = "grid_ccsds";
-    size_t size              = packing_type.size();
+    size_t size = packing_type.size();
     CODES_CHECK(codes_set_double_array(handle, "values", values, values_len), 0);
     CODES_CHECK(codes_set_string(handle, "packingType", packing_type.c_str(), &size), 0);
     CODES_CHECK(codes_get_double_array(handle, "values", grid_ccsds_values, &values_len), 0);

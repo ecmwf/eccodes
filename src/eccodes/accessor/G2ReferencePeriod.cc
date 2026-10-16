@@ -41,4 +41,4 @@ int G2ReferencePeriod::value_count(long* count)
     return GRIB_SUCCESS;
 }
 
-}
+}  // namespace eccodes::accessor

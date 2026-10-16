@@ -22,17 +22,50 @@ struct table_entry
 };
 
 static const struct table_entry table[] = {
-    { "gaussian", &grib_iterator_gaussian, },
-    { "gaussian_reduced", &grib_iterator_gaussian_reduced, },
-    { "healpix", &grib_iterator_healpix, },
-    { "lambert_azimuthal_equal_area", &grib_iterator_lambert_azimuthal_equal_area, },
-    { "lambert_conformal", &grib_iterator_lambert_conformal, },
-    { "latlon", &grib_iterator_latlon, },
-    { "latlon_reduced", &grib_iterator_latlon_reduced, },
-    { "mercator", &grib_iterator_mercator, },
-    { "polar_stereographic", &grib_iterator_polar_stereographic, },
-    { "regular", &grib_iterator_regular, },
-    { "space_view", &grib_iterator_space_view, },
+    {
+        "gaussian",
+        &grib_iterator_gaussian,
+    },
+    {
+        "gaussian_reduced",
+        &grib_iterator_gaussian_reduced,
+    },
+    {
+        "healpix",
+        &grib_iterator_healpix,
+    },
+    {
+        "lambert_azimuthal_equal_area",
+        &grib_iterator_lambert_azimuthal_equal_area,
+    },
+    {
+        "lambert_conformal",
+        &grib_iterator_lambert_conformal,
+    },
+    {
+        "latlon",
+        &grib_iterator_latlon,
+    },
+    {
+        "latlon_reduced",
+        &grib_iterator_latlon_reduced,
+    },
+    {
+        "mercator",
+        &grib_iterator_mercator,
+    },
+    {
+        "polar_stereographic",
+        &grib_iterator_polar_stereographic,
+    },
+    {
+        "regular",
+        &grib_iterator_regular,
+    },
+    {
+        "space_view",
+        &grib_iterator_space_view,
+    },
     // { "unstructured", &grib_iterator_unstructured, },
 };
 
@@ -47,7 +80,7 @@ eccodes::geo_iterator::Iterator* grib_iterator_factory(grib_handle* h, grib_argu
         if (strcmp(type, table[i].type) == 0) {
             eccodes::geo_iterator::Iterator* builder = *(table[i].iterator);
             eccodes::geo_iterator::Iterator* it = builder->create();
-            it->flags_              = flags;
+            it->flags_ = flags;
 
             {
                 eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
@@ -70,7 +103,7 @@ eccodes::geo_iterator::Iterator* grib_iterator_factory(grib_handle* h, grib_argu
 
 static int grib_get_data_(const grib_handle* h, double* lats, double* lons, double* values)
 {
-    int err             = 0;
+    int err = 0;
     eccodes::geo_iterator::Iterator* iter = NULL;
     double *lat, *lon, *val;
 
@@ -121,7 +154,7 @@ static double* pointer_to_data(unsigned int i, unsigned int j,
 /* Apply the scanning mode flags which may require data array to be transformed
  * to standard west-to-east (+i) south-to-north (+j) mode.
  * The data array passed in should have 'numPoints' elements.
-*/
+ */
 int transform_iterator_data(grib_context* context, double* data,
                             long iScansNegatively, long jScansPositively,
                             long jPointsAreConsecutive, long alternativeRowScanning,
@@ -143,7 +176,7 @@ int transform_iterator_data(grib_context* context, double* data,
         nx > 0 && ny > 0) {
         /* Regular grid +i -j: convert from we:ns to we:sn */
         size_t row_size = ((size_t)nx) * sizeof(double);
-        data2           = (double*)grib_context_malloc(context, row_size);
+        data2 = (double*)grib_context_malloc(context, row_size);
         if (!data2) {
             grib_context_log(context, GRIB_LOG_ERROR, "Geoiterator data: Error allocating %ld bytes", row_size);
             return GRIB_OUT_OF_MEMORY;

@@ -23,10 +23,10 @@
 #define EFDEBUG 0
 
 #ifndef LLONG_MAX
-#define LLONG_MAX LONG_MAX
+    #define LLONG_MAX LONG_MAX
 #endif
 #ifndef ULLONG_MAX
-#define ULLONG_MAX ULONG_MAX
+    #define ULLONG_MAX ULONG_MAX
 #endif
 
 
@@ -44,8 +44,8 @@ static Fraction_value_type fraction_gcd(Fraction_value_type a, Fraction_value_ty
 {
     while (b != 0) {
         Fraction_value_type r = a % b;
-        a                     = b;
-        b                     = r;
+        a = b;
+        b = r;
     }
     return a;
 }
@@ -62,22 +62,22 @@ static Fraction_type fraction_construct(Fraction_value_type top, Fraction_value_
     Fraction_value_type sign = 1;
     ECCODES_ASSERT(bottom != 0);
     if (top < 0) {
-        top  = -top;
+        top = -top;
         sign = -sign;
     }
 
     if (bottom < 0) {
         bottom = -bottom;
-        sign   = -sign;
+        sign = -sign;
     }
 
     g = fraction_gcd(top, bottom);
     if (g != 0) {
-        top    = top / g;
+        top = top / g;
         bottom = bottom / g;
     }
 
-    result.top_    = sign * top;
+    result.top_ = sign * top;
     result.bottom_ = bottom;
     return result;
 }
@@ -85,7 +85,7 @@ static Fraction_type fraction_construct(Fraction_value_type top, Fraction_value_
 static Fraction_type fraction_construct_from_double(double x)
 {
     Fraction_type result;
-    double value             = x;
+    double value = x;
     Fraction_value_type sign = 1;
     Fraction_value_type m00 = 1, m11 = 1, m01 = 0, m10 = 0;
     Fraction_value_type a = x;
@@ -97,15 +97,15 @@ static Fraction_type fraction_construct_from_double(double x)
 
     if (x < 0) {
         sign = -sign;
-        x    = -x;
+        x = -x;
     }
 
     t2 = m10 * a + m11;
 
     while (t2 <= MAX_DENOM) {
         Fraction_value_type t1 = m00 * a + m01;
-        m01                    = m00;
-        m00                    = t1;
+        m01 = m00;
+        m00 = t1;
 
         m11 = m10;
         m10 = t2;
@@ -120,7 +120,7 @@ static Fraction_type fraction_construct_from_double(double x)
             break;
         }
 
-        a  = x;
+        a = x;
         t2 = m10 * a + m11;
 
         if (cnt++ > 10000) {
@@ -133,14 +133,14 @@ static Fraction_type fraction_construct_from_double(double x)
         m10 >>= 1;
     }
 
-    top    = m00;
+    top = m00;
     bottom = m10;
 
-    g      = fraction_gcd(top, bottom);
-    top    = top / g;
+    g = fraction_gcd(top, bottom);
+    top = top / g;
     bottom = bottom / g;
 
-    result.top_    = sign * top;
+    result.top_ = sign * top;
     result.bottom_ = bottom;
     return result;
 }
@@ -179,7 +179,7 @@ static Fraction_type fraction_operator_divide(Fraction_type self, Fraction_type 
 {
     int overflow = 0; /*boolean*/
 
-    Fraction_value_type top    = fraction_mul(&overflow, self.top_, other.bottom_);
+    Fraction_value_type top = fraction_mul(&overflow, self.top_, other.bottom_);
     Fraction_value_type bottom = fraction_mul(&overflow, self.bottom_, other.top_);
 
     if (!overflow) {
@@ -188,8 +188,8 @@ static Fraction_type fraction_operator_divide(Fraction_type self, Fraction_type 
     else {
         /*Fallback option*/
         /*return Fraction(double(*this) / double(other));*/
-        double d1        = fraction_operator_double(self);
-        double d2        = fraction_operator_double(other);
+        double d1 = fraction_operator_double(self);
+        double d2 = fraction_operator_double(other);
         Fraction_type f1 = fraction_construct_from_double(d1 / d2);
         return f1;
     }
@@ -200,7 +200,7 @@ static Fraction_type fraction_operator_multiply(Fraction_type self, Fraction_typ
 {
     int overflow = 0; /*boolean*/
 
-    Fraction_value_type top    = fraction_mul(&overflow, self.top_, other.top_);
+    Fraction_value_type top = fraction_mul(&overflow, self.top_, other.top_);
     Fraction_value_type bottom = fraction_mul(&overflow, self.bottom_, other.bottom_);
 
     if (!overflow) {
@@ -209,8 +209,8 @@ static Fraction_type fraction_operator_multiply(Fraction_type self, Fraction_typ
     else {
         /* Fallback option */
         /*return Fraction(double(*this) * double(other));*/
-        double d1        = fraction_operator_double(self);
-        double d2        = fraction_operator_double(other);
+        double d1 = fraction_operator_double(self);
+        double d2 = fraction_operator_double(other);
         Fraction_type f1 = fraction_construct_from_double(d1 * d2);
         return f1;
     }
@@ -220,7 +220,7 @@ static Fraction_type fraction_operator_multiply(Fraction_type self, Fraction_typ
 static int fraction_operator_less_than(Fraction_type self, Fraction_type other)
 {
     int overflow = 0;
-    int result   = fraction_mul(&overflow, self.top_, other.bottom_) < fraction_mul(&overflow, other.top_, self.bottom_);
+    int result = fraction_mul(&overflow, self.top_, other.bottom_) < fraction_mul(&overflow, other.top_, self.bottom_);
     if (overflow) {
         double d1 = fraction_operator_double(self);
         double d2 = fraction_operator_double(other);
@@ -234,7 +234,7 @@ static int fraction_operator_less_than(Fraction_type self, Fraction_type other)
 static int fraction_operator_greater_than(Fraction_type self, Fraction_type other)
 {
     int overflow = 0;
-    int result   = fraction_mul(&overflow, self.top_, other.bottom_) > fraction_mul(&overflow, other.top_, self.bottom_);
+    int result = fraction_mul(&overflow, self.top_, other.bottom_) > fraction_mul(&overflow, other.top_, self.bottom_);
     if (overflow) {
         double d1 = fraction_operator_double(self);
         double d2 = fraction_operator_double(other);
@@ -248,7 +248,7 @@ static int fraction_operator_greater_than(Fraction_type self, Fraction_type othe
 static Fraction_type fraction_construct_from_long_long(long long n)
 {
     Fraction_type result;
-    result.top_    = n;
+    result.top_ = n;
     result.bottom_ = 1;
     return result;
 }
@@ -256,7 +256,7 @@ static Fraction_type fraction_construct_from_long_long(long long n)
 /*template<class T>Fraction operator*(T n, const Fraction& f){    return Fraction(n) * f;  }*/
 static Fraction_type fraction_operator_multiply_n_Frac(Fraction_value_type n, Fraction_type f)
 {
-    Fraction_type ft     = fraction_construct_from_long_long(n);
+    Fraction_type ft = fraction_construct_from_long_long(n);
     Fraction_type result = fraction_operator_multiply(ft, f);
     return result;
     /*return Fraction(n) * f;*/
@@ -281,7 +281,7 @@ static void gaussian_reduced_row(
     inc = fraction_construct(360ll, Ni_globe);
 
     /* auto Nw = (w / inc).integralPart(); */
-    Nw     = fraction_integralPart(fraction_operator_divide(w, inc));
+    Nw = fraction_integralPart(fraction_operator_divide(w, inc));
     Nw_inc = fraction_operator_multiply_n_Frac(Nw, inc);
 
     ECCODES_ASSERT(Ni_globe > 1);
@@ -291,14 +291,14 @@ static void gaussian_reduced_row(
     }
 
     /*auto Ne = (e / inc).integralPart();*/
-    Ne     = fraction_integralPart(fraction_operator_divide(e, inc));
+    Ne = fraction_integralPart(fraction_operator_divide(e, inc));
     Ne_inc = fraction_operator_multiply_n_Frac(Ne, inc);
     /* if (Ne * inc > e) */
     if (fraction_operator_greater_than(Ne_inc, e)) {
         Ne -= 1;
     }
     if (Nw > Ne) {
-        *pNi   = 0;          /* no points on this latitude */
+        *pNi = 0;            /* no points on this latitude */
         *pLon1 = *pLon2 = 0; /* dummy - unused */
     }
     else {
@@ -334,9 +334,9 @@ void grib_get_reduced_row_legacy(long pl, double lon_first, double lon_last, lon
     }
 
     /* computing integer number of points and coordinates without using floating point resolution*/
-    *npoints    = (range * pl) / 360.0 + 1;
+    *npoints = (range * pl) / 360.0 + 1;
     *ilon_first = (lon_first * pl) / 360.0;
-    *ilon_last  = (lon_last * pl) / 360.0;
+    *ilon_last = (lon_last * pl) / 360.0;
 
     irange = *ilon_last - *ilon_first + 1;
 
@@ -450,9 +450,9 @@ static void grib_get_reduced_row_(long pl, double lon_first, double lon_last, lo
         &the_count,
         &the_lon1,
         &the_lon2);
-    *npoints    = (long)the_count;
+    *npoints = (long)the_count;
     *ilon_first = (the_lon1 * pl) / 360.0;
-    *ilon_last  = (the_lon2 * pl) / 360.0;
+    *ilon_last = (the_lon2 * pl) / 360.0;
 }
 
 // C-API: Ensure all exceptions are converted to error codes
@@ -483,9 +483,9 @@ static void grib_get_reduced_row_p_(long pl, double lon_first, double lon_last, 
         &the_count,
         &the_lon1,
         &the_lon2);
-    *npoints    = (long)the_count;
+    *npoints = (long)the_count;
     *olon_first = the_lon1;
-    *olon_last  = the_lon2;
+    *olon_last = the_lon2;
 }
 
 // C-API: Ensure all exceptions are converted to error codes

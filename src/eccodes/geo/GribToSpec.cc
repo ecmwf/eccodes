@@ -53,12 +53,12 @@ struct Condition
 {
     Condition() = default;
 
-    Condition(const Condition&)            = delete;
-    Condition(Condition&&)                 = delete;
+    Condition(const Condition&) = delete;
+    Condition(Condition&&) = delete;
     Condition& operator=(const Condition&) = delete;
-    Condition& operator=(Condition&&)      = delete;
+    Condition& operator=(Condition&&) = delete;
 
-    virtual ~Condition()                   = default;
+    virtual ~Condition() = default;
     virtual bool eval(codes_handle*) const = 0;
 };
 
@@ -82,7 +82,7 @@ bool ConditionT<long>::eval(codes_handle* h) const
     ASSERT(h != nullptr);
 
     long value = 0;
-    int err    = codes_get_long(h, key_, &value);
+    int err = codes_get_long(h, key_, &value);
 
     if (err == CODES_NOT_FOUND) {
         return false;
@@ -119,7 +119,7 @@ bool ConditionT<std::string>::eval(codes_handle* h) const
 
     char buffer[10240];
     size_t size = sizeof(buffer);
-    int err     = codes_get_string(h, key_, buffer, &size);
+    int err = codes_get_string(h, key_, buffer, &size);
 
     if (err == CODES_NOT_FOUND) {
         return false;
@@ -443,11 +443,11 @@ struct ProcessingT
     fun_t fun_;
     explicit ProcessingT(fun_t&& fun) :
         fun_(fun) {}
-    ~ProcessingT()                     = default;
-    ProcessingT(const ProcessingT&)    = delete;
-    ProcessingT(ProcessingT&&)         = delete;
+    ~ProcessingT() = default;
+    ProcessingT(const ProcessingT&) = delete;
+    ProcessingT(ProcessingT&&) = delete;
     void operator=(const ProcessingT&) = delete;
-    void operator=(ProcessingT&&)      = delete;
+    void operator=(ProcessingT&&) = delete;
     bool eval(codes_handle* h, T& v) const { return fun_(h, v); }
 };
 
@@ -605,7 +605,7 @@ ProcessingT<double>* iDirectionIncrementInDegrees_fix_for_periodic_regular_grids
 
         double Lon1 = 0.;
         double Lon2 = 0.;
-        long Ni     = 0;
+        long Ni = 0;
         CHECK_CALL(codes_get_double(h, "longitudeOfFirstGridPointInDegrees", &Lon1));
         CHECK_CALL(codes_get_double(h, "longitudeOfLastGridPointInDegrees", &Lon2));
         CHECK_CALL(codes_get_long(h, "Ni", &Ni));
@@ -745,7 +745,7 @@ ProcessingT<std::string>* order()
 
         const auto ip = get_bool(h, "iScansPositively");
         const auto jp = get_bool(h, "jScansPositively");
-        const auto a  = get_bool(h, "alternativeRowScanning");
+        const auto a = get_bool(h, "alternativeRowScanning");
 
         value = get_bool(h, "jPointsAreConsecutive") ? "j" + (jp ? P : M) + (!a ? "" : (jp ? M : P)) + "i" + (ip ? P : M)
                                                      : "i" + (ip ? P : M) + (!a ? "" : (ip ? M : P)) + "j" + (jp ? P : M);
@@ -899,17 +899,16 @@ GribToSpec::GribToSpec(codes_handle* h, bool rotated) :
     int err = 0;
 
     if (
-        !(codes_is_missing(handle_, "Ni", &err) != 0 && err == CODES_SUCCESS) && //
-        !(codes_is_missing(handle_, "Nj", &err) != 0 && err == CODES_SUCCESS) && //
-        codes_get_long(handle_, "Ni", &Ni) == CODES_SUCCESS && //
-        codes_get_long(handle_, "Nj", &Nj) == CODES_SUCCESS && //
-        codes_get_long(handle_, "numberOfDataPoints", &Nv) == CODES_SUCCESS)
-    {
+        !(codes_is_missing(handle_, "Ni", &err) != 0 && err == CODES_SUCCESS) &&  //
+        !(codes_is_missing(handle_, "Nj", &err) != 0 && err == CODES_SUCCESS) &&  //
+        codes_get_long(handle_, "Ni", &Ni) == CODES_SUCCESS &&                    //
+        codes_get_long(handle_, "Nj", &Nj) == CODES_SUCCESS &&                    //
+        codes_get_long(handle_, "numberOfDataPoints", &Nv) == CODES_SUCCESS) {
         if (Ni * Nj != Nv) {
             wrongly_encoded_grib_error(
-                    "GribToSpec: Ni*Nj!=numberOfDataPoints (" +
-                    std::to_string(Ni) + "*" + std::to_string(Nj) + "!=" +
-                    std::to_string(Nv) + ")");
+                "GribToSpec: Ni*Nj!=numberOfDataPoints (" +
+                std::to_string(Ni) + "*" + std::to_string(Nj) + "!=" +
+                std::to_string(Nv) + ")");
         }
     }
 }
@@ -960,7 +959,7 @@ bool GribToSpec::get(const std::string& name, std::string& value) const
 
     char buffer[10240];
     size_t size = sizeof(buffer);
-    int err     = codes_get_string(handle_, key, buffer, &size);
+    int err = codes_get_string(handle_, key, buffer, &size);
 
     if (err == CODES_NOT_FOUND) {
         static const ProcessingList<std::string> process{
@@ -1002,7 +1001,7 @@ bool GribToSpec::get(const std::string& name, bool& value) const
 
     // FIXME: make sure that 'temp' is not set if CODES_MISSING_LONG
     long temp = CODES_MISSING_LONG;
-    int err   = codes_get_long(handle_, key, &temp);
+    int err = codes_get_long(handle_, key, &temp);
     if (err == CODES_NOT_FOUND || codes_is_missing(handle_, key, &err) != 0) {
         return false;
     }
@@ -1255,7 +1254,7 @@ bool GribToSpec::get(const std::string& name, std::vector<double>& value) const
     }
 
     size_t count = 0;
-    int err      = codes_get_size(handle_, key, &count);
+    int err = codes_get_size(handle_, key, &count);
     CHECK_ERROR(err, key);
 
     ASSERT(count > 0);
@@ -1293,8 +1292,8 @@ void GribToSpec::pl_expand_to_global(std::vector<long>& pl) const
     const auto& lats(eckit::geo::util::gaussian_latitudes(N, increasing));
     const auto eps = std::max(eckit::geo::PointLonLat::EPS, get_double("angular_precision"));
 
-    auto approx              = [=](double a, double b) { return increasing ? a + eps < b : a - eps > b; };
-    const auto j             = std::distance(lats.begin(), std::lower_bound(lats.begin(), lats.end(), lat1, approx));
+    auto approx = [=](double a, double b) { return increasing ? a + eps < b : a - eps > b; };
+    const auto j = std::distance(lats.begin(), std::lower_bound(lats.begin(), lats.end(), lat1, approx));
     const auto lat2_expected = lats[j + pl.size() - 1];
     if (j + pl.size() > 2 * N || !eckit::types::is_approximately_equal<double>(lat2, lat2_expected, eps)) {
         wrongly_encoded_grib_error("GribToSpec: cropped 'pl' doesn't align to global latitudes: start=" + std::to_string(j) + " + #pl=" + std::to_string(pl.size()) + " <= #lats=" + std::to_string(lats.size()));
@@ -1316,7 +1315,7 @@ void GribToSpec::json(eckit::JSON& j) const
     for (; codes_keys_iterator_next(kit) != 0;) {
         const auto* name = codes_keys_iterator_get_name(kit);
 
-        int err         = 0;
+        int err = 0;
         bool is_missing = 0 != codes_is_missing(handle_, name, &err);
         CHECK_ERROR(err, name);
 

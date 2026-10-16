@@ -22,8 +22,8 @@ static void usage(char* prog)
 
 int main(int argc, char** argv)
 {
-    FILE* fin   = 0;
-    int ret     = 0;
+    FILE* fin = 0;
+    int ret = 0;
     char* fname = 0;
     float lat, lon;
     double *vlat, *vlon;
@@ -36,7 +36,7 @@ int main(int argc, char** argv)
         usage(argv[0]);
 
     fname = argv[1];
-    fin   = fopen(fname, "r");
+    fin = fopen(fname, "r");
     if (!fin) {
         perror(fname);
         exit(1);
@@ -88,7 +88,7 @@ int main(int argc, char** argv)
     }
 
     fname = argv[1];
-    fin   = fopen(fname, "r");
+    fin = fopen(fname, "r");
     if (!fin) {
         perror(fname);
         exit(1);
@@ -102,7 +102,7 @@ int main(int argc, char** argv)
     fclose(fin);
 
     fname = argv[2];
-    fin   = fopen(fname, "r");
+    fin = fopen(fname, "r");
     if (!fin) {
         perror(fname);
         exit(1);
@@ -122,7 +122,7 @@ int main(int argc, char** argv)
 
     for (n = 3; n <= argc - 1; n++) {
         fname = argv[n];
-        fin   = fopen(fname, "r");
+        fin = fopen(fname, "r");
         if (!fin) {
             perror(fname);
             exit(1);

@@ -15,8 +15,8 @@ namespace eccodes::accessor
 
 size_t PadToMultiple::preferred_size(int from_handle)
 {
-    long padding  = 0;
-    long begin    = 0;
+    long padding = 0;
+    long begin = 0;
     long multiple = 0;
 
     begin_->evaluate_long(get_enclosing_handle(), &begin);
@@ -32,9 +32,9 @@ void PadToMultiple::init(const long len, grib_arguments* arg)
 {
     Padding::init(len, arg);
 
-    begin_    = arg->get_expression(get_enclosing_handle(), 0);
+    begin_ = arg->get_expression(get_enclosing_handle(), 0);
     multiple_ = arg->get_expression(get_enclosing_handle(), 1);
-    length_   = preferred_size(1);
+    length_ = preferred_size(1);
 }
 
 }  // namespace eccodes::accessor

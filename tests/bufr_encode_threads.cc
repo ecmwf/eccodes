@@ -19,21 +19,21 @@
 #include "grib_dumper_factory.h"
 
 /* These are passed in via argv */
-static size_t NUM_THREADS         = 0;
+static size_t NUM_THREADS = 0;
 static size_t FILES_PER_ITERATION = 0;
-static char* INPUT_FILE           = NULL;
-int opt_dump                      = 0; /* If 1 then dump handle to /dev/null */
-int opt_clone                     = 0; /* If 1 then clone source handle */
-int opt_write                     = 0; /* If 1 write handle to file */
+static char* INPUT_FILE = NULL;
+int opt_dump = 0;  /* If 1 then dump handle to /dev/null */
+int opt_clone = 0; /* If 1 then clone source handle */
+int opt_write = 0; /* If 1 write handle to file */
 
 static int encode_file(char* template_file, char* output_file)
 {
     FILE *in, *out = NULL;
     codes_handle* source_handle = NULL;
-    const void* buffer          = NULL;
-    size_t size                 = 0;
-    int err                     = 0;
-    long numSubsets             = 0;
+    const void* buffer = NULL;
+    size_t size = 0;
+    int err = 0;
+    long numSubsets = 0;
 
     ECCODES_ASSERT(template_file);
     in = fopen(template_file, "rb");
@@ -64,9 +64,9 @@ static int encode_file(char* template_file, char* output_file)
             }
         }
         if (opt_dump) {
-            FILE* devnull            = fopen("/dev/null", "w");
-            eccodes::Dumper* dumper  = NULL;
-            const char* dumper_name  = "bufr_simple";
+            FILE* devnull = fopen("/dev/null", "w");
+            eccodes::Dumper* dumper = NULL;
+            const char* dumper_name = "bufr_simple";
             unsigned long dump_flags = CODES_DUMP_FLAG_ALL_DATA;
             /* codes_dump_content(source_handle,devnull, "json", 1024, NULL); */ /* JSON dump with all attributes */
             dumper = grib_dump_content_with_dumper(source_handle, dumper, devnull, dumper_name, dump_flags, NULL);
@@ -119,10 +119,10 @@ int main(int argc, char** argv)
                 break;
         }
     }
-    index               = optind;
-    mode                = argv[index];
-    INPUT_FILE          = argv[index + 1];
-    NUM_THREADS         = atol(argv[index + 2]);
+    index = optind;
+    mode = argv[index];
+    INPUT_FILE = argv[index + 1];
+    NUM_THREADS = atol(argv[index + 2]);
     FILES_PER_ITERATION = atol(argv[index + 3]);
 
     if (strcmp(mode, "seq") == 0) {
@@ -142,8 +142,8 @@ int main(int argc, char** argv)
         pthread_t* workers = (pthread_t*)malloc(NUM_THREADS * sizeof(pthread_t));
         for (i = 0; i < NUM_THREADS; i++) {
             struct v* data = (struct v*)malloc(sizeof(struct v));
-            data->number   = i;
-            data->data     = NULL;
+            data->number = i;
+            data->data = NULL;
 
             /* Now we will create the thread passing it data as an argument */
             pthread_create(&workers[thread_counter], NULL, runner, data);
@@ -152,15 +152,15 @@ int main(int argc, char** argv)
         }
 
         for (i = 0; i < NUM_THREADS; i++) {
-          pthread_join(workers[i], NULL);
+            pthread_join(workers[i], NULL);
         }
         free(workers);
 #elif GRIB_OMP_THREADS
-#pragma omp parallel for schedule(static) num_threads(NUM_THREADS)
+    #pragma omp parallel for schedule(static) num_threads(NUM_THREADS)
         for (i = 0; i < NUM_THREADS; i++) {
             struct v* data = (struct v*)malloc(sizeof(struct v));
-            data->number   = i;
-            data->data     = NULL;
+            data->number = i;
+            data->data = NULL;
             do_stuff(data);
         }
 #else
@@ -170,8 +170,8 @@ int main(int argc, char** argv)
     else {
         for (i = 0; i < NUM_THREADS; i++) {
             struct v* data = (struct v*)malloc(sizeof(struct v));
-            data->number   = i;
-            data->data     = NULL;
+            data->number = i;
+            data->data = NULL;
             do_stuff(data);
         }
     }

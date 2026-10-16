@@ -17,15 +17,15 @@
 
 int main(int argc, char** argv)
 {
-    int err               = 0;
-    size_t len            = 0;
-    grib_context* ctx     = grib_context_get_default();
+    int err = 0;
+    size_t len = 0;
+    grib_context* ctx = grib_context_get_default();
 
     assert(argc == 5);
 
-    const char* in_filename  = argv[1];  // CCSDS field - not constant
-    const char* in_sample    = argv[2];  // CCSDS sample - constant field
-    const char* out_binfile  = argv[3];  // binary file with raw bytes
+    const char* in_filename = argv[1];   // CCSDS field - not constant
+    const char* in_sample = argv[2];     // CCSDS sample - constant field
+    const char* out_binfile = argv[3];   // binary file with raw bytes
     const char* out_filename = argv[4];  // final output
 
     FILE* in = fopen(in_filename, "rb");
@@ -55,16 +55,16 @@ int main(int argc, char** argv)
 
     // Get input field values as bytes
     unsigned char* byte_val = NULL;
-    size_t blen             = 0;
-    long sec7Len            = -1;
+    size_t blen = 0;
+    long sec7Len = -1;
 
     // CODES_CHECK(codes_get_length(h, "codedValues", &klen), 0); // no good, always 1025!
-    CODES_CHECK(codes_get_long(h, "section7Length", &sec7Len), 0); //grib2 only
+    CODES_CHECK(codes_get_long(h, "section7Length", &sec7Len), 0);  // grib2 only
     printf("1. codes_get_length of sec7 = %ld\n", sec7Len);
 
-    blen     = sec7Len;
+    blen = sec7Len;
     byte_val = (unsigned char*)malloc(blen * sizeof(unsigned char));
-    GRIB_CHECK(codes_get_bytes(h, "codedValues", byte_val, &blen), 0);//magic
+    GRIB_CHECK(codes_get_bytes(h, "codedValues", byte_val, &blen), 0);  // magic
     printf("1. codes_get_bytes blen = %zu\n", blen);
 
     FILE* fout = fopen(out_binfile, "wb");
@@ -77,9 +77,9 @@ int main(int argc, char** argv)
 
     // Read direct from bytes in a file
     struct stat finfo;
-    size_t fsize        = 0;
+    size_t fsize = 0;
     unsigned char* data = NULL;
-    unsigned char* p    = NULL;
+    unsigned char* p = NULL;
 
     FILE* f = fopen(out_binfile, "rb");
     stat(out_binfile, &finfo);
@@ -87,7 +87,7 @@ int main(int argc, char** argv)
     printf("Read bin file: fsize=%zu\n", fsize);
 
     data = (unsigned char*)malloc(fsize);
-    p    = data;
+    p = data;
     if (fread(data, 1, fsize, f) != fsize) {
         perror(out_binfile);
         exit(1);
@@ -115,7 +115,7 @@ int main(int argc, char** argv)
     GRIB_CHECK(codes_set_long(h1, "ccsdsRsi", ccsdsRsi), 0);
     GRIB_CHECK(codes_set_long(h1, "numberOfValues", numberOfValues), 0);
     GRIB_CHECK(codes_set_long(h1, "numberOfDataPoints", numberOfDataPoints), 0);
-    GRIB_CHECK(codes_set_bytes(h1, "codedValues", p, &len), 0);//magic
+    GRIB_CHECK(codes_set_bytes(h1, "codedValues", p, &len), 0);  // magic
 
     CODES_CHECK(codes_write_message(h1, out_filename, "w"), 0);
     grib_context_set_debug(ctx, 0);

@@ -20,8 +20,8 @@ int main(void)
     const int nj = 2880;
     size_t numbytes = 0;
     double* values;
-    int i                = 0;
-    codes_handle* h      = NULL;
+    int i = 0;
+    codes_handle* h = NULL;
     const char* filename = "bigfile.grib";
 
 #ifndef ECCODES_ON_WINDOWS
@@ -36,11 +36,11 @@ int main(void)
     }
 
     for (i = 0; i < ni * nj; i++) {
-        #ifndef ECCODES_ON_WINDOWS
-            double r  = rand_r(&seed) * 1.0 / RAND_MAX;
-        #else
-            double r  = rand() * 1.0 / RAND_MAX;
-        #endif
+#ifndef ECCODES_ON_WINDOWS
+        double r = rand_r(&seed) * 1.0 / RAND_MAX;
+#else
+        double r = rand() * 1.0 / RAND_MAX;
+#endif
         values[i] = r;
     }
 

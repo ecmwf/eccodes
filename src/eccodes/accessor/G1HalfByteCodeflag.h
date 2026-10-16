@@ -19,15 +19,20 @@ class G1HalfByteCodeflag : public Gen
 {
 public:
     G1HalfByteCodeflag() :
-        Gen() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        Gen() {}
+    const AccessorType& accessor_type() const override
+    {
+        {
+            return accessor_type_;
+        }
+    }
     long get_native_type() override;
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;
 
-    static constexpr AccessorType accessor_type_{"g1_half_byte_codeflag"};
+    static constexpr AccessorType accessor_type_{ "g1_half_byte_codeflag" };
 };
 
 }  // namespace eccodes::accessor
