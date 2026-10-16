@@ -2,6 +2,7 @@
 name = "eccodes"
 repo = "ecmwf/eccodes"
 visibility = "public"
+fork-pull-requests = true
 compiler-inputs = ["cxx-compiler"]
 git-read = ["ecmwf/bindman"]
 add-to-path = ["bin"]

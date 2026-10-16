@@ -175,7 +175,8 @@ void wrongly_encoded_grib_error(const std::string& msg)
 
 void wrongly_encoded_grib(const std::string& msg)
 {
-    if (static bool do_abort = codes_getenv("ECCODES_GRIB_GEO_STRICT") != nullptr; do_abort) {
+    static const bool do_abort = codes_getenv("ECCODES_GRIB_GEO_STRICT") != nullptr;
+    if (do_abort) {
         wrongly_encoded_grib_error(msg);
     }
 
