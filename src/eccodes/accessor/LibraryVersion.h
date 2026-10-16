@@ -20,7 +20,7 @@ class LibraryVersion : public Ascii
 public:
     LibraryVersion() :
         Ascii() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     int unpack_string(char*, size_t* len) override;
     size_t string_length() override;
     int value_count(long*) override;

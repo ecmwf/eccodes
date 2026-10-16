@@ -20,7 +20,7 @@ class Variable : public Gen
 public:
     Variable() :
         Gen() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     long get_native_type() override;
     bool accepts_native_type(long type) override;
     int pack_double(const double* val, size_t* len) override;

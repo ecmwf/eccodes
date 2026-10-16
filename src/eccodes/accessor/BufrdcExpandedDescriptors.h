@@ -20,7 +20,7 @@ class BufrdcExpandedDescriptors : public Long
 public:
     BufrdcExpandedDescriptors() :
         Long() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     int unpack_long(long* val, size_t* len) override;
     int unpack_string_array(char**, size_t* len) override;
     int value_count(long*) override;

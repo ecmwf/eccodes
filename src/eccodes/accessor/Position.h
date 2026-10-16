@@ -20,7 +20,7 @@ class Position : public Gen
 public:
     Position() :
         Gen() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     long get_native_type() override;
     int unpack_long(long* val, size_t* len) override;
     void dump(eccodes::Dumper*) override;

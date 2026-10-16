@@ -20,7 +20,7 @@ class CfVarName : public Ascii
 public:
     CfVarName() :
         Ascii() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     int unpack_string(char*, size_t* len) override;
     size_t string_length() override;
     void init(const long, grib_arguments*) override;

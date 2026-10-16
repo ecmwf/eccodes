@@ -20,7 +20,7 @@ class G1FcPeriod : public G1StepRange
 public:
     G1FcPeriod() :
         G1StepRange() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     int unpack_string(char*, size_t* len) override;
 
     static constexpr AccessorType accessor_type_{"g1fcperiod"};

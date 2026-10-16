@@ -21,7 +21,7 @@ class SmartTable : public Unsigned
 public:
     SmartTable() :
         Unsigned() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     long get_native_type() override;
     int unpack_long(long* val, size_t* len) override;
     int unpack_string(char*, size_t* len) override;

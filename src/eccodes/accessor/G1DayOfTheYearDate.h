@@ -20,7 +20,7 @@ class G1DayOfTheYearDate : public G1Date
 public:
     G1DayOfTheYearDate() :
         G1Date() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     int unpack_string(char*, size_t* len) override;
     void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;

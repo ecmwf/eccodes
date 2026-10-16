@@ -20,7 +20,7 @@ class Time : public Long
 public:
     Time() :
         Long() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     int unpack_string(char*, size_t* len) override;

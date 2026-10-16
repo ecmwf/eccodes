@@ -20,7 +20,7 @@ class JulianDay : public Double
 public:
     JulianDay() :
         Double() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     int pack_double(const double* val, size_t* len) override;
     int pack_long(const long* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;

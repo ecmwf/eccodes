@@ -21,7 +21,7 @@ public:
     void init(const long l, grib_arguments* args) override;
     Transient() :
         Variable() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
 
     static constexpr AccessorType accessor_type_{"transient"};
 };

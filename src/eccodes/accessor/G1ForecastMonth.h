@@ -20,7 +20,7 @@ class G1ForecastMonth : public Long
 public:
     G1ForecastMonth() :
         Long() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     void dump(eccodes::Dumper*) override;

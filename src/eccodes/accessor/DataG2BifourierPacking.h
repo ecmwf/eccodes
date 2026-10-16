@@ -49,7 +49,7 @@ class DataG2BifourierPacking : public DataSimplePacking
 public:
     DataG2BifourierPacking() :
         DataSimplePacking() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
     int value_count(long*) override;

@@ -18,7 +18,7 @@ class Constant : public Variable
 public:
     Constant() :
         Variable() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     void init(const long, grib_arguments*) override;
 
 

@@ -20,7 +20,7 @@ class Unsigned : public Long
 public:
     Unsigned() :
         Long() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     void init(const long len, grib_arguments* arg) override;
     void dump(eccodes::Dumper* dumper) override;
     int unpack_long(long* val, size_t* len) override;

@@ -20,7 +20,7 @@ class Long : public Gen
 public:
     Long() :
         Gen() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     void init(const long len, grib_arguments* arg) override;
     long get_native_type() override;
     int pack_missing() override;

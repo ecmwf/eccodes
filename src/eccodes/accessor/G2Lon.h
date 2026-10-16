@@ -20,7 +20,7 @@ class G2Lon : public Double
 public:
     G2Lon() :
         Double() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
     void init(const long, grib_arguments*) override;

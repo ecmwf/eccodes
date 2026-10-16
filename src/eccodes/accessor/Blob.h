@@ -20,7 +20,7 @@ class Blob : public Gen
 public:
     Blob() :
         Gen() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     long get_native_type() override;
     int unpack_bytes(unsigned char*, size_t* len) override;
     void dump(eccodes::Dumper*) override;

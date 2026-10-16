@@ -20,7 +20,7 @@ class AbstractVector : public Double
 public:
     AbstractVector() :
         Double() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
 
 public:
     // TODO(maee): make private

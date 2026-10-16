@@ -20,7 +20,7 @@ class G1MessageLength : public SectionLength
 public:
     G1MessageLength() :
         SectionLength() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;

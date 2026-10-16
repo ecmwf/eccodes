@@ -20,7 +20,7 @@ class MarsStep : public Ascii
 public:
     MarsStep() :
         Ascii() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     long get_native_type() override;
     int pack_long(const long* val, size_t* len) override;
     int pack_string(const char*, size_t* len) override;

@@ -20,7 +20,7 @@ class G1Bitmap : public Bitmap
 public:
     G1Bitmap() :
         Bitmap() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     int pack_double(const double* val, size_t* len) override;
     int unpack_bytes(unsigned char*, size_t* len) override;
     int value_count(long*) override;

@@ -20,7 +20,7 @@ class AbstractLongVector : public Gen
 public:
     AbstractLongVector() :
         Gen() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
 
 public:
     // TODO(maee): make private

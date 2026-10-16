@@ -20,7 +20,7 @@ class BufrStringValues : public Ascii
 public:
     BufrStringValues() :
         Ascii() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     int unpack_string(char*, size_t* len) override;
     int unpack_string_array(char**, size_t* len) override;
     int value_count(long*) override;

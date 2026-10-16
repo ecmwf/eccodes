@@ -21,7 +21,7 @@ class Iterator : public Gen
 public:
     Iterator() :
         Gen() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     void init(const long l, grib_arguments* args) override;
     void dump(eccodes::Dumper* dumper) override;
 

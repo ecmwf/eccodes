@@ -20,7 +20,7 @@ class When : public Gen
 public:
     When() :
         Gen() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     long get_native_type() override;
     void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;

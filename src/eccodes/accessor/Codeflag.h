@@ -20,7 +20,7 @@ class Codeflag : public Unsigned
 public:
     Codeflag() :
         Unsigned() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     int value_count(long*) override;
     void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;

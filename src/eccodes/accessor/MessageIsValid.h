@@ -20,7 +20,7 @@ class MessageIsValid : public Long
 public:
     MessageIsValid() :
         Long() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     int unpack_long(long* val, size_t* len) override;
     int pack_string(const char* sval, size_t* len) override;
     void init(const long, grib_arguments*) override;

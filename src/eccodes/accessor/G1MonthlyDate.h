@@ -20,7 +20,7 @@ class G1MonthlyDate : public Long
 public:
     G1MonthlyDate() :
         Long() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
 

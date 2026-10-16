@@ -20,7 +20,7 @@ class Section : public Gen
 public:
     Section() :
         Gen() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     long get_native_type() override;
     long byte_count() override;
     long next_offset() override;

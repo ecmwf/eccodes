@@ -22,7 +22,7 @@ class Gen : public Accessor
 {
 public:
     Gen() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     ~Gen();
 
     void init_accessor(const long, grib_arguments*) override;  // TODO: Implement

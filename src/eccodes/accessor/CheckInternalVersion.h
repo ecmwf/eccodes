@@ -20,7 +20,7 @@ class CheckInternalVersion : public Ascii
 public:
     CheckInternalVersion() :
         Ascii() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     size_t string_length() override;
     int value_count(long*) override;
     void init(const long, grib_arguments*) override;

@@ -21,7 +21,7 @@ class Nearest : public Gen
 public:
     Nearest() :
         Gen() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     void init(const long l, grib_arguments* args) override;
     void dump(eccodes::Dumper* dumper) override;
 

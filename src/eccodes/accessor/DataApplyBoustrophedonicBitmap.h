@@ -20,7 +20,7 @@ class DataApplyBoustrophedonicBitmap : public Gen
 public:
     DataApplyBoustrophedonicBitmap() :
         Gen() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     long get_native_type() override;
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;

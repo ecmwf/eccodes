@@ -20,7 +20,7 @@ class BufrGroup : public Variable
 public:
     BufrGroup() :
         Variable() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     void dump(eccodes::Dumper*) override;
     grib_accessor* next(grib_accessor*, int explore) override;
 

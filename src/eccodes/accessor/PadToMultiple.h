@@ -20,7 +20,7 @@ class PadToMultiple : public Padding
 public:
     PadToMultiple() :
         Padding() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     void init(const long, grib_arguments*) override;
     size_t preferred_size(int) override;
 
