@@ -1,0 +1,219 @@
+# GENERATED FILE - DO NOT EDIT.
+# Regenerate via the ci-infrastructure-generate CLI.
+# Source of truth: each repo's .ci/manifest.toml.
+name: Downstream runner (eccodes)
+on:
+  workflow_run:
+    workflows:
+    - CI
+    - CI (fork)
+    types:
+    - completed
+  workflow_dispatch:
+    inputs:
+      pull-request:
+        description: Number of the pull request whose commit to run downstream CI for
+        required: true
+        type: string
+      level:
+        description: '''all'', or the highest consumer level to run (as the run-downstream-ci labels)'
+        required: true
+        default: '1'
+        type: string
+concurrency:
+  group: trigger-downstream-runner-${{ (github.event.workflow_run.name == 'CI (fork)' && github.event.workflow_run.display_title) || github.event.workflow_run.head_sha || inputs.pull-request }}
+  cancel-in-progress: true
+jobs:
+  ci-approval:
+    runs-on: ubuntu-slim
+    permissions:
+      pull-requests: write
+    steps:
+    - uses: ecmwf/ci-infrastructure/actions/require-ci-approval@main
+  context:
+    runs-on: ubuntu-slim
+    permissions:
+      actions: read
+      pull-requests: read
+    outputs:
+      head-sha: ${{ steps.ctx.outputs.head-sha }}
+      head-branch: ${{ steps.ctx.outputs.head-branch }}
+      ci-conclusion: ${{ steps.ctx.outputs.ci-conclusion }}
+      ci-url: ${{ steps.ctx.outputs.ci-url }}
+      ci-summary: ${{ steps.ctx.outputs.ci-summary }}
+      pull-request: ${{ steps.ctx.outputs.pull-request }}
+    steps:
+    - name: Resolve the commit under test
+      id: ctx
+      uses: ecmwf/ci-infrastructure/actions/resolve-dispatch-context@main
+      with:
+        pull-request: ${{ inputs.pull-request }}
+        fork-ci-workflow: ci-fork.yml
+    needs:
+    - ci-approval
+  label-gate:
+    runs-on: ubuntu-slim
+    permissions:
+      pull-requests: read
+    outputs:
+      run: ${{ steps.gate.outputs.run }}
+      depth: ${{ steps.gate.outputs.depth }}
+    steps:
+    - name: Check the downstream-CI label
+      id: gate
+      uses: ecmwf/ci-infrastructure/actions/should-downstream-run@main
+      with:
+        sha: ${{ needs.context.outputs.head-sha }}
+        pull-request: ${{ needs.context.outputs.pull-request }}
+        level: ${{ inputs.level }}
+    needs:
+    - ci-approval
+    - context
+  validate:
+    if: ${{ (needs.context.outputs.ci-conclusion == 'success') && needs['label-gate'].outputs.run == 'true' }}
+    runs-on: arc-runner-normal
+    container:
+      image: eccr.ecmwf.int/public-ci-images/ubuntu24.04-base:latest
+    steps:
+    - name: Announce image
+      uses: ecmwf/ci-infrastructure/actions/announce-image@main
+    - id: mint
+      uses: actions/create-github-app-token@v3
+      with:
+        client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
+        private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
+        owner: ${{ github.repository_owner }}
+    - uses: actions/checkout@v6
+      with:
+        ref: ${{ needs.context.outputs.head-sha }}
+        token: ${{ steps.mint.outputs.token }}
+    - uses: ecmwf/ci-infrastructure/actions/validate-generated-workflows@main
+      with:
+        token: ${{ steps.mint.outputs.token }}
+    needs:
+    - ci-approval
+    - context
+    - label-gate
+  report-start:
+    if: ${{ (needs.context.outputs.ci-conclusion == 'success') && needs['label-gate'].outputs.run == 'true' }}
+    runs-on: ubuntu-slim
+    permissions:
+      statuses: write
+    steps:
+    - name: Post pending downstream status
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        gh api -X POST \
+          "/repos/${{ github.repository }}/statuses/${{ needs.context.outputs.head-sha }}" \
+          -f state=pending \
+          -f context='downstream/runner' \
+          -f target_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+          -f description='Downstream runner tests running'
+    needs:
+    - ci-approval
+    - context
+    - label-gate
+  report-ci-failure:
+    if: ${{ (needs.context.outputs.ci-conclusion != 'success' && needs.context.outputs.ci-conclusion != '') && needs['label-gate'].outputs.run == 'true' }}
+    runs-on: ubuntu-slim
+    permissions:
+      statuses: write
+    steps:
+    - name: Post downstream failure status
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        gh api -X POST \
+          "/repos/${{ github.repository }}/statuses/${{ needs.context.outputs.head-sha }}" \
+          -f state=failure \
+          -f context='downstream/runner' \
+          -f target_url="${{ needs.context.outputs.ci-url }}" \
+          -f description="${{ needs.context.outputs.ci-summary }}; downstream runner not run"
+    needs:
+    - ci-approval
+    - context
+    - label-gate
+  fdb:
+    name: fdb
+    needs:
+    - ci-approval
+    - context
+    - label-gate
+    - validate
+    - metkit
+    uses: ecmwf/fdb/.github/workflows/cross-repo-trigger.yml@develop
+    with:
+      from-repo: ${{ github.repository }}
+      from-sha: ${{ needs.context.outputs.head-sha }}
+      from-jobs: '["eccodes/build"]'
+      branch: ${{ needs.context.outputs.head-branch }}
+      fallback-ref: develop
+    secrets: inherit
+    if: ${{ needs['label-gate'].outputs.run == 'true' && (needs['label-gate'].outputs.depth == 'all' || needs['label-gate'].outputs.depth >= 2) }}
+  metkit:
+    name: metkit
+    needs:
+    - ci-approval
+    - context
+    - label-gate
+    - validate
+    uses: ecmwf/metkit/.github/workflows/cross-repo-trigger.yml@develop
+    with:
+      from-repo: ${{ github.repository }}
+      from-sha: ${{ needs.context.outputs.head-sha }}
+      from-jobs: '["eccodes/build"]'
+      branch: ${{ needs.context.outputs.head-branch }}
+      fallback-ref: develop
+    secrets: inherit
+    if: ${{ needs['label-gate'].outputs.run == 'true' && (needs['label-gate'].outputs.depth == 'all' || needs['label-gate'].outputs.depth >= 1) }}
+  mir:
+    name: mir
+    needs:
+    - ci-approval
+    - context
+    - label-gate
+    - validate
+    - metkit
+    uses: ecmwf/mir/.github/workflows/cross-repo-trigger.yml@develop
+    with:
+      from-repo: ${{ github.repository }}
+      from-sha: ${{ needs.context.outputs.head-sha }}
+      from-jobs: '["eccodes/build"]'
+      branch: ${{ needs.context.outputs.head-branch }}
+      fallback-ref: develop
+    secrets: inherit
+    if: ${{ needs['label-gate'].outputs.run == 'true' && (needs['label-gate'].outputs.depth == 'all' || needs['label-gate'].outputs.depth >= 2) }}
+  report-result:
+    needs:
+    - ci-approval
+    - context
+    - label-gate
+    - validate
+    - fdb
+    - metkit
+    - mir
+    if: ${{ (always() && needs.context.outputs.ci-conclusion == 'success') && needs['label-gate'].outputs.run == 'true' }}
+    runs-on: ubuntu-slim
+    permissions:
+      statuses: write
+    steps:
+    - name: Post final downstream status
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        state=success
+        for r in ${{ needs.validate.result }} ${{ needs.fdb.result }} ${{ needs.metkit.result }} ${{ needs.mir.result }}; do
+          if [ "$r" = failure ] || [ "$r" = cancelled ]; then
+            state=failure
+          fi
+        done
+        depth="${{ needs['label-gate'].outputs.depth }}"
+        scope=""
+        if [ "$depth" != all ]; then scope=" (up to level $depth)"; fi
+        gh api -X POST \
+          "/repos/${{ github.repository }}/statuses/${{ needs.context.outputs.head-sha }}" \
+          -f state="$state" \
+          -f context='downstream/runner' \
+          -f target_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+          -f description="Downstream runner tests $state$scope"

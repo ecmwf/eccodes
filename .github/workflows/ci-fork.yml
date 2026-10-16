@@ -6,7 +6,7 @@ run-name: 'CI (fork) #${{ github.event.pull_request.number }} @ ${{ github.event
 on:
   pull_request_target:
     types:
-    - labeled
+    - opened
     - synchronize
     - reopened
 permissions:
@@ -14,6 +14,6 @@ permissions:
   pull-requests: write
 jobs:
   ci:
-    if: github.event.pull_request.head.repo.full_name != github.repository && (github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci')
+    if: github.event.pull_request.head.repo.full_name != github.repository
     uses: ./.github/workflows/ci.yml
     secrets: inherit
