@@ -1,0 +1,19 @@
+# GENERATED FILE - DO NOT EDIT.
+# Regenerate via the ci-infrastructure-generate CLI.
+# Source of truth: each repo's .ci/manifest.toml.
+name: CI (fork)
+run-name: 'CI (fork) #${{ github.event.pull_request.number }} @ ${{ github.event.pull_request.head.sha }}'
+on:
+  pull_request_target:
+    types:
+    - labeled
+    - synchronize
+    - reopened
+permissions:
+  contents: read
+  pull-requests: write
+jobs:
+  ci:
+    if: github.event.pull_request.head.repo.full_name != github.repository && (github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci')
+    uses: ./.github/workflows/ci.yml
+    secrets: inherit
