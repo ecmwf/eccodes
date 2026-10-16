@@ -1,0 +1,26 @@
+# GENERATED FILE - DO NOT EDIT.
+# Regenerate via the ci-infrastructure-generate CLI.
+# Source of truth: each repo's .ci/manifest.toml.
+name: '[PR] Downstream-CI label gate'
+on:
+  pull_request_target:
+    types:
+    - opened
+    - reopened
+    - synchronize
+    - labeled
+    - unlabeled
+permissions:
+  statuses: write
+  actions: write
+jobs:
+  gate:
+    runs-on: ubuntu-slim
+    steps:
+    - uses: ecmwf/ci-infrastructure/actions/require-label-decision@main
+      with:
+        context: downstream-ci-label
+        description-decided: Downstream-CI decision recorded
+    - uses: ecmwf/ci-infrastructure/actions/dispatch-downstream@main
+      with:
+        workflows: trigger-downstream.yml trigger-downstream-hpc-atos.yml
