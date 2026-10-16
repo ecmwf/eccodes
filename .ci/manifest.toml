@@ -200,14 +200,13 @@ modules = ["load prgenv/nvidia", "unload nvidia", "load nvidia/26.1", "load cmak
 c-compiler-binary = "nvc"
 cxx-compiler-binary = "nvc++"
 
-# Disabled for now due to the eckit error
-# [[matrix.build-hpc.include]]
-# options = "eckit-geo"
-# cxx-compiler = "icpc-2023.2"
-# platform = "hpc-atos-intel"
-# modules = ["load prgenv/intel", "unload intel", "load intel/2023.2.0", "load cmake", "load ninja"]
-# c-compiler-binary = "icc"
-# cxx-compiler-binary = "icpc"
+[[matrix.build-hpc.include]]
+options = "eckit-geo"
+cxx-compiler = "icpc-2023.2"
+platform = "hpc-atos-intel"
+modules = ["load prgenv/intel", "unload intel", "load intel/2023.2.0", "load cmake", "load ninja"]
+c-compiler-binary = "icc"
+cxx-compiler-binary = "icpc"
 
 [matrix.build-hpc]
 packages = ["eccodes"]
