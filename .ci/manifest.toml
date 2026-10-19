@@ -4,7 +4,6 @@ repo = "ecmwf/eccodes"
 visibility = "public"
 fork-pull-requests = true
 compiler-inputs = ["cxx-compiler"]
-git-read = ["ecmwf/bindman"]
 add-to-path = ["bin"]
 
 [[deps]]
@@ -218,6 +217,7 @@ repo = "ecmwf/eckit"
 package = "eckit"
 ref = "develop"
 compiler-inputs = ["cxx-compiler"]
+crates = ["eckit-sys"]
 
 [matrix.rust]
 packages = ["eccodes-rust"]

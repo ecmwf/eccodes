@@ -56,19 +56,9 @@ jobs:
         uses: ecmwf/ci-infrastructure/actions/announce-image@main
       - uses: actions/checkout@v6
 
-      - id: git-read
-        uses: actions/create-github-app-token@v3
-        with:
-          client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
-          private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
-          owner: ${{ github.repository_owner }}
-          repositories: bindman
-          permission-contents: read
-
       - name: Publish the crates
         uses: ecmwf/ci-infrastructure/actions/run-job-script@main
         with:
           job-script: ${{ matrix.job-script }}
           matrix-leg: ${{ toJSON(matrix) }}
           package: eccodes-crates
-          git-token: ${{ steps.git-read.outputs.token }}
