@@ -207,7 +207,7 @@ container-credentials = true
 triggers = ["upstream-change", "rebuild-request"]
 
 [packages.eccodes-rust]
-compiler-inputs = ["cxx-compiler"]
+compiler-inputs = ["cxx-compiler", "rust-compiler"]
 
 [[packages.eccodes-rust.deps]]
 package = "eccodes"
@@ -238,7 +238,7 @@ rust-compiler = "rust-1.90"
 # Publishing the crates, only from publish-crates.yml: no patches and the default features, as a
 # crates.io user gets them, so the -sys crates build their C++ from the release tags.
 [packages.eccodes-crates]
-compiler-inputs = ["cxx-compiler"]
+compiler-inputs = ["cxx-compiler", "rust-compiler"]
 
 [matrix.rust-publish]
 packages = ["eccodes-crates"]
