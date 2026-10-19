@@ -1,0 +1,74 @@
+name: publish-crates
+
+# A release tag publishes the Rust crates; a manual run does what `mode` says, but publishes only from a tag.
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+  workflow_dispatch:
+    inputs:
+      mode:
+        type: choice
+        options: [dry-run, publish]
+        default: dry-run
+
+permissions:
+  contents: read
+
+jobs:
+  resolve:
+    runs-on: arc-runner-normal
+    container:
+      image: eccr.ecmwf.int/public-ci-images/ubuntu24.04-base:latest
+    outputs:
+      matrix: ${{ toJSON(fromJSON(steps.r.outputs.json)['rust-publish']) }}
+    steps:
+      - name: Announce image
+        uses: ecmwf/ci-infrastructure/actions/announce-image@main
+      - id: mint
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+      - uses: actions/checkout@v6
+      - id: r
+        uses: ecmwf/ci-infrastructure/actions/resolve-deps@main
+        with:
+          matrix: rust-publish
+          token: ${{ steps.mint.outputs.token }}
+          client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
+          app-private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
+
+  publish:
+    needs: resolve
+    name: publish (${{ matrix._resolved['job-name'] }})
+    runs-on: ${{ matrix['runs-on'] }}
+    container:
+      image: ${{ matrix.container }}
+    strategy:
+      matrix: ${{ fromJSON(needs.resolve.outputs.matrix) }}
+    env:
+      CI_CARGO_PUBLISH: ${{ github.ref_type == 'tag' && (inputs.mode || 'publish') || 'dry-run' }}
+      CARGO_REGISTRY_TOKEN: ${{ github.ref_type == 'tag' && secrets.CARGO_REGISTRY_TOKEN || '' }}
+    steps:
+      - name: Announce image
+        uses: ecmwf/ci-infrastructure/actions/announce-image@main
+      - uses: actions/checkout@v6
+
+      - id: git-read
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: bindman
+          permission-contents: read
+
+      - name: Publish the crates
+        uses: ecmwf/ci-infrastructure/actions/run-job-script@main
+        with:
+          job-script: ${{ matrix.job-script }}
+          matrix-leg: ${{ toJSON(matrix) }}
+          package: eccodes-crates
+          git-token: ${{ steps.git-read.outputs.token }}
