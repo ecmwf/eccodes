@@ -35,11 +35,11 @@ private:
     static inline int depth_ = 0;
 
     long section_offset_ = 0;
-    long begin_          = 0;
-    long empty_          = 0;
-    long end_            = 0;
-    long isLeaf_         = 0;
-    long isAttribute_    = 0;
+    long begin_ = 0;
+    long empty_ = 0;
+    long end_ = 0;
+    long isLeaf_ = 0;
+    long isAttribute_ = 0;
 
     void dump_attributes(grib_accessor* a);
     void dump_values_attribute(grib_accessor* a, const char* prefix);

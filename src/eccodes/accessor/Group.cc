@@ -73,8 +73,8 @@ long Group::get_native_type()
 
 int Group::unpack_string(char* val, size_t* len)
 {
-    long i         = 0;
-    size_t l       = length_ + 1;
+    long i = 0;
+    size_t l = length_ + 1;
     grib_handle* h = get_enclosing_handle();
 
     if (*len < l) {
@@ -88,17 +88,17 @@ int Group::unpack_string(char* val, size_t* len)
     for (i = 0; i < length_; i++)
         val[i] = h->buffer->data[offset_ + i];
     val[i] = 0;
-    *len   = i;
+    *len = i;
     return GRIB_SUCCESS;
 }
 
 int Group::unpack_long(long* v, size_t* len)
 {
-    char val[1024] = {0};
-    size_t l   = sizeof(val);
-    size_t i   = 0;
+    char val[1024] = { 0 };
+    size_t l = sizeof(val);
+    size_t i = 0;
     char* last = NULL;
-    int err    = unpack_string(val, &l);
+    int err = unpack_string(val, &l);
     if (err)
         return err;
 
@@ -122,7 +122,7 @@ int Group::unpack_long(long* v, size_t* len)
 int Group::unpack_double(double* v, size_t* len)
 {
     char val[1024];
-    size_t l   = sizeof(val);
+    size_t l = sizeof(val);
     char* last = NULL;
     unpack_string(val, &l);
     *v = strtod(val, &last);

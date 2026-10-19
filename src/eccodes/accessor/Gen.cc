@@ -27,17 +27,17 @@ void Gen::init(const long len, grib_arguments* param)
         length_ = 0;
         if (!vvalue_)
             vvalue_ = (grib_virtual_value*)grib_context_malloc_clear(context_, sizeof(grib_virtual_value));
-        vvalue_->type   = get_native_type();
+        vvalue_->type = get_native_type();
         vvalue_->length = len;
         if (act->default_value_ != NULL) {
             const char* p = 0;
-            size_t s_len  = 1;
+            size_t s_len = 1;
             long l;
             int ret = 0;
             double d;
             char tmp[1024];
             grib_expression* expression = act->default_value_->get_expression(get_enclosing_handle(), 0);
-            int type                    = expression->native_type(get_enclosing_handle());
+            int type = expression->native_type(get_enclosing_handle());
             switch (type) {
                     // TODO(maee): add single-precision case
 
@@ -53,7 +53,7 @@ void Gen::init(const long len, grib_arguments* param)
 
                 default:
                     s_len = sizeof(tmp);
-                    p     = expression->evaluate_string(get_enclosing_handle(), tmp, &s_len, &ret);
+                    p = expression->evaluate_string(get_enclosing_handle(), tmp, &s_len, &ret);
                     if (ret != GRIB_SUCCESS) {
                         grib_context_log(context_, GRIB_LOG_ERROR, "Unable to evaluate %s as string", name_);
                         ECCODES_ASSERT(0);
@@ -131,8 +131,8 @@ long Gen::byte_offset()
 int Gen::unpack_bytes(unsigned char* val, size_t* len)
 {
     const unsigned char* buf = get_enclosing_handle()->buffer->data;
-    const long length        = byte_count();
-    const long offset        = byte_offset();
+    const long length = byte_count();
+    const long offset = byte_offset();
 
     if (*len < length) {
         grib_context_log(context_,
@@ -153,8 +153,8 @@ int Gen::unpack_bytes(unsigned char* val, size_t* len)
 int Gen::clear()
 {
     unsigned char* buf = get_enclosing_handle()->buffer->data;
-    const long length  = byte_count();
-    const long offset  = byte_offset();
+    const long length = byte_count();
+    const long offset = byte_offset();
 
     memset(buf + offset, 0, length);
 
@@ -164,10 +164,10 @@ int Gen::clear()
 int Gen::unpack_long(long* v, size_t* len)
 {
     is_overridden_[UNPACK_LONG] = 0;
-    int type                    = GRIB_TYPE_UNDEFINED;
+    int type = GRIB_TYPE_UNDEFINED;
     if (is_overridden_[UNPACK_DOUBLE] == 1) {
         double val = 0.0;
-        size_t l   = 1;
+        size_t l = 1;
         unpack_double(&val, &l);
         if (is_overridden_[UNPACK_DOUBLE] == 1) {
             if (val == GRIB_MISSING_DOUBLE)
@@ -182,7 +182,7 @@ int Gen::unpack_long(long* v, size_t* len)
 
     if (is_overridden_[UNPACK_STRING] == 1) {
         char val[1024];
-        size_t l   = sizeof(val);
+        size_t l = sizeof(val);
         char* last = NULL;
         unpack_string(val, &l);
 
@@ -226,8 +226,8 @@ int Gen::unpack_string(char* v, size_t* len)
     int err = 0;
     if (is_overridden_[UNPACK_DOUBLE] == 1) {
         double val = 0.0;
-        size_t l   = 1;
-        err        = unpack_double(&val, &l);
+        size_t l = 1;
+        err = unpack_double(&val, &l);
         if (is_overridden_[UNPACK_DOUBLE] == 1) {
             if (err)
                 return err;
@@ -242,7 +242,7 @@ int Gen::unpack_string(char* v, size_t* len)
     if (is_overridden_[UNPACK_LONG] == 1) {
         long val = 0;
         size_t l = 1;
-        err      = unpack_long(&val, &l);
+        err = unpack_long(&val, &l);
         if (is_overridden_[UNPACK_LONG] == 1) {
             if (err)
                 return err;
@@ -273,11 +273,11 @@ int Gen::unpack_string_array(char** v, size_t* len)
 
 int Gen::pack_expression(grib_expression* e)
 {
-    size_t len        = 1;
-    long lval         = 0;
-    double dval       = 0;
-    const char* cval  = NULL;
-    int ret           = 0;
+    size_t len = 1;
+    long lval = 0;
+    double dval = 0;
+    const char* cval = NULL;
+    int ret = 0;
     grib_handle* hand = get_enclosing_handle();
 
     // Use the native type of the expression not the accessor
@@ -310,7 +310,7 @@ int Gen::pack_expression(grib_expression* e)
 
         case GRIB_TYPE_STRING: {
             char tmp[1024];
-            len  = sizeof(tmp);
+            len = sizeof(tmp);
             cval = e->evaluate_string(hand, tmp, &len, &ret);
             if (ret != GRIB_SUCCESS) {
                 grib_context_log(context_, GRIB_LOG_ERROR, "Unable to set %s as string (from %s)",
@@ -330,7 +330,7 @@ int Gen::pack_expression(grib_expression* e)
 int Gen::pack_long(const long* v, size_t* len)
 {
     is_overridden_[PACK_LONG] = 0;
-    grib_context* c           = context_;
+    grib_context* c = context_;
     if (is_overridden_[PACK_DOUBLE]) {
         double* val = (double*)grib_context_malloc(c, *len * (sizeof(double)));
         if (!val) {
@@ -358,9 +358,9 @@ int Gen::pack_long(const long* v, size_t* len)
 int pack_double_array_as_long(grib_accessor* a, const double* v, size_t* len)
 {
     grib_context* c = a->context_;
-    int ret         = GRIB_SUCCESS;
+    int ret = GRIB_SUCCESS;
     size_t numBytes = *len * (sizeof(long));
-    long* lValues   = (long*)grib_context_malloc(c, numBytes);
+    long* lValues = (long*)grib_context_malloc(c, numBytes);
     if (!lValues) {
         grib_context_log(
             c, GRIB_LOG_ERROR, "Unable to allocate %zu bytes", numBytes);
@@ -376,7 +376,7 @@ int pack_double_array_as_long(grib_accessor* a, const double* v, size_t* len)
 int Gen::pack_double(const double* v, size_t* len)
 {
     is_overridden_[PACK_DOUBLE] = 0;
-    grib_context* c             = context_;
+    grib_context* c = context_;
 
     if (is_overridden_[PACK_LONG] || accessor_type() == "codetable") {
         /* ECC-648: Special case of codetable */
@@ -393,15 +393,15 @@ int Gen::pack_double(const double* v, size_t* len)
 
 int Gen::pack_string_array(const char** v, size_t* len)
 {
-    int err           = 0;
-    size_t length     = 0;
+    int err = 0;
+    size_t length = 0;
     grib_accessor* as = 0;
 
-    as     = this;
+    as = this;
     long i = (long)*len - 1;
     while (as && i >= 0) {
         length = strlen(v[i]);
-        err    = as->pack_string(v[i], &length);
+        err = as->pack_string(v[i], &length);
         if (err)
             return err;
         --i;
@@ -414,9 +414,9 @@ int Gen::pack_string(const char* v, size_t* len)
 {
     is_overridden_[PACK_STRING] = 0;
     if (is_overridden_[PACK_DOUBLE]) {
-        size_t l     = 1;
+        size_t l = 1;
         char* endPtr = NULL; /* for error handling */
-        double val   = strtod(v, &endPtr);
+        double val = strtod(v, &endPtr);
         if (*endPtr) {
             grib_context_log(context_,
                              GRIB_LOG_ERROR,
@@ -433,7 +433,7 @@ int Gen::pack_string(const char* v, size_t* len)
     if (is_overridden_[PACK_LONG]) {
         size_t l = 1;
         long val = atol(v);
-        int err  = pack_long(&val, &l);
+        int err = pack_long(&val, &l);
         if (is_overridden_[PACK_LONG]) {
             return err;
         }
@@ -529,10 +529,10 @@ int Gen::is_missing_internal()
 
 int Gen::is_missing()
 {
-    int i              = 0;
-    int is_missing     = 1;
+    int i = 0;
+    int is_missing = 1;
     unsigned char ones = 0xff;
-    unsigned char* v   = NULL;
+    unsigned char* v = NULL;
 
     if (flags_ & GRIB_ACCESSOR_FLAG_TRANSIENT) {
         if (vvalue_ == NULL) {
@@ -567,15 +567,15 @@ int Gen::unpack_double_element(size_t i, double* val)
 }
 
 int Gen::unpack_double_element_set(const size_t* index_array,
-                                                   size_t len,
-                                                   double* val_array)
+                                   size_t len,
+                                   double* val_array)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
 
 int Gen::unpack_double_subarray(double* val,
-                                                size_t start,
-                                                size_t len)
+                                size_t start,
+                                size_t len)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
@@ -632,8 +632,8 @@ int unpack_element_set(const size_t*, size_t, double*)
         "Gen::unpack_element_set not implemented");
 }
 int Gen::unpack_float_element_set(const size_t*,
-                                                  size_t,
-                                                  float*)
+                                  size_t,
+                                  float*)
 {
     throw std::runtime_error(
         "Gen::unpack_float_element_set not implemented");

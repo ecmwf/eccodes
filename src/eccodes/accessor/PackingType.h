@@ -19,7 +19,7 @@ class PackingType : public Gen
 {
 public:
     PackingType() :
-        Gen() { }
+        Gen() {}
     const AccessorType& accessor_type() const override { return accessor_type_; }
     long get_native_type() override;
     int pack_string(const char*, size_t* len) override;
@@ -32,7 +32,7 @@ private:
     const char* packing_type_ = nullptr;
 
 public:
-    static constexpr AccessorType accessor_type_{"packing_type"};
+    static constexpr AccessorType accessor_type_{ "packing_type" };
 };
 
 }  // namespace eccodes::accessor

@@ -25,11 +25,11 @@ void LatLonValues::init(const long l, grib_arguments* c)
 
 int LatLonValues::unpack_double(double* val, size_t* len)
 {
-    int err         = 0;
-    double* v       = val;
+    int err = 0;
+    double* v = val;
     double lat, lon, value;
-    size_t size         = 0;
-    long count          = 0;
+    size_t size = 0;
+    long count = 0;
     grib_iterator* iter = grib_iterator_new(get_enclosing_handle(), 0, &err);
     if (err) {
         *len = 0;

@@ -19,7 +19,7 @@ class Signed : public Long
 {
 public:
     Signed() :
-        Long() { }
+        Long() {}
     const AccessorType& accessor_type() const override { return accessor_type_; }
     int is_missing() override;
     int pack_long(const long* val, size_t* len) override;
@@ -37,7 +37,7 @@ private:
     int nbytes_ = 0;
 
 public:
-    static constexpr AccessorType accessor_type_{"signed"};
+    static constexpr AccessorType accessor_type_{ "signed" };
 };
 
 }  // namespace eccodes::accessor

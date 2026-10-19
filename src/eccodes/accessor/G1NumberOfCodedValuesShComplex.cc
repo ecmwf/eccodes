@@ -16,15 +16,15 @@ namespace eccodes::accessor
 void G1NumberOfCodedValuesShComplex::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
-    int n             = 0;
-    bitsPerValue_     = c->get_name(get_enclosing_handle(), n++);
+    int n = 0;
+    bitsPerValue_ = c->get_name(get_enclosing_handle(), n++);
     offsetBeforeData_ = c->get_name(get_enclosing_handle(), n++);
-    offsetAfterData_  = c->get_name(get_enclosing_handle(), n++);
-    unusedBits_       = c->get_name(get_enclosing_handle(), n++);
-    numberOfValues_   = c->get_name(get_enclosing_handle(), n++);
-    JS_               = c->get_name(get_enclosing_handle(), n++);
-    KS_               = c->get_name(get_enclosing_handle(), n++);
-    MS_               = c->get_name(get_enclosing_handle(), n++);
+    offsetAfterData_ = c->get_name(get_enclosing_handle(), n++);
+    unusedBits_ = c->get_name(get_enclosing_handle(), n++);
+    numberOfValues_ = c->get_name(get_enclosing_handle(), n++);
+    JS_ = c->get_name(get_enclosing_handle(), n++);
+    KS_ = c->get_name(get_enclosing_handle(), n++);
+    MS_ = c->get_name(get_enclosing_handle(), n++);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     length_ = 0;
@@ -32,8 +32,8 @@ void G1NumberOfCodedValuesShComplex::init(const long l, grib_arguments* c)
 
 int G1NumberOfCodedValuesShComplex::unpack_long(long* val, size_t* len)
 {
-    int ret               = GRIB_SUCCESS;
-    long bpv              = 0;
+    int ret = GRIB_SUCCESS;
+    long bpv = 0;
     long offsetBeforeData = 0, offsetAfterData = 0, unusedBits = 0, numberOfValues;
     long JS = 0, KS = 0, MS = 0, NS = 0;
 

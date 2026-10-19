@@ -33,22 +33,22 @@ int main(int argc, char** argv)
     long step, levelType;
     char** filenames;
     size_t nkeys, nfiles;
-    int i        = 0;
+    int i = 0;
     char* keys[] = { "step", "date", "param", "levelType" };
     codes_fieldset* set;
     codes_handle* h;
-    char param[20] = {0};
-    char date[10] = {0};
+    char param[20] = { 0 };
+    char date[10] = { 0 };
     size_t datelen = 10;
-    size_t len     = 20;
+    size_t len = 20;
     char* order_by = 0;
 
     if (argc != 3) usage(argv[0]);
 
-    nkeys    = sizeof(keys) / sizeof(*keys);
+    nkeys = sizeof(keys) / sizeof(*keys);
     order_by = strdup(argv[1]);
 
-    nfiles    = argc - 2;
+    nfiles = argc - 2;
     filenames = (char**)malloc(sizeof(char*) * nfiles);
     for (i = 0; i < nfiles; i++)
         filenames[i] = (char*)strdup(argv[i + 2]);

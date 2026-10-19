@@ -26,13 +26,14 @@ void grib_arguments_free(grib_context* c, grib_arguments* g)
     }
 }
 
-namespace eccodes {
+namespace eccodes
+{
 
 Arguments::Arguments(grib_context* c, Expression* g, Arguments* n)
 {
-    context_    = c;
+    context_ = c;
     expression_ = g;
-    next_       = n;
+    next_ = n;
 }
 
 Arguments::~Arguments()

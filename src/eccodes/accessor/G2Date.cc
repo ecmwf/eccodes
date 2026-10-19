@@ -18,17 +18,17 @@ void G2Date::init(const long l, grib_arguments* c)
     Long::init(l, c);
     int n = 0;
 
-    year_  = c->get_name(get_enclosing_handle(), n++);
+    year_ = c->get_name(get_enclosing_handle(), n++);
     month_ = c->get_name(get_enclosing_handle(), n++);
-    day_   = c->get_name(get_enclosing_handle(), n++);
+    day_ = c->get_name(get_enclosing_handle(), n++);
 }
 
 int G2Date::unpack_long(long* val, size_t* len)
 {
-    int ret    = 0;
-    long year  = 0;
+    int ret = 0;
+    long year = 0;
     long month = 0;
-    long day   = 0;
+    long day = 0;
 
     if ((ret = grib_get_long_internal(get_enclosing_handle(), day_, &day)) != GRIB_SUCCESS)
         return ret;
@@ -53,11 +53,11 @@ int G2Date::unpack_long(long* val, size_t* len)
 
 int G2Date::pack_long(const long* val, size_t* len)
 {
-    int ret    = GRIB_SUCCESS;
-    long v     = val[0];
-    long year  = 0;
+    int ret = GRIB_SUCCESS;
+    long v = val[0];
+    long year = 0;
     long month = 0;
-    long day   = 0;
+    long day = 0;
 
     if (*len != 1)
         return GRIB_WRONG_ARRAY_SIZE;

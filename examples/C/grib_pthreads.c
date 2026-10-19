@@ -22,7 +22,7 @@
 /* Return 0 if numbers considered equal, otherwise 1 */
 static int compare_doubles(double a, double b, double tolerance)
 {
-    int ret  = 0;
+    int ret = 0;
     double d = fabs(a - b);
     if (d > tolerance) {
         ret = 1;
@@ -36,12 +36,12 @@ static void* process_grib(void* threadID)
     size_t str_len = 20, i = 0;
     long indicatorOfUnitOfTimeRange = 1, step = 0;
     char mystring[100];
-    double* values    = NULL;
+    double* values = NULL;
     size_t values_len = 0;
     double min = 0, max = 0, avg = 0;
-    const double tol      = 1e-4;
-    double pv[4]          = { 1, 2, 3, 4 };
-    const size_t pvsize   = 4;
+    const double tol = 1e-4;
+    double pv[4] = { 1, 2, 3, 4 };
+    const size_t pvsize = 4;
     ProductKind prod_kind = PRODUCT_ANY;
 
     codes_handle* h = codes_grib_handle_new_from_samples(0, "regular_ll_pl_grib2");
@@ -90,7 +90,7 @@ int main(int argc, char** argv)
 {
     pthread_t threads[NUM_THREADS];
     int error = 0;
-    long i    = 0;
+    long i = 0;
     for (i = 0; i < NUM_THREADS; ++i) {
         printf("Creating thread %ld\n", i);
         error = pthread_create(&threads[i], NULL, process_grib, (void*)i);

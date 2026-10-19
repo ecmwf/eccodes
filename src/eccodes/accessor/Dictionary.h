@@ -19,7 +19,7 @@ class Dictionary : public Gen
 {
 public:
     Dictionary() :
-        Gen() { }
+        Gen() {}
     const AccessorType& accessor_type() const override { return accessor_type_; }
     long get_native_type() override;
     int unpack_double(double* val, size_t* len) override;
@@ -39,7 +39,7 @@ private:
     grib_trie* load_dictionary(int* err);
 
 public:
-    static constexpr AccessorType accessor_type_{"dictionary"};
+    static constexpr AccessorType accessor_type_{ "dictionary" };
 };
 
 }  // namespace eccodes::accessor

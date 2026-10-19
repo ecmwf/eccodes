@@ -19,7 +19,7 @@ class Sprintf : public Ascii
 {
 public:
     Sprintf() :
-        Ascii() { }
+        Ascii() {}
     const AccessorType& accessor_type() const override { return accessor_type_; }
     int unpack_string(char*, size_t* len) override;
     size_t string_length() override;
@@ -30,7 +30,7 @@ private:
     grib_arguments* args_ = nullptr;
 
 public:
-    static constexpr AccessorType accessor_type_{"sprintf"};
+    static constexpr AccessorType accessor_type_{ "sprintf" };
 };
 
 }  // namespace eccodes::accessor

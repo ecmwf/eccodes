@@ -19,7 +19,7 @@ class OctahedralGaussian : public Long
 {
 public:
     OctahedralGaussian() :
-        Long() { }
+        Long() {}
     const AccessorType& accessor_type() const override { return accessor_type_; }
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
@@ -32,7 +32,7 @@ private:
     const char* pl_ = nullptr;
 
 public:
-    static constexpr AccessorType accessor_type_{"octahedral_gaussian"};
+    static constexpr AccessorType accessor_type_{ "octahedral_gaussian" };
 };
 
 }  // namespace eccodes::accessor

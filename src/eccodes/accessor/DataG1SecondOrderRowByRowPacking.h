@@ -20,7 +20,7 @@ class DataG1SecondOrderRowByRowPacking : public DataSimplePacking
 {
 public:
     DataG1SecondOrderRowByRowPacking() :
-        DataSimplePacking() { }
+        DataSimplePacking() {}
     const AccessorType& accessor_type() const override { return accessor_type_; }
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
@@ -46,10 +46,11 @@ private:
     const char* bitmap_ = nullptr;
     const char* groupWidths_ = nullptr;
 
-    template <typename T> int unpack_real(T* values, size_t* len);
+    template <typename T>
+    int unpack_real(T* values, size_t* len);
 
 public:
-    static constexpr AccessorType accessor_type_{"data_g1second_order_row_by_row_packing"};
+    static constexpr AccessorType accessor_type_{ "data_g1second_order_row_by_row_packing" };
 };
 
 }  // namespace eccodes::accessor

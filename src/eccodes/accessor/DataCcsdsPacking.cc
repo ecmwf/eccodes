@@ -25,16 +25,16 @@ void DataCcsdsPacking::init(const long v, grib_arguments* args)
     Values::init(v, args);
 
     grib_handle* h = get_enclosing_handle();
-    number_of_values_        = args->get_name(h, carg_++);
-    reference_value_         = args->get_name(h, carg_++);
-    binary_scale_factor_     = args->get_name(h, carg_++);
-    decimal_scale_factor_    = args->get_name(h, carg_++);
+    number_of_values_ = args->get_name(h, carg_++);
+    reference_value_ = args->get_name(h, carg_++);
+    binary_scale_factor_ = args->get_name(h, carg_++);
+    decimal_scale_factor_ = args->get_name(h, carg_++);
     optimize_scaling_factor_ = args->get_name(h, carg_++);
-    bits_per_value_          = args->get_name(h, carg_++);
-    number_of_data_points_   = args->get_name(h, carg_++);
-    ccsds_flags_             = args->get_name(h, carg_++);
-    ccsds_block_size_        = args->get_name(h, carg_++);
-    ccsds_rsi_               = args->get_name(h, carg_++);
+    bits_per_value_ = args->get_name(h, carg_++);
+    number_of_data_points_ = args->get_name(h, carg_++);
+    ccsds_flags_ = args->get_name(h, carg_++);
+    ccsds_block_size_ = args->get_name(h, carg_++);
+    ccsds_rsi_ = args->get_name(h, carg_++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
@@ -49,7 +49,7 @@ int DataCcsdsPacking::value_count(long* count)
 
 static bool is_big_endian()
 {
-    unsigned char is_big_endian   = 0;
+    unsigned char is_big_endian = 0;
     unsigned short endianess_test = 1;
     return reinterpret_cast<const char*>(&endianess_test)[0] == is_big_endian;
 }
@@ -84,23 +84,23 @@ static void print_aec_stream_info(struct aec_stream* strm, const char* func)
     fprintf(stderr, "ECCODES DEBUG CCSDS %s aec_stream.avail_in=%lu\n", func, strm->avail_in);
 }
 
-#define MAX_BITS_PER_VALUE 32
+    #define MAX_BITS_PER_VALUE 32
 int DataCcsdsPacking::pack_double(const double* val, size_t* len)
 {
-    grib_handle* hand       = get_enclosing_handle();
-    int err                 = GRIB_SUCCESS;
+    grib_handle* hand = get_enclosing_handle();
+    int err = GRIB_SUCCESS;
     size_t buflen = 0, i = 0;
     bool is_constant_field = false;
 
-    unsigned char* buf     = NULL;
+    unsigned char* buf = NULL;
     unsigned char* encoded = NULL;
-    size_t n_vals          = 0;
+    size_t n_vals = 0;
 
-    long binary_scale_factor  = 0;
+    long binary_scale_factor = 0;
     long decimal_scale_factor = 0;
-    long optimize_scaling_factor  = 0;
+    long optimize_scaling_factor = 0;
     double reference_value = 0;
-    long bits_per_value    = 0;
+    long bits_per_value = 0;
     double max, min, d, divisor;
 
     long number_of_data_points;
@@ -123,7 +123,7 @@ int DataCcsdsPacking::pack_double(const double* val, size_t* len)
         return err;
     if ((err = grib_get_long_internal(hand, decimal_scale_factor_, &decimal_scale_factor)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_long_internal(hand, optimize_scaling_factor_ , &optimize_scaling_factor)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(hand, optimize_scaling_factor_, &optimize_scaling_factor)) != GRIB_SUCCESS)
         return err;
     if ((err = grib_get_long_internal(hand, ccsds_flags_, &ccsds_flags)) != GRIB_SUCCESS)
         return err;
@@ -226,34 +226,34 @@ int DataCcsdsPacking::pack_double(const double* val, size_t* len)
         d = codes_power<double>(decimal_scale_factor, 10);
     }
     else {
-        int last        = 127;  // last must be a parameter coming from the def file
-        double range    = 0;
+        int last = 127;  // last must be a parameter coming from the def file
+        double range = 0;
         double minrange = 0, maxrange = 0;
         double unscaled_max = 0;
         double unscaled_min = 0;
-        double f            = 0;
-        double decimal      = 1;
+        double f = 0;
+        double decimal = 1;
 
         decimal_scale_factor = 0;
-        range                = (max - min);
-        unscaled_min         = min;
-        unscaled_max         = max;
-        f                    = (codes_power<double>(bits_per_value, 2) - 1);
-        minrange             = codes_power<double>(-last, 2) * f;
-        maxrange             = codes_power<double>(last, 2) * f;
+        range = (max - min);
+        unscaled_min = min;
+        unscaled_max = max;
+        f = (codes_power<double>(bits_per_value, 2) - 1);
+        minrange = codes_power<double>(-last, 2) * f;
+        maxrange = codes_power<double>(last, 2) * f;
 
         while (range < minrange) {
             decimal_scale_factor += 1;
             decimal *= 10;
-            min   = unscaled_min * decimal;
-            max   = unscaled_max * decimal;
+            min = unscaled_min * decimal;
+            max = unscaled_max * decimal;
             range = (max - min);
         }
         while (range > maxrange) {
             decimal_scale_factor -= 1;
             decimal /= 10;
-            min   = unscaled_min * decimal;
-            max   = unscaled_max * decimal;
+            min = unscaled_min * decimal;
+            max = unscaled_max * decimal;
             range = (max - min);
         }
 
@@ -327,7 +327,7 @@ int DataCcsdsPacking::pack_double(const double* val, size_t* len)
 
     // ECC-1431: GRIB2: CCSDS encoding failure AEC_STREAM_ERROR
     buflen = (nbytes * n_vals) * 67 / 64 + 256;
-    buf    = (unsigned char*)grib_context_buffer_malloc_clear(context_, buflen);
+    buf = (unsigned char*)grib_context_buffer_malloc_clear(context_, buflen);
 
     if (!buf) {
         err = GRIB_OUT_OF_MEMORY;
@@ -353,15 +353,15 @@ int DataCcsdsPacking::pack_double(const double* val, size_t* len)
     if ((err = grib_set_long_internal(hand, decimal_scale_factor_, decimal_scale_factor)) != GRIB_SUCCESS)
         return err;
 
-    strm.flags           = ccsds_flags;
+    strm.flags = ccsds_flags;
     strm.bits_per_sample = bits_per_value;
-    strm.block_size      = ccsds_block_size;
-    strm.rsi             = ccsds_rsi;
+    strm.block_size = ccsds_block_size;
+    strm.rsi = ccsds_rsi;
 
-    strm.next_out  = buf;
+    strm.next_out = buf;
     strm.avail_out = buflen;
-    strm.next_in   = encoded;
-    strm.avail_in  = nbytes * n_vals;
+    strm.next_in = encoded;
+    strm.avail_in = nbytes * n_vals;
 
     // This does not support spherical harmonics, and treats 24 differently than:
     // see http://cdo.sourcearchive.com/documentation/1.5.1.dfsg.1-1/cgribexlib_8c_source.html
@@ -400,19 +400,19 @@ int DataCcsdsPacking::unpack(T* val, size_t* len)
     int err = GRIB_SUCCESS;
     size_t buflen = 0;
     struct aec_stream strm;
-    double bscale          = 0;
-    double dscale          = 0;
-    unsigned char* buf     = NULL;
-    size_t n_vals          = 0;
-    size_t size            = 0;
+    double bscale = 0;
+    double dscale = 0;
+    unsigned char* buf = NULL;
+    size_t n_vals = 0;
+    size_t size = 0;
     unsigned char* decoded = NULL;
     // unsigned char* p       = NULL;
     long nn = 0;
 
-    long binary_scale_factor  = 0;
+    long binary_scale_factor = 0;
     long decimal_scale_factor = 0;
-    double reference_value    = 0;
-    long bits_per_value       = 0;
+    double reference_value = 0;
+    long bits_per_value = 0;
 
     long ccsds_flags;
     long ccsds_block_size;
@@ -461,27 +461,27 @@ int DataCcsdsPacking::unpack(T* val, size_t* len)
     dscale = codes_power<T>(-decimal_scale_factor, 10);
 
     buflen = byte_count();
-    buf    = hand->buffer->data;
+    buf = hand->buffer->data;
     buf += byte_offset();
-    strm.flags           = ccsds_flags;
+    strm.flags = ccsds_flags;
     strm.bits_per_sample = bits_per_value;
-    strm.block_size      = ccsds_block_size;
-    strm.rsi             = ccsds_rsi;
+    strm.block_size = ccsds_block_size;
+    strm.rsi = ccsds_rsi;
 
-    strm.next_in  = buf;
+    strm.next_in = buf;
     strm.avail_in = buflen;
 
     nbytes = (bits_per_value + 7) / 8;
     if (nbytes == 3)
         nbytes = 4;
 
-    size    = n_vals * nbytes;
+    size = n_vals * nbytes;
     decoded = (unsigned char*)grib_context_buffer_malloc_clear(context_, size);
     if (!decoded) {
         err = GRIB_OUT_OF_MEMORY;
         goto cleanup;
     }
-    strm.next_out  = decoded;
+    strm.next_out = decoded;
     strm.avail_out = size;
 
     if (hand->context->debug) print_aec_stream_info(&strm, "unpack_*");
@@ -540,12 +540,12 @@ int DataCcsdsPacking::unpack_float(float* val, size_t* len)
 int DataCcsdsPacking::unpack_double_element(size_t idx, double* val)
 {
     // The index idx relates to codedValues NOT values!
-    grib_handle* hand      = get_enclosing_handle();
-    int err                = 0;
-    size_t size            = 0;
-    long bits_per_value    = 0;
+    grib_handle* hand = get_enclosing_handle();
+    int err = 0;
+    size_t size = 0;
+    long bits_per_value = 0;
     double reference_value = 0;
-    double* values         = NULL;
+    double* values = NULL;
 
     if ((err = grib_get_long_internal(hand, bits_per_value_, &bits_per_value)) != GRIB_SUCCESS)
         return err;
@@ -563,7 +563,7 @@ int DataCcsdsPacking::unpack_double_element(size_t idx, double* val)
     if (idx > size) return GRIB_INVALID_ARGUMENT;
 
     values = (double*)grib_context_malloc_clear(context_, size * sizeof(double));
-    err    = grib_get_double_array(hand, "codedValues", values, &size);
+    err = grib_get_double_array(hand, "codedValues", values, &size);
     if (err) {
         grib_context_free(context_, values);
         return err;
@@ -577,9 +577,9 @@ int DataCcsdsPacking::unpack_double_element_set(const size_t* index_array, size_
 {
     grib_handle* hand = get_enclosing_handle();
     size_t size = 0, i = 0;
-    double* values         = NULL;
-    int err                = 0;
-    long bits_per_value    = 0;
+    double* values = NULL;
+    int err = 0;
+    long bits_per_value = 0;
     double reference_value = 0;
 
     if ((err = grib_get_long_internal(hand, bits_per_value_, &bits_per_value)) != GRIB_SUCCESS)
@@ -605,7 +605,7 @@ int DataCcsdsPacking::unpack_double_element_set(const size_t* index_array, size_
     }
 
     values = (double*)grib_context_malloc_clear(context_, size * sizeof(double));
-    err    = grib_get_double_array(get_enclosing_handle(), "codedValues", values, &size);
+    err = grib_get_double_array(get_enclosing_handle(), "codedValues", values, &size);
     if (err) {
         grib_context_free(context_, values);
         return err;

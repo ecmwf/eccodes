@@ -16,9 +16,9 @@ namespace eccodes::accessor
 long Values::init_length()
 {
     int ret = 0;
-    long seclen        = 0;
+    long seclen = 0;
     long offsetsection = 0;
-    long offsetdata    = 0;
+    long offsetdata = 0;
 
     if ((ret = grib_get_long_internal(get_enclosing_handle(), seclen_, &seclen)))
         return ret;
@@ -49,10 +49,10 @@ void Values::init(const long v, grib_arguments* params)
     Gen::init(v, params);
     carg_ = 0;
 
-    seclen_        = params->get_name(get_enclosing_handle(), carg_++);
-    offsetdata_    = params->get_name(get_enclosing_handle(), carg_++);
+    seclen_ = params->get_name(get_enclosing_handle(), carg_++);
+    offsetdata_ = params->get_name(get_enclosing_handle(), carg_++);
     offsetsection_ = params->get_name(get_enclosing_handle(), carg_++);
-    values_dirty_  = 1;
+    values_dirty_ = 1;
 
     length_ = init_length();
     /* ECCODES_ASSERT(length_ >=0); */
@@ -93,14 +93,14 @@ void Values::update_size(size_t s)
 
 int Values::compare(grib_accessor* b)
 {
-    int retval   = 0;
+    int retval = 0;
     double* aval = 0;
     double* bval = 0;
 
     size_t alen = 0;
     size_t blen = 0;
-    int err     = 0;
-    long count  = 0;
+    int err = 0;
+    long count = 0;
 
     err = value_count(&count);
     if (err)

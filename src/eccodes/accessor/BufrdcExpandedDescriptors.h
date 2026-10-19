@@ -19,7 +19,7 @@ class BufrdcExpandedDescriptors : public Long
 {
 public:
     BufrdcExpandedDescriptors() :
-        Long() { }
+        Long() {}
     const AccessorType& accessor_type() const override { return accessor_type_; }
     int unpack_long(long* val, size_t* len) override;
     int unpack_string_array(char**, size_t* len) override;
@@ -34,7 +34,7 @@ private:
     grib_accessor* get_accessor();
 
 public:
-    static constexpr AccessorType accessor_type_{"bufrdc_expanded_descriptors"};
+    static constexpr AccessorType accessor_type_{ "bufrdc_expanded_descriptors" };
 };
 
 }  // namespace eccodes::accessor

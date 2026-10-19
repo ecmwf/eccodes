@@ -17,16 +17,16 @@ void Time::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
     grib_handle* hand = get_enclosing_handle();
-    int n             = 0;
+    int n = 0;
 
-    hour_   = c->get_name(hand, n++);
+    hour_ = c->get_name(hand, n++);
     minute_ = c->get_name(hand, n++);
     second_ = c->get_name(hand, n++);
 }
 
 int Time::unpack_long(long* val, size_t* len)
 {
-    int ret   = 0;
+    int ret = 0;
     long hour = 0, minute = 0, second = 0;
     grib_handle* hand = get_enclosing_handle();
 
@@ -65,15 +65,15 @@ int Time::unpack_long(long* val, size_t* len)
 
 int Time::pack_long(const long* val, size_t* len)
 {
-    int ret           = 0;
-    long v            = val[0];
+    int ret = 0;
+    long v = val[0];
     grib_handle* hand = get_enclosing_handle();
     long hour = 0, minute = 0, second = 0;
 
     if (*len != 1)
         return GRIB_WRONG_ARRAY_SIZE;
 
-    hour   = v / 100;
+    hour = v / 100;
     minute = v % 100;
     second = 0; /* We ignore the 'seconds' in our time calculation! */
 
@@ -96,7 +96,7 @@ int Time::pack_long(const long* val, size_t* len)
 
 int Time::unpack_string(char* val, size_t* len)
 {
-    long v       = 0;
+    long v = 0;
     size_t lsize = 1, lmin = 5;
 
     unpack_long(&v, &lsize);

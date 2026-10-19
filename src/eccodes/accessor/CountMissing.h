@@ -19,7 +19,7 @@ class CountMissing : public Long
 {
 public:
     CountMissing() :
-        Long() { }
+        Long() {}
     const AccessorType& accessor_type() const override { return accessor_type_; }
     int unpack_long(long* val, size_t* len) override;
     int value_count(long*) override;
@@ -32,7 +32,7 @@ private:
     const char* missingValueManagementUsed_ = nullptr;
 
 public:
-    static constexpr AccessorType accessor_type_{"count_missing"};
+    static constexpr AccessorType accessor_type_{ "count_missing" };
 };
 
 }  // namespace eccodes::accessor

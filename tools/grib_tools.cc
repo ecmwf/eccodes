@@ -18,17 +18,17 @@
 #endif
 
 #if HAVE_LIBJASPER
-/* Remove compiler warnings re macros being redefined */
-#undef PACKAGE_BUGREPORT
-#undef PACKAGE_NAME
-#undef PACKAGE_STRING
-#undef PACKAGE_TARNAME
-#undef PACKAGE_VERSION
+    /* Remove compiler warnings re macros being redefined */
+    #undef PACKAGE_BUGREPORT
+    #undef PACKAGE_NAME
+    #undef PACKAGE_STRING
+    #undef PACKAGE_TARNAME
+    #undef PACKAGE_VERSION
 #endif
 
 #ifdef ENABLE_FLOATING_POINT_EXCEPTIONS
- #include <fenv.h>
- int feenableexcept(int excepts);
+    #include <fenv.h>
+int feenableexcept(int excepts);
 #endif
 
 GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
@@ -54,70 +54,70 @@ static int scan(grib_context* c, grib_runtime_options* options, const char* dir)
 FILE* dump_file;
 
 static grib_runtime_options global_options = {
-    0,  /* verbose       */
-    0,  /* fail          */
-    0,  /* skip          */
-    12, /* default_print_width */
-    0,  /* print_header */
-    0,  /* name_space */
-    0,  /* print_number */
-    1,  /* print_statistics */
-    {0}, /* grib_values requested_print_keys[MAX_KEYS] */
-    0, /* requested_print_keys_count */
-    {0}, /* grib_values print_keys[MAX_KEYS] */
-    0, /* print_keys_count  */
-    0, /* strict            */
-    0, /* multi_support     */
-    0, /* set_values_count  */
-    {0}, /* grib_values set_values[MAX_KEYS] */
-    {0}, /* grib_values constraints[MAX_KEYS] */
-    0, /* constraints_count */
-    {0}, /* grib_values compare[MAX_KEYS] */
-    0, /* compare_count */
-    0, /* handle_count      */
-    0, /* filter_handle_count */
-    0, /* file_count     */
-    0, /* grib_tools_file* infile_extra */
-    0, /* grib_tools_file* current_infile */
-    0, /* grib_tools_file* infile */
-    0, /* grib_tools_file* outfile */
-    0, /* grib_action* action */
-    0, /* int dump_flags; */
-    0, /* char* dump_mode; */
-    0, /* repack    */
-    0, /* error    */
-    0, /* gts    */
-    0, /* orderby    */
-    0, /* latlon    */
-    {0}, /* double lats[4] */
-    {0}, /* double lons[4] */
-    {0}, /* double values[4] */
-    {0}, /* double distances[4] */
-    {0},  /* int indexes[4] */
-    4,  /* int latlon_mode */
-    0,  /* char* latlon_mask */
-    -1, /* int latlon_idx */
-    {0}, /* double mask_values[4] */
-    0, /* index */
-    0, /* index_on */
-    0, /* constant */
-    0, /* dump_filename*/
-    0, /* grib_fieldset* idx */
-    0, /* random */
-    0, /* format */
-    0, /* onlyfiles */
-    0, /* tolerance_count  */
-    0, /* through_index */
-    0, /* index1  */
-    0, /* index2  */
-    0, /* context  */
-    0, /* stop  */
-    0, /* mode  */
-    0, /* headers_only  */
-    0, /* skip_all  */
-    {0}, /* grib_values tolerance[MAX_KEYS] */
-    0, /* infile_offset */
-    0  /* JSON output */
+    0,     /* verbose       */
+    0,     /* fail          */
+    0,     /* skip          */
+    12,    /* default_print_width */
+    0,     /* print_header */
+    0,     /* name_space */
+    0,     /* print_number */
+    1,     /* print_statistics */
+    { 0 }, /* grib_values requested_print_keys[MAX_KEYS] */
+    0,     /* requested_print_keys_count */
+    { 0 }, /* grib_values print_keys[MAX_KEYS] */
+    0,     /* print_keys_count  */
+    0,     /* strict            */
+    0,     /* multi_support     */
+    0,     /* set_values_count  */
+    { 0 }, /* grib_values set_values[MAX_KEYS] */
+    { 0 }, /* grib_values constraints[MAX_KEYS] */
+    0,     /* constraints_count */
+    { 0 }, /* grib_values compare[MAX_KEYS] */
+    0,     /* compare_count */
+    0,     /* handle_count      */
+    0,     /* filter_handle_count */
+    0,     /* file_count     */
+    0,     /* grib_tools_file* infile_extra */
+    0,     /* grib_tools_file* current_infile */
+    0,     /* grib_tools_file* infile */
+    0,     /* grib_tools_file* outfile */
+    0,     /* grib_action* action */
+    0,     /* int dump_flags; */
+    0,     /* char* dump_mode; */
+    0,     /* repack    */
+    0,     /* error    */
+    0,     /* gts    */
+    0,     /* orderby    */
+    0,     /* latlon    */
+    { 0 }, /* double lats[4] */
+    { 0 }, /* double lons[4] */
+    { 0 }, /* double values[4] */
+    { 0 }, /* double distances[4] */
+    { 0 }, /* int indexes[4] */
+    4,     /* int latlon_mode */
+    0,     /* char* latlon_mask */
+    -1,    /* int latlon_idx */
+    { 0 }, /* double mask_values[4] */
+    0,     /* index */
+    0,     /* index_on */
+    0,     /* constant */
+    0,     /* dump_filename*/
+    0,     /* grib_fieldset* idx */
+    0,     /* random */
+    0,     /* format */
+    0,     /* onlyfiles */
+    0,     /* tolerance_count  */
+    0,     /* through_index */
+    0,     /* index1  */
+    0,     /* index2  */
+    0,     /* context  */
+    0,     /* stop  */
+    0,     /* mode  */
+    0,     /* headers_only  */
+    0,     /* skip_all  */
+    { 0 }, /* grib_values tolerance[MAX_KEYS] */
+    0,     /* infile_offset */
+    0      /* JSON output */
 };
 
 static grib_handle* grib_handle_new_from_file_x(grib_context* c, FILE* f, int mode, int headers_only, int* err)
@@ -150,9 +150,9 @@ int grib_tool(int argc, char** argv)
     eckit::Main::initialise(argc, argv);
 #endif
 
-    int ret                = 0;
+    int ret = 0;
     int i = 0;
-    grib_context* c        = grib_context_get_default();
+    grib_context* c = grib_context_get_default();
     global_options.context = c;
 
     /* This is a consequence of ECC-440.
@@ -191,8 +191,7 @@ int grib_tool(int argc, char** argv)
     /* ECC-926: Currently only GRIB and BUFR indexing work. Disable the through_index if GTS etc */
     if ((global_options.mode == MODE_GRIB || global_options.mode == MODE_BUFR) &&
         is_index_file(global_options.infile->name) &&
-        (global_options.infile_extra && is_index_file(global_options.infile_extra->name)))
-    {
+        (global_options.infile_extra && is_index_file(global_options.infile_extra->name))) {
         global_options.through_index = 1;
         return grib_tool_index(&global_options);
     }
@@ -220,15 +219,15 @@ int grib_tool(int argc, char** argv)
 
 static int grib_tool_with_orderby(grib_runtime_options* options)
 {
-    int err             = 0;
+    int err = 0;
     grib_failed *failed = NULL, *p = NULL;
-    grib_handle* h          = NULL;
+    grib_handle* h = NULL;
     grib_tools_file* infile = options->infile;
     const char** filenames = NULL;
-    int files_count    = 0;
+    int files_count = 0;
     grib_fieldset* set = NULL;
-    int i              = 0;
-    grib_context* c    = grib_context_get_default();
+    int i = 0;
+    grib_context* c = grib_context_get_default();
 
     if (infile)
         infile->failed = NULL;
@@ -244,7 +243,7 @@ static int grib_tool_with_orderby(grib_runtime_options* options)
     infile = options->infile;
     for (i = 0; i < files_count; i++) {
         filenames[i] = infile->name;
-        infile       = infile->next;
+        infile = infile->next;
     }
 
     if (grib_options_on("7"))
@@ -269,10 +268,10 @@ static int grib_tool_with_orderby(grib_runtime_options* options)
         if (!h) {
             grib_no_handle_action(options, err);
 
-            failed        = (grib_failed*)grib_context_malloc_clear(c, sizeof(grib_failed));
+            failed = (grib_failed*)grib_context_malloc_clear(c, sizeof(grib_failed));
             failed->count = infile->handle_count;
             failed->error = err;
-            failed->next  = NULL;
+            failed->next = NULL;
 
             if (!infile->failed) {
                 infile->failed = failed;
@@ -306,7 +305,7 @@ static int grib_tool_with_orderby(grib_runtime_options* options)
         grib_handle_delete(h);
     }
 
-    if (set->size==0) fprintf(stderr, "%s: No messages found in fieldset\n", tool_name);
+    if (set->size == 0) fprintf(stderr, "%s: No messages found in fieldset\n", tool_name);
     grib_tool_finalise_action(options);
 
     grib_fieldset_delete(set);
@@ -322,16 +321,18 @@ static char iobuf[1024 * 1024];
 static std::string guess_file_product(const std::string& filename)
 {
     std::string result;
-    char buffer[5] = {0};
+    char buffer[5] = { 0 };
     FILE* fin = fopen(filename.c_str(), "rb");
     if (fin) {
         size_t bytes = fread(buffer, 1, sizeof(buffer), fin);
         if (bytes == sizeof(buffer)) {
-            if (strncmp(buffer, "GRIB", 4)==0) {
+            if (strncmp(buffer, "GRIB", 4) == 0) {
                 result = "GRIB";
-            } else if (strncmp(buffer, "BUDG", 4)==0) {
+            }
+            else if (strncmp(buffer, "BUDG", 4) == 0) {
                 result = "GRIB";
-            } else if (strncmp(buffer, "BUFR", 4)==0) {
+            }
+            else if (strncmp(buffer, "BUFR", 4) == 0) {
                 result = "BUFR";
             }
         }
@@ -345,15 +346,15 @@ static int grib_tool_without_orderby(grib_runtime_options* options)
     int err = 0;
     /*int nofail=0;*/
     grib_failed *failed = NULL, *p = NULL;
-    grib_handle* h          = NULL;
+    grib_handle* h = NULL;
     grib_tools_file* infile = options->infile;
 
-    grib_context* c              = grib_context_get_default();
-    options->file_count          = 0;
-    options->handle_count        = 0;
+    grib_context* c = grib_context_get_default();
+    options->file_count = 0;
+    options->handle_count = 0;
     options->filter_handle_count = 0;
-    options->current_infile      = options->infile;
-    infile->failed               = NULL;
+    options->current_infile = options->infile;
+    infile->failed = NULL;
 
     if (grib_options_on("7"))
         c->no_fail_on_wrong_length = 1;
@@ -384,7 +385,7 @@ static int grib_tool_without_orderby(grib_runtime_options* options)
         setvbuf(infile->file, iobuf, _IOFBF, sizeof(iobuf));
 
         options->file_count++;
-        infile->handle_count        = 0;
+        infile->handle_count = 0;
         infile->filter_handle_count = 0;
 
         grib_tool_new_file_action(options, infile);
@@ -407,10 +408,10 @@ static int grib_tool_without_orderby(grib_runtime_options* options)
                 /* fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n"); */
                 grib_no_handle_action(options, err);
 
-                failed        = (grib_failed*)grib_context_malloc_clear(c, sizeof(grib_failed));
+                failed = (grib_failed*)grib_context_malloc_clear(c, sizeof(grib_failed));
                 failed->count = infile->handle_count;
                 failed->error = err;
-                failed->next  = NULL;
+                failed->next = NULL;
 
                 if (!infile->failed) {
                     infile->failed = failed;
@@ -459,7 +460,7 @@ static int grib_tool_without_orderby(grib_runtime_options* options)
                 exit(1);
         }
 
-        infile                  = infile->next;
+        infile = infile->next;
         options->current_infile = infile;
     }
 
@@ -472,7 +473,7 @@ static int grib_tool_without_orderby(grib_runtime_options* options)
 
 static int navigate(grib_field_tree* fields, grib_runtime_options* options)
 {
-    int err          = 0;
+    int err = 0;
     int message_type = 0;
 
     if (!fields || options->stop)
@@ -518,10 +519,10 @@ static int navigate(grib_field_tree* fields, grib_runtime_options* options)
 
 static int grib_tool_index(grib_runtime_options* options)
 {
-    int err  = 0;
+    int err = 0;
     char* f1 = options->infile->name;
     char* f2 = options->infile_extra->name;
-    grib_index_key *k1=0, *k2=0;
+    grib_index_key *k1 = 0, *k2 = 0;
     int found = 0;
 
     grib_context* c = grib_context_get_default();
@@ -538,7 +539,7 @@ static int grib_tool_index(grib_runtime_options* options)
 
     k1 = options->index1->keys;
     while (k1) {
-        k2    = options->index2->keys;
+        k2 = options->index2->keys;
         found = 0;
         while (k2) {
             if (!strcmp(k1->name, k2->name)) {
@@ -565,12 +566,12 @@ static int grib_tool_index(grib_runtime_options* options)
         }
 
         k1->value[0] = 0;
-        k1           = k1->next;
+        k1 = k1->next;
     }
 
     k2 = options->index2->keys;
     while (k2) {
-        k1    = options->index1->keys;
+        k1 = options->index1->keys;
         found = 0;
         while (k1) {
             if (!strcmp(k1->name, k2->name)) {
@@ -580,7 +581,7 @@ static int grib_tool_index(grib_runtime_options* options)
             k1 = k1->next;
         }
         if (!found) {
-            fprintf(stderr,"Indexes contained in the input files have different keys!\n");
+            fprintf(stderr, "Indexes contained in the input files have different keys!\n");
             fprintf(stderr, "keys in file %s:\n", f2);
             k2 = options->index2->keys;
             while (k2) {
@@ -687,7 +688,7 @@ static int process(grib_context* c, grib_runtime_options* options, const char* p
 
 static int grib_tool_onlyfiles(grib_runtime_options* options)
 {
-    grib_context* c         = grib_context_get_default();
+    grib_context* c = grib_context_get_default();
     const grib_tools_file* infile = options->infile;
     int err = 0;
 
@@ -708,7 +709,7 @@ static void grib_print_header(grib_runtime_options* options, grib_handle* h)
     int width;
     int written_to_dump = 0; /* boolean */
     if (options->json_output && !options->latlon)
-        return; // For JSON output we do not print a single header for all msgs
+        return;  // For JSON output we do not print a single header for all msgs
     if (options->handle_count != 1)
         return;
 
@@ -718,7 +719,7 @@ static void grib_print_header(grib_runtime_options* options, grib_handle* h)
         int j = 0;
         for (j = 0; j < options->print_keys_count; j++) {
             strlenkey = strlen(options->print_keys[j].name);
-            width     = strlenkey < options->default_print_width ? options->default_print_width + 2 : strlenkey + 2;
+            width = strlenkey < options->default_print_width ? options->default_print_width + 2 : strlenkey + 2;
             if (options->default_print_width < 0)
                 width = strlenkey + 1;
 
@@ -757,7 +758,7 @@ static int cmpstringp(const void* p1, const void* p2)
 
 static void grib_tools_set_print_keys(grib_runtime_options* options, grib_handle* h, const char* ns)
 {
-    int i                     = 0;
+    int i = 0;
     grib_keys_iterator* kiter = NULL;
 
     options->print_keys_count = 0;
@@ -794,7 +795,7 @@ static void grib_tools_set_print_keys(grib_runtime_options* options, grib_handle
             options->print_keys[options->print_keys_count].type = GRIB_TYPE_STRING;
             // For the statistics namespace, do not force the type to be string.
             // Setting it to undefined will use the keys' native type i.e. GRIB_TYPE_DOUBLE
-            if (strcmp(ns,"statistics")==0)
+            if (strcmp(ns, "statistics") == 0)
                 options->print_keys[options->print_keys_count].type = GRIB_TYPE_UNDEFINED;
             options->print_keys_count++;
         }
@@ -802,7 +803,9 @@ static void grib_tools_set_print_keys(grib_runtime_options* options, grib_handle
         grib_keys_iterator_delete(kiter);
         if (options->print_keys_count == 0 && options->latlon == 0) {
             int j = 0, k = 0, ns_count = 0;
-            const char* all_namespace_vals[1024] = {NULL,}; // sorted array containing all namespaces
+            const char* all_namespace_vals[1024] = {
+                NULL,
+            };  // sorted array containing all namespaces
             printf("ERROR: namespace \"%s\" does not contain any key.\n", ns);
             printf("Here are the available namespaces in this message:\n");
             h->accessor_store.for_each([&](grib_accessor* anAccessor) {
@@ -819,7 +822,7 @@ static void grib_tools_set_print_keys(grib_runtime_options* options, grib_handle
                 if (all_namespace_vals[i]) {
                     int print_it = 1;
                     if (i > 0 && strcmp(all_namespace_vals[i], all_namespace_vals[i - 1]) == 0) {
-                        print_it = 0; // skip duplicate entries
+                        print_it = 0;  // skip duplicate entries
                     }
                     if (print_it)
                         printf("\t%s\n", all_namespace_vals[i]);
@@ -832,16 +835,16 @@ static void grib_tools_set_print_keys(grib_runtime_options* options, grib_handle
 
 static int to_skip(grib_runtime_options* options, grib_handle* h, grib_values* v, int* err)
 {
-    double dvalue              = 0;
-    int ret                    = 0;
-    long lvalue                = 0;
-    char value[MAX_STRING_LEN] = {0};
+    double dvalue = 0;
+    int ret = 0;
+    long lvalue = 0;
+    char value[MAX_STRING_LEN] = { 0 };
     size_t len = MAX_STRING_LEN;
-    *err       = 0;
+    *err = 0;
 
     ECCODES_ASSERT(options->constraints_count > 0);
 
-    if (strcmp(v->name, "count")==0 && v->long_value < 1) {
+    if (strcmp(v->name, "count") == 0 && v->long_value < 1) {
         fprintf(dump_file, "ERROR: Invalid value for key '%s' (must be an integer greater than 0)\n", v->name);
         exit(1);
     }
@@ -849,19 +852,19 @@ static int to_skip(grib_runtime_options* options, grib_handle* h, grib_values* v
     switch (v->type) {
         case GRIB_TYPE_STRING:
             *err = grib_get_string(h, v->name, value, &len);
-            ret  = v->equal ? grib_inline_strcmp(value, v->string_value) : !grib_inline_strcmp(value, v->string_value);
+            ret = v->equal ? grib_inline_strcmp(value, v->string_value) : !grib_inline_strcmp(value, v->string_value);
             break;
         case GRIB_TYPE_DOUBLE:
             *err = grib_get_double(h, v->name, &dvalue);
-            ret  = v->equal ? (dvalue != v->double_value) : (dvalue == v->double_value);
+            ret = v->equal ? (dvalue != v->double_value) : (dvalue == v->double_value);
             break;
         case GRIB_TYPE_LONG:
             *err = grib_get_long(h, v->name, &lvalue);
-            ret  = v->equal ? (lvalue != v->long_value) : (lvalue == v->long_value);
+            ret = v->equal ? (lvalue != v->long_value) : (lvalue == v->long_value);
             break;
         case GRIB_TYPE_MISSING:
             lvalue = grib_is_missing(h, v->name, err);
-            ret    = (lvalue == v->equal) ? 0 : 1;
+            ret = (lvalue == v->equal) ? 0 : 1;
             break;
         default:
             fprintf(dump_file, "ERROR: Invalid type for %s\n", v->name);
@@ -879,7 +882,7 @@ void grib_skip_check(grib_runtime_options* options, grib_handle* h)
     /* ECC-1179: bufr_copy/bufr_ls: Allow 'where' clause with Data Section keys */
     if (options->constraints_count > 0 && h->product_kind == PRODUCT_BUFR) {
         for (i = 0; i < options->set_values_count; i++) {
-            if (strcmp(options->set_values[i].name, "unpack")==0) {
+            if (strcmp(options->set_values[i].name, "unpack") == 0) {
                 grib_set_long(h, "unpack", 1);
                 break;
             }
@@ -939,8 +942,8 @@ void grib_skip_check(grib_runtime_options* options, grib_handle* h)
 static int is_valid_JSON_number(const char* input)
 {
     const char* p = input;
-    size_t len    = 0;
-    int is_float  = 0;
+    size_t len = 0;
+    int is_float = 0;
     if (p == 0 || *p == '\0')
         return 0;
     if (*p == '-')
@@ -969,12 +972,12 @@ static int is_valid_JSON_number(const char* input)
 static int get_initial_element_of_array(grib_handle* h, const char* keyName, size_t num_vals, char* value)
 {
     int err = 0, type = 0;
-    size_t len          = num_vals;
-    char* sval          = NULL;
+    size_t len = num_vals;
+    char* sval = NULL;
     unsigned char* uval = NULL;
-    long* lval          = NULL;
-    double* dval        = NULL;
-    grib_context* c     = h->context;
+    long* lval = NULL;
+    double* dval = NULL;
+    grib_context* c = h->context;
 
     ECCODES_ASSERT(num_vals > 1); /* This is for array keys */
     if ((err = grib_get_native_type(h, keyName, &type)) != GRIB_SUCCESS)
@@ -1028,8 +1031,8 @@ static void get_value_for_key(grib_handle* h, const char* key_name, int key_type
 {
     int ret = 0, type = key_type;
     double dvalue = 0;
-    long lvalue   = 0;
-    size_t len    = MAX_STRING_LEN;
+    long lvalue = 0;
+    size_t len = MAX_STRING_LEN;
     if (grib_is_missing(h, key_name, &ret) && ret == GRIB_SUCCESS) {
         snprintf(value_str, 32, "MISSING");
         return;
@@ -1056,7 +1059,8 @@ static void get_value_for_key(grib_handle* h, const char* key_name, int key_type
         ret = grib_get_size(h, pName, &num_vals);
         if (ret == GRIB_SUCCESS && num_vals > 1) { /* See ECC-278 */
             ret = get_initial_element_of_array(h, pName, num_vals, value_str);
-        } else {
+        }
+        else {
             ret = grib_get_string(h, pName, value_str, &len);
         }
     }
@@ -1079,7 +1083,8 @@ static void get_value_for_key(grib_handle* h, const char* key_name, int key_type
     if (ret != GRIB_SUCCESS) {
         if (ret == GRIB_NOT_FOUND) {
             snprintf(value_str, 32, "not_found");
-        } else {
+        }
+        else {
             fprintf(dump_file, "ERROR: Failed to get value for key '%s' (%s)\n", key_name, grib_get_error_message(ret));
             if (ret == GRIB_ARRAY_TOO_SMALL || ret == GRIB_BUFFER_TOO_SMALL)
                 fprintf(dump_file, "\tHint: Tool %s cannot print keys of array type. Use grib_filter.\n", tool_name);
@@ -1092,32 +1097,32 @@ static void get_value_for_key(grib_handle* h, const char* key_name, int key_type
 static int fix_for_lsdate_needed(grib_handle* h)
 {
     long lsdate_bug = 0;
-    int err         = grib_get_long(h, "lsdate_bug", &lsdate_bug);
+    int err = grib_get_long(h, "lsdate_bug", &lsdate_bug);
     if (!err && lsdate_bug == 1) return 1;
     return 0;
 }
 static int fix_for_lstime_needed(grib_handle* h)
 {
     long lstime_bug = 0;
-    int err         = grib_get_long(h, "lstime_bug", &lstime_bug);
+    int err = grib_get_long(h, "lstime_bug", &lstime_bug);
     if (!err && lstime_bug == 1) return 1;
     return 0;
 }
 
 void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
 {
-    int i   = 0;
+    int i = 0;
     int ret = 0, width = 0;
     int strlenvalue = 0;
-    double dvalue   = 0;
-    long lvalue     = 0;
-    char value[MAX_STRING_LEN] = {0};
+    double dvalue = 0;
+    long lvalue = 0;
+    char value[MAX_STRING_LEN] = { 0 };
     const char* notfound = "not_found";
-    int written_to_dump  = 0; /* boolean */
-    grib_accessor* acc   = NULL;
-    size_t num_vals      = 0;
-    int fix_lsdate       = 0;
-    int fix_lstime       = 0;
+    int written_to_dump = 0; /* boolean */
+    grib_accessor* acc = NULL;
+    size_t num_vals = 0;
+    int fix_lsdate = 0;
+    int fix_lstime = 0;
 
     if (!options->verbose)
         return;
@@ -1146,9 +1151,9 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
     }
 
     for (i = 0; i < options->print_keys_count; i++) {
-        size_t len  = MAX_STRING_LEN;
+        size_t len = MAX_STRING_LEN;
         int keyType = options->print_keys[i].type;
-        ret         = GRIB_SUCCESS;
+        ret = GRIB_SUCCESS;
 
         if (h->product_kind == PRODUCT_BUFR) {
             /* ECC-236: Do not use grib_is_missing for BUFR */
@@ -1170,19 +1175,25 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
                     case GRIB_TYPE_DOUBLE:
                         if (num_vals > 1) {
                             ret = GRIB_ARRAY_TOO_SMALL;
-                        } else {
+                        }
+                        else {
                             ret = grib_get_double(h, options->print_keys[i].name, &dvalue);
-                            if (dvalue == GRIB_MISSING_DOUBLE) snprintf(value, 32, "MISSING");
-                            else                               snprintf(value, 32, options->format, dvalue);
+                            if (dvalue == GRIB_MISSING_DOUBLE)
+                                snprintf(value, 32, "MISSING");
+                            else
+                                snprintf(value, 32, options->format, dvalue);
                         }
                         break;
                     case GRIB_TYPE_LONG:
                         if (num_vals > 1) {
                             ret = GRIB_ARRAY_TOO_SMALL;
-                        } else {
+                        }
+                        else {
                             ret = grib_get_long(h, options->print_keys[i].name, &lvalue);
-                            if (lvalue == GRIB_MISSING_LONG) snprintf(value, 32, "MISSING");
-                            else                             snprintf(value, 32, "%ld", lvalue);
+                            if (lvalue == GRIB_MISSING_LONG)
+                                snprintf(value, 32, "MISSING");
+                            else
+                                snprintf(value, 32, "%ld", lvalue);
                         }
                         break;
                     case GRIB_TYPE_BYTES:
@@ -1239,10 +1250,10 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
         }
 
         if (ret != GRIB_SUCCESS) {
-            if (options->fail) { // ECC-1551
-                //GRIB_CHECK_NOLINE(ret, options->print_keys[i].name);
+            if (options->fail) {  // ECC-1551
+                // GRIB_CHECK_NOLINE(ret, options->print_keys[i].name);
                 grib_context_log(h->context, GRIB_LOG_ERROR, "%s (%s)",
-                                options->print_keys[i].name, grib_get_error_message(ret));
+                                 options->print_keys[i].name, grib_get_error_message(ret));
                 if (ret == GRIB_ARRAY_TOO_SMALL || ret == GRIB_BUFFER_TOO_SMALL) {
                     fprintf(dump_file, "\tHint: Tool %s cannot print keys of array type. Use grib_filter.\n", tool_name);
                 }
@@ -1250,7 +1261,8 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
             }
             if (ret == GRIB_NOT_FOUND) {
                 strcpy(value, notfound);
-            } else {
+            }
+            else {
                 fprintf(dump_file, "%s (%s)\n", options->print_keys[i].name, grib_get_error_message(ret));
                 if (ret == GRIB_ARRAY_TOO_SMALL || ret == GRIB_BUFFER_TOO_SMALL) {
                     fprintf(dump_file, "\tHint: Tool %s cannot print keys of array type. Use grib_filter.\n", tool_name);
@@ -1285,7 +1297,7 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
         else if (options->latlon_mode == 1) {
             snprintf(value, sizeof(value), options->format, options->values[options->latlon_idx]);
             strlenvalue = (int)strlen(value);
-            width       = strlenvalue < options->default_print_width ? options->default_print_width + 2 : strlenvalue + 2;
+            width = strlenvalue < options->default_print_width ? options->default_print_width + 2 : strlenvalue + 2;
             fprintf(dump_file, "%-*s", (int)width, value);
             written_to_dump = 1;
         }
@@ -1319,8 +1331,8 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
 
         snprintf(value, 32, options->format, v);
         strlenvalue = (int)strlen(value);
-        width       = strlenvalue < options->default_print_width ? options->default_print_width + 2 : strlenvalue + 2;
-        fprintf(dump_file, "%s%-*s", (written_to_dump?" ":""),  (int)width, value);
+        width = strlenvalue < options->default_print_width ? options->default_print_width + 2 : strlenvalue + 2;
+        fprintf(dump_file, "%s%-*s", (written_to_dump ? " " : ""), (int)width, value);
         written_to_dump = 1;
     }
     if (written_to_dump) {
@@ -1372,7 +1384,7 @@ static int filenames_equal(const char* f1, const char* f2)
     grib_context* c = grib_context_get_default();
     char* resolved1 = codes_resolve_path(c, f1);
     char* resolved2 = codes_resolve_path(c, f2);
-    eq = (strcmp(resolved1, resolved2)==0);
+    eq = (strcmp(resolved1, resolved2) == 0);
     grib_context_free(c, resolved1);
     grib_context_free(c, resolved2);
     return eq;
@@ -1382,9 +1394,9 @@ void grib_tools_write_message(grib_runtime_options* options, grib_handle* h)
 {
     const void* buffer;
     size_t size;
-    grib_file* of       = NULL;
-    int err             = 0;
-    char filename[1024] = {0};
+    grib_file* of = NULL;
+    int err = 0;
+    char filename[1024] = { 0 };
     ECCODES_ASSERT(options->outfile != NULL && options->outfile->name != NULL);
 
     /* See ECC-1086
@@ -1401,7 +1413,7 @@ void grib_tools_write_message(grib_runtime_options* options, grib_handle* h)
     /* Check outfile is not same as infile */
     if (filenames_equal(options->infile->name, filename)) {
         grib_context_log(h->context, GRIB_LOG_ERROR,
-                "output file '%s' is the same as input file. Aborting\n", filename);
+                         "output file '%s' is the same as input file. Aborting\n", filename);
         exit(GRIB_IO_PROBLEM);
     }
 

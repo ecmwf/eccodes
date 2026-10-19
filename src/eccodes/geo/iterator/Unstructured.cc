@@ -13,7 +13,8 @@
 eccodes::geo_iterator::Unstructured _grib_iterator_unstructured{};
 eccodes::geo_iterator::Iterator* grib_iterator_unstructured = &_grib_iterator_unstructured;
 
-namespace eccodes::geo_iterator {
+namespace eccodes::geo_iterator
+{
 
 #define ITER "Unstructured grid Geoiterator"
 

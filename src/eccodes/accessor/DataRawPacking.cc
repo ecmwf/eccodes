@@ -19,7 +19,7 @@ void DataRawPacking::init(const long v, grib_arguments* args)
     Values::init(v, args);
 
     number_of_values_ = args->get_name(get_enclosing_handle(), carg_++);
-    precision_        = args->get_name(get_enclosing_handle(), carg_++);
+    precision_ = args->get_name(get_enclosing_handle(), carg_++);
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
@@ -32,10 +32,10 @@ int DataRawPacking::value_count(long* n_vals)
 int DataRawPacking::unpack_double(double* val, size_t* len)
 {
     unsigned char* buf = NULL;
-    int bytes          = 0;
-    size_t nvals       = 0;
-    long inlen         = byte_count();
-    long precision     = 0;
+    int bytes = 0;
+    size_t nvals = 0;
+    long inlen = byte_count();
+    long precision = 0;
 
     int code = GRIB_SUCCESS;
 
@@ -71,13 +71,13 @@ int DataRawPacking::unpack_double(double* val, size_t* len)
 
 int DataRawPacking::pack_double(const double* val, size_t* len)
 {
-    int bytes             = 0;
+    int bytes = 0;
     unsigned char* buffer = NULL;
 
     long precision = 0;
 
     double* values = (double*)val;
-    size_t inlen   = *len;
+    size_t inlen = *len;
 
     /*int free_buffer = 0;
      *int free_values = 0;*/
@@ -141,13 +141,13 @@ clean_up:
 
 int DataRawPacking::unpack_double_element(size_t idx, double* val)
 {
-    int ret            = 0;
+    int ret = 0;
     unsigned char* buf = NULL;
-    int bytes          = 0;
-    size_t nvals       = 0;
-    long inlen         = byte_count();
-    long pos           = 0;
-    long precision     = 0;
+    int bytes = 0;
+    size_t nvals = 0;
+    long inlen = byte_count();
+    long pos = 0;
+    long precision = 0;
 
     if ((ret = grib_get_long_internal(get_enclosing_handle(), precision_, &precision)) != GRIB_SUCCESS)
         return ret;
@@ -183,7 +183,7 @@ int DataRawPacking::unpack_double_element(size_t idx, double* val)
 
 int DataRawPacking::unpack_double_element_set(const size_t* index_array, size_t len, double* val_array)
 {
-    int err  = 0;
+    int err = 0;
     size_t i = 0;
     for (i = 0; i < len; ++i) {
         if ((err = unpack_double_element(index_array[i], val_array + i)) != GRIB_SUCCESS)

@@ -30,7 +30,7 @@ static void usage(const char* prog)
 int main(int argc, char** argv)
 {
     int i;
-    double* values    = NULL;
+    double* values = NULL;
     size_t values_len = 0;
 
     /* Note: the full name of the sample file is "regular_ll_pl_grib1.tmpl" */
@@ -41,7 +41,7 @@ int main(int argc, char** argv)
 
     /* here is how you can get the samples path */
     const char* samples_path = codes_samples_path(NULL);
-    codes_handle* h          = NULL;
+    codes_handle* h = NULL;
     double d, e;
     long count;
 
@@ -61,9 +61,9 @@ int main(int argc, char** argv)
     CODES_CHECK(codes_get_size(h, "values", &values_len), 0);
 
     values = (double*)malloc(values_len * sizeof(double));
-    d      = 10e-8;
-    e      = d;
-    count  = 1;
+    d = 10e-8;
+    e = d;
+    count = 1;
     for (i = 0; i < values_len; i++) {
         if (count > 100) {
             e *= 10;

@@ -19,7 +19,7 @@ class DivDouble : public Double
 {
 public:
     DivDouble() :
-        Double() { }
+        Double() {}
     const AccessorType& accessor_type() const override { return accessor_type_; }
     int unpack_double(double* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
@@ -29,7 +29,7 @@ private:
     double divisor_ = 0.;
 
 public:
-    static constexpr AccessorType accessor_type_{"divdouble"};
+    static constexpr AccessorType accessor_type_{ "divdouble" };
 };
 
 }  // namespace eccodes::accessor

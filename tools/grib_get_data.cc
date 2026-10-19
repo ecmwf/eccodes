@@ -38,7 +38,7 @@ grib_option grib_options[] = {
 const char* tool_description =
     "Print a latitude, longitude, data values list.\n"
     "\tNote: Rotated grids are first unrotated";
-const char* tool_name  = "grib_get_data";
+const char* tool_name = "grib_get_data";
 const char* tool_online_doc = "https://confluence.ecmwf.int/display/ECC/grib_get_data";
 const char* tool_usage = "[options] grib_file grib_file ...";
 
@@ -76,21 +76,21 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 {
     int err = 0;
 
-    double missingValue     = 9999;
-    int skip_missing        = 1;
-    char* missing_string    = NULL;
-    int i                   = 0;
-    grib_values* values     = NULL;
-    grib_iterator* iter     = NULL;
-    char format_values[32]  = {0};
-    char format_latlons[32] = {0};
-    const char* default_format_values  = "%.10e";
+    double missingValue = 9999;
+    int skip_missing = 1;
+    char* missing_string = NULL;
+    int i = 0;
+    grib_values* values = NULL;
+    grib_iterator* iter = NULL;
+    char format_values[32] = { 0 };
+    char format_latlons[32] = { 0 };
+    const char* default_format_values = "%.10e";
     const char* default_format_latlons = "%9.3f%9.3f";
-    int print_keys               = grib_options_on("p:");
-    long numberOfPoints          = 0;
-    long bitmapPresent           = 0;
-    long* bitmap                 = NULL; /* bitmap array */
-    size_t bmp_len               = 0;
+    int print_keys = grib_options_on("p:");
+    long numberOfPoints = 0;
+    long bitmapPresent = 0;
+    long* bitmap = NULL; /* bitmap array */
+    size_t bmp_len = 0;
     double *data_values = 0, *lats = 0, *lons = 0;
     size_t size = 0, num_bytes = 0;
     long hasMissingValues = 0;
@@ -105,14 +105,14 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     if (grib_options_on("m:")) {
         /* User wants to see missing values */
         char* theEnd = NULL;
-        double mval  = 0;
-        char* kmiss  = grib_options_get_option("m:");
-        char* p      = kmiss;
+        double mval = 0;
+        char* kmiss = grib_options_get_option("m:");
+        char* p = kmiss;
         skip_missing = 0;
         while (*p != ':' && *p != '\0')
             p++;
         if (*p == ':' && *(p + 1) != '\0') {
-            *p             = '\0';
+            *p = '\0';
             missing_string = strdup(p + 1);
         }
         else {
@@ -137,7 +137,8 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         /* Do a very basic sanity check */
         const char* str = grib_options_get_option("L:");
         if (string_count_char(str, '%') != 2) {
-            fprintf(stderr, "ERROR: Invalid lats/lons format option \"%s\".\n"
+            fprintf(stderr,
+                    "ERROR: Invalid lats/lons format option \"%s\".\n"
                     "       The default is: \"%s\"."
                     " For higher precision, try: \"%%12.6f%%12.6f\"\n",
                     str, default_format_latlons);
@@ -151,7 +152,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 
     if ((err = grib_get_long(h, "numberOfPoints", &numberOfPoints)) != GRIB_SUCCESS) {
         fprintf(stderr, "ERROR: Unable to get number of points (%s)\n", grib_get_error_message(err));
-        long gridDescriptionSectionPresent=-1;
+        long gridDescriptionSectionPresent = -1;
         int err2 = grib_get_long(h, "gridDescriptionSectionPresent", &gridDescriptionSectionPresent);
         if (!err2 && gridDescriptionSectionPresent == 0) {
             fprintf(stderr, "ERROR: The grid description section is not included in the message.\n");
@@ -161,7 +162,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 
     iter = grib_iterator_new(h, 0, &err);
 
-    num_bytes   = (numberOfPoints + 1) * sizeof(double);
+    num_bytes = (numberOfPoints + 1) * sizeof(double);
     data_values = (double*)calloc(numberOfPoints + 1, sizeof(double));
     if (!data_values) {
         fprintf(stderr, "ERROR: Failed to allocate %zu bytes for data values (number of points=%ld)\n",
@@ -175,14 +176,14 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         if (!lats) exit(GRIB_OUT_OF_MEMORY);
         lons = (double*)calloc(numberOfPoints + 1, sizeof(double));
         if (!lons) exit(GRIB_OUT_OF_MEMORY);
-        lat  = lats;
-        lon  = lons;
-        val  = data_values;
+        lat = lats;
+        lon = lons;
+        val = data_values;
         while (grib_iterator_next(iter, lat++, lon++, val++)) {}
     }
     else if (err == GRIB_NOT_IMPLEMENTED || err == GRIB_SUCCESS) {
         size = numberOfPoints;
-        err  = grib_get_double_array(h, "values", data_values, &size);
+        err = grib_get_double_array(h, "values", data_values, &size);
         if (err) {
             grib_context_log(h->context, GRIB_LOG_ERROR, "Cannot decode values: %s",
                              grib_get_error_message(err));
@@ -304,14 +305,14 @@ static void print_key_values(grib_values* values, int values_count)
 
 static grib_values* get_key_values(grib_runtime_options* options, grib_handle* h)
 {
-    int i                      = 0;
-    int ret                    = 0;
-    char value[MAX_STRING_LEN] = {0};
+    int i = 0;
+    int ret = 0;
+    char value[MAX_STRING_LEN] = { 0 };
     const char* notfound = "not found";
 
     for (i = 0; i < options->print_keys_count; i++) {
         size_t len = MAX_STRING_LEN;
-        ret        = GRIB_SUCCESS;
+        ret = GRIB_SUCCESS;
 
         if (grib_is_missing(h, options->print_keys[i].name, &ret) && ret == GRIB_SUCCESS) {
             options->print_keys[i].type = GRIB_TYPE_MISSING;

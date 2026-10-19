@@ -74,7 +74,7 @@ static void rebuild_hash_keys(grib_handle* h, grib_section* s)
 
     while (a) {
         grib_section* sub = a->sub_section_;
-        int i             = 0;
+        int i = 0;
         const char* p;
         DEBUG_ASSERT(h == a->get_enclosing_handle());
 
@@ -82,7 +82,7 @@ static void rebuild_hash_keys(grib_handle* h, grib_section* s)
             if (*p != '_') {
                 if (a->same_ != a && i == 0) {
                     grib_handle* hand = a->get_enclosing_handle();
-                    a->same_          = hand->accessor_store.exchange(p, a);
+                    a->same_ = hand->accessor_store.exchange(p, a);
                     DEBUG_ASSERT(a->same_ != a);
                 }
             }
@@ -122,7 +122,7 @@ static grib_accessor* _search_and_cache(grib_handle* h, const char* name, const 
 
 static char* get_rank(grib_context* c, const char* name, int* rank)
 {
-    char* p   = (char*)name;
+    char* p = (char*)name;
     char* end = p;
     char* ret = NULL;
 
@@ -144,10 +144,10 @@ static char* get_rank(grib_context* c, const char* name, int* rank)
 
 static char* get_condition(const char* name, codes_condition* condition)
 {
-    char* equal        = (char*)name;
+    char* equal = (char*)name;
     char* endCondition = NULL;
-    char* str          = NULL;
-    char* end          = NULL;
+    char* str = NULL;
+    char* end = NULL;
     long lval;
     grib_context* c = grib_context_get_default();
 
@@ -170,13 +170,13 @@ static char* get_condition(const char* name, codes_condition* condition)
     DEBUG_ASSERT(str);
     memcpy(str, equal + 1, endCondition - equal - 1);
 
-    end  = NULL;
+    end = NULL;
     lval = strtol(str, &end, 10);
     if (*end != 0) { /* strtol failed. Not an integer */
         double dval;
         dval = strtod(str, &end);
         if (*end == 0) { /* strtod passed. So a double */
-            condition->rightType   = GRIB_TYPE_DOUBLE;
+            condition->rightType = GRIB_TYPE_DOUBLE;
             condition->rightDouble = dval;
         }
     }
@@ -188,7 +188,7 @@ static char* get_condition(const char* name, codes_condition* condition)
     if (condition->rightType != GRIB_TYPE_UNDEFINED) {
         strcpy(str, endCondition + 1);
         condition->left = (char*)grib_context_malloc_clear(c, equal - name);
-        DEBUG_ASSERT( condition->left );
+        DEBUG_ASSERT(condition->left);
         memcpy(condition->left, name + 1, equal - name - 1);
     }
     else {
@@ -232,7 +232,7 @@ static grib_accessor* search_by_rank(grib_handle* h, const char* name, int rank,
     }
     else {
         int rank2;
-        char* str          = get_rank(h->context, name, &rank2);
+        char* str = get_rank(h->context, name, &rank2);
         grib_accessor* ret = _search_and_cache(h, str, the_namespace);
         grib_context_free(h->context, str);
         return ret;
@@ -242,20 +242,20 @@ static grib_accessor* search_by_rank(grib_handle* h, const char* name, int rank,
 static int get_single_long_val(grib_accessor* a, long* result)
 {
     grib_context* c = a->context_;
-    int err         = 0;
-    size_t size     = 1;
+    int err = 0;
+    size_t size = 1;
     if (c->bufr_multi_element_constant_arrays) {
         long count = 0;
         a->value_count(&count);
         if (count > 1) {
-            size_t i        = 0;
-            long val0       = 0;
+            size_t i = 0;
+            long val0 = 0;
             int is_constant = 1;
-            long* values    = (long*)grib_context_malloc_clear(c, sizeof(long) * count);
+            long* values = (long*)grib_context_malloc_clear(c, sizeof(long) * count);
             DEBUG_ASSERT(values);
-            size            = count;
-            err             = a->unpack_long(values, &size);
-            val0            = values[0];
+            size = count;
+            err = a->unpack_long(values, &size);
+            val0 = values[0];
             for (i = 0; i < size; i++) {
                 if (val0 != values[i]) {
                     is_constant = 0;
@@ -282,20 +282,20 @@ static int get_single_long_val(grib_accessor* a, long* result)
 static int get_single_double_val(grib_accessor* a, double* result)
 {
     grib_context* c = a->context_;
-    int err         = 0;
-    size_t size     = 1;
+    int err = 0;
+    size_t size = 1;
     if (c->bufr_multi_element_constant_arrays) {
         long count = 0;
         a->value_count(&count);
         if (count > 1) {
-            size_t i        = 0;
-            double val0     = 0;
+            size_t i = 0;
+            double val0 = 0;
             int is_constant = 1;
-            double* values  = (double*)grib_context_malloc_clear(c, sizeof(double) * count);
+            double* values = (double*)grib_context_malloc_clear(c, sizeof(double) * count);
             DEBUG_ASSERT(values);
-            size            = count;
-            err             = a->unpack_double(values, &size);
-            val0            = values[0];
+            size = count;
+            err = a->unpack_double(values, &size);
+            val0 = values[0];
             for (i = 0; i < size; i++) {
                 if (val0 != values[i]) {
                     is_constant = 0;
@@ -323,7 +323,7 @@ static int get_single_double_val(grib_accessor* a, double* result)
 static int condition_true(grib_accessor* a, codes_condition* condition)
 {
     int ret = 0, err = 0;
-    long lval   = 0;
+    long lval = 0;
     double dval = 0;
 
     /* The condition has to be of the form:
@@ -357,7 +357,7 @@ static int condition_true(grib_accessor* a, codes_condition* condition)
 
 static void search_from_accessors_list(grib_accessors_list* al, const grib_accessors_list* end, const char* name, grib_accessors_list* result)
 {
-    char attribute_name[200] = {0};
+    char attribute_name[200] = { 0 };
     grib_accessor* accessor_result = 0;
     grib_context* c = al->accessor->context_;
     int doFree = 1;
@@ -398,7 +398,7 @@ static void search_from_accessors_list(grib_accessors_list* al, const grib_acces
 static void search_accessors_list_by_condition(grib_accessors_list* al, const char* name, codes_condition* condition, grib_accessors_list* result)
 {
     grib_accessors_list* start = NULL;
-    grib_accessors_list* end   = NULL;
+    grib_accessors_list* end = NULL;
 
     while (al) {
         if (!grib_inline_strcmp(al->accessor->name_, condition->left)) {
@@ -411,9 +411,9 @@ static void search_accessors_list_by_condition(grib_accessors_list* al, const ch
             if (end == NULL)
                 end = al;
             search_from_accessors_list(start, end, name, result);
-            al    = end;
+            al = end;
             start = NULL;
-            end   = NULL;
+            end = NULL;
         }
         al = al->next_;
     }
@@ -450,16 +450,16 @@ static void grib_find_same_and_push(grib_accessors_list* al, grib_accessor* a)
 
 grib_accessors_list* grib_find_accessors_list(const grib_handle* ch, const char* name)
 {
-    char* str                  = NULL;
-    grib_accessors_list* al    = NULL;
+    char* str = NULL;
+    grib_accessors_list* al = NULL;
     codes_condition* condition = NULL;
-    grib_accessor* a           = NULL;
-    grib_handle* h             = (grib_handle*)ch;
+    grib_accessor* a = NULL;
+    grib_handle* h = (grib_handle*)ch;
 
     if (name[0] == '/') {
         condition = (codes_condition*)grib_context_malloc_clear(h->context, sizeof(codes_condition));
         DEBUG_ASSERT(condition);
-        str       = get_condition(name, condition);
+        str = get_condition(name, condition);
         if (str) {
             al = search_by_condition(h, str, condition);
             grib_context_free(h->context, str);
@@ -475,7 +475,7 @@ grib_accessors_list* grib_find_accessors_list(const grib_handle* ch, const char*
         if (a) {
             char* str2;
             int r;
-            al   = (grib_accessors_list*)grib_context_malloc_clear(h->context, sizeof(grib_accessors_list));
+            al = (grib_accessors_list*)grib_context_malloc_clear(h->context, sizeof(grib_accessors_list));
             str2 = get_rank(h->context, name, &r);
             al->push(a, r);
             grib_context_free(h->context, str2);
@@ -497,9 +497,9 @@ static grib_accessor* search_and_cache(grib_handle* h, const char* name, const c
     grib_accessor* a = NULL;
 
     if (name[0] == '#') {
-        int rank       = -1;
+        int rank = -1;
         char* basename = get_rank(h->context, name, &rank);
-        a              = search_by_rank(h, basename, rank, the_namespace);
+        a = search_by_rank(h, basename, rank, the_namespace);
         grib_context_free(h->context, basename);
     }
     else {
@@ -511,9 +511,9 @@ static grib_accessor* search_and_cache(grib_handle* h, const char* name, const c
 
 static grib_accessor* _grib_find_accessor(const grib_handle* ch, const char* name)
 {
-    grib_handle* h   = (grib_handle*)ch;
+    grib_handle* h = (grib_handle*)ch;
     grib_accessor* a = NULL;
-    char* p          = NULL;
+    char* p = NULL;
     DEBUG_ASSERT(name);
 
     p = strchr((char*)name, '.');
@@ -544,14 +544,14 @@ static grib_accessor* _grib_find_accessor(const grib_handle* ch, const char* nam
 char* grib_split_name_attribute(grib_context* c, const char* name, char* attribute_name)
 {
     /*returns accessor name and attribute*/
-    size_t size         = 0;
+    size_t size = 0;
     char* accessor_name = NULL;
-    char* p             = strstr((char*)name, "->");
+    char* p = strstr((char*)name, "->");
     if (!p) {
         *attribute_name = 0;
         return (char*)name;
     }
-    size          = p - name;
+    size = p - name;
     accessor_name = (char*)grib_context_malloc_clear(c, size + 1);
     accessor_name = (char*)memcpy(accessor_name, name, size);
     p += 2;
@@ -567,7 +567,7 @@ grib_accessor* grib_find_accessor(const grib_handle* h, const char* name)
         aret = _grib_find_accessor(h, name); /* ECC-144: Performance */
     }
     else {
-        char attribute_name[512] = {0};
+        char attribute_name[512] = { 0 };
         grib_accessor* a = NULL;
 
         char* accessor_name = grib_split_name_attribute(h->context, name, attribute_name);
@@ -604,7 +604,7 @@ grib_accessor* grib_find_accessor(const grib_handle* h, const char* name)
 grib_accessor* grib_find_accessor_fast(grib_handle* h, const char* name)
 {
     grib_accessor* a = NULL;
-    char* p          = NULL;
+    char* p = NULL;
     DEBUG_ASSERT(name);
 
     p = strchr((char*)name, '.');

@@ -16,9 +16,9 @@ namespace eccodes::accessor
 void DataDummyField::init(const long v, grib_arguments* args)
 {
     DataG1SimplePacking::init(v, args);
-    missing_value_  = args->get_name(get_enclosing_handle(), carg_++);
+    missing_value_ = args->get_name(get_enclosing_handle(), carg_++);
     numberOfPoints_ = args->get_name(get_enclosing_handle(), carg_++);
-    bitmap_         = args->get_name(get_enclosing_handle(), carg_++);
+    bitmap_ = args->get_name(get_enclosing_handle(), carg_++);
 }
 
 int DataDummyField::unpack_double(double* val, size_t* len)
@@ -26,7 +26,7 @@ int DataDummyField::unpack_double(double* val, size_t* len)
     size_t i = 0, n_vals = 0;
     long numberOfPoints;
     double missing_value = 0;
-    int err              = 0;
+    int err = 0;
 
     if ((err = grib_get_long_internal(get_enclosing_handle(), numberOfPoints_, &numberOfPoints)) != GRIB_SUCCESS)
         return err;
@@ -54,12 +54,12 @@ int DataDummyField::unpack_double(double* val, size_t* len)
 
 int DataDummyField::pack_double(const double* val, size_t* len)
 {
-    size_t n_vals       = *len;
-    int err             = 0;
+    size_t n_vals = *len;
+    int err = 0;
     long bits_per_value = 0;
-    long half_byte      = 0;
-    size_t buflen       = 0;
-    unsigned char* buf  = NULL;
+    long half_byte = 0;
+    size_t buflen = 0;
+    unsigned char* buf = NULL;
 
     if (*len == 0)
         return GRIB_NO_VALUES;
@@ -88,7 +88,7 @@ int DataDummyField::pack_double(const double* val, size_t* len)
 
 int DataDummyField::value_count(long* numberOfPoints)
 {
-    int err         = 0;
+    int err = 0;
     *numberOfPoints = 0;
 
     if ((err = grib_get_long_internal(get_enclosing_handle(), numberOfPoints_, numberOfPoints)) != GRIB_SUCCESS) {

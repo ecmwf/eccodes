@@ -12,15 +12,15 @@
 
 int main(int argc, char** argv)
 {
-    FILE* in                 = NULL;
-    int err                  = 0;
-    grib_handle* h_full      = NULL;
+    FILE* in = NULL;
+    int err = 0;
+    grib_handle* h_full = NULL;
     grib_keys_iterator* iter = NULL;
-    const char* name         = NULL;
-    const void* msg1         = NULL;
-    const char* infilename   = NULL;
-    size_t size1             = 0;
-    grib_handle* h_partial   = 0;
+    const char* name = NULL;
+    const void* msg1 = NULL;
+    const char* infilename = NULL;
+    size_t size1 = 0;
+    grib_handle* h_partial = 0;
 
     ECCODES_ASSERT(argc == 2);
     infilename = argv[1];

@@ -16,14 +16,14 @@ namespace eccodes::accessor
 void NumberOfValues::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
-    int n             = 0;
+    int n = 0;
     grib_handle* hand = get_enclosing_handle();
 
-    values_              = c->get_name(hand, n++);
-    bitsPerValue_        = c->get_name(hand, n++);
-    numberOfPoints_      = c->get_name(hand, n++);
-    bitmapPresent_       = c->get_name(hand, n++);
-    bitmap_              = c->get_name(hand, n++);
+    values_ = c->get_name(hand, n++);
+    bitsPerValue_ = c->get_name(hand, n++);
+    numberOfPoints_ = c->get_name(hand, n++);
+    bitmapPresent_ = c->get_name(hand, n++);
+    bitmap_ = c->get_name(hand, n++);
     numberOfCodedValues_ = c->get_name(hand, n++);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 
@@ -32,7 +32,7 @@ void NumberOfValues::init(const long l, grib_arguments* c)
 
 int NumberOfValues::unpack_long(long* val, size_t* len)
 {
-    int ret      = GRIB_SUCCESS;
+    int ret = GRIB_SUCCESS;
     long npoints = 0, bitmap_present = 0;
     size_t size = 0;
 
@@ -44,7 +44,7 @@ int NumberOfValues::unpack_long(long* val, size_t* len)
 
     if (bitmap_present) {
         double* bitmap;
-        size   = npoints;
+        size = npoints;
         bitmap = (double*)grib_context_malloc(context_, sizeof(double) * size);
         if ((ret = grib_get_double_array_internal(get_enclosing_handle(), bitmap_, bitmap, &size)) != GRIB_SUCCESS) {
             grib_context_free(context_, bitmap);

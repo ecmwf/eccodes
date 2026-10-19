@@ -19,7 +19,7 @@ class Lookup : public Long
 {
 public:
     Lookup() :
-        Long() { }
+        Long() {}
     const AccessorType& accessor_type() const override { return accessor_type_; }
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
@@ -37,7 +37,7 @@ private:
     grib_expression* real_name_ = nullptr;
 
 public:
-    static constexpr AccessorType accessor_type_{"lookup"};
+    static constexpr AccessorType accessor_type_{ "lookup" };
 };
 
 }  // namespace eccodes::accessor

@@ -16,8 +16,8 @@ namespace eccodes::accessor
 void BitsPerValue::init(const long l, grib_arguments* args)
 {
     Long::init(l, args);
-    int n           = 0;
-    values_         = args->get_name(get_enclosing_handle(), n++);
+    int n = 0;
+    values_ = args->get_name(get_enclosing_handle(), n++);
     bits_per_value_ = args->get_name(get_enclosing_handle(), n++);
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     length_ = 0;
@@ -25,7 +25,7 @@ void BitsPerValue::init(const long l, grib_arguments* args)
 
 int BitsPerValue::unpack_long(long* val, size_t* len)
 {
-    int ret        = 0;
+    int ret = 0;
     grib_handle* h = get_enclosing_handle();
 
     if ((ret = grib_get_long_internal(h, bits_per_value_, val)) != GRIB_SUCCESS)
@@ -37,11 +37,11 @@ int BitsPerValue::unpack_long(long* val, size_t* len)
 
 int BitsPerValue::pack_long(const long* val, size_t* len)
 {
-    double* values  = NULL;
-    size_t size     = 0;
-    int ret         = 0;
+    double* values = NULL;
+    size_t size = 0;
+    int ret = 0;
     grib_context* c = context_;
-    grib_handle* h  = get_enclosing_handle();
+    grib_handle* h = get_enclosing_handle();
 
     if ((ret = grib_get_size(h, values_, &size)) != GRIB_SUCCESS)
         return ret;

@@ -20,13 +20,13 @@ namespace eccodes::dumper
 
 int BufrSimple::init()
 {
-    grib_context* c  = context_;
-    section_offset_  = 0;
-    empty_           = 1;
-    isLeaf_          = 0;
-    isAttribute_     = 0;
+    grib_context* c = context_;
+    section_offset_ = 0;
+    empty_ = 1;
+    isLeaf_ = 0;
+    isAttribute_ = 0;
     numberOfSubsets_ = 0;
-    keys_            = (grib_string_list*)grib_context_malloc_clear(
+    keys_ = (grib_string_list*)grib_context_malloc_clear(
         c, sizeof(grib_string_list));
 
     return GRIB_SUCCESS;
@@ -35,10 +35,10 @@ int BufrSimple::init()
 int BufrSimple::destroy()
 {
     grib_string_list* next = keys_;
-    grib_string_list* cur  = NULL;
-    grib_context* c        = context_;
+    grib_string_list* cur = NULL;
+    grib_context* c = context_;
     while (next) {
-        cur  = next;
+        cur = next;
         next = next->next;
         grib_context_free(c, cur->value);
         grib_context_free(c, cur);
@@ -51,12 +51,12 @@ void BufrSimple::dump_values(grib_accessor* a)
     double value = 0;
     size_t size = 0, size2 = 0;
     double* values = NULL;
-    int err        = 0;
+    int err = 0;
     int i, r;
-    int cols        = 9;
-    long count      = 0;
+    int cols = 9;
+    long count = 0;
     grib_context* c = a->context_;
-    grib_handle* h  = a->get_enclosing_handle();
+    grib_handle* h = a->get_enclosing_handle();
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
         return;
@@ -66,7 +66,7 @@ void BufrSimple::dump_values(grib_accessor* a)
 
     if (size > 1) {
         values = (double*)grib_context_malloc_clear(c, sizeof(double) * size);
-        err    = a->unpack_double(values, &size2);
+        err = a->unpack_double(values, &size2);
     }
     else {
         err = a->unpack_double(&value, &size2);
@@ -141,10 +141,10 @@ void BufrSimple::dump_values_attribute(grib_accessor* a, const char* prefix)
     double value = 0;
     size_t size = 0, size2 = 0;
     double* values = NULL;
-    int err        = 0;
+    int err = 0;
     int i, icount;
-    int cols        = 9;
-    long count      = 0;
+    int cols = 9;
+    long count = 0;
     grib_context* c = a->context_;
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
@@ -155,7 +155,7 @@ void BufrSimple::dump_values_attribute(grib_accessor* a, const char* prefix)
 
     if (size > 1) {
         values = (double*)grib_context_malloc_clear(c, sizeof(double) * size);
-        err    = a->unpack_double(values, &size2);
+        err = a->unpack_double(values, &size2);
     }
     else {
         err = a->unpack_double(&value, &size2);
@@ -209,15 +209,15 @@ void BufrSimple::dump_values_attribute(grib_accessor* a, const char* prefix)
 
 void BufrSimple::dump_long(grib_accessor* a, const char* comment)
 {
-    long value  = 0;
+    long value = 0;
     size_t size = 0, size2 = 0;
     long* values = NULL;
-    int err      = 0;
+    int err = 0;
     int i, r, icount;
-    int cols        = 9;
-    long count      = 0;
+    int cols = 9;
+    long count = 0;
     grib_context* c = a->context_;
-    grib_handle* h  = a->get_enclosing_handle();
+    grib_handle* h = a->get_enclosing_handle();
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0)
         return;
@@ -269,7 +269,7 @@ void BufrSimple::dump_long(grib_accessor* a, const char* comment)
 
     if (size > 1) {
         int doing_unexpandedDescriptors = 0;
-        icount                          = 0;
+        icount = 0;
         if ((r = compute_bufr_key_rank(h, keys_, a->name_)) != 0)
             fprintf(out_, "#%d#%s=", r, a->name_);
         else
@@ -337,13 +337,13 @@ void BufrSimple::dump_long(grib_accessor* a, const char* comment)
 
 void BufrSimple::dump_long_attribute(grib_accessor* a, const char* prefix)
 {
-    long value  = 0;
+    long value = 0;
     size_t size = 0, size2 = 0;
     long* values = NULL;
-    int err      = 0;
+    int err = 0;
     int i, icount;
-    int cols        = 9;
-    long count      = 0;
+    int cols = 9;
+    long count = 0;
     grib_context* c = a->context_;
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
@@ -410,9 +410,9 @@ void BufrSimple::dump_bits(grib_accessor* a, const char* comment) {}
 void BufrSimple::dump_double(grib_accessor* a, const char* comment)
 {
     double value = 0;
-    size_t size  = 1;
+    size_t size = 1;
     int r;
-    grib_handle* h  = a->get_enclosing_handle();
+    grib_handle* h = a->get_enclosing_handle();
     grib_context* c = h->context;
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
@@ -458,11 +458,11 @@ void BufrSimple::dump_string_array(grib_accessor* a, const char* comment)
     char** values = NULL;
     size_t size = 0, i = 0;
     grib_context* c = a->context_;
-    int err         = 0;
-    int is_missing  = 0;
-    long count      = 0;
-    int r           = 0;
-    grib_handle* h  = a->get_enclosing_handle();
+    int err = 0;
+    int is_missing = 0;
+    long count = 0;
+    int r = 0;
+    grib_handle* h = a->get_enclosing_handle();
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
         return;
@@ -532,14 +532,14 @@ void BufrSimple::dump_string_array(grib_accessor* a, const char* comment)
 #define MAX_STRING_SIZE 4096
 void BufrSimple::dump_string(grib_accessor* a, const char* comment)
 {
-    char value[MAX_STRING_SIZE] = {0}; /* See ECC-710 */
-    char* p              = NULL;
-    size_t size          = MAX_STRING_SIZE;
-    grib_context* c      = a->context_;
-    int r                = 0;
-    int is_missing       = 0;
-    int err              = 0;
-    grib_handle* h       = a->get_enclosing_handle();
+    char value[MAX_STRING_SIZE] = { 0 }; /* See ECC-710 */
+    char* p = NULL;
+    size_t size = MAX_STRING_SIZE;
+    grib_context* c = a->context_;
+    int r = 0;
+    int is_missing = 0;
+    int err = 0;
+    grib_handle* h = a->get_enclosing_handle();
     const char* acc_name = a->name_;
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0) {
@@ -638,9 +638,9 @@ void BufrSimple::dump_section(grib_accessor* a, grib_block_of_accessors* block)
     if (strcmp(a->name_, "BUFR") == 0 ||
         strcmp(a->name_, "GRIB") == 0 ||
         strcmp(a->name_, "META") == 0) {
-        int err        = 0;
+        int err = 0;
         grib_handle* h = a->get_enclosing_handle();
-        empty_         = 1;
+        empty_ = 1;
 
         err = grib_get_long(h, "numberOfSubsets", &(numberOfSubsets_));
         ECCODES_ASSERT(!err);
@@ -693,7 +693,7 @@ void BufrSimple::dump_attributes(grib_accessor* a, const char* prefix)
         a->attributes_[i]->flags_ = flags;
         i++;
     }
-    isLeaf_      = 0;
+    isLeaf_ = 0;
     isAttribute_ = 0;
 }
 

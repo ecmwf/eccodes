@@ -26,4 +26,4 @@ namespace eccodes
 using Spec = ::eckit::spec::Spec;
 
 
-}  // namespace eccodes::geo
+}  // namespace eccodes

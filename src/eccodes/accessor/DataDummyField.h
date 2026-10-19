@@ -19,7 +19,7 @@ class DataDummyField : public DataG1SimplePacking
 {
 public:
     DataDummyField() :
-        DataG1SimplePacking() { }
+        DataG1SimplePacking() {}
     const AccessorType& accessor_type() const override { return accessor_type_; }
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
@@ -32,7 +32,7 @@ private:
     const char* bitmap_ = nullptr;
 
 public:
-    static constexpr AccessorType accessor_type_{"data_dummy_field"};
+    static constexpr AccessorType accessor_type_{ "data_dummy_field" };
 };
 
 }  // namespace eccodes::accessor

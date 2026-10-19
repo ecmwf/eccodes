@@ -11,7 +11,7 @@
 #include <stdio.h>
 
 #ifndef ECCODES_ON_WINDOWS
-#include <unistd.h>
+    #include <unistd.h>
 #endif
 
 #include "grib_api_internal.h"
@@ -19,11 +19,11 @@
 int main(int argc, char** argv)
 {
     int err = 0, is_missing = 0;
-    double* values    = NULL;
-    char format[1024] = {0};
+    double* values = NULL;
+    char format[1024] = { 0 };
     size_t values_len = 0, i = 0;
-    long Ni        = 0;
-    FILE* in       = NULL;
+    long Ni = 0;
+    FILE* in = NULL;
     grib_handle* h = NULL;
 
     if (argc > 1)

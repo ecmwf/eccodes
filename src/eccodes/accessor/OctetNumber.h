@@ -19,7 +19,7 @@ class OctetNumber : public Long
 {
 public:
     OctetNumber() :
-        Long() { }
+        Long() {}
     const AccessorType& accessor_type() const override { return accessor_type_; }
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
@@ -30,7 +30,7 @@ private:
     long right_ = 0;
 
 public:
-    static constexpr AccessorType accessor_type_{"octet_number"};
+    static constexpr AccessorType accessor_type_{ "octet_number" };
 };
 
 }  // namespace eccodes::accessor

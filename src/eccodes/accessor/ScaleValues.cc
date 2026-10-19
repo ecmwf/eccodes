@@ -16,8 +16,8 @@ namespace eccodes::accessor
 void ScaleValues::init(const long l, grib_arguments* args)
 {
     Double::init(l, args);
-    int n         = 0;
-    values_       = args->get_name(get_enclosing_handle(), n++);
+    int n = 0;
+    values_ = args->get_name(get_enclosing_handle(), n++);
     missingValue_ = args->get_name(get_enclosing_handle(), n++);
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     length_ = 0;
@@ -25,22 +25,22 @@ void ScaleValues::init(const long l, grib_arguments* args)
 
 int ScaleValues::unpack_double(double* val, size_t* len)
 {
-    *val    = 1;
-    *len    = 1;
+    *val = 1;
+    *len = 1;
     // It does not make sense to decode this key!
-    //fprintf(stderr, "ECCODES WARNING :  Key %s is applicable only during encoding.\n", name_);
+    // fprintf(stderr, "ECCODES WARNING :  Key %s is applicable only during encoding.\n", name_);
     return GRIB_SUCCESS;
 }
 
 int ScaleValues::pack_double(const double* val, size_t* len)
 {
-    double* values            = NULL;
-    double missingValue       = 0;
+    double* values = NULL;
+    double missingValue = 0;
     long missingValuesPresent = 0;
-    size_t size               = 0;
+    size_t size = 0;
     int ret = 0;
     const grib_context* c = context_;
-    grib_handle* h        = get_enclosing_handle();
+    grib_handle* h = get_enclosing_handle();
 
     if (*val == 1)
         return GRIB_SUCCESS;

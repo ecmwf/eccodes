@@ -275,15 +275,15 @@ static const int mapping[] = {
 #ifdef DEBUG
 static const size_t NUM_MAPPINGS = sizeof(mapping) / sizeof(mapping[0]);
 
-#define DebugCheckBounds(index, value)                                                                  \
-    do {                                                                                                \
-        if (!((index) >= 0 && (index) < NUM_MAPPINGS)) {                                                \
-            printf("ERROR: string='%s' index=%ld @ %s +%d \n", value, (long)index, __FILE__, __LINE__); \
-            abort();                                                                                    \
-        }                                                                                               \
-    } while (0)
+    #define DebugCheckBounds(index, value)                                                                  \
+        do {                                                                                                \
+            if (!((index) >= 0 && (index) < NUM_MAPPINGS)) {                                                \
+                printf("ERROR: string='%s' index=%ld @ %s +%d \n", value, (long)index, __FILE__, __LINE__); \
+                abort();                                                                                    \
+            }                                                                                               \
+        } while (0)
 #else
-#define DebugCheckBounds(index, value)
+    #define DebugCheckBounds(index, value)
 #endif
 
 
@@ -308,8 +308,8 @@ grib_trie* grib_trie_new(grib_context* c)
     grib_trie* t = (grib_trie*)grib_context_malloc_clear(c, sizeof(grib_trie));
 #endif
     t->context = c;
-    t->first   = SIZE;
-    t->last    = -1;
+    t->first = SIZE;
+    t->last = -1;
     return t;
 }
 
@@ -362,8 +362,8 @@ void grib_trie_clear(grib_trie* t)
 void* grib_trie_insert(grib_trie* t, const char* key, void* data)
 {
     grib_trie* last = t;
-    const char* k   = key;
-    void* old       = NULL;
+    const char* k = key;
+    void* old = NULL;
 
     if (!t) {
         ECCODES_ASSERT(!"grib_trie_insert: grib_trie==NULL");
@@ -381,7 +381,7 @@ void* grib_trie_insert(grib_trie* t, const char* key, void* data)
     }
 
     if (*k == 0) {
-        old     = t->data;
+        old = t->data;
         t->data = data;
     }
     else {
@@ -396,7 +396,7 @@ void* grib_trie_insert(grib_trie* t, const char* key, void* data)
                 t->last = j;
             t = t->next[j] = grib_trie_new(t->context);
         }
-        old     = t->data;
+        old = t->data;
         t->data = data;
     }
     return data == old ? NULL : old;
@@ -405,7 +405,7 @@ void* grib_trie_insert(grib_trie* t, const char* key, void* data)
 void* grib_trie_insert_no_replace(grib_trie* t, const char* key, void* data)
 {
     grib_trie* last = t;
-    const char* k   = key;
+    const char* k = key;
     ECCODES_ASSERT(t);
 
     while (*k && t) {

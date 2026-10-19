@@ -19,7 +19,7 @@ class Trim : public Ascii
 {
 public:
     Trim() :
-        Ascii() { }
+        Ascii() {}
     const AccessorType& accessor_type() const override { return accessor_type_; }
     int pack_string(const char*, size_t* len) override;
     int unpack_string(char*, size_t* len) override;
@@ -32,7 +32,7 @@ private:
     int trim_right_ = 0;
 
 public:
-    static constexpr AccessorType accessor_type_{"trim"};
+    static constexpr AccessorType accessor_type_{ "trim" };
 };
 
 }  // namespace eccodes::accessor

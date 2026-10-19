@@ -19,7 +19,7 @@ class G2LatLon : public Double
 {
 public:
     G2LatLon() :
-        Double() { }
+        Double() {}
     const AccessorType& accessor_type() const override { return accessor_type_; }
     int pack_missing() override;
     int is_missing() override;
@@ -33,7 +33,7 @@ private:
     const char* given_ = nullptr;
 
 public:
-    static constexpr AccessorType accessor_type_{"g2latlon"};
+    static constexpr AccessorType accessor_type_{ "g2latlon" };
 };
 
 }  // namespace eccodes::accessor

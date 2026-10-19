@@ -11,14 +11,15 @@
 #include "IsInList.h"
 #include "eccodes_prototypes.h"
 
-namespace eccodes::expression {
-
-grib_trie* IsInList::load_list(grib_context* c,  int* err) const
+namespace eccodes::expression
 {
-    char* filename  = NULL;
-    char line[1024] = {0};
+
+grib_trie* IsInList::load_list(grib_context* c, int* err) const
+{
+    char* filename = NULL;
+    char line[1024] = { 0 };
     grib_trie* list = NULL;
-    FILE* f         = NULL;
+    FILE* f = NULL;
 
     *err = GRIB_SUCCESS;
 
@@ -75,7 +76,7 @@ const char* IsInList::get_name() const
 int IsInList::evaluate_long(grib_handle* h, long* result) const
 {
     int err = 0;
-    char mybuf[1024] = {0};
+    char mybuf[1024] = { 0 };
     size_t size = 1024;
 
     grib_trie* list = load_list(h->context, &err);
@@ -110,7 +111,7 @@ int IsInList::evaluate_double(grib_handle* h, double* result) const
 
 const char* IsInList::evaluate_string(grib_handle* h, char* buf, size_t* size, int* err) const
 {
-    char mybuf[1024] = {0};
+    char mybuf[1024] = { 0 };
     size_t sizebuf = 1024;
     long result;
 
@@ -155,7 +156,8 @@ void IsInList::add_dependency(grib_accessor* observer)
     grib_dependency_add(observer, observed);
 }
 
-void IsInList::destroy(grib_context* c) {
+void IsInList::destroy(grib_context* c)
+{
     grib_context_free_persistent(c, name_);
     grib_context_free_persistent(c, list_);
 }
@@ -178,6 +180,7 @@ int IsInList::native_type(grib_handle* h) const
 
 }  // namespace eccodes::expression
 
-grib_expression* new_is_in_list_expression(grib_context* c, const char* name, const char* list) {
+grib_expression* new_is_in_list_expression(grib_context* c, const char* name, const char* list)
+{
     return new eccodes::expression::IsInList(c, name, list);
 }

@@ -40,9 +40,9 @@ const char* tool_description =
     "Sets key/value pairs in the input BUFR file(s) and writes"
     "\n\teach message to the output_bufr_file."
     "\n\tIt fails when an error occurs (e.g. key not found).";
-const char* tool_name       = "bufr_set";
+const char* tool_name = "bufr_set";
 const char* tool_online_doc = "https://confluence.ecmwf.int/display/ECC/bufr_set";
-const char* tool_usage      = "[options] bufr_file bufr_file ... output_bufr_file";
+const char* tool_usage = "[options] bufr_file bufr_file ... output_bufr_file";
 
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 

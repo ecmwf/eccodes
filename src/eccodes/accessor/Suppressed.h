@@ -19,7 +19,7 @@ class Suppressed : public Long
 {
 public:
     Suppressed() :
-        Long() { }
+        Long() {}
     const AccessorType& accessor_type() const override { return accessor_type_; }
     long get_native_type() override;
     int unpack_double(double* val, size_t* len) override;
@@ -34,7 +34,7 @@ private:
     void log_message();
 
 public:
-    static constexpr AccessorType accessor_type_{"suppressed"};
+    static constexpr AccessorType accessor_type_{ "suppressed" };
 };
 
 }  // namespace eccodes::accessor

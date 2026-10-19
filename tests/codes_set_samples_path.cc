@@ -14,24 +14,24 @@
 /* Windows always has a colon in pathnames e.g. C:\temp\file. So instead we use semi-colons as delimiter */
 /* in order to have multiple definitions/samples directories */
 #ifdef ECCODES_ON_WINDOWS
-#define ECC_PATH_DELIMITER_CHAR ';'
+    #define ECC_PATH_DELIMITER_CHAR ';'
 #else
-#define ECC_PATH_DELIMITER_CHAR ':'
+    #define ECC_PATH_DELIMITER_CHAR ':'
 #endif
 
 int main(int argc, char** argv)
 {
-    grib_handle* h       = NULL;
-    char full_path[2048] = {0};
+    grib_handle* h = NULL;
+    char full_path[2048] = { 0 };
     const char* sample_name = NULL;
-    const char* new_dir     = NULL;
-    grib_context* c         = NULL;
-    long paramId            = 0;
+    const char* new_dir = NULL;
+    grib_context* c = NULL;
+    long paramId = 0;
 
     ECCODES_ASSERT(argc == 3);
 
     sample_name = argv[1];
-    new_dir     = argv[2]; /* The directory containing the given sample */
+    new_dir = argv[2]; /* The directory containing the given sample */
 
     codes_context_set_debug(c, -1);
     printf("Initial samples path = %s\n", grib_samples_path(c));

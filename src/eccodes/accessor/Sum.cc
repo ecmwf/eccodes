@@ -16,7 +16,7 @@ namespace eccodes::accessor
 void Sum::init(const long l, grib_arguments* c)
 {
     Double::init(l, c);
-    int n   = 0;
+    int n = 0;
     values_ = c->get_name(get_enclosing_handle(), n++);
     length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
@@ -24,8 +24,8 @@ void Sum::init(const long l, grib_arguments* c)
 
 int Sum::unpack_long(long* val, size_t* len)
 {
-    int ret      = 0;
-    size_t size  = 0;
+    int ret = 0;
+    size_t size = 0;
     long* values = 0;
     long i;
     long count = 0;
@@ -56,8 +56,8 @@ int Sum::unpack_long(long* val, size_t* len)
 
 int Sum::unpack_double(double* val, size_t* len)
 {
-    int ret        = 0;
-    size_t size    = 0;
+    int ret = 0;
+    size_t size = 0;
     double* values = 0;
     long i;
     long count = 0;
@@ -92,9 +92,9 @@ int Sum::unpack_double(double* val, size_t* len)
 int Sum::value_count(long* count)
 {
     size_t n = 0;
-    int ret  = GRIB_SUCCESS;
+    int ret = GRIB_SUCCESS;
 
-    ret    = grib_get_size(get_enclosing_handle(), values_, &n);
+    ret = grib_get_size(get_enclosing_handle(), values_, &n);
     *count = n;
 
     if (ret)

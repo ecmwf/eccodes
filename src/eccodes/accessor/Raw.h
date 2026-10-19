@@ -19,7 +19,7 @@ class Raw : public Gen
 {
 public:
     Raw() :
-        Gen() { }
+        Gen() {}
     const AccessorType& accessor_type() const override { return accessor_type_; }
     long get_native_type() override;
     int pack_bytes(const unsigned char*, size_t* len) override;
@@ -36,7 +36,7 @@ private:
     long relativeOffset_ = 0;
 
 public:
-    static constexpr AccessorType accessor_type_{"raw"};
+    static constexpr AccessorType accessor_type_{ "raw" };
 };
 
 }  // namespace eccodes::accessor

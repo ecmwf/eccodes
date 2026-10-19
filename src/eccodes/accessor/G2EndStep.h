@@ -19,7 +19,7 @@ class G2EndStep : public Long
 {
 public:
     G2EndStep() :
-        Long() { }
+        Long() {}
     const AccessorType& accessor_type() const override { return accessor_type_; }
     long get_native_type() override;
     int pack_long(const long* val, size_t* len) override;
@@ -57,7 +57,7 @@ private:
     int pack_long_(const long end_step_value, const long end_step_unit);
 
 public:
-    static constexpr AccessorType accessor_type_{"g2end_step"};
+    static constexpr AccessorType accessor_type_{ "g2end_step" };
 };
 
 }  // namespace eccodes::accessor

@@ -34,12 +34,12 @@ static void binary_search(const double xx[], const unsigned long n, double x, un
 
 unsigned long grib_ieee_to_long(double x)
 {
-    unsigned long s    = 0;
+    unsigned long s = 0;
     unsigned long mmax = 0xffffff;
     unsigned long mmin = 0x800000;
-    unsigned long m    = 0;
-    unsigned long e    = 0;
-    double rmmax       = mmax + 0.5;
+    unsigned long m = 0;
+    unsigned long e = 0;
+    double rmmax = mmax + 0.5;
 
     /* printf("\ngrib_ieee_to_long: x=%.20e\n",x); */
     if (x < 0) {
@@ -208,11 +208,11 @@ int grib_nearest_smaller_ieee_float(double a, double* ret)
     if (a > ieee_table.vmax) {
         const grib_context* c = grib_context_get_default();
         grib_context_log(c, GRIB_LOG_ERROR,
-                "Number is too large: x=%e > xmax=%e (IEEE float)", a, ieee_table.vmax);
+                         "Number is too large: x=%e > xmax=%e (IEEE float)", a, ieee_table.vmax);
         return GRIB_INTERNAL_ERROR;
     }
 
-    l    = grib_ieee_nearest_smaller_to_long(a);
+    l = grib_ieee_nearest_smaller_to_long(a);
     *ret = grib_long_to_ieee(l);
     return GRIB_SUCCESS;
 }
@@ -243,38 +243,38 @@ double grib_long_to_ieee64(unsigned long x)
 }
 
 template <>
-int grib_ieee_decode_array<double> (grib_context* c, unsigned char* buf, size_t nvals, int bytes, double* val)
+int grib_ieee_decode_array<double>(grib_context* c, unsigned char* buf, size_t nvals, int bytes, double* val)
 {
     int err = 0, j = 0;
-    unsigned char s[8] = {0};
+    unsigned char s[8] = { 0 };
     float fval;
     double* pval = val;
 
     switch (bytes) {
         case 4:
             for (size_t i = 0; i < nvals; i++) {
-#if IEEE_LE
+    #if IEEE_LE
                 for (j = 3; j >= 0; j--)
                     s[j] = *(buf++);
                 memcpy(&fval, s, 4);
                 val[i] = (double)fval;
-#elif IEEE_BE
+    #elif IEEE_BE
                 memcpy(&fval, buf, 4);
                 val[i] = (double)fval;
                 buf += 4;
-#endif
+    #endif
             }
             break;
         case 8:
             for (size_t i = 0; i < nvals; i++) {
-#if IEEE_LE
+    #if IEEE_LE
                 for (j = 7; j >= 0; j--)
                     s[j] = *(buf++);
                 memcpy(pval++, s, 8);
-#elif IEEE_BE
+    #elif IEEE_BE
                 memcpy(pval++, buf, 8);
                 buf += 8;
-#endif
+    #endif
             }
             break;
         default:
@@ -290,19 +290,19 @@ template <>
 int grib_ieee_decode_array<float>(grib_context* c, unsigned char* buf, size_t nvals, int bytes, float* val)
 {
     int err = 0, j = 0;
-    unsigned char s[4] = {0};
+    unsigned char s[4] = { 0 };
 
     switch (bytes) {
         case 4:
             for (size_t i = 0; i < nvals; i++) {
-#if IEEE_LE
+    #if IEEE_LE
                 for (j = 3; j >= 0; j--)
                     s[j] = *(buf++);
                 memcpy(&val[i], s, 4);
-#elif IEEE_BE
+    #elif IEEE_BE
                 memcpy(&val[i], buf, 4);
                 buf += 4;
-#endif
+    #endif
             }
             break;
         default:
@@ -333,7 +333,7 @@ int grib_ieee_decode_array_float(grib_context* c, unsigned char* buf, size_t nva
     long bitr = 0;
 
     for (i = 0; i < nvals; i++)
-        val[i] = (float) grib_long_to_ieee(grib_decode_unsigned_long(buf, &bitr, bytes * 8));
+        val[i] = (float)grib_long_to_ieee(grib_decode_unsigned_long(buf, &bitr, bytes * 8));
 
     return err;
 }
@@ -346,11 +346,11 @@ int grib_ieee_encode_array(grib_context* c, double* val, size_t nvals, int bytes
                            unsigned char* buf)
 {
     int err = 0, j = 0;
-#if IEEE_LE
+    #if IEEE_LE
     unsigned char s4[4];
     unsigned char s8[8];
-#endif
-    float fval   = 0;
+    #endif
+    float fval = 0;
     double* pval = val;
 
     switch (bytes) {
@@ -358,26 +358,26 @@ int grib_ieee_encode_array(grib_context* c, double* val, size_t nvals, int bytes
             for (size_t i = 0; i < nvals; i++) {
                 fval = (float)val[i];
 
-#if IEEE_LE
+    #if IEEE_LE
                 memcpy(s4, &(fval), 4);
                 for (j = 3; j >= 0; j--)
                     *(buf++) = s4[j];
-#elif IEEE_BE
+    #elif IEEE_BE
                 memcpy(buf, &(fval), 4);
                 buf += 4;
-#endif
+    #endif
             }
             break;
         case 8:
             for (size_t i = 0; i < nvals; i++) {
-#if IEEE_LE
+    #if IEEE_LE
                 memcpy(s8, pval++, 8);
                 for (j = 7; j >= 0; j--)
                     *(buf++) = s8[j];
-#elif IEEE_BE
+    #elif IEEE_BE
                 memcpy(buf, pval++, 8);
                 buf += 8;
-#endif
+    #endif
             }
             break;
         default:

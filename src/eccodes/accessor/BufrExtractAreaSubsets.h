@@ -19,7 +19,7 @@ class BufrExtractAreaSubsets : public Gen
 {
 public:
     BufrExtractAreaSubsets() :
-        Gen() { }
+        Gen() {}
     const AccessorType& accessor_type() const override { return accessor_type_; }
     long get_native_type() override;
     int pack_long(const long* val, size_t* len) override;
@@ -40,7 +40,7 @@ private:
     int select_area();
 
 public:
-    static constexpr AccessorType accessor_type_{"bufr_extract_area_subsets"};
+    static constexpr AccessorType accessor_type_{ "bufr_extract_area_subsets" };
 };
 
 }  // namespace eccodes::accessor

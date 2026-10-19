@@ -28,15 +28,15 @@ bufr_keys_iterator* codes_bufr_keys_iterator_new(grib_handle* h, unsigned long f
         return NULL;
 
     ki->filter_flags = filter_flags;
-    ki->handle       = h;
+    ki->handle = h;
     DEBUG_ASSERT(h->product_kind == PRODUCT_BUFR);
-    ki->key_name            = NULL;
-    ki->i_curr_attribute    = 0;
+    ki->key_name = NULL;
+    ki->i_curr_attribute = 0;
     ki->accessor_flags_only = GRIB_ACCESSOR_FLAG_DUMP;
     ki->accessor_flags_skip = GRIB_ACCESSOR_FLAG_HIDDEN; /*ECC-568*/
 
     ki->at_start = 1;
-    ki->match    = 0;
+    ki->match = 0;
 
     if (ki->seen == NULL)
         ki->seen = grib_trie_new(h->context);
@@ -57,12 +57,12 @@ bufr_keys_iterator* codes_bufr_data_section_keys_iterator_new(grib_handle* h)
 
     ki->handle = h;
     DEBUG_ASSERT(h->product_kind == PRODUCT_BUFR);
-    ki->i_curr_attribute    = 0;
+    ki->i_curr_attribute = 0;
     ki->accessor_flags_only = GRIB_ACCESSOR_FLAG_BUFR_DATA | GRIB_ACCESSOR_FLAG_DUMP;
     ki->accessor_flags_skip = GRIB_ACCESSOR_FLAG_HIDDEN | GRIB_ACCESSOR_FLAG_READ_ONLY;
 
     ki->at_start = 1;
-    ki->match    = 0;
+    ki->match = 0;
 
     if (ki->seen == NULL)
         ki->seen = grib_trie_new(h->context);
@@ -77,7 +77,7 @@ static void mark_seen(bufr_keys_iterator* ki, const char* name)
     if (r)
         (*r)++;
     else {
-        r  = (int*)grib_context_malloc(ki->handle->context, sizeof(int));
+        r = (int*)grib_context_malloc(ki->handle->context, sizeof(int));
         *r = 1;
         grib_trie_insert(ki->seen, name, (void*)r);
     }
@@ -114,8 +114,8 @@ static int next_attribute(bufr_keys_iterator* kiter)
     if (!kiter->current)
         return 0;
     if (!kiter->attributes) {
-        kiter->attributes       = kiter->current->attributes_;
-        kiter->prefix           = 0;
+        kiter->attributes = kiter->current->attributes_;
+        kiter->prefix = 0;
         kiter->i_curr_attribute = 0;
     }
     i_curr_attribute = kiter->i_curr_attribute - 1;
@@ -131,7 +131,7 @@ static int next_attribute(bufr_keys_iterator* kiter)
         if (!kiter->prefix) {
             const size_t prefixLenMax = strlen(kiter->current->name_) + 10;
             kiter->prefix = (char*)grib_context_malloc_clear(kiter->current->context_, prefixLenMax);
-            r             = (int*)grib_trie_get(kiter->seen, kiter->current->name_);
+            r = (int*)grib_trie_get(kiter->seen, kiter->current->name_);
             snprintf(kiter->prefix, prefixLenMax, "#%d#%s", *r, kiter->current->name_);
         }
         kiter->i_curr_attribute++;
@@ -147,14 +147,14 @@ static int next_attribute(bufr_keys_iterator* kiter)
             return 0;
         }
         prefix = (char*)grib_context_malloc_clear(kiter->current->context_,
-                strlen(kiter->prefix) + strlen(kiter->attributes[i_curr_attribute]->name_) + 3);
+                                                  strlen(kiter->prefix) + strlen(kiter->attributes[i_curr_attribute]->name_) + 3);
         /*sprintf(prefix,"%s->%s",kiter->prefix,kiter->attributes[i_curr_attribute]->name);*/
         strcpy(prefix, kiter->prefix); /* strcpy and strcat here are much faster than sprintf */
         strcat(prefix, "->");
         strcat(prefix, kiter->attributes[i_curr_attribute]->name_);
         grib_context_free(kiter->current->context_, kiter->prefix);
-        kiter->prefix           = prefix;
-        kiter->attributes       = kiter->attributes[i_curr_attribute]->attributes_;
+        kiter->prefix = prefix;
+        kiter->attributes = kiter->attributes[i_curr_attribute]->attributes_;
         kiter->i_curr_attribute = 0;
         return next_attribute(kiter);
     }
@@ -167,18 +167,18 @@ int codes_bufr_keys_iterator_next(bufr_keys_iterator* kiter)
     kiter->key_name = NULL;
 
     if (kiter->at_start) {
-        kiter->current          = kiter->handle->root->block->first;
-        kiter->at_start         = 0;
+        kiter->current = kiter->handle->root->block->first;
+        kiter->at_start = 0;
         kiter->i_curr_attribute = 0;
-        kiter->prefix           = 0;
-        kiter->attributes       = 0;
+        kiter->prefix = 0;
+        kiter->attributes = 0;
     }
     else {
         if (next_attribute(kiter)) {
             return 1;
         }
         else {
-            kiter->current    = kiter->current->next_accessor();
+            kiter->current = kiter->current->next_accessor();
             kiter->attributes = 0;
             if (kiter->prefix) {
                 grib_context_free(kiter->current->context_, kiter->prefix);
@@ -199,14 +199,14 @@ int codes_bufr_keys_iterator_next(bufr_keys_iterator* kiter)
 char* codes_bufr_keys_iterator_get_name(const bufr_keys_iterator* ckiter)
 {
     bufr_keys_iterator* kiter = (bufr_keys_iterator*)ckiter;
-    int* r                    = 0;
-    char* ret                 = 0;
-    const grib_context* c     = kiter->handle->context;
+    int* r = 0;
+    char* ret = 0;
+    const grib_context* c = kiter->handle->context;
     DEBUG_ASSERT(kiter->current);
 
     if (kiter->prefix) {
         int iattribute = kiter->i_curr_attribute - 1;
-        ret            = (char*)grib_context_malloc_clear(c, strlen(kiter->prefix) + strlen(kiter->attributes[iattribute]->name_) + 10);
+        ret = (char*)grib_context_malloc_clear(c, strlen(kiter->prefix) + strlen(kiter->attributes[iattribute]->name_) + 10);
         /*sprintf(ret,"%s->%s",kiter->prefix,kiter->attributes[iattribute]->name);*/
         strcpy(ret, kiter->prefix); /* strcpy and strcat here are much faster than sprintf */
         strcat(ret, "->");

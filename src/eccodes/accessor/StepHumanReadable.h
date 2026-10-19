@@ -19,7 +19,7 @@ class StepHumanReadable : public Gen
 {
 public:
     StepHumanReadable() :
-        Gen() { }
+        Gen() {}
     const AccessorType& accessor_type() const override { return accessor_type_; }
     long get_native_type() override;
     int unpack_string(char*, size_t* len) override;
@@ -30,7 +30,7 @@ private:
     const char* step_ = nullptr;
 
 public:
-    static constexpr AccessorType accessor_type_{"step_human_readable"};
+    static constexpr AccessorType accessor_type_{ "step_human_readable" };
 };
 
 }  // namespace eccodes::accessor

@@ -21,9 +21,9 @@ typedef struct list
 
 int main(int argc, char* argv[])
 {
-    int i                  = 0;
-    int j                  = 0;
-    int fail               = 0;
+    int i = 0;
+    int j = 0;
+    int fail = 0;
     grib_compiler compiler = {
         0,
     };
@@ -32,7 +32,7 @@ int main(int argc, char* argv[])
     grib_action* a;
 
     list* first = NULL;
-    list* l     = NULL;
+    list* l = NULL;
 
     compiler.out = stdout;
     compiler.max = 4096;
@@ -76,7 +76,7 @@ int main(int argc, char* argv[])
         printf("return a[0];\n");
         printf("}\n");
 
-        l       = calloc(sizeof(list), 1);
+        l = calloc(sizeof(list), 1);
         l->next = first;
 
         strcpy(l->name, name);

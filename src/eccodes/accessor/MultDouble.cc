@@ -18,13 +18,13 @@ void MultDouble::init(const long l, grib_arguments* c)
     Double::init(l, c);
     int n = 0;
 
-    val_        = c->get_name(get_enclosing_handle(), n++);
+    val_ = c->get_name(get_enclosing_handle(), n++);
     multiplier_ = c->get_double(get_enclosing_handle(), n++);
 }
 
 int MultDouble::unpack_double(double* val, size_t* len)
 {
-    int ret      = GRIB_SUCCESS;
+    int ret = GRIB_SUCCESS;
     double value = 0;
 
     ret = grib_get_double_internal(get_enclosing_handle(), val_, &value);

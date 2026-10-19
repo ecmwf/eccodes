@@ -38,20 +38,20 @@ static void test_reduced_gg(int remove_local_def, int edition, const char* packi
                             const char* input_filename, const char* output_filename)
 {
     /* based on copy_spec_from_ksec */
-    int err     = 0;
+    int err = 0;
     size_t slen = 32, inlen = 0, outlen = 0;
     size_t i = 0, size = 0;
     int set_spec_flags = 0;
-    double* values     = NULL;
-    FILE* in           = NULL;
-    FILE* out          = NULL;
+    double* values = NULL;
+    FILE* in = NULL;
+    FILE* out = NULL;
     const void* buffer = NULL;
-    char gridType[128] = {0};
+    char gridType[128] = { 0 };
 
-    grib_handle* handle     = 0;
-    grib_handle* finalh     = 0;
-    grib_util_grid_spec spec = {0};
-    grib_util_packing_spec packing_spec = {0};
+    grib_handle* handle = 0;
+    grib_handle* finalh = 0;
+    grib_util_grid_spec spec = { 0 };
+    grib_util_packing_spec packing_spec = { 0 };
 
     ECCODES_ASSERT(input_filename);
     in = fopen(input_filename, "rb");
@@ -78,26 +78,26 @@ static void test_reduced_gg(int remove_local_def, int edition, const char* packi
         values[i] *= 1.10;
     }
 
-    spec.grid_type                          = GRIB_UTIL_GRID_SPEC_REDUCED_GG;
-    spec.N                                  = 32; /* hardcoded for now */
-    spec.Nj                                 = 2 * spec.N;
-    outlen                                  = inlen;
-    spec.iDirectionIncrementInDegrees       = 1.5;
-    spec.jDirectionIncrementInDegrees       = 1.5;
-    spec.latitudeOfFirstGridPointInDegrees  = 87.863799;
+    spec.grid_type = GRIB_UTIL_GRID_SPEC_REDUCED_GG;
+    spec.N = 32; /* hardcoded for now */
+    spec.Nj = 2 * spec.N;
+    outlen = inlen;
+    spec.iDirectionIncrementInDegrees = 1.5;
+    spec.jDirectionIncrementInDegrees = 1.5;
+    spec.latitudeOfFirstGridPointInDegrees = 87.863799;
     spec.longitudeOfFirstGridPointInDegrees = 0.0;
-    spec.latitudeOfLastGridPointInDegrees   = -spec.latitudeOfFirstGridPointInDegrees;
-    spec.longitudeOfLastGridPointInDegrees  = 357.187500;
-    spec.bitmapPresent                      = 0;
+    spec.latitudeOfLastGridPointInDegrees = -spec.latitudeOfFirstGridPointInDegrees;
+    spec.longitudeOfLastGridPointInDegrees = 357.187500;
+    spec.bitmapPresent = 0;
 
     /*packing_spec.packing_type = GRIB_UTIL_PACKING_TYPE_GRID_SECOND_ORDER;*/
     packing_spec.packing_type = get_packing_type_code(packingType);
     packing_spec.bitsPerValue = 24;
-    packing_spec.accuracy     = GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES;
+    packing_spec.accuracy = GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES;
     if (packingType)
-        packing_spec.packing  = GRIB_UTIL_PACKING_USE_PROVIDED;
+        packing_spec.packing = GRIB_UTIL_PACKING_USE_PROVIDED;
     else
-        packing_spec.packing  = GRIB_UTIL_PACKING_SAME_AS_INPUT;
+        packing_spec.packing = GRIB_UTIL_PACKING_SAME_AS_INPUT;
 
     // Extra settings
     packing_spec.extra_settings_count++;
@@ -118,22 +118,22 @@ static void test_reduced_gg(int remove_local_def, int edition, const char* packi
 
     /* Try some invalid inputs and check it is handled */
     {
-        grib_handle* h2      = 0;
+        grib_handle* h2 = 0;
         packing_spec.accuracy = 999;
-        h2                    = grib_util_set_spec(handle, &spec, &packing_spec, set_spec_flags, values, outlen, &err);
+        h2 = grib_util_set_spec(handle, &spec, &packing_spec, set_spec_flags, values, outlen, &err);
         ECCODES_ASSERT(err == GRIB_INTERNAL_ERROR);
         ECCODES_ASSERT(!h2);
         if (h2) exit(1);
 #ifdef INFINITY
         packing_spec.accuracy = GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES;
-        values[0]             = INFINITY;
-        h2                    = grib_util_set_spec(handle, &spec, &packing_spec, set_spec_flags, values, outlen, &err);
+        values[0] = INFINITY;
+        h2 = grib_util_set_spec(handle, &spec, &packing_spec, set_spec_flags, values, outlen, &err);
         ECCODES_ASSERT(err == GRIB_ENCODING_ERROR);
         ECCODES_ASSERT(!h2);
         if (h2) exit(1);
 
-        values[0]             = -INFINITY;
-        h2                    = grib_util_set_spec(handle, &spec, &packing_spec, set_spec_flags, values, outlen, &err);
+        values[0] = -INFINITY;
+        h2 = grib_util_set_spec(handle, &spec, &packing_spec, set_spec_flags, values, outlen, &err);
         ECCODES_ASSERT(err == GRIB_ENCODING_ERROR);
         ECCODES_ASSERT(!h2);
         if (h2) exit(1);
@@ -159,21 +159,21 @@ static void test_regular_ll(int remove_local_def, int edition, const char* packi
                             const char* input_filename, const char* output_filename)
 {
     /* based on copy_spec_from_ksec */
-    int err     = 0;
+    int err = 0;
     size_t slen = 32, inlen = 0, outlen = 0;
-    size_t size        = 0;
+    size_t size = 0;
     int set_spec_flags = 0;
-    double* values     = NULL;
-    FILE* in           = NULL;
-    FILE* out          = NULL;
+    double* values = NULL;
+    FILE* in = NULL;
+    FILE* out = NULL;
     const void* buffer = NULL;
-    char gridType[128] = {0};
+    char gridType[128] = { 0 };
     long input_edition = 0;
 
-    grib_handle* handle     = 0;
-    grib_handle* finalh     = 0;
-    grib_util_grid_spec spec = {0};
-    grib_util_packing_spec packing_spec = {0};
+    grib_handle* handle = 0;
+    grib_handle* finalh = 0;
+    grib_util_grid_spec spec = { 0 };
+    grib_util_packing_spec packing_spec = { 0 };
 
     ECCODES_ASSERT(input_filename);
     in = fopen(input_filename, "rb");
@@ -200,32 +200,32 @@ static void test_regular_ll(int remove_local_def, int edition, const char* packi
     values[1] = 5.5;
 
     spec.grid_type = GRIB_UTIL_GRID_SPEC_REGULAR_LL;
-    spec.Nj        = 14;
-    spec.Ni        = 17;
-    outlen         = spec.Nj * spec.Ni;
+    spec.Nj = 14;
+    spec.Ni = 17;
+    outlen = spec.Nj * spec.Ni;
     /* outlen = inlen; */
-    spec.iDirectionIncrementInDegrees       = 1.5;
-    spec.jDirectionIncrementInDegrees       = 1.5;
-    spec.latitudeOfFirstGridPointInDegrees  = 60.0001;
+    spec.iDirectionIncrementInDegrees = 1.5;
+    spec.jDirectionIncrementInDegrees = 1.5;
+    spec.latitudeOfFirstGridPointInDegrees = 60.0001;
     spec.longitudeOfFirstGridPointInDegrees = -9.0;
-    spec.latitudeOfLastGridPointInDegrees   = 40.5;
-    spec.longitudeOfLastGridPointInDegrees  = 15.0;
-    spec.bitmapPresent                      = 0;
+    spec.latitudeOfLastGridPointInDegrees = 40.5;
+    spec.longitudeOfLastGridPointInDegrees = 15.0;
+    spec.bitmapPresent = 0;
 
     /*packing_spec.packing_type = GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE;*/
     packing_spec.packing_type = get_packing_type_code(packingType);
     packing_spec.bitsPerValue = 24;
-    packing_spec.accuracy     = GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES;
+    packing_spec.accuracy = GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES;
     if (packingType)
-        packing_spec.packing  = GRIB_UTIL_PACKING_USE_PROVIDED;
+        packing_spec.packing = GRIB_UTIL_PACKING_USE_PROVIDED;
     else
-        packing_spec.packing  = GRIB_UTIL_PACKING_SAME_AS_INPUT;
+        packing_spec.packing = GRIB_UTIL_PACKING_SAME_AS_INPUT;
 
     // Temporary. We will remove all instances of the "expandBoundingBox" key from the extra_settings.
     // This is no longer needed as MIR and gridSpec will always expand
     packing_spec.extra_settings_count++;
-    packing_spec.extra_settings[0].type       = GRIB_TYPE_LONG;
-    packing_spec.extra_settings[0].name       = "expandBoundingBox";
+    packing_spec.extra_settings[0].type = GRIB_TYPE_LONG;
+    packing_spec.extra_settings[0].name = "expandBoundingBox";
     packing_spec.extra_settings[0].long_value = 1;
 
     if (edition != 0) {
@@ -251,7 +251,7 @@ static void test_regular_ll(int remove_local_def, int edition, const char* packi
      * so it is rounded up to nearest millidegree */
     if (input_edition == 1) {
         const double expected_lat1 = 60.001;
-        double lat1                = 0;
+        double lat1 = 0;
         CODES_CHECK(grib_get_double(finalh, "latitudeOfFirstGridPointInDegrees", &lat1), 0);
         ECCODES_ASSERT(fabs(lat1 - expected_lat1) < 1e-10);
     }
@@ -370,12 +370,12 @@ static void test_grid_complex_spatial_differencing(int remove_local_def, int edi
 int main(int argc, char* argv[])
 {
     int i = 0, remove_local_def = 0;
-    int edition        = 0;
-    char* packingType  = NULL;
-    char* infile_name  = NULL;
+    int edition = 0;
+    char* packingType = NULL;
+    char* infile_name = NULL;
     char* outfile_name = NULL;
 
-    if (argc == 1 || argc > 8) return 1;// see usage
+    if (argc == 1 || argc > 8) return 1;  // see usage
 
     for (i = 1; i < argc; i++) {
         if (strcmp(argv[i], "-p") == 0) {
@@ -391,7 +391,7 @@ int main(int argc, char* argv[])
         }
         else {
             /* Expect 2 filenames */
-            infile_name  = argv[i];
+            infile_name = argv[i];
             outfile_name = argv[i + 1];
             break;
         }

@@ -32,9 +32,9 @@ int main(int argc, char* argv[])
 
     double *lat = NULL, *lon = NULL, *bscatter = NULL;
     long numObs = 0;
-    size_t len  = 0;
+    size_t len = 0;
     int i, err = 0;
-    int cnt            = 0;
+    int cnt = 0;
     const char* infile = "../../data/bufr/asca_139.bufr";
     char key_name[128];
 

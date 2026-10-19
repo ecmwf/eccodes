@@ -20,7 +20,7 @@ void Vector::init(const long l, grib_arguments* c)
     int n = 0;
 
     vector_ = c->get_name(get_enclosing_handle(), n++);
-    index_  = c->get_long(get_enclosing_handle(), n++);
+    index_ = c->get_long(get_enclosing_handle(), n++);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     length_ = 0;
@@ -28,10 +28,10 @@ void Vector::init(const long l, grib_arguments* c)
 
 int Vector::unpack_double(double* val, size_t* len)
 {
-    int err     = 0;
+    int err = 0;
     size_t size = 0;
     double* stat;
-    grib_accessor* va                  = (grib_accessor*)grib_find_accessor(get_enclosing_handle(), vector_);
+    grib_accessor* va = (grib_accessor*)grib_find_accessor(get_enclosing_handle(), vector_);
     accessor::AbstractVector* v = (accessor::AbstractVector*)va;
 
     ECCODES_ASSERT(index_ >= 0);
@@ -45,7 +45,7 @@ int Vector::unpack_double(double* val, size_t* len)
         // printf("\nClassVector::unpack_double  accessor=%s is DIRTY\n", name_);
         grib_get_size(get_enclosing_handle(), vector_, &size);
         stat = (double*)grib_context_malloc_clear(context_, sizeof(double) * size);
-        err  = va->unpack_double(stat, &size);
+        err = va->unpack_double(stat, &size);
         grib_context_free(context_, stat);
         if (err)
             return err;

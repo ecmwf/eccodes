@@ -31,7 +31,7 @@ private:
     long referencePeriod_ = 0;
 
 public:
-    static constexpr AccessorType accessor_type_{"g2_probability"};
+    static constexpr AccessorType accessor_type_{ "g2_probability" };
 };
 
 }  // namespace eccodes::accessor

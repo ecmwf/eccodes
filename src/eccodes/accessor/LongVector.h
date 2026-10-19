@@ -19,7 +19,7 @@ class LongVector : public AbstractLongVector
 {
 public:
     LongVector() :
-        AbstractLongVector() { }
+        AbstractLongVector() {}
     const AccessorType& accessor_type() const override { return accessor_type_; }
     long get_native_type() override;
     int pack_long(const long* val, size_t* len) override;
@@ -32,7 +32,7 @@ private:
     int index_ = 0;
 
 public:
-    static constexpr AccessorType accessor_type_{"long_vector"};
+    static constexpr AccessorType accessor_type_{ "long_vector" };
 };
 
 }  // namespace eccodes::accessor

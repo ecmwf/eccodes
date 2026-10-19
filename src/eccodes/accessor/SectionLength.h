@@ -19,13 +19,13 @@ class SectionLength : public Unsigned
 {
 public:
     SectionLength() :
-        Unsigned() { }
+        Unsigned() {}
     const AccessorType& accessor_type() const override { return accessor_type_; }
     int value_count(long*) override;
     void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;
 
-    static constexpr AccessorType accessor_type_{"section_length"};
+    static constexpr AccessorType accessor_type_{ "section_length" };
 };
 
 }  // namespace eccodes::accessor

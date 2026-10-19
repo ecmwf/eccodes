@@ -19,21 +19,21 @@ class G2ConceptDir : public Gen
 {
 public:
     G2ConceptDir() :
-        Gen() { }
+        Gen() {}
     const AccessorType& accessor_type() const override { return accessor_type_; }
     long get_native_type() override;
     int unpack_string(char*, size_t* len) override;
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* preferLocal_     = nullptr;
-    const char* masterDir_       = nullptr;
-    const char* localDir_        = nullptr;
+    const char* preferLocal_ = nullptr;
+    const char* masterDir_ = nullptr;
+    const char* localDir_ = nullptr;
     const char* datasetForLocal_ = nullptr;
-    int mode_                    = 0;  // 1=conceptsDir1 or 2=conceptsDir2
+    int mode_ = 0;  // 1=conceptsDir1 or 2=conceptsDir2
 
 public:
-    static constexpr AccessorType accessor_type_{"g2_concept_dir"};
+    static constexpr AccessorType accessor_type_{ "g2_concept_dir" };
 };
 
 }  // namespace eccodes::accessor

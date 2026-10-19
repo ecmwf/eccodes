@@ -19,7 +19,7 @@ class G2Date : public Long
 {
 public:
     G2Date() :
-        Long() { }
+        Long() {}
     const AccessorType& accessor_type() const override { return accessor_type_; }
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
@@ -31,7 +31,7 @@ private:
     const char* day_ = nullptr;
 
 public:
-    static constexpr AccessorType accessor_type_{"g2date"};
+    static constexpr AccessorType accessor_type_{ "g2date" };
 };
 
 }  // namespace eccodes::accessor

@@ -19,7 +19,7 @@ class ToDouble : public Gen
 {
 public:
     ToDouble() :
-        Gen() { }
+        Gen() {}
     const AccessorType& accessor_type() const override { return accessor_type_; }
     long get_native_type() override;
     int unpack_double(double* val, size_t* len) override;
@@ -40,7 +40,7 @@ private:
     long scale_ = 0;
 
 public:
-    static constexpr AccessorType accessor_type_{"to_double"};
+    static constexpr AccessorType accessor_type_{ "to_double" };
 };
 
 }  // namespace eccodes::accessor

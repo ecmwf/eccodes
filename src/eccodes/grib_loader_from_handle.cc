@@ -10,8 +10,8 @@
 
 #include "grib_api_internal.h"
 
-#if defined DEBUG && ! defined GRIB_PTHREADS
-  #define MY_DEBUG
+#if defined DEBUG && !defined GRIB_PTHREADS
+    #define MY_DEBUG
 #endif
 
 static int copy_values(grib_handle* h, grib_accessor* ga)
@@ -45,9 +45,9 @@ static int copy_values(grib_handle* h, grib_accessor* ga)
 
 int grib_lookup_long_from_handle(grib_context* gc, grib_loader* loader, const char* name, long* value)
 {
-    grib_handle* h   = (grib_handle*)loader->data;
+    grib_handle* h = (grib_handle*)loader->data;
     grib_accessor* b = grib_find_accessor(h, name);
-    size_t len       = 1;
+    size_t len = 1;
     if (b)
         return b->unpack_long(value, &len);
 
@@ -81,19 +81,19 @@ static long get_copy_type(grib_handle* h, const char* name, grib_accessor* ga, l
 
 int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_arguments* default_value)
 {
-    grib_handle* h      = (grib_handle*)loader->data;
-    int ret             = GRIB_SUCCESS;
-    size_t len          = 0;
-    char* sval          = NULL;
+    grib_handle* h = (grib_handle*)loader->data;
+    int ret = GRIB_SUCCESS;
+    size_t len = 0;
+    char* sval = NULL;
     unsigned char* uval = NULL;
-    long* lval          = NULL;
-    double* dval        = NULL;
+    long* lval = NULL;
+    double* dval = NULL;
 #ifdef MY_DEBUG
-    static int first           = 1;
+    static int first = 1;
     static const char* missing = 0;
 #endif
     const char* name = NULL;
-    int k            = 0;
+    int k = 0;
     grib_handle* g;
     grib_accessor* ao = NULL;
     int e, pack_missing = 0;
@@ -115,12 +115,12 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
         return GRIB_SUCCESS;
     }
 
-//     if(h->values)
-//         if(copy_values(h,ga) == GRIB_SUCCESS)
-//         {
-//             grib_context_log(h->context,GRIB_LOG_DEBUG, "Copying: setting %s to multi-set-value",   ga->name);
-//             return GRIB_SUCCESS;
-//         }
+    //     if(h->values)
+    //         if(copy_values(h,ga) == GRIB_SUCCESS)
+    //         {
+    //             grib_context_log(h->context,GRIB_LOG_DEBUG, "Copying: setting %s to multi-set-value",   ga->name);
+    //             return GRIB_SUCCESS;
+    //         }
 
 #if 0
     if(h->loader)
@@ -152,7 +152,7 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
 #ifdef MY_DEBUG
         if (first) {
             missing = codes_getenv("ECCODES_PRINT_MISSING");
-            first   = 0;
+            first = 0;
         }
 #endif
         grib_context_log(h->context, GRIB_LOG_DEBUG, "Copying [%s] failed: %s",
@@ -190,7 +190,7 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
     // ECC-2013: Unfortunately we mapped some keys to be "string_type" in the definitions,
     // e.g., the grib2 key typeOfFirstFixedSurface. Its code table 4.5 has multiple
     // abbreviations of "sfc" etc which clash! So we mark it with this flag to revert to integers which are unique
-    if ( ga->flags_ & GRIB_ACCESSOR_FLAG_COPY_AS_LONG ) {
+    if (ga->flags_ & GRIB_ACCESSOR_FLAG_COPY_AS_LONG) {
         ga_type = GRIB_TYPE_LONG;
     }
     else {
@@ -203,7 +203,7 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
             /*grib_get_string_length_acc(ga,&len);  See ECC-490 */
             grib_get_string_length(h, name, &len);
             sval = (char*)grib_context_malloc(h->context, len);
-            ret  = grib_get_string_internal(h, name, sval, &len);
+            ret = grib_get_string_internal(h, name, sval, &len);
             if (ret == GRIB_SUCCESS) {
                 grib_context_log(h->context, GRIB_LOG_DEBUG, "Copying string %s to %s", sval, name);
                 ret = ga->pack_string(sval, &len);
@@ -214,7 +214,7 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
 
         case GRIB_TYPE_LONG:
             lval = (long*)grib_context_malloc(h->context, len * sizeof(long));
-            ret  = grib_get_long_array_internal(h, name, lval, &len);
+            ret = grib_get_long_array_internal(h, name, lval, &len);
             if (ret == GRIB_SUCCESS) {
                 grib_context_log(h->context, GRIB_LOG_DEBUG, "Copying %d long(s) %d to %s", len, lval[0], name);
                 if (ga->same_) {
@@ -246,7 +246,7 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
 
         case GRIB_TYPE_DOUBLE:
             dval = (double*)grib_context_malloc(h->context, len * sizeof(double));
-            ret  = grib_get_double_array(h, name, dval, &len); /* GRIB-898 */
+            ret = grib_get_double_array(h, name, dval, &len); /* GRIB-898 */
             if (ret == GRIB_SUCCESS) {
                 grib_context_log(h->context, GRIB_LOG_DEBUG, "Copying %d double(s) %g to %s", len, dval[0], name);
                 if (ga->same_) {
@@ -265,10 +265,10 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
 
         case GRIB_TYPE_BYTES:
 
-            ao   = grib_find_accessor(h, name);
-            len  = ao->byte_count();
+            ao = grib_find_accessor(h, name);
+            len = ao->byte_count();
             uval = (unsigned char*)grib_context_malloc(h->context, len * sizeof(char));
-            ret  = ao->unpack_bytes(uval, &len);
+            ret = ao->unpack_bytes(uval, &len);
             /* ret = grib_get_bytes_internal(h,name,uval,&len); */
             if (ret == GRIB_SUCCESS) {
                 grib_context_log(h->context, GRIB_LOG_DEBUG, "Copying %d byte(s) to %s", len, name);
@@ -284,7 +284,7 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
 
         default:
             grib_context_log(h->context, GRIB_LOG_ERROR,
-                "Copying %s, cannot establish type %ld [%s]", name, ga->get_native_type(), ga->creator_->class_name_);
+                             "Copying %s, cannot establish type %ld [%s]", name, ga->get_native_type(), ga->creator_->class_name_);
             break;
     }
 

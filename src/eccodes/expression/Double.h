@@ -12,7 +12,8 @@
 
 #include "Expression.h"
 
-namespace eccodes::expression {
+namespace eccodes::expression
+{
 
 class Double : public Expression
 {

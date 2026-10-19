@@ -18,8 +18,8 @@ void ToInteger::init(const long len, grib_arguments* arg)
     Gen::init(len, arg);
     grib_handle* hand = get_enclosing_handle();
 
-    key_        = arg->get_name(hand, 0);
-    start_      = arg->get_long(hand, 1);
+    key_ = arg->get_name(hand, 0);
+    start_ = arg->get_long(hand, 1);
     str_length_ = arg->get_long(hand, 2);
 
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
@@ -31,7 +31,7 @@ int ToInteger::value_count(long* count)
     size_t size = 0;
 
     int err = grib_get_size(get_enclosing_handle(), key_, &size);
-    *count  = size;
+    *count = size;
 
     return err;
 }
@@ -59,8 +59,8 @@ long ToInteger::get_native_type()
 
 int ToInteger::unpack_string(char* val, size_t* len)
 {
-    int err        = 0;
-    char buff[512] = {0};
+    int err = 0;
+    char buff[512] = { 0 };
     size_t size = sizeof(buff);
     size_t length = string_length();
 
@@ -83,7 +83,7 @@ int ToInteger::unpack_string(char* val, size_t* len)
     memcpy(val, buff + start_, length);
 
     val[length] = 0;
-    *len        = length;
+    *len = length;
     return GRIB_SUCCESS;
 }
 
@@ -106,10 +106,10 @@ int ToInteger::pack_double(const double* v, size_t* len)
 
 int ToInteger::unpack_long(long* v, size_t* len)
 {
-    char val[1024] = {0};
-    size_t l   = sizeof(val);
+    char val[1024] = { 0 };
+    size_t l = sizeof(val);
     char* last = NULL;
-    int err    = unpack_string(val, &l);
+    int err = unpack_string(val, &l);
 
     if (err)
         return err;
@@ -124,7 +124,7 @@ int ToInteger::unpack_double(double* v, size_t* len)
 {
     size_t l = 1;
     long val = 0;
-    int err  = unpack_long(&val, &l);
+    int err = unpack_long(&val, &l);
 
     *v = (double)val;
     return err;

@@ -19,7 +19,7 @@ class ScaleValues : public Double
 {
 public:
     ScaleValues() :
-        Double() { }
+        Double() {}
     const AccessorType& accessor_type() const override { return accessor_type_; }
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
@@ -30,7 +30,7 @@ private:
     const char* missingValue_ = nullptr;
 
 public:
-    static constexpr AccessorType accessor_type_{"scale_values"};
+    static constexpr AccessorType accessor_type_{ "scale_values" };
 };
 
 }  // namespace eccodes::accessor

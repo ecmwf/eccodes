@@ -27,14 +27,14 @@ void G1VerificationDate::init(const long l, grib_arguments* c)
 
 int G1VerificationDate::unpack_long(long* val, size_t* len)
 {
-    int ret    = 0;
-    long date  = 0;
-    long time  = 0;
+    int ret = 0;
+    long date = 0;
+    long time = 0;
     long cdate = 0;
-    long step  = 0;
+    long step = 0;
     long vtime = 0;
     long vdate = 0;
-    long vd    = 0;
+    long vd = 0;
 
     if ((ret = grib_get_long_internal(get_enclosing_handle(), date_, &date)) != GRIB_SUCCESS)
         return ret;
@@ -47,7 +47,7 @@ int G1VerificationDate::unpack_long(long* val, size_t* len)
 
     cdate = (long)grib_date_to_julian(date);
     vtime = cdate * 24 + time + step;
-    vd    = vtime / 24;
+    vd = vtime / 24;
     vdate = grib_julian_to_date(vd);
 
     // printf("\n********\n date %d, time %d, step %d, vdate: %d, cdate %d, vd %d\n********\n", date, time, step, vdate, cdate, vd);

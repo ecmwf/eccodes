@@ -99,11 +99,11 @@ void Debug::aliases(grib_accessor* a)
 
 void Debug::dump_long(grib_accessor* a, const char* comment)
 {
-    long value   = 0;
-    size_t size  = 0;
-    size_t more  = 0;
+    long value = 0;
+    size_t size = 0;
+    size_t more = 0;
     long* values = NULL; /* array of long */
-    long count   = 0;
+    long count = 0;
     int err = 0, i = 0;
 
     if (a->length_ == 0 && (option_flags_ & GRIB_DUMP_FLAG_CODED) != 0)
@@ -190,8 +190,8 @@ void Debug::dump_bits(grib_accessor* a, const char* comment)
         return;
 
     size_t size = 1;
-    long value  = 0;
-    int err     = a->unpack_long(&value, &size);
+    long value = 0;
+    int err = a->unpack_long(&value, &size);
     set_begin_end(a);
 
     for (int i = 0; i < depth_; i++)
@@ -218,8 +218,8 @@ void Debug::dump_bits(grib_accessor* a, const char* comment)
 void Debug::dump_double(grib_accessor* a, const char* comment)
 {
     double value = 0;
-    size_t size  = 1;
-    int err      = a->unpack_double(&value, &size);
+    size_t size = 1;
+    int err = a->unpack_double(&value, &size);
     int i;
 
     if (a->length_ == 0 && (option_flags_ & GRIB_DUMP_FLAG_CODED) != 0)
@@ -251,7 +251,7 @@ void Debug::dump_string(grib_accessor* a, const char* comment)
     int i;
     size_t size = 0;
     char* value = NULL;
-    char* p     = NULL;
+    char* p = NULL;
 
     if (a->length_ == 0 && (option_flags_ & GRIB_DUMP_FLAG_CODED) != 0)
         return;
@@ -365,8 +365,8 @@ void Debug::dump_string_array(grib_accessor* a, const char* comment)
 void Debug::dump_bytes(grib_accessor* a, const char* comment)
 {
     int i, k, err = 0;
-    size_t more        = 0;
-    size_t size        = a->length_;
+    size_t more = 0;
+    size_t size = a->length_;
     unsigned char* buf = (unsigned char*)grib_context_malloc(context_, size);
 
     if (a->length_ == 0 && (option_flags_ & GRIB_DUMP_FLAG_CODED) != 0)
@@ -434,7 +434,7 @@ void Debug::dump_values(grib_accessor* a)
     size_t more = 0;
     double* buf = NULL;
     size_t size = 0;
-    long count  = 0;
+    long count = 0;
 
     if (a->length_ == 0 && (option_flags_ & GRIB_DUMP_FLAG_CODED) != 0)
         return;
@@ -538,11 +538,11 @@ void Debug::dump_section(grib_accessor* a, grib_block_of_accessors* block)
 void Debug::set_begin_end(grib_accessor* a)
 {
     if ((option_flags_ & GRIB_DUMP_FLAG_OCTET) != 0) {
-        begin_  = a->offset_ - section_offset_ + 1;
+        begin_ = a->offset_ - section_offset_ + 1;
         theEnd_ = a->get_next_position_offset() - section_offset_;
     }
     else {
-        begin_  = a->offset_;
+        begin_ = a->offset_;
         theEnd_ = a->get_next_position_offset();
     }
 }

@@ -24,7 +24,7 @@ public:
     int execute(grib_handle* h) override;
 
     grib_arguments* args_ = nullptr;
-    grib_case* Case_      = nullptr;
+    grib_case* Case_ = nullptr;
     grib_action* Default_ = nullptr;
 };
 

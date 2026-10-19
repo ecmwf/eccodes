@@ -19,7 +19,7 @@ class GaussianGridName : public Gen
 {
 public:
     GaussianGridName() :
-        Gen() { }
+        Gen() {}
     const AccessorType& accessor_type() const override { return accessor_type_; }
     long get_native_type() override;
     int unpack_string(char*, size_t* len) override;
@@ -32,7 +32,7 @@ private:
     const char* isOctahedral_ = nullptr;
 
 public:
-    static constexpr AccessorType accessor_type_{"gaussian_grid_name"};
+    static constexpr AccessorType accessor_type_{ "gaussian_grid_name" };
 };
 
 }  // namespace eccodes::accessor

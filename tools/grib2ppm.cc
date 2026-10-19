@@ -20,7 +20,7 @@ typedef struct map
 } map;
 
 map cmap[CMAP_MAX];
-unsigned long last[CMAP_MAX] = {0};
+unsigned long last[CMAP_MAX] = { 0 };
 
 /*
 unsigned char unused(char c)
@@ -56,10 +56,10 @@ static int next(FILE* f, char* buf)
 int main(int argc, char* argv[])
 {
     grib_handle* h = NULL;
-    FILE* f        = NULL;
-    int i          = 0;
-    int err        = 0;
-    int centred    = 0;
+    FILE* f = NULL;
+    int i = 0;
+    int err = 0;
+    int centred = 0;
     unsigned r, g, b;
     int cmap_entries = 0;
     double min0, max0;
@@ -107,9 +107,9 @@ int main(int argc, char* argv[])
                         }
                         cmap[cmap_entries].min = min0;
                         cmap[cmap_entries].max = max0;
-                        cmap[cmap_entries].r   = r;
-                        cmap[cmap_entries].g   = g;
-                        cmap[cmap_entries].b   = b;
+                        cmap[cmap_entries].r = r;
+                        cmap[cmap_entries].g = g;
+                        cmap[cmap_entries].b = b;
                         cmap_entries++;
                     }
                     fclose(f);
@@ -153,8 +153,8 @@ int main(int argc, char* argv[])
             GRIB_CHECK(grib_get_long(h, "Nj", &height), 0);
             GRIB_CHECK(grib_get_double_array(h, "values", values, &count), 0);
 
-            max        = values[0];
-            min        = values[0];
+            max = values[0];
+            min = values[0];
             indices[0] = 0;
             for (i = 1; i < count; ++i) {
                 if (values[i] > max)
@@ -191,7 +191,7 @@ int main(int argc, char* argv[])
             if (cmap_entries) {
                 printf("P6\n%ld %ld\n255\n", width, height);
                 for (i = 0; i < count; ++i) {
-                    double v       = values[indices[i]];
+                    double v = values[indices[i]];
                     unsigned int p = ((unsigned long)v) % CMAP_MAX; /* kind of hashing */
                     unsigned int k = last[p];
                     for (j = 0; j < cmap_entries; j++) {
@@ -225,9 +225,9 @@ int main(int argc, char* argv[])
                     }
                     double denom = 1;
                     if (max != min) denom = max - min;
-                    c  = (v - min) * 65535 / denom;
+                    c = (v - min) * 65535 / denom;
                     hh = c >> 8;
-                    l  = c & 0xff;
+                    l = c & 0xff;
                     printf("%c", hh);
                     printf("%c", l);
                 }

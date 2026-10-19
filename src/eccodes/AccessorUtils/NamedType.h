@@ -30,9 +30,11 @@ constexpr std::size_t fnv1a_hash(const char* str)
 
 namespace detail
 {
-constexpr const char* c_str(const char* value) { return value; }
-inline const char* c_str(const std::string& value) { return value.c_str(); }
-} // namespace detail
+constexpr const char* c_str(const char* value)
+{ return value; }
+inline const char* c_str(const std::string& value)
+{ return value.c_str(); }
+}  // namespace detail
 
 // With T = const char* the type is a compile-time constant (constexpr). It then does not
 // own the string: the string must outlive it, as a string literal does.
@@ -62,16 +64,18 @@ private:
     std::size_t uid_;
 };
 
-} // namespace eccodes
+}  // namespace eccodes
 
 namespace std
 {
 
 template <typename T, typename Parameter>
-struct hash<eccodes::NamedType<T, Parameter>> {
-    std::size_t operator()(const eccodes::NamedType<T, Parameter>& nt) const {
+struct hash<eccodes::NamedType<T, Parameter>>
+{
+    std::size_t operator()(const eccodes::NamedType<T, Parameter>& nt) const
+    {
         return nt.uid();
     }
 };
 
-} // namespace std
+}  // namespace std

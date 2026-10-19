@@ -17,7 +17,7 @@ void UnpackBufrValues::init(const long len, grib_arguments* params)
 {
     Gen::init(len, params);
     char* key;
-    key            = (char*)params->get_name(get_enclosing_handle(), 0);
+    key = (char*)params->get_name(get_enclosing_handle(), 0);
     data_accessor_ = dynamic_cast<BufrDataArray*>(grib_find_accessor(get_enclosing_handle(), key));
 
     length_ = 0;
@@ -96,11 +96,10 @@ int UnpackBufrValues::pack_long(const long* val, size_t* len)
         long tablesVersion, tablesVersionLatest;
         if (grib_get_long(h, "masterTablesVersionNumber", &tablesVersion) == GRIB_SUCCESS &&
             grib_get_long(h, "masterTablesVersionNumberLatest", &tablesVersionLatest) == GRIB_SUCCESS &&
-            tablesVersion > tablesVersionLatest)
-        {
+            tablesVersion > tablesVersionLatest) {
             grib_context_log(context_, GRIB_LOG_ERROR,
-                "Please note: masterTablesVersionNumber=%ld but masterTablesVersionNumberLatest=%ld",
-                tablesVersion, tablesVersionLatest);
+                             "Please note: masterTablesVersionNumber=%ld but masterTablesVersionNumberLatest=%ld",
+                             tablesVersion, tablesVersionLatest);
         }
     }
     return err;

@@ -21,18 +21,18 @@
 #include <assert.h>
 
 #ifndef HAVE_FSEEKO
-#define fseeko fseek
-#define ftello ftell
+    #define fseeko fseek
+    #define ftello ftell
 #endif
 
-const int NUM_FIELDS  = 4;
-const int COUNT       = 5;
+const int NUM_FIELDS = 4;
+const int COUNT = 5;
 const char* file_path = "../../data/multi_created.grib2";
 
 static void read_data(FILE* fp, int num_msgs)
 {
-    int err         = 0, i;
-    long stepRange  = 0;
+    int err = 0, i;
+    long stepRange = 0;
     codes_handle* h = NULL;
 
     printf("File offset start = %ld\n", ftello(fp));

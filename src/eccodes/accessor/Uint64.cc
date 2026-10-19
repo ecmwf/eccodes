@@ -15,8 +15,8 @@ namespace eccodes::accessor
 
 int Uint64::unpack_long(long* val, size_t* len)
 {
-    long value                = 0;
-    long pos                  = offset_;
+    long value = 0;
+    long pos = offset_;
     const unsigned char* data = get_enclosing_handle()->buffer->data;
     unsigned long long result = 0, tmp;
     int i;
@@ -31,7 +31,7 @@ int Uint64::unpack_long(long* val, size_t* len)
     }
 
     value = result;
-    tmp   = value;
+    tmp = value;
 
     /* Result does not fit in long */
     if (tmp != result) {

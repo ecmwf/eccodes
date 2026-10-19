@@ -14,10 +14,10 @@
 
 static ProductKind get_product_kind(const char* p)
 {
-    if (strcmp(p, "GRIB") == 0)  return PRODUCT_GRIB;
-    if (strcmp(p, "BUFR") == 0)  return PRODUCT_BUFR;
+    if (strcmp(p, "GRIB") == 0) return PRODUCT_GRIB;
+    if (strcmp(p, "BUFR") == 0) return PRODUCT_BUFR;
     if (strcmp(p, "METAR") == 0) return PRODUCT_METAR;
-    if (strcmp(p, "GTS") == 0)   return PRODUCT_GTS;
+    if (strcmp(p, "GTS") == 0) return PRODUCT_GTS;
     return PRODUCT_ANY;
 }
 
@@ -28,7 +28,7 @@ int main(int argc, char** argv)
 
     assert(argc == 3);
 
-    const ProductKind mode = get_product_kind( argv[1] );
+    const ProductKind mode = get_product_kind(argv[1]);
     const char* filename = argv[2];
 
     FILE* fp = fopen(filename, "rb");

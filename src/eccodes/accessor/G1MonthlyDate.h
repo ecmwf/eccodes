@@ -19,7 +19,7 @@ class G1MonthlyDate : public Long
 {
 public:
     G1MonthlyDate() :
-        Long() { }
+        Long() {}
     const AccessorType& accessor_type() const override { return accessor_type_; }
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
@@ -28,7 +28,7 @@ private:
     const char* date_ = nullptr;
 
 public:
-    static constexpr AccessorType accessor_type_{"g1monthlydate"};
+    static constexpr AccessorType accessor_type_{ "g1monthlydate" };
 };
 
 }  // namespace eccodes::accessor

@@ -12,12 +12,12 @@
 int main(int argc, char* argv[])
 {
     FILE* f;
-    int err          = 0;
-    char infile[]    = "../../data/reduced_gaussian_model_level.grib1";
-    codes_handle* h  = NULL;
+    int err = 0;
+    char infile[] = "../../data/reduced_gaussian_model_level.grib1";
+    codes_handle* h = NULL;
     codes_context* c = codes_context_get_default();
     codes_values values[4];
-    const int nvalues = sizeof(values)/sizeof(values[0]);
+    const int nvalues = sizeof(values) / sizeof(values[0]);
     int i = 0;
     char* name = NULL;
 
@@ -34,29 +34,29 @@ int main(int argc, char* argv[])
     }
     fclose(f);
 
-    values[i].type       = CODES_TYPE_LONG;
-    values[i].name       = "centre";
+    values[i].type = CODES_TYPE_LONG;
+    values[i].name = "centre";
     values[i].long_value = 98;
     i++;
 
-    values[i].type       = CODES_TYPE_DOUBLE;
-    values[i].name       = "bitsPerValue";
+    values[i].type = CODES_TYPE_DOUBLE;
+    values[i].name = "bitsPerValue";
     values[i].double_value = 13;
     i++;
 
-    values[i].type       = CODES_TYPE_STRING;
-    values[i].name       = "identifier";
+    values[i].type = CODES_TYPE_STRING;
+    values[i].name = "identifier";
     values[i].string_value = "GRIB";
     i++;
 
-    values[i].type       = CODES_TYPE_LONG;
-    values[i].name       = "level";
+    values[i].type = CODES_TYPE_LONG;
+    values[i].name = "level";
     values[i].long_value = 2; /* Intentionally made different; actual level==1 */
 
     err = codes_values_check(h, values, nvalues);
     if (err) {
         for (i = 0; i < nvalues; i++) {
-            printf("i=%d %s\n",i, values[i].name);
+            printf("i=%d %s\n", i, values[i].name);
             if (values[i].error == err) name = (char*)values[i].name;
         }
         fprintf(stderr, "Error: \"%s\" - %s\n", name, codes_get_error_message(err));

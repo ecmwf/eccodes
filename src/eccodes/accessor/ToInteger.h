@@ -19,7 +19,7 @@ class ToInteger : public Gen
 {
 public:
     ToInteger() :
-        Gen() { }
+        Gen() {}
     const AccessorType& accessor_type() const override { return accessor_type_; }
     long get_native_type() override;
     int pack_double(const double* val, size_t* len) override;
@@ -40,7 +40,7 @@ private:
     size_t str_length_ = 0;
 
 public:
-    static constexpr AccessorType accessor_type_{"to_integer"};
+    static constexpr AccessorType accessor_type_{ "to_integer" };
 };
 
 }  // namespace eccodes::accessor

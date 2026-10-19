@@ -12,11 +12,14 @@
 
 #include "Gen.h"
 
-namespace eccodes::geo_nearest {
+namespace eccodes::geo_nearest
+{
 
-class Mercator : public Gen {
+class Mercator : public Gen
+{
 public:
-    Mercator() {
+    Mercator()
+    {
         class_name_ = "mercator";
     }
     Nearest* create() override { return new Mercator(); };

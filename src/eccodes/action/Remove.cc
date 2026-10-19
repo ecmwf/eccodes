@@ -21,11 +21,11 @@ namespace eccodes::action
 Remove::Remove(grib_context* context, grib_arguments* args)
 {
     class_name_ = "action_class_remove";
-    next_       = NULL;
-    name_       = grib_context_strdup_persistent(context, "DELETE");
-    op_         = grib_context_strdup_persistent(context, "remove");
-    context_    = context;
-    args_       = args;
+    next_ = NULL;
+    name_ = grib_context_strdup_persistent(context, "DELETE");
+    op_ = grib_context_strdup_persistent(context, "remove");
+    context_ = context;
+    args_ = args;
 }
 
 Remove::~Remove()

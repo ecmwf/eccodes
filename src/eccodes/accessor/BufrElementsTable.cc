@@ -39,8 +39,8 @@ void BufrElementsTable::init(const long len, grib_arguments* params)
     int n = 0;
 
     dictionary_ = params->get_string(get_enclosing_handle(), n++);
-    masterDir_  = params->get_name(get_enclosing_handle(), n++);
-    localDir_   = params->get_name(get_enclosing_handle(), n++);
+    masterDir_ = params->get_name(get_enclosing_handle(), n++);
+    localDir_ = params->get_name(get_enclosing_handle(), n++);
 
     length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
@@ -49,20 +49,20 @@ void BufrElementsTable::init(const long len, grib_arguments* params)
 grib_trie* BufrElementsTable::load_bufr_elements_table(int* err)
 {
     char* filename = NULL;
-    char line[1024] = {0};
-    char masterDir[1024] = {0};
-    char localDir[1024] = {0};
-    char dictName[1024] = {0};
-    char masterRecomposed[1024] = {0};  // e.g. bufr/tables/0/wmo/36/element.table
-    char localRecomposed[1024] = {0};   // e.g. bufr/tables/0/local/0/98/0/element.table
-    char* localFilename   = 0;
-    char** list           = 0;
-    char** cached_list    = 0;
-    size_t len            = 1024;
+    char line[1024] = { 0 };
+    char masterDir[1024] = { 0 };
+    char localDir[1024] = { 0 };
+    char dictName[1024] = { 0 };
+    char masterRecomposed[1024] = { 0 };  // e.g. bufr/tables/0/wmo/36/element.table
+    char localRecomposed[1024] = { 0 };   // e.g. bufr/tables/0/local/0/98/0/element.table
+    char* localFilename = 0;
+    char** list = 0;
+    char** cached_list = 0;
+    size_t len = 1024;
     grib_trie* dictionary = NULL;
-    FILE* f               = NULL;
-    grib_handle* h        = get_enclosing_handle();
-    grib_context* c       = context_;
+    FILE* f = NULL;
+    grib_handle* h = get_enclosing_handle();
+    grib_context* c = context_;
 
     *err = GRIB_SUCCESS;
 
@@ -77,7 +77,7 @@ grib_trie* BufrElementsTable::load_bufr_elements_table(int* err)
         eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
 
         if (*masterDir != 0) {
-            char name[4096] = {0};
+            char name[4096] = { 0 };
             snprintf(name, 4096, "%s/%s", masterDir, dictionary_);
             grib_recompose_name(h, NULL, name, masterRecomposed, 0);
             filename = grib_context_full_defs_path(c, masterRecomposed);
@@ -87,7 +87,7 @@ grib_trie* BufrElementsTable::load_bufr_elements_table(int* err)
         }
 
         if (*localDir != 0) {
-            char localName[2048] = {0};
+            char localName[2048] = { 0 };
             snprintf(localName, 2048, "%s/%s", localDir, dictionary_);
             grib_recompose_name(h, NULL, localName, localRecomposed, 0);
             localFilename = grib_context_full_defs_path(c, localRecomposed);
@@ -116,7 +116,7 @@ grib_trie* BufrElementsTable::load_bufr_elements_table(int* err)
 
         f = codes_fopen(filename, "r");
         if (!f) {
-            *err       = GRIB_IO_PROBLEM;
+            *err = GRIB_IO_PROBLEM;
             dictionary = NULL;
             return dictionary;
         }
@@ -129,14 +129,14 @@ grib_trie* BufrElementsTable::load_bufr_elements_table(int* err)
             list = string_split(line, "|");
             grib_trie_insert(dictionary, list[0], list);
         }
-    } // lock scope end
+    }  // lock scope end
 
     fclose(f);
 
     if (localFilename != 0) {
         f = codes_fopen(localFilename, "r");
         if (!f) {
-            *err       = GRIB_IO_PROBLEM;
+            *err = GRIB_IO_PROBLEM;
             dictionary = NULL;
             return dictionary;
         }
@@ -203,9 +203,9 @@ static long atol_fast(const char* input)
 
 int BufrElementsTable::bufr_get_from_table(bufr_descriptor* v)
 {
-    int ret              = 0;
-    char** list          = 0;
-    char code[7]         = { 0 };
+    int ret = 0;
+    char** list = 0;
+    char code[7] = { 0 };
     const size_t codeLen = sizeof(code);
 
     grib_trie* table = load_bufr_elements_table(&ret);
@@ -222,7 +222,7 @@ int BufrElementsTable::bufr_get_from_table(bufr_descriptor* v)
     {
         /* ECC-1137: check descriptor key name and unit lengths */
         const size_t maxlen_shortName = sizeof(v->shortName);
-        const size_t maxlen_units     = sizeof(v->units);
+        const size_t maxlen_units = sizeof(v->units);
         ECCODES_ASSERT(strlen(list[1]) < maxlen_shortName);
         ECCODES_ASSERT(strlen(list[4]) < maxlen_units);
     }
@@ -233,11 +233,11 @@ int BufrElementsTable::bufr_get_from_table(bufr_descriptor* v)
     strcpy(v->units, list[4]);
 
     /* ECC-985: Scale and reference are often 0 so we can reduce calls to atol */
-    v->scale  = atol_fast(list[5]);
+    v->scale = atol_fast(list[5]);
     v->factor = codes_power<double>(-v->scale, 10);
 
     v->reference = atol_fast(list[6]);
-    v->width     = atol(list[7]);
+    v->width = atol(list[7]);
 
     return GRIB_SUCCESS;
 }
@@ -259,10 +259,10 @@ bufr_descriptor* BufrElementsTable::get_descriptor(int code, int* err)
         return NULL;
     }
     v->context = c;
-    v->code    = code;
-    v->F       = code / 100000;
-    v->X       = (code - v->F * 100000) / 1000;
-    v->Y       = (code - v->F * 100000) % 1000;
+    v->code = code;
+    v->F = code / 100000;
+    v->X = (code - v->F * 100000) / 1000;
+    v->Y = (code - v->F * 100000) % 1000;
 
     switch (v->F) {
         case 0:

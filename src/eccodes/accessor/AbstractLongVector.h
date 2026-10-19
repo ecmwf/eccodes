@@ -19,7 +19,7 @@ class AbstractLongVector : public Gen
 {
 public:
     AbstractLongVector() :
-        Gen() { }
+        Gen() {}
     const AccessorType& accessor_type() const override { return accessor_type_; }
 
 public:
@@ -28,7 +28,7 @@ public:
     long pack_index_ = 0;
     int number_of_elements_ = 0;
 
-    static constexpr AccessorType accessor_type_{"abstract_long_vector"};
+    static constexpr AccessorType accessor_type_{ "abstract_long_vector" };
 };
 
 }  // namespace eccodes::accessor

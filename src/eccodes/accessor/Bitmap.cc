@@ -52,12 +52,12 @@ void Bitmap::init(const long len, grib_arguments* arg)
 {
     Bytes::init(len, arg);
     grib_handle* hand = get_enclosing_handle();
-    int n             = 0;
+    int n = 0;
 
     tableReference_ = arg->get_name(hand, n++);
-    missing_value_  = arg->get_name(hand, n++);
-    offsetbsec_     = arg->get_name(hand, n++);
-    sLength_        = arg->get_name(hand, n++);
+    missing_value_ = arg->get_name(hand, n++);
+    offsetbsec_ = arg->get_name(hand, n++);
+    sLength_ = arg->get_name(hand, n++);
 
     compute_size();
 }
@@ -70,7 +70,7 @@ long Bitmap::next_offset()
 void Bitmap::dump(eccodes::Dumper* dumper)
 {
     long len = 0;
-    char label[1024] = {0};
+    char label[1024] = { 0 };
 
     value_count(&len);
     snprintf(label, sizeof(label), "Bitmap of %ld values", len);
@@ -79,8 +79,8 @@ void Bitmap::dump(eccodes::Dumper* dumper)
 
 int Bitmap::unpack_long(long* val, size_t* len)
 {
-    long pos                = offset_ * 8;
-    long tlen               = 0;
+    long pos = offset_ * 8;
+    long tlen = 0;
     const grib_handle* hand = get_enclosing_handle();
 
     int err = value_count(&tlen);

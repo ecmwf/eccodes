@@ -40,14 +40,14 @@ static int build_long_array(grib_context* c, grib_handle* h, int compressed,
     int err = 0;
     long i;
     size_t n = numberOfSubsets;
-    *array   = (long*)grib_context_malloc_clear(c, sizeof(long) * numberOfSubsets);
+    *array = (long*)grib_context_malloc_clear(c, sizeof(long) * numberOfSubsets);
     if (compressed) {
         err = grib_get_long_array(h, key, *array, &n);
         if (zero_on_error) {
             if (err) {
-                err         = 0;
+                err = 0;
                 (*array)[0] = 0;
-                n           = 1;
+                n = 1;
             }
         }
         if (err)
@@ -64,7 +64,7 @@ static int build_long_array(grib_context* c, grib_handle* h, int compressed,
     }
     else {
         /* uncompressed */
-        char keystr[32] = {0};
+        char keystr[32] = { 0 };
         size_t values_len = 0;
         for (i = 0; i < numberOfSubsets; ++i) {
             long lVal = 0;
@@ -91,9 +91,9 @@ void BufrExtractDatetimeSubsets::init(const long len, grib_arguments* arg)
     Gen::init(len, arg);
     int n = 0;
 
-    length_            = 0;
-    doExtractSubsets_  = arg->get_name(get_enclosing_handle(), n++);
-    numberOfSubsets_   = arg->get_name(get_enclosing_handle(), n++);
+    length_ = 0;
+    doExtractSubsets_ = arg->get_name(get_enclosing_handle(), n++);
+    numberOfSubsets_ = arg->get_name(get_enclosing_handle(), n++);
     extractSubsetList_ = arg->get_name(get_enclosing_handle(), n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
@@ -106,15 +106,15 @@ long BufrExtractDatetimeSubsets::get_native_type()
 
 int BufrExtractDatetimeSubsets::select_datetime()
 {
-    int ret         = 0;
+    int ret = 0;
     long compressed = 0;
-    grib_handle* h  = get_enclosing_handle();
+    grib_handle* h = get_enclosing_handle();
     grib_context* c = h->context;
 
     double julianStart = 0, julianEnd = 0, julianDT = 0;
-    char start_str[80] = {0},
-         end_str[80] = {0},
-         datetime_str[80] = {0};
+    char start_str[80] = { 0 },
+         end_str[80] = { 0 },
+         datetime_str[80] = { 0 };
     long yearRank, monthRank, dayRank, hourRank, minuteRank, secondRank;
     long yearStart, monthStart, dayStart, hourStart, minuteStart, secondStart;
     long yearEnd, monthEnd, dayEnd, hourEnd, minuteEnd, secondEnd;
@@ -122,13 +122,13 @@ int BufrExtractDatetimeSubsets::select_datetime()
     double* second = NULL;
     long numberOfSubsets, i;
     grib_iarray* subsets = NULL;
-    size_t nsubsets      = 0;
-    char yearstr[32]     = "year";
-    char monthstr[32]    = "month";
-    char daystr[32]      = "day";
-    char hourstr[32]     = "hour";
-    char minutestr[32]   = "minute";
-    char secondstr[32]   = "second";
+    size_t nsubsets = 0;
+    char yearstr[32] = "year";
+    char monthstr[32] = "month";
+    char daystr[32] = "day";
+    char hourstr[32] = "hour";
+    char minutestr[32] = "minute";
+    char secondstr[32] = "second";
 
     ret = grib_get_long(h, "compressedData", &compressed);
     if (ret) return ret;
@@ -193,9 +193,9 @@ int BufrExtractDatetimeSubsets::select_datetime()
     if (compressed) {
         ret = grib_get_double_array(h, secondstr, second, &n);
         if (ret) {
-            ret       = 0;
+            ret = 0;
             second[0] = 0;
-            n         = 1;
+            n = 1;
             (void)ret;
         }
         if (n != (size_t)numberOfSubsets) {
@@ -308,12 +308,12 @@ int BufrExtractDatetimeSubsets::select_datetime()
     }
 
     nsubsets = grib_iarray_used_size(subsets);
-    ret      = grib_set_long(h, "extractedDateTimeNumberOfSubsets", nsubsets);
+    ret = grib_set_long(h, "extractedDateTimeNumberOfSubsets", nsubsets);
     if (ret) return ret;
 
     if (nsubsets != 0) {
         long* subsets_ar = grib_iarray_get_array(subsets);
-        ret              = grib_set_long_array(h, extractSubsetList_, subsets_ar, nsubsets);
+        ret = grib_set_long_array(h, extractSubsetList_, subsets_ar, nsubsets);
         grib_context_free(c, subsets_ar);
         if (ret) return ret;
 

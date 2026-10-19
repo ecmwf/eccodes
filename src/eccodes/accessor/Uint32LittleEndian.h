@@ -19,12 +19,12 @@ class Uint32LittleEndian : public Gen
 {
 public:
     Uint32LittleEndian() :
-        Gen() { }
+        Gen() {}
     const AccessorType& accessor_type() const override { return accessor_type_; }
     long get_native_type() override;
     int unpack_long(long* val, size_t* len) override;
 
-    static constexpr AccessorType accessor_type_{"uint32_little_endian"};
+    static constexpr AccessorType accessor_type_{ "uint32_little_endian" };
 };
 
 }  // namespace eccodes::accessor

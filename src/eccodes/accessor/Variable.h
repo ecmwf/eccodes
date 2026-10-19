@@ -19,7 +19,7 @@ class Variable : public Gen
 {
 public:
     Variable() :
-        Gen() { }
+        Gen() {}
     const AccessorType& accessor_type() const override { return accessor_type_; }
     long get_native_type() override;
     bool accepts_native_type(long type) override;
@@ -41,6 +41,7 @@ public:
     grib_accessor* make_clone(grib_section*, int*) override;
 
     void accessor_variable_set_type(int type);
+
 private:
     double dval_ = 0.;
     float fval_ = 0.f;
@@ -49,7 +50,7 @@ private:
     int type_ = 0;
 
 public:
-    static constexpr AccessorType accessor_type_{"variable"};
+    static constexpr AccessorType accessor_type_{ "variable" };
 };
 
 }  // namespace eccodes::accessor

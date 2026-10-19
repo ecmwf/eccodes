@@ -19,7 +19,7 @@ class G2Aerosol : public Unsigned
 {
 public:
     G2Aerosol() :
-        Unsigned() { }
+        Unsigned() {}
     const AccessorType& accessor_type() const override { return accessor_type_; }
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
@@ -32,7 +32,7 @@ private:
     int optical_ = 0;
 
 public:
-    static constexpr AccessorType accessor_type_{"g2_aerosol"};
+    static constexpr AccessorType accessor_type_{ "g2_aerosol" };
 };
 
 }  // namespace eccodes::accessor

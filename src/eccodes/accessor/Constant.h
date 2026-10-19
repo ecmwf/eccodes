@@ -17,12 +17,12 @@ class Constant : public Variable
 {
 public:
     Constant() :
-        Variable() { }
+        Variable() {}
     const AccessorType& accessor_type() const override { return accessor_type_; }
     void init(const long, grib_arguments*) override;
 
 
-    static constexpr AccessorType accessor_type_{"constant"};
+    static constexpr AccessorType accessor_type_{ "constant" };
 };
 
 }  // namespace eccodes::accessor

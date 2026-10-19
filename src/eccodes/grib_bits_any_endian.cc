@@ -13,7 +13,7 @@
  ***************************************************************************/
 
 #ifdef ECCODES_ON_WINDOWS
-#include <stdint.h>
+    #include <stdint.h>
 #endif
 
 #include "grib_scaling.h"
@@ -79,8 +79,7 @@
 //     return bits_all_one.v[nbits] == val;
 // }
 
-constexpr auto bits_all_one_array = []() constexpr
-{
+constexpr auto bits_all_one_array = []() constexpr {
     std::array<int64_t, 64> v{};
     for (int i = 1; i < 64; ++i) {
         v[i] = 0xFFFF'FFFF'FFFF'FFFF >> (64 - i);
@@ -104,14 +103,14 @@ int grib_is_all_bits_one(int64_t val, long nbits)
 int grib_encode_string(unsigned char* bitStream, long* bitOffset, size_t numberOfCharacters, const char* string)
 {
     size_t i = 0, slen = 0;
-    int err         = 0;
+    int err = 0;
     long byteOffset = *bitOffset / 8;
-    int remainder   = *bitOffset % 8;
+    int remainder = *bitOffset % 8;
     unsigned char c;
     unsigned char* p;
-    const unsigned char mask[]    = { 0, 0x80, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC, 0xFE };
+    const unsigned char mask[] = { 0, 0x80, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC, 0xFE };
     int remainderComplement = 8 - remainder;
-    char str[512]           = {0};
+    char str[512] = { 0 };
     char* s = str;
 
     ECCODES_ASSERT(numberOfCharacters < 512);
@@ -122,7 +121,7 @@ int grib_encode_string(unsigned char* bitStream, long* bitOffset, size_t numberO
      *    call codes_set(ibufr,'shipOrMobileLandStationIdentifier','')
      * For some odd reason this gets passed in as a NULL string here!
      * To be further investigated
-    */
+     */
     if (string) {
         slen = strlen(string);
         if (slen > numberOfCharacters) {
@@ -162,10 +161,10 @@ char* grib_decode_string(const unsigned char* bitStream, long* bitOffset, size_t
 {
     size_t i;
     long byteOffset = *bitOffset / 8;
-    int remainder   = *bitOffset % 8;
+    int remainder = *bitOffset % 8;
     unsigned char c;
     unsigned char* p;
-    char* s                 = string;
+    char* s = string;
     const unsigned char mask[] = { 0, 0x80, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC, 0xFE };
     int remainderComplement = 8 - remainder;
 
@@ -205,19 +204,19 @@ char* grib_decode_string(const unsigned char* bitStream, long* bitOffset, size_t
  */
 unsigned long grib_decode_unsigned_long(const unsigned char* p, long* bitp, long nbits)
 {
-    unsigned long ret    = 0;
-    long oc              = *bitp / 8;
-    unsigned long mask   = 0;
-    long pi              = 0;
+    unsigned long ret = 0;
+    long oc = *bitp / 8;
+    unsigned long mask = 0;
+    long pi = 0;
     int usefulBitsInByte = 0;
-    long bitsToRead      = 0;
+    long bitsToRead = 0;
 
     if (nbits == 0)
         return 0;
 
     if (nbits > max_nbits) {
         int bits = nbits;
-        int mod  = bits % max_nbits;
+        int mod = bits % max_nbits;
 
         if (mod != 0) {
             int e = grib_decode_unsigned_long(p, bitp, mod);
@@ -273,15 +272,15 @@ unsigned long grib_decode_unsigned_long(const unsigned char* p, long* bitp, long
 
 int grib_encode_unsigned_long(unsigned char* p, unsigned long val, long* bitp, long nbits)
 {
-    long len          = nbits;
-    int s             = *bitp % 8;
-    int n             = 8 - s;
+    long len = nbits;
+    int s = *bitp % 8;
+    int n = 8 - s;
     unsigned char tmp = 0; /*for temporary results*/
 
     if (nbits > max_nbits) {
         /* TODO: Do some real code here, to support long longs */
-        int bits  = nbits;
-        int mod   = bits % max_nbits;
+        int bits = nbits;
+        int mod = bits % max_nbits;
         long zero = 0;
 
         if (mod != 0) {
@@ -338,19 +337,19 @@ int grib_encode_unsigned_long(unsigned char* p, unsigned long val, long* bitp, l
 
 size_t grib_decode_size_t(const unsigned char* p, long* bitp, long nbits)
 {
-    size_t ret           = 0;
-    long oc              = *bitp / 8;
-    size_t mask          = 0;
-    long pi              = 0;
+    size_t ret = 0;
+    long oc = *bitp / 8;
+    size_t mask = 0;
+    long pi = 0;
     int usefulBitsInByte = 0;
-    long bitsToRead      = 0;
+    long bitsToRead = 0;
 
     if (nbits == 0)
         return 0;
 
     if (nbits > max_nbits_size_t) {
         int bits = nbits;
-        int mod  = bits % max_nbits_size_t;
+        int mod = bits % max_nbits_size_t;
 
         if (mod != 0) {
             int e = grib_decode_size_t(p, bitp, mod);
@@ -443,9 +442,9 @@ int grib_encode_size_tb(unsigned char* p, size_t val, long* bitp, long nb)
 }
 
 #if OMP_PACKING
-#include "grib_bits_any_endian_omp.cc"
+    #include "grib_bits_any_endian_omp.cc"
 #elif VECTOR
-#include "grib_bits_any_endian_vector.cc"  /* Experimental */
+    #include "grib_bits_any_endian_vector.cc" /* Experimental */
 #else
-#include "grib_bits_any_endian_simple.cc"
+    #include "grib_bits_any_endian_simple.cc"
 #endif

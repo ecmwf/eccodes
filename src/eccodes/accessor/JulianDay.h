@@ -19,7 +19,7 @@ class JulianDay : public Double
 {
 public:
     JulianDay() :
-        Double() { }
+        Double() {}
     const AccessorType& accessor_type() const override { return accessor_type_; }
     int pack_double(const double* val, size_t* len) override;
     int pack_long(const long* val, size_t* len) override;
@@ -35,7 +35,7 @@ private:
     const char* second_ = nullptr;
 
 public:
-    static constexpr AccessorType accessor_type_{"julian_day"};
+    static constexpr AccessorType accessor_type_{ "julian_day" };
 };
 
 }  // namespace eccodes::accessor

@@ -19,7 +19,7 @@ class MultDouble : public Double
 {
 public:
     MultDouble() :
-        Double() { }
+        Double() {}
     const AccessorType& accessor_type() const override { return accessor_type_; }
     int unpack_double(double* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
@@ -29,7 +29,7 @@ private:
     double multiplier_ = 0.;
 
 public:
-    static constexpr AccessorType accessor_type_{"multdouble"};
+    static constexpr AccessorType accessor_type_{ "multdouble" };
 };
 
 }  // namespace eccodes::accessor

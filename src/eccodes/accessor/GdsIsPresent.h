@@ -19,7 +19,7 @@ class GdsIsPresent : public Long
 {
 public:
     GdsIsPresent() :
-        Long() { }
+        Long() {}
     const AccessorType& accessor_type() const override { return accessor_type_; }
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
@@ -32,7 +32,7 @@ private:
     const char* values_ = nullptr;
 
 public:
-    static constexpr AccessorType accessor_type_{"gds_is_present"};
+    static constexpr AccessorType accessor_type_{ "gds_is_present" };
 };
 
 }  // namespace eccodes::accessor

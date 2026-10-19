@@ -19,7 +19,7 @@ class Message : public Bytes
 {
 public:
     Message() :
-        Bytes() { }
+        Bytes() {}
     const AccessorType& accessor_type() const override { return accessor_type_; }
     int unpack_string(char*, size_t* len) override;
     size_t string_length() override;
@@ -28,7 +28,7 @@ public:
     void update_size(size_t) override;
     void resize(size_t) override;
 
-    static constexpr AccessorType accessor_type_{"message"};
+    static constexpr AccessorType accessor_type_{ "message" };
 };
 
 }  // namespace eccodes::accessor

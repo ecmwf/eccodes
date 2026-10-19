@@ -19,7 +19,7 @@ class Unsigned : public Long
 {
 public:
     Unsigned() :
-        Long() { }
+        Long() {}
     const AccessorType& accessor_type() const override { return accessor_type_; }
     void init(const long len, grib_arguments* arg) override;
     void dump(eccodes::Dumper* dumper) override;
@@ -43,7 +43,7 @@ private:
 
 
 public:
-    static constexpr AccessorType accessor_type_{"unsigned"};
+    static constexpr AccessorType accessor_type_{ "unsigned" };
 };
 
 }  // namespace eccodes::accessor
