@@ -246,6 +246,8 @@ publishes = false
 
 [[matrix.rust-publish.include]]
 job-script = "./.ci/rust-publish.sh.j2"
+# eccodes-compat versions its own frozen API surface, not the ecCodes release.
+cargo-skip-published = ["eccodes-compat"]
 runs-on = "arc-runner-very-large"
 cxx-compiler = "g++-13"
 c-compiler = "gcc-13"
