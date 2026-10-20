@@ -6,7 +6,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! eccodes = { package = "eccodes-compat", version = "0.1" }
+//! eccodes = { package = "eccodes-compat", version = "0.15" }
 //! ```
 //!
 //! New code should use the official [`eccodes`] crate directly; this layer
