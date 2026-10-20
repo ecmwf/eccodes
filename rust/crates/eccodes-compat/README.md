@@ -8,7 +8,7 @@ line, with no source changes:
 
 ```toml
 [dependencies]
-eccodes = { package = "eccodes-compat", version = "0.1" }
+eccodes = { package = "eccodes-compat", version = "0.15" }
 ```
 
 This crate is frozen at the 0.15 surface and maintained for migration only.

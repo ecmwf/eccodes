@@ -16,7 +16,7 @@ from ecCodes 2.50.0 on, keeps the 0.15 API working on top of them.
 
 ```toml
 [dependencies]
-eccodes = { package = "eccodes-compat", version = "0.1" }
+eccodes = { package = "eccodes-compat", version = "0.15" }
 ```
 
 Your source stays as it is. Everything now runs on the official bindings
