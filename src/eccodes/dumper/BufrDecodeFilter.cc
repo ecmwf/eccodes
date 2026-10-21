@@ -145,7 +145,7 @@ void BufrDecodeFilter::dump_values_attribute(grib_accessor* a, const char* prefi
     (void)err; /* TODO */
 }
 
-void BufrDecodeFilter::dump_long(grib_accessor* a, const char* comment)
+void BufrDecodeFilter::dump_long(grib_accessor* a, const char*)
 {
     long value = 0;
     size_t size = 0;
@@ -250,9 +250,9 @@ void BufrDecodeFilter::dump_long_attribute(grib_accessor* a, const char* prefix)
     (void)err; /* TODO */
 }
 
-void BufrDecodeFilter::dump_bits(grib_accessor* a, const char* comment) {}
+void BufrDecodeFilter::dump_bits(grib_accessor*, const char*) {}
 
-void BufrDecodeFilter::dump_double(grib_accessor* a, const char* comment)
+void BufrDecodeFilter::dump_double(grib_accessor* a, const char*)
 {
     double value = 0;
     size_t size = 1;
@@ -350,7 +350,7 @@ void BufrDecodeFilter::dump_string_array(grib_accessor* a,
 }
 
 #define MAX_STRING_SIZE 4096
-void BufrDecodeFilter::dump_string(grib_accessor* a, const char* comment)
+void BufrDecodeFilter::dump_string(grib_accessor* a, const char*)
 {
     char value[MAX_STRING_SIZE] = { 0 }; /* See ECC-710 */
     size_t size = MAX_STRING_SIZE;
@@ -408,9 +408,9 @@ void BufrDecodeFilter::dump_string(grib_accessor* a, const char* comment)
     (void)err; /* TODO */
 }
 
-void BufrDecodeFilter::dump_bytes(grib_accessor* a, const char* comment) {}
+void BufrDecodeFilter::dump_bytes(grib_accessor*, const char*) {}
 
-void BufrDecodeFilter::dump_label(grib_accessor* a, const char* comment) {}
+void BufrDecodeFilter::dump_label(grib_accessor*, const char*) {}
 
 static void _dump_long_array(grib_handle* h, FILE* f, const char* key)
 {

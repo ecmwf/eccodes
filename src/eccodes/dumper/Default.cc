@@ -361,7 +361,7 @@ void Default::dump_string(grib_accessor* a, const char* comment)
     grib_context_free(c, value);
 }
 
-void Default::dump_bytes(grib_accessor* a, const char* comment)
+void Default::dump_bytes(grib_accessor*, const char*)
 {
     //     int i,k,err =0;
     //     size_t more = 0;
@@ -524,7 +524,7 @@ void Default::dump_values(grib_accessor* a)
     grib_context_free(context_, buf);
 }
 
-void Default::dump_label(grib_accessor* a, const char* comment)
+void Default::dump_label(grib_accessor*, const char*)
 {
     /*grib_dumper_default *self = (grib_dumper_default*)d;
 

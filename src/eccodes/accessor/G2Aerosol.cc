@@ -24,7 +24,7 @@ void G2Aerosol::init(const long l, grib_arguments* c)
     optical_ = c->get_long(hand, n++);
 }
 
-int G2Aerosol::unpack_long(long* val, size_t* len)
+int G2Aerosol::unpack_long(long* val, size_t*)
 {
     long productDefinitionTemplateNumber = 0;
     grib_get_long(get_enclosing_handle(), productDefinitionTemplateNumber_, &productDefinitionTemplateNumber);
@@ -37,7 +37,7 @@ int G2Aerosol::unpack_long(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int G2Aerosol::pack_long(const long* val, size_t* len)
+int G2Aerosol::pack_long(const long*, size_t*)
 {
     grib_handle* hand = get_enclosing_handle();
     long productDefinitionTemplateNumber = -1;

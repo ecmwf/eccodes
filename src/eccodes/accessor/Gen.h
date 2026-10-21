@@ -87,7 +87,7 @@ private:
     std::bitset<8> is_overridden_ = 0b11111111;
 
     template <typename T>
-    int unpack_helper(grib_accessor* a, T* v, size_t* len);
+    int unpack_helper(grib_accessor* a, T* v);
 
 public:
     static constexpr AccessorType accessor_type_{ "gen" };
@@ -95,7 +95,7 @@ public:
 
 
 template <typename T>
-int Gen::unpack_helper(grib_accessor* a, T* v, size_t* len)
+int Gen::unpack_helper(grib_accessor* a, T* v)
 {
     static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
     int type = GRIB_TYPE_UNDEFINED;

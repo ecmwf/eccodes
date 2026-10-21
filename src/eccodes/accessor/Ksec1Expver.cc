@@ -88,7 +88,7 @@ int Ksec1Expver::pack_string(const char* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int Ksec1Expver::pack_long(const long* val, size_t* len)
+int Ksec1Expver::pack_long(const long* val, size_t*)
 {
     char sval[5] = { 0 };
     size_t slen = 4;

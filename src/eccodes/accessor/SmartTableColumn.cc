@@ -57,7 +57,7 @@ int SmartTableColumn::unpack_string_array(char** buffer, size_t* len)
         return GRIB_NOT_FOUND;
     }
 
-    err = grib_get_size_acc(get_enclosing_handle(), (grib_accessor*)tableAccessor, &size);
+    err = grib_get_size_acc((grib_accessor*)tableAccessor, &size);
     if (err)
         return err;
     if (*len < size) {
@@ -113,7 +113,7 @@ int SmartTableColumn::unpack_long(long* val, size_t* len)
         return GRIB_NOT_FOUND;
     }
 
-    err = grib_get_size_acc(get_enclosing_handle(), (grib_accessor*)tableAccessor, &size);
+    err = grib_get_size_acc((grib_accessor*)tableAccessor, &size);
     if (err)
         return err;
     if (*len < size) {

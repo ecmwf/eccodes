@@ -81,7 +81,7 @@ int MarsStep::unpack_string(char* val, size_t* len)
     return ret;
 }
 
-int MarsStep::pack_long(const long* val, size_t* len)
+int MarsStep::pack_long(const long* val, size_t*)
 {
     char buff[100] = { 0 };
     size_t bufflen = 100;

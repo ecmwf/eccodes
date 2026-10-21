@@ -50,7 +50,7 @@ static eccodes::sync::Mutex mutex;
 
 static int grib_load_smart_table(grib_context* c, const char* filename, const char* recomposed_name, size_t size, grib_smart_table* t);
 
-void SmartTable::init(const long len, grib_arguments* params)
+void SmartTable::init(const long, grib_arguments* params)
 {
     int n = 0;
     grib_handle* hand = get_enclosing_handle();

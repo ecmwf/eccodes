@@ -50,7 +50,7 @@ int ClosestDate::unpack_long(long* val, size_t* len)
 }
 
 /* Sets val to the 'index' of the closes date */
-int ClosestDate::unpack_double(double* val, size_t* len)
+int ClosestDate::unpack_double(double* val, size_t*)
 {
     int err = 0;
     long num_forecasts = 0; /* numberOfForecastsUsedInLocalTime */

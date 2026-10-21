@@ -32,7 +32,7 @@ void ChangeScanningDirection::init(const long len, grib_arguments* args)
     length_ = 0;
 }
 
-int ChangeScanningDirection::pack_long(const long* val, size_t* len)
+int ChangeScanningDirection::pack_long(const long* val, size_t*)
 {
     int err = 0;
     long i, j, jr, theEnd, Ni, Nj, k, kp;
@@ -149,7 +149,7 @@ long ChangeScanningDirection::get_native_type()
     return GRIB_TYPE_LONG;
 }
 
-int ChangeScanningDirection::unpack_long(long* v, size_t* len)
+int ChangeScanningDirection::unpack_long(long* v, size_t*)
 {
     /* ECC-976: decoding this accessor doesn't make sense so we return a dummy value */
     *v = -1;

@@ -43,7 +43,7 @@ static int copy_values(grib_handle* h, grib_accessor* ga)
     return GRIB_NOT_FOUND;
 }
 
-int grib_lookup_long_from_handle(grib_context* gc, grib_loader* loader, const char* name, long* value)
+int grib_lookup_long_from_handle(grib_context*, grib_loader* loader, const char* name, long* value)
 {
     grib_handle* h = (grib_handle*)loader->data;
     grib_accessor* b = grib_find_accessor(h, name);

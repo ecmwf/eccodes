@@ -128,7 +128,7 @@ int Template::create_accessor(grib_section* p, grib_loader* h)
     return GRIB_SUCCESS;
 }
 
-grib_action* Template::reparse(grib_accessor* acc, int* doit)
+grib_action* Template::reparse(grib_accessor* acc, int*)
 {
     char* fpath = 0;
 

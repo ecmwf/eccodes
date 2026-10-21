@@ -308,13 +308,13 @@ cleanup:
 
 #else  // HAVE_LIBJASPER
 
-int grib_jasper_decode(grib_context* c, unsigned char* buf, const size_t* buflen, double* val, const size_t* n_vals)
+int grib_jasper_decode(grib_context* c, unsigned char*, const size_t*, double*, const size_t*)
 {
     grib_context_log(c, GRIB_LOG_ERROR, "grib_jasper_decode: JasPer JPEG support not enabled.");
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
 
-int grib_jasper_encode(grib_context* c, j2k_encode_helper* helper)
+int grib_jasper_encode(grib_context* c, j2k_encode_helper*)
 {
     grib_context_log(c, GRIB_LOG_ERROR, "grib_jasper_encode: JasPer JPEG support not enabled.");
     return GRIB_FUNCTIONALITY_NOT_ENABLED;

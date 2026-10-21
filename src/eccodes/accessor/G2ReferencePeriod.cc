@@ -9,13 +9,13 @@ void G2ReferencePeriod::init(const long length, grib_arguments* args)
     productDefinitionTemplateNumber_ = args->get_name(get_enclosing_handle(), 0);
 }
 
-int G2ReferencePeriod::unpack_long(long* val, size_t* len)
+int G2ReferencePeriod::unpack_long(long* val, size_t*)
 {
     *val = grib_is_defined(get_enclosing_handle(), "typeOfRelationToReferenceDataset");
     return GRIB_SUCCESS;
 }
 
-int G2ReferencePeriod::pack_long(const long* val, size_t* len)
+int G2ReferencePeriod::pack_long(const long*, size_t*)
 {
     grib_handle* handle = get_enclosing_handle();
     long current_template = 0;

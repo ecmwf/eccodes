@@ -97,7 +97,7 @@ int main(int argc, char** argv)
                 memset(buffer + len - 4, '7', 4); /* add in 7777 at end */
                 len = data_len = SIZE;
                 data = (unsigned char*)&buffer[0];
-                ret = grib_read_any_from_memory(NULL, &data, &data_len, buffer, &len);
+                ret = grib_read_any_from_memory(&data, &data_len, buffer, &len);
                 printf("   -> GRIB %lu: size: %zu code: %d (%s)\n", count, len, ret, grib_get_error_message(ret));
                 if (ret == 0) {
                     if (fwrite(buffer, 1, len, bad) != len) {

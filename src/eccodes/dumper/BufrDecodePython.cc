@@ -168,7 +168,7 @@ void BufrDecodePython::dump_values_attribute(grib_accessor* a, const char* prefi
     (void)err; /* TODO */
 }
 
-void BufrDecodePython::dump_long(grib_accessor* a, const char* comment)
+void BufrDecodePython::dump_long(grib_accessor* a, const char*)
 {
     long value = 0;
     size_t size = 0;
@@ -295,11 +295,11 @@ void BufrDecodePython::dump_long_attribute(grib_accessor* a, const char* prefix)
     (void)err; /* TODO */
 }
 
-void BufrDecodePython::dump_bits(grib_accessor* a, const char* comment)
+void BufrDecodePython::dump_bits(grib_accessor*, const char*)
 {
 }
 
-void BufrDecodePython::dump_double(grib_accessor* a, const char* comment)
+void BufrDecodePython::dump_double(grib_accessor* a, const char*)
 {
     double value = 0;
     size_t size = 1;
@@ -396,7 +396,7 @@ void BufrDecodePython::dump_string_array(grib_accessor* a, const char* comment)
 }
 
 #define MAX_STRING_SIZE 4096
-void BufrDecodePython::dump_string(grib_accessor* a, const char* comment)
+void BufrDecodePython::dump_string(grib_accessor* a, const char*)
 {
     char value[MAX_STRING_SIZE] = { 0 }; /* See ECC-710 */
     char* p = NULL;
@@ -452,11 +452,11 @@ void BufrDecodePython::dump_string(grib_accessor* a, const char* comment)
     (void)err; /* TODO */
 }
 
-void BufrDecodePython::dump_bytes(grib_accessor* a, const char* comment)
+void BufrDecodePython::dump_bytes(grib_accessor*, const char*)
 {
 }
 
-void BufrDecodePython::dump_label(grib_accessor* a, const char* comment)
+void BufrDecodePython::dump_label(grib_accessor*, const char*)
 {
 }
 
@@ -532,7 +532,7 @@ void BufrDecodePython::dump_attributes(grib_accessor* a, const char* prefix)
     isAttribute_ = 0;
 }
 
-void BufrDecodePython::header(const grib_handle* h) const
+void BufrDecodePython::header(const grib_handle*) const
 {
     if (count_ < 2) {
         /* This is the first message being processed */
@@ -552,7 +552,7 @@ void BufrDecodePython::header(const grib_handle* h) const
     fprintf(out_, "    codes_set(ibufr, 'unpack', 1)\n");
 }
 
-void BufrDecodePython::footer(const grib_handle* h) const
+void BufrDecodePython::footer(const grib_handle*) const
 {
     fprintf(out_, "    codes_release(ibufr)\n");
 }

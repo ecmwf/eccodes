@@ -33,7 +33,7 @@ void G2Chemical::init(const long l, grib_arguments* c)
     chemical_type_ = c->get_long(hand, n++);
 }
 
-int G2Chemical::unpack_long(long* val, size_t* len)
+int G2Chemical::unpack_long(long* val, size_t*)
 {
     long productDefinitionTemplateNumber = 0;
     grib_get_long(get_enclosing_handle(), productDefinitionTemplateNumber_, &productDefinitionTemplateNumber);
@@ -49,7 +49,7 @@ int G2Chemical::unpack_long(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int G2Chemical::pack_long(const long* val, size_t* len)
+int G2Chemical::pack_long(const long*, size_t*)
 {
     grib_handle* hand = get_enclosing_handle();
     long productDefinitionTemplateNumber = -1;

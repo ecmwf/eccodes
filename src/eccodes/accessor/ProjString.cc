@@ -82,7 +82,7 @@ static int get_earth_shape(grib_handle* h, char* result)
     return err;
 }
 
-static int proj_space_view(grib_handle* h, char* result)
+static int proj_space_view(grib_handle*, char*)
 {
     return GRIB_NOT_IMPLEMENTED;
     //     int err        = 0;
@@ -120,11 +120,11 @@ static int proj_albers(grib_handle* h, char* result)
     return err;
 }
 
-static int proj_transverse_mercator(grib_handle* h, char* result)
+static int proj_transverse_mercator(grib_handle*, char*)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
-static int proj_equatorial_azimuthal_equidistant(grib_handle* h, char* result)
+static int proj_equatorial_azimuthal_equidistant(grib_handle*, char*)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
@@ -191,7 +191,7 @@ static int proj_polar_stereographic(grib_handle* h, char* result)
 
 // ECC-1552: This is for regular_ll, regular_gg, reduced_ll, reduced_gg
 //           These are not 'projected' grids!
-static int proj_unprojected(grib_handle* h, char* result)
+static int proj_unprojected(grib_handle*, char* result)
 {
     int err = 0;
     // char shape[128] = {0};

@@ -70,7 +70,7 @@ int BufrStringValues::unpack_string_array(char** buffer, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int BufrStringValues::unpack_string(char* val, size_t* len)
+int BufrStringValues::unpack_string(char*, size_t*)
 {
     return GRIB_NOT_IMPLEMENTED;
 }

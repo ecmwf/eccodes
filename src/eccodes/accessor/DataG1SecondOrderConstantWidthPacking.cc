@@ -49,7 +49,7 @@ int DataG1SecondOrderConstantWidthPacking::value_count(long* numberOfSecondOrder
     return err;
 }
 
-int DataG1SecondOrderConstantWidthPacking::unpack_float(float* val, size_t* len)
+int DataG1SecondOrderConstantWidthPacking::unpack_float(float*, size_t*)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
@@ -176,7 +176,7 @@ int DataG1SecondOrderConstantWidthPacking::unpack_double(double* values, size_t*
     return ret;
 }
 
-int DataG1SecondOrderConstantWidthPacking::pack_double(const double* cval, size_t* len)
+int DataG1SecondOrderConstantWidthPacking::pack_double(const double*, size_t*)
 {
     grib_context_log(context_, GRIB_LOG_ERROR, "%s: %s: Not implemented", accessor_type().c_str(), __func__);
     return GRIB_NOT_IMPLEMENTED;

@@ -13,7 +13,7 @@
 namespace eccodes::accessor
 {
 
-size_t PadToMultiple::preferred_size(int from_handle)
+size_t PadToMultiple::preferred_size(int)
 {
     long padding = 0;
     long begin = 0;

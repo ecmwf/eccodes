@@ -98,7 +98,7 @@ int G2StepRange::unpack_string(char* val, size_t* len)
 // <start_step> and <end_step> can be in different units
 // stepRange="X" in instantaneous field is equivalent to set step=X
 // stepRange="X" in accumulated field is equivalent to startStep=X, endStep=startStep
-int G2StepRange::pack_string(const char* val, size_t* len)
+int G2StepRange::pack_string(const char* val, size_t*)
 {
     grib_handle* h = get_enclosing_handle();
     int ret = 0;
@@ -177,7 +177,7 @@ size_t G2StepRange::string_length()
     return 255;
 }
 
-int G2StepRange::pack_long(const long* val, size_t* len)
+int G2StepRange::pack_long(const long* val, size_t*)
 {
     char buff[100] = { 0 };
     size_t bufflen = 100;
@@ -186,7 +186,7 @@ int G2StepRange::pack_long(const long* val, size_t* len)
     return pack_string(buff, &bufflen);
 }
 
-int G2StepRange::unpack_long(long* val, size_t* len)
+int G2StepRange::unpack_long(long* val, size_t*)
 {
     grib_handle* h = get_enclosing_handle();
     int ret = 0;
@@ -223,7 +223,7 @@ int G2StepRange::unpack_long(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int G2StepRange::unpack_double(double* val, size_t* len)
+int G2StepRange::unpack_double(double* val, size_t*)
 {
     grib_handle* h = get_enclosing_handle();
     int ret = 0;

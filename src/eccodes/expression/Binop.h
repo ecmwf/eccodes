@@ -18,7 +18,7 @@ namespace eccodes::expression
 class Binop : public Expression
 {
 public:
-    Binop(grib_context*, BinopLongProc, BinopDoubleProc, Expression*, Expression*);
+    Binop(BinopLongProc, BinopDoubleProc, Expression*, Expression*);
 
     void destroy(grib_context*) override;
     void print(grib_context*, grib_handle*, FILE*) const override;
@@ -41,4 +41,4 @@ private:
 
 }  // namespace eccodes::expression
 
-grib_expression* new_binop_expression(grib_context*, grib_binop_long_proc, grib_binop_double_proc, grib_expression*, grib_expression*);
+grib_expression* new_binop_expression(grib_binop_long_proc, grib_binop_double_proc, grib_expression*, grib_expression*);

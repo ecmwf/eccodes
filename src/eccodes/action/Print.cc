@@ -72,7 +72,7 @@ int Print::execute(grib_handle* h)
         out = stdout;
     }
 
-    err = grib_recompose_print(h, nullptr, name2_, 0, out);
+    err = grib_recompose_print(h, name2_, 0, out);
 
     if (outname_)
         fclose(out);
@@ -80,7 +80,7 @@ int Print::execute(grib_handle* h)
     return err;
 }
 
-int Print::create_accessor(grib_section* p, grib_loader* h)
+int Print::create_accessor(grib_section* p, grib_loader*)
 {
     // ECC-1929: A print statement within the definitions does not
     // actually create an accessor. So we just run it

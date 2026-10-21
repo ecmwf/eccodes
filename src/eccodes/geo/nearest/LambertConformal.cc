@@ -31,12 +31,12 @@ int LambertConformal::init(grib_handle* h, grib_arguments* args)
 }
 
 int LambertConformal::find(grib_handle* h,
-                           double inlat, double inlon, unsigned long flags,
+                           double inlat, double inlon, unsigned long,
                            double* outlats, double* outlons,
-                           double* values, double* distances, int* indexes, size_t* len)
+                           double* values, double* distances, int* indexes, size_t*)
 {
     return grib_nearest_find_generic(
-        h, inlat, inlon, flags, /* inputs */
+        h, inlat, inlon, /* inputs */
 
         values_key_, /* outputs to set the 'self' object */
         &(lats_),
@@ -46,7 +46,7 @@ int LambertConformal::find(grib_handle* h,
         &(distances_),
 
         outlats, outlons, /* outputs of the find function */
-        values, distances, indexes, len);
+        values, distances, indexes);
 }
 
 }  // namespace eccodes::geo_nearest

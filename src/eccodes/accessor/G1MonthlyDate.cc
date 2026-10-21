@@ -22,7 +22,7 @@ void G1MonthlyDate::init(const long l, grib_arguments* c)
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-int G1MonthlyDate::unpack_long(long* val, size_t* len)
+int G1MonthlyDate::unpack_long(long* val, size_t*)
 {
     long date = 0;
 

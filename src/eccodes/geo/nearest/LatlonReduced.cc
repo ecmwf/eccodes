@@ -39,7 +39,7 @@ int LatlonReduced::init(grib_handle* h, grib_arguments* args)
 int LatlonReduced::find(grib_handle* h,
                         double inlat, double inlon, unsigned long flags,
                         double* outlats, double* outlons, double* values,
-                        double* distances, int* indexes, size_t* len)
+                        double* distances, int* indexes, size_t*)
 {
     int err = 0;
     double lat1, lat2, lon1, lon2;
@@ -58,12 +58,12 @@ int LatlonReduced::find(grib_handle* h,
     if (is_global) {
         err = find_global(h, inlat, inlon, flags,
                           outlats, outlons, values,
-                          distances, indexes, len);
+                          distances, indexes);
     }
     else {
         int lons_count = 0; /*dummy*/
         err = grib_nearest_find_generic(
-            h, inlat, inlon, flags,
+            h, inlat, inlon,
             values_key_,
             &(lats_),
             &(lats_count_),
@@ -71,7 +71,7 @@ int LatlonReduced::find(grib_handle* h,
             &(lons_count),
             &(distances_),
             outlats, outlons,
-            values, distances, indexes, len);
+            values, distances, indexes);
     }
     return err;
 }
@@ -79,7 +79,7 @@ int LatlonReduced::find(grib_handle* h,
 int LatlonReduced::find_global(grib_handle* h,
                                double inlat, double inlon, unsigned long flags,
                                double* outlats, double* outlons, double* values,
-                               double* distances, int* indexes, size_t* len)
+                               double* distances, int* indexes)
 {
     int ret = 0, kk = 0, ii = 0, jj = 0;
     int j = 0;

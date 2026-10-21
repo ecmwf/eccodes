@@ -174,7 +174,6 @@ void accessor_raw_set_length(grib_accessor* a, size_t len);
 long accessor_raw_get_offset(grib_accessor* a);
 
 /* grib_gaussian_reduced.cc */
-void grib_get_reduced_row_wrapper(grib_handle* h, long pl, double lon_first, double lon_last, long* npoints, long* ilon_first, long* ilon_last);
 void grib_get_reduced_row_legacy(long pl, double lon_first, double lon_last, long* npoints, long* ilon_first, long* ilon_last);
 void grib_get_reduced_row(long pl, double lon_first, double lon_last, long* npoints, long* ilon_first, long* ilon_last);
 void grib_get_reduced_row_p(long pl, double lon_first, double lon_last, long* npoints, double* olon_first, double* olon_last);
@@ -321,7 +320,7 @@ long grib_date_to_julian(long ddate);
 
 /* grib_fieldset.cc */
 grib_fieldset* grib_fieldset_new_from_files(grib_context* c, const char* filenames[], int nfiles, const char** keys, int nkeys, const char* where_string, const char* order_by_string, int* err);
-int grib_fieldset_apply_where(grib_fieldset* set, const char* where_string);
+int grib_fieldset_apply_where();
 int grib_fieldset_apply_order_by(grib_fieldset* set, const char* order_by_string);
 void grib_fieldset_delete_order_by(grib_context* c, grib_order_by* order_by);
 void grib_fieldset_delete(grib_fieldset* set);
@@ -347,7 +346,7 @@ void grib_file_pool_print(const char* title, FILE* out);
 /* grib_geography.cc */
 int grib_get_gaussian_latitudes(long trunc, double* lats);
 int is_gaussian_global(double lat1, double lat2, double lon1, double lon2, long num_points_equator, const double* latitudes, double angular_precision);
-void rotate(const double inlat, const double inlon, const double angleOfRot, const double southPoleLat, const double southPoleLon, double* outlat, double* outlon);
+void rotate(const double inlat, const double inlon, const double southPoleLat, const double southPoleLon, double* outlat, double* outlon);
 void unrotate(const double inlat, const double inlon, const double angleOfRot, const double southPoleLat, const double southPoleLon, double* outlat, double* outlon);
 double geographic_distance_spherical(double radius, double lon1, double lat1, double lon2, double lat2);
 
@@ -422,10 +421,10 @@ void* wmo_read_metar_from_file_malloc(FILE* f, int headers_only, size_t* size, o
 void* wmo_read_any_from_file_malloc(FILE* f, int headers_only, size_t* size, off_t* offset, int* err);
 void* wmo_read_grib_from_file_malloc(FILE* f, int headers_only, size_t* size, off_t* offset, int* err);
 void* wmo_read_bufr_from_file_malloc(FILE* f, int headers_only, size_t* size, off_t* offset, int* err);
-int grib_read_any_headers_only_from_file(grib_context* ctx, FILE* f, void* buffer, size_t* len);
+int grib_read_any_headers_only_from_file(FILE* f, void* buffer, size_t* len);
 int grib_read_any_from_file(grib_context* ctx, FILE* f, void* buffer, size_t* len);
 int grib_read_any_from_memory_alloc(grib_context* ctx, unsigned char** data, size_t* data_length, void** buffer, size_t* length);
-int grib_read_any_from_memory(grib_context* ctx, unsigned char** data, size_t* data_length, void* buffer, size_t* len);
+int grib_read_any_from_memory(unsigned char** data, size_t* data_length, void* buffer, size_t* len);
 int grib_count_in_file(grib_context* c, FILE* f, int* n);
 int grib_count_in_filename(grib_context* c, const char* filename, int* n);
 int codes_extract_offsets_malloc(grib_context* c, const char* filename, ProductKind product, off_t** offsets, int* num_messages, int strict_mode);
@@ -486,7 +485,7 @@ int codes_bufr_keys_iterator_delete(bufr_keys_iterator* kiter);
 /* grib_parse_utils.cc */
 int grib_recompose_name(grib_handle* h, grib_accessor* observer, const char* uname, char* fname, int fail);
 int grib_accessors_list_print(grib_handle* h, grib_accessors_list* al, const char* name, int type, const char* format, const char* separator, int maxcols, int* newline, FILE* out);
-int grib_recompose_print(grib_handle* h, grib_accessor* observer, const char* uname, int fail, FILE* out);
+int grib_recompose_print(grib_handle* h, const char* uname, int fail, FILE* out);
 grib_action_file* grib_find_action_file(const char* fname, grib_action_file_list* afl);
 int grib_yywrap(void);
 char* file_being_parsed(void);
@@ -535,7 +534,7 @@ int grib_set_missing(grib_handle* h, const char* name);
 int grib_is_missing_long(grib_accessor* a, long x);
 int grib_is_missing_double(grib_accessor* a, double x);
 int grib_is_missing_string(grib_accessor* a, const unsigned char* x, size_t len);
-int grib_accessor_can_be_missing(grib_accessor* a, int* err);
+int grib_accessor_can_be_missing(grib_accessor* a);
 int grib_accessor_is_missing(grib_accessor* a, int* err);
 int grib_is_missing(const grib_handle* h, const char* name, int* err);
 int grib_is_defined(const grib_handle* h, const char* name);
@@ -543,7 +542,6 @@ int grib_set_flag(grib_handle* h, const char* name, unsigned long flag);
 int grib_set_double_array_internal(grib_handle* h, const char* name, const double* val, size_t length);
 int grib_set_force_double_array(grib_handle* h, const char* name, const double* val, size_t length);
 int grib_set_double_array(grib_handle* h, const char* name, const double* val, size_t length);
-int grib_set_float_array_internal(grib_handle* h, const char* name, const float* val, size_t length);
 int grib_set_force_float_array(grib_handle* h, const char* name, const float* val, size_t length);
 int grib_set_float_array(grib_handle* h, const char* name, const float* val, size_t length);
 int grib_set_long_array_internal(grib_handle* h, const char* name, const long* val, size_t length);
@@ -575,7 +573,7 @@ int grib_get_float_array(const grib_handle* h, const char* name, float* val, siz
 
 int grib_get_string_length_acc(grib_accessor* a, size_t* size);
 int grib_get_string_length(const grib_handle* h, const char* name, size_t* size);
-int grib_get_size_acc(const grib_handle* h, grib_accessor* a, size_t* size);
+int grib_get_size_acc(grib_accessor* a, size_t* size);
 int grib_get_size(const grib_handle* h, const char* name, size_t* size);
 int grib_get_length(const grib_handle* h, const char* name, size_t* length);
 int grib_get_offset(const grib_handle* h, const char* key, size_t* val);
@@ -595,25 +593,25 @@ const char* grib_get_error_message(int code);
 void grib_check(const char* call, const char* file, int line, int e, const char* msg);
 
 /* grib_expression_class_binop.cc */
-grib_expression* new_binop_expression(grib_context* c, grib_binop_long_proc long_func, grib_binop_double_proc double_func, grib_expression* left, grib_expression* right);
+grib_expression* new_binop_expression(grib_binop_long_proc long_func, grib_binop_double_proc double_func, grib_expression* left, grib_expression* right);
 
 /* grib_expression_class_logical_and.cc */
-grib_expression* new_logical_and_expression(grib_context* c, grib_expression* left, grib_expression* right);
+grib_expression* new_logical_and_expression(grib_expression* left, grib_expression* right);
 
 /* grib_expression_class_logical_or.cc */
-grib_expression* new_logical_or_expression(grib_context* c, grib_expression* left, grib_expression* right);
+grib_expression* new_logical_or_expression(grib_expression* left, grib_expression* right);
 
 /* grib_expression_class_is_in_dict.cc */
 grib_expression* new_is_in_dict_expression(grib_context* c, const char* name, const char* list);
 
 /* grib_expression_class_true.cc */
-grib_expression* new_true_expression(grib_context* c);
+grib_expression* new_true_expression();
 
 /* grib_expression_class_string_compare.cc */
-grib_expression* new_string_compare_expression(grib_context* c, grib_expression* left, grib_expression* right, int eq);
+grib_expression* new_string_compare_expression(grib_expression* left, grib_expression* right, int eq);
 
 /* grib_expression_class_unop.cc */
-grib_expression* new_unop_expression(grib_context* c, grib_unop_long_proc long_func, grib_unop_double_proc double_func, grib_expression* exp);
+grib_expression* new_unop_expression(grib_unop_long_proc long_func, grib_unop_double_proc double_func, grib_expression* exp);
 
 /* grib_expression_class_functor.cc */
 grib_expression* new_functor_expression(grib_context* c, const char* name, grib_arguments* args);
@@ -631,10 +629,10 @@ grib_expression* new_is_integer_expression(grib_context* c, const char* name, in
 grib_expression* new_length_expression(grib_context* c, const char* name);
 
 /* grib_expression_class_long.cc */
-grib_expression* new_long_expression(grib_context* c, long value);
+grib_expression* new_long_expression(long value);
 
 /* grib_expression_class_double.cc */
-grib_expression* new_double_expression(grib_context* c, double value);
+grib_expression* new_double_expression(double value);
 
 /* grib_expression_class_string.cc */
 grib_expression* new_string_expression(grib_context* c, const char* value);

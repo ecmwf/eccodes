@@ -38,19 +38,19 @@ void Suppressed::log_message()
     }
 }
 
-int Suppressed::unpack_string(char* val, size_t* len)
+int Suppressed::unpack_string(char*, size_t*)
 {
     log_message();
     return GRIB_NOT_FOUND;
 }
 
-int Suppressed::unpack_long(long* val, size_t* len)
+int Suppressed::unpack_long(long*, size_t*)
 {
     log_message();
     return GRIB_NOT_FOUND;
 }
 
-int Suppressed::unpack_double(double* val, size_t* len)
+int Suppressed::unpack_double(double*, size_t*)
 {
     log_message();
     return GRIB_NOT_FOUND;

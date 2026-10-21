@@ -30,7 +30,7 @@ void G1NumberOfCodedValuesShComplex::init(const long l, grib_arguments* c)
     length_ = 0;
 }
 
-int G1NumberOfCodedValuesShComplex::unpack_long(long* val, size_t* len)
+int G1NumberOfCodedValuesShComplex::unpack_long(long* val, size_t*)
 {
     int ret = GRIB_SUCCESS;
     long bpv = 0;

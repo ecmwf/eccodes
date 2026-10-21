@@ -52,8 +52,8 @@ Gen::Gen(grib_context* context, const char* name, const char* op, const long len
 Gen::~Gen()
 {
     if (params_ != default_value_)
-        grib_arguments_free(context_, params_);
-    grib_arguments_free(context_, default_value_);
+        grib_arguments_free(params_);
+    grib_arguments_free(default_value_);
 
     grib_context_free_persistent(context_, name_);
     grib_context_free_persistent(context_, op_);
@@ -97,7 +97,7 @@ int Gen::create_accessor(grib_section* p, grib_loader* loader)
         return loader->init_accessor(loader, ga, default_value_);
 }
 
-int Gen::notify_change(grib_accessor* notified, grib_accessor* changed)
+int Gen::notify_change(grib_accessor* notified, grib_accessor*)
 {
     if (default_value_)
         return notified->pack_expression(default_value_->get_expression(notified->get_enclosing_handle(), 0));

@@ -13,7 +13,7 @@
 
 #include "grib_api_internal.h"
 
-int main(int argc, char** argv)
+int main(int, char** argv)
 {
     int err = 0;
     size_t size = 0;

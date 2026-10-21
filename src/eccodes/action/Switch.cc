@@ -54,7 +54,7 @@ Switch::~Switch()
     while (t) {
         grib_case* nt = t->next;
         delete t->action;
-        grib_arguments_free(context_, t->values);
+        grib_arguments_free(t->values);
         grib_context_free(context_, t);
         t = nt;
     }

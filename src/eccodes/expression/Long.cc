@@ -13,36 +13,36 @@
 namespace eccodes::expression
 {
 
-int Long::evaluate_long(grib_handle* h, long* lres) const
+int Long::evaluate_long(grib_handle*, long* lres) const
 {
     *lres = value_;
     return GRIB_SUCCESS;
 }
 
-int Long::evaluate_double(grib_handle* h, double* dres) const
+int Long::evaluate_double(grib_handle*, double* dres) const
 {
     *dres = value_;
     return GRIB_SUCCESS;
 }
 
-void Long::print(grib_context* c, grib_handle* f, FILE* out) const
+void Long::print(grib_context*, grib_handle*, FILE* out) const
 {
     fprintf(out, "long(%ld)", value_);
 }
 
-void Long::add_dependency(grib_accessor* observer)
+void Long::add_dependency(grib_accessor*)
 {
     /* grib_expression_long* e = (grib_expression_long*)g; */
 }
 
-int Long::native_type(grib_handle* h) const
+int Long::native_type(grib_handle*) const
 {
     return GRIB_TYPE_LONG;
 }
 
 }  // namespace eccodes::expression
 
-grib_expression* new_long_expression(grib_context* c, long value)
+grib_expression* new_long_expression(long value)
 {
     return new eccodes::expression::Long(value);
 }
