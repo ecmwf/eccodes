@@ -11,7 +11,7 @@
 #include "grib_api_internal.h"
 #include "While.h"
 
-grib_action* grib_action_create_while(grib_context* context, grib_expression* expression, grib_action* block)
+grib_action* grib_action_create_while(grib_context* context, grib_expression* /*expression*/, grib_action* /*block*/)
 {
     grib_context_log(context, GRIB_LOG_ERROR, "The 'while' statement is deprecated");
     return NULL;

@@ -293,7 +293,7 @@ static int min_max_array(double* data, unsigned int n, double* min, double* max,
 //     return bms;
 // }
 
-static int post_process(grib_context* c, long* vals, long len, long order, long bias, const unsigned long extras[2])
+static int post_process(long* vals, long len, long order, long bias, const unsigned long extras[2])
 {
     unsigned long last, penultimate = 0, j = 0;
     ECCODES_ASSERT(order > 0);
@@ -1727,7 +1727,7 @@ int DataG22OrderPacking::unpack(T* val, size_t* len)
 
         bias = grib_decode_signed_longb(buf_ref, &ref_p, numberOfOctetsExtraDescriptors * 8);
 
-        post_process(context_, sec_val, n_vals, orderOfSpatialDifferencing, bias, extras);
+        post_process(sec_val, n_vals, orderOfSpatialDifferencing, bias, extras);
         // de_spatial_difference (context_ , sec_val, n_vals, orderOfSpatialDifferencing, bias);
     }
 

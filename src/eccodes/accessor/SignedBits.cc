@@ -50,7 +50,7 @@ void SignedBits::init(const long len, grib_arguments* args)
     length_ = compute_byte_count();
 }
 
-int SignedBits::unpack_long(long* val, size_t* len)
+int SignedBits::unpack_long(long* /*val*/, size_t* /*len*/)
 {
     return GRIB_NOT_IMPLEMENTED;
 #if 0
@@ -90,7 +90,7 @@ int SignedBits::unpack_long(long* val, size_t* len)
 #endif
 }
 
-int SignedBits::pack_long(const long* val, size_t* len)
+int SignedBits::pack_long(const long* /*val*/, size_t* /*len*/)
 {
     return GRIB_NOT_IMPLEMENTED;
 #if 0

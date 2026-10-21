@@ -334,7 +334,7 @@ cleanup:
     return ret;
 }
 
-int BufrExtractDatetimeSubsets::pack_long(const long* val, size_t* len)
+int BufrExtractDatetimeSubsets::pack_long(const long* /*val*/, size_t* len)
 {
     if (*len == 0)
         return GRIB_SUCCESS;

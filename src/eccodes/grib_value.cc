@@ -774,7 +774,7 @@ int grib_accessor_is_missing(grib_accessor* a, int* err)
     }
 }
 
-int grib_accessor_can_be_missing(grib_accessor* a, int* err)
+int grib_accessor_can_be_missing(grib_accessor* a, int* /*err*/)
 {
     if (a->flags_ & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) {
         return 1;
@@ -908,7 +908,7 @@ int grib_set_double_array_internal(grib_handle* h, const char* name, const doubl
     return ret;
 }
 
-int grib_set_float_array_internal(grib_handle* h, const char* name, const float* val, size_t length)
+int grib_set_float_array_internal(grib_handle* /*h*/, const char* /*name*/, const float* /*val*/, size_t /*length*/)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
@@ -994,7 +994,7 @@ int grib_set_force_double_array(grib_handle* h, const char* name, const double* 
 }
 
 // C-API: Ensure all exceptions are converted to error codes
-int grib_set_force_float_array(grib_handle* h, const char* name, const float* val, size_t length)
+int grib_set_force_float_array(grib_handle* /*h*/, const char* /*name*/, const float* /*val*/, size_t /*length*/)
 {
     /* GRIB-285: Same as grib_set_float_array but allows setting of READ-ONLY keys like codedValues */
     /* Use with great caution!! */
@@ -1015,7 +1015,7 @@ int grib_set_double_array(grib_handle* h, const char* name, const double* val, s
 }
 
 // C-API: Ensure all exceptions are converted to error codes
-int grib_set_float_array(grib_handle* h, const char* name, const float* val, size_t length)
+int grib_set_float_array(grib_handle* /*h*/, const char* /*name*/, const float* /*val*/, size_t /*length*/)
 {
     // return __grib_set_float_array(h, name, val, length, /*check=*/1);
     return GRIB_NOT_IMPLEMENTED;
@@ -1390,7 +1390,7 @@ int grib_get_double_elements(const grib_handle* h, const char* name, const int* 
 }
 
 // C-API: Ensure all exceptions are converted to error codes
-int grib_get_float_elements(const grib_handle* h, const char* name, const int* index_array, long len, float* val_array)
+int grib_get_float_elements(const grib_handle* /*h*/, const char* /*name*/, const int* /*index_array*/, long /*len*/, float* /*val_array*/)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
@@ -1529,7 +1529,7 @@ int grib_get_native_type(const grib_handle* h, const char* name, int* type)
 // }
 
 template <typename T>
-static int _grib_get_array_internal(const grib_handle* h, grib_accessor* a, T* val, size_t buffer_len, size_t* decoded_length)
+static int _grib_get_array_internal(grib_accessor* a, T* val, size_t buffer_len, size_t* decoded_length)
 {
     static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
 
@@ -1589,7 +1589,7 @@ static int grib_get_double_array_(const grib_handle* h, const char* name, double
         }
         else {
             *length = 0;
-            return _grib_get_array_internal<double>(h, a, val, len, length);
+            return _grib_get_array_internal<double>(a, val, len, length);
         }
     }
 }
@@ -1615,7 +1615,7 @@ static int grib_get_float_array_(const grib_handle* h, const char* name, float* 
     ECCODES_ASSERT(name[0] != '/');
     ECCODES_ASSERT(name[0] != '#');
     *length = 0;
-    return _grib_get_array_internal<float>(h, a, val, len, length);
+    return _grib_get_array_internal<float>(a, val, len, length);
 }
 
 // C-API: Ensure all exceptions are converted to error codes
@@ -1675,7 +1675,7 @@ int grib_get_string_length(const grib_handle* h, const char* name, size_t* size)
     }
 }
 
-int grib_get_size_acc(const grib_handle* h, grib_accessor* a, size_t* size)
+int grib_get_size_acc(const grib_handle* /*h*/, grib_accessor* a, size_t* size)
 {
     long count = 0;
     int err = 0;
@@ -1777,7 +1777,7 @@ int grib_get_offset(const grib_handle* ch, const char* key, size_t* val)
     return eccodes::getErrorCode(result);
 }
 
-static int grib_get_string_array_internal_(const grib_handle* h, grib_accessor* a, char** val, size_t buffer_len, size_t* decoded_length)
+static int grib_get_string_array_internal_(grib_accessor* a, char** val, size_t buffer_len, size_t* decoded_length)
 {
     // Collect the same_ chain into a list to avoid stack overflow from deep recursion
     std::vector<grib_accessor*> chain;
@@ -1819,7 +1819,7 @@ static int grib_get_string_array_(const grib_handle* h, const char* name, char**
         }
         else {
             *length = 0;
-            return grib_get_string_array_internal_(h, a, val, len, length);
+            return grib_get_string_array_internal_(a, val, len, length);
         }
     }
 }
@@ -1831,7 +1831,7 @@ int grib_get_string_array(const grib_handle* h, const char* name, char** val, si
     return eccodes::getErrorCode(result);
 }
 
-static int _grib_get_long_array_internal(const grib_handle* h, grib_accessor* a, long* val, size_t buffer_len, size_t* decoded_length)
+static int _grib_get_long_array_internal(grib_accessor* a, long* val, size_t buffer_len, size_t* decoded_length)
 {
     // Collect the same_ chain into a list to avoid stack overflow from deep recursion
     std::vector<grib_accessor*> chain;
@@ -1884,7 +1884,7 @@ static int grib_get_long_array_(const grib_handle* h, const char* name, long* va
         }
         else {
             *length = 0;
-            return _grib_get_long_array_internal(h, a, val, len, length);
+            return _grib_get_long_array_internal(a, val, len, length);
         }
     }
     return ret;
@@ -2354,7 +2354,7 @@ int codes_copy_key(grib_handle* h1, grib_handle* h2, const char* key, int type)
     }
 }
 
-int codes_compare_key(grib_handle* h1, grib_handle* h2, const char* key, int compare_flags)
+int codes_compare_key(grib_handle* h1, grib_handle* h2, const char* key, int /*compare_flags*/)
 {
     grib_accessor* a1 = grib_find_accessor(h1, key);
     if (!a1) {

@@ -21,7 +21,7 @@ void Pad::init(const long len, grib_arguments* arg)
     length_ = preferred_size(1);
 }
 
-size_t Pad::preferred_size(int from_handle)
+size_t Pad::preferred_size(int /*from_handle*/)
 {
     long length = 0;
 

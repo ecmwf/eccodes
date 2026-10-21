@@ -100,7 +100,7 @@ static bool eq_integer(const char* l, const char* r)
     return false;
 }
 
-static bool eq_null(const char* l, const char* r)
+static bool eq_null(const char* /*l*/, const char* /*r*/)
 {
     return true;
 }
@@ -158,7 +158,7 @@ static parameter* find_parameter(const request* r, const char* parname)
     return NULL;
 }
 
-static void ecc_reqmerge(parameter* pa, const parameter* pb, request* a)
+static void ecc_reqmerge(parameter* pa, const parameter* pb)
 {
     const value* vb = pb->values;
 
@@ -204,7 +204,7 @@ static bool ecc_reqmerge1(request* a, const request* b)
         if (strcmp(pa->name, pb->name) != 0)
             return false;
 
-        ecc_reqmerge(pa, pb, a);
+        ecc_reqmerge(pa, pb);
 
         pa = pa->next;
         pb = pb->next;
@@ -405,7 +405,7 @@ static void ecc_reqmerge2(request* a, const request* b)
             }
         }
         else {
-            ecc_reqmerge(pa, pb, a);
+            ecc_reqmerge(pa, pb);
         }
 
         pb = pb->next;
@@ -1718,7 +1718,7 @@ struct stuff_1
     request* r;
 };
 
-static void reqcb_1(const request* r, int count, axis_t* names, char* vals[], void* data)
+static void reqcb_1(const request* /*r*/, int count, axis_t* names, char* vals[], void* data)
 {
     struct stuff_1* s = (struct stuff_1*)data;
     int i;
@@ -3535,7 +3535,7 @@ static void reqcb(const request* r, int count, axis_t* names, char* vals[], void
     last = w;
 }
 
-static bool chk_152(int count, axis_t* names, char* vals[])
+static bool chk_152()
 {
     return true;
 }
@@ -3561,7 +3561,7 @@ static void loop(const request* r, bool ml, int index, int count, axis_t* string
             loop(r, ml, index + 1, count, strings, values, callback, data);
         }
     }
-    else if (!ml || chk_152(count, strings, values))
+    else if (!ml || chk_152())
         callback(r, count, strings, values, data);
 }
 
@@ -3980,7 +3980,7 @@ int main(int argc, char* argv[])
     return grib_tool(argc, argv);
 }
 
-int grib_tool_before_getopt(grib_runtime_options* options)
+int grib_tool_before_getopt(grib_runtime_options* /*options*/)
 {
     return 0;
 }
@@ -4124,7 +4124,7 @@ int grib_tool_init(grib_runtime_options* options)
     return 0;
 }
 
-int grib_tool_new_filename_action(grib_runtime_options* options, const char* filename)
+int grib_tool_new_filename_action(grib_runtime_options* /*options*/, const char* filename)
 {
     char buf[1024] = { 0 };
     int e = 0;
@@ -4251,17 +4251,17 @@ int grib_tool_new_filename_action(grib_runtime_options* options, const char* fil
     return e;
 }
 
-int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* file)
+int grib_tool_new_file_action(grib_runtime_options* /*options*/, grib_tools_file* /*file*/)
 {
     return 0;
 }
 
-int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
+int grib_tool_new_handle_action(grib_runtime_options* /*options*/, grib_handle* /*h*/)
 {
     return 0;
 }
 
-int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
+int grib_tool_skip_handle(grib_runtime_options* /*options*/, grib_handle* /*h*/)
 {
     return 0;
 }
@@ -4367,7 +4367,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     return 0;
 }
 
-int grib_no_handle_action(grib_runtime_options* options, int err)
+int grib_no_handle_action(grib_runtime_options* /*options*/, int /*err*/)
 {
     fprintf(dump_file, "\t\t\"ERROR: unreadable message\"\n");
     return 0;

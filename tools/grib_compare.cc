@@ -203,7 +203,7 @@ static int blocklisted(const char* name)
     return 0;
 }
 
-static double relative_error(double a, double b, double err)
+static double relative_error(double a, double b)
 {
     double relativeError;
 
@@ -222,7 +222,7 @@ int main(int argc, char* argv[])
     return grib_tool(argc, argv);
 }
 
-int grib_tool_before_getopt(grib_runtime_options* options)
+int grib_tool_before_getopt(grib_runtime_options* /*options*/)
 {
     return 0;
 }
@@ -391,11 +391,11 @@ int grib_tool_init(grib_runtime_options* options)
     return 0;
 }
 
-int grib_tool_new_filename_action(grib_runtime_options* options, const char* file)
+int grib_tool_new_filename_action(grib_runtime_options* /*options*/, const char* /*file*/)
 {
     return 0;
 }
-int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* file)
+int grib_tool_new_file_action(grib_runtime_options* /*options*/, grib_tools_file* /*file*/)
 {
     return 0;
 }
@@ -1046,7 +1046,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
                         printf(" absolute diff. = %.16e,", fabs(dval1[imaxdiff] - dval2[imaxdiff]));
                         if (!compareAbsolute)
                             printf(" max");
-                        printf(" relative diff. = %g", relative_error(dval1[imaxdiff], dval2[imaxdiff], value_tolerance));
+                        printf(" relative diff. = %g", relative_error(dval1[imaxdiff], dval2[imaxdiff]));
                         printf("\n\tmax diff. element %zu: %.20e %.20e",
                                imaxdiff, dval1[imaxdiff], dval2[imaxdiff]);
                         printf("\n\ttolerance=%.16e", value_tolerance);
@@ -1069,7 +1069,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
                         printf("double [%s]: [%.20e] != [%.20e]\n",
                                name, dval1[0], dval2[0]);
                         printf("\tabsolute diff. = %g,", fabs(dval1[0] - dval2[0]));
-                        printf(" relative diff. = %g\n", relative_error(dval1[0], dval2[0], value_tolerance));
+                        printf(" relative diff. = %g\n", relative_error(dval1[0], dval2[0]));
                         printf("\ttolerance=%g\n", value_tolerance);
                     }
                 }
@@ -1312,7 +1312,7 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
     return err;
 }
 
-int grib_no_handle_action(grib_runtime_options* options, int err)
+int grib_no_handle_action(grib_runtime_options* /*options*/, int /*err*/)
 {
     fprintf(dump_file, "\t\t\"ERROR: unreadable message\"\n");
     return 0;

@@ -134,7 +134,7 @@ void Binop::add_dependency(grib_accessor* observer)
     right_->add_dependency(observer);
 }
 
-Binop::Binop(grib_context* c,
+Binop::Binop(grib_context* /*c*/,
              BinopLongProc long_func,
              BinopDoubleProc double_func,
              Expression* left, Expression* right)

@@ -90,7 +90,7 @@ int ToDouble::unpack_string(char* val, size_t* len)
     return err;
 }
 
-int ToDouble::unpack_long(long* v, size_t* len)
+int ToDouble::unpack_long(long* v, size_t* /*len*/)
 {
     char val[1024] = { 0 };
     size_t l = sizeof(val);
@@ -108,7 +108,7 @@ int ToDouble::unpack_long(long* v, size_t* len)
     return err;
 }
 
-int ToDouble::unpack_double(double* v, size_t* len)
+int ToDouble::unpack_double(double* v, size_t* /*len*/)
 {
     char val[1024] = { 0 };
     size_t l = sizeof(val);

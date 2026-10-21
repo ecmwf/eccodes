@@ -95,7 +95,7 @@ public:
 
 
 template <typename T>
-int Gen::unpack_helper(grib_accessor* a, T* v, size_t* len)
+int Gen::unpack_helper(grib_accessor* a, T* v, size_t* /*len*/)
 {
     static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
     int type = GRIB_TYPE_UNDEFINED;

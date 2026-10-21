@@ -19,7 +19,7 @@
 #include <assert.h>
 #include "eccodes.h"
 
-int main(int argc, char** argv)
+int main(void)
 {
     int err = 0, is_missing = 0;
 

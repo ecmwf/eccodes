@@ -125,7 +125,7 @@ int NumberOfPointsGaussian::unpack_long(long* val, size_t* len)
 }
 
 /* New algorithm */
-int NumberOfPointsGaussian::unpack_long_new(long* val, size_t* len)
+int NumberOfPointsGaussian::unpack_long_new(long* val, size_t* /*len*/)
 {
     int err = GRIB_SUCCESS;
     int is_global = 0;
@@ -231,7 +231,7 @@ int NumberOfPointsGaussian::unpack_long_new(long* val, size_t* len)
 }
 
 /* With Legacy support */
-int NumberOfPointsGaussian::unpack_long_with_legacy_support(long* val, size_t* len)
+int NumberOfPointsGaussian::unpack_long_with_legacy_support(long* val, size_t* /*len*/)
 {
     int err = GRIB_SUCCESS;
     int is_global = 0;

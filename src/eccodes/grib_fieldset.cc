@@ -404,7 +404,7 @@ static grib_fieldset* grib_fieldset_create_from_order_by(grib_context* c, grib_o
 }
 
 // Experimental: Needs more work
-int grib_fieldset_apply_where(grib_fieldset* set, const char* where_string)
+int grib_fieldset_apply_where(grib_fieldset* /*set*/, const char* /*where_string*/)
 {
     // grib_math* m = NULL;
     // m = grib_math_new(set->context, where_string, &err);

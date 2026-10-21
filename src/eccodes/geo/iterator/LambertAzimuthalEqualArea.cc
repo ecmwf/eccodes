@@ -98,7 +98,7 @@ int LambertAzimuthalEqualArea::init_oblate(grib_handle* h,
                                            double Dx, double Dy, double earthMinorAxisInMetres, double earthMajorAxisInMetres,
                                            double latFirstInRadians, double lonFirstInRadians,
                                            double centralLongitudeInRadians, double standardParallelInRadians,
-                                           long iScansNegatively, long jScansPositively, long jPointsAreConsecutive)
+                                           long iScansNegatively, long jScansPositively, long /*jPointsAreConsecutive*/)
 {
     double *lats, *lons;
     long i, j;

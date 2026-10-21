@@ -68,7 +68,7 @@ int SecondOrderBitsPerValue::pack_long(const long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int SecondOrderBitsPerValue::unpack_long(long* val, size_t* len)
+int SecondOrderBitsPerValue::unpack_long(long* val, size_t* /*len*/)
 {
     int ret = GRIB_SUCCESS;
     size_t size = 0;

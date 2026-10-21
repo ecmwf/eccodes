@@ -88,7 +88,7 @@ int Mercator::init_mercator(grib_handle* h,
                             double DiInMetres, double DjInMetres,
                             double earthMinorAxisInMetres, double earthMajorAxisInMetres,
                             double latFirstInRadians, double lonFirstInRadians,
-                            double latLastInRadians, double lonLastInRadians,
+                            double /*latLastInRadians*/, double /*lonLastInRadians*/,
                             double LaDInRadians, double orientationInRadians)
 {
     int i, j, err = 0;

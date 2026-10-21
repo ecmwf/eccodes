@@ -13,7 +13,7 @@
 namespace eccodes::expression
 {
 
-Unop::Unop(grib_context* c, Expression::UnopLongProc long_func,
+Unop::Unop(grib_context* /*c*/, Expression::UnopLongProc long_func,
            Expression::UnopDoubleProc double_func,
            Expression* exp) : exp_(exp),
                               long_func_(long_func),
@@ -61,7 +61,7 @@ void Unop::add_dependency(grib_accessor* observer)
     exp_->add_dependency(observer);
 }
 
-int Unop::native_type(grib_handle* h) const
+int Unop::native_type(grib_handle* /*h*/) const
 {
     return long_func_ ? GRIB_TYPE_LONG : GRIB_TYPE_DOUBLE;
 }

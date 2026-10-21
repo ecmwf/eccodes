@@ -19,7 +19,7 @@
 
 #include "eccodes.h"
 
-int main(int argc, char** argv)
+int main(void)
 {
     int err = 0;
     size_t i = 0;

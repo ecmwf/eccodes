@@ -45,7 +45,7 @@ int G2BitmapPresent::unpack_long(long* val, size_t* len)
     return ret;
 }
 
-int G2BitmapPresent::pack_long(const long* val, size_t* len)
+int G2BitmapPresent::pack_long(const long* val, size_t* /*len*/)
 {
     long bitmapIndicator = 0;
 

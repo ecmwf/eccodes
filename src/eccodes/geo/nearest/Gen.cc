@@ -43,10 +43,10 @@ int Gen::destroy()
     return Nearest::destroy();
 }
 
-int Gen::find(grib_handle* h,
-              double inlat, double inlon, unsigned long flags,
-              double* outlats, double* outlons, double* values,
-              double* distances, int* indexes, size_t* len)
+int Gen::find(grib_handle* /*h*/,
+              double /*inlat*/, double /*inlon*/, unsigned long /*flags*/,
+              double* /*outlats*/, double* /*outlons*/, double* /*values*/,
+              double* /*distances*/, int* /*indexes*/, size_t* /*len*/)
 {
     return GRIB_NOT_IMPLEMENTED;
 }

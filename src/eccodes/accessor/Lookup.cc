@@ -53,7 +53,7 @@ void Lookup::dump(eccodes::Dumper* dumper)
     dumper->dump_long(this, buf);
 }
 
-int Lookup::unpack_string(char* v, size_t* len)
+int Lookup::unpack_string(char* v, size_t* /*len*/)
 {
     unsigned char bytes[1024] = { 0 };
 
@@ -109,7 +109,7 @@ int Lookup::unpack_long(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int Lookup::pack_long(const long* val, size_t* len)
+int Lookup::pack_long(const long* /*val*/, size_t* /*len*/)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
@@ -124,7 +124,7 @@ long Lookup::byte_offset()
     return loffset_;
 }
 
-int Lookup::notify_change(grib_accessor* changed)
+int Lookup::notify_change(grib_accessor* /*changed*/)
 {
     /* Forward changes */
     return grib_dependency_notify_change(this);

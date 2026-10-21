@@ -435,7 +435,7 @@ void grib_file_delete(grib_file* file)
     /* file = NULL; */
 }
 
-void grib_file_pool_print(const char* title, FILE* out)
+void grib_file_pool_print(const char* title, FILE* /*out*/)
 {
     int i = 0;
     grib_file* file = file_pool.first;

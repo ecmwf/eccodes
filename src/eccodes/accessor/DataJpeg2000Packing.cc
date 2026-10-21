@@ -86,7 +86,7 @@ int DataJpeg2000Packing::value_count(long* n_vals)
 #define EXTRA_BUFFER_SIZE 10240
 
 #if HAVE_JPEG
-int DataJpeg2000Packing::unpack_float(float* val, size_t* len)
+int DataJpeg2000Packing::unpack_float(float* /*val*/, size_t* /*len*/)
 {
     return GRIB_NOT_IMPLEMENTED;
 }

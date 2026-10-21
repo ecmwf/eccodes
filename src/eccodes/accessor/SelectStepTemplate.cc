@@ -23,13 +23,13 @@ void SelectStepTemplate::init(const long l, grib_arguments* c)
     instant_ = c->get_long(hand, n++);
 }
 
-int SelectStepTemplate::unpack_long(long* val, size_t* len)
+int SelectStepTemplate::unpack_long(long* val, size_t* /*len*/)
 {
     *val = 1;
     return GRIB_SUCCESS;
 }
 
-int SelectStepTemplate::pack_long(const long* val, size_t* len)
+int SelectStepTemplate::pack_long(const long* /*val*/, size_t* /*len*/)
 {
     grib_handle* hand = get_enclosing_handle();
     long productDefinitionTemplateNumber = 0;
