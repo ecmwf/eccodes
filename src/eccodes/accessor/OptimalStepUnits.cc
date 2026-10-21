@@ -68,7 +68,7 @@ int OptimalStepUnits::pack_expression(grib_expression* e)
     return ret;
 }
 
-int OptimalStepUnits::pack_long(const long* val, size_t* len)
+int OptimalStepUnits::pack_long(const long* val, size_t*)
 {
     grib_handle* h = get_enclosing_handle();
 
@@ -139,7 +139,7 @@ int OptimalStepUnits::pack_long(const long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int OptimalStepUnits::unpack_long(long* val, size_t* len)
+int OptimalStepUnits::unpack_long(long* val, size_t*)
 {
     grib_handle* h = get_enclosing_handle();
 

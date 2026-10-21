@@ -439,10 +439,10 @@ void grib_file_pool_print(const char* title, FILE* out)
 {
     int i = 0;
     grib_file* file = file_pool.first;
-    printf("%s: size=%zu, num_opened_files=%d\n", title, file_pool.size, file_pool.number_of_opened_files);
+    fprintf(out, "%s: size=%zu, num_opened_files=%d\n", title, file_pool.size, file_pool.number_of_opened_files);
     while (file) {
-        printf("%s:\tfile_pool entry %d = %s\n", title, i++, file->name);
+        fprintf(out, "%s:\tfile_pool entry %d = %s\n", title, i++, file->name);
         file = file->next;
     }
-    printf("\n");
+    fprintf(out, "\n");
 }

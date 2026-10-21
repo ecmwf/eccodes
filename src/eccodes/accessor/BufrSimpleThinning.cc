@@ -99,7 +99,7 @@ int BufrSimpleThinning::apply_thinning()
     return ret;
 }
 
-int BufrSimpleThinning::pack_long(const long* val, size_t* len)
+int BufrSimpleThinning::pack_long(const long*, size_t* len)
 {
     if (*len == 0)
         return GRIB_SUCCESS;

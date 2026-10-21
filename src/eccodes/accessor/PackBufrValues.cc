@@ -23,26 +23,26 @@ void PackBufrValues::init(const long len, grib_arguments* params)
     length_ = 0;
 }
 
-void PackBufrValues::dump(eccodes::Dumper* dumper)
+void PackBufrValues::dump(eccodes::Dumper*)
 {
 }
 
-int PackBufrValues::unpack_string_array(char** buffer, size_t* len)
-{
-    return GRIB_NOT_IMPLEMENTED;
-}
-
-int PackBufrValues::unpack_string(char* buffer, size_t* len)
+int PackBufrValues::unpack_string_array(char**, size_t*)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int PackBufrValues::unpack_long(long* val, size_t* len)
+int PackBufrValues::unpack_string(char*, size_t*)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int PackBufrValues::unpack_double(double* val, size_t* len)
+int PackBufrValues::unpack_long(long*, size_t*)
+{
+    return GRIB_NOT_IMPLEMENTED;
+}
+
+int PackBufrValues::unpack_double(double*, size_t*)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
@@ -63,13 +63,13 @@ long PackBufrValues::get_native_type()
     return GRIB_TYPE_LONG;
 }
 
-int PackBufrValues::pack_long(const long* val, size_t* len)
+int PackBufrValues::pack_long(const long*, size_t*)
 {
     grib_accessor* data = (grib_accessor*)data_accessor_;
     return data->pack_double(0, 0);
 }
 
-int PackBufrValues::pack_double(const double* val, size_t* len)
+int PackBufrValues::pack_double(const double*, size_t*)
 {
     grib_accessor* data = (grib_accessor*)data_accessor_;
     return data->pack_double(0, 0);

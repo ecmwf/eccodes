@@ -73,7 +73,7 @@ static void png_write_callback(png_structp png, png_bytep data, png_size_t lengt
     p->offset += length;
 }
 
-static void png_flush_callback(png_structp png)
+static void png_flush_callback(png_structp)
 {
     /* Empty */
 }
@@ -616,22 +616,22 @@ static void print_error_feature_not_enabled(grib_context* c)
                      "PNG support not enabled. Please rebuild with -DENABLE_PNG=ON");
 }
 
-int DataPngPacking::unpack_double(double* val, size_t* len)
+int DataPngPacking::unpack_double(double*, size_t*)
 {
     print_error_feature_not_enabled(context_);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
-int DataPngPacking::pack_double(const double* val, size_t* len)
+int DataPngPacking::pack_double(const double*, size_t*)
 {
     print_error_feature_not_enabled(context_);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
-int DataPngPacking::unpack_double_element(size_t idx, double* val)
+int DataPngPacking::unpack_double_element(size_t, double*)
 {
     print_error_feature_not_enabled(context_);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
-int DataPngPacking::unpack_double_element_set(const size_t* index_array, size_t len, double* val_array)
+int DataPngPacking::unpack_double_element_set(const size_t*, size_t, double*)
 {
     print_error_feature_not_enabled(context_);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;

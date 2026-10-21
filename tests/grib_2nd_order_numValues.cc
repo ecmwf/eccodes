@@ -19,7 +19,7 @@
 #define NLON 81
 #define NLAT 166
 
-int main(int argc, char* argv[])
+int main(int, char*[])
 {
     size_t len, slen;
     grib_handle* h = NULL;

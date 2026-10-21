@@ -34,4 +34,4 @@ private:
 
 }  // namespace eccodes::expression
 
-grib_expression* new_long_expression(grib_context*, long);
+grib_expression* new_long_expression(long);

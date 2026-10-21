@@ -129,7 +129,7 @@ void Json::dump_values(grib_accessor* a)
     (void)err; /* TODO */
 }
 
-void Json::dump_long(grib_accessor* a, const char* comment)
+void Json::dump_long(grib_accessor* a, const char*)
 {
     long value = 0;
     size_t size = 1, size2 = 0;
@@ -235,11 +235,11 @@ void Json::dump_long(grib_accessor* a, const char* comment)
     (void)err; /* TODO */
 }
 
-void Json::dump_bits(grib_accessor* a, const char* comment)
+void Json::dump_bits(grib_accessor*, const char*)
 {
 }
 
-void Json::dump_double(grib_accessor* a, const char* comment)
+void Json::dump_double(grib_accessor* a, const char*)
 {
     double value = 0;
     size_t size = 1;
@@ -360,7 +360,7 @@ void Json::dump_string_array(grib_accessor* a, const char* comment)
 }
 
 #define MAX_STRING_SIZE 4096
-void Json::dump_string(grib_accessor* a, const char* comment)
+void Json::dump_string(grib_accessor* a, const char*)
 {
     char value[MAX_STRING_SIZE] = { 0 }; /* See ECC-710 */
     size_t size = MAX_STRING_SIZE;
@@ -438,11 +438,11 @@ void Json::dump_string(grib_accessor* a, const char* comment)
     (void)err; /* TODO */
 }
 
-void Json::dump_bytes(grib_accessor* a, const char* comment)
+void Json::dump_bytes(grib_accessor*, const char*)
 {
 }
 
-void Json::dump_label(grib_accessor* a, const char* comment)
+void Json::dump_label(grib_accessor*, const char*)
 {
 }
 

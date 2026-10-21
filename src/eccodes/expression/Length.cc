@@ -53,7 +53,7 @@ const char* Length::evaluate_string(grib_handle* h, char* buf, size_t* size, int
     return buf;
 }
 
-void Length::print(grib_context* c, grib_handle* f, FILE* out) const
+void Length::print(grib_context*, grib_handle* f, FILE* out) const
 {
     fprintf(out, "access('%s", name_);
     if (f) {
@@ -88,7 +88,7 @@ Length::Length(grib_context* c, const char* name)
     name_ = grib_context_strdup_persistent(c, name);
 }
 
-int Length::native_type(grib_handle* h) const
+int Length::native_type(grib_handle*) const
 {
     return GRIB_TYPE_LONG;
 }

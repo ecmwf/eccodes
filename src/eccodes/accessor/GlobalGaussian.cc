@@ -32,7 +32,7 @@ void GlobalGaussian::init(const long l, grib_arguments* c)
     subdivision_ = c->get_name(h, n++);
 }
 
-int GlobalGaussian::unpack_long(long* val, size_t* len)
+int GlobalGaussian::unpack_long(long* val, size_t*)
 {
     int ret = GRIB_SUCCESS;
     long latfirst, latlast, lonfirst, lonlast, basic_angle, subdivision, N, Ni;
@@ -138,7 +138,7 @@ int GlobalGaussian::unpack_long(long* val, size_t* len)
     return ret;
 }
 
-int GlobalGaussian::pack_long(const long* val, size_t* len)
+int GlobalGaussian::pack_long(const long* val, size_t*)
 {
     int ret = GRIB_SUCCESS;
     long latfirst, latlast, lonfirst, lonlast, di, diold, basic_angle = 0, N, Ni;

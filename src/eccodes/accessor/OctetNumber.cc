@@ -40,7 +40,7 @@ int OctetNumber::unpack_long(long* val, size_t* len)
     return ret;
 }
 
-int OctetNumber::pack_long(const long* val, size_t* len)
+int OctetNumber::pack_long(const long*, size_t*)
 {
     return GRIB_SUCCESS;
 }

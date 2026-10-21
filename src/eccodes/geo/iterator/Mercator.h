@@ -31,7 +31,6 @@ private:
                       double, double,
                       double, double,
                       double, double,
-                      double, double,
                       double, double);
 };
 

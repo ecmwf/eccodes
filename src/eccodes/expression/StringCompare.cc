@@ -88,21 +88,21 @@ void StringCompare::add_dependency(grib_accessor* observer)
     right_->add_dependency(observer);
 }
 
-StringCompare::StringCompare(grib_context* c, Expression* left, Expression* right, int eq)
+StringCompare::StringCompare(Expression* left, Expression* right, int eq)
 {
     left_ = left;
     right_ = right;
     eq_ = eq;
 }
 
-int StringCompare::native_type(grib_handle* h) const
+int StringCompare::native_type(grib_handle*) const
 {
     return GRIB_TYPE_LONG;
 }
 
 }  // namespace eccodes::expression
 
-grib_expression* new_string_compare_expression(grib_context* c, grib_expression* left, grib_expression* right, int eq)
+grib_expression* new_string_compare_expression(grib_expression* left, grib_expression* right, int eq)
 {
-    return new eccodes::expression::StringCompare(c, left, right, eq);
+    return new eccodes::expression::StringCompare(left, right, eq);
 }

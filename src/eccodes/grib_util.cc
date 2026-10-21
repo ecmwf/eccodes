@@ -185,7 +185,7 @@ int grib_get_header_length(FILE* f, size_t* result)
     return GRIB_SUCCESS;
 }
 
-static void set_total_length(unsigned char* buffer, long* section_length, const long* section_offset, int edition, size_t totalLength)
+static void set_total_length(unsigned char* buffer, const long* section_offset, int edition, size_t totalLength)
 {
     long off;
     switch (edition) {
@@ -286,7 +286,7 @@ static grib_handle* grib_sections_copy_internal(grib_handle* hfrom, grib_handle*
         memcpy(buffer + 15, ((unsigned char*)buffer_to) + 15, 1);
     }
 
-    set_total_length(buffer, section_length, section_offset, edition, totalLength);
+    set_total_length(buffer, section_offset, edition, totalLength);
 
     h = grib_handle_new_from_message(hfrom->context, buffer, totalLength);
 
@@ -721,7 +721,7 @@ static int check_values(const double* data_values, size_t data_values_count)
     return GRIB_SUCCESS;
 }*/
 
-static int check_geometry(grib_handle* handle, const grib_util_grid_spec* spec,
+static int check_geometry(const grib_util_grid_spec* spec,
                           size_t data_values_count, bool specified_as_global)
 {
     int err = 0;
@@ -983,7 +983,7 @@ static long get_bitsPerValue_for_packingType(const int specPackingType, const lo
     return specBitsPerValue;  // original
 }
 
-static int get_grib_sample_name(grib_handle* h, long editionNumber,
+static int get_grib_sample_name(long editionNumber,
                                 const grib_util_grid_spec* spec, const char* grid_type, char* sample_name)
 {
     const size_t sample_name_len = 1024;
@@ -1471,7 +1471,7 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
     return GRIB_SUCCESS;
 }
 #else
-int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, const grib_util_packing_spec* packing_spec)
+int grib_set_from_grid_spec(grib_handle*, const grib_util_grid_spec*, const grib_util_packing_spec*)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
@@ -1481,7 +1481,6 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
 static grib_handle* grib_util_set_spec_(grib_handle* h,
                                         const grib_util_grid_spec* spec,
                                         const grib_util_packing_spec* packing_spec,
-                                        int flags,
                                         const double* data_values,  // can be NULL
                                         size_t data_values_count,
                                         int* err)
@@ -1560,7 +1559,7 @@ static grib_handle* grib_util_set_spec_(grib_handle* h,
     SET_STRING_VALUE("gridType", grid_type);
 
     // The "pl" is given from the template, but "section_copy" will take care of setting the right headers
-    if (get_grib_sample_name(h, editionNumber, spec, grid_type, sample_name) != GRIB_SUCCESS) {
+    if (get_grib_sample_name(editionNumber, spec, grid_type, sample_name) != GRIB_SUCCESS) {
         goto cleanup;
     }
 
@@ -2128,7 +2127,7 @@ static grib_handle* grib_util_set_spec_(grib_handle* h,
         grib_set_long(h_out, "deleteLocalDefinition", 1);
     }
 
-    if ((*err = check_geometry(h_out, spec, data_values_count, false)) != GRIB_SUCCESS) {
+    if ((*err = check_geometry(spec, data_values_count, false)) != GRIB_SUCCESS) {
         fprintf(stderr, "%s: Geometry check failed: %s\n", __func__, grib_get_error_message(*err));
         if (h->context->write_on_fail)
             grib_write_message(h_out, "error.grib", "w");
@@ -2158,12 +2157,12 @@ cleanup:
 grib_handle* grib_util_set_spec(grib_handle* h,
                                 const grib_util_grid_spec* spec,
                                 const grib_util_packing_spec* packing_spec,
-                                int flags,
+                                int,
                                 const double* data_values,  // can be NULL
                                 size_t data_values_count,
                                 int* err)
 {
-    auto result = eccodes::handleExceptions(grib_util_set_spec_, h, spec, packing_spec, flags, data_values, data_values_count, err);
+    auto result = eccodes::handleExceptions(grib_util_set_spec_, h, spec, packing_spec, data_values, data_values_count, err);
     return eccodes::updateErrorAndReturnValue(result, err);
 }
 

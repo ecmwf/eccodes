@@ -30,12 +30,12 @@ void LocalDefinition::init(const long l, grib_arguments* c)
     derivedForecast_ = c->get_name(hand, n++);
 }
 
-int LocalDefinition::unpack_long(long* val, size_t* len)
+int LocalDefinition::unpack_long(long* val, size_t*)
 {
     return grib_get_long(get_enclosing_handle(), grib2LocalSectionNumber_, val);
 }
 
-int LocalDefinition::pack_long(const long* val, size_t* len)
+int LocalDefinition::pack_long(const long* val, size_t*)
 {
     grib_handle* hand = get_enclosing_handle();
     long productDefinitionTemplateNumber = -1;

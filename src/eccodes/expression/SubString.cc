@@ -13,13 +13,13 @@
 namespace eccodes::expression
 {
 
-const char* SubString::evaluate_string(grib_handle* h, char* buf, size_t* size, int* err) const
+const char* SubString::evaluate_string(grib_handle*, char*, size_t*, int* err) const
 {
     *err = 0;
     return value_;
 }
 
-void SubString::print(grib_context* c, grib_handle* f, FILE* out) const
+void SubString::print(grib_context*, grib_handle*, FILE* out) const
 {
     fprintf(out, "string('%s')", value_);
 }
@@ -29,7 +29,7 @@ void SubString::destroy(grib_context* c)
     grib_context_free_persistent(c, value_);
 }
 
-void SubString::add_dependency(grib_accessor* observer)
+void SubString::add_dependency(grib_accessor*)
 {
     /* grib_expression_sub_string* e = (grib_expression_sub_string*)g; */
 }
@@ -42,7 +42,7 @@ SubString::SubString(grib_context* c, const char* value, size_t start, size_t le
     value_ = grib_context_strdup_persistent(c, v);
 }
 
-int SubString::native_type(grib_handle* h) const
+int SubString::native_type(grib_handle*) const
 {
     return GRIB_TYPE_STRING;
 }

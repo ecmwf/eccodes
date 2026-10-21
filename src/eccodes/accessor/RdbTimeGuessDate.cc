@@ -78,7 +78,7 @@ int RdbTimeGuessDate::unpack_long(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int RdbTimeGuessDate::pack_long(const long* v, size_t* len)
+int RdbTimeGuessDate::pack_long(const long*, size_t*)
 {
     /* do nothing*/
     return GRIB_SUCCESS;
