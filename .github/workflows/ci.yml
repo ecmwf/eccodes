@@ -60,6 +60,7 @@ jobs:
       # resolve-deps declares matrix-<kind> outputs only for some kinds; json holds them all.
       fortran-matrix: ${{ toJSON(fromJSON(steps.r.outputs.json).fortran) }}
       fortran-hpc-matrix: ${{ toJSON(fromJSON(steps.r.outputs.json)['fortran-hpc']) }}
+      lint-matrix: ${{ toJSON(fromJSON(steps.r.outputs.json).lint) }}
     steps:
       - name: Announce image
         uses: ecmwf/ci-infrastructure/actions/announce-image@main
@@ -75,7 +76,7 @@ jobs:
       - id: r
         uses: ecmwf/ci-infrastructure/actions/resolve-deps@main
         with:
-          matrix: build,build-hpc,fortran,fortran-hpc,rust
+          matrix: build,build-hpc,fortran,fortran-hpc,rust,lint
           token: ${{ steps.mint.outputs.token }}
           client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
           app-private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
@@ -255,6 +256,73 @@ jobs:
         with:
           install-path: ${{ steps.build.outputs.install-path }}
           artifact-name: ${{ matrix._resolved.own-artifact-name }}
+
+      - name: Print dependency table
+        if: always()
+        uses: ecmwf/ci-infrastructure/actions/print-dep-table@main
+        with:
+          resolved: ${{ toJSON(matrix._resolved) }}
+
+  # Strict warnings, clang-tidy and cppcheck; see [matrix.lint] in .ci/manifest.toml.
+  lint:
+    needs: [ci-approval, resolve]
+    name: lint (${{ matrix._resolved['job-name'] }})
+    runs-on: ${{ matrix['runs-on'] }}
+    container:
+      image: ${{ matrix.container || '' }}
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.resolve.outputs.lint-matrix) }}
+    steps:
+      - name: Announce image
+        uses: ecmwf/ci-infrastructure/actions/announce-image@main
+      - id: mint
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+      - uses: ecmwf/ci-infrastructure/actions/checkout-under-test@main
+        with:
+          allow-unsafe-pr-checkout: ${{ github.event_name == 'pull_request_target' }}
+
+      - name: Fetch resolved deps
+        id: deps
+        uses: ecmwf/ci-infrastructure/actions/fetch-deps@main
+        with:
+          deps-json: ${{ toJSON(matrix._resolved.deps) }}
+          token: ${{ steps.mint.outputs.token }}
+
+      # Until the tools are in an image.
+      - name: Install ${{ matrix.apt-packages }}
+        if: matrix.apt-packages
+        env:
+          PACKAGES: ${{ matrix.apt-packages }}
+        run: |
+          sudo=$([ "$(id -u)" -eq 0 ] || echo sudo)
+          $sudo apt-get update
+          # shellcheck disable=SC2086
+          $sudo apt-get install -y --no-install-recommends $PACKAGES
+
+      - name: Run ${{ matrix.options }}
+        id: build
+        uses: ecmwf/ci-infrastructure/actions/run-job-script@main
+        with:
+          job-script: ${{ matrix.job-script }}
+          matrix-leg: ${{ toJSON(matrix) }}
+          package: eccodes-analysis
+          cmake-prefix-path: ${{ steps.deps.outputs.cmake-prefix-path }}
+
+      - name: Upload reports
+        if: always() && steps.build.outputs.build-dir
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: lint-${{ matrix.options }}-${{ matrix['cxx-compiler'] }}
+          path: |
+            ${{ steps.build.outputs.build-dir }}/build.log
+            ${{ steps.build.outputs.build-dir }}/clang-tidy.log
+            ${{ steps.build.outputs.build-dir }}/cppcheck.txt
+          if-no-files-found: ignore
 
       - name: Print dependency table
         if: always()
