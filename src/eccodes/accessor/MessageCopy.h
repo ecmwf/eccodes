@@ -19,8 +19,8 @@ class MessageCopy : public Gen
 {
 public:
     MessageCopy() :
-        Gen() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        Gen() {}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     long get_native_type() override;
     int unpack_string(char*, size_t* len) override;
     size_t string_length() override;
@@ -28,7 +28,7 @@ public:
     void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;
 
-    static constexpr AccessorType accessor_type_{"message_copy"};
+    static constexpr AccessorType accessor_type_{ "message_copy" };
 };
 
 }  // namespace eccodes::accessor

@@ -23,16 +23,16 @@ int main(int argc, char** argv)
 {
     int err = 0, is_missing = 0;
 
-    FILE* in            = NULL;
-    const char* infile  = "../../data/reduced_gaussian_pressure_level.grib2";
-    FILE* out           = NULL;
+    FILE* in = NULL;
+    const char* infile = "../../data/reduced_gaussian_pressure_level.grib2";
+    FILE* out = NULL;
     const char* outfile = "out_surface_level.grib2";
-    codes_handle* h     = NULL;
-    const void* buffer  = NULL;
-    size_t size         = 0;
-    char str[]          = "sfc";
-    size_t str_len      = 3;
-    long Ni             = 0;
+    codes_handle* h = NULL;
+    const void* buffer = NULL;
+    size_t size = 0;
+    char str[] = "sfc";
+    size_t str_len = 3;
+    long Ni = 0;
 
     in = fopen(infile, "rb");
     if (!in) {

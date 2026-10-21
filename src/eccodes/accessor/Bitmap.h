@@ -19,8 +19,8 @@ class Bitmap : public Bytes
 {
 public:
     Bitmap() :
-        Bytes() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        Bytes() {}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     int unpack_double(double* val, size_t* len) override;
     int unpack_float(float* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
@@ -44,7 +44,7 @@ private:
     void compute_size();
 
 public:
-    static constexpr AccessorType accessor_type_{"bitmap"};
+    static constexpr AccessorType accessor_type_{ "bitmap" };
 };
 
 }  // namespace eccodes::accessor

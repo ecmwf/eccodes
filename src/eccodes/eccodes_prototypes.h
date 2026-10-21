@@ -160,7 +160,7 @@ int grib_index_dump_file(FILE* fout, const char* filename, unsigned long flags);
 void grib_index_dump(FILE* fout, grib_index* index, unsigned long flags);
 char* grib_get_field_file(grib_index* index, off_t* offset);
 grib_handle* grib_handle_new_from_index(grib_index* index, int* err);
-void grib_index_rewind(grib_index *index);
+void grib_index_rewind(grib_index* index);
 grib_handle* codes_new_from_index(grib_index* index, int message_type, int* err);
 int codes_index_set_product_kind(grib_index* index, ProductKind product_kind);
 int codes_index_set_unpack_bufr(grib_index* index, int unpack);
@@ -226,8 +226,8 @@ int grib_nearest_smaller_ieee_float(double a, double* ret);
 unsigned long grib_ieee64_to_long(double x);
 double grib_long_to_ieee64(unsigned long x);
 // ECC-1467
-//int grib_ieee_decode_array(grib_context* c, unsigned char* buf, size_t nvals, int bytes, double* val);
-//int grib_ieee_decode_array_float(grib_context* c, unsigned char* buf, size_t nvals, int bytes, float* val);
+// int grib_ieee_decode_array(grib_context* c, unsigned char* buf, size_t nvals, int bytes, double* val);
+// int grib_ieee_decode_array_float(grib_context* c, unsigned char* buf, size_t nvals, int bytes, float* val);
 int grib_ieee_encode_array(grib_context* c, double* val, size_t nvals, int bytes, unsigned char* buf);
 
 /* grib_memory.cc */
@@ -658,7 +658,7 @@ int codes_check_grib_ieee_packing_value(int value);
 int codes_flush_sync_close_file(FILE* f);
 int is_date_valid(long year, long month, long day, long hour, long minute, double second);
 int is_time_valid(long hours, long minutes, long seconds);
-int is_time_valid_HHMM(long number); // number is HHMM
+int is_time_valid_HHMM(long number);  // number is HHMM
 long convert_to_minutes(long step, long stepUnits);
 bool is_sorted_ascending(const double arr[], size_t n);
 bool is_sorted_descending(const double arr[], size_t n);
@@ -770,8 +770,8 @@ int grib_encode_size_tb(unsigned char* p, size_t val, long* bitp, long nb);
 
 /* grib_bits_any_endian_simple.cc */
 int grib_decode_long_array(const unsigned char* p, long* bitp, long bitsPerValue, size_t n_vals, long* val);
-//int grib_decode_double_array(const unsigned char* p, long* bitp, long bitsPerValue, double reference_value, double s, double d, size_t n_vals, double* val);
-//int grib_decode_float_array(const unsigned char* p, long* bitp, long bitsPerValue, double reference_value, double s, double d, size_t n_vals, float* val);
+// int grib_decode_double_array(const unsigned char* p, long* bitp, long bitsPerValue, double reference_value, double s, double d, size_t n_vals, double* val);
+// int grib_decode_float_array(const unsigned char* p, long* bitp, long bitsPerValue, double reference_value, double s, double d, size_t n_vals, float* val);
 int grib_decode_double_array_complex(const unsigned char* p, long* bitp, long nbits, double reference_value, double s, double* d, size_t size, double* val);
 int grib_encode_long_array(size_t n_vals, const long* val, long bits_per_value, unsigned char* p, long* off);
 int grib_encode_double_array(size_t n_vals, const double* val, long bits_per_value, double reference_value, double d, double divisor, unsigned char* p, long* off);

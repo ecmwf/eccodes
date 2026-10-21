@@ -16,10 +16,10 @@ namespace eccodes::accessor
 void BufrdcExpandedDescriptors::init(const long len, grib_arguments* args)
 {
     Long::init(len, args);
-    int n                        = 0;
-    expandedDescriptors_         = args->get_name(get_enclosing_handle(), n++);
+    int n = 0;
+    expandedDescriptors_ = args->get_name(get_enclosing_handle(), n++);
     expandedDescriptorsAccessor_ = 0;
-    length_                      = 0;
+    length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
@@ -34,11 +34,11 @@ grib_accessor* BufrdcExpandedDescriptors::get_accessor()
 int BufrdcExpandedDescriptors::unpack_long(long* val, size_t* len)
 {
     grib_accessor* descriptors = 0;
-    size_t rlen                = 0, l;
-    long lenall                = 0;
-    size_t i                   = 0;
-    long* v                    = 0;
-    grib_context* c            = context_;
+    size_t rlen = 0, l;
+    long lenall = 0;
+    size_t i = 0;
+    long* v = 0;
+    grib_context* c = context_;
 
     descriptors = get_accessor();
     if (!descriptors) return GRIB_NOT_FOUND;
@@ -60,13 +60,13 @@ int BufrdcExpandedDescriptors::unpack_long(long* val, size_t* len)
 
 int BufrdcExpandedDescriptors::unpack_string_array(char** buffer, size_t* len)
 {
-    int err                    = 0;
+    int err = 0;
     grib_accessor* descriptors = 0;
-    size_t l                   = 0;
-    long lenall                = 0;
-    size_t i                   = 0;
-    long* v                    = 0;
-    char buf[25]               = {0,};
+    size_t l = 0;
+    long lenall = 0;
+    size_t i = 0;
+    long* v = 0;
+    char buf[25] = { 0 };
     grib_context* c = context_;
 
     descriptors = get_accessor();
@@ -77,7 +77,7 @@ int BufrdcExpandedDescriptors::unpack_string_array(char** buffer, size_t* len)
     l = lenall;
     if (l > *len) return GRIB_ARRAY_TOO_SMALL;
 
-    v   = (long*)grib_context_malloc_clear(c, sizeof(long) * l);
+    v = (long*)grib_context_malloc_clear(c, sizeof(long) * l);
     err = descriptors->unpack_long(v, &l);
     if (err) return err;
 

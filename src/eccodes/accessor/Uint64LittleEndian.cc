@@ -30,7 +30,7 @@ int Uint64LittleEndian::unpack_long(long* val, size_t* len)
     }
 
     value = result;
-    tmp   = value;
+    tmp = value;
 
     /* Result does not fit in long */
     if (tmp != result) {

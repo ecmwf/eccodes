@@ -21,7 +21,7 @@ typedef enum IterMode
 
 int main(int argc, char** argv)
 {
-    int err  = 0;
+    int err = 0;
     double lat = 0, lon = 0, value = 0;
     long n = 0, numberOfDataPoints = 0;
     char* filename = NULL;
@@ -37,7 +37,7 @@ int main(int argc, char** argv)
     ECCODES_ASSERT(argc == 3);
     option = argv[1];
     filename = argv[2];
-    if (strcmp(option, "-n")==0) {
+    if (strcmp(option, "-n") == 0) {
         mode = NO_VALUES;
     }
 
@@ -47,7 +47,7 @@ int main(int argc, char** argv)
     ECCODES_ASSERT(!err);
     ECCODES_ASSERT(h);
 
-    GRIB_CHECK(grib_get_long(h,"numberOfDataPoints", &numberOfDataPoints),0);
+    GRIB_CHECK(grib_get_long(h, "numberOfDataPoints", &numberOfDataPoints), 0);
 
     flags = (mode == NO_VALUES) ? GRIB_GEOITERATOR_NO_VALUES : 0;
     iter = grib_iterator_new(h, flags, &err);
@@ -63,9 +63,11 @@ int main(int argc, char** argv)
             ECCODES_ASSERT(grib_iterator_has_next(iter));
         }
         if (verbose) {
-            printf("%9.3f %9.3f ",lat, lon);
-            if (pValue) printf(" %.10e\n", *pValue);
-            else printf("\n");
+            printf("%9.3f %9.3f ", lat, lon);
+            if (pValue)
+                printf(" %.10e\n", *pValue);
+            else
+                printf("\n");
         }
         n++;
     }
@@ -76,7 +78,7 @@ int main(int argc, char** argv)
     {
         // Test getting the previous value from a geoiterator.
         // Note: Only implemented for regular grids
-        char gridType[128] = {0,};
+        char gridType[128] = { 0 };
         size_t len = sizeof(gridType);
         GRIB_CHECK(grib_get_string(h, "gridType", gridType, &len), 0);
         if (strstr(gridType, "regular_")) {

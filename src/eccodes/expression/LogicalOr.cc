@@ -10,22 +10,23 @@
 
 #include "LogicalOr.h"
 
-namespace eccodes::expression {
+namespace eccodes::expression
+{
 
 
 LogicalOr::LogicalOr(grib_context* c, Expression* left, Expression* right)
 {
-    left_  = left;
+    left_ = left;
     right_ = right;
 }
 
 int LogicalOr::evaluate_long(grib_handle* h, long* lres) const
 {
-    long v1    = 0;
-    long v2    = 0;
+    long v1 = 0;
+    long v2 = 0;
     double dv1 = 0;
     double dv2 = 0;
-    int ret    = 0;
+    int ret = 0;
 
     switch (left_->native_type(h)) {
         case GRIB_TYPE_LONG:
@@ -108,6 +109,7 @@ int LogicalOr::native_type(grib_handle* h) const
 
 }  // namespace eccodes::expression
 
-grib_expression* new_logical_or_expression(grib_context* c, grib_expression* left, grib_expression* right) {
+grib_expression* new_logical_or_expression(grib_context* c, grib_expression* left, grib_expression* right)
+{
     return new eccodes::expression::LogicalOr(c, left, right);
 }

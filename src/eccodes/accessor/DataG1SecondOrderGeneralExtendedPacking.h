@@ -19,8 +19,8 @@ class DataG1SecondOrderGeneralExtendedPacking : public DataSimplePacking
 {
 public:
     DataG1SecondOrderGeneralExtendedPacking() :
-        DataSimplePacking() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        DataSimplePacking() {}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
     int unpack_float(float* val, size_t* len) override;
@@ -63,7 +63,7 @@ private:
     size_t size_ = 0;
 
 public:
-    static constexpr AccessorType accessor_type_{"data_g1second_order_general_extended_packing"};
+    static constexpr AccessorType accessor_type_{ "data_g1second_order_general_extended_packing" };
 };
 
 }  // namespace eccodes::accessor

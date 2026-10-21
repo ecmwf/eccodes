@@ -17,20 +17,20 @@
 #include "grib_api_internal.h"
 
 /* These are passed in via argv */
-static size_t NUM_THREADS         = 0;
+static size_t NUM_THREADS = 0;
 static size_t FILES_PER_ITERATION = 0;
-static char* INPUT_FILE           = NULL;
-int opt_dump                      = 0; /* If 1 then dump handle to /dev/null */
-int opt_clone                     = 0; /* If 1 then clone source handle */
-int opt_write                     = 0; /* If 1 write handle to file */
+static char* INPUT_FILE = NULL;
+int opt_dump = 0;  /* If 1 then dump handle to /dev/null */
+int opt_clone = 0; /* If 1 then clone source handle */
+int opt_write = 0; /* If 1 write handle to file */
 
 static int encode_file(const char* template_file, const char* output_file)
 {
     FILE *in, *out = NULL;
     grib_handle* source_handle = NULL;
-    const void* buffer         = NULL;
-    size_t size                = 0;
-    int err                    = 0;
+    const void* buffer = NULL;
+    size_t size = 0;
+    int err = 0;
     double* values;
 
     in = fopen(template_file, "rb");
@@ -44,8 +44,8 @@ static int encode_file(const char* template_file, const char* output_file)
     while ((source_handle = grib_handle_new_from_file(0, in, &err)) != NULL) {
         int i;
         size_t values_len = 0;
-        size_t str_len    = 20;
-        grib_handle* h    = source_handle;
+        size_t str_len = 20;
+        grib_handle* h = source_handle;
 
         if (opt_clone) {
             h = grib_handle_clone(source_handle);
@@ -127,10 +127,10 @@ int main(int argc, char** argv)
                 break;
         }
     }
-    index               = optind;
-    mode                = argv[index];
-    INPUT_FILE          = argv[index + 1];
-    NUM_THREADS         = atol(argv[index + 2]);
+    index = optind;
+    mode = argv[index];
+    INPUT_FILE = argv[index + 1];
+    NUM_THREADS = atol(argv[index + 2]);
     FILES_PER_ITERATION = atol(argv[index + 3]);
 
     if (strcmp(mode, "seq") == 0) {
@@ -143,8 +143,8 @@ int main(int argc, char** argv)
         pthread_t* workers = (pthread_t*)malloc(NUM_THREADS * sizeof(pthread_t));
         for (i = 0; i < NUM_THREADS; i++) {
             struct v* data = (struct v*)malloc(sizeof(struct v));
-            data->number   = i;
-            data->data     = NULL;
+            data->number = i;
+            data->data = NULL;
 
             /* Now we will create the thread passing it data as an argument */
             pthread_create(&workers[thread_counter], NULL, runner, data);
@@ -153,15 +153,15 @@ int main(int argc, char** argv)
         }
 
         for (i = 0; i < NUM_THREADS; i++) {
-          pthread_join(workers[i], NULL);
+            pthread_join(workers[i], NULL);
         }
         free(workers);
 #elif GRIB_OMP_THREADS
-#pragma omp parallel for schedule(static) num_threads(NUM_THREADS)
+    #pragma omp parallel for schedule(static) num_threads(NUM_THREADS)
         for (i = 0; i < NUM_THREADS; i++) {
             struct v* data = (struct v*)malloc(sizeof(struct v));
-            data->number   = i;
-            data->data     = NULL;
+            data->number = i;
+            data->data = NULL;
             do_stuff(data);
         }
 #else
@@ -172,8 +172,8 @@ int main(int argc, char** argv)
     else {
         for (i = 0; i < NUM_THREADS; i++) {
             struct v* data = (struct v*)malloc(sizeof(struct v));
-            data->number   = i;
-            data->data     = NULL;
+            data->number = i;
+            data->data = NULL;
             do_stuff(data);
         }
     }

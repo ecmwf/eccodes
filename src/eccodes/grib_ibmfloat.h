@@ -48,8 +48,8 @@ The vmin and vmax boundaries are defined as:
 struct IbmTable
 {
 private:
-    using ValueType                        = double;
-    static constexpr int TABLESIZE         = 128;
+    using ValueType = double;
+    static constexpr int TABLESIZE = 128;
     static constexpr uint32_t mantissa_min = 0x100000;
     static constexpr uint32_t mantissa_max = 0xffffff;
 

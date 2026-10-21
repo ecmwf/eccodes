@@ -19,8 +19,8 @@ class Vector : public AbstractVector
 {
 public:
     Vector() :
-        AbstractVector() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        AbstractVector() {}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     int unpack_double(double* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
 
@@ -29,7 +29,7 @@ private:
     int index_ = 0;
 
 public:
-    static constexpr AccessorType accessor_type_{"vector"};
+    static constexpr AccessorType accessor_type_{ "vector" };
 };
 
 }  // namespace eccodes::accessor

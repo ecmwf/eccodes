@@ -13,7 +13,8 @@
 eccodes::geo_iterator::LambertAzimuthalEqualArea _grib_iterator_lambert_azimuthal_equal_area{};
 eccodes::geo_iterator::Iterator* grib_iterator_lambert_azimuthal_equal_area = &_grib_iterator_lambert_azimuthal_equal_area;
 
-namespace eccodes::geo_iterator {
+namespace eccodes::geo_iterator
+{
 
 #define ITER "Lambert azimuthal equal area Geoiterator"
 
@@ -57,7 +58,7 @@ static void pj_authset(double es, double* APA)
 {
     double t;
     APA[0] = es * P00;
-    t      = es * es;
+    t = es * es;
     APA[0] += t * P01;
     APA[1] = t * P10;
     t *= es;
@@ -77,7 +78,7 @@ static double pj_qsfn(double sinphi, double e, double one_es)
     const double EPSILON = 1.0e-7;
 
     if (e >= EPSILON) {
-        con  = e * sinphi;
+        con = e * sinphi;
         div1 = 1.0 - con * con;
         div2 = 1.0 + con;
 
@@ -93,11 +94,11 @@ static double pj_qsfn(double sinphi, double e, double one_es)
 
 #define EPS10 1.e-10
 int LambertAzimuthalEqualArea::init_oblate(grib_handle* h,
-                       size_t nv, long nx, long ny,
-                       double Dx, double Dy, double earthMinorAxisInMetres, double earthMajorAxisInMetres,
-                       double latFirstInRadians, double lonFirstInRadians,
-                       double centralLongitudeInRadians, double standardParallelInRadians,
-                       long iScansNegatively, long jScansPositively, long jPointsAreConsecutive)
+                                           size_t nv, long nx, long ny,
+                                           double Dx, double Dy, double earthMinorAxisInMetres, double earthMajorAxisInMetres,
+                                           double latFirstInRadians, double lonFirstInRadians,
+                                           double centralLongitudeInRadians, double standardParallelInRadians,
+                                           long iScansNegatively, long jScansPositively, long jPointsAreConsecutive)
 {
     double *lats, *lons;
     long i, j;
@@ -106,21 +107,21 @@ int LambertAzimuthalEqualArea::init_oblate(grib_handle* h,
     double Q__qp = 0, Q__rq = 0, Q__cosb1, Q__sinb1, Q__dd, Q__xmf, Q__ymf, t;
     /* double Q__mmf = 0; */
     double e, es, temp, one_es;
-    double APA[3] = {0,};
+    double APA[3] = { 0 };
     double xFirst, yFirst;
 
     Dx = iScansNegatively == 0 ? Dx / 1000 : -Dx / 1000;
     Dy = jScansPositively == 1 ? Dy / 1000 : -Dy / 1000;
 
-    temp   = (earthMajorAxisInMetres - earthMinorAxisInMetres) / earthMajorAxisInMetres;
-    es     = 2 * temp - temp * temp;
+    temp = (earthMajorAxisInMetres - earthMinorAxisInMetres) / earthMajorAxisInMetres;
+    es = 2 * temp - temp * temp;
     one_es = 1.0 - es;
-    e      = sqrt(es);
+    e = sqrt(es);
 
     coslam = cos(lonFirstInRadians - centralLongitudeInRadians); /* cos(lp.lam) */
     sinlam = sin(lonFirstInRadians - centralLongitudeInRadians);
     sinphi = sin(latFirstInRadians); /* sin(lp.phi) */
-    q      = pj_qsfn(sinphi, e, one_es);
+    q = pj_qsfn(sinphi, e, one_es);
 
     t = fabs(standardParallelInRadians);
     if (t > M_PI_2 + EPS10) {
@@ -136,8 +137,8 @@ int LambertAzimuthalEqualArea::init_oblate(grib_handle* h,
     Q__qp = pj_qsfn(1.0, e, one_es);
     /* Q__mmf = 0.5 / one_es;  ----  TODO(masn): do I need this? */
     pj_authset(es, APA); /* sets up APA array */
-    Q__rq    = sqrt(0.5 * Q__qp);
-    sinphi_  = sin(standardParallelInRadians); /*  (P->phi0); */
+    Q__rq = sqrt(0.5 * Q__qp);
+    sinphi_ = sin(standardParallelInRadians); /*  (P->phi0); */
     Q__sinb1 = pj_qsfn(sinphi_, e, one_es) / Q__qp;
     Q__cosb1 = sqrt(1.0 - Q__sinb1 * Q__sinb1);
     if (Q__cosb1 == 0) {
@@ -149,10 +150,10 @@ int LambertAzimuthalEqualArea::init_oblate(grib_handle* h,
     Q__ymf = (Q__xmf = Q__rq) / Q__dd;
     Q__xmf *= Q__dd;
 
-    sinb  = q / Q__qp;
+    sinb = q / Q__qp;
     cosb2 = 1.0 - sinb * sinb;
-    cosb  = cosb2 > 0 ? sqrt(cosb2) : 0;
-    b     = 1. + Q__sinb1 * sinb + Q__cosb1 * cosb * coslam;
+    cosb = cosb2 > 0 ? sqrt(cosb2) : 0;
+    b = 1. + Q__sinb1 * sinb + Q__cosb1 * cosb * coslam;
     if (fabs(b) < EPS10) {
         return GRIB_GEOCALCULUS_PROBLEM;
     }
@@ -180,7 +181,7 @@ int LambertAzimuthalEqualArea::init_oblate(grib_handle* h,
     {
         xFirst = x0;
         yFirst = y0;
-        y      = yFirst;
+        y = yFirst;
         for (j = 0; j < ny; j++) {
             x = xFirst;
             for (i = 0; i < nx; i++) {
@@ -199,7 +200,7 @@ int LambertAzimuthalEqualArea::init_oblate(grib_handle* h,
                 sCe = sin(sCe);
                 xy_x *= sCe;
                 /* if oblique */
-                ab   = cCe * Q__sinb1 + xy_y * sCe * Q__cosb1 / rho;
+                ab = cCe * Q__sinb1 + xy_y * sCe * Q__cosb1 / rho;
                 xy_y = rho * Q__cosb1 * cCe - xy_y * Q__sinb1 * sCe;
                 /*  else
                     ab = xy.y * sCe / rho;
@@ -224,11 +225,11 @@ int LambertAzimuthalEqualArea::init_oblate(grib_handle* h,
 }
 
 int LambertAzimuthalEqualArea::init_sphere(grib_handle* h,
-                       size_t nv, long nx, long ny,
-                       double Dx, double Dy, double radius,
-                       double latFirstInRadians, double lonFirstInRadians,
-                       double centralLongitudeInRadians, double standardParallelInRadians,
-                       long iScansNegatively, long jScansPositively, long jPointsAreConsecutive)
+                                           size_t nv, long nx, long ny,
+                                           double Dx, double Dy, double radius,
+                                           double latFirstInRadians, double lonFirstInRadians,
+                                           double centralLongitudeInRadians, double standardParallelInRadians,
+                                           long iScansNegatively, long jScansPositively, long jPointsAreConsecutive)
 {
     double *lats, *lons;
     double phi1, lambda0, xFirst, yFirst, x, y;
@@ -238,16 +239,16 @@ int LambertAzimuthalEqualArea::init_sphere(grib_handle* h,
     long i, j;
     double c, rho;
     const double epsilon = 1.0e-20;
-    const double d2r     = acos(0.0) / 90.0;
+    const double d2r = acos(0.0) / 90.0;
 
     lambda0 = centralLongitudeInRadians;
-    phi1    = standardParallelInRadians;
+    phi1 = standardParallelInRadians;
 
     cosphi1 = cos(phi1);
     sinphi1 = sin(phi1);
 
-    Dx          = iScansNegatively == 0 ? Dx / 1000 : -Dx / 1000;
-    Dy          = jScansPositively == 1 ? Dy / 1000 : -Dy / 1000;
+    Dx = iScansNegatively == 0 ? Dx / 1000 : -Dx / 1000;
+    Dy = jScansPositively == 1 ? Dy / 1000 : -Dy / 1000;
     lats_ = (double*)grib_context_malloc(h->context, nv * sizeof(double));
     if (!lats_) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", ITER, nv * sizeof(double));
@@ -262,25 +263,25 @@ int LambertAzimuthalEqualArea::init_sphere(grib_handle* h,
     lons = lons_;
 
     /* compute xFirst,yFirst in metres */
-    sinphi     = sin(latFirstInRadians);
-    cosphi     = cos(latFirstInRadians);
+    sinphi = sin(latFirstInRadians);
+    cosphi = cos(latFirstInRadians);
     cosdlambda = cos(lonFirstInRadians - lambda0);
     sindlambda = sin(lonFirstInRadians - lambda0);
-    kp         = radius * sqrt(2.0 / (1 + sinphi1 * sinphi + cosphi1 * cosphi * cosdlambda));
-    xFirst     = kp * cosphi * sindlambda;
-    yFirst     = kp * (cosphi1 * sinphi - sinphi1 * cosphi * cosdlambda);
+    kp = radius * sqrt(2.0 / (1 + sinphi1 * sinphi + cosphi1 * cosphi * cosdlambda));
+    xFirst = kp * cosphi * sindlambda;
+    yFirst = kp * (cosphi1 * sinphi - sinphi1 * cosphi * cosdlambda);
 
     if (jPointsAreConsecutive) {
         x = xFirst;
         for (i = 0; i < nx; i++) {
             double xsq = x * x;
-            y          = yFirst;
+            y = yFirst;
             for (j = 0; j < ny; j++) {
                 rho = sqrt(xsq + y * y);
                 if (rho > epsilon) {
-                    c     = 2 * asin(rho / (2.0 * radius));
-                    cosc  = cos(c);
-                    sinc  = sin(c);
+                    c = 2 * asin(rho / (2.0 * radius));
+                    cosc = cos(c);
+                    sinc = sin(c);
                     *lats = asin(cosc * sinphi1 + y * sinc * cosphi1 / rho) / d2r;
                     *lons = (lambda0 + atan2(x * sinc, rho * cosphi1 * cosc - y * sinphi1 * sinc)) / d2r;
                 }
@@ -302,13 +303,13 @@ int LambertAzimuthalEqualArea::init_sphere(grib_handle* h,
         y = yFirst;
         for (j = 0; j < ny; j++) {
             double ysq = y * y;
-            x          = xFirst;
+            x = xFirst;
             for (i = 0; i < nx; i++) {
                 rho = sqrt(x * x + ysq);
                 if (rho > epsilon) {
-                    c     = 2 * asin(rho / (2.0 * radius));
-                    cosc  = cos(c);
-                    sinc  = sin(c);
+                    c = 2 * asin(rho / (2.0 * radius));
+                    cosc = cos(c);
+                    sinc = sin(c);
                     *lats = asin(cosc * sinphi1 + y * sinc * cosphi1 / rho) / d2r;
                     *lons = (lambda0 + atan2(x * sinc, rho * cosphi1 * cosc - y * sinphi1 * sinc)) / d2r;
                 }
@@ -345,20 +346,20 @@ int LambertAzimuthalEqualArea::init(grib_handle* h, grib_arguments* args)
     long jScansPositively, jPointsAreConsecutive;
     double earthMajorAxisInMetres = 0, earthMinorAxisInMetres = 0;
 
-    const char* sradius                 = args->get_name(h, carg_++);
-    const char* snx                     = args->get_name(h, carg_++);
-    const char* sny                     = args->get_name(h, carg_++);
-    const char* slatFirstInDegrees      = args->get_name(h, carg_++);
-    const char* slonFirstInDegrees      = args->get_name(h, carg_++);
-    const char* sstandardParallel       = args->get_name(h, carg_++);
-    const char* scentralLongitude       = args->get_name(h, carg_++);
-    const char* sDx                     = args->get_name(h, carg_++);
-    const char* sDy                     = args->get_name(h, carg_++);
-    const char* siScansNegatively       = args->get_name(h, carg_++);
-    const char* sjScansPositively       = args->get_name(h, carg_++);
-    const char* sjPointsAreConsecutive  = args->get_name(h, carg_++);
+    const char* sradius = args->get_name(h, carg_++);
+    const char* snx = args->get_name(h, carg_++);
+    const char* sny = args->get_name(h, carg_++);
+    const char* slatFirstInDegrees = args->get_name(h, carg_++);
+    const char* slonFirstInDegrees = args->get_name(h, carg_++);
+    const char* sstandardParallel = args->get_name(h, carg_++);
+    const char* scentralLongitude = args->get_name(h, carg_++);
+    const char* sDx = args->get_name(h, carg_++);
+    const char* sDy = args->get_name(h, carg_++);
+    const char* siScansNegatively = args->get_name(h, carg_++);
+    const char* sjScansPositively = args->get_name(h, carg_++);
+    const char* sjPointsAreConsecutive = args->get_name(h, carg_++);
     const char* salternativeRowScanning = args->get_name(h, carg_++);
-    const double d2r                    = acos(0.0) / 90.0;
+    const double d2r = acos(0.0) / 90.0;
 
     is_oblate = grib_is_earth_oblate(h);
     if (is_oblate) {
@@ -374,7 +375,7 @@ int LambertAzimuthalEqualArea::init(grib_handle* h, grib_arguments* args)
     if ((err = grib_get_long_internal(h, sny, &ny)) != GRIB_SUCCESS)
         return err;
 
-    if ( nv_ != (size_t)(nx * ny) ) {
+    if (nv_ != (size_t)(nx * ny)) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Wrong number of points (%zu!=%ldx%ld)", ITER, nv_, nx, ny);
         return GRIB_WRONG_GRID;
     }
@@ -399,8 +400,8 @@ int LambertAzimuthalEqualArea::init(grib_handle* h, grib_arguments* args)
     if ((err = grib_get_long_internal(h, salternativeRowScanning, &alternativeRowScanning)) != GRIB_SUCCESS)
         return err;
 
-    latFirstInRadians         = latFirstInDegrees * d2r;
-    lonFirstInRadians         = lonFirstInDegrees * d2r;
+    latFirstInRadians = latFirstInDegrees * d2r;
+    lonFirstInRadians = lonFirstInDegrees * d2r;
     centralLongitudeInRadians = centralLongitudeInDegrees * d2r;
     standardParallelInRadians = standardParallelInDegrees * d2r;
 

@@ -13,15 +13,15 @@
 int main(int argc, char* argv[])
 {
     grib_handle* h = NULL;
-    FILE* inf      = NULL;
-    FILE* ouf      = NULL;
-    char* infile   = 0;
-    char* oufile   = 0;
-    int err        = 0;
-    size_t size    = 0;
+    FILE* inf = NULL;
+    FILE* ouf = NULL;
+    char* infile = 0;
+    char* oufile = 0;
+    int err = 0;
+    size_t size = 0;
     const void* buffer = NULL;
 
-    if (argc < 3) return 1; // prog in out
+    if (argc < 3) return 1;  // prog in out
 
     infile = argv[1];
     oufile = argv[2];

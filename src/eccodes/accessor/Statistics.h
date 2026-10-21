@@ -19,8 +19,8 @@ class Statistics : public AbstractVector
 {
 public:
     Statistics() :
-        AbstractVector() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        AbstractVector() {}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     int unpack_double(double* val, size_t* len) override;
     int unpack_string(char*, size_t* len) override;
     int value_count(long*) override;
@@ -33,7 +33,7 @@ private:
     const char* missing_value_ = nullptr;
 
 public:
-    static constexpr AccessorType accessor_type_{"statistics"};
+    static constexpr AccessorType accessor_type_{ "statistics" };
 };
 
 }  // namespace eccodes::accessor

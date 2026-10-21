@@ -32,14 +32,14 @@ int main(int argc, char* argv[])
         kiter = grib_keys_iterator_new(h, /*flags=*/0, /*namespace=*/NULL);
         ECCODES_ASSERT(kiter);
 
-        grib_keys_iterator_rewind(kiter); // no-op
+        grib_keys_iterator_rewind(kiter);  // no-op
 
         while (grib_keys_iterator_next(kiter)) {
             const char* name = grib_keys_iterator_get_name(kiter);
             ECCODES_ASSERT(name);
             int type = 0;
             GRIB_CHECK(grib_get_native_type(h, name, &type), 0);
-            ECCODES_ASSERT( type > 0 && type < 7 );
+            ECCODES_ASSERT(type > 0 && type < 7);
             int ktype = grib_keys_iterator_get_native_type(kiter);
             if (type != ktype) {
                 fprintf(stderr, "ERROR: key=%s type=%s ktype=%s\n", name, grib_get_type_name(type), grib_get_type_name(ktype));
@@ -53,13 +53,13 @@ int main(int argc, char* argv[])
             printf("%s = %s (%d)\n", name, type_name, type);
 
             if (STR_EQUAL(type_name, "label")) {
-                char value[MAX_VAL_LEN] = {0,};
+                char value[MAX_VAL_LEN] = { 0 };
                 size_t vlen = MAX_VAL_LEN;
                 GRIB_CHECK(grib_get_string(h, name, value, &vlen), name);
-                ECCODES_ASSERT( strlen(value) > 0 );
+                ECCODES_ASSERT(strlen(value) > 0);
                 int e = grib_keys_iterator_get_string(kiter, value, &vlen);
                 ECCODES_ASSERT(!e);
-                ECCODES_ASSERT( STR_EQUAL(name, value) );
+                ECCODES_ASSERT(STR_EQUAL(name, value));
             }
             if (STR_EQUAL(name, "editionNumber")) {
                 long lVal = 0;

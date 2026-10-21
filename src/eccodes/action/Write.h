@@ -23,8 +23,8 @@ public:
 
     int execute(grib_handle* h) override;
 
-    char* name2_       = nullptr;
-    int append_        = 0;
+    char* name2_ = nullptr;
+    int append_ = 0;
     int padtomultiple_ = 0;
 };
 

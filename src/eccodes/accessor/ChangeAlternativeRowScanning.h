@@ -19,8 +19,8 @@ class ChangeAlternativeRowScanning : public Gen
 {
 public:
     ChangeAlternativeRowScanning() :
-        Gen() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        Gen() {}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     long get_native_type() override;
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
@@ -33,7 +33,7 @@ private:
     const char* alternativeRowScanning_ = nullptr;
 
 public:
-    static constexpr AccessorType accessor_type_{"change_alternative_row_scanning"};
+    static constexpr AccessorType accessor_type_{ "change_alternative_row_scanning" };
 };
 
 }  // namespace eccodes::accessor

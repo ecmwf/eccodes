@@ -20,7 +20,7 @@ void Mtg2SwitchDefault::init(const long len, grib_arguments* arg)
     grib_handle* h = get_enclosing_handle();
 
     if (context_->debug) {
-        const int numActualArgs   = arg->get_count();
+        const int numActualArgs = arg->get_count();
         const int numExpectedArgs = 4;
         if (numActualArgs != numExpectedArgs) {
             grib_context_log(context_, GRIB_LOG_FATAL, "Accessor %s (key %s): %d arguments provided but expected %d",
@@ -28,9 +28,9 @@ void Mtg2SwitchDefault::init(const long len, grib_arguments* arg)
         }
     }
 
-    tablesVersion_           = arg->get_name(h, 0);
+    tablesVersion_ = arg->get_name(h, 0);
     tablesVersionMTG2Switch_ = arg->get_name(h, 1);
-    marsClass_               = arg->get_name(h, 2);
+    marsClass_ = arg->get_name(h, 2);
     MTG2SwitchViaTablesVersion_ = arg->get_name(h, 3);
 
     length_ = 0;
@@ -45,10 +45,10 @@ void Mtg2SwitchDefault::init(const long len, grib_arguments* arg)
 //  2 = post-MTG2 encoding with paramId + chemId used
 int Mtg2SwitchDefault::unpack_long(long* val, size_t* len)
 {
-    grib_handle* h     = get_enclosing_handle();
-    int err            = 0;
+    grib_handle* h = get_enclosing_handle();
+    int err = 0;
     long tablesVersion = 0, tablesVersionMTG2Switch = 0;
-    char marsClass[32] = {0,};
+    char marsClass[32] = { 0 };
 
     err = grib_get_long(h, tablesVersion_, &tablesVersion);
     if (err) return err;
@@ -80,10 +80,10 @@ int Mtg2SwitchDefault::unpack_long(long* val, size_t* len)
         else {
             // For certain classes post MTG2 we always want the param + chem split (value 2)
             // For TIGGE, marsClass is not defined in the empty local Section 2, but is defined later on.
-            if ( marsClassExists && (STR_EQUAL(marsClass, "a5") ||
-                                     STR_EQUAL(marsClass, "cr") ||
-                                     STR_EQUAL(marsClass, "mc") ||
-                                     STR_EQUAL(marsClass, "gg")) ) {
+            if (marsClassExists && (STR_EQUAL(marsClass, "a5") ||
+                                    STR_EQUAL(marsClass, "cr") ||
+                                    STR_EQUAL(marsClass, "mc") ||
+                                    STR_EQUAL(marsClass, "gg"))) {
                 *val = 2;
             }
             else {

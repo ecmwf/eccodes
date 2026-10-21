@@ -22,9 +22,9 @@ void Ksec1Expver::init(const long len, grib_arguments* arg)
 
 int Ksec1Expver::unpack_long(long* val, size_t* len)
 {
-    long value  = 0;
-    long pos    = offset_ * 8;
-    char* intc  = NULL;
+    long value = 0;
+    long pos = offset_ * 8;
+    char* intc = NULL;
     char* pTemp = NULL;
     char expver[5];
     char refexpver[5];
@@ -40,7 +40,7 @@ int Ksec1Expver::unpack_long(long* val, size_t* len)
 
     unpack_string(refexpver, &llen);
     /* test for endian */
-    intc  = (char*)&value;
+    intc = (char*)&value;
     pTemp = intc;
 
     expver[0] = *pTemp++;
@@ -90,7 +90,7 @@ int Ksec1Expver::pack_string(const char* val, size_t* len)
 
 int Ksec1Expver::pack_long(const long* val, size_t* len)
 {
-    char sval[5] = {0,};
+    char sval[5] = { 0 };
     size_t slen = 4;
     snprintf(sval, sizeof(sval), "%04d", (int)(*val));
     return pack_string(sval, &slen);

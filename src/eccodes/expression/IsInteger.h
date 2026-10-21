@@ -12,9 +12,11 @@
 
 #include "Expression.h"
 
-namespace eccodes::expression {
+namespace eccodes::expression
+{
 
-class IsInteger : public Expression {
+class IsInteger : public Expression
+{
 public:
     IsInteger(grib_context*, const char*, int, int);
 
@@ -30,8 +32,8 @@ public:
     const char* class_name() const override { return "is_integer"; };
 
 private:
-    char* name_    = nullptr;
-    size_t start_  = 0;
+    char* name_ = nullptr;
+    size_t start_ = 0;
     size_t length_ = 0;
 };
 

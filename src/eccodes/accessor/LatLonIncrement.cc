@@ -16,33 +16,33 @@ namespace eccodes::accessor
 void LatLonIncrement::init(const long l, grib_arguments* c)
 {
     Double::init(l, c);
-    int n             = 0;
+    int n = 0;
     grib_handle* hand = get_enclosing_handle();
 
     directionIncrementGiven_ = c->get_name(hand, n++);
-    directionIncrement_      = c->get_name(hand, n++);
-    scansPositively_         = c->get_name(hand, n++);
-    first_                   = c->get_name(hand, n++);
-    last_                    = c->get_name(hand, n++);
-    numberOfPoints_          = c->get_name(hand, n++);
-    angleMultiplier_         = c->get_name(hand, n++);
-    angleDivisor_            = c->get_name(hand, n++);
-    isLongitude_             = c->get_long(hand, n++);
+    directionIncrement_ = c->get_name(hand, n++);
+    scansPositively_ = c->get_name(hand, n++);
+    first_ = c->get_name(hand, n++);
+    last_ = c->get_name(hand, n++);
+    numberOfPoints_ = c->get_name(hand, n++);
+    angleMultiplier_ = c->get_name(hand, n++);
+    angleDivisor_ = c->get_name(hand, n++);
+    isLongitude_ = c->get_long(hand, n++);
 }
 
 int LatLonIncrement::unpack_double(double* val, size_t* len)
 {
-    int ret           = 0;
+    int ret = 0;
     grib_handle* hand = get_enclosing_handle();
 
     long directionIncrementGiven = 0;
-    long directionIncrement      = 0;
-    long angleDivisor            = 1;
-    long angleMultiplier         = 1;
-    double first                 = 0;
-    double last                  = 0;
-    long numberOfPoints          = 0;
-    long scansPositively         = 0;
+    long directionIncrement = 0;
+    long angleDivisor = 1;
+    long angleMultiplier = 1;
+    double first = 0;
+    double last = 0;
+    long numberOfPoints = 0;
+    long scansPositively = 0;
 
     if (*len < 1)
         return GRIB_ARRAY_TOO_SMALL;
@@ -118,19 +118,19 @@ int LatLonIncrement::unpack_double(double* val, size_t* len)
 
 int LatLonIncrement::pack_double(const double* val, size_t* len)
 {
-    int ret                  = 0;
+    int ret = 0;
     long codedNumberOfPoints = 0;
-    grib_handle* hand        = get_enclosing_handle();
+    grib_handle* hand = get_enclosing_handle();
 
     long directionIncrementGiven = 0;
-    long directionIncrement      = 0;
-    long angleDivisor            = 1;
-    long angleMultiplier         = 1;
-    double first                 = 0;
-    double last                  = 0;
-    long numberOfPoints          = 0;
+    long directionIncrement = 0;
+    long angleDivisor = 1;
+    long angleMultiplier = 1;
+    double first = 0;
+    double last = 0;
+    long numberOfPoints = 0;
     /* long numberOfPointsInternal = 0; */
-    long scansPositively            = 0;
+    long scansPositively = 0;
     double directionIncrementDouble = 0;
 
     ret = grib_get_double_internal(hand, first_, &first);
@@ -164,9 +164,9 @@ int LatLonIncrement::pack_double(const double* val, size_t* len)
     }
 
     if (*val == GRIB_MISSING_DOUBLE) {
-        directionIncrement      = GRIB_MISSING_LONG;
+        directionIncrement = GRIB_MISSING_LONG;
         directionIncrementGiven = 1;
-        numberOfPoints          = GRIB_MISSING_LONG;
+        numberOfPoints = GRIB_MISSING_LONG;
     }
     else {
         /* numberOfPointsInternal = 1+rint(fabs((last-first) / *val)); */
@@ -175,7 +175,7 @@ int LatLonIncrement::pack_double(const double* val, size_t* len)
 
         directionIncrement = (long)directionIncrementDouble;
         if (directionIncrement == 0) {
-            directionIncrement      = GRIB_MISSING_LONG;
+            directionIncrement = GRIB_MISSING_LONG;
             directionIncrementGiven = 0;
         }
     }

@@ -10,7 +10,8 @@
 
 #include "Long.h"
 
-namespace eccodes::expression {
+namespace eccodes::expression
+{
 
 int Long::evaluate_long(grib_handle* h, long* lres) const
 {
@@ -41,6 +42,7 @@ int Long::native_type(grib_handle* h) const
 
 }  // namespace eccodes::expression
 
-grib_expression* new_long_expression(grib_context* c, long value) {
+grib_expression* new_long_expression(grib_context* c, long value)
+{
     return new eccodes::expression::Long(value);
 }

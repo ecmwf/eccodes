@@ -19,8 +19,8 @@ class ReferenceValueError : public Double
 {
 public:
     ReferenceValueError() :
-        Double() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        Double() {}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     int unpack_double(double* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
 
@@ -29,7 +29,7 @@ private:
     const char* floatType_ = nullptr;
 
 public:
-    static constexpr AccessorType accessor_type_{"reference_value_error"};
+    static constexpr AccessorType accessor_type_{ "reference_value_error" };
 };
 
 }  // namespace eccodes::accessor

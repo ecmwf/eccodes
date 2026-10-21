@@ -948,9 +948,9 @@ int main(int argc, char* argv[])
             char geometry[128];
 
             snprintf(f, 128, "lam_gp_%s.grib", grids[igrid]);
-            fp         = fopen(f, "rb");
-            h          = grib_handle_new_from_file(0, fp, &err);
-            vals       = (double*)malloc(sizeof(double) * 4096);
+            fp = fopen(f, "rb");
+            h = grib_handle_new_from_file(0, fp, &err);
+            vals = (double*)malloc(sizeof(double) * 4096);
             values_len = 4096;
             GRIB_CHECK(grib_get_double_array(h, "values", vals, &values_len), 0);
             for (i = 0; i < 4096; i++)

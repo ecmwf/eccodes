@@ -29,11 +29,11 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
 {
     static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
     unsigned long rlen = 0;
-    long count         = 0;
-    int err            = 0;
-    unsigned long i    = 0;
-    long bitp          = a->offset_ * 8;
-    grib_handle* hand  = a->get_enclosing_handle();
+    long count = 0;
+    int err = 0;
+    unsigned long i = 0;
+    long bitp = a->offset_ * 8;
+    grib_handle* hand = a->get_enclosing_handle();
 
     err = a->value_count(&count);
     if (err)
@@ -65,12 +65,12 @@ int IbmFloat::unpack_float(float* val, size_t* len)
 
 int IbmFloat::pack_double(const double* val, size_t* len)
 {
-    int ret            = 0;
-    unsigned long i    = 0;
+    int ret = 0;
+    unsigned long i = 0;
     unsigned long rlen = *len;
-    size_t buflen      = 0;
+    size_t buflen = 0;
     unsigned char* buf = NULL;
-    long off           = 0;
+    long off = 0;
 
     if (*len < 1) {
         grib_context_log(context_, GRIB_LOG_ERROR, "Wrong size for %s, it packs at least 1 value", name_);

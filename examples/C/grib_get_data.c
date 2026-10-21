@@ -21,12 +21,12 @@
 
 int main(int argc, char** argv)
 {
-    int err              = 0;
-    size_t i             = 0;
-    FILE* in             = NULL;
+    int err = 0;
+    size_t i = 0;
+    FILE* in = NULL;
     const char* filename = "../../data/reduced_latlon_surface.grib1";
-    codes_handle* h      = NULL;
-    long numberOfPoints  = 0;
+    codes_handle* h = NULL;
+    long numberOfPoints = 0;
     const double missing = 1.0e36;
     double *lats, *lons, *values; /* arrays */
 

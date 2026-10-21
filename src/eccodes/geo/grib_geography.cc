@@ -23,7 +23,7 @@
 #define DEG2RAD 0.01745329251994329576  /* pi over 180 */
 
 #ifndef M_PI
-#define M_PI 3.14159265358979323846
+    #define M_PI 3.14159265358979323846
 #endif
 
 static void gauss_first_guess(long trunc, double* vals)
@@ -99,9 +99,9 @@ static int compute_gaussian_latitudes(long trunc, double* lats)
     long jlat, iter, legi;
     double rad2deg, convval, root, legfonc = 0;
     double mem1, mem2, conv;
-    double denom     = 0.0;
+    double denom = 0.0;
     double precision = 1.0E-14;
-    const long nlat  = trunc * 2;
+    const long nlat = trunc * 2;
 
     rad2deg = 180.0 / M_PI;
 
@@ -125,8 +125,8 @@ static int compute_gaussian_latitudes(long trunc, double* lats)
             /*  Compute Legendre polynomial  */
             for (legi = 0; legi < nlat; legi++) {
                 legfonc = ((2.0 * (legi + 1) - 1.0) * root * mem1 - legi * mem2) / ((double)(legi + 1));
-                mem2    = mem1;
-                mem1    = legfonc;
+                mem2 = mem1;
+                mem1 = legfonc;
             }
 
             /*  Perform Newton iteration  */
@@ -140,12 +140,12 @@ static int compute_gaussian_latitudes(long trunc, double* lats)
         }
 
         /*   Set North and South values using symmetry */
-        lats[jlat]            = asin(root) * rad2deg;
+        lats[jlat] = asin(root) * rad2deg;
         lats[nlat - 1 - jlat] = -lats[jlat];
     }
 
-    //if (nlat != (trunc * 2))
-    //    lats[trunc + 1] = 0.0;
+    // if (nlat != (trunc * 2))
+    //     lats[trunc + 1] = 0.0;
     return GRIB_SUCCESS;
 }
 
@@ -153,7 +153,7 @@ static int compute_gaussian_latitudes(long trunc, double* lats)
 // The provided 'lats' array should have allocated 2*N elements
 static int get_precomputed_latitudes_N640(double* lats)
 {
-    #include "grib_gaussian_N640.h"
+#include "grib_gaussian_N640.h"
     const size_t N = 640;
     for (size_t i = 0; i < N; ++i) {
         lats[i] = lats_N640[i];
@@ -171,7 +171,7 @@ static int get_precomputed_latitudes_N640(double* lats)
 // The provided 'lats' array should have allocated 2*N elements
 static int get_precomputed_latitudes_N1280(double* lats)
 {
-    #include "grib_gaussian_N1280.h"
+#include "grib_gaussian_N1280.h"
     const size_t N = 1280;
     for (size_t i = 0; i < N; ++i) {
         lats[i] = lats_N1280[i];
@@ -214,8 +214,8 @@ int is_gaussian_global(
     double angular_precision                            /* tolerance for angle comparison */
 )
 {
-    int global         = 1;
-    const double d     = fabs(latitudes[0] - latitudes[1]);
+    int global = 1;
+    const double d = fabs(latitudes[0] - latitudes[1]);
     const double delta = 360.0 / num_points_equator;
     /* Compute the expected last longitude for a global field */
     const double lon2_global = 360.0 - delta;
@@ -250,7 +250,7 @@ void rotate(const double inlat, const double inlon,
     double PYROT, PXROT, ZCYROT, ZCXROT, ZSXROT;
     const double ZSYCEN = sin(DEG2RAD * (southPoleLat + 90.));
     const double ZCYCEN = cos(DEG2RAD * (southPoleLat + 90.));
-    const double ZXMXC  = DEG2RAD * (inlon - southPoleLon);
+    const double ZXMXC = DEG2RAD * (inlon - southPoleLon);
     const double ZSXMXC = sin(ZXMXC);
     const double ZCXMXC = cos(ZXMXC);
     const double ZSYREG = sin(DEG2RAD * inlat);
@@ -285,9 +285,9 @@ void unrotate(const double inlat, const double inlon,
     /* First convert the data point from spherical lat lon to (x',y',z') */
     double latr = lat_y * DEG2RAD;
     double lonr = lon_x * DEG2RAD;
-    double xd   = cos(lonr) * cos(latr);
-    double yd   = sin(lonr) * cos(latr);
-    double zd   = sin(latr);
+    double xd = cos(lonr) * cos(latr);
+    double yd = sin(lonr) * cos(latr);
+    double zd = sin(latr);
 
     double t = -(90.0 + southPoleLat);
     double o = -southPoleLon;
@@ -329,7 +329,7 @@ void unrotate(const double inlat, const double inlon,
     *outlon = ret_lon;
 }
 
-#define RADIAN(x) ((x)*acos(0.0) / 90.0)
+#define RADIAN(x) ((x) * acos(0.0) / 90.0)
 
 /* radius is in km, angles in degrees */
 /* Spherical Law of Cosines */

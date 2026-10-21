@@ -34,9 +34,9 @@ static int test_gh_to_z_conversion(void)
     long numberOfMissing = 0;
     long missingValuesPresent = 0;
     double missingValue = 0;
-    const double G = 9.80665;  /* gravitational acceleration m/s^2 */
+    const double G = 9.80665; /* gravitational acceleration m/s^2 */
     size_t packing_type_len = 64;
-    char packing_type[64] = {0};
+    char packing_type[64] = { 0 };
 
     printf("Test: gh to z conversion with complex packing...\n");
 
@@ -80,7 +80,7 @@ static int test_gh_to_z_conversion(void)
     size_t num_critical = 0;
     for (size_t i = 0; i < values_len && num_critical < 20; i += values_len / 20) {
         /* Values that produce results near 9999 after multiplying by G */
-        values[i] = 9999.0 / G;         /* ≈ 1019.624, scales to ≈ 9999.0 */
+        values[i] = 9999.0 / G; /* ≈ 1019.624, scales to ≈ 9999.0 */
         num_critical++;
     }
 
@@ -112,7 +112,8 @@ static int test_gh_to_z_conversion(void)
     printf("  numberOfMissing after set = %ld\n", numberOfMissing);
 
     if (numberOfMissing != 0) {
-        fprintf(stderr, "ERROR: numberOfMissing = %ld after setting values (expected 0).\n"
+        fprintf(stderr,
+                "ERROR: numberOfMissing = %ld after setting values (expected 0).\n"
                 "Values near 9999 were incorrectly treated as missing!\n",
                 numberOfMissing);
         /* Don't exit yet - continue to show the full picture */
@@ -215,7 +216,7 @@ static int test_scale_values_by_with_complex_packing(void)
 
     /* Include values that produce ~9999 after scaling by G */
     for (size_t i = 0; i < values_len && i < 100; i += 10) {
-        values[i] = 9999.0 / G;  /* ≈ 1019.624 */
+        values[i] = 9999.0 / G; /* ≈ 1019.624 */
     }
 
     CODES_CHECK(codes_set_long(h, "bitsPerValue", 16), 0);
@@ -284,7 +285,6 @@ static int test_scale_values_by_with_complex_packing(void)
     printf("  PASSED\n");
     return 0;
 }
-
 
 
 int main(int argc, char** argv)

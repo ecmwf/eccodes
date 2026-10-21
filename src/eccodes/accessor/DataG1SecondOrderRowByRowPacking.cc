@@ -18,23 +18,23 @@ void DataG1SecondOrderRowByRowPacking::init(const long v, grib_arguments* args)
     DataSimplePacking::init(v, args);
     grib_handle* gh = get_enclosing_handle();
 
-    half_byte_                       = args->get_name(gh, carg_++);
-    packingType_                     = args->get_name(gh, carg_++);
-    ieee_packing_                    = args->get_name(gh, carg_++);
-    precision_                       = args->get_name(gh, carg_++);
-    widthOfFirstOrderValues_         = args->get_name(gh, carg_++);
-    N1_                              = args->get_name(gh, carg_++);
-    N2_                              = args->get_name(gh, carg_++);
-    numberOfGroups_                  = args->get_name(gh, carg_++);
+    half_byte_ = args->get_name(gh, carg_++);
+    packingType_ = args->get_name(gh, carg_++);
+    ieee_packing_ = args->get_name(gh, carg_++);
+    precision_ = args->get_name(gh, carg_++);
+    widthOfFirstOrderValues_ = args->get_name(gh, carg_++);
+    N1_ = args->get_name(gh, carg_++);
+    N2_ = args->get_name(gh, carg_++);
+    numberOfGroups_ = args->get_name(gh, carg_++);
     numberOfSecondOrderPackedValues_ = args->get_name(gh, carg_++);
-    extraValues_                     = args->get_name(gh, carg_++);
-    Ni_                              = args->get_name(gh, carg_++);
-    Nj_                              = args->get_name(gh, carg_++);
-    pl_                              = args->get_name(gh, carg_++);
-    jPointsAreConsecutive_           = args->get_name(gh, carg_++);
-    groupWidths_                     = args->get_name(gh, carg_++);
-    bitmap_                          = args->get_name(gh, carg_++);
-    edition_                         = 1;
+    extraValues_ = args->get_name(gh, carg_++);
+    Ni_ = args->get_name(gh, carg_++);
+    Nj_ = args->get_name(gh, carg_++);
+    pl_ = args->get_name(gh, carg_++);
+    jPointsAreConsecutive_ = args->get_name(gh, carg_++);
+    groupWidths_ = args->get_name(gh, carg_++);
+    bitmap_ = args->get_name(gh, carg_++);
+    edition_ = 1;
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
@@ -42,14 +42,14 @@ int DataG1SecondOrderRowByRowPacking::value_count(long* count)
 {
     grib_handle* gh = get_enclosing_handle();
     long n = 0, i = 0;
-    long numberOfRows          = 0;
+    long numberOfRows = 0;
     long jPointsAreConsecutive = 0;
     long Ni = 0, Nj = 0;
     int bitmapPresent = 0;
-    size_t plSize     = 0;
-    long* pl          = 0;
-    int ret           = 0;
-    grib_context* c   = context_;
+    size_t plSize = 0;
+    long* pl = 0;
+    int ret = 0;
+    grib_context* c = context_;
 
     if (bitmap_)
         bitmapPresent = 1;
@@ -67,7 +67,7 @@ int DataG1SecondOrderRowByRowPacking::value_count(long* count)
     }
 
     plSize = 0;
-    ret    = grib_get_size(gh, pl_, &plSize);
+    ret = grib_get_size(gh, pl_, &plSize);
     if (ret == GRIB_SUCCESS) {
         pl = (long*)grib_context_malloc_clear(context_, sizeof(long) * plSize);
         if ((ret = grib_get_long_array(gh, pl_, pl, &plSize)) != GRIB_SUCCESS)
@@ -87,7 +87,7 @@ int DataG1SecondOrderRowByRowPacking::value_count(long* count)
         else {
             numberOfPoints = Ni * Nj;
         }
-        long* bitmap  = (long*)grib_context_malloc_clear(context_, sizeof(long) * numberOfPoints);
+        long* bitmap = (long*)grib_context_malloc_clear(context_, sizeof(long) * numberOfPoints);
         long* pbitmap = bitmap;
         grib_get_long_array(gh, bitmap_, bitmap, &numberOfPoints);
         for (size_t ii = 0; ii < numberOfPoints; ii++)
@@ -117,12 +117,12 @@ int DataG1SecondOrderRowByRowPacking::unpack_real(T* values, size_t* len)
     grib_handle* gh = get_enclosing_handle();
     int ret = GRIB_SUCCESS;
     long numberOfGroups, numberOfSecondOrderPackedValues;
-    long* groupWidths      = 0;
+    long* groupWidths = 0;
     long* firstOrderValues = 0;
-    long* X                = 0;
+    long* X = 0;
     long numberOfRows, numberOfColumns;
     long* numbersPerRow;
-    long pos                     = 0;
+    long pos = 0;
     long widthOfFirstOrderValues = 0;
     long jPointsAreConsecutive;
     unsigned char* buf = gh->buffer->data;
@@ -132,9 +132,9 @@ int DataG1SecondOrderRowByRowPacking::unpack_real(T* values, size_t* len)
     long decimal_scale_factor;
     double s, d;
     size_t groupWidthsSize = 0;
-    int bitmapPresent      = 0;
-    size_t plSize          = 0;
-    long* pl               = 0;
+    int bitmapPresent = 0;
+    size_t plSize = 0;
+    long* pl = 0;
 
     buf += byte_offset();
     if ((ret = grib_get_long_internal(gh, numberOfGroups_, &numberOfGroups)) != GRIB_SUCCESS)
@@ -157,11 +157,11 @@ int DataG1SecondOrderRowByRowPacking::unpack_real(T* values, size_t* len)
     if ((ret = grib_get_long_internal(gh, Nj_, &Nj)) != GRIB_SUCCESS)
         return ret;
     if (jPointsAreConsecutive) {
-        numberOfRows    = Ni;
+        numberOfRows = Ni;
         numberOfColumns = Nj;
     }
     else {
-        numberOfRows    = Nj;
+        numberOfRows = Nj;
         numberOfColumns = Ni;
     }
 
@@ -176,7 +176,7 @@ int DataG1SecondOrderRowByRowPacking::unpack_real(T* values, size_t* len)
             for (i = 0; i < numberOfRows; i++)
                 numberOfPoints += pl[i];
         }
-        long* bitmap  = (long*)grib_context_malloc_clear(context_, sizeof(long) * numberOfPoints);
+        long* bitmap = (long*)grib_context_malloc_clear(context_, sizeof(long) * numberOfPoints);
         long* pbitmap = bitmap;
         grib_get_long_array(gh, bitmap_, bitmap, &numberOfPoints);
         if (plSize && pl) {
@@ -224,7 +224,7 @@ int DataG1SecondOrderRowByRowPacking::unpack_real(T* values, size_t* len)
                                       &numberOfSecondOrderPackedValues)) != GRIB_SUCCESS)
         return ret;
 
-    groupWidths     = (long*)grib_context_malloc_clear(context_, sizeof(long) * numberOfGroups);
+    groupWidths = (long*)grib_context_malloc_clear(context_, sizeof(long) * numberOfGroups);
     groupWidthsSize = numberOfGroups;
     if ((ret = grib_get_long_array_internal(gh, groupWidths_, groupWidths, &groupWidthsSize)) != GRIB_SUCCESS)
         return ret;
@@ -288,10 +288,10 @@ int DataG1SecondOrderRowByRowPacking::unpack_double(double* values, size_t* len)
 
 int DataG1SecondOrderRowByRowPacking::pack_double(const double* cval, size_t* len)
 {
-    int err         = 0;
+    int err = 0;
     grib_handle* gh = get_enclosing_handle();
-    char type[]     = "grid_second_order";
-    size_t size     = strlen(type);
+    char type[] = "grid_second_order";
+    size_t size = strlen(type);
 
     err = grib_set_string(gh, "packingType", type, &size);
     if (err)

@@ -19,21 +19,21 @@ class BufrExtractDatetimeSubsets : public Gen
 {
 public:
     BufrExtractDatetimeSubsets() :
-        Gen() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        Gen() {}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     long get_native_type() override;
     int pack_long(const long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* doExtractSubsets_  = nullptr;
-    const char* numberOfSubsets_   = nullptr;
+    const char* doExtractSubsets_ = nullptr;
+    const char* numberOfSubsets_ = nullptr;
     const char* extractSubsetList_ = nullptr;
 
     int select_datetime();
 
 public:
-    static constexpr AccessorType accessor_type_{"bufr_extract_datetime_subsets"};
+    static constexpr AccessorType accessor_type_{ "bufr_extract_datetime_subsets" };
 };
 
 }  // namespace eccodes::accessor

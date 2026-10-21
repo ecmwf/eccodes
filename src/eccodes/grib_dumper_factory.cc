@@ -22,6 +22,7 @@ struct table_entry
     eccodes::Dumper** dumper;
 };
 
+// clang-format off
 static struct table_entry table[] = {
     {"bufr_decode_C",&grib_dumper_bufr_decode_c,},
     {"bufr_decode_filter",&grib_dumper_bufr_decode_filter,},
@@ -39,6 +40,7 @@ static struct table_entry table[] = {
     // {"serialize",&grib_dumper_serialize,},
     {"wmo",&grib_dumper_wmo,},
 };
+// clang-format on
 
 eccodes::Dumper* grib_dumper_factory(const char* op, const grib_handle* h, FILE* out, unsigned long option_flags, void* arg)
 {
@@ -48,11 +50,11 @@ eccodes::Dumper* grib_dumper_factory(const char* op, const grib_handle* h, FILE*
             eccodes::Dumper* d = *(table[i].dumper);
             {
                 eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
-                d->depth_          = 0;
-                d->context_        = h->context;
-                d->option_flags_   = option_flags;
-                d->arg_            = arg;
-                d->out_            = out;
+                d->depth_ = 0;
+                d->context_ = h->context;
+                d->option_flags_ = option_flags;
+                d->arg_ = arg;
+                d->out_ = out;
                 d->init();
             }
             grib_context_log(
@@ -124,7 +126,7 @@ int grib_print(grib_handle* h, const char* name, eccodes::Dumper* d)
 
 void grib_dump_keys(grib_handle* h, FILE* f, const char* mode, unsigned long flags, void* data, const char** keys, size_t num_keys)
 {
-    grib_accessor* acc  = NULL;
+    grib_accessor* acc = NULL;
     eccodes::Dumper* dumper = grib_dumper_factory(mode ? mode : "default", h, f, flags, data);
     if (!dumper)
         return;

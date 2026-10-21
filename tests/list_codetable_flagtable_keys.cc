@@ -38,7 +38,7 @@ static void print_names(eccodes::Action* a)
         else if (!strcmp(a->class_name_, "action_class_gen")) {
             const char* table = NULL;
             eccodes::action::Gen* ag = dynamic_cast<eccodes::action::Gen*>(a);
-            if (strcmp(a->op_,"codetable")==0 || strcmp(a->op_,"codeflag")==0) {
+            if (strcmp(a->op_, "codetable") == 0 || strcmp(a->op_, "codeflag") == 0) {
                 printf("%s", a->name_);
                 table = ag->params_->get_string(NULL, 0);
                 if (table) printf("\t%s=%s", a->op_, table);
@@ -55,11 +55,11 @@ static void print_names(eccodes::Action* a)
 
 int main(int argc, char* argv[])
 {
-    int i    = 0;
+    int i = 0;
     int fail = 0;
 
     grib_context* c = grib_context_get_default();
-    grib_action* a  = NULL;
+    grib_action* a = NULL;
 
     for (i = 1; i < argc; i++) {
         if (!(a = grib_parse_file(c, argv[i]))) {

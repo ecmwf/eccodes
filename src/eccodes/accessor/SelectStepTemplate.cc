@@ -32,7 +32,7 @@ int SelectStepTemplate::unpack_long(long* val, size_t* len)
 int SelectStepTemplate::pack_long(const long* val, size_t* len)
 {
     grib_handle* hand = get_enclosing_handle();
-    long productDefinitionTemplateNumber    = 0;
+    long productDefinitionTemplateNumber = 0;
     long productDefinitionTemplateNumberNew = 0;
 
     grib_get_long(hand, productDefinitionTemplateNumber_, &productDefinitionTemplateNumber);

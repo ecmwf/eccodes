@@ -19,8 +19,8 @@ class G1EndOfIntervalMonthly : public AbstractVector
 {
 public:
     G1EndOfIntervalMonthly() :
-        AbstractVector() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        AbstractVector() {}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     int unpack_double(double* val, size_t* len) override;
     int value_count(long*) override;
     void destroy(grib_context*) override;
@@ -31,7 +31,7 @@ private:
     const char* verifyingMonth_ = nullptr;
 
 public:
-    static constexpr AccessorType accessor_type_{"g1end_of_interval_monthly"};
+    static constexpr AccessorType accessor_type_{ "g1end_of_interval_monthly" };
 };
 
 }  // namespace eccodes::accessor

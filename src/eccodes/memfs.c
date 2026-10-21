@@ -11,7 +11,7 @@
 
 #include "eccodes_config.h"
 #ifdef ECCODES_HAVE_FMEMOPEN
-#define _GNU_SOURCE
+    #define _GNU_SOURCE
 #endif
 
 #include <stdio.h>
@@ -20,7 +20,8 @@
 #include <string.h>
 #include "eccodes_windef.h"
 
-struct entry {
+struct entry
+{
     const char* path;
     const unsigned char* content;
     size_t length;
@@ -33,18 +34,20 @@ struct entry {
 
 #if !defined(ECCODES_HAVE_FMEMOPEN)
 
-#if defined(ECCODES_HAVE_FUNOPEN)
-typedef struct mem_file {
+    #if defined(ECCODES_HAVE_FUNOPEN)
+typedef struct mem_file
+{
     const char* buffer;
     size_t size;
     size_t pos;
 } mem_file;
 
-static int read_mem(void *data, char * buf, int len) {
+static int read_mem(void* data, char* buf, int len)
+{
     mem_file* f = (mem_file*)data;
     int n = len;
 
-    if(f->pos + n > f->size) {
+    if (f->pos + n > f->size) {
         n = f->size - f->pos;
     }
 
@@ -54,49 +57,53 @@ static int read_mem(void *data, char * buf, int len) {
     return n;
 }
 
-static int write_mem(void* data, const char* buf, int len) {
+static int write_mem(void* data, const char* buf, int len)
+{
     mem_file* f = (mem_file*)data;
     return -1;
 }
 
-static fpos_t seek_mem(void *data, fpos_t pos, int whence) {
+static fpos_t seek_mem(void* data, fpos_t pos, int whence)
+{
     mem_file* f = (mem_file*)data;
     long newpos = 0;
 
     switch (whence) {
-    case SEEK_SET:
-        newpos = (long)pos;
-        break;
+        case SEEK_SET:
+            newpos = (long)pos;
+            break;
 
-    case SEEK_CUR:
-        newpos = (long)f->pos + (long)pos;
-        break;
+        case SEEK_CUR:
+            newpos = (long)f->pos + (long)pos;
+            break;
 
-    case SEEK_END:
-        newpos = (long)f->size -  (long)pos;
-        break;
+        case SEEK_END:
+            newpos = (long)f->size - (long)pos;
+            break;
 
-    default:
-        return -1;
-        break;
-  }
+        default:
+            return -1;
+            break;
+    }
 
-  if(newpos < 0) { newpos = 0; }
-  if(newpos > f->size) { newpos = f->size; }
+    if (newpos < 0) { newpos = 0; }
+    if (newpos > f->size) { newpos = f->size; }
 
-  f->pos = newpos;
-  return newpos;
+    f->pos = newpos;
+    return newpos;
 }
 
-static int close_mem(void *data) {
+static int close_mem(void* data)
+{
     mem_file* f = (mem_file*)data;
     free(f);
     return 0;
 }
 
-static FILE* fmemopen(const char* buffer, size_t size, const char* mode){
+static FILE* fmemopen(const char* buffer, size_t size, const char* mode)
+{
     mem_file* f = (mem_file*)calloc(sizeof(mem_file), 1);
-    if(!f) return NULL;
+    if (!f) return NULL;
 
     f->buffer = buffer;
     f->size = size;
@@ -104,15 +111,16 @@ static FILE* fmemopen(const char* buffer, size_t size, const char* mode){
     return funopen(f, &read_mem, &write_mem, &seek_mem, &close_mem);
 }
 
-#else /* defined(ECCODES_HAVE_FUNOPEN) */
+    #else /* defined(ECCODES_HAVE_FUNOPEN) */
 
-#if defined(ECCODES_ON_WINDOWS)
+        #if defined(ECCODES_ON_WINDOWS)
 
-#include <io.h>
-#include <fcntl.h>
-#include <windows.h>
+            #include <io.h>
+            #include <fcntl.h>
+            #include <windows.h>
 
-static FILE *fmemopen(void* buffer, size_t size, const char* mode) {
+static FILE* fmemopen(void* buffer, size_t size, const char* mode)
+{
     char path[MAX_PATH - 13];
     if (!GetTempPath(sizeof(path), path))
         return NULL;
@@ -149,12 +157,12 @@ static FILE *fmemopen(void* buffer, size_t size, const char* mode) {
     return f;
 }
 
-#else /* defined(ECCODES_ON_WINDOWS) */
-#include <stdio.h>
+        #else /* defined(ECCODES_ON_WINDOWS) */
+            #include <stdio.h>
 /* On old unix systems */
 
-static FILE *fmemopen(void* buffer, size_t size, const char* mode) {
-
+static FILE* fmemopen(void* buffer, size_t size, const char* mode)
+{
     FILE* f = tmpfile();
     if (!f) {
         return NULL;
@@ -165,18 +173,19 @@ static FILE *fmemopen(void* buffer, size_t size, const char* mode) {
     return f;
 }
 
-#endif /* defined(ECCODES_ON_WINDOWS) */
+        #endif /* defined(ECCODES_ON_WINDOWS) */
 
-#endif /* defined(ECCODES_HAVE_FUNOPEN) */
-#endif /* !defined(ECCODES_HAVE_FMEMOPEN) */
+    #endif /* defined(ECCODES_HAVE_FUNOPEN) */
+#endif     /* !defined(ECCODES_HAVE_FMEMOPEN) */
 
-static size_t entries_count = sizeof(entries)/sizeof(entries[0]);
+static size_t entries_count = sizeof(entries) / sizeof(entries[0]);
 
-static const unsigned char* find(const char* path, size_t* length) {
+static const unsigned char* find(const char* path, size_t* length)
+{
     size_t i;
 
-    for(i = 0; i < entries_count; i++) {
-        if(strcmp(path, entries[i].path) == 0) {
+    for (i = 0; i < entries_count; i++) {
+        if (strcmp(path, entries[i].path) == 0) {
             /*printf("Found in MEMFS %s\\n", path);*/
             *length = entries[i].length;
             return entries[i].content;
@@ -186,15 +195,17 @@ static const unsigned char* find(const char* path, size_t* length) {
     return NULL;
 }
 
-int codes_memfs_exists(const char* path) {
+int codes_memfs_exists(const char* path)
+{
     size_t dummy;
     return find(path, &dummy) != NULL;
 }
 
-FILE* codes_memfs_open(const char* path) {
+FILE* codes_memfs_open(const char* path)
+{
     size_t size;
     const unsigned char* mem = find(path, &size);
-    if(!mem) {
+    if (!mem) {
         return NULL;
     }
     return fmemopen((void*)mem, size, "r");

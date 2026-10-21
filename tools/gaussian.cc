@@ -29,7 +29,7 @@ int main(int argc, const char* argv[])
     if (argc != 2)
         usage(argv[0]);
 
-    n     = atol(argv[1]);
+    n = atol(argv[1]);
     count = n * 2;
 
     latitudes = (double*)malloc(count * sizeof(double));

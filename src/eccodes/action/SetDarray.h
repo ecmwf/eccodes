@@ -21,11 +21,11 @@ public:
     SetDArray(grib_context* context, const char* name, grib_darray* darray);
     ~SetDArray() override;
 
-    //void dump(FILE*, int) override;
+    // void dump(FILE*, int) override;
     int execute(grib_handle* h) override;
 
     grib_darray* darray_ = nullptr;
-    char* name2_         = nullptr;
+    char* name2_ = nullptr;
 };
 
 }  // namespace eccodes::action

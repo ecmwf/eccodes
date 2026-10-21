@@ -12,9 +12,11 @@
 
 #include "Expression.h"
 
-namespace eccodes::expression {
+namespace eccodes::expression
+{
 
-class Functor : public Expression {
+class Functor : public Expression
+{
 public:
     Functor(grib_context* c, const char*, grib_arguments*);
 

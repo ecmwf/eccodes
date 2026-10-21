@@ -60,14 +60,14 @@ grib_option grib_options[] = {
     /* {"x",0,0,0,1,0} */
 };
 
-const char* tool_description   = "Dump the content of a BUFR file in different formats.";
-const char* tool_name          = "bufr_dump";
-const char* tool_online_doc    = "https://confluence.ecmwf.int/display/ECC/bufr_dump";
-const char* tool_usage         = "[options] bufr_file bufr_file ...";
-static int json                = 0;
-static int dump_descriptors    = 0;
-static char* json_option       = 0;
-static int first_handle        = 1;
+const char* tool_description = "Dump the content of a BUFR file in different formats.";
+const char* tool_name = "bufr_dump";
+const char* tool_online_doc = "https://confluence.ecmwf.int/display/ECC/bufr_dump";
+const char* tool_usage = "[options] bufr_file bufr_file ...";
+static int json = 0;
+static int dump_descriptors = 0;
+static char* json_option = 0;
+static int first_handle = 1;
 static eccodes::Dumper* dumper = 0;
 
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
@@ -90,7 +90,7 @@ int grib_tool_before_getopt(grib_runtime_options* options)
 static void check_code_gen_dump_mode(const char* language)
 {
     grib_context* c = grib_context_get_default();
-    const int ok    = (strcmp(language, "C") == 0 ||
+    const int ok = (strcmp(language, "C") == 0 ||
                     strcmp(language, "fortran") == 0 ||
                     strcmp(language, "python") == 0 ||
                     strcmp(language, "filter") == 0);
@@ -102,11 +102,11 @@ static void check_code_gen_dump_mode(const char* language)
 int grib_tool_init(grib_runtime_options* options)
 {
     options->dump_mode = (char*)"default";
-    options->strict    = 1; /* Must set here as bufr_dump has its own -S option */
+    options->strict = 1; /* Must set here as bufr_dump has its own -S option */
 
     if (grib_options_on("j:")) {
         options->dump_mode = (char*)"json";
-        json_option        = grib_options_get_option("j:");
+        json_option = grib_options_get_option("j:");
         if (strlen(json_option) > 1 || (json_option[0] != 's' && json_option[0] != 'f' && json_option[0] != 'a')) {
             printf("%s: Invalid JSON option %s\n", tool_name, json_option);
             exit(1);
@@ -115,14 +115,14 @@ int grib_tool_init(grib_runtime_options* options)
     }
 
     if (grib_options_on("O")) {
-        options->dump_mode  = (char*)"wmo";
-        json                = 0;
+        options->dump_mode = (char*)"wmo";
+        json = 0;
         options->dump_flags = GRIB_DUMP_FLAG_CODED | GRIB_DUMP_FLAG_OCTET | GRIB_DUMP_FLAG_VALUES | GRIB_DUMP_FLAG_READ_ONLY;
     }
 
     if (grib_options_on("p")) {
         options->dump_mode = (char*)"bufr_simple";
-        json               = 0;
+        json = 0;
     }
 
     if (grib_options_on("D:")) {
@@ -160,7 +160,7 @@ int grib_tool_init(grib_runtime_options* options)
     if (grib_options_on("d") && !grib_options_on("u")) {
         options->dump_flags |= GRIB_DUMP_FLAG_ALL_DATA;
         dump_descriptors = 1;
-        json             = 0;
+        json = 0;
     }
 
     /* Turn off GRIB multi-field support mode. Not relevant for BUFR */
@@ -186,8 +186,8 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
      * Dumping of index files
      */
     if (is_index_file(options->current_infile->name)) {
-        int err              = 0;
-        grib_context* c      = grib_context_get_default();
+        int err = 0;
+        grib_context* c = grib_context_get_default();
         const char* filename = options->current_infile->name;
         json = 0;
 
@@ -213,7 +213,7 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
             /* Dump filter for one message only. Multi-message BUFR files will not work! */
             int err = 0, numMessages = 0;
             grib_context* c = grib_context_get_default();
-            err             = grib_count_in_file(c, options->current_infile->file, &numMessages);
+            err = grib_count_in_file(c, options->current_infile->file, &numMessages);
             if (!err && numMessages > 1) {
                 fprintf(stderr, "\nERROR: Cannot dump filter for multi-message BUFR files.\n");
                 fprintf(stderr, "       (The input file \"%s\" has %d messages)\n", options->current_infile->name, numMessages);
@@ -295,10 +295,10 @@ static void bufr_dump_descriptors(grib_handle* h)
     size_t size_desc = 0, size_names = 0, size_abbrevs = 0, size_units = 0;
     size_t i = 0, j = 0, size_proper = 0;
     long* array_descriptors = NULL;
-    char** array_names      = NULL;
-    char** array_abbrevs    = NULL;
-    char** array_units      = NULL;
-    const char* the_key     = "expandedDescriptors";
+    char** array_names = NULL;
+    char** array_abbrevs = NULL;
+    char** array_units = NULL;
+    const char* the_key = "expandedDescriptors";
 
     GRIB_CHECK_NOLINE(grib_get_size(h, the_key, &size_desc), 0);
     array_descriptors = (long*)malloc(size_desc * sizeof(long));
@@ -355,8 +355,8 @@ static void bufr_dump_descriptors(grib_handle* h)
             printf("%06ld\t\tASSOCIATED FIELD\n", desc);
         }
         else {
-            char* abbr  = array_abbrevs[j];
-            char* name  = array_names[j];
+            char* abbr = array_abbrevs[j];
+            char* name = array_names[j];
             char* units = array_units[j];
             printf("%06ld\t%s\t%s [%s]\n", desc, abbr, name, units);
             ++j;
@@ -378,7 +378,7 @@ static int check_subset_number(const char* user_input, long numberOfSubsets, lon
     long val = 0;
     char* endptr;
     errno = 0; /* To distinguish success/failure after call */
-    val   = strtol(user_input, &endptr, 10);
+    val = strtol(user_input, &endptr, 10);
     if ((errno == ERANGE && (val == LONG_MAX || val == LONG_MIN)) || (errno != 0 && val == 0)) {
         perror("strtol");
         return GRIB_INVALID_ARGUMENT;
@@ -398,9 +398,9 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 {
     long length = 0;
     int i, err = 0;
-    grib_handle* hclone                   = NULL;
+    grib_handle* hclone = NULL;
     eccodes::accessor::BufrDataArray* data = NULL;
-    grib_accessors_list* al               = NULL;
+    grib_accessors_list* al = NULL;
     if (grib_get_long(h, "totalLength", &length) != GRIB_SUCCESS)
         length = -9999;
 
@@ -427,7 +427,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             if (numberOfSubsets > 1) {
                 grib_handle* new_handle = 0;
                 grib_handle* h2;
-                size_t size        = 0;
+                size_t size = 0;
                 const void* buffer = NULL;
 
                 /* Clone, unpack and extract that particular subset */
@@ -442,7 +442,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
                 new_handle = grib_handle_new_from_message(0, buffer, size);
                 ECCODES_ASSERT(new_handle);
                 /* Replace handle with the new one which has only one subset */
-                h      = new_handle;
+                h = new_handle;
                 hclone = h2; /* to be deleted later */
             }
         }
@@ -476,8 +476,8 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
                         /*return err; See ECC-723*/
                     }
                 }
-                data                = dynamic_cast<eccodes::accessor::BufrDataArray*>(grib_find_accessor(h, "numericValues"));
-                al                  = data->accessor_bufr_data_array_get_dataAccessors();
+                data = dynamic_cast<eccodes::accessor::BufrDataArray*>(grib_find_accessor(h, "numericValues"));
+                al = data->accessor_bufr_data_array_get_dataAccessors();
                 options->dump_flags = GRIB_DUMP_FLAG_ALL_ATTRIBUTES;
                 codes_dump_bufr_flat(al, h, stdout, options->dump_mode, options->dump_flags, 0);
                 break;

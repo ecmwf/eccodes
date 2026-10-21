@@ -19,8 +19,8 @@ class G2StepRange : public Gen
 {
 public:
     G2StepRange() :
-        Gen() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        Gen() {}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     long get_native_type() override;
     int pack_long(const long* val, size_t* len) override;
     int pack_string(const char*, size_t* len) override;
@@ -36,7 +36,7 @@ private:
     const char* end_step_ = nullptr;
 
 public:
-    static constexpr AccessorType accessor_type_{"g2step_range"};
+    static constexpr AccessorType accessor_type_{ "g2step_range" };
 };
 
 }  // namespace eccodes::accessor

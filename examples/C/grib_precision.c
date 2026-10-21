@@ -21,24 +21,24 @@
 
 #include "eccodes.h"
 
-#define EPSILON 1e-6
+#define EPSILON      1e-6
 #define EXPECTED_MIN 270.466796875
 #define EXPECTED_MAX 311.096796875
 
 int main(int argc, char** argv)
 {
-    int err     = 0;
+    int err = 0;
     size_t size = 0;
 
-    FILE* in            = NULL;
-    const char* infile  = "../../data/regular_latlon_surface.grib1";
-    FILE* out           = NULL;
+    FILE* in = NULL;
+    const char* infile = "../../data/regular_latlon_surface.grib1";
+    FILE* out = NULL;
     const char* outfile = "out.precision.grib1";
-    codes_handle* h     = NULL;
-    const void* buffer  = NULL;
-    double* values1     = NULL;
-    double* values2     = NULL;
-    double maxa         = 0;
+    codes_handle* h = NULL;
+    const void* buffer = NULL;
+    double* values1 = NULL;
+    double* values2 = NULL;
+    double maxa = 0;
     double maxv = 0, minv = 0;
     double maxr = 0, r = 0;
     long decimalPrecision;

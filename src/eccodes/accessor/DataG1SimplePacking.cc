@@ -18,11 +18,11 @@ void DataG1SimplePacking::init(const long v, grib_arguments* args)
 {
     DataSimplePacking::init(v, args);
 
-    half_byte_    = args->get_name(get_enclosing_handle(), carg_++);
-    packingType_  = args->get_name(get_enclosing_handle(), carg_++);
+    half_byte_ = args->get_name(get_enclosing_handle(), carg_++);
+    packingType_ = args->get_name(get_enclosing_handle(), carg_++);
     ieee_packing_ = args->get_name(get_enclosing_handle(), carg_++);
-    precision_    = args->get_name(get_enclosing_handle(), carg_++);
-    edition_      = 1;
+    precision_ = args->get_name(get_enclosing_handle(), carg_++);
+    edition_ = 1;
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
@@ -39,33 +39,33 @@ int DataG1SimplePacking::value_count(long* number_of_values)
 
 int DataG1SimplePacking::pack_double(const double* cval, size_t* len)
 {
-    size_t n_vals             = *len;
-    long half_byte            = 0;
-    int ret                   = 0;
-    long offsetdata           = 0;
-    long offsetsection        = 0;
-    double reference_value    = 0;
-    long binary_scale_factor  = 0;
-    long bits_per_value       = 0;
+    size_t n_vals = *len;
+    long half_byte = 0;
+    int ret = 0;
+    long offsetdata = 0;
+    long offsetsection = 0;
+    double reference_value = 0;
+    long binary_scale_factor = 0;
+    long bits_per_value = 0;
     long decimal_scale_factor = 0;
-    double decimal            = 1;
-    size_t buflen             = 0;
-    unsigned char* buf        = NULL;
-    unsigned char* encoded    = NULL;
-    double divisor            = 1;
+    double decimal = 1;
+    size_t buflen = 0;
+    unsigned char* buf = NULL;
+    unsigned char* encoded = NULL;
+    double divisor = 1;
     int i;
-    long off                   = 0;
-    grib_context* c            = context_;
-    grib_handle* h             = get_enclosing_handle();
-    char* ieee_packing_s       = NULL;
-    char* packingType_s        = NULL;
-    char* precision_s          = NULL;
-    double units_factor        = 1.0;
-    double units_bias          = 0.0;
-    double* val                = (double*)cval;
-    double missingValue        = 9999.0;
+    long off = 0;
+    grib_context* c = context_;
+    grib_handle* h = get_enclosing_handle();
+    char* ieee_packing_s = NULL;
+    char* packingType_s = NULL;
+    char* precision_s = NULL;
+    double units_factor = 1.0;
+    double units_bias = 0.0;
+    double* val = (double*)cval;
+    double missingValue = 9999.0;
     long constantFieldHalfByte = 0;
-    int err                    = 0;
+    int err = 0;
 
     if (*len != 0) {
         if (units_factor_ &&
@@ -98,14 +98,14 @@ int DataG1SimplePacking::pack_double(const double* cval, size_t* len)
 
         if (c->ieee_packing && ieee_packing_) {
             long precision = 0; /* Either 1(=32 bits) or 2(=64 bits) */
-            size_t lenstr  = strlen(ieee_packing_);
+            size_t lenstr = strlen(ieee_packing_);
             if ((ret = codes_check_grib_ieee_packing_value(c->ieee_packing)) != GRIB_SUCCESS)
                 return ret;
 
-            packingType_s  = grib_context_strdup(c, packingType_);
+            packingType_s = grib_context_strdup(c, packingType_);
             ieee_packing_s = grib_context_strdup(c, ieee_packing_);
-            precision_s    = grib_context_strdup(c, precision_);
-            precision      = c->ieee_packing == 32 ? 1 : 2;
+            precision_s = grib_context_strdup(c, precision_);
+            precision = c->ieee_packing == 32 ? 1 : 2;
 
             if ((ret = grib_set_string(h, packingType_s, ieee_packing_s, &lenstr)) != GRIB_SUCCESS)
                 return ret;
@@ -198,7 +198,7 @@ int DataG1SimplePacking::pack_double(const double* cval, size_t* len)
     if ((ret = grib_set_long_internal(get_enclosing_handle(), half_byte_, half_byte)) != GRIB_SUCCESS)
         return ret;
 
-    buf     = (unsigned char*)grib_context_buffer_malloc_clear(context_, buflen);
+    buf = (unsigned char*)grib_context_buffer_malloc_clear(context_, buflen);
     encoded = buf;
 
     grib_encode_double_array(n_vals, val, bits_per_value, reference_value, decimal, divisor, encoded, &off);

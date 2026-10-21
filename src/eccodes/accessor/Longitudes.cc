@@ -19,25 +19,25 @@ void Longitudes::init(const long l, grib_arguments* args)
     Double::init(l, args);
     int n = 0;
 
-    values_   = args->get_name(get_enclosing_handle(), n++);
+    values_ = args->get_name(get_enclosing_handle(), n++);
     distinct_ = args->get_long(get_enclosing_handle(), n++);
-    save_     = 0;
-    lons_     = 0;
+    save_ = 0;
+    lons_ = 0;
 
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
 int Longitudes::unpack_double(double* val, size_t* len)
 {
-    int ret             = 0;
-    double* v           = val;
-    double dummyLat     = 0;
-    size_t size         = 0;
-    long count          = 0;
+    int ret = 0;
+    double* v = val;
+    double dummyLat = 0;
+    size_t size = 0;
+    long count = 0;
     grib_iterator* iter = NULL;
 
     save_ = 1;
-    ret   = value_count(&count);
+    ret = value_count(&count);
     if (ret) return ret;
     size = count;
 
@@ -82,7 +82,7 @@ int Longitudes::unpack_double(double* val, size_t* len)
 
 int Longitudes::value_count(long* len)
 {
-    grib_handle* h  = get_enclosing_handle();
+    grib_handle* h = get_enclosing_handle();
     double* val = NULL;
     int ret = 0;
     size_t size = 0;
@@ -130,11 +130,11 @@ static int compare_doubles_ascending(const void* a, const void* b)
 
 static int get_distinct(grib_accessor* a, double** val, long* len)
 {
-    double* v       = NULL;
-    double* v1      = NULL;
+    double* v = NULL;
+    double* v1 = NULL;
     double dummyLat = 0;
-    int ret         = 0;
-    size_t size     = *len;
+    int ret = 0;
+    size_t size = *len;
     grib_context* c = a->context_;
 
     // Performance: We do not need the values to be decoded
@@ -164,12 +164,12 @@ static int get_distinct(grib_accessor* a, double** val, long* len)
         return GRIB_OUT_OF_MEMORY;
     }
 
-    double prev  = v[0];
+    double prev = v[0];
     v1[0] = prev;
     long count = 1;
     for (long i = 1; i < *len; i++) {
         if (v[i] != prev) {
-            prev      = v[i];
+            prev = v[i];
             v1[count] = prev;
             count++;
         }

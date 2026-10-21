@@ -19,8 +19,8 @@ class DataG2SimplePackingWithPreprocessing : public DataG2SimplePacking
 {
 public:
     DataG2SimplePackingWithPreprocessing() :
-        DataG2SimplePacking() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        DataG2SimplePacking() {}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
     int value_count(long*) override;
@@ -31,7 +31,7 @@ private:
     const char* pre_processing_parameter_ = nullptr;
 
 public:
-    static constexpr AccessorType accessor_type_{"data_g2simple_packing_with_preprocessing"};
+    static constexpr AccessorType accessor_type_{ "data_g2simple_packing_with_preprocessing" };
 };
 
 }  // namespace eccodes::accessor

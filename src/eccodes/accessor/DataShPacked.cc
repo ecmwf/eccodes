@@ -22,16 +22,16 @@ void DataShPacked::init(const long v, grib_arguments* args)
     DataSimplePacking::init(v, args);
     grib_handle* hand = get_enclosing_handle();
 
-    GRIBEX_sh_bug_present_  = args->get_name(hand, carg_++);
-    ieee_floats_            = args->get_name(hand, carg_++);
+    GRIBEX_sh_bug_present_ = args->get_name(hand, carg_++);
+    ieee_floats_ = args->get_name(hand, carg_++);
     laplacianOperatorIsSet_ = args->get_name(hand, carg_++);
-    laplacianOperator_      = args->get_name(hand, carg_++);
-    sub_j_                  = args->get_name(hand, carg_++);
-    sub_k_                  = args->get_name(hand, carg_++);
-    sub_m_                  = args->get_name(hand, carg_++);
-    pen_j_                  = args->get_name(hand, carg_++);
-    pen_k_                  = args->get_name(hand, carg_++);
-    pen_m_                  = args->get_name(hand, carg_++);
+    laplacianOperator_ = args->get_name(hand, carg_++);
+    sub_j_ = args->get_name(hand, carg_++);
+    sub_k_ = args->get_name(hand, carg_++);
+    sub_m_ = args->get_name(hand, carg_++);
+    pen_j_ = args->get_name(hand, carg_++);
+    pen_k_ = args->get_name(hand, carg_++);
+    pen_m_ = args->get_name(hand, carg_++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
     length_ = 0;
@@ -75,38 +75,38 @@ int DataShPacked::value_count(long* count)
 int DataShPacked::unpack_double(double* val, size_t* len)
 {
     size_t i = 0;
-    int ret  = GRIB_SUCCESS;
+    int ret = GRIB_SUCCESS;
     // long lup = 0;
     long hcount = 0, lcount = 0, hpos = 0, mmax = 0, n_vals = 0;
     double* scals = NULL;
     /* double *pscals=NULL; */
 
     double s = 0, d = 0, laplacianOperator = 0;
-    unsigned char* buf  = NULL;
+    unsigned char* buf = NULL;
     unsigned char* hres = NULL;
     unsigned char* lres = NULL;
     unsigned long packed_offset;
     long lpos = 0;
 
-    long maxv                  = 0;
+    long maxv = 0;
     long GRIBEX_sh_bug_present = 0;
-    long ieee_floats           = 0;
-    long offsetdata            = 0;
-    long bits_per_value        = 0;
-    double reference_value     = 0;
-    long binary_scale_factor   = 0;
-    long decimal_scale_factor  = 0;
+    long ieee_floats = 0;
+    long offsetdata = 0;
+    long bits_per_value = 0;
+    double reference_value = 0;
+    long binary_scale_factor = 0;
+    long decimal_scale_factor = 0;
 
     long sub_j = 0, sub_k = 0, sub_m = 0, pen_j = 0, pen_k = 0, pen_m = 0;
 
     double operat = 0;
-    int bytes     = 0;
-    int err       = 0;
+    int bytes = 0;
+    int err = 0;
 
     decode_float_proc decode_float = NULL;
 
     n_vals = 0;
-    err    = value_count(&n_vals);
+    err = value_count(&n_vals);
     if (err)
         return err;
 
@@ -153,15 +153,15 @@ int DataShPacked::unpack_double(double* val, size_t* len)
     switch (ieee_floats) {
         case 0:
             decode_float = grib_long_to_ibm;
-            bytes        = 4;
+            bytes = 4;
             break;
         case 1:
             decode_float = grib_long_to_ieee;
-            bytes        = 4;
+            bytes = 4;
             break;
         case 2:
             decode_float = grib_long_to_ieee64;
-            bytes        = 8;
+            bytes = 8;
             break;
         default:
             return GRIB_NOT_IMPLEMENTED;

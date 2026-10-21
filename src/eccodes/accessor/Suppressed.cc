@@ -24,8 +24,8 @@ void Suppressed::init(const long l, grib_arguments* c)
 
 void Suppressed::log_message()
 {
-    int i                            = 0;
-    grib_handle* hand                = get_enclosing_handle();
+    int i = 0;
+    grib_handle* hand = get_enclosing_handle();
 
     grib_context_log(context_, GRIB_LOG_ERROR,
                      "key '%s' is unavailable in this version.", name_);

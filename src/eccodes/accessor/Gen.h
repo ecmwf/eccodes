@@ -21,8 +21,8 @@ namespace eccodes::accessor
 class Gen : public Accessor
 {
 public:
-    Gen() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+    Gen() {}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     ~Gen();
 
     void init_accessor(const long, grib_arguments*) override;  // TODO: Implement
@@ -90,7 +90,7 @@ private:
     int unpack_helper(grib_accessor* a, T* v, size_t* len);
 
 public:
-    static constexpr AccessorType accessor_type_{"gen"};
+    static constexpr AccessorType accessor_type_{ "gen" };
 };
 
 
@@ -98,7 +98,7 @@ template <typename T>
 int Gen::unpack_helper(grib_accessor* a, T* v, size_t* len)
 {
     static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
-    int type          = GRIB_TYPE_UNDEFINED;
+    int type = GRIB_TYPE_UNDEFINED;
     const char* Tname = type_to_string<T>(*v);
 
     if constexpr (std::is_same_v<T, float>) {
@@ -121,7 +121,7 @@ int Gen::unpack_helper(grib_accessor* a, T* v, size_t* len)
 
     if (is_overridden_[UNPACK_STRING]) {
         char val[1024];
-        size_t l   = sizeof(val);
+        size_t l = sizeof(val);
         char* last = NULL;
         a->unpack_string(val, &l);
         if (is_overridden_[UNPACK_STRING]) {

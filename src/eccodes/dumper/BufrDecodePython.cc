@@ -24,11 +24,11 @@ int BufrDecodePython::init()
 {
     grib_context* c = context_;
     section_offset_ = 0;
-    empty_          = 1;
-    count_          = 1;
-    isLeaf_         = 0;
-    isAttribute_    = 0;
-    keys_           = (grib_string_list*)grib_context_malloc_clear(c, sizeof(grib_string_list));
+    empty_ = 1;
+    count_ = 1;
+    isLeaf_ = 0;
+    isAttribute_ = 0;
+    keys_ = (grib_string_list*)grib_context_malloc_clear(c, sizeof(grib_string_list));
 
     return GRIB_SUCCESS;
 }
@@ -36,10 +36,10 @@ int BufrDecodePython::init()
 int BufrDecodePython::destroy()
 {
     grib_string_list* next = keys_;
-    grib_string_list* cur  = NULL;
-    grib_context* c        = context_;
+    grib_string_list* cur = NULL;
+    grib_context* c = context_;
     while (next) {
-        cur  = next;
+        cur = next;
         next = next->next;
         grib_context_free(c, cur->value);
         grib_context_free(c, cur);
@@ -56,14 +56,14 @@ static char* dval_to_string(const grib_context* c, double v)
 
 void BufrDecodePython::dump_values(grib_accessor* a)
 {
-    double value    = 0;
-    size_t size     = 0;
-    int err         = 0;
-    int r           = 0;
-    long count      = 0;
-    char* sval      = NULL;
+    double value = 0;
+    size_t size = 0;
+    int err = 0;
+    int r = 0;
+    long count = 0;
+    char* sval = NULL;
     grib_context* c = a->context_;
-    grib_handle* h  = a->get_enclosing_handle();
+    grib_handle* h = a->get_enclosing_handle();
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
         return;
@@ -121,9 +121,9 @@ void BufrDecodePython::dump_values(grib_accessor* a)
 void BufrDecodePython::dump_values_attribute(grib_accessor* a, const char* prefix)
 {
     double value = 0;
-    size_t size  = 0;
-    int err      = 0;
-    long count   = 0;
+    size_t size = 0;
+    int err = 0;
+    long count = 0;
     char* sval;
     grib_context* c = a->context_;
 
@@ -170,13 +170,13 @@ void BufrDecodePython::dump_values_attribute(grib_accessor* a, const char* prefi
 
 void BufrDecodePython::dump_long(grib_accessor* a, const char* comment)
 {
-    long value      = 0;
-    size_t size     = 0;
-    int err         = 0;
-    int r           = 0;
-    long count      = 0;
+    long value = 0;
+    size_t size = 0;
+    int err = 0;
+    int r = 0;
+    long count = 0;
     grib_context* c = a->context_;
-    grib_handle* h  = a->get_enclosing_handle();
+    grib_handle* h = a->get_enclosing_handle();
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0)
         return;
@@ -251,10 +251,10 @@ void BufrDecodePython::dump_long(grib_accessor* a, const char* comment)
 
 void BufrDecodePython::dump_long_attribute(grib_accessor* a, const char* prefix)
 {
-    long value      = 0;
-    size_t size     = 0;
-    int err         = 0;
-    long count      = 0;
+    long value = 0;
+    size_t size = 0;
+    int err = 0;
+    long count = 0;
     grib_context* c = a->context_;
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
@@ -302,10 +302,10 @@ void BufrDecodePython::dump_bits(grib_accessor* a, const char* comment)
 void BufrDecodePython::dump_double(grib_accessor* a, const char* comment)
 {
     double value = 0;
-    size_t size  = 1;
+    size_t size = 1;
     int r;
-    char* sval      = NULL;
-    grib_handle* h  = a->get_enclosing_handle();
+    char* sval = NULL;
+    grib_handle* h = a->get_enclosing_handle();
     grib_context* c = h->context;
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
@@ -346,12 +346,12 @@ void BufrDecodePython::dump_double(grib_accessor* a, const char* comment)
 
 void BufrDecodePython::dump_string_array(grib_accessor* a, const char* comment)
 {
-    size_t size     = 0;
+    size_t size = 0;
     grib_context* c = NULL;
-    int err         = 0;
-    long count      = 0;
-    int r           = 0;
-    grib_handle* h  = a->get_enclosing_handle();
+    int err = 0;
+    long count = 0;
+    int r = 0;
+    grib_handle* h = a->get_enclosing_handle();
 
     c = a->context_;
 
@@ -398,9 +398,9 @@ void BufrDecodePython::dump_string_array(grib_accessor* a, const char* comment)
 #define MAX_STRING_SIZE 4096
 void BufrDecodePython::dump_string(grib_accessor* a, const char* comment)
 {
-    char value[MAX_STRING_SIZE] = {0, }; /* See ECC-710 */
-    char* p         = NULL;
-    size_t size     = MAX_STRING_SIZE;
+    char value[MAX_STRING_SIZE] = { 0 }; /* See ECC-710 */
+    char* p = NULL;
+    size_t size = MAX_STRING_SIZE;
     grib_context* c = a->context_;
     int r = 0, err = 0;
     grib_handle* h = a->get_enclosing_handle();
@@ -411,8 +411,8 @@ void BufrDecodePython::dump_string(grib_accessor* a, const char* comment)
     empty_ = 0;
 
     err = a->unpack_string(value, &size);
-    p   = value;
-    r   = compute_bufr_key_rank(h, keys_, a->name_);
+    p = value;
+    r = compute_bufr_key_rank(h, keys_, a->name_);
     if (grib_is_missing_string(a, (unsigned char*)value, size)) {
         return;
     }
@@ -477,8 +477,8 @@ void BufrDecodePython::dump_section(grib_accessor* a, grib_block_of_accessors* b
         strcmp(a->name_, "GRIB") == 0 ||
         strcmp(a->name_, "META") == 0) {
         grib_handle* h = a->get_enclosing_handle();
-        depth          = 2;
-        empty_         = 1;
+        depth = 2;
+        empty_ = 1;
         depth += 2;
         _dump_long_array(h, out_, "dataPresentIndicator");
         _dump_long_array(h, out_, "delayedDescriptorReplicationFactor");
@@ -513,7 +513,7 @@ void BufrDecodePython::dump_attributes(grib_accessor* a, const char* prefix)
             continue;
         }
         isLeaf_ = a->attributes_[i]->attributes_[0] == NULL ? 1 : 0;
-        flags   = a->attributes_[i]->flags_;
+        flags = a->attributes_[i]->flags_;
         a->attributes_[i]->flags_ |= GRIB_ACCESSOR_FLAG_DUMP;
         switch (a->attributes_[i]->get_native_type()) {
             case GRIB_TYPE_LONG:
@@ -528,7 +528,7 @@ void BufrDecodePython::dump_attributes(grib_accessor* a, const char* prefix)
         a->attributes_[i]->flags_ = flags;
         i++;
     }
-    isLeaf_      = 0;
+    isLeaf_ = 0;
     isAttribute_ = 0;
 }
 

@@ -18,7 +18,7 @@ private:
     const char* productDefinitionTemplateNumber_ = nullptr;
 
 public:
-    static constexpr AccessorType accessor_type_{"g2_referenceperiod"};
+    static constexpr AccessorType accessor_type_{ "g2_referenceperiod" };
 };
 
-}
+}  // namespace eccodes::accessor

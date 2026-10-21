@@ -25,13 +25,13 @@ int main(int argc, char* argv[])
     /* message handle. Required in all the eccodes calls acting on a message.*/
     codes_handle* h = NULL;
 
-    char* units        = NULL;
+    char* units = NULL;
     char* unitsPercent = NULL;
     long longVal;
     double doubleVal;
-    size_t len         = 0;
-    int err            = 0;
-    int cnt            = 0;
+    size_t len = 0;
+    int err = 0;
+    int cnt = 0;
     const char* infile = "../../data/bufr/syno_multi.bufr";
 
     in = fopen(infile, "rb");

@@ -35,12 +35,12 @@ public:
 
 private:
     static inline int depth_ = 0;
-    long section_offset_     = 0;
-    long empty_              = 0;
-    //long end_                = 0;
-    long isLeaf_             = 0;
-    long isAttribute_        = 0;
-    grib_string_list* keys_  = nullptr;
+    long section_offset_ = 0;
+    long empty_ = 0;
+    // long end_                = 0;
+    long isLeaf_ = 0;
+    long isAttribute_ = 0;
+    grib_string_list* keys_ = nullptr;
 
     void dump_attributes(grib_accessor* a, const char* prefix);
     void dump_values_attribute(grib_accessor* a, const char* prefix);

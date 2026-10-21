@@ -18,28 +18,28 @@ void DataComplexPacking::init(const long v, grib_arguments* args)
     DataSimplePacking::init(v, args);
     grib_handle* gh = get_enclosing_handle();
 
-    GRIBEX_sh_bug_present_  = args->get_name(gh, carg_++);
-    ieee_floats_            = args->get_name(gh, carg_++);
+    GRIBEX_sh_bug_present_ = args->get_name(gh, carg_++);
+    ieee_floats_ = args->get_name(gh, carg_++);
     laplacianOperatorIsSet_ = args->get_name(gh, carg_++);
-    laplacianOperator_      = args->get_name(gh, carg_++);
-    sub_j_                  = args->get_name(gh, carg_++);
-    sub_k_                  = args->get_name(gh, carg_++);
-    sub_m_                  = args->get_name(gh, carg_++);
-    pen_j_                  = args->get_name(gh, carg_++);
-    pen_k_                  = args->get_name(gh, carg_++);
-    pen_m_                  = args->get_name(gh, carg_++);
+    laplacianOperator_ = args->get_name(gh, carg_++);
+    sub_j_ = args->get_name(gh, carg_++);
+    sub_k_ = args->get_name(gh, carg_++);
+    sub_m_ = args->get_name(gh, carg_++);
+    pen_j_ = args->get_name(gh, carg_++);
+    pen_k_ = args->get_name(gh, carg_++);
+    pen_m_ = args->get_name(gh, carg_++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
 int DataComplexPacking::value_count(long* count)
 {
-    int ret         = GRIB_SUCCESS;
+    int ret = GRIB_SUCCESS;
     grib_handle* gh = get_enclosing_handle();
-    long pen_j      = 0;
-    long pen_k      = 0;
-    long pen_m      = 0;
-    *count          = 0;
+    long pen_j = 0;
+    long pen_k = 0;
+    long pen_m = 0;
+    *count = 0;
 
     if (length_ == 0)
         return 0;
@@ -79,7 +79,7 @@ double calculate_pfactor(const grib_context* ctx, const double* spectralField, l
     /*
      * Setup the weights
      */
-    range   = (double)(ismax - ismin + 1);
+    range = (double)(ismax - ismin + 1);
     weights = (double*)grib_context_malloc(ctx, (ismax + 1) * sizeof(double));
     for (loop = ismin; loop <= ismax; loop++)
         weights[loop] = range / (double)(loop - ismin + 1);
@@ -133,10 +133,10 @@ double calculate_pfactor(const grib_context* ctx, const double* spectralField, l
     for (loop = ismin; loop <= ismax; loop++) {
         x = log((double)(loop * (loop + 1)));
         ECCODES_ASSERT(norms[loop] > 0);
-        y                = log(norms[loop]);
+        y = log(norms[loop]);
         weightedSumOverX = weightedSumOverX + x * weights[loop];
         weightedSumOverY = weightedSumOverY + y * weights[loop];
-        sumOfWeights     = sumOfWeights + weights[loop];
+        sumOfWeights = sumOfWeights + weights[loop];
     }
     weightedSumOverX = weightedSumOverX / sumOfWeights;
     weightedSumOverY = weightedSumOverY / sumOfWeights;
@@ -169,14 +169,14 @@ int DataComplexPacking::pack_double(const double* val, size_t* len)
 {
     grib_handle* gh = get_enclosing_handle();
 
-    size_t i      = 0;
-    int ret       = GRIB_SUCCESS;
-    long hcount   = 0;
-    long lcount   = 0;
-    long hpos     = 0;
-    long lup      = 0;
-    long mmax     = 0;
-    long n_vals   = 0;
+    size_t i = 0;
+    int ret = GRIB_SUCCESS;
+    long hcount = 0;
+    long lcount = 0;
+    long hpos = 0;
+    long lup = 0;
+    long mmax = 0;
+    long n_vals = 0;
     double* scals = NULL;
 
     double s = 0;
@@ -185,8 +185,8 @@ int DataComplexPacking::pack_double(const double* val, size_t* len)
     unsigned char* buf = NULL;
 
     size_t buflen = 0;
-    size_t hsize  = 0;
-    size_t lsize  = 0;
+    size_t hsize = 0;
+    size_t lsize = 0;
 
     unsigned char* hres = NULL;
     unsigned char* lres = NULL;
@@ -194,27 +194,27 @@ int DataComplexPacking::pack_double(const double* val, size_t* len)
     long lpos = 0;
     long maxv = 0;
 
-    long offsetdata              = 0;
-    long bits_per_value          = 0;
-    double reference_value       = 0;
-    long binary_scale_factor     = 0;
-    long decimal_scale_factor    = 0;
+    long offsetdata = 0;
+    long bits_per_value = 0;
+    double reference_value = 0;
+    long binary_scale_factor = 0;
+    long decimal_scale_factor = 0;
     long optimize_scaling_factor = 0;
-    long laplacianOperatorIsSet  = 0;
+    long laplacianOperatorIsSet = 0;
 
-    double laplacianOperator   = 0;
-    long sub_j                 = 0;
-    long sub_k                 = 0;
-    long sub_m                 = 0;
-    long pen_j                 = 0;
-    long pen_k                 = 0;
-    long pen_m                 = 0;
+    double laplacianOperator = 0;
+    long sub_j = 0;
+    long sub_k = 0;
+    long sub_m = 0;
+    long pen_j = 0;
+    long pen_k = 0;
+    long pen_m = 0;
     long GRIBEX_sh_bug_present = 0;
-    long ieee_floats           = 0;
-    double min                 = 0;
-    double max                 = 0;
-    double current_val         = 0;
-    short mixmax_unset         = 0;
+    long ieee_floats = 0;
+    double min = 0;
+    double max = 0;
+    double current_val = 0;
+    short mixmax_unset = 0;
     int bytes;
 
     encode_float_proc encode_float = NULL;
@@ -262,15 +262,15 @@ int DataComplexPacking::pack_double(const double* val, size_t* len)
     switch (ieee_floats) {
         case 0:
             encode_float = grib_ibm_to_long;
-            bytes        = 4;
+            bytes = 4;
             break;
         case 1:
             encode_float = grib_ieee_to_long;
-            bytes        = 4;
+            bytes = 4;
             break;
         case 2:
             encode_float = grib_ieee64_to_long;
-            bytes        = 8;
+            bytes = 8;
             break;
         default:
             return GRIB_NOT_IMPLEMENTED;
@@ -287,13 +287,12 @@ int DataComplexPacking::pack_double(const double* val, size_t* len)
     // Note: in spectral_simple we have one less.
     // See definitions/grib2/templates/template.7.50.def
     //    transient numberOfPackedValues = numberOfValues - 1 : no_copy;
-    if ( (size_t)n_vals == *len + 1) {
-        char convertingFrom[128] = {0,};
+    if ((size_t)n_vals == *len + 1) {
+        char convertingFrom[128] = { 0 };
         size_t slen = sizeof(convertingFrom);
         if (grib_get_string(gh, "convertingFrom", convertingFrom, &slen) == GRIB_SUCCESS &&
-            STR_EQUAL(convertingFrom, "spectral_simple"))
-        {
-            *len += 1; // adjust size
+            STR_EQUAL(convertingFrom, "spectral_simple")) {
+            *len += 1;  // adjust size
             grib_set_long(gh, "numberOfDataPoints", n_vals);
         }
     }
@@ -325,7 +324,7 @@ int DataComplexPacking::pack_double(const double* val, size_t* len)
             values = (double*)val;
         }
         buflen = n_vals * bytes;
-        buf    = (unsigned char*)grib_context_malloc_clear(context_, buflen);
+        buf = (unsigned char*)grib_context_malloc_clear(context_, buflen);
         grib_ieee_encode_array(context_, values, n_vals, bytes, buf);
         if (d)
             grib_context_free(context_, values);
@@ -358,7 +357,7 @@ int DataComplexPacking::pack_double(const double* val, size_t* len)
 
     buflen = hsize + lsize;
 
-    buf  = (unsigned char*)grib_context_malloc(context_, buflen);
+    buf = (unsigned char*)grib_context_malloc(context_, buflen);
     hres = buf;
     lres = buf + hsize;
 
@@ -374,11 +373,11 @@ int DataComplexPacking::pack_double(const double* val, size_t* len)
     for (i = 1; i < maxv; i++)
         scals[i] = ((double)pow(i * (i + 1), laplacianOperator));
 
-    mmax   = 0;
-    maxv   = pen_j + 1;
-    i      = 0;
+    mmax = 0;
+    maxv = pen_j + 1;
+    i = 0;
     hcount = 0;
-    sub_k  = sub_j;
+    sub_k = sub_j;
 
     while (maxv > 0) {
         lup = mmax;
@@ -393,8 +392,8 @@ int DataComplexPacking::pack_double(const double* val, size_t* len)
         for (lcount = hcount; lcount < maxv; lcount++) {
             current_val = ((val[i++]) * scals[lup]);
             if (mixmax_unset == 0) {
-                max          = current_val;
-                min          = current_val;
+                max = current_val;
+                min = current_val;
                 mixmax_unset = 1;
             }
 
@@ -438,9 +437,9 @@ int DataComplexPacking::pack_double(const double* val, size_t* len)
         }
         binary_scale_factor = grib_get_binary_scale_fact(d * max, reference_value, bits_per_value, &ret);
         if (ret == GRIB_UNDERFLOW) {
-            d                   = 0;
+            d = 0;
             binary_scale_factor = 0;
-            reference_value     = 0;
+            reference_value = 0;
         }
         else {
             if (ret != GRIB_SUCCESS) {
@@ -453,10 +452,10 @@ int DataComplexPacking::pack_double(const double* val, size_t* len)
 
     i = 0;
 
-    mmax   = 0;
-    maxv   = pen_j + 1;
+    mmax = 0;
+    maxv = pen_j + 1;
     hcount = 0;
-    sub_k  = sub_j;
+    sub_k = sub_j;
 
     while (maxv > 0) {
         lup = mmax;
@@ -562,36 +561,36 @@ template <typename T>
 int DataComplexPacking::unpack_real(T* val, size_t* len)
 {
     static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
-    grib_handle* gh         = get_enclosing_handle();
+    grib_handle* gh = get_enclosing_handle();
 
-    size_t i    = 0;
-    int ret     = GRIB_SUCCESS;
+    size_t i = 0;
+    int ret = GRIB_SUCCESS;
     long hcount = 0;
     long lcount = 0;
-    long hpos   = 0;
-    long lup    = 0;
-    long mmax   = 0;
+    long hpos = 0;
+    long lup = 0;
+    long mmax = 0;
     long n_vals = 0;
-    T* scals    = NULL;
+    T* scals = NULL;
     T *pscals = NULL, *pval = NULL;
 
-    T s                 = 0;
-    T d                 = 0;
+    T s = 0;
+    T d = 0;
     T laplacianOperator = 0;
-    unsigned char* buf  = NULL;
+    unsigned char* buf = NULL;
     unsigned char* hres = NULL;
     unsigned char* lres = NULL;
     unsigned long packed_offset;
     long lpos = 0;
 
-    long maxv                  = 0;
+    long maxv = 0;
     long GRIBEX_sh_bug_present = 0;
-    long ieee_floats           = 0;
+    long ieee_floats = 0;
 
-    long offsetdata           = 0;
-    long bits_per_value       = 0;
-    T reference_value         = 0;
-    long binary_scale_factor  = 0;
+    long offsetdata = 0;
+    long bits_per_value = 0;
+    T reference_value = 0;
+    long binary_scale_factor = 0;
     long decimal_scale_factor = 0;
 
     long sub_j = 0;
@@ -659,15 +658,15 @@ int DataComplexPacking::unpack_real(T* val, size_t* len)
     switch (ieee_floats) {
         case 0:
             decode_float = grib_long_to_ibm;
-            bytes        = 4;
+            bytes = 4;
             break;
         case 1:
             decode_float = grib_long_to_ieee;
-            bytes        = 4;
+            bytes = 4;
             break;
         case 2:
             decode_float = grib_long_to_ieee64;
-            bytes        = 8;
+            bytes = 8;
             break;
         default:
             return GRIB_NOT_IMPLEMENTED;
@@ -688,7 +687,7 @@ int DataComplexPacking::unpack_real(T* val, size_t* len)
 
     if (pen_j == sub_j) {
         n_vals = (pen_j + 1) * (pen_j + 2);
-        d      = codes_power<T>(-decimal_scale_factor, 10);
+        d = codes_power<T>(-decimal_scale_factor, 10);
 
         grib_ieee_decode_array<T>(context_, buf, n_vals, bytes, val);
         if (d) {
@@ -699,7 +698,7 @@ int DataComplexPacking::unpack_real(T* val, size_t* len)
     }
 
     packed_offset = byte_offset() + bytes * (sub_k + 1) * (sub_k + 2);
-    lpos          = 8 * (packed_offset - offsetdata);
+    lpos = 8 * (packed_offset - offsetdata);
 
     s = codes_power<T>(binary_scale_factor, 2);
     d = codes_power<T>(-decimal_scale_factor, 10);
@@ -745,7 +744,7 @@ int DataComplexPacking::unpack_real(T* val, size_t* len)
         }
 
         pscals = scals + lup;
-        pval   = val + i;
+        pval = val + i;
 #if FAST_BIG_ENDIAN
         grib_decode_double_array_complex(lres,
                                          &lpos, bits_per_value,
@@ -770,13 +769,14 @@ int DataComplexPacking::unpack_real(T* val, size_t* len)
         mmax++;
     }
 
-    //ECCODES_ASSERT(*len >= i);
+    // ECCODES_ASSERT(*len >= i);
     if (*len < i) {
         grib_context_log(context_, GRIB_LOG_ERROR, "%s::%s: Invalid values *len=%zu and i=%zu.",
                          accessor_type().c_str(), __func__, *len, i);
         grib_context_log(context_, GRIB_LOG_ERROR, "Make sure your array is large enough.");
         ret = GRIB_ARRAY_TOO_SMALL;
-    } else {
+    }
+    else {
         *len = i;
     }
 
@@ -797,7 +797,7 @@ int DataComplexPacking::unpack_float(float* val, size_t* len)
 
     // return unpack<float>(a, val, len);
 
-    size_t size  = *len;
+    size_t size = *len;
     double* val8 = (double*)grib_context_malloc(context_, size * (sizeof(double)));
     if (!val8) return GRIB_OUT_OF_MEMORY;
 

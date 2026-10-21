@@ -18,27 +18,27 @@ void DataG22OrderPacking::init(const long v, grib_arguments* args)
     Values::init(v, args);
     grib_handle* gh = get_enclosing_handle();
 
-    numberOfValues_        = args->get_name(gh, carg_++);
-    bits_per_value_        = args->get_name(gh, carg_++);
-    reference_value_       = args->get_name(gh, carg_++);
-    binary_scale_factor_   = args->get_name(gh, carg_++);
-    decimal_scale_factor_  = args->get_name(gh, carg_++);
+    numberOfValues_ = args->get_name(gh, carg_++);
+    bits_per_value_ = args->get_name(gh, carg_++);
+    reference_value_ = args->get_name(gh, carg_++);
+    binary_scale_factor_ = args->get_name(gh, carg_++);
+    decimal_scale_factor_ = args->get_name(gh, carg_++);
     optimize_scale_factor_ = args->get_name(gh, carg_++);
 
-    typeOfOriginalFieldValues_                = args->get_name(gh, carg_++);
-    groupSplittingMethodUsed_                 = args->get_name(gh, carg_++);
-    missingValueManagementUsed_               = args->get_name(gh, carg_++);
-    primaryMissingValueSubstitute_            = args->get_name(gh, carg_++);
-    secondaryMissingValueSubstitute_          = args->get_name(gh, carg_++);
-    numberOfGroupsOfDataValues_               = args->get_name(gh, carg_++);
-    referenceForGroupWidths_                  = args->get_name(gh, carg_++);
-    numberOfBitsUsedForTheGroupWidths_        = args->get_name(gh, carg_++);
-    referenceForGroupLengths_                 = args->get_name(gh, carg_++);
-    lengthIncrementForTheGroupLengths_        = args->get_name(gh, carg_++);
-    trueLengthOfLastGroup_                    = args->get_name(gh, carg_++);
+    typeOfOriginalFieldValues_ = args->get_name(gh, carg_++);
+    groupSplittingMethodUsed_ = args->get_name(gh, carg_++);
+    missingValueManagementUsed_ = args->get_name(gh, carg_++);
+    primaryMissingValueSubstitute_ = args->get_name(gh, carg_++);
+    secondaryMissingValueSubstitute_ = args->get_name(gh, carg_++);
+    numberOfGroupsOfDataValues_ = args->get_name(gh, carg_++);
+    referenceForGroupWidths_ = args->get_name(gh, carg_++);
+    numberOfBitsUsedForTheGroupWidths_ = args->get_name(gh, carg_++);
+    referenceForGroupLengths_ = args->get_name(gh, carg_++);
+    lengthIncrementForTheGroupLengths_ = args->get_name(gh, carg_++);
+    trueLengthOfLastGroup_ = args->get_name(gh, carg_++);
     numberOfBitsUsedForTheScaledGroupLengths_ = args->get_name(gh, carg_++);
 
-    orderOfSpatialDifferencing_     = args->get_name(gh, carg_++);
+    orderOfSpatialDifferencing_ = args->get_name(gh, carg_++);
     numberOfOctetsExtraDescriptors_ = args->get_name(gh, carg_++);
     dataRepresentationTemplateNumber_ = args->get_name(gh, carg_++);
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
@@ -56,7 +56,7 @@ struct bitstream_context
 
 static void init_bitstream(bitstream_context* ctx, unsigned char* new_bitstream)
 {
-    ctx->bitstream   = new_bitstream;
+    ctx->bitstream = new_bitstream;
     ctx->n_bitstream = ctx->reg = ctx->rbits = 0;
 }
 
@@ -65,7 +65,7 @@ static void finish_bitstream(bitstream_context* ctx)
     if (ctx->rbits) {
         ctx->n_bitstream++;
         *ctx->bitstream++ = (ctx->reg << (8 - ctx->rbits)) & 255;
-        ctx->rbits        = 0;
+        ctx->rbits = 0;
     }
 }
 
@@ -324,7 +324,7 @@ static int post_process(grib_context* c, long* vals, long len, long order, long 
     }
     else if (order == 2) {
         penultimate = extras[0];
-        last        = extras[1];
+        last = extras[1];
         while (j < len) {
             if (vals[j] == LONG_MAX) {
                 j++;
@@ -345,9 +345,9 @@ static int post_process(grib_context* c, long* vals, long len, long order, long 
         }
         for (; j < len; j++) {
             if (vals[j] != LONG_MAX) {
-                vals[j]     = vals[j] + bias + last + last - penultimate;
+                vals[j] = vals[j] + bias + last + last - penultimate;
                 penultimate = last;
-                last        = vals[j];
+                last = vals[j];
             }
         }
     }
@@ -455,7 +455,7 @@ static void move_one_left(struct section* s, int* v)
     // remove t?
     if (t->i0 > t->i1) {
         s->tail = t->tail;
-        t       = s->tail;
+        t = s->tail;
         if (t) t->head = s;
         return;
     }
@@ -520,8 +520,8 @@ static void move_one_right(struct section* s, int* v)
 
     // if s is empty, copy t to s and recalculate
     if (s->i0 > s->i1) {
-        s->i0   = t->i0;
-        s->i1   = t->i1;
+        s->i0 = t->i0;
+        s->i1 = t->i1;
         s->tail = t->tail;
 
         s->mx = s->mn = INT_MAX;
@@ -732,32 +732,32 @@ static void merge_j(struct section* h, int ref_bits, int width_bits, int has_und
 
         if (saving_hm >= saving_mt && saving_hm >= 0) {
             // merge h and m
-            h->i1      = m->i1;
-            h->tail    = m->tail;
-            h->mn      = min0;
-            h->mx      = max0;
+            h->i1 = m->i1;
+            h->tail = m->tail;
+            h->mn = min0;
+            h->mx = max0;
             h->missing = h->missing || m->missing;
-            m          = h->tail;
+            m = h->tail;
             if (m) m->head = h;
             if (h->head) h = h->head;
             size_head = size_mid = size_tail = 0;
         }
         else if (saving_mt >= saving_hm && saving_mt >= 0) {
             // merge m and t
-            m->i1      = t->i1;
-            m->tail    = t->tail;
-            m->mn      = min1;
-            m->mx      = max1;
+            m->i1 = t->i1;
+            m->tail = t->tail;
+            m->mn = min1;
+            m->mx = max1;
             m->missing = m->missing || t->missing;
-            t          = m->tail;
+            t = m->tail;
             if (t) t->head = m;
             size_head = size_mid = size_tail = 0;
         }
         else {
             // no merging
-            h         = h->tail;
+            h = h->tail;
             size_head = size_mid;
-            size_mid  = size_tail;
+            size_mid = size_tail;
             size_tail = 0;
         }
     }
@@ -792,7 +792,7 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
     size_t ndef = 0, nndata = 0, nstruct, i, ii;
 
     int LEN_SEC_MAX = 127;
-    int LEN_BITS    = 7;
+    int LEN_BITS = 7;
 
     if (*len == 0)
         return GRIB_NO_VALUES;
@@ -866,7 +866,7 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
         return GRIB_INVALID_ARGUMENT;
     }
 
-    use_bitmap  = bitmap_present;
+    use_bitmap = bitmap_present;
     wanted_bits = bits_per_value;
 
     for (i = 0; i < *len; i++) {
@@ -918,9 +918,9 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
         if (err) return err;
 
         // Section 7
-        //constexpr size_t sec7_size = 3;
-        //unsigned char empty_sec7[sec7_size] = { 255, 0, 0 };  // group reference, group width, group length
-        //grib_buffer_replace(this, empty_sec7, sec7_size, 1, 1);
+        // constexpr size_t sec7_size = 3;
+        // unsigned char empty_sec7[sec7_size] = { 255, 0, 0 };  // group reference, group width, group length
+        // grib_buffer_replace(this, empty_sec7, sec7_size, 1, 1);
         return GRIB_SUCCESS;
     }
 
@@ -942,7 +942,7 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
     //     if ((err = grib_set_long_internal(gh, "bitmapPresent", 1)) != GRIB_SUCCESS) return err;
     // }
 
-    nndata    = use_bitmap ? ndef : ndata;
+    nndata = use_bitmap ? ndef : ndata;
     has_undef = use_bitmap ? 0 : ndata != ndef;
 
     v = reinterpret_cast<int*>(grib_context_malloc(context_, nndata * sizeof(int)));
@@ -960,15 +960,15 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
     binary_scale = bin_scale;
 
     if (use_scale) {  // ECMWF style
-        ref       = min_val;
-        frange    = max_val - ref;
+        ref = min_val;
+        frange = max_val - ref;
         dec_scale = 0;
         if (frange != 0.0) {
             frexp(frange, &j);               // Required bits
             binary_scale = j - wanted_bits;  // Scale factor
-            nbits        = wanted_bits;
-            scale        = ldexp(1.0, -binary_scale);
-            frange       = floor((max_val - ref) * scale + 0.5);
+            nbits = wanted_bits;
+            scale = ldexp(1.0, -binary_scale);
+            frange = floor((max_val - ref) * scale + 0.5);
             frexp(frange, &j);
             if (j != nbits) binary_scale++;
         }
@@ -995,7 +995,7 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
         }
         scale = ldexp(1.0, -binary_scale);
         // ref = floor(min_val*scale)/scale;
-        ref    = min_val;
+        ref = min_val;
         frange = floor((max_val - ref) * scale + 0.5);
         frexp(frange, &nbits);
         if (nbits > max_bits) {
@@ -1050,30 +1050,30 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
         // delta_delta(v, nndata, &vmn, &vmx, &extra_0, &extra_1);
         // single core version
         {
-            int last=0, last0=0, penultimate = 0;
+            int last = 0, last0 = 0, penultimate = 0;
             for (i = 0; i < nndata; i++) {
                 if (v[i] != INT_MAX) {
                     extra_0 = penultimate = v[i];
-                    v[i++]  = 0;
+                    v[i++] = 0;
                     break;
                 }
             }
             for (; i < nndata; i++) {
                 if (v[i] != INT_MAX) {
                     extra_1 = last = v[i];
-                    v[i++]  = 0;
+                    v[i++] = 0;
                     break;
                 }
             }
 
             for (; i < nndata; i++) {
                 if (v[i] != INT_MAX) {
-                    last0       = v[i];
-                    v[i]        = v[i] - 2 * last + penultimate;
+                    last0 = v[i];
+                    v[i] = v[i] - 2 * last + penultimate;
                     penultimate = last;
-                    last        = last0;
-                    vmn         = vmn > v[i] ? v[i] : vmn;
-                    vmx         = vmx < v[i] ? v[i] : vmx;
+                    last = last0;
+                    vmn = vmn > v[i] ? v[i] : vmn;
+                    vmx = vmx < v[i] ? v[i] : vmx;
                 }
             }
         }
@@ -1082,22 +1082,22 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
         // delta(v, nndata, &vmn, &vmx, &extra_0);
         // single core version
         {
-            int last =0, last0=0;
+            int last = 0, last0 = 0;
 
             for (i = 0; i < nndata; i++) {
                 if (v[i] != INT_MAX) {
                     extra_0 = last = v[i];
-                    v[i++]         = 0;
+                    v[i++] = 0;
                     break;
                 }
             }
             for (; i < nndata; i++) {
                 if (v[i] != INT_MAX) {
                     last0 = v[i];
-                    v[i]  = v[i] - last;
-                    last  = last0;
-                    vmn   = vmn > v[i] ? v[i] : vmn;
-                    vmx   = vmx < v[i] ? v[i] : vmx;
+                    v[i] = v[i] - last;
+                    last = last0;
+                    vmn = vmn > v[i] ? v[i] : vmn;
+                    vmx = vmx < v[i] ? v[i] : vmx;
                 }
             }
         }
@@ -1115,11 +1115,11 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
     for (i = 0; i < nndata; i++) {
         v[i] = (v[i] != INT_MAX) ? v[i] - vmn : INT_MAX;
     }
-    vmx   = vmx - vmn;
+    vmx = vmx - vmn;
     vbits = find_nbits(vmx + has_undef);
 
     // size of merged struct
-    ii      = 0;
+    ii = 0;
     nstruct = 1;
     for (i = 1; i < nndata; i++) {
         if (((i - ii + 1) > LEN_SEC_MAX) || (v[i] != v[ii])) {
@@ -1137,9 +1137,9 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
     // initialize linked list
 
     // The first element in the list is initialized with the first element from v
-    ii         = 0;  // section counter
+    ii = 0;  // section counter
     list[0].mn = list[0].mx = v[0];
-    list[0].missing         = (v[0] == INT_MAX);
+    list[0].missing = (v[0] == INT_MAX);
     list[0].i0 = list[0].i1 = 0;
     for (i = 1; i < nndata; i++) {
         // join last section
@@ -1151,20 +1151,20 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
         else {
             ii++;
             list[ii].mn = list[ii].mx = v[i];
-            list[ii].missing          = (v[i] == INT_MAX);
+            list[ii].missing = (v[i] == INT_MAX);
             list[ii].i0 = list[ii].i1 = i;
         }
     }
-    list[0].head  = NULL;
+    list[0].head = NULL;
     list[ii].tail = NULL;
-    start.tail    = &list[0];
+    start.tail = &list[0];
 
     if (nstruct != ii + 1) {
         grib_context_log(context_, GRIB_LOG_ERROR, "%s packing: nstruct=%zu wanted %zu", accessor_type().c_str(), nstruct, ii + 1);
         return GRIB_ENCODING_ERROR;
     }
     for (i = 1; i < nstruct; i++) {
-        list[i].head     = &list[i - 1];
+        list[i].head = &list[i - 1];
         list[i - 1].tail = &list[i];
     }
 
@@ -1192,7 +1192,7 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
         return GRIB_OUT_OF_MEMORY;
     }
 
-    j  = size_all(start.tail, vbits, LEN_BITS + est_group_width, has_undef);
+    j = size_all(start.tail, vbits, LEN_BITS + est_group_width, has_undef);
     j0 = j + 1;
 #ifdef DEBUG
     grib_context_log(context_, GRIB_LOG_DEBUG, "COMPLEX: complex start inc segments size0 %d segsize %d", j, LEN_SEC_MAX);
@@ -1261,11 +1261,11 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
         s = s->tail;
     }
 
-    lens   = reinterpret_cast<int*>(grib_context_malloc(context_, ngroups * sizeof(int)));
+    lens = reinterpret_cast<int*>(grib_context_malloc(context_, ngroups * sizeof(int)));
     widths = reinterpret_cast<int*>(grib_context_malloc(context_, ngroups * sizeof(int)));
-    refs   = reinterpret_cast<int*>(grib_context_malloc(context_, ngroups * sizeof(int)));
-    itmp   = reinterpret_cast<int*>(grib_context_malloc(context_, ngroups * sizeof(int)));
-    itmp2  = reinterpret_cast<int*>(grib_context_malloc(context_, ngroups * sizeof(int)));
+    refs = reinterpret_cast<int*>(grib_context_malloc(context_, ngroups * sizeof(int)));
+    itmp = reinterpret_cast<int*>(grib_context_malloc(context_, ngroups * sizeof(int)));
+    itmp2 = reinterpret_cast<int*>(grib_context_malloc(context_, ngroups * sizeof(int)));
 
     if (lens == NULL || widths == NULL || refs == NULL || itmp == NULL || itmp2 == NULL) {
         grib_context_log(context_, GRIB_LOG_ERROR, "%s packing: memory alloc of lens/widths/refs/itmp/itmp2 failed", accessor_type().c_str());
@@ -1276,8 +1276,8 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
     for (i = ii = 0, s = start.tail; ii < ngroups; ii++, s = s->tail) {
         lens[ii] = s->i1 - s->i0 + 1;
         i += lens[ii];
-        refs[ii]  = s->mn;
-        itmp[ii]  = s->mx;
+        refs[ii] = s->mn;
+        itmp[ii] = s->mx;
         itmp2[ii] = s->missing;
     }
     if (i != nndata)
@@ -1297,7 +1297,7 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
 
     glenmn = glenmx = lens[0];
     gwidmx = gwidmn = widths[0];
-    grefmx          = refs[0] != INT_MAX ? refs[0] : 0;
+    grefmx = refs[0] != INT_MAX ? refs[0] : 0;
 
     {
         int glenmn_thread, glenmx_thread, gwidmx_thread, gwidmn_thread,
@@ -1392,9 +1392,9 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
         for (i = 0; i < ngroups; i++) {
             j += lens[i] * widths[i];
             size_sec7 += (j >> 3);
-            j        = (j & 7);
-            refs[i]  = (refs[i] != INT_MAX) ? refs[i] : ONES;
-            itmp[i]  = widths[i] - gwidmn;
+            j = (j & 7);
+            refs[i] = (refs[i] != INT_MAX) ? refs[i] : ONES;
+            itmp[i] = widths[i] - gwidmn;
             itmp2[i] = lens[i] - glenmn;
         }
         k += j;
@@ -1449,8 +1449,8 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
         if (widths[i]) {
             for (j = 0; j < lens[i]; j++) {
                 v[j + itmp[i]] = (v[j + itmp[i]] == INT_MAX)
-                                     ? ONES
-                                     : v[j + itmp[i]] - refs[i];
+                                   ? ONES
+                                   : v[j + itmp[i]] - refs[i];
             }
         }
     }
@@ -1487,29 +1487,29 @@ int DataG22OrderPacking::unpack(T* val, size_t* len)
     static_assert(std::is_floating_point<T>::value, "Requires floating points numbers");
     grib_handle* gh = get_enclosing_handle();
 
-    size_t i                  = 0;
-    size_t j                  = 0;
-    long n_vals               = 0;
-    long vcount               = 0;
-    int err                   = GRIB_SUCCESS;
-    long* sec_val             = NULL;
-    unsigned char* buf        = reinterpret_cast<unsigned char*>(gh->buffer->data);
-    unsigned char* buf_ref    = NULL;
-    unsigned char* buf_width  = NULL;
+    size_t i = 0;
+    size_t j = 0;
+    long n_vals = 0;
+    long vcount = 0;
+    int err = GRIB_SUCCESS;
+    long* sec_val = NULL;
+    unsigned char* buf = reinterpret_cast<unsigned char*>(gh->buffer->data);
+    unsigned char* buf_ref = NULL;
+    unsigned char* buf_width = NULL;
     unsigned char* buf_length = NULL;
-    unsigned char* buf_vals   = NULL;
+    unsigned char* buf_vals = NULL;
 
-    long length_p            = 0;
-    long ref_p               = 0;
-    long width_p             = 0;
-    long vals_p              = 0;
-    long nvals_per_group     = 0;
+    long length_p = 0;
+    long ref_p = 0;
+    long width_p = 0;
+    long vals_p = 0;
+    long nvals_per_group = 0;
     long nbits_per_group_val = 0;
-    long group_ref_val       = 0;
+    long group_ref_val = 0;
 
-    long bits_per_value    = 0;
-    T binary_s             = 0;
-    T decimal_s            = 0;
+    long bits_per_value = 0;
+    T binary_s = 0;
+    T decimal_s = 0;
     double reference_value = 0;
 
     long binary_scale_factor;
@@ -1526,7 +1526,7 @@ int DataG22OrderPacking::unpack(T* val, size_t* len)
     long lengthIncrementForTheGroupLengths;
     long trueLengthOfLastGroup;
     long numberOfBitsUsedForTheScaledGroupLengths;
-    long orderOfSpatialDifferencing     = 0;
+    long orderOfSpatialDifferencing = 0;
     long numberOfOctetsExtraDescriptors = 0;
     double missingValue = 0;
 
@@ -1614,21 +1614,21 @@ int DataG22OrderPacking::unpack(T* val, size_t* len)
 
     buf_width = buf_ref + (ref_p / 8) + ((ref_p % 8) ? 1 : 0);
 
-    width_p    = (numberOfGroupsOfDataValues * numberOfBitsUsedForTheGroupWidths);
+    width_p = (numberOfGroupsOfDataValues * numberOfBitsUsedForTheGroupWidths);
     buf_length = buf_width + (width_p / 8) + ((width_p % 8) ? 1 : 0);
 
     length_p = (numberOfGroupsOfDataValues * numberOfBitsUsedForTheScaledGroupLengths);
     buf_vals = buf_length + (length_p / 8) + ((length_p % 8) ? 1 : 0);
 
     length_p = 0;
-    ref_p    = orderOfSpatialDifferencing ? (orderOfSpatialDifferencing + 1) * (numberOfOctetsExtraDescriptors * 8) : 0;
-    width_p  = 0;
-    vals_p   = 0;
-    vcount   = 0;
+    ref_p = orderOfSpatialDifferencing ? (orderOfSpatialDifferencing + 1) * (numberOfOctetsExtraDescriptors * 8) : 0;
+    width_p = 0;
+    vals_p = 0;
+    vcount = 0;
 
     for (i = 0; i < numberOfGroupsOfDataValues; i++) {
-        group_ref_val       = grib_decode_unsigned_long(buf_ref, &ref_p, bits_per_value);
-        nvals_per_group     = grib_decode_unsigned_long(buf_length, &length_p, numberOfBitsUsedForTheScaledGroupLengths);
+        group_ref_val = grib_decode_unsigned_long(buf_ref, &ref_p, bits_per_value);
+        nvals_per_group = grib_decode_unsigned_long(buf_length, &length_p, numberOfBitsUsedForTheScaledGroupLengths);
         nbits_per_group_val = grib_decode_unsigned_long(buf_width, &width_p, numberOfBitsUsedForTheGroupWidths);
 
         nvals_per_group *= lengthIncrementForTheGroupLengths;
@@ -1660,13 +1660,13 @@ int DataG22OrderPacking::unpack(T* val, size_t* len)
                         sec_val[vcount + j] = LONG_MAX;  // missing value
                     }
                     else {
-                        long temp           = grib_decode_unsigned_long(buf_vals, &vals_p, nbits_per_group_val);
+                        long temp = grib_decode_unsigned_long(buf_vals, &vals_p, nbits_per_group_val);
                         sec_val[vcount + j] = group_ref_val + temp;
                     }
                 }
                 else {
                     long temp = grib_decode_unsigned_long(buf_vals, &vals_p, nbits_per_group_val);
-                    maxn      = (1 << nbits_per_group_val) - 1;
+                    maxn = (1 << nbits_per_group_val) - 1;
                     if (temp == maxn) {
                         sec_val[vcount + j] = LONG_MAX;  // missing value
                     }
@@ -1678,7 +1678,7 @@ int DataG22OrderPacking::unpack(T* val, size_t* len)
         }
         else if (missingValueManagementUsed == 2) {
             // Primary and secondary missing values included within data values
-            long maxn  = (1 << bits_per_value) - 1;
+            long maxn = (1 << bits_per_value) - 1;
             long maxn2 = 0;  // maxn - 1
             for (j = 0; j < nvals_per_group; j++) {
                 if (nbits_per_group_val == 0) {
@@ -1687,14 +1687,14 @@ int DataG22OrderPacking::unpack(T* val, size_t* len)
                         sec_val[vcount + j] = LONG_MAX;  // missing value
                     }
                     else {
-                        long temp           = grib_decode_unsigned_long(buf_vals, &vals_p, nbits_per_group_val);
+                        long temp = grib_decode_unsigned_long(buf_vals, &vals_p, nbits_per_group_val);
                         sec_val[vcount + j] = group_ref_val + temp;
                     }
                 }
                 else {
                     long temp = grib_decode_unsigned_long(buf_vals, &vals_p, nbits_per_group_val);
-                    maxn      = (1 << nbits_per_group_val) - 1;
-                    maxn2     = maxn - 1;
+                    maxn = (1 << nbits_per_group_val) - 1;
+                    maxn2 = maxn - 1;
                     if (temp == maxn || temp == maxn2) {
                         sec_val[vcount + j] = LONG_MAX;  // missing value
                     }
@@ -1710,7 +1710,7 @@ int DataG22OrderPacking::unpack(T* val, size_t* len)
 
     if (orderOfSpatialDifferencing) {
         long bias = 0;
-        unsigned long extras[2] = {0,};
+        unsigned long extras[2] = { 0 };
         ref_p = 0;
 
         // For Complex packing, order == 0
@@ -1731,7 +1731,7 @@ int DataG22OrderPacking::unpack(T* val, size_t* len)
         // de_spatial_difference (context_ , sec_val, n_vals, orderOfSpatialDifferencing, bias);
     }
 
-    binary_s  = (T)codes_power<T>(binary_scale_factor, 2);
+    binary_s = (T)codes_power<T>(binary_scale_factor, 2);
     decimal_s = (T)codes_power<T>(-decimal_scale_factor, 10);
 
     for (i = 0; i < n_vals; i++) {
@@ -1759,16 +1759,16 @@ int DataG22OrderPacking::unpack_float(float* val, size_t* len)
 
 int DataG22OrderPacking::unpack_double_element(size_t idx, double* val)
 {
-    size_t size    = 0;
+    size_t size = 0;
     double* values = NULL;
-    int err        = grib_get_size(get_enclosing_handle(), "codedValues", &size);
+    int err = grib_get_size(get_enclosing_handle(), "codedValues", &size);
     if (err)
         return err;
     if (idx > size)
         return GRIB_INVALID_ARGUMENT;
 
     values = reinterpret_cast<double*>(grib_context_malloc_clear(context_, size * sizeof(double)));
-    err    = grib_get_double_array(get_enclosing_handle(), "codedValues", values, &size);
+    err = grib_get_double_array(get_enclosing_handle(), "codedValues", values, &size);
     if (err) {
         grib_context_free(context_, values);
         return err;
@@ -1794,7 +1794,7 @@ int DataG22OrderPacking::unpack_double_element_set(const size_t* index_array, si
     }
 
     values = reinterpret_cast<double*>(grib_context_malloc_clear(context_, size * sizeof(double)));
-    err    = grib_get_double_array(get_enclosing_handle(), "codedValues", values, &size);
+    err = grib_get_double_array(get_enclosing_handle(), "codedValues", values, &size);
     if (err) {
         grib_context_free(context_, values);
         return err;

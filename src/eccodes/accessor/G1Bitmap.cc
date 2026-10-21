@@ -25,12 +25,12 @@ int G1Bitmap::pack_double(const double* val, size_t* len)
 
     unsigned char* buf = NULL;
     size_t i;
-    int err  = 0;
+    int err = 0;
     long pos = 0;
     // long bmaplen          = 0;
     const int bit_padding = 16;
-    double miss_values    = 0;
-    tlen                  = ((*len + bit_padding - 1) / bit_padding * bit_padding) / 8;
+    double miss_values = 0;
+    tlen = ((*len + bit_padding - 1) / bit_padding * bit_padding) / 8;
 
     if ((err = grib_get_double_internal(get_enclosing_handle(), missing_value_, &miss_values)) != GRIB_SUCCESS)
         return err;

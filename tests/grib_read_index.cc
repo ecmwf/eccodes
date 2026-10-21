@@ -13,7 +13,7 @@
 int main(int argc, char* argv[])
 {
     grib_index* index = NULL;
-    grib_handle* h    = NULL;
+    grib_handle* h = NULL;
     long *steps, *levels, *numbers;
     char** shortNames = NULL;
     size_t i, j, k, l;

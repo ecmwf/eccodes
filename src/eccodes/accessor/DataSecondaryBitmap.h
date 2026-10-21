@@ -19,8 +19,8 @@ class DataSecondaryBitmap : public Gen
 {
 public:
     DataSecondaryBitmap() :
-        Gen() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        Gen() {}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     long get_native_type() override;
     int unpack_double(double* val, size_t* len) override;
     void dump(eccodes::Dumper*) override;
@@ -33,7 +33,7 @@ protected:
     const char* expand_by_ = nullptr;
 
 public:
-    static constexpr AccessorType accessor_type_{"data_secondary_bitmap"};
+    static constexpr AccessorType accessor_type_{ "data_secondary_bitmap" };
 };
 
 }  // namespace eccodes::accessor

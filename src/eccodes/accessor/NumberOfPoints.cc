@@ -16,13 +16,13 @@ namespace eccodes::accessor
 void NumberOfPoints::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
-    int n             = 0;
+    int n = 0;
     grib_handle* hand = get_enclosing_handle();
 
-    ni_        = c->get_name(hand, n++);
-    nj_        = c->get_name(hand, n++);
+    ni_ = c->get_name(hand, n++);
+    nj_ = c->get_name(hand, n++);
     plpresent_ = c->get_name(hand, n++);
-    pl_        = c->get_name(hand, n++);
+    pl_ = c->get_name(hand, n++);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     length_ = 0;
@@ -32,9 +32,9 @@ int NumberOfPoints::unpack_long(long* val, size_t* len)
 {
     int ret = GRIB_SUCCESS;
     long ni = 0, nj = 0, plpresent = 0;
-    size_t plsize     = 0;
-    long* pl          = NULL;
-    grib_context* c   = context_;
+    size_t plsize = 0;
+    long* pl = NULL;
+    grib_context* c = context_;
     grib_handle* hand = get_enclosing_handle();
 
     if ((ret = grib_get_long_internal(hand, ni_, &ni)) != GRIB_SUCCESS)
@@ -60,7 +60,7 @@ int NumberOfPoints::unpack_long(long* val, size_t* len)
     if (plpresent) {
         /*reduced*/
         plsize = nj;
-        pl     = (long*)grib_context_malloc(c, sizeof(long) * plsize);
+        pl = (long*)grib_context_malloc(c, sizeof(long) * plsize);
         grib_get_long_array_internal(hand, pl_, pl, &plsize);
         *val = 0;
         for (size_t i = 0; i < plsize; i++)

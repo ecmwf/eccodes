@@ -19,8 +19,8 @@ class RdbTimeGuessDate : public Long
 {
 public:
     RdbTimeGuessDate() :
-        Long() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        Long() {}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
@@ -33,7 +33,7 @@ private:
     long yearOrMonth_ = 0;
 
 public:
-    static constexpr AccessorType accessor_type_{"rdbtime_guess_date"};
+    static constexpr AccessorType accessor_type_{ "rdbtime_guess_date" };
 };
 
 }  // namespace eccodes::accessor
