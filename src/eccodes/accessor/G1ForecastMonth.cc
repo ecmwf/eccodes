@@ -34,7 +34,7 @@ void G1ForecastMonth::dump(eccodes::Dumper* dumper)
     dumper->dump_long(this, NULL);
 }
 
-static int calculate_fcmonth(grib_accessor* a, long verification_yearmonth, long base_date, long day, long hour, long* result)
+static int calculate_fcmonth(long verification_yearmonth, long base_date, long day, long hour, long* result)
 {
     long base_yearmonth = 0;
     long vyear = 0;
@@ -58,7 +58,7 @@ static int calculate_fcmonth(grib_accessor* a, long verification_yearmonth, long
     return GRIB_SUCCESS;
 }
 
-static int unpack_long_edition2(grib_accessor* a, long* val, size_t* len)
+static int unpack_long_edition2(grib_accessor* a, long* val)
 {
     int err = 0;
     grib_handle* h = a->get_enclosing_handle();
@@ -97,13 +97,13 @@ static int unpack_long_edition2(grib_accessor* a, long* val, size_t* len)
         return err;
 
     verification_yearmonth = year2 * 100 + month2;
-    if ((err = calculate_fcmonth(a, verification_yearmonth, dataDate, day, hour, val)) != GRIB_SUCCESS)
+    if ((err = calculate_fcmonth(verification_yearmonth, dataDate, day, hour, val)) != GRIB_SUCCESS)
         return err;
 
     return GRIB_SUCCESS;
 }
 
-int G1ForecastMonth::unpack_long_edition1(long* val, size_t* len)
+int G1ForecastMonth::unpack_long_edition1(long* val)
 {
     int err = 0;
 
@@ -129,7 +129,7 @@ int G1ForecastMonth::unpack_long_edition1(long* val, size_t* len)
     if ((err = grib_get_long_internal(get_enclosing_handle(), check_, &check)) != GRIB_SUCCESS)
         return err;
 
-    if ((err = calculate_fcmonth(this, verification_yearmonth, base_date, day, hour, val)) != GRIB_SUCCESS)
+    if ((err = calculate_fcmonth(verification_yearmonth, base_date, day, hour, val)) != GRIB_SUCCESS)
         return err;
 
     /* Verification - compare gribForecastMonth with fcmonth */
@@ -149,7 +149,7 @@ int G1ForecastMonth::unpack_long_edition1(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int G1ForecastMonth::unpack_long(long* val, size_t* len)
+int G1ForecastMonth::unpack_long(long* val, size_t*)
 {
     int err = 0;
     grib_handle* hand = get_enclosing_handle();
@@ -159,15 +159,15 @@ int G1ForecastMonth::unpack_long(long* val, size_t* len)
         return err;
 
     if (edition == 1)
-        return unpack_long_edition1(val, len);
+        return unpack_long_edition1(val);
     if (edition == 2)
-        return unpack_long_edition2(this, val, len);
+        return unpack_long_edition2(this, val);
 
     return GRIB_UNSUPPORTED_EDITION;
 }
 
 /* TODO(maee): Check for a valid date */
-int G1ForecastMonth::pack_long(const long* val, size_t* len)
+int G1ForecastMonth::pack_long(const long* val, size_t*)
 {
     return grib_set_long_internal(get_enclosing_handle(), fcmonth_, *val);
 }

@@ -40,4 +40,4 @@ public:
 }  // namespace eccodes
 
 eccodes::Arguments* grib_arguments_new(grib_context* c, grib_expression* g, eccodes::Arguments* n);
-void grib_arguments_free(grib_context* c, grib_arguments* g);
+void grib_arguments_free(grib_arguments* g);

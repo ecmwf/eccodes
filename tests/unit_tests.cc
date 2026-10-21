@@ -285,7 +285,7 @@ static void test_assertion_catching()
     free(list);
 }
 
-static void my_logging_proc(const grib_context* c, int level, const char* mesg)
+static void my_logging_proc(const grib_context*, int, const char*)
 {
     logging_caught = 1;
 }
@@ -321,7 +321,7 @@ static void test_logging_file()
     grib_context_log(context, GRIB_LOG_ERROR, "test_logging_file: Can you see me now?");
 }
 
-static void my_print_proc(const grib_context* c, void* descriptor, const char* mesg)
+static void my_print_proc(const grib_context*, void*, const char*)
 {
 }
 static void test_print_proc()
@@ -988,7 +988,7 @@ static void test_expressions()
     grib_handle* h = grib_handle_new_from_samples(c, "GRIB2");
     if (!h) return;
 
-    grib_expression* eTrue = new_true_expression(c);
+    grib_expression* eTrue = new_true_expression();
     ECCODES_ASSERT(eTrue);
     const char* cname = eTrue->class_name();
     ECCODES_ASSERT(cname && strlen(cname) > 0);
@@ -996,12 +996,12 @@ static void test_expressions()
     ECCODES_ASSERT(!err && dVal > 0);
     eTrue->print(c, h, stderr);
 
-    grib_expression* eUnOp = new_unop_expression(c, 0, 0, 0);
+    grib_expression* eUnOp = new_unop_expression(0, 0, 0);
     ECCODES_ASSERT(eUnOp);
     cname = eUnOp->class_name();
     ECCODES_ASSERT(cname && strlen(cname) > 0);
 
-    grib_expression* eBinop = new_binop_expression(c, 0, 0, 0, 0);
+    grib_expression* eBinop = new_binop_expression(0, 0, 0, 0);
     ECCODES_ASSERT(eBinop);
     cname = eBinop->class_name();
     ECCODES_ASSERT(cname && strlen(cname) > 0);
@@ -1026,17 +1026,17 @@ static void test_expressions()
     const char* result = eIsInt->evaluate_string(h, buf, &size, &err);
     ECCODES_ASSERT(STR_EQUAL(result, "1"));
 
-    grib_expression* eStrCmp = new_string_compare_expression(c, 0, 0, 0);
+    grib_expression* eStrCmp = new_string_compare_expression(0, 0, 0);
     ECCODES_ASSERT(eStrCmp);
     cname = eStrCmp->class_name();
     ECCODES_ASSERT(cname && strlen(cname) > 0);
 
-    grib_expression* eLogAnd = new_logical_and_expression(c, 0, 0);
+    grib_expression* eLogAnd = new_logical_and_expression(0, 0);
     ECCODES_ASSERT(eLogAnd);
     cname = eLogAnd->class_name();
     ECCODES_ASSERT(cname && strlen(cname) > 0);
 
-    grib_expression* eLogOr = new_logical_or_expression(c, 0, 0);
+    grib_expression* eLogOr = new_logical_or_expression(0, 0);
     ECCODES_ASSERT(eLogOr);
     cname = eLogOr->class_name();
     ECCODES_ASSERT(cname && strlen(cname) > 0);
@@ -1208,7 +1208,7 @@ void test_grib_is_all_bits_one()
     ECCODES_ASSERT(!grib_is_all_bits_one(0x1FFFFFFFFFFFFE, 53));
 }
 
-int main(int argc, char** argv)
+int main(int, char** argv)
 {
     printf("Doing unit tests. ecCodes version = %ld\n", grib_get_api_version());
     printf("codes_print_api_version gives: ");

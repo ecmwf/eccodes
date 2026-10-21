@@ -32,7 +32,7 @@ int OffsetValues::unpack_double(double* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int OffsetValues::pack_double(const double* val, size_t* len)
+int OffsetValues::pack_double(const double* val, size_t*)
 {
     double* values = NULL;
     size_t size = 0;

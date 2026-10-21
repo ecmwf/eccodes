@@ -43,7 +43,7 @@ void Mtg2SwitchDefault::init(const long len, grib_arguments* arg)
 //  0 = pre-MTG2 encoding used
 //  1 = post-MTG2 encoding used
 //  2 = post-MTG2 encoding with paramId + chemId used
-int Mtg2SwitchDefault::unpack_long(long* val, size_t* len)
+int Mtg2SwitchDefault::unpack_long(long* val, size_t*)
 {
     grib_handle* h = get_enclosing_handle();
     int err = 0;

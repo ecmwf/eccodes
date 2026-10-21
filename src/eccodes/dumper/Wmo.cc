@@ -195,7 +195,7 @@ void Wmo::dump_bits(grib_accessor* a, const char* comment)
     fprintf(out_, "\n");
 }
 
-void Wmo::dump_double(grib_accessor* a, const char* comment)
+void Wmo::dump_double(grib_accessor* a, const char*)
 {
     double value = 0;
     size_t size = 1;
@@ -229,7 +229,7 @@ void Wmo::dump_double(grib_accessor* a, const char* comment)
     fprintf(out_, "\n");
 }
 
-void Wmo::dump_string(grib_accessor* a, const char* comment)
+void Wmo::dump_string(grib_accessor* a, const char*)
 {
     size_t size = 0;
     char* value = NULL;
@@ -275,7 +275,7 @@ void Wmo::dump_string(grib_accessor* a, const char* comment)
     grib_context_free(a->context_, value);
 }
 
-void Wmo::dump_bytes(grib_accessor* a, const char* comment)
+void Wmo::dump_bytes(grib_accessor* a, const char*)
 {
     int i, k, err = 0;
     size_t more = 0;
@@ -442,7 +442,7 @@ void Wmo::dump_values(grib_accessor* a)
     grib_context_free(context_, buf);
 }
 
-void Wmo::dump_label(grib_accessor* a, const char* comment)
+void Wmo::dump_label(grib_accessor*, const char*)
 {
     //  for(i = 0; i < depth_ ; i++) fprintf(out_," ");
     //  fprintf(out_,"----> %s %s %s\n",a->creator_->op, a->name_,comment?comment:"");

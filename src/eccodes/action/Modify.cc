@@ -33,7 +33,7 @@ Modify::~Modify()
     grib_context_free_persistent(context_, op_);
 }
 
-int Modify::create_accessor(grib_section* p, grib_loader* h)
+int Modify::create_accessor(grib_section* p, grib_loader*)
 {
     grib_accessor* ga = NULL;
 

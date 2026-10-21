@@ -384,7 +384,7 @@ int grib_accessors_list_print(grib_handle* h, grib_accessors_list* al, const cha
     return ret;
 }
 
-int grib_recompose_print(grib_handle* h, grib_accessor* observer, const char* uname, int fail, FILE* out)
+int grib_recompose_print(grib_handle* h, const char* uname, int fail, FILE* out)
 {
     grib_accessors_list* al = NULL;
     char loc[1024];

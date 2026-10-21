@@ -1155,7 +1155,7 @@ typedef struct user_buffer_t
     size_t buffer_size;
 } user_buffer_t;
 
-static void* user_provider_buffer(void* data, size_t* length, int* err)
+static void* user_provider_buffer(void* data, size_t* length, int*)
 {
     user_buffer_t* u = (user_buffer_t*)data;
     *length = u->buffer_size;
@@ -1322,12 +1322,12 @@ typedef struct stream_struct
 
 } stream_struct;
 
-static off_t stream_tell(void* data)
+static off_t stream_tell(void*)
 {
     return 0;
 }
 
-static int stream_seek(void* data, off_t len)
+static int stream_seek(void*, off_t)
 {
     return 0;
 }
@@ -1568,7 +1568,7 @@ static void* context_allocate_buffer(void* data, size_t* length, int* err)
     return u->buffer;
 }
 
-int grib_read_any_headers_only_from_file(grib_context* ctx, FILE* f, void* buffer, size_t* len)
+int grib_read_any_headers_only_from_file(FILE* f, void* buffer, size_t* len)
 {
     int err;
     user_buffer_t u;
@@ -1595,7 +1595,7 @@ int grib_read_any_headers_only_from_file(grib_context* ctx, FILE* f, void* buffe
     return err;
 }
 
-int grib_read_any_from_file(grib_context* ctx, FILE* f, void* buffer, size_t* len)
+int grib_read_any_from_file(grib_context*, FILE* f, void* buffer, size_t* len)
 {
     int err;
     user_buffer_t u;
@@ -1637,12 +1637,12 @@ typedef struct memory_read_data
     size_t data_len;
 } memory_read_data;
 
-static off_t memory_tell(void* data)
+static off_t memory_tell(void*)
 {
     return 0;
 }
 
-static int memory_seek(void* data, off_t len)
+static int memory_seek(void*, off_t)
 {
     return 0;
 }
@@ -1699,7 +1699,7 @@ int grib_read_any_from_memory_alloc(grib_context* ctx, unsigned char** data, siz
     return err;
 }
 
-int grib_read_any_from_memory(grib_context* ctx, unsigned char** data, size_t* data_length, void* buffer, size_t* len)
+int grib_read_any_from_memory(unsigned char** data, size_t* data_length, void* buffer, size_t* len)
 {
     int err;
     memory_read_data m;

@@ -21,7 +21,7 @@ void do_stuff(void* data);
 
 void* runner(void* ptr); /* the thread function */
 
-int main(int argc, char** argv)
+int main(int, char** argv)
 {
 #if GRIB_PTHREADS
     long i;

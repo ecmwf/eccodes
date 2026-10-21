@@ -21,7 +21,7 @@ void When::init(const long len, grib_arguments* arg)
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-void When::dump(eccodes::Dumper* dumper)
+void When::dump(eccodes::Dumper*)
 {
     /* dumper->dump_when(a,NULL); */
 }

@@ -98,7 +98,7 @@ int LambertAzimuthalEqualArea::init_oblate(grib_handle* h,
                                            double Dx, double Dy, double earthMinorAxisInMetres, double earthMajorAxisInMetres,
                                            double latFirstInRadians, double lonFirstInRadians,
                                            double centralLongitudeInRadians, double standardParallelInRadians,
-                                           long iScansNegatively, long jScansPositively, long jPointsAreConsecutive)
+                                           long iScansNegatively, long jScansPositively)
 {
     double *lats, *lons;
     long i, j;
@@ -410,7 +410,7 @@ int LambertAzimuthalEqualArea::init(grib_handle* h, grib_arguments* args)
                           Dx, Dy, earthMinorAxisInMetres, earthMajorAxisInMetres,
                           latFirstInRadians, lonFirstInRadians,
                           centralLongitudeInRadians, standardParallelInRadians,
-                          iScansNegatively, jScansPositively, jPointsAreConsecutive);
+                          iScansNegatively, jScansPositively);
     }
     else {
         err = init_sphere(h, nv_, nx, ny,

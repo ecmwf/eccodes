@@ -16,11 +16,11 @@ grib_arguments* grib_arguments_new(grib_context* c, eccodes::Expression* g, ecco
     return new eccodes::Arguments(c, g, n);
 }
 
-void grib_arguments_free(grib_context* c, grib_arguments* g)
+void grib_arguments_free(grib_arguments* g)
 {
     if (g) {
         // TODO(maee): Check for memory leaks
-        // grib_arguments_free(c, g->next_);
+        // grib_arguments_free(g->next_);
         // grib_expression_free(c, g->expression_);
         delete g;
     }
@@ -38,7 +38,7 @@ Arguments::Arguments(grib_context* c, Expression* g, Arguments* n)
 
 Arguments::~Arguments()
 {
-    grib_arguments_free(context_, next_);
+    grib_arguments_free(next_);
     if (expression_) {
         expression_->destroy(context_);
         delete expression_;
@@ -55,7 +55,7 @@ void Arguments::print(grib_handle* f) const
     }
 }
 
-const char* Arguments::get_name(grib_handle* h, int n) const
+const char* Arguments::get_name(grib_handle*, int n) const
 {
     const Expression* e = NULL;
     const Arguments* args = this;
@@ -118,7 +118,7 @@ double Arguments::get_double(grib_handle* h, int n) const
     return dres;
 }
 
-grib_expression* Arguments::get_expression(grib_handle* h, int n) const
+grib_expression* Arguments::get_expression(grib_handle*, int n) const
 {
     const Arguments* args = this;
     while (args && n-- > 0) {

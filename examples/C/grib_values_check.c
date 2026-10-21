@@ -9,7 +9,7 @@
  */
 #include "eccodes.h"
 
-int main(int argc, char* argv[])
+int main(void)
 {
     FILE* f;
     int err = 0;

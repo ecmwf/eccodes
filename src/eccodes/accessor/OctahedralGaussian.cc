@@ -67,7 +67,7 @@ static int is_pl_octahedral(const long pl[], size_t size)
     return 1; /* it's octahedral */
 }
 
-int OctahedralGaussian::unpack_long(long* val, size_t* len)
+int OctahedralGaussian::unpack_long(long* val, size_t*)
 {
     int ret = GRIB_SUCCESS;
     long Ni;
@@ -113,7 +113,7 @@ int OctahedralGaussian::unpack_long(long* val, size_t* len)
     return ret;
 }
 
-int OctahedralGaussian::pack_long(const long* val, size_t* len)
+int OctahedralGaussian::pack_long(const long*, size_t*)
 {
     return GRIB_NOT_IMPLEMENTED;
 }

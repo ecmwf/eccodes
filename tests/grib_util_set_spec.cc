@@ -34,7 +34,7 @@ static int get_packing_type_code(const char* packingType)
     return result;
 }
 
-static void test_reduced_gg(int remove_local_def, int edition, const char* packingType,
+static void test_reduced_gg(const char* packingType,
                             const char* input_filename, const char* output_filename)
 {
     /* based on copy_spec_from_ksec */
@@ -404,7 +404,7 @@ int main(int argc, char* argv[])
     printf("DEBUG outfile_name     = %s\n", outfile_name);
 #endif
     test_regular_ll(remove_local_def, edition, packingType, infile_name, outfile_name);
-    test_reduced_gg(remove_local_def, edition, packingType, infile_name, outfile_name);
+    test_reduced_gg(packingType, infile_name, outfile_name);
     /*test_grid_complex_spatial_differencing(remove_local_def, edition, packingType, infile_name, outfile_name);*/
 
     return 0;

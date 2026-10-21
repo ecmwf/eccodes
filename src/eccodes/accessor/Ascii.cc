@@ -104,19 +104,19 @@ int Ascii::pack_string(const char* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int Ascii::pack_long(const long* v, size_t* len)
+int Ascii::pack_long(const long*, size_t*)
 {
     grib_context_log(this->context_, GRIB_LOG_ERROR, "Should not pack %s as long (It's a string)", name_);
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int Ascii::pack_double(const double* v, size_t* len)
+int Ascii::pack_double(const double*, size_t*)
 {
     grib_context_log(this->context_, GRIB_LOG_ERROR, "Should not pack %s as double (It's a string)", name_);
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int Ascii::unpack_long(long* v, size_t* len)
+int Ascii::unpack_long(long* v, size_t*)
 {
     char val[1024] = { 0 };
     size_t l = sizeof(val);
@@ -143,7 +143,7 @@ int Ascii::unpack_long(long* v, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int Ascii::unpack_double(double* v, size_t* len)
+int Ascii::unpack_double(double* v, size_t*)
 {
     char val[1024] = { 0 };
     size_t l = sizeof(val);

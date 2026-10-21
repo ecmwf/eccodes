@@ -53,7 +53,7 @@ static double calc_error(const double* zval1, const double* zval2)
     return sqrt(zerr);
 }
 
-int main(int argc, char* argv[])
+int main(int, char*[])
 {
     const int bitsPerValue[11] = { 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18 };
     int ipackingType, ibitsPerValue, ioptimizeScaleFactor;

@@ -87,24 +87,24 @@ int ToInteger::unpack_string(char* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int ToInteger::pack_string(const char* val, size_t* len)
+int ToInteger::pack_string(const char*, size_t*)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int ToInteger::pack_long(const long* v, size_t* len)
+int ToInteger::pack_long(const long*, size_t*)
 {
     grib_context_log(context_, GRIB_LOG_ERROR, "Should not pack %s as an integer", name_);
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int ToInteger::pack_double(const double* v, size_t* len)
+int ToInteger::pack_double(const double*, size_t*)
 {
     grib_context_log(context_, GRIB_LOG_ERROR, "Should not pack %s as a double", name_);
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int ToInteger::unpack_long(long* v, size_t* len)
+int ToInteger::unpack_long(long* v, size_t*)
 {
     char val[1024] = { 0 };
     size_t l = sizeof(val);
@@ -120,7 +120,7 @@ int ToInteger::unpack_long(long* v, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int ToInteger::unpack_double(double* v, size_t* len)
+int ToInteger::unpack_double(double* v, size_t*)
 {
     size_t l = 1;
     long val = 0;

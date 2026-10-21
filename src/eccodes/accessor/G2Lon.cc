@@ -21,7 +21,7 @@ void G2Lon::init(const long l, grib_arguments* c)
     longitude_ = c->get_name(get_enclosing_handle(), n++);
 }
 
-int G2Lon::unpack_double(double* val, size_t* len)
+int G2Lon::unpack_double(double* val, size_t*)
 {
     int ret = 0;
     long longitude;
@@ -39,7 +39,7 @@ int G2Lon::unpack_double(double* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int G2Lon::pack_double(const double* val, size_t* len)
+int G2Lon::pack_double(const double* val, size_t*)
 {
     long longitude;
     double value = *val;

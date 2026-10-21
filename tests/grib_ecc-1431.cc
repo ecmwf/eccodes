@@ -32,7 +32,7 @@ struct Range
 //
 // Test: This test doesn't accept errors after decompression.
 //
-int main(int argc, char** argv)
+int main(int, char**)
 {
     std::vector<Range> ranges;
     ranges.push_back({ flt::max() / 10, flt::max() });

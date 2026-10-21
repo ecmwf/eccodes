@@ -21,7 +21,7 @@
 #define MTRONC 30
 #define STRONC 10
 
-int main(int argc, char* argv[])
+int main(int, char*[])
 {
     size_t len;
     grib_handle* h;

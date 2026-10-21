@@ -18,13 +18,13 @@ String::String(grib_context* c, const char* value)
     value_ = grib_context_strdup_persistent(c, value);
 }
 
-const char* String::evaluate_string(grib_handle* h, char* buf, size_t* size, int* err) const
+const char* String::evaluate_string(grib_handle*, char*, size_t*, int* err) const
 {
     *err = 0;
     return value_;
 }
 
-void String::print(grib_context* c, grib_handle* f, FILE* out) const
+void String::print(grib_context*, grib_handle*, FILE* out) const
 {
     fprintf(out, "string('%s')", value_);
 }
@@ -34,12 +34,12 @@ void String::destroy(grib_context* c)
     grib_context_free_persistent(c, value_);
 }
 
-void String::add_dependency(grib_accessor* observer)
+void String::add_dependency(grib_accessor*)
 {
     /* grib_expression_string* e = (grib_expression_string*)g; */
 }
 
-int String::native_type(grib_handle* h) const
+int String::native_type(grib_handle*) const
 {
     return GRIB_TYPE_STRING;
 }

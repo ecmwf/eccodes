@@ -101,7 +101,7 @@ int main(int argc, char* argv[])
     return grib_tool(argc, argv);
 }
 
-int grib_tool_before_getopt(grib_runtime_options* options)
+int grib_tool_before_getopt(grib_runtime_options*)
 {
     return 0;
 }
@@ -178,22 +178,22 @@ int grib_tool_init(grib_runtime_options* options)
     return 0;
 }
 
-int grib_tool_new_filename_action(grib_runtime_options* options, const char* file)
+int grib_tool_new_filename_action(grib_runtime_options*, const char*)
 {
     return 0;
 }
-int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* file)
+int grib_tool_new_file_action(grib_runtime_options*, grib_tools_file*)
 {
     return 0;
 }
 
-static void printInfo(grib_handle* h)
+static void printInfo()
 {
     printf("== %d == DIFFERENCE == ", count);
 }
 
 static grib_handle* gts_handle_new_from_file_x(
-    grib_context* c, FILE* f, int mode, int headers_only, int* err)
+    grib_context* c, FILE* f, int* err)
 {
     return codes_handle_new_from_file(c, f, PRODUCT_GTS, err);
 }
@@ -203,7 +203,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     int err = 0;
     count++;
 
-    global_handle = gts_handle_new_from_file_x(h->context, options->infile_extra->file, options->mode, 0, &err);
+    global_handle = gts_handle_new_from_file_x(h->context, options->infile_extra->file, &err);
 
     if (!global_handle || err != GRIB_SUCCESS) {
         morein2++;
@@ -334,7 +334,7 @@ static int compare_values(const grib_runtime_options* options, grib_handle* h1, 
         printf("  comparing %s", name);
 
     if (type1 == GRIB_TYPE_UNDEFINED && (err = grib_get_native_type(h1, name, &type1)) != GRIB_SUCCESS) {
-        printInfo(h1);
+        printInfo();
         printf("Error: cannot get type of [%s] in 1st field: %s\n", name, grib_get_error_message(err));
         save_error(c, name);
         return err;
@@ -342,12 +342,12 @@ static int compare_values(const grib_runtime_options* options, grib_handle* h1, 
 
     if (type2 == GRIB_TYPE_UNDEFINED && (err = grib_get_native_type(h2, name, &type2)) != GRIB_SUCCESS) {
         if (err == GRIB_NOT_FOUND) {
-            printInfo(h1);
+            printInfo();
             printf("[%s] not found in 2nd field\n", name);
             save_error(c, name);
             return err;
         }
-        printInfo(h1);
+        printInfo();
         printf("Error: cannot get type of [%s] in 2nd field: %s\n", name, grib_get_error_message(err));
         save_error(c, name);
         return err;
@@ -360,7 +360,7 @@ static int compare_values(const grib_runtime_options* options, grib_handle* h1, 
         return err;
 
     if ((err = grib_get_size(h1, name, &len1)) != GRIB_SUCCESS) {
-        printInfo(h1);
+        printInfo();
         printf("Error: cannot get size of [%s] in 1st field: %s\n", name, grib_get_error_message(err));
         save_error(c, name);
         return err;
@@ -368,13 +368,13 @@ static int compare_values(const grib_runtime_options* options, grib_handle* h1, 
 
     if ((err = grib_get_size(h2, name, &len2)) != GRIB_SUCCESS) {
         if (err == GRIB_NOT_FOUND) {
-            printInfo(h1);
+            printInfo();
             printf("[%s] not found in 2nd field\n", name);
             save_error(c, name);
             return err;
         }
 
-        printInfo(h1);
+        printInfo();
         printf("Error: cannot get size of [%s] in 2nd field: %s\n", name, grib_get_error_message(err));
         save_error(c, name);
         return err;
@@ -393,14 +393,14 @@ static int compare_values(const grib_runtime_options* options, grib_handle* h1, 
             sval2 = (char*)grib_context_malloc(h2->context, len2 * sizeof(char));
 
             if ((err1 = grib_get_string(h1, name, sval1, &len1)) != GRIB_SUCCESS) {
-                printInfo(h1);
+                printInfo();
                 printf("Error: cannot get string value of [%s] in 1st field: %s\n",
                        name, grib_get_error_message(err1));
                 save_error(c, name);
             }
 
             if ((err2 = grib_get_string(h2, name, sval2, &len2)) != GRIB_SUCCESS) {
-                printInfo(h1);
+                printInfo();
                 printf("Error: cannot get string value of [%s] in 2nd field: %s\n",
                        name, grib_get_error_message(err2));
                 save_error(c, name);
@@ -408,7 +408,7 @@ static int compare_values(const grib_runtime_options* options, grib_handle* h1, 
 
             if (err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS) {
                 if (grib_inline_strcmp(sval1, sval2) != 0) {
-                    printInfo(h1);
+                    printInfo();
                     printf("string [%s]: [%s] != [%s]\n",
                            name, sval1, sval2);
                     err1 = GRIB_VALUE_MISMATCH;
@@ -433,21 +433,21 @@ static int compare_values(const grib_runtime_options* options, grib_handle* h1, 
             lval2 = (long*)grib_context_malloc(h2->context, len2 * sizeof(long));
 
             if ((err1 = grib_get_long_array(h1, name, lval1, &len1)) != GRIB_SUCCESS) {
-                printInfo(h1);
+                printInfo();
                 printf("Error: cannot get long value of [%s] in 1st field: %s\n",
                        name, grib_get_error_message(err1));
                 save_error(c, name);
             }
 
             if ((err2 = grib_get_long_array(h2, name, lval2, &len2)) != GRIB_SUCCESS) {
-                printInfo(h1);
+                printInfo();
                 printf("Error: cannot get long value of [%s] in 2nd field: %s\n",
                        name, grib_get_error_message(err2));
                 save_error(c, name);
             }
 
             if (err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS && len1 != len2) {
-                printInfo(h1);
+                printInfo();
                 printf("Different size for \"%s\"  [%ld]  [%ld]\n", name, (long)len1, (long)len2);
                 err1 = GRIB_INTERNAL_ERROR;
                 save_error(c, name);
@@ -460,7 +460,7 @@ static int compare_values(const grib_runtime_options* options, grib_handle* h1, 
                         countdiff++;
 
                 if (countdiff) {
-                    printInfo(h1);
+                    printInfo();
                     save_error(c, name);
                     err1 = GRIB_VALUE_MISMATCH;
                     if (len1 == 1)
@@ -491,7 +491,7 @@ static int compare_values(const grib_runtime_options* options, grib_handle* h1, 
 
         default:
             if (verbose) printf("\n");
-            printInfo(h1);
+            printInfo();
             save_error(c, name);
             fprintf(stderr, "Cannot compare [%s], unsupported type %d\n", name, type1);
             return GRIB_UNABLE_TO_COMPARE_ACCESSORS;
@@ -617,7 +617,7 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
     return err;
 }
 
-int grib_no_handle_action(grib_runtime_options* options, int err)
+int grib_no_handle_action(grib_runtime_options*, int)
 {
     fprintf(dump_file, "\t\t\"ERROR: unreadable message\"\n");
     return 0;
