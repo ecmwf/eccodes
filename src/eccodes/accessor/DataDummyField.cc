@@ -52,7 +52,7 @@ int DataDummyField::unpack_double(double* val, size_t* len)
     return err;
 }
 
-int DataDummyField::pack_double(const double* val, size_t* len)
+int DataDummyField::pack_double(const double* /*val*/, size_t* len)
 {
     size_t n_vals = *len;
     int err = 0;

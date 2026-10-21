@@ -56,7 +56,7 @@ static size_t count_global_points(const long* pl, size_t plsize)
     return sum_of_pl_array(pl, plsize);
 }
 static size_t count_subarea_points(grib_handle* h, get_reduced_row_proc get_reduced_row,
-                                   long* pl, size_t plsize, double lon_first, double lon_last)
+                                   long* pl, double lon_first, double lon_last)
 {
     size_t j = 0, result = 0;
     long row_count = 0;
@@ -98,7 +98,7 @@ static void binary_search(const double xx[], const unsigned long n, double x, lo
 /* Use legacy way to compute the iterator latitude/longitude values */
 int GaussianReduced::iterate_reduced_gaussian_subarea_legacy(grib_handle* h,
                                                              double lat_first, double lon_first,
-                                                             double lat_last, double lon_last,
+                                                             double /*lat_last*/, double lon_last,
                                                              double* lats, long* pl, size_t plsize)
 {
     int err = 0;
@@ -111,7 +111,7 @@ int GaussianReduced::iterate_reduced_gaussian_subarea_legacy(grib_handle* h,
     get_reduced_row_proc get_reduced_row = &grib_get_reduced_row_legacy; /* legacy algorithm */
 
     if (h->context->debug) {
-        const size_t np = count_subarea_points(h, get_reduced_row, pl, plsize, lon_first, lon_last);
+        const size_t np = count_subarea_points(h, get_reduced_row, pl, lon_first, lon_last);
         fprintf(stderr, "ECCODES DEBUG grib_iterator_class_gaussian_reduced: Legacy sub-area num points=%zu\n", np);
     }
 
@@ -131,7 +131,7 @@ int GaussianReduced::iterate_reduced_gaussian_subarea_legacy(grib_handle* h,
             ilon_first -= pl[j];
         for (i = ilon_first; i <= ilon_last; i++) {
             if (e_ >= nv_) {
-                size_t np = count_subarea_points(h, get_reduced_row, pl, plsize, lon_first, lon_last);
+                size_t np = count_subarea_points(h, get_reduced_row, pl, lon_first, lon_last);
                 grib_context_log(h->context, GRIB_LOG_ERROR,
                                  "%s (sub-area legacy). Num points=%zu, size(values)=%zu", ITER, np, nv_);
                 return GRIB_WRONG_GRID;
@@ -171,7 +171,7 @@ int GaussianReduced::iterate_reduced_gaussian_subarea(grib_handle* h,
     get_reduced_row_proc get_reduced_row = &grib_get_reduced_row;
 
     if (h->context->debug) {
-        const size_t np = count_subarea_points(h, get_reduced_row, pl, plsize, lon_first, lon_last);
+        const size_t np = count_subarea_points(h, get_reduced_row, pl, lon_first, lon_last);
         fprintf(stderr, "ECCODES DEBUG grib_iterator_class_gaussian_reduced: sub-area num points=%zu\n", np);
     }
 
@@ -200,7 +200,7 @@ int GaussianReduced::iterate_reduced_gaussian_subarea(grib_handle* h,
             double lon2 = olon_first + i * delta;
             if (e_ >= nv_) {
                 /* Only print error message on the second pass */
-                size_t np = count_subarea_points(h, get_reduced_row, pl, plsize, lon_first, lon_last);
+                size_t np = count_subarea_points(h, get_reduced_row, pl, lon_first, lon_last);
                 grib_context_log(h->context, GRIB_LOG_ERROR,
                                  "%s (sub-area). Num points=%zu, size(values)=%zu", ITER, np, nv_);
                 return GRIB_WRONG_GRID;
@@ -214,7 +214,7 @@ int GaussianReduced::iterate_reduced_gaussian_subarea(grib_handle* h,
 
     if (e_ != nv_) {
         /* Fewer counted points in the sub-area than the number of data values */
-        const size_t legacy_count = count_subarea_points(h, grib_get_reduced_row_legacy, pl, plsize, lon_first, lon_last);
+        const size_t legacy_count = count_subarea_points(h, grib_get_reduced_row_legacy, pl, lon_first, lon_last);
         if (nv_ == legacy_count) {
             /* Legacy (produced by PRODGEN/LIBEMOS) */
             return iterate_reduced_gaussian_subarea_legacy(h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize);

@@ -30,7 +30,7 @@ void NumberOfValues::init(const long l, grib_arguments* c)
     length_ = 0;
 }
 
-int NumberOfValues::unpack_long(long* val, size_t* len)
+int NumberOfValues::unpack_long(long* val, size_t* /*len*/)
 {
     int ret = GRIB_SUCCESS;
     long npoints = 0, bitmap_present = 0;

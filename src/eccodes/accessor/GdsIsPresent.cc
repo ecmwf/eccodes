@@ -28,7 +28,7 @@ void GdsIsPresent::init(const long l, grib_arguments* c)
     length_ = 0;
 }
 
-int GdsIsPresent::pack_long(const long* val, size_t* len)
+int GdsIsPresent::pack_long(const long* val, size_t* /*len*/)
 {
     long missing = 255;
     int ret = 0;

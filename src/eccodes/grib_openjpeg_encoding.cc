@@ -31,7 +31,7 @@ static void openjpeg_error(const char* msg, void* client_data)
     grib_context_log((grib_context*)client_data, GRIB_LOG_ERROR, "openjpeg: %s", msg);
 }
 
-static void openjpeg_info(const char* msg, void* client_data)
+static void openjpeg_info(const char* /*msg*/, void* /*client_data*/)
 {
     /* grib_context_log((grib_context*)client_data,GRIB_LOG_INFO,"openjpeg: %s",msg); */
 }

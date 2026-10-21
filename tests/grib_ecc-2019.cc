@@ -35,7 +35,7 @@ static void check_for_levelist(codes_handle* h, bool should_exist)
     codes_keys_iterator_delete(kiter);
 }
 
-int main(int argc, char* argv[])
+int main(int /*argc*/, char* /*argv*/[])
 {
     codes_handle* h = grib_handle_new_from_samples(0, "GRIB2");
     size_t alen = 1000;

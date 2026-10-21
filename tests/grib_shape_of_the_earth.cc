@@ -238,7 +238,7 @@ static void check_axis_units()
     }
 }
 
-int main(int argc, char* argv[])
+int main(int /*argc*/, char* /*argv*/[])
 {
     check_radius_follows_shape();
 

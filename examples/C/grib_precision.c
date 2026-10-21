@@ -25,7 +25,7 @@
 #define EXPECTED_MIN 270.466796875
 #define EXPECTED_MAX 311.096796875
 
-int main(int argc, char** argv)
+int main(void)
 {
     int err = 0;
     size_t size = 0;

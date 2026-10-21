@@ -33,7 +33,7 @@ void LongVector::init(const long l, grib_arguments* c)
     length_ = 0;
 }
 
-int LongVector::unpack_long(long* val, size_t* len)
+int LongVector::unpack_long(long* val, size_t* /*len*/)
 {
     size_t size = 0;
     int err = 0;

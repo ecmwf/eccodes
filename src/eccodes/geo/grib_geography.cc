@@ -244,7 +244,7 @@ int is_gaussian_global(
 
 /* From Magics GribRotatedInterpretor::rotate */
 void rotate(const double inlat, const double inlon,
-            const double angleOfRot, const double southPoleLat, const double southPoleLon,
+            const double /*angleOfRot*/, const double southPoleLat, const double southPoleLon,
             double* outlat, double* outlon)
 {
     double PYROT, PXROT, ZCYROT, ZCXROT, ZSXROT;

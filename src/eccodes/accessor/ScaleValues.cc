@@ -32,7 +32,7 @@ int ScaleValues::unpack_double(double* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int ScaleValues::pack_double(const double* val, size_t* len)
+int ScaleValues::pack_double(const double* val, size_t* /*len*/)
 {
     double* values = NULL;
     double missingValue = 0;

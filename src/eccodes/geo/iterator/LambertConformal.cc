@@ -126,7 +126,7 @@ static void xy2lonlat(double radius, double n, double f, double rho0_bare, doubl
 
 int LambertConformal::init_sphere(const grib_handle* h,
                                   size_t nv, long nx, long ny,
-                                  double LoVInDegrees,
+                                  double /*LoVInDegrees*/,
                                   double Dx, double Dy, double radius,
                                   double latFirstInRadians, double lonFirstInRadians,
                                   double LoVInRadians, double Latin1InRadians, double Latin2InRadians,
@@ -216,7 +216,7 @@ int LambertConformal::init_sphere(const grib_handle* h,
 // Oblate spheroid
 int LambertConformal::init_oblate(const grib_handle* h,
                                   size_t nv, long nx, long ny,
-                                  double LoVInDegrees,
+                                  double /*LoVInDegrees*/,
                                   double Dx, double Dy,
                                   double earthMinorAxisInMetres, double earthMajorAxisInMetres,
                                   double latFirstInRadians, double lonFirstInRadians,

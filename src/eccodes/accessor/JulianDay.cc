@@ -38,7 +38,7 @@ int JulianDay::pack_long(const long* val, size_t* len)
     return pack_double(&v, len);
 }
 
-int JulianDay::pack_double(const double* val, size_t* len)
+int JulianDay::pack_double(const double* val, size_t* /*len*/)
 {
     int ret = GRIB_SUCCESS;
     long hour = 0, minute = 0, second = 0;
@@ -76,7 +76,7 @@ int JulianDay::unpack_long(long* val, size_t* len)
     return ret;
 }
 
-int JulianDay::unpack_double(double* val, size_t* len)
+int JulianDay::unpack_double(double* val, size_t* /*len*/)
 {
     int ret = 0;
     long date, hour, minute, second;

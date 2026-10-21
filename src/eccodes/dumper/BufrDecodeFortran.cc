@@ -152,7 +152,7 @@ void BufrDecodeFortran::dump_values_attribute(grib_accessor* a, const char* pref
     (void)err; /* TODO */
 }
 
-void BufrDecodeFortran::dump_long(grib_accessor* a, const char* comment)
+void BufrDecodeFortran::dump_long(grib_accessor* a, const char* /*comment*/)
 {
     long value = 0;
     size_t size = 0;
@@ -283,11 +283,11 @@ void BufrDecodeFortran::dump_long_attribute(grib_accessor* a, const char* prefix
     (void)err; /* TODO */
 }
 
-void BufrDecodeFortran::dump_bits(grib_accessor* a, const char* comment)
+void BufrDecodeFortran::dump_bits(grib_accessor* /*a*/, const char* /*comment*/)
 {
 }
 
-void BufrDecodeFortran::dump_double(grib_accessor* a, const char* comment)
+void BufrDecodeFortran::dump_double(grib_accessor* a, const char* /*comment*/)
 {
     double value;
     size_t size = 1;
@@ -383,7 +383,7 @@ void BufrDecodeFortran::dump_string_array(grib_accessor* a, const char* comment)
 }
 
 #define MAX_STRING_SIZE 4096
-void BufrDecodeFortran::dump_string(grib_accessor* a, const char* comment)
+void BufrDecodeFortran::dump_string(grib_accessor* a, const char* /*comment*/)
 {
     char value[MAX_STRING_SIZE] = { 0 }; /* See ECC-710 */
     size_t size = MAX_STRING_SIZE;
@@ -441,11 +441,11 @@ void BufrDecodeFortran::dump_string(grib_accessor* a, const char* comment)
     (void)err; /* TODO */
 }
 
-void BufrDecodeFortran::dump_bytes(grib_accessor* a, const char* comment)
+void BufrDecodeFortran::dump_bytes(grib_accessor* /*a*/, const char* /*comment*/)
 {
 }
 
-void BufrDecodeFortran::dump_label(grib_accessor* a, const char* comment)
+void BufrDecodeFortran::dump_label(grib_accessor* /*a*/, const char* /*comment*/)
 {
 }
 
@@ -522,7 +522,7 @@ void BufrDecodeFortran::dump_attributes(grib_accessor* a, const char* prefix)
     isAttribute_ = 0;
 }
 
-void BufrDecodeFortran::header(const grib_handle* h) const
+void BufrDecodeFortran::header(const grib_handle* /*h*/) const
 {
     if (count_ < 2) {
         /* This is the first message being processed */
@@ -553,7 +553,7 @@ void BufrDecodeFortran::header(const grib_handle* h) const
     fprintf(out_, "  call codes_set(ibufr, 'unpack', 1)\n");
 }
 
-void BufrDecodeFortran::footer(const grib_handle* h) const
+void BufrDecodeFortran::footer(const grib_handle* /*h*/) const
 {
     /*fprintf(dumper_.out,"  call codes_close_file(ifile)\n");*/
     fprintf(out_, "  call codes_release(ibufr)\n");

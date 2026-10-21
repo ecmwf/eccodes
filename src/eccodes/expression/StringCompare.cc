@@ -88,14 +88,14 @@ void StringCompare::add_dependency(grib_accessor* observer)
     right_->add_dependency(observer);
 }
 
-StringCompare::StringCompare(grib_context* c, Expression* left, Expression* right, int eq)
+StringCompare::StringCompare(grib_context* /*c*/, Expression* left, Expression* right, int eq)
 {
     left_ = left;
     right_ = right;
     eq_ = eq;
 }
 
-int StringCompare::native_type(grib_handle* h) const
+int StringCompare::native_type(grib_handle* /*h*/) const
 {
     return GRIB_TYPE_LONG;
 }

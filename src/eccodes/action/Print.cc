@@ -80,7 +80,7 @@ int Print::execute(grib_handle* h)
     return err;
 }
 
-int Print::create_accessor(grib_section* p, grib_loader* h)
+int Print::create_accessor(grib_section* p, grib_loader* /*h*/)
 {
     // ECC-1929: A print statement within the definitions does not
     // actually create an accessor. So we just run it

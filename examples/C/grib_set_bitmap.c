@@ -21,7 +21,7 @@
 
 #include "eccodes.h"
 
-int main(int argc, char** argv)
+int main(void)
 {
     int err = 0, i = 0, NUM_MISSING = 10;
 

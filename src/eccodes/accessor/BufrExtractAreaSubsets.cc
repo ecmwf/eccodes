@@ -175,7 +175,7 @@ int BufrExtractAreaSubsets::select_area()
     return ret;
 }
 
-int BufrExtractAreaSubsets::pack_long(const long* val, size_t* len)
+int BufrExtractAreaSubsets::pack_long(const long* /*val*/, size_t* len)
 {
     if (*len == 0)
         return GRIB_SUCCESS;

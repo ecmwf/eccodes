@@ -30,7 +30,7 @@ static void free_memory(double* sigt_pres, double* sigt_geo, double* sigt_t, dou
     free(sigt_td);
 }
 
-int main(int argc, char* argv[])
+int main(void)
 {
     FILE* in = NULL;
 

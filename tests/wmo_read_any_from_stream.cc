@@ -15,7 +15,7 @@
 #define SIZE 1024 * 1024
 char buffer[SIZE];
 
-static long readcb(void* data, void* buffer, long len)
+static long readcb(void* /*data*/, void* /*buffer*/, long /*len*/)
 {
     // long l = handle->read(buffer, len);
     //  ecCodes interprets a -1 as EOF
