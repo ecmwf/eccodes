@@ -13,6 +13,7 @@ Checks: >
   -bugprone-assignment-in-if-condition,
   -bugprone-branch-clone,
   -bugprone-easily-swappable-parameters,
+  -bugprone-empty-catch,
   -bugprone-forward-declaration-namespace,
   -bugprone-implicit-widening-of-multiplication-result,
   -bugprone-inc-dec-in-conditions,
@@ -32,6 +33,7 @@ Checks: >
   -cert-err33-c,
   -concurrency-mt-unsafe,
   -performance-enum-size,
+  -performance-inefficient-vector-operation,
   -performance-unnecessary-value-param
 WarningsAsErrors: '*'
 ...
