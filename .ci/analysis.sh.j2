@@ -1,0 +1,70 @@
+{# SPDX-FileCopyrightText: 2005- European Centre for Medium-Range Weather Forecasts (ECMWF)
+   SPDX-License-Identifier: Apache-2.0
+
+   The lint lanes of .github/workflows/ci.yml and the analysis lanes of
+   .github/workflows/analysis.yml; `options` names both the CMake preset and the
+   analysis. #}
+{% extends "ci-infrastructure/cmake-runner.sh.j2" %}
+{% block cmake_args %}
+  -DENABLE_FORTRAN=OFF \
+{% endblock %}
+{% block build %}
+status=0
+{% if options == "cppcheck" %}
+# Findings not yet fixed; each fix drops its id.
+todo="duplInheritedMember nullPointerRedundantCheck incorrectStringBooleanError arrayIndexOutOfBoundsCond
+  uselessAssignmentPtrArg useInitializationList nullPointer memsetClassFloat signConversionCond
+  preprocessorErrorDirective nullPointerArithmeticRedundantCheck legacyUninitvar invalidFunctionArg
+  identicalConditionAfterEarlyExit"
+suppress=()
+for id in $todo; do suppress+=("--suppress=$id"); done
+cppcheck --project="$build/compile_commands.json" --file-filter="$CI_SOURCE_DIR/src/*" \
+  --enable=warning,performance,portability --inline-suppr --suppress=missingIncludeSystem "${suppress[@]}" \
+  -j "$jobs" --template=gcc --error-exitcode=1 --output-file="$build/cppcheck.txt" || status=$?
+cat "$build/cppcheck.txt"
+{% else %}
+# Keep going, so a -Werror build reports every failing translation unit.
+cmake --build "$build" --parallel "$jobs" -- -k 2>&1 | tee "$build/build.log" || status=$?
+echo "Warnings by flag:"
+grep -o '\[-W[^]]*\]' "$build/build.log" | sort | uniq -c | sort -rn || true
+{% if options == "clang-tidy" %}
+[ "$status" -eq 0 ]
+run-clang-tidy-18 -p "$build" -clang-tidy-binary "$(command -v clang-tidy-18)" -quiet -j "$jobs" \
+  -header-filter="^$CI_SOURCE_DIR/src/" "^$CI_SOURCE_DIR/src/" 2>&1 | tee "$build/clang-tidy.log" || status=$?
+{% endif %}
+{% endif %}
+[ "$status" -eq 0 ]
+{% endblock %}
+{% block test %}
+ctest --test-dir "$build" --output-on-failure -L download_data -j 6
+{% if options == "valgrind" %}
+export ECCODES_TEST_WITH_VALGRIND=1
+{% elif options == "asan-ubsan" %}
+export LSAN_OPTIONS="suppressions=$CI_SOURCE_DIR/tests/lsan-leap42.supp"
+export UBSAN_OPTIONS=print_stacktrace=1
+{% elif options == "tsan" %}
+export TSAN_OPTIONS="suppressions=$CI_SOURCE_DIR/cmake/tsan_suppressions.txt"
+{% endif %}
+{% if options == "coverage" %}
+# Report only: test failures are the other lanes' business.
+ctest --test-dir "$build" --output-on-failure -LE download_data -j "$jobs" || true
+mkdir -p "$build/coverage"
+gcovr --root "$CI_SOURCE_DIR" --object-directory "$build" --filter "$CI_SOURCE_DIR/src/" \
+  --gcov-executable {{ c_compiler_binary | replace("gcc", "gcov") | sh }} -j "$jobs" --print-summary \
+  --gcov-ignore-errors=no_working_dir_found \
+  --html-details "$build/coverage/index.html" --cobertura "$build/coverage/coverage.xml"
+{% else %}
+wrap=""
+{% if options in ("asan-ubsan", "tsan") %}
+# gcc-13's sanitizers can't map their shadow memory under high-entropy ASLR
+# (Linux >= 6.5); turn it off where the container lets us.
+if setarch "$(uname -m)" -R true 2>/dev/null; then
+  wrap="setarch $(uname -m) -R"
+fi
+{% endif %}
+# shellcheck disable=SC2086
+$wrap ctest --test-dir "$build" --output-on-failure -LE download_data -j "$jobs"
+{% endif %}
+{% endblock %}
+{% block install %}
+{% endblock %}
