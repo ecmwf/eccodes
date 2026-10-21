@@ -60,6 +60,28 @@
     end if
   end subroutine grib_index_create
 
+  !> Create a new empty index with the given keys.
+  !>
+  !> Unlike grib_index_create, no file is scanned. Messages can be added
+  !> later with grib_index_add_message.
+  !>
+  !> @param indexid     ID of the newly created index
+  !> @param keys        comma separated list of keys for the index
+  !> @param status      GRIB_SUCCESS if OK, integer value on error
+  subroutine grib_index_new(indexid, keys, status)
+    integer(kind=kindOfInt), intent(inout)          :: indexid
+    character(len=*), intent(in)                    :: keys
+    integer(kind=kindOfInt), optional, intent(out)  :: status
+    integer(kind=kindOfInt)                         :: iret
+
+    iret = grib_f_index_new(indexid, keys)
+    if (present(status)) then
+      status = iret
+    else
+      call grib_check(iret, 'index_new', '('//keys//')')
+    end if
+  end subroutine grib_index_new
+
   !> Add a file to an index.
   !>
   !>
@@ -85,6 +107,37 @@
       call grib_check(iret, 'index_add_file', '('//filename//')')
     end if
   end subroutine grib_index_add_file
+
+  !> Add a message handle to an index at the given file offset.
+  !>
+  !> The message must already have been written to the file at 'offset'.
+  !> Typical usage: record ftell() before writing, write the message,
+  !> then call this to update the index without re-scanning the file.
+  !>
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref grib_get_error_string.
+  !>
+  !> @param indexid     ID of the index to update
+  !> @param gribid      ID of the GRIB message handle to index
+  !> @param filename    name of the file containing the message
+  !> @param offset      byte offset of the message within the file
+  !> @param status      GRIB_SUCCESS if OK, integer value on error
+  subroutine grib_index_add_message(indexid, gribid, filename, offset, status)
+    integer(kind=kindOfInt), intent(in)             :: indexid
+    integer(kind=kindOfInt), intent(in)             :: gribid
+    character(len=*), intent(in)                    :: filename
+    integer(kind=8), intent(in)                     :: offset
+    integer(kind=kindOfInt), optional, intent(out)  :: status
+    integer(kind=kindOfInt)                         :: iret
+
+    iret = grib_f_index_add_message(indexid, gribid, filename, offset)
+    if (present(status)) then
+      status = iret
+    else
+      call grib_check(iret, 'index_add_message', '('//filename//')')
+    end if
+  end subroutine grib_index_add_message
 
   !> Get the number of distinct values of the key in argument contained in the index. The key must belong to the index.
   !>
