@@ -1,1 +1,1 @@
-'h' = {northernLatitudeOfClusterDomain = 75000; westernLongitudeOfClusterDomain = 340000; southernLatitudeOfClusterDomain = 30000; easternLongitudeOfClusterDomain = 40000;}
+'h' = {northernLatitudeOfClusterDomain = 75000000; westernLongitudeOfClusterDomain = 340000000; southernLatitudeOfClusterDomain = 30000000; easternLongitudeOfClusterDomain = 40000000;}
