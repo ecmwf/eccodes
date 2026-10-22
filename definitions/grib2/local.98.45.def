@@ -1,0 +1,8 @@
+# Local definition 45: 
+
+unsigned[2] clusteringStartTimeStep  : dump;
+unsigned[2] clusteringEndTimeStep  : dump;
+unsigned[1] representativeMember : dump;
+codetable[1] climatologicalRegime "grib2/tables/local/ecmf/regimes.table" : dump;
+
+concept clusteringDomain(unknown, "clusteringDomain.def", conceptsDir2, conceptsDir1): read_only;

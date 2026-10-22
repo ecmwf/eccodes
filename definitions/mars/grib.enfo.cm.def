@@ -1,2 +1,7 @@
-alias mars.number = clusterNumber;
-alias mars.domain = clusteringDomain;
+if (edition == 1) {
+ alias mars.number = clusterIdentifier;
+ alias mars.domain = clusteringDomain;
+} else {
+ alias mars.number = clusterNumber;
+ alias mars.domain = clusteringDomain;
+}
