@@ -10,9 +10,6 @@
 
 #include "ValidityDate.h"
 
-eccodes::accessor::ValidityDate _grib_accessor_validity_date;
-eccodes::Accessor* grib_accessor_validity_date = &_grib_accessor_validity_date;
-
 namespace eccodes::accessor
 {
 
@@ -20,15 +17,15 @@ void ValidityDate::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
     grib_handle* hand = get_enclosing_handle();
-    int n             = 0;
+    int n = 0;
 
-    date_      = c->get_name(hand, n++);
-    time_      = c->get_name(hand, n++);
-    step_      = c->get_name(hand, n++);
+    date_ = c->get_name(hand, n++);
+    time_ = c->get_name(hand, n++);
+    step_ = c->get_name(hand, n++);
     stepUnits_ = c->get_name(hand, n++);
-    year_      = c->get_name(hand, n++);
-    month_     = c->get_name(hand, n++);
-    day_       = c->get_name(hand, n++);
+    year_ = c->get_name(hand, n++);
+    month_ = c->get_name(hand, n++);
+    day_ = c->get_name(hand, n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
@@ -36,11 +33,11 @@ void ValidityDate::init(const long l, grib_arguments* c)
 int ValidityDate::unpack_long(long* val, size_t* len)
 {
     grib_handle* hand = get_enclosing_handle();
-    int ret           = 0;
-    long date         = 0;
-    long time         = 0;
-    long step         = 0;
-    long stepUnits    = 0;
+    int ret = 0;
+    long date = 0;
+    long time = 0;
+    long step = 0;
+    long stepUnits = 0;
     long hours = 0, minutes = 0, step_mins = 0, tmp, tmp_hrs;
 
     if (year_) {
@@ -71,10 +68,10 @@ int ValidityDate::unpack_long(long* val, size_t* len)
     }
 
     minutes = time % 100;
-    hours   = time / 100;
-    tmp     = minutes + step_mins; /* add the step to our minutes */
-    tmp_hrs = tmp / 60;            /* how many hours and mins is that? */
-    hours += tmp_hrs;              /* increment hours */
+    hours = time / 100;
+    tmp = minutes + step_mins; /* add the step to our minutes */
+    tmp_hrs = tmp / 60;        /* how many hours and mins is that? */
+    hours += tmp_hrs;          /* increment hours */
 
     date = grib_date_to_julian(date);
     /* does the new 'hours' exceed 24? if so increment julian */

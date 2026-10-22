@@ -1,0 +1,12 @@
+# DestinE MARS layout
+# Local definition 2: Land surface tile data with tilescheme key
+
+# Base keywords for all datasets
+include "grib2/local.destine.base.def"
+
+# Keywords based on dataset
+template_nofail datasetTemplate "grib2/local.destine.[dataset:s].def";
+
+# Add tilescheme key
+codetable[2] tilescheme "grib2/destine_tilescheme.table" : dump;
+alias mars.tilescheme = tilescheme;

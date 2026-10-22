@@ -3,7 +3,7 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
+#
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
@@ -24,6 +24,7 @@ tempDir=${label}.temp.dir
 rm -rf $tempDir
 mkdir -p $tempDir/definitions/grib2
 bootfile=$tempDir/definitions/grib2/boot.def
+
 cat $def_dir/grib2/boot.def > $bootfile
 echo "uint16 key_uint16: transient;"    >> $bootfile
 echo "uint32 key_uint32: transient;"    >> $bootfile
@@ -53,6 +54,16 @@ set -e
 # kindOfProduct = GRIB, dataDate = 20070323
 grib_check_key_equals $input 'key_tos1,key_tos2'     'G 200'
 grib_check_key_equals $input 'key_tos2:d,key_tos2:i' '200 200'
+
+
+# Non-existent accessor
+set +e
+echo "meta abcd bad_accessor();" > $tempDir/definitions/boot_extra.def
+${tools_dir}/grib_ls $input > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "No creator for type bad_accessor" $tempText
 
 rm -rf $tempDir
 

@@ -14,4 +14,3 @@ alias local.diagnosticNumber=diagnosticNumber;
 
 alias iteration = iterationNumber;
 alias diagnostic = diagnosticNumber;
-

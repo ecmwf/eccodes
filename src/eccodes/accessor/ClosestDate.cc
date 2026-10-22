@@ -11,9 +11,6 @@
 #include "ClosestDate.h"
 #include <float.h>
 
-eccodes::accessor::ClosestDate _grib_accessor_closest_date;
-eccodes::Accessor* grib_accessor_closest_date = &_grib_accessor_closest_date;
-
 namespace eccodes::accessor
 {
 
@@ -21,17 +18,17 @@ void ClosestDate::init(const long l, grib_arguments* c)
 {
     Double::init(l, c);
     grib_handle* h = get_enclosing_handle();
-    int n          = 0;
+    int n = 0;
 
-    dateLocal_    = c->get_name(h, n++);
-    timeLocal_    = c->get_name(h, n++);
+    dateLocal_ = c->get_name(h, n++);
+    timeLocal_ = c->get_name(h, n++);
     numForecasts_ = c->get_name(h, n++);
-    year_         = c->get_name(h, n++);
-    month_        = c->get_name(h, n++);
-    day_          = c->get_name(h, n++);
-    hour_         = c->get_name(h, n++);
-    minute_       = c->get_name(h, n++);
-    second_       = c->get_name(h, n++);
+    year_ = c->get_name(h, n++);
+    month_ = c->get_name(h, n++);
+    day_ = c->get_name(h, n++);
+    hour_ = c->get_name(h, n++);
+    minute_ = c->get_name(h, n++);
+    second_ = c->get_name(h, n++);
 
     length_ = 0;
 }
@@ -43,10 +40,10 @@ void ClosestDate::dump(eccodes::Dumper* dumper)
 
 int ClosestDate::unpack_long(long* val, size_t* len)
 {
-    int ret  = 0;
+    int ret = 0;
     double v = 0;
 
-    ret  = unpack_double(&v, len);
+    ret = unpack_double(&v, len);
     *val = (long)v;
 
     return ret;
@@ -55,21 +52,21 @@ int ClosestDate::unpack_long(long* val, size_t* len)
 /* Sets val to the 'index' of the closes date */
 int ClosestDate::unpack_double(double* val, size_t* len)
 {
-    int err            = 0;
+    int err = 0;
     long num_forecasts = 0; /* numberOfForecastsUsedInLocalTime */
     /* These relate to the date and time in Section 1 */
     long ymdLocal, hmsLocal, yearLocal, monthLocal, dayLocal, hourLocal, minuteLocal, secondLocal;
-    double jLocal  = 0;
+    double jLocal = 0;
     double minDiff = DBL_MAX;
-    size_t i       = 0;
-    size_t size    = 0; /* number of elements in the array keys - should be = numberOfForecastsUsedInLocalTime */
+    size_t i = 0;
+    size_t size = 0; /* number of elements in the array keys - should be = numberOfForecastsUsedInLocalTime */
 
     /* These relate to the forecast dates and times in Section 4 */
     long *yearArray, *monthArray, *dayArray, *hourArray, *minuteArray, *secondArray;
 
-    grib_handle* h        = get_enclosing_handle();
+    grib_handle* h = get_enclosing_handle();
     const grib_context* c = context_;
-    *val                  = -1; /* initialise to an invalid index */
+    *val = -1; /* initialise to an invalid index */
 
     if ((err = grib_get_long_internal(h, numForecasts_, &num_forecasts)) != GRIB_SUCCESS) return err;
     ECCODES_ASSERT(num_forecasts > 1);
@@ -126,7 +123,7 @@ int ClosestDate::unpack_double(double* val, size_t* len)
         diff = jLocal - jval;
         if (diff >= 0 && diff < minDiff) {
             minDiff = diff;
-            *val    = i;
+            *val = i;
         }
     }
     if (*val == -1) {

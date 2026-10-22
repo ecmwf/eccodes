@@ -20,7 +20,7 @@ if(type != perturbedType)
   # Ritz numbers:
   signed[4] NINT_LOG10_RITZ : dump ;
   signed[4] NINT_RITZ_EXP : dump ;
-  
+
   alias local.numberOfIterations= numberOfIterations;
   alias local.numberOfSingularVectorsComputed= numberOfSingularVectorsComputed ;
   alias local.normAtInitialTime= normAtInitialTime  ;
@@ -36,4 +36,3 @@ if(type != perturbedType)
   alias local.NINT_LOG10_RITZ= NINT_LOG10_RITZ ;
   alias local.NINT_RITZ_EXP= NINT_RITZ_EXP  ;
 }
-

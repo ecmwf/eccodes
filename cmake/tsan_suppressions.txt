@@ -1,0 +1,5 @@
+# ThreadSanitizer suppressions for ecCodes
+# See https://github.com/google/sanitizers/wiki/ThreadSanitizerSuppressions
+
+# libgfortran has a known lock-order-inversion that is not an ecCodes issue
+deadlock:libgfortran

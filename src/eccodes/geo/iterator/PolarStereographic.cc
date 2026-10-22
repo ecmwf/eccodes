@@ -13,7 +13,8 @@
 eccodes::geo_iterator::PolarStereographic _grib_iterator_polar_stereographic{};
 eccodes::geo_iterator::Iterator* grib_iterator_polar_stereographic = &_grib_iterator_polar_stereographic;
 
-namespace eccodes::geo_iterator {
+namespace eccodes::geo_iterator
+{
 
 #define ITER "Polar stereographic Geoiterator"
 
@@ -67,26 +68,22 @@ int PolarStereographic::init(grib_handle* h, grib_arguments* args)
     double ts;                                /* value of small t */
     double height;                            /* height above ellipsoid */
     double x0, y0, lonFirst, latFirst;
-    proj_data_t fwd_proj_data = {
-        0,
-    };
-    proj_data_t inv_proj_data = {
-        0,
-    };
+    proj_data_t fwd_proj_data = { 0 };
+    proj_data_t inv_proj_data = { 0 };
 
-    const char* s_radius                 = args->get_name(h, carg_++);
-    const char* s_nx                     = args->get_name(h, carg_++);
-    const char* s_ny                     = args->get_name(h, carg_++);
-    const char* s_latFirstInDegrees      = args->get_name(h, carg_++);
-    const char* s_lonFirstInDegrees      = args->get_name(h, carg_++);
-    const char* s_southPoleOnPlane       = args->get_name(h, carg_++);
-    const char* s_centralLongitude       = args->get_name(h, carg_++);
-    const char* s_centralLatitude        = args->get_name(h, carg_++);
-    const char* s_Dx                     = args->get_name(h, carg_++);
-    const char* s_Dy                     = args->get_name(h, carg_++);
-    const char* s_iScansNegatively       = args->get_name(h, carg_++);
-    const char* s_jScansPositively       = args->get_name(h, carg_++);
-    const char* s_jPointsAreConsecutive  = args->get_name(h, carg_++);
+    const char* s_radius = args->get_name(h, carg_++);
+    const char* s_nx = args->get_name(h, carg_++);
+    const char* s_ny = args->get_name(h, carg_++);
+    const char* s_latFirstInDegrees = args->get_name(h, carg_++);
+    const char* s_lonFirstInDegrees = args->get_name(h, carg_++);
+    const char* s_southPoleOnPlane = args->get_name(h, carg_++);
+    const char* s_centralLongitude = args->get_name(h, carg_++);
+    const char* s_centralLatitude = args->get_name(h, carg_++);
+    const char* s_Dx = args->get_name(h, carg_++);
+    const char* s_Dy = args->get_name(h, carg_++);
+    const char* s_iScansNegatively = args->get_name(h, carg_++);
+    const char* s_jScansPositively = args->get_name(h, carg_++);
+    const char* s_jPointsAreConsecutive = args->get_name(h, carg_++);
     const char* s_alternativeRowScanning = args->get_name(h, carg_++);
 
     if (grib_is_earth_oblate(h)) {
@@ -101,7 +98,7 @@ int PolarStereographic::init(grib_handle* h, grib_arguments* args)
     if ((ret = grib_get_long_internal(h, s_ny, &ny)) != GRIB_SUCCESS)
         return ret;
 
-    if ( nv_ != (size_t)(nx * ny) ) {
+    if (nv_ != (size_t)(nx * ny)) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Wrong number of points (%zu!=%ldx%ld)", ITER, nv_, nx, ny);
         return GRIB_WRONG_GRID;
     }
@@ -129,15 +126,15 @@ int PolarStereographic::init(grib_handle* h, grib_arguments* args)
         return ret;
 
     centralLongitude = centralLongitudeInDegrees * DEG2RAD;
-    centralLatitude  = centralLatitudeInDegrees * DEG2RAD;
-    lonFirst         = lonFirstInDegrees * DEG2RAD;
-    latFirst         = latFirstInDegrees * DEG2RAD;
+    centralLatitude = centralLatitudeInDegrees * DEG2RAD;
+    lonFirst = lonFirstInDegrees * DEG2RAD;
+    latFirst = latFirstInDegrees * DEG2RAD;
 
     /* Forward projection initialisation */
     fwd_proj_data.false_northing = 0;
-    fwd_proj_data.false_easting  = 0;
-    fwd_proj_data.centre_lon     = centralLongitude;
-    fwd_proj_data.centre_lat     = centralLatitude;
+    fwd_proj_data.false_easting = 0;
+    fwd_proj_data.centre_lon = centralLongitude;
+    fwd_proj_data.centre_lat = centralLatitude;
     if (centralLatitude < 0)
         fwd_proj_data.sign = -1.0;
     else
@@ -146,14 +143,14 @@ int PolarStereographic::init(grib_handle* h, grib_arguments* args)
     if (fabs(fabs(centralLatitude) - PI_OVER_2) > EPSILON) {
         /* central latitude different from 90 i.e. not north/south polar */
         fwd_proj_data.ind = 1;
-        con1              = fwd_proj_data.sign * centralLatitude;
+        con1 = fwd_proj_data.sign * centralLatitude;
         fwd_proj_data.mcs = cos(con1);
         fwd_proj_data.tcs = tan(0.5 * (PI_OVER_2 - con1));
     }
 
     /* Forward projection from initial lat,lon to initial x,y */
     con1 = fwd_proj_data.sign * (lonFirst - fwd_proj_data.centre_lon);
-    ts   = tan(0.5 * (PI_OVER_2 - fwd_proj_data.sign * latFirst));
+    ts = tan(0.5 * (PI_OVER_2 - fwd_proj_data.sign * latFirst));
     if (fwd_proj_data.ind)
         height = radius * fwd_proj_data.mcs * ts / fwd_proj_data.tcs;
     else
@@ -165,10 +162,10 @@ int PolarStereographic::init(grib_handle* h, grib_arguments* args)
     y0 = -y0;
 
     /* Inverse projection initialisation */
-    inv_proj_data.false_easting  = x0;
+    inv_proj_data.false_easting = x0;
     inv_proj_data.false_northing = y0;
-    inv_proj_data.centre_lon     = centralLongitude;
-    inv_proj_data.centre_lat     = centralLatitude;
+    inv_proj_data.centre_lon = centralLongitude;
+    inv_proj_data.centre_lat = centralLatitude;
     if (centralLatitude < 0)
         inv_proj_data.sign = -1.0;
     else
@@ -176,7 +173,7 @@ int PolarStereographic::init(grib_handle* h, grib_arguments* args)
     inv_proj_data.ind = 0;
     if (fabs(fabs(centralLatitude) - PI_OVER_2) > EPSILON) {
         inv_proj_data.ind = 1;
-        con1              = inv_proj_data.sign * inv_proj_data.centre_lat;
+        con1 = inv_proj_data.sign * inv_proj_data.centre_lat;
         inv_proj_data.mcs = cos(con1);
         inv_proj_data.tcs = tan(0.5 * (PI_OVER_2 - con1));
     }
@@ -215,7 +212,7 @@ int PolarStereographic::init(grib_handle* h, grib_arguments* args)
             }
             else {
                 double temp = atan2(_x, -_y);
-                *lons       = inv_proj_data.sign * temp + inv_proj_data.centre_lon;
+                *lons = inv_proj_data.sign * temp + inv_proj_data.centre_lon;
             }
             *lats = *lats * RAD2DEG;
             *lons = *lons * RAD2DEG;

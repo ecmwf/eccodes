@@ -10,9 +10,6 @@
 
 #include "G1MonthlyDate.h"
 
-eccodes::accessor::G1MonthlyDate _grib_accessor_g1monthlydate;
-eccodes::Accessor* grib_accessor_g1monthlydate = &_grib_accessor_g1monthlydate;
-
 namespace eccodes::accessor
 {
 

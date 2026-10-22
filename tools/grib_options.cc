@@ -14,11 +14,11 @@ extern char* optarg;
 extern int optind;
 
 #ifdef ECCODES_ON_WINDOWS
-#include "wingetopt.h"
+    #include "wingetopt.h"
 #endif
 
 static const char* names[] = { "parameter", "vertical", "geography", "data", "mars", "local" };
-static int names_count     = 6;
+static int names_count = 6;
 
 /* id,args,help */
 static grib_options_help grib_options_help_list[] = {
@@ -28,8 +28,7 @@ static grib_options_help grib_options_help_list[] = {
     { "B:", "'order by' directive",
       "\n\t\tOrder by. The output will be ordered according to the 'order by' directive."
       "\n\t\tExample: \"step:i asc, centre desc\" (step numeric ascending and centre descending)"
-      "\n\t\tDefault sort mode is 'asc'\n"
-    },
+      "\n\t\tDefault sort mode is 'asc'\n" },
     { "c:", "key[:i|d|s|n],key[:i|d|s|n],...",
       "\n\t\tOnly the listed keys or namespaces (:n) are compared. The optional letter after the colon is used "
       "\n\t\tto force the type in the comparison: i->integer, d->float, s->string, n->namespace."
@@ -38,7 +37,7 @@ static grib_options_help grib_options_help_list[] = {
       "\n\t\tSet all the data values to \"value\".\n" },
     { "e:", "tolerance", "\n\t\tOnly values whose difference is more than tolerance are considered different.\n" },
     { "f", 0, "Force. Force the execution not to fail on error.\n" },
-    { "F:", "format", "\n\t\tC style format for floating-point values.\n" },
+    { "F:", "format", "\n\t\tC-style format for floating-point values.\n" },
     { "g", 0, "Copy GTS header.\n" },
     { "G", 0, "GRIBEX compatibility mode.\n" },
     { "i:", "index",
@@ -52,7 +51,7 @@ static grib_options_help grib_options_help_list[] = {
       "\n\t\tfile (file is used as mask. The closer point with mask value>=0.5 is printed)\n" },
     { "n:", "namespace",
       "\n\t\tAll the keys belonging to the given namespace are printed.\n" },
-    { "m", 0, "Mars keys are printed.\n" },
+    { "m", 0, "All the keys belonging to the 'mars' namespace are printed.\n" },
     { "o:", "output_file",
       "\n\t\tOutput is written to output_file."
       "\n\t\tIf an output file is required and -o is not used, the"
@@ -90,7 +89,7 @@ static grib_options_help grib_options_help_list[] = {
     { "M", 0, "Multi-field support off. Turn off support for multiple fields in a single GRIB message.\n" },
     { "O", 0, "Octet mode. WMO documentation style dump.\n" },
     { "P:", "key[:{s|d|i}],key[:{s|d|i}],...",
-      "\n\t\tAs -p adding the declared keys to the default list.\n" },
+      "\n\t\tSame as -p but adds the declared keys to the default list.\n" },
     { "R:", "key1=relative_error1,key2=relative_error2,...\n",
       "\tCompare floating-point values using the relative error as tolerance."
       "\n\t\tkey1=relative_error1 will compare key1 using relative_error1."
@@ -99,7 +98,7 @@ static grib_options_help grib_options_help_list[] = {
       "Strict. Only messages matching all the constraints are copied to"
       "\n\t\tthe output file\n" },
     { "T:", "T | B | A", "Message type. T->GTS, B->BUFR, A->Any (Experimental).\n\t\t\tThe input file is interpreted according to the message type.\n" },
-    { "V", 0, "Version.\n" },
+    { "V", 0, "Print version.\n" },
     { "W:", "width", "\n\t\tMinimum width of each column in output. Default is 10.\n" },
     { "X:", "offset", "\n\t\tInput file offset in bytes. Processing of the input file will start from the given offset.\n" },
     { "x", 0, "Fast parsing option, only headers are loaded.\n" },
@@ -194,7 +193,7 @@ int grib_get_runtime_options(int argc, char** argv, grib_runtime_options* option
 int grib_process_runtime_options(grib_context* context, int argc, char** argv, grib_runtime_options* options)
 {
     int i = 0, ret = 0;
-    int has_output      = 0;
+    int has_output = 0;
     int has_input_extra = 0, nfiles = 0;
     char *karg = NULL, *warg = NULL, *sarg = NULL, *barg = NULL;
 
@@ -240,7 +239,7 @@ int grib_process_runtime_options(grib_context* context, int argc, char** argv, g
 
     if (grib_options_on("i:")) {
         options->index_on = 1;
-        options->index    = atoi(grib_options_get_option("i:"));
+        options->index = atoi(grib_options_get_option("i:"));
     }
 
     if (grib_options_on("l:"))
@@ -259,15 +258,15 @@ int grib_process_runtime_options(grib_context* context, int argc, char** argv, g
     static_assert(sizeof(options->infile_offset) >= 8);
 #endif
 
-    has_output      = grib_options_on("U");
+    has_output = grib_options_on("U");
     has_input_extra = grib_options_on("I");
     options->repack = grib_options_on("r");
-    options->gts    = grib_options_on("g");
+    options->gts = grib_options_on("g");
 
     if (grib_options_on("d:")) {
-        char* endPtr          = NULL; /* for error handling */
+        char* endPtr = NULL; /* for error handling */
         const char* optionStr = grib_options_get_option("d:");
-        options->constant     = strtod(optionStr, &endPtr);
+        options->constant = strtod(optionStr, &endPtr);
         if (*endPtr) {
             fprintf(stderr, "%s: Invalid number for -d option: '%s'\n", tool_name, optionStr);
             exit(1);
@@ -283,15 +282,15 @@ int grib_process_runtime_options(grib_context* context, int argc, char** argv, g
         usage();
 
     if (has_input_extra) {
-        options->infile_extra       = (grib_tools_file*)calloc(1, sizeof(grib_tools_file));
+        options->infile_extra = (grib_tools_file*)calloc(1, sizeof(grib_tools_file));
         options->infile_extra->name = argv[optind];
     }
 
     if (!options->infile) {
         for (i = optind + has_input_extra; i < argc - has_output; i++) {
-            grib_tools_file* p      = NULL;
+            grib_tools_file* p = NULL;
             grib_tools_file* infile = (grib_tools_file*)calloc(1, sizeof(grib_tools_file));
-            infile->name            = argv[i];
+            infile->name = argv[i];
             if (!options->infile)
                 options->infile = infile;
             else {
@@ -304,18 +303,18 @@ int grib_process_runtime_options(grib_context* context, int argc, char** argv, g
     }
 
     if (has_output) {
-        options->outfile       = (grib_tools_file*)calloc(1, sizeof(grib_tools_file));
+        options->outfile = (grib_tools_file*)calloc(1, sizeof(grib_tools_file));
         options->outfile->name = strdup(argv[argc - 1]);
     }
 
     if (grib_options_on("o:")) {
-        options->outfile       = (grib_tools_file*)calloc(1, sizeof(grib_tools_file));
+        options->outfile = (grib_tools_file*)calloc(1, sizeof(grib_tools_file));
         options->outfile->name = grib_options_get_option("o:");
     }
 
     options->print_number = grib_options_on("N");
     options->print_header = grib_options_on("H");
-    options->verbose      = grib_options_on("v");
+    options->verbose = grib_options_on("v");
 
     if (grib_options_on("q") && grib_options_command_line("q"))
         options->verbose = 0;
@@ -334,12 +333,12 @@ int grib_process_runtime_options(grib_context* context, int argc, char** argv, g
     if (grib_options_on("P:"))
         karg = grib_options_get_option("P:");
     else if (grib_options_on("p:")) {
-        karg                = grib_options_get_option("p:");
+        karg = grib_options_get_option("p:");
         options->name_space = NULL;
     }
 
     options->requested_print_keys_count = MAX_KEYS;
-    ret                                 = parse_keyval_string(tool_name, karg, 0, GRIB_TYPE_UNDEFINED,
+    ret = parse_keyval_string(tool_name, karg, 0, GRIB_TYPE_UNDEFINED,
                               options->requested_print_keys, &(options->requested_print_keys_count));
     if (ret == GRIB_INVALID_ARGUMENT)
         usage();
@@ -358,25 +357,25 @@ int grib_process_runtime_options(grib_context* context, int argc, char** argv, g
         grib_gts_header_off(context);
 
     if (grib_options_on("s:")) {
-        sarg                      = grib_options_get_option("s:");
+        sarg = grib_options_get_option("s:");
         options->set_values_count = MAX_KEYS;
-        ret                       = parse_keyval_string(tool_name, sarg, 1, GRIB_TYPE_UNDEFINED, options->set_values, &(options->set_values_count));
+        ret = parse_keyval_string(tool_name, sarg, 1, GRIB_TYPE_UNDEFINED, options->set_values, &(options->set_values_count));
         if (ret == GRIB_INVALID_ARGUMENT)
             usage();
     }
 
     if (grib_options_on("b:")) {
-        barg                      = grib_options_get_option("b:");
+        barg = grib_options_get_option("b:");
         options->set_values_count = MAX_KEYS;
-        ret                       = parse_keyval_string(tool_name, barg, 0, GRIB_TYPE_STRING, options->set_values, &(options->set_values_count));
+        ret = parse_keyval_string(tool_name, barg, 0, GRIB_TYPE_STRING, options->set_values, &(options->set_values_count));
         if (ret == GRIB_INVALID_ARGUMENT)
             usage();
     }
 
     if (grib_options_on("c:")) {
-        sarg                   = grib_options_get_option("c:");
+        sarg = grib_options_get_option("c:");
         options->compare_count = MAX_KEYS;
-        ret                    = parse_keyval_string(tool_name, sarg, 0, GRIB_TYPE_UNDEFINED, options->compare,
+        ret = parse_keyval_string(tool_name, sarg, 0, GRIB_TYPE_UNDEFINED, options->compare,
                                   &(options->compare_count));
         if (ret == GRIB_INVALID_ARGUMENT)
             usage();
@@ -392,7 +391,7 @@ int grib_process_runtime_options(grib_context* context, int argc, char** argv, g
     warg = grib_options_get_option("w:");
 
     options->constraints_count = MAX_KEYS;
-    ret                        = parse_keyval_string(tool_name, warg, 1, GRIB_TYPE_UNDEFINED,
+    ret = parse_keyval_string(tool_name, warg, 1, GRIB_TYPE_UNDEFINED,
                               options->constraints, &(options->constraints_count));
     if (ret == GRIB_INVALID_ARGUMENT)
         usage();
@@ -402,10 +401,10 @@ int grib_process_runtime_options(grib_context* context, int argc, char** argv, g
 
 const char* grib_options_get_help(const char* id)
 {
-    int i      = 0;
+    int i = 0;
     char msg[] = "ERROR: help not found for option ";
     const size_t msize = sizeof(msg) + 3;
-    char* err  = (char*)calloc(1, msize);
+    char* err = (char*)calloc(1, msize);
     snprintf(err, msize, "%s%c\n", msg, *id);
     for (i = 0; i < grib_options_count; i++) {
         if (!strcmp(id, grib_options[i].id)) {
@@ -425,11 +424,11 @@ const char* grib_options_get_help(const char* id)
 
 const char* grib_options_get_args(const char* id)
 {
-    int i        = 0;
+    int i = 0;
     const char empty[] = "";
-    char msg[]   = "ERROR: help not found for option -";
+    char msg[] = "ERROR: help not found for option -";
     const size_t msize = sizeof(msg) + 3;
-    char* err    = NULL;
+    char* err = NULL;
     if (id[1] != ':')
         return strdup(empty);
     err = (char*)calloc(1, msize);

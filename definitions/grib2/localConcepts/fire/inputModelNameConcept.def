@@ -1,0 +1,42 @@
+
+# ifs (ID range: 1-18)
+'ifs' = {inputProcessIdentifier=1;}
+'ifs' = {inputProcessIdentifier=2;}
+'ifs' = {inputProcessIdentifier=3;}
+'ifs' = {inputProcessIdentifier=4;}
+'ifs' = {inputProcessIdentifier=5;}
+'ifs' = {inputProcessIdentifier=6;}
+'ifs' = {inputProcessIdentifier=7;}
+'ifs' = {inputProcessIdentifier=8;}
+'ifs' = {inputProcessIdentifier=9;}
+'ifs' = {inputProcessIdentifier=10;}
+'ifs' = {inputProcessIdentifier=11;}
+'ifs' = {inputProcessIdentifier=12;}
+'ifs' = {inputProcessIdentifier=13;}
+'ifs' = {inputProcessIdentifier=14;}
+'ifs' = {inputProcessIdentifier=15;}
+'ifs' = {inputProcessIdentifier=16;}
+'ifs' = {inputProcessIdentifier=17;}
+'ifs' = {inputProcessIdentifier=18;}
+
+# aifs (ID range: 500-504)
+'aifs' = {inputProcessIdentifier=500;}
+'aifs' = {inputProcessIdentifier=501;}
+'aifs' = {inputProcessIdentifier=502;}
+'aifs' = {inputProcessIdentifier=503;}
+'aifs' = {inputProcessIdentifier=504;}
+
+# cosmo (ID range: 1000-1000)
+'cosmo' = {inputProcessIdentifier=1000;}
+
+# icon (ID range: 1500-1500)
+'icon' = {inputProcessIdentifier=1500;}
+
+# era5-land (ID range: 65532-65532)
+'era5-land' = {inputProcessIdentifier=65532;}
+
+# era5 (ID range: 65533-65533)
+'era5' = {inputProcessIdentifier=65533;}
+
+# obs (ID range: 65534-65534)
+'obs' = {inputProcessIdentifier=65534;}

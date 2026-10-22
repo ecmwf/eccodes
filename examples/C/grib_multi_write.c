@@ -26,18 +26,18 @@ static void usage(const char* prog)
 
 int main(int argc, char** argv)
 {
-    int err  = 0;
+    int err = 0;
     FILE* in = NULL;
     FILE* of = NULL;
     long edition, step;
-    char* filename          = NULL;
-    char* ofilename         = NULL;
-    codes_handle* h         = NULL;
-    codes_multi_handle* mh  = NULL;
+    char* filename = NULL;
+    char* ofilename = NULL;
+    codes_handle* h = NULL;
+    codes_multi_handle* mh = NULL;
     const int start_section = 4; /* Grib2 Product Definition Section */
 
     if (argc < 3) usage(argv[0]);
-    filename  = argv[1];
+    filename = argv[1];
     ofilename = argv[2];
 
     /* open input file */

@@ -9,22 +9,20 @@
  */
 
 #include "Codetable.h"
+#include "sync/Mutex.h"
 #include <cctype>
-
-eccodes::accessor::Codetable _grib_accessor_codetable;
-eccodes::Accessor* grib_accessor_codetable = &_grib_accessor_codetable;
 
 int codes_codetable_get_contents_malloc(const grib_handle* h, const char* key, code_table_entry** entries, size_t* num_entries)
 {
-    long lvalue     = 0;
-    size_t size     = 1;
-    int err         = 0;
+    long lvalue = 0;
+    size_t size = 1;
+    int err = 0;
     grib_context* c = h->context;
 
     grib_accessor* aa = grib_find_accessor(h, key);
     if (!aa) return GRIB_NOT_FOUND;
 
-    if (!STR_EQUAL(aa->class_name_, "codetable")) {
+    if (aa->accessor_type() != "codetable") {
         return GRIB_INVALID_ARGUMENT;  // key is not a codetable
     }
 
@@ -43,7 +41,7 @@ int codes_codetable_get_contents_malloc(const grib_handle* h, const char* key, c
         if (STR_EQUAL(table->recomposed_name[0], cached_table->recomposed_name[0])) {
             // Found a cache entry that matches the recomposed name of ours
             *num_entries = cached_table->size;
-            *entries     = (code_table_entry*)calloc(cached_table->size, sizeof(code_table_entry));
+            *entries = (code_table_entry*)calloc(cached_table->size, sizeof(code_table_entry));
             if (!*entries) {
                 return GRIB_OUT_OF_MEMORY;
             }
@@ -84,9 +82,9 @@ void grib_codetable_delete(grib_context* c)
 int codes_codetable_check_code_figure(const grib_handle* h, const char* key, long code_figure)
 {
     code_table_entry* entries = NULL;
-    size_t num_entries        = 0;
-    int err                   = 0;
-    err                       = codes_codetable_get_contents_malloc(h, key, &entries, &num_entries);
+    size_t num_entries = 0;
+    int err = 0;
+    err = codes_codetable_get_contents_malloc(h, key, &entries, &num_entries);
     if (err) return err;
 
     if (code_figure < 0 || (size_t)code_figure >= num_entries) {
@@ -106,9 +104,9 @@ cleanup:
 int codes_codetable_check_abbreviation(const grib_handle* h, const char* key, const char* abbreviation)
 {
     code_table_entry* entries = NULL;
-    size_t num_entries        = 0;
-    int err                   = 0;
-    err                       = codes_codetable_get_contents_malloc(h, key, &entries, &num_entries);
+    size_t num_entries = 0;
+    int err = 0;
+    err = codes_codetable_get_contents_malloc(h, key, &entries, &num_entries);
     if (err) return err;
 
     bool found = false;
@@ -129,33 +127,7 @@ int codes_codetable_check_abbreviation(const grib_handle* h, const char* key, co
 namespace eccodes::accessor
 {
 
-#if GRIB_PTHREADS
-static pthread_once_t once    = PTHREAD_ONCE_INIT;
-static pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
-
-static void init_mutex()
-{
-    pthread_mutexattr_t attr;
-    pthread_mutexattr_init(&attr);
-    pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
-    pthread_mutex_init(&mutex1, &attr);
-    pthread_mutexattr_destroy(&attr);
-}
-#elif GRIB_OMP_THREADS
-static int once = 0;
-static omp_nest_lock_t mutex1;
-
-static void init_mutex()
-{
-    GRIB_OMP_CRITICAL(lock_grib_accessor_codetable_c)
-    {
-        if (once == 0) {
-            omp_init_nest_lock(&mutex1);
-            once = 1;
-        }
-    }
-}
-#endif
+static eccodes::sync::Mutex mutex;
 
 static int grib_load_codetable(grib_context* c, const char* filename, const char* recomposed_name, size_t size, grib_codetable* t);
 
@@ -163,12 +135,12 @@ void Codetable::init(const long len, grib_arguments* params)
 {
     Unsigned::init(len, params);
 
-    int n             = 0;
-    long new_len      = len;
+    int n = 0;
+    long new_len = len;
     grib_handle* hand = get_enclosing_handle();
-    grib_action* act  = (grib_action*)(creator_);
+    grib_action* act = (grib_action*)(creator_);
     DEBUG_ASSERT(len == nbytes_);
-    table_        = NULL;
+    table_ = NULL;
     table_loaded_ = 0;
 
     if (new_len == 0) {
@@ -188,7 +160,7 @@ void Codetable::init(const long len, grib_arguments* params)
         grib_context_log(context_, GRIB_LOG_FATAL, "%s: codetable table is invalid", name_);
     }
     masterDir_ = params->get_name(hand, n++); /* can be NULL */
-    localDir_  = params->get_name(hand, n++); /* can be NULL */
+    localDir_ = params->get_name(hand, n++);  /* can be NULL */
 
     /*if (flags_ & GRIB_ACCESSOR_FLAG_STRING_TYPE)
     printf("-------- %s type string (%ld)\n",a->name,flags_ );*/
@@ -203,17 +175,17 @@ void Codetable::init(const long len, grib_arguments* params)
         length_ = 0;
         if (!vvalue_)
             vvalue_ = (grib_virtual_value*)grib_context_malloc_clear(context_, sizeof(grib_virtual_value));
-        vvalue_->type   = get_native_type();
+        vvalue_->type = get_native_type();
         vvalue_->length = new_len;
         if (act->default_value_ != NULL) {
             const char* p = 0;
-            size_t s_len  = 1;
+            size_t s_len = 1;
             long l;
             int ret = 0;
             double d;
             char tmp[1024];
             grib_expression* expression = act->default_value_->get_expression(hand, 0);
-            int type                    = expression->native_type(hand);
+            int type = expression->native_type(hand);
             switch (type) {
                 case GRIB_TYPE_DOUBLE:
                     expression->evaluate_double(hand, &d);
@@ -227,7 +199,7 @@ void Codetable::init(const long len, grib_arguments* params)
 
                 default:
                     s_len = sizeof(tmp);
-                    p     = expression->evaluate_string(get_enclosing_handle(), tmp, &s_len, &ret);
+                    p = expression->evaluate_string(get_enclosing_handle(), tmp, &s_len, &ret);
                     if (ret != GRIB_SUCCESS) {
                         grib_context_log(context_, GRIB_LOG_FATAL,
                                          "Unable to evaluate %s as string", name_);
@@ -268,7 +240,7 @@ static int str_eq(const char* a, const char* b)
 static void dump_codetable(grib_codetable* atable)
 {
     const grib_codetable* next = NULL;
-    int count            = 0;
+    int count = 0;
 
     next = atable;
     while (next) {
@@ -281,17 +253,17 @@ static void dump_codetable(grib_codetable* atable)
 
 grib_codetable* Codetable::load_table()
 {
-    size_t size                     = 0;
-    grib_handle* h                  = parent_->h;
-    grib_context* c                 = h->context;
-    grib_codetable* t               = NULL;
-    grib_codetable* next            = NULL;
-    char* filename                  = 0;
-    char recomposed[1024]           = {0,};
-    char localRecomposed[1024] = {0,};
-    char* localFilename  = 0;
-    char masterDir[1024] = {0,};
-    char localDir[1024] = {0,};
+    size_t size = 0;
+    grib_handle* h = parent_->h;
+    grib_context* c = h->context;
+    grib_codetable* t = NULL;
+    grib_codetable* next = NULL;
+    const char* filename = 0;
+    char recomposed[1024] = { 0 };
+    char localRecomposed[1024] = { 0 };
+    const char* localFilename = 0;
+    char masterDir[1024] = { 0 };
+    char localDir[1024] = { 0 };
     size_t len = 1024;
 
     if (masterDir_ != NULL)
@@ -302,7 +274,7 @@ grib_codetable* Codetable::load_table()
         grib_get_string(h, localDir_, localDir, &len);
 
     if (*masterDir != 0) {
-        char name[2048] = {0,};
+        char name[2048] = { 0 };
         snprintf(name, sizeof(name), "%s/%s", masterDir, tablename_);
         grib_recompose_name(h, NULL, name, recomposed, 0);
         filename = grib_context_full_defs_path(c, recomposed);
@@ -313,34 +285,30 @@ grib_codetable* Codetable::load_table()
     }
 
     if (*localDir != 0) {
-        char localName[2048] = {0,};
+        char localName[2048] = { 0 };
         snprintf(localName, sizeof(localName), "%s/%s", localDir, tablename_);
         grib_recompose_name(h, NULL, localName, localRecomposed, 0);
         localFilename = grib_context_full_defs_path(c, localRecomposed);
     }
 
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex1); /* GRIB-930 */
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
 
     /*printf("DBG %s: Look in cache: f=%s lf=%s (recomposed=%s)\n", att_ .name, filename, localFilename,recomposed);*/
     if (filename == NULL && localFilename == NULL) {
-        t = NULL;
-        goto the_end;
+        return NULL;
     }
     next = c->codetable;
     while (next) {
         if ((filename && next->filename[0] && grib_inline_strcmp(filename, next->filename[0]) == 0) &&
             ((localFilename == 0 && next->filename[1] == NULL) ||
              ((localFilename != 0 && next->filename[1] != NULL) && grib_inline_strcmp(localFilename, next->filename[1]) == 0))) {
-            t = next;
-            goto the_end;
+            return next;
         }
         /* Special case: see GRIB-735 */
         if (filename == NULL && localFilename != NULL) {
             if (str_eq(localFilename, next->filename[0]) ||
                 str_eq(localFilename, next->filename[1])) {
-                t = next;
-                goto the_end;
+                return next;
             }
         }
         next = next->next;
@@ -369,12 +337,8 @@ grib_codetable* Codetable::load_table()
 
     if (t->filename[0] == NULL && t->filename[1] == NULL) {
         grib_context_free_persistent(c, t);
-        t = NULL;
-        goto the_end;
+        return NULL;
     }
-
-the_end:
-    GRIB_MUTEX_UNLOCK(&mutex1);
 
     return t;
 }
@@ -383,7 +347,7 @@ static int grib_load_codetable(grib_context* c, const char* filename,
                                const char* recomposed_name, size_t size, grib_codetable* t)
 {
     char line[1024];
-    FILE* f        = NULL;
+    FILE* f = NULL;
     int lineNumber = 0;
     grib_context_log(c, GRIB_LOG_DEBUG, "Loading code table from %s", filename);
 
@@ -394,26 +358,26 @@ static int grib_load_codetable(grib_context* c, const char* filename,
     ECCODES_ASSERT(t != NULL);
 
     if (t->filename[0] == NULL) {
-        t->filename[0]        = grib_context_strdup_persistent(c, filename);
+        t->filename[0] = grib_context_strdup_persistent(c, filename);
         t->recomposed_name[0] = grib_context_strdup_persistent(c, recomposed_name);
-        t->next               = c->codetable;
-        t->size               = size;
-        c->codetable          = t;
+        t->next = c->codetable;
+        t->size = size;
+        c->codetable = t;
     }
     else {
-        t->filename[1]        = grib_context_strdup_persistent(c, filename);
+        t->filename[1] = grib_context_strdup_persistent(c, filename);
         t->recomposed_name[1] = grib_context_strdup_persistent(c, recomposed_name);
     }
 
     while (fgets(line, sizeof(line) - 1, f)) {
-        char* p                 = line;
-        int code                = 0;
-        char abbreviation[1024] = {0,};
-        char title[1024] = {0,};
-        char* pAbbrev         = abbreviation;
-        char* pTitle          = title;
-        char* units           = 0;
-        char unknown[]        = "unknown";
+        char* p = line;
+        int code = 0;
+        char abbreviation[1024] = { 0 };
+        char title[1024] = { 0 };
+        char* pAbbrev = abbreviation;
+        char* pTitle = title;
+        char* units = 0;
+        char unknown[] = "unknown";
         char* last_open_paren = NULL;
         char* last_clos_paren = NULL;
 
@@ -479,7 +443,7 @@ static int grib_load_codetable(grib_context* c, const char* filename,
             last_clos_paren = strrchr(line, ')');
             if (last_clos_paren && last_open_paren != last_clos_paren) {
                 units = last_open_paren + 1;
-                p     = units;
+                p = units;
                 p += (last_clos_paren - last_open_paren - 1);
                 *p = '\0';
             }
@@ -495,7 +459,7 @@ static int grib_load_codetable(grib_context* c, const char* filename,
             // This can happen if in a file with the same name, we have the same code e.g.,
             // definitions/grib2/tables/2/4.5.table
             // definitions/grib2/tables/local/kwbc/1/4.5.table
-            //grib_context_log(c, GRIB_LOG_WARNING, "code_table_entry: duplicate code in %s: %d (table size=%ld)", filename, code, size);
+            // grib_context_log(c, GRIB_LOG_WARNING, "code_table_entry: duplicate code in %s: %d (table size=%ld)", filename, code, size);
             continue;
         }
 
@@ -503,8 +467,8 @@ static int grib_load_codetable(grib_context* c, const char* filename,
         ECCODES_ASSERT(t->entries[code].title == NULL);
 
         t->entries[code].abbreviation = grib_context_strdup_persistent(c, abbreviation);
-        t->entries[code].title        = grib_context_strdup_persistent(c, title);
-        t->entries[code].units        = grib_context_strdup_persistent(c, units);
+        t->entries[code].title = grib_context_strdup_persistent(c, title);
+        t->entries[code].units = grib_context_strdup_persistent(c, units);
     }
 
     fclose(f);
@@ -522,7 +486,7 @@ void Codetable::dump(eccodes::Dumper* dumper)
     long value;
 
     if (!table_loaded_) {
-        table_        = load_table(); /* may return NULL */
+        table_ = load_table(); /* may return NULL */
         table_loaded_ = 1;
     }
     table = table_;
@@ -572,7 +536,7 @@ void Codetable::dump(eccodes::Dumper* dumper)
 
 int Codetable::unpack_string(char* buffer, size_t* len)
 {
-    grib_codetable* table = NULL;
+    const grib_codetable* table = NULL;
 
     size_t size = 1;
     long value;
@@ -584,7 +548,7 @@ int Codetable::unpack_string(char* buffer, size_t* len)
         return err;
 
     if (!table_loaded_) {
-        table_        = load_table(); /* may return NULL */
+        table_ = load_table(); /* may return NULL */
         table_loaded_ = 1;
     }
     table = table_;
@@ -601,7 +565,7 @@ int Codetable::unpack_string(char* buffer, size_t* len)
     if (*len < l) {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
-                         class_name_, name_, l, *len);
+                         accessor_type().c_str(), name_, l, *len);
         *len = l;
         return GRIB_BUFFER_TOO_SMALL;
     }
@@ -650,11 +614,11 @@ int Codetable::pack_string(const char* buffer, size_t* len)
     }
 
     grib_codetable* table = NULL;
-    long i                = 0;
-    size_t size           = 1;
+    long i = 0;
+    size_t size = 1;
 
     if (!table_loaded_) {
-        table_        = load_table(); /* may return NULL */
+        table_ = load_table(); /* may return NULL */
         table_loaded_ = 1;
     }
     table = table_;
@@ -684,14 +648,14 @@ int Codetable::pack_string(const char* buffer, size_t* len)
     if (flags_ & GRIB_ACCESSOR_FLAG_NO_FAIL) {
         grib_action* act = (grib_action*)(creator_);
         if (act->default_value_ != NULL) {
-            const char* p  = 0;
-            size_t s_len   = 1;
-            long l         = 0;
-            int ret        = 0;
-            double d       = 0;
-            char tmp[1024] = {0,};
+            const char* p = 0;
+            size_t s_len = 1;
+            long l = 0;
+            int ret = 0;
+            double d = 0;
+            char tmp[1024] = { 0 };
             grib_expression* expression = act->default_value_->get_expression(get_enclosing_handle(), 0);
-            int type                    = expression->native_type(get_enclosing_handle());
+            int type = expression->native_type(get_enclosing_handle());
             switch (type) {
                 case GRIB_TYPE_DOUBLE:
                     expression->evaluate_double(get_enclosing_handle(), &d);
@@ -705,7 +669,7 @@ int Codetable::pack_string(const char* buffer, size_t* len)
 
                 default:
                     s_len = sizeof(tmp);
-                    p     = expression->evaluate_string(get_enclosing_handle(), tmp, &s_len, &ret);
+                    p = expression->evaluate_string(get_enclosing_handle(), tmp, &s_len, &ret);
                     if (ret != GRIB_SUCCESS) {
                         grib_context_log(context_, GRIB_LOG_ERROR,
                                          "%s: Unable to evaluate default value of %s as string expression", __func__, name_);
@@ -736,10 +700,10 @@ int Codetable::pack_string(const char* buffer, size_t* len)
 
 int Codetable::pack_expression(grib_expression* e)
 {
-    const char* cval  = NULL;
-    int ret           = 0;
-    long lval         = 0;
-    size_t len        = 1;
+    const char* cval = NULL;
+    int ret = 0;
+    long lval = 0;
+    size_t len = 1;
     grib_handle* hand = get_enclosing_handle();
 
     if (strcmp(e->class_name(), "long") == 0) {
@@ -749,7 +713,7 @@ int Codetable::pack_expression(grib_expression* e)
     }
     else {
         char tmp[1024];
-        len  = sizeof(tmp);
+        len = sizeof(tmp);
         cval = e->evaluate_string(hand, tmp, &len, &ret);
         if (ret != GRIB_SUCCESS) {
             grib_context_log(context_, GRIB_LOG_ERROR,
@@ -787,7 +751,7 @@ long Codetable::get_native_type()
 int Codetable::unpack_long(long* val, size_t* len)
 {
     long rlen = 0, i = 0;
-    long pos          = offset_ * 8;
+    long pos = offset_ * 8;
     grib_handle* hand = NULL;
 
 #ifdef DEBUG
@@ -800,7 +764,7 @@ int Codetable::unpack_long(long* val, size_t* len)
     rlen = 1; /* ECC-480 Performance: avoid func call overhead of grib_value_count */
 
     if (!table_loaded_) {
-        table_        = load_table(); /* may return NULL */
+        table_ = load_table(); /* may return NULL */
         table_loaded_ = 1;
     }
 
@@ -819,8 +783,10 @@ int Codetable::unpack_long(long* val, size_t* len)
 
     // ECC-480 Performance: inline here to reduce func call overhead
     // No longer needed... use get_enclosing_handle
-    if (parent_ == NULL) hand = h_;
-    else hand = parent_->h;
+    if (parent_ == NULL)
+        hand = h_;
+    else
+        hand = parent_->h;
 
     for (i = 0; i < rlen; i++) {
         val[i] = (long)grib_decode_unsigned_long(hand->buffer->data, &pos, nbytes_ * 8);
@@ -835,10 +801,10 @@ int Codetable::pack_missing()
     // Many of the code tables do have a 'Missing' entry (all bits = 1)
     // So it is more user-friendly to allow setting codetable keys to
     // missing. For tables that do not have such an entry, an error is issued
-    grib_handle* h = get_enclosing_handle();
+    const grib_handle* h = get_enclosing_handle();
 
     const long nbytes = length_;
-    const long nbits  = nbytes * 8;
+    const long nbits = nbytes * 8;
     const long maxVal = (1 << nbits) - 1;
 
     int err = codes_codetable_check_code_figure(h, name_, maxVal);

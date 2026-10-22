@@ -10,9 +10,6 @@
 
 #include "Dirty.h"
 
-eccodes::accessor::Dirty _grib_accessor_dirty;
-eccodes::Accessor* grib_accessor_dirty = &_grib_accessor_dirty;
-
 namespace eccodes::accessor
 {
 

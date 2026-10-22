@@ -10,36 +10,33 @@
 
 #include "Sexagesimal2Decimal.h"
 
-eccodes::accessor::Sexagesimal2decimal _grib_accessor_sexagesimal2decimal;
-eccodes::Accessor* grib_accessor_sexagesimal2decimal = &_grib_accessor_sexagesimal2decimal;
-
 namespace eccodes::accessor
 {
 
-void Sexagesimal2decimal::init(const long len, grib_arguments* arg)
+void Sexagesimal2Decimal::init(const long len, grib_arguments* arg)
 {
     ToDouble::init(len, arg);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-void Sexagesimal2decimal::dump(eccodes::Dumper* dumper)
+void Sexagesimal2Decimal::dump(eccodes::Dumper* dumper)
 {
     dumper->dump_double(this, NULL);
 }
 
-long Sexagesimal2decimal::get_native_type()
+long Sexagesimal2Decimal::get_native_type()
 {
     return GRIB_TYPE_DOUBLE;
 }
 
-int Sexagesimal2decimal::unpack_string(char* val, size_t* len)
+int Sexagesimal2Decimal::unpack_string(char* val, size_t* len)
 {
-    int err        = 0;
-    char buff[512] = {0,};
+    int err = 0;
+    char buff[512] = { 0 };
     size_t length = 0;
-    size_t size   = sizeof(buff);
-    char* p       = 0;
-    char* q       = 0;
+    size_t size = sizeof(buff);
+    char* p = 0;
+    char* q = 0;
     double dd, mm = 0, ss = 0;
     int dd_sign = 1;
 
@@ -78,9 +75,9 @@ int Sexagesimal2decimal::unpack_string(char* val, size_t* len)
             break;
         case 'N':
         case 'E':
-            *p      = 0;
+            *p = 0;
             dd_sign = 1;
-            mm      = atoi(q) / 60.0;
+            mm = atoi(q) / 60.0;
             dd += mm;
             p++;
             q = p;

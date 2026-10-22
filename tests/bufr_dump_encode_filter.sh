@@ -3,7 +3,7 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
+#
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
@@ -93,4 +93,12 @@ do
     rm -f $fBufrTmp $fRules
   fi
 done
+
+# Special cases
+# BUFR with non-ECMWF local section (bufrHeaderCentre = 78)
+file=uegabe.bufr
+${tools_dir}/bufr_dump -Efilter ${data_dir}/bufr/$file > $fRules 2>$fLog
+grep -q "Cannot generate code for section 2" $fLog
+
+# Clean up
 rm -f $fLog $fBufrTmp $fRules

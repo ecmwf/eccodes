@@ -10,9 +10,6 @@
 
 #include "Latitudes.h"
 
-eccodes::accessor::Latitudes _grib_accessor_latitudes;
-eccodes::Accessor* grib_accessor_latitudes = &_grib_accessor_latitudes;
-
 namespace eccodes::accessor
 {
 
@@ -50,24 +47,24 @@ void Latitudes::init(const long l, grib_arguments* args)
     Double::init(l, args);
     int n = 0;
 
-    values_   = args->get_name(get_enclosing_handle(), n++);
+    values_ = args->get_name(get_enclosing_handle(), n++);
     distinct_ = args->get_long(get_enclosing_handle(), n++);
-    save_     = 0;
+    save_ = 0;
 
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
 int Latitudes::unpack_double(double* val, size_t* len)
 {
-    int ret             = 0;
-    double* v           = val;
-    double dummyLon     = 0;
-    size_t size         = 0;
-    long count          = 0;
+    int ret = 0;
+    double* v = val;
+    double dummyLon = 0;
+    size_t size = 0;
+    long count = 0;
     grib_iterator* iter = NULL;
 
     save_ = 1;
-    ret   = value_count(&count);
+    ret = value_count(&count);
     if (ret) return ret;
     size = count;
     if (*len < size) {
@@ -94,6 +91,7 @@ int Latitudes::unpack_double(double* val, size_t* len)
     // ECC-1525 Performance: We do not need the values to be decoded
     iter = grib_iterator_new(get_enclosing_handle(), GRIB_GEOITERATOR_NO_VALUES, &ret);
     if (ret != GRIB_SUCCESS) {
+        *len = 0;
         grib_iterator_delete(iter);
         grib_context_log(context_, GRIB_LOG_ERROR, "latitudes: Unable to create iterator");
         return ret;
@@ -109,8 +107,8 @@ int Latitudes::unpack_double(double* val, size_t* len)
 
 int Latitudes::value_count(long* len)
 {
-    grib_handle* h  = get_enclosing_handle();
-    double* val     = NULL;
+    grib_handle* h = get_enclosing_handle();
+    double* val = NULL;
     int ret = GRIB_SUCCESS;
     size_t size = 0;
 
@@ -146,8 +144,8 @@ int Latitudes::value_count(long* len)
 
 static int get_distinct(grib_accessor* a, double** val, long* len)
 {
-    double* v   = NULL;
-    double* v1  = NULL;
+    double* v = NULL;
+    double* v1 = NULL;
     double dummyLon = 0;
     int ret = GRIB_SUCCESS;
     long jScansPositively = 0;  // default: north to south
@@ -157,6 +155,7 @@ static int get_distinct(grib_accessor* a, double** val, long* len)
     // Performance: We do not need the values to be decoded
     grib_iterator* iter = grib_iterator_new(a->get_enclosing_handle(), GRIB_GEOITERATOR_NO_VALUES, &ret);
     if (ret != GRIB_SUCCESS) {
+        *len = 0;
         grib_iterator_delete(iter);
         grib_context_log(c, GRIB_LOG_ERROR, "latitudes: Unable to create iterator");
         return ret;
@@ -173,9 +172,9 @@ static int get_distinct(grib_accessor* a, double** val, long* len)
     v = *val;
 
     // See which direction the latitudes are to be scanned
-    if ((ret = grib_get_long_internal(a->get_enclosing_handle(), "jScansPositively", &jScansPositively)))
-        return ret;
-    if (jScansPositively) {
+    ret = grib_get_long(a->get_enclosing_handle(), "jScansPositively", &jScansPositively);
+
+    if (ret == GRIB_SUCCESS && jScansPositively) {
         if (!is_sorted_ascending(v, size)) {
             qsort(v, *len, sizeof(double), &compare_doubles_ascending);  // South to North
         }
@@ -193,12 +192,12 @@ static int get_distinct(grib_accessor* a, double** val, long* len)
     }
 
     // Construct a unique set of lats by filtering out duplicates
-    double prev  = v[0];
+    double prev = v[0];
     v1[0] = prev;
     long count = 1;
     for (long i = 1; i < *len; i++) {
         if (v[i] != prev) {
-            prev      = v[i];
+            prev = v[i];
             v1[count] = prev;  // Value different from previous so store it
             count++;
         }

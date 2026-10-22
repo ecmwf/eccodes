@@ -40,14 +40,14 @@ const char* tool_description =
     "Get values of some keys from a GRIB file."
     "\n\tIt is similar to grib_ls, but fails returning an error code "
     "\n\twhen an error occurs (e.g. key not found).";
-const char* tool_name  = "grib_get";
+const char* tool_name = "grib_get";
 const char* tool_online_doc = "https://confluence.ecmwf.int/display/ECC/grib_get";
 const char* tool_usage = "[options] grib_file grib_file ...";
 
-int grib_options_count       = sizeof(grib_options) / sizeof(grib_option);
-static double lat            = 0;
-static double lon            = 0;
-static int mode              = 0;
+int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
+static double lat = 0;
+static double lon = 0;
+static int mode = 0;
 static grib_nearest* nearest = NULL;
 
 int main(int argc, char* argv[])
@@ -65,13 +65,13 @@ int grib_tool_init(grib_runtime_options* options)
 {
     char *theEnd = NULL, *end1 = NULL;
     size_t size = 4;
-    int ret     = 0;
+    int ret = 0;
     double min = 0, max = 0;
-    int i   = 0;
-    char* p = NULL;
+    int i = 0;
+    const char* p = NULL;
 
-    options->print_header        = 0;
-    options->print_statistics    = 0;
+    options->print_header = 0;
+    options->print_statistics = 0;
     options->default_print_width = -1;
 
     if (options->latlon) {
@@ -129,7 +129,7 @@ int grib_tool_init(grib_runtime_options* options)
         grib_handle_delete(hh);
 
         options->latlon_idx = -1;
-        max                 = options->distances[0];
+        max = options->distances[0];
         for (i = 0; i < 4; i++)
             if (max < options->distances[i]) {
                 max = options->distances[i];
@@ -138,16 +138,16 @@ int grib_tool_init(grib_runtime_options* options)
         for (i = 0; i < 4; i++) {
             if ((min >= options->distances[i]) && (options->mask_values[i] >= 0.5)) {
                 options->latlon_idx = i;
-                min                 = options->distances[i];
+                min = options->distances[i];
             }
         }
 
         if (options->latlon_idx < 0) {
-            min                 = 0;
+            min = 0;
             options->latlon_idx = 0;
             for (i = 1; i < 4; i++) {
                 if (min > options->distances[i]) {
-                    min                 = options->distances[i];
+                    min = options->distances[i];
                     options->latlon_idx = i;
                 }
             }
@@ -174,7 +174,7 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
 int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 {
     size_t size = 4;
-    int err     = 0;
+    int err = 0;
 
     if (!options->skip) {
         if (options->set_values_count != 0) {
@@ -196,11 +196,11 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
                                             options->lats, options->lons, options->values,
                                             options->distances, options->indexes, &size),
                           0);
-        min                 = options->distances[0];
+        min = options->distances[0];
         options->latlon_idx = 0;
         for (i = 1; i < 4; i++) {
             if (min > options->distances[i]) {
-                min                 = options->distances[i];
+                min = options->distances[i];
                 options->latlon_idx = i;
             }
         }

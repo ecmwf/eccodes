@@ -12,24 +12,21 @@
 #include "ecc_numeric_limits.h"
 
 
-eccodes::accessor::Bits _grib_accessor_bits;
-eccodes::Accessor* grib_accessor_bits = &_grib_accessor_bits;
-
 namespace eccodes::accessor
 {
 
 void Bits::init(const long l, grib_arguments* c)
 {
     Gen::init(l, c);
-    grib_handle* hand  = get_enclosing_handle();
+    grib_handle* hand = get_enclosing_handle();
     grib_expression* e = NULL;
-    int n              = 0;
-    referenceValue_    = 0;
+    int n = 0;
+    referenceValue_ = 0;
 
     argument_ = c->get_name(hand, n++);
-    start_    = c->get_long(hand, n++);
-    len_      = c->get_long(hand, n++);
-    e         = c->get_expression(hand, n++);
+    start_ = c->get_long(hand, n++);
+    len_ = c->get_long(hand, n++);
+    e = c->get_expression(hand, n++);
     if (e) {
         e->evaluate_double(hand, &(referenceValue_));
         referenceValuePresent_ = 1;
@@ -51,21 +48,21 @@ int Bits::unpack_long(long* val, size_t* len)
 {
     grib_accessor* x = NULL;
     unsigned char* p = NULL;
-    grib_handle* h   = get_enclosing_handle();
+    grib_handle* h = get_enclosing_handle();
     long start, length;
     int ret = 0;
 
     if (*len < 1)
         return GRIB_WRONG_ARRAY_SIZE;
 
-    start  = start_;
+    start = start_;
     length = len_;
 
     x = grib_find_accessor(get_enclosing_handle(), argument_);
     if (!x)
         return GRIB_NOT_FOUND;
 
-    p    = h->buffer->data + x->byte_offset();
+    p = h->buffer->data + x->byte_offset();
     *val = grib_decode_unsigned_long(p, &start, length);
 
     *len = 1;
@@ -77,21 +74,21 @@ int Bits::unpack_double(double* val, size_t* len)
 {
     grib_accessor* x = NULL;
     unsigned char* p = NULL;
-    grib_handle* h   = get_enclosing_handle();
+    grib_handle* h = get_enclosing_handle();
     long start, length;
     int ret = 0;
 
     if (*len < 1)
         return GRIB_WRONG_ARRAY_SIZE;
 
-    start  = start_;
+    start = start_;
     length = len_;
 
     x = grib_find_accessor(get_enclosing_handle(), argument_);
     if (!x)
         return GRIB_NOT_FOUND;
 
-    p    = h->buffer->data + x->byte_offset();
+    p = h->buffer->data + x->byte_offset();
     *val = grib_decode_unsigned_long(p, &start, length);
 
     *val = ((long)*val + referenceValue_) / scale_;
@@ -104,21 +101,21 @@ int Bits::unpack_double(double* val, size_t* len)
 int Bits::pack_double(const double* val, size_t* len)
 {
     grib_accessor* x = NULL;
-    grib_handle* h   = get_enclosing_handle();
+    grib_handle* h = get_enclosing_handle();
     unsigned char* p = NULL;
     long start, length, lval;
 
     if (*len != 1)
         return GRIB_WRONG_ARRAY_SIZE;
 
-    start  = start_;
+    start = start_;
     length = len_;
 
     x = grib_find_accessor(get_enclosing_handle(), argument_);
     if (!x)
         return GRIB_NOT_FOUND;
 
-    p    = h->buffer->data + x->byte_offset();
+    p = h->buffer->data + x->byte_offset();
     lval = round(*val * scale_) - referenceValue_;
     return grib_encode_unsigned_longb(p, lval, &start, length);
 }
@@ -126,7 +123,7 @@ int Bits::pack_double(const double* val, size_t* len)
 int Bits::pack_long(const long* val, size_t* len)
 {
     grib_accessor* x = NULL;
-    grib_handle* h   = get_enclosing_handle();
+    grib_handle* h = get_enclosing_handle();
     unsigned char* p = NULL;
     long start, length, maxval;
 
@@ -139,7 +136,7 @@ int Bits::pack_long(const long* val, size_t* len)
         return pack_double(&dVal, len);
     }
 
-    start  = start_;
+    start = start_;
     length = len_;
 
     x = grib_find_accessor(get_enclosing_handle(), argument_);
@@ -195,9 +192,9 @@ long Bits::get_native_type()
 
 int Bits::unpack_string(char* v, size_t* len)
 {
-    int ret     = 0;
+    int ret = 0;
     double dval = 0;
-    long lval   = 0;
+    long lval = 0;
     size_t llen = 1;
 
     switch (get_native_type()) {

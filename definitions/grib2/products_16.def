@@ -1,0 +1,8 @@
+# (C) Copyright 2005- ECMWF.
+
+# WPMIP prod products (prod)
+if (!defined(marsExpver)) {
+  constant marsExpver = 'prod';
+}
+
+include "grib2/products_wpmip.def"

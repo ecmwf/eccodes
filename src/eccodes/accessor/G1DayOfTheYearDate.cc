@@ -10,9 +10,6 @@
 
 #include "G1DayOfTheYearDate.h"
 
-eccodes::accessor::G1DayOfTheYearDate _grib_accessor_g1day_of_the_year_date;
-eccodes::Accessor* grib_accessor_g1day_of_the_year_date = &_grib_accessor_g1day_of_the_year_date;
-
 namespace eccodes::accessor
 {
 
@@ -33,11 +30,11 @@ int G1DayOfTheYearDate::unpack_string(char* val, size_t* len)
     grib_handle* hand = get_enclosing_handle();
     char tmp[1024];
 
-    long year             = 0;
-    long century          = 0;
-    long month            = 0;
-    long day              = 0;
-    long fullyear         = 0;
+    long year = 0;
+    long century = 0;
+    long month = 0;
+    long day = 0;
+    long fullyear = 0;
     long fake_day_of_year = 0;
 
     grib_get_long_internal(hand, century_, &century);
@@ -45,7 +42,7 @@ int G1DayOfTheYearDate::unpack_string(char* val, size_t* len)
     grib_get_long_internal(hand, month_, &month);
     grib_get_long_internal(hand, year_, &year);
 
-    fullyear         = ((century - 1) * 100 + year);
+    fullyear = ((century - 1) * 100 + year);
     fake_day_of_year = ((month - 1) * 30) + day;
     snprintf(tmp, sizeof(tmp), "%04ld-%03ld", fullyear, fake_day_of_year);
 

@@ -14,7 +14,8 @@
 eccodes::geo_iterator::LambertConformal _grib_iterator_lambert_conformal{};
 eccodes::geo_iterator::Iterator* grib_iterator_lambert_conformal = &_grib_iterator_lambert_conformal;
 
-namespace eccodes::geo_iterator {
+namespace eccodes::geo_iterator
+{
 
 #define ITER    "Lambert conformal Geoiterator"
 #define EPSILON 1.0e-10
@@ -57,11 +58,11 @@ static double compute_phi(
     int i, MAX_ITER = 15;
 
     eccnth = 0.5 * eccent;
-    phi    = M_PI_2 - 2 * atan(ts);
+    phi = M_PI_2 - 2 * atan(ts);
     for (i = 0; i <= MAX_ITER; i++) {
         sinpi = sin(phi);
-        con   = eccent * sinpi;
-        dphi  = M_PI_2 - 2 * atan(ts * (pow(((1.0 - con) / (1.0 + con)), eccnth))) - phi;
+        con = eccent * sinpi;
+        dphi = M_PI_2 - 2 * atan(ts * (pow(((1.0 - con) / (1.0 + con)), eccnth))) - phi;
         phi += dphi;
         if (fabs(dphi) <= 0.0000000001)
             return (phi);
@@ -86,7 +87,7 @@ static double compute_t(
 {
     double con = eccent * sinphi;
     double com = 0.5 * eccent;
-    con        = pow(((1.0 - con) / (1.0 + con)), com);
+    con = pow(((1.0 - con) / (1.0 + con)), com);
     return (tan(0.5 * (M_PI_2 - phi)) / con);
 }
 
@@ -104,18 +105,18 @@ static void xy2lonlat(double radius, double n, double f, double rho0_bare, doubl
     DEBUG_ASSERT(n != 0.0);
     x /= radius;
     y /= radius;
-    y          = rho0_bare - y;
+    y = rho0_bare - y;
     double rho = hypot(x, y);
     if (rho != 0.0) {
         if (n < 0.0) {
             rho = -rho;
-            x   = -x;
-            y   = -y;
+            x = -x;
+            y = -y;
         }
         double latRadians = 2. * atan(pow(f / rho, 1.0 / n)) - M_PI_2;
         double lonRadians = atan2(x, y) / n;
-        *lonDeg           = (lonRadians + LoVInRadians) * RAD2DEG;
-        *latDeg           = latRadians * RAD2DEG;
+        *lonDeg = (lonRadians + LoVInRadians) * RAD2DEG;
+        *latDeg = latRadians * RAD2DEG;
     }
     else {
         *lonDeg = 0.0;
@@ -141,11 +142,11 @@ int LambertConformal::init_sphere(const grib_handle* h,
             log(tan(M_PI_4 + Latin2InRadians / 2.0) / tan(M_PI_4 + Latin1InRadians / 2.0));
     }
 
-    double f         = (cos(Latin1InRadians) * pow(tan(M_PI_4 + Latin1InRadians / 2.0), n)) / n;
-    double rho       = radius * f * pow(tan(M_PI_4 + latFirstInRadians / 2.0), -n);
+    double f = (cos(Latin1InRadians) * pow(tan(M_PI_4 + Latin1InRadians / 2.0), n)) / n;
+    double rho = radius * f * pow(tan(M_PI_4 + latFirstInRadians / 2.0), -n);
     double rho0_bare = f * pow(tan(M_PI_4 + LaDInRadians / 2.0), -n);
-    double rho0      = radius * rho0_bare;  // scaled
-    double lonDiff   = lonFirstInRadians - LoVInRadians;
+    double rho0 = radius * rho0_bare;  // scaled
+    double lonDiff = lonFirstInRadians - LoVInRadians;
 
     // Adjust longitude to range -180 to 180
     if (lonDiff > M_PI)
@@ -153,8 +154,8 @@ int LambertConformal::init_sphere(const grib_handle* h,
     if (lonDiff < -M_PI)
         lonDiff += 2 * M_PI;
     double angle = n * lonDiff;
-    double x0    = rho * sin(angle);
-    double y0    = rho0 - rho * cos(angle);
+    double x0 = rho * sin(angle);
+    double y0 = rho0 - rho * cos(angle);
     // Dx = iScansNegatively == 0 ? Dx : -Dx;
     // GRIB-405: Don't change sign of Dy. Latitudes ALWAYS increase from latitudeOfFirstGridPoint
     // Dy = jScansPositively == 1 ? Dy : -Dy;
@@ -176,9 +177,9 @@ int LambertConformal::init_sphere(const grib_handle* h,
         y = y0 + j * Dy;
         for (long i = 0; i < nx; i++) {
             const long index = i + j * nx;
-            x                = x0 + i * Dx;
+            x = x0 + i * Dx;
             xy2lonlat(radius, n, f, rho0_bare, LoVInRadians, x, y, &lonDeg, &latDeg);
-            lonDeg       = normalise_longitude_in_degrees(lonDeg);
+            lonDeg = normalise_longitude_in_degrees(lonDeg);
             lons_[index] = lonDeg;
             lats_[index] = latDeg;
         }
@@ -243,16 +244,16 @@ int LambertConformal::init_oblate(const grib_handle* h,
 
     sin_po = sin(Latin1InRadians);
     cos_po = cos(Latin1InRadians);
-    con    = sin_po;
-    ms1    = compute_m(e, sin_po, cos_po);
-    ts1    = compute_t(e, Latin1InRadians, sin_po);
+    con = sin_po;
+    ms1 = compute_m(e, sin_po, cos_po);
+    ts1 = compute_t(e, Latin1InRadians, sin_po);
 
     sin_po = sin(Latin2InRadians);
     cos_po = cos(Latin2InRadians);
-    ms2    = compute_m(e, sin_po, cos_po);
-    ts2    = compute_t(e, Latin2InRadians, sin_po);
+    ms2 = compute_m(e, sin_po, cos_po);
+    ts2 = compute_t(e, Latin2InRadians, sin_po);
     sin_po = sin(LaDInRadians);
-    ts0    = compute_t(e, LaDInRadians, sin_po);
+    ts0 = compute_t(e, LaDInRadians, sin_po);
 
     if (fabs(Latin1InRadians - Latin2InRadians) > EPSILON) {
         ns = log(ms1 / ms2) / log(ts1 / ts2);
@@ -260,15 +261,15 @@ int LambertConformal::init_oblate(const grib_handle* h,
     else {
         ns = con;
     }
-    F  = ms1 / (ns * pow(ts1, ns));
+    F = ms1 / (ns * pow(ts1, ns));
     rh = earthMajorAxisInMetres * F * pow(ts0, ns);
 
     // Forward projection: convert lat,lon to x,y
     con = fabs(fabs(latFirstInRadians) - M_PI_2);
     if (con > EPSILON) {
         sinphi = sin(latFirstInRadians);
-        ts     = compute_t(e, latFirstInRadians, sinphi);
-        rh1    = earthMajorAxisInMetres * F * pow(ts, ns);
+        ts = compute_t(e, latFirstInRadians, sinphi);
+        rh1 = earthMajorAxisInMetres * F * pow(ts, ns);
     }
     else {
         con = latFirstInRadians * ns;
@@ -279,10 +280,10 @@ int LambertConformal::init_oblate(const grib_handle* h,
         rh1 = 0;
     }
     theta = ns * adjust_lon_radians(lonFirstInRadians - LoVInRadians);
-    x0    = rh1 * sin(theta);
-    y0    = rh - rh1 * cos(theta);
-    x0    = -x0;
-    y0    = -y0;
+    x0 = rh1 * sin(theta);
+    y0 = rh - rh1 * cos(theta);
+    x0 = -x0;
+    y0 = -y0;
 
     // Allocate latitude and longitude arrays
     lats_ = (double*)grib_context_malloc(h->context, nv * sizeof(double));
@@ -297,7 +298,7 @@ int LambertConformal::init_oblate(const grib_handle* h,
     }
 
     // Populate our arrays
-    false_easting  = x0;
+    false_easting = x0;
     false_northing = y0;
     for (j = 0; j < ny; j++) {
         y = j * Dy;
@@ -306,8 +307,8 @@ int LambertConformal::init_oblate(const grib_handle* h,
             double _x, _y;
             x = i * Dx;
             // Inverse projection to convert from x,y to lat,lon
-            _x  = x - false_easting;
-            _y  = rh - y + false_northing;
+            _x = x - false_easting;
+            _y = rh - y + false_northing;
             rh1 = sqrt(_x * _x + _y * _y);
             con = 1.0;
             if (ns <= 0) {
@@ -318,8 +319,8 @@ int LambertConformal::init_oblate(const grib_handle* h,
             if (rh1 != 0)
                 theta = atan2((con * _x), (con * _y));
             if ((rh1 != 0) || (ns > 0.0)) {
-                con    = 1.0 / ns;
-                ts     = pow((rh1 / (earthMajorAxisInMetres * F)), con);
+                con = 1.0 / ns;
+                ts = pow((rh1 / (earthMajorAxisInMetres * F)), con);
                 latRad = compute_phi(e, ts, &err);
                 if (err) {
                     grib_context_log(h->context, GRIB_LOG_ERROR,
@@ -336,8 +337,8 @@ int LambertConformal::init_oblate(const grib_handle* h,
             if (i == 0 && j == 0) {
                 DEBUG_ASSERT(fabs(latFirstInRadians - latRad) <= EPSILON);
             }
-            latDeg       = latRad * RAD2DEG;  // Convert to degrees
-            lonDeg       = normalise_longitude_in_degrees(lonRad * RAD2DEG);
+            latDeg = latRad * RAD2DEG;  // Convert to degrees
+            lonDeg = normalise_longitude_in_degrees(lonRad * RAD2DEG);
             lons_[index] = lonDeg;
             lats_[index] = latDeg;
         }
@@ -359,21 +360,21 @@ int LambertConformal::init(grib_handle* h, grib_arguments* args)
         LaDInRadians;
     double earthMajorAxisInMetres = 0, earthMinorAxisInMetres = 0;
 
-    const char* sradius            = args->get_name(h, carg_++);
-    const char* snx                = args->get_name(h, carg_++);
-    const char* sny                = args->get_name(h, carg_++);
-    const char* sLoVInDegrees      = args->get_name(h, carg_++);
-    const char* sLaDInDegrees      = args->get_name(h, carg_++);
-    const char* sLatin1InDegrees   = args->get_name(h, carg_++);
-    const char* sLatin2InDegrees   = args->get_name(h, carg_++);
+    const char* sradius = args->get_name(h, carg_++);
+    const char* snx = args->get_name(h, carg_++);
+    const char* sny = args->get_name(h, carg_++);
+    const char* sLoVInDegrees = args->get_name(h, carg_++);
+    const char* sLaDInDegrees = args->get_name(h, carg_++);
+    const char* sLatin1InDegrees = args->get_name(h, carg_++);
+    const char* sLatin2InDegrees = args->get_name(h, carg_++);
     const char* slatFirstInDegrees = args->get_name(h, carg_++);
     const char* slonFirstInDegrees = args->get_name(h, carg_++);
     // Dx and Dy are in Metres
-    const char* sDx                     = args->get_name(h, carg_++);
-    const char* sDy                     = args->get_name(h, carg_++);
-    const char* siScansNegatively       = args->get_name(h, carg_++);
-    const char* sjScansPositively       = args->get_name(h, carg_++);
-    const char* sjPointsAreConsecutive  = args->get_name(h, carg_++);
+    const char* sDx = args->get_name(h, carg_++);
+    const char* sDy = args->get_name(h, carg_++);
+    const char* siScansNegatively = args->get_name(h, carg_++);
+    const char* sjScansPositively = args->get_name(h, carg_++);
+    const char* sjPointsAreConsecutive = args->get_name(h, carg_++);
     const char* salternativeRowScanning = args->get_name(h, carg_++);
 
     if ((err = grib_get_long_internal(h, snx, &nx)) != GRIB_SUCCESS) return err;
@@ -389,7 +390,7 @@ int LambertConformal::init(grib_handle* h, grib_arguments* args)
         if ((err = grib_get_double_internal(h, sradius, &radius)) != GRIB_SUCCESS) return err;
     }
 
-    if ( nv_ != (size_t)(nx * ny) ) {
+    if (nv_ != (size_t)(nx * ny)) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Wrong number of points (%zu!=%ldx%ld)", ITER, nv_, nx, ny);
         return GRIB_WRONG_GRID;
     }
@@ -431,10 +432,10 @@ int LambertConformal::init(grib_handle* h, grib_arguments* args)
     //
     latFirstInRadians = latFirstInDegrees * DEG2RAD;
     lonFirstInRadians = lonFirstInDegrees * DEG2RAD;
-    Latin1InRadians   = Latin1InDegrees * DEG2RAD;
-    Latin2InRadians   = Latin2InDegrees * DEG2RAD;
-    LaDInRadians      = LaDInDegrees * DEG2RAD;
-    LoVInRadians      = LoVInDegrees * DEG2RAD;
+    Latin1InRadians = Latin1InDegrees * DEG2RAD;
+    Latin2InRadians = Latin2InDegrees * DEG2RAD;
+    LaDInRadians = LaDInDegrees * DEG2RAD;
+    LoVInRadians = LoVInDegrees * DEG2RAD;
 
     if (is_oblate) {
         err = init_oblate(h, nv_, nx, ny,

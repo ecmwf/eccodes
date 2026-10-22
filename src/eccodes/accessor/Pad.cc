@@ -10,9 +10,6 @@
 
 #include "Pad.h"
 
-eccodes::accessor::Pad _grib_accessor_pad;
-eccodes::Accessor* grib_accessor_pad = &_grib_accessor_pad;
-
 namespace eccodes::accessor
 {
 
@@ -21,7 +18,7 @@ void Pad::init(const long len, grib_arguments* arg)
     Padding::init(len, arg);
 
     expression_ = arg->get_expression(get_enclosing_handle(), 0);
-    length_     = preferred_size(1);
+    length_ = preferred_size(1);
 }
 
 size_t Pad::preferred_size(int from_handle)

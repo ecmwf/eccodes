@@ -10,25 +10,22 @@
 
 #include "G1ForecastMonth.h"
 
-eccodes::accessor::G1ForecastMonth _grib_accessor_g1forecastmonth;
-eccodes::Accessor* grib_accessor_g1forecastmonth = &_grib_accessor_g1forecastmonth;
-
 namespace eccodes::accessor
 {
 
 void G1ForecastMonth::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
-    grib_handle* h  = get_enclosing_handle();
-    int n           = 0;
+    grib_handle* h = get_enclosing_handle();
+    int n = 0;
     const int count = c->get_count();
     if (count == 6) { /* GRIB1 case -- this needs to be refactored */
         verification_yearmonth_ = c->get_name(h, n++);
-        base_date_              = c->get_name(h, n++);
-        day_                    = c->get_name(h, n++);
-        hour_                   = c->get_name(h, n++);
-        fcmonth_                = c->get_name(h, n++);
-        check_                  = c->get_name(h, n++);
+        base_date_ = c->get_name(h, n++);
+        day_ = c->get_name(h, n++);
+        hour_ = c->get_name(h, n++);
+        fcmonth_ = c->get_name(h, n++);
+        check_ = c->get_name(h, n++);
     }
 }
 
@@ -40,17 +37,17 @@ void G1ForecastMonth::dump(eccodes::Dumper* dumper)
 static int calculate_fcmonth(grib_accessor* a, long verification_yearmonth, long base_date, long day, long hour, long* result)
 {
     long base_yearmonth = 0;
-    long vyear          = 0;
-    long vmonth         = 0;
-    long byear          = 0;
-    long bmonth         = 0;
-    long fcmonth        = 0;
+    long vyear = 0;
+    long vmonth = 0;
+    long byear = 0;
+    long bmonth = 0;
+    long fcmonth = 0;
 
     base_yearmonth = base_date / 100;
 
-    vyear  = verification_yearmonth / 100;
+    vyear = verification_yearmonth / 100;
     vmonth = verification_yearmonth % 100;
-    byear  = base_yearmonth / 100;
+    byear = base_yearmonth / 100;
     bmonth = base_yearmonth % 100;
 
     fcmonth = (vyear - byear) * 12 + (vmonth - bmonth);
@@ -94,7 +91,7 @@ static int unpack_long_edition2(grib_accessor* a, long* val, size_t* len)
         return err;
 
     dstep = (((double)forecastTime) * 3600) / 86400; /* as a fraction of a day */
-    jul2  = jul_base + dstep;
+    jul2 = jul_base + dstep;
 
     if ((err = grib_julian_to_datetime(jul2, &year2, &month2, &day2, &hour2, &minute2, &second2)) != GRIB_SUCCESS)
         return err;
@@ -111,12 +108,12 @@ int G1ForecastMonth::unpack_long_edition1(long* val, size_t* len)
     int err = 0;
 
     long verification_yearmonth = 0;
-    long base_date              = 0;
-    long day                    = 0;
-    long hour                   = 0;
-    long gribForecastMonth      = 0;
-    long check                  = 0;
-    long fcmonth                = 0;
+    long base_date = 0;
+    long day = 0;
+    long hour = 0;
+    long gribForecastMonth = 0;
+    long check = 0;
+    long fcmonth = 0;
 
     if ((err = grib_get_long_internal(get_enclosing_handle(),
                                       verification_yearmonth_, &verification_yearmonth)) != GRIB_SUCCESS)
@@ -154,9 +151,9 @@ int G1ForecastMonth::unpack_long_edition1(long* val, size_t* len)
 
 int G1ForecastMonth::unpack_long(long* val, size_t* len)
 {
-    int err           = 0;
+    int err = 0;
     grib_handle* hand = get_enclosing_handle();
-    long edition      = 0;
+    long edition = 0;
 
     if ((err = grib_get_long(hand, "edition", &edition)) != GRIB_SUCCESS)
         return err;

@@ -46,10 +46,10 @@ grib_iarray* grib_iarray_new(size_t size, size_t incsize)
         grib_context_log(c, GRIB_LOG_ERROR, "%s: Unable to allocate %zu bytes", __func__, sizeof(grib_iarray));
         return NULL;
     }
-    v->size                = size;
-    v->n                   = 0;
-    v->incsize             = incsize;
-    v->v                   = (long*)grib_context_malloc(c, sizeof(long) * size);
+    v->size = size;
+    v->n = 0;
+    v->incsize = incsize;
+    v->v = (long*)grib_context_malloc(c, sizeof(long) * size);
     v->number_of_pop_front = 0;
     if (!v->v) {
         grib_context_log(c, GRIB_LOG_ERROR, "%s: Unable to allocate %zu bytes", __func__, sizeof(long) * size);
@@ -99,8 +99,8 @@ static grib_iarray* grib_iarray_resize_to(grib_iarray* v, size_t newsize)
     v->v -= v->number_of_pop_front;
     grib_context_free(c, v->v);
 
-    v->v                   = newv;
-    v->size                = newsize;
+    v->v = newv;
+    v->size = newsize;
     v->number_of_pop_front = 0;
 
     return v;
@@ -114,7 +114,7 @@ static grib_iarray* grib_iarray_resize(grib_iarray* v)
 
 grib_iarray* grib_iarray_push(grib_iarray* v, long val)
 {
-    size_t start_size    = 100;
+    size_t start_size = 100;
     size_t start_incsize = 100;
 
     if (!v)

@@ -10,9 +10,6 @@
 
 #include "NumberOfValuesDataRawPacking.h"
 
-eccodes::accessor::NumberOfValuesDataRawPacking _grib_accessor_number_of_values_data_raw_packing;
-eccodes::Accessor* grib_accessor_number_of_values_data_raw_packing = &_grib_accessor_number_of_values_data_raw_packing;
-
 namespace eccodes::accessor
 {
 
@@ -21,7 +18,7 @@ void NumberOfValuesDataRawPacking::init(const long v, grib_arguments* args)
     Gen::init(v, args);
     int n = 0;
 
-    values_    = args->get_name(get_enclosing_handle(), n++);
+    values_ = args->get_name(get_enclosing_handle(), n++);
     precision_ = args->get_name(get_enclosing_handle(), n++);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     length_ = 0;
@@ -29,11 +26,11 @@ void NumberOfValuesDataRawPacking::init(const long v, grib_arguments* args)
 
 int NumberOfValuesDataRawPacking::unpack_long(long* val, size_t* len)
 {
-    int err              = 0;
+    int err = 0;
     grib_accessor* adata = NULL;
-    long precision       = 0;
-    int bytes            = 0;
-    long byte_count      = 0;
+    long precision = 0;
+    int bytes = 0;
+    long byte_count = 0;
 
     adata = grib_find_accessor(get_enclosing_handle(), values_);
     ECCODES_ASSERT(adata != NULL);

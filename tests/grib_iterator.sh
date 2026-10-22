@@ -54,8 +54,12 @@ ${tools_dir}/grib_get_data "$samp_dir/sh_ml_grib2.tmpl" > $tempText
 ${tools_dir}/grib_get_data $samp_dir/reduced_rotated_gg_pl_320_grib1.tmpl > $tempText
 ${tools_dir}/grib_get_data $samp_dir/reduced_rotated_gg_pl_320_grib2.tmpl > $tempText
 ECCODES_DEBUG=-1 ${tools_dir}/grib_get_data ${data_dir}/reduced_gaussian_sub_area.grib2 > $tempText 2>&1
-grep -q "sub-area num points=53564" $tempText
-
+if grep -q "sub-area num points=53564" "$tempText" || grib_check_key_equals "${data_dir}/reduced_gaussian_sub_area.grib2" numberOfDataPoints 53564
+then
+    : # success
+else
+    exit 42
+fi
 
 # -w option
 input=$data_dir/tigge_cf_ecmwf.grib2
@@ -90,7 +94,12 @@ fi
 # Iterate with DEBUG on
 input=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
 ECCODES_DEBUG=1 ${tools_dir}/grib_get_data $input > $tempText 2>&1
-grep "global num points=6114" $tempText
+if grep -q "global num points=6114" "$tempText" || grib_check_key_equals "$input" numberOfDataPoints 6114
+then
+    : # success
+else
+    exit 42
+fi
 
 
 # Clean up

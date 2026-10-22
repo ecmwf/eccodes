@@ -10,7 +10,7 @@ set -A gg_resols 48 512 400
 set -A sh_resols 63 799 511
 
 
-[[ -d $templates_dir ]] ||  mkdir -p $templates_dir 
+[[ -d $templates_dir ]] ||  mkdir -p $templates_dir
 cd $templates_dir
 
 cat > ifs_templates.filter << EOF
@@ -62,40 +62,40 @@ function do_templates
   for ret in ${rets[@]}
   do
 
-    rm -f $target || true 
+    rm -f $target || true
     mars << EOF
     $ret,
     target=$target
 EOF
 
-    grib_filter ifs_templates.filter $target 
+    grib_filter ifs_templates.filter $target
   done
 
 }
 
 
-for resol in ${sh_resols[@]} 
-do 
+for resol in ${sh_resols[@]}
+do
 
   base_retrieve="retrieve,resol=$resol,date=$date"
 
   set -A rets   \
     "${base_retrieve},param=t,levtype=pl,level=1000" \
-    "${base_retrieve},param=t,levtype=ml,levelist=1" 
+    "${base_retrieve},param=t,levtype=ml,levelist=1"
 
   do_templates
 
 done
 
-for resol in ${gg_resols[@]} 
-do 
+for resol in ${gg_resols[@]}
+do
 
   base_retrieve="retrieve,gaussian=reduced,grid=$resol,date=$date"
 
   set -A rets   \
     "${base_retrieve},param=q,levtype=pl,level=1000" \
     "${base_retrieve},param=t,levtype=ml,levelist=1,gaussian=reduced" \
-    "${base_retrieve},param=2t,levtype=sfc" 
+    "${base_retrieve},param=2t,levtype=sfc"
 
   do_templates
 
@@ -103,6 +103,6 @@ done
 
 rm -f ifs_templates.filter $target || true
 
-ls -l 
+ls -l
 
 grib_ls *

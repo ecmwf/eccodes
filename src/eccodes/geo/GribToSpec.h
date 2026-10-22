@@ -12,22 +12,27 @@
 
 #pragma once
 
+#include <map>
 #include <string>
 #include <vector>
 
-#include "eckit/geo/spec/Custom.h"
+#include "eckit/spec/Custom.h"
 
 #include "eccodes/geo/Geo.h"
+#include "eccodes/Spec.h"
 
 
 namespace eccodes::geo
 {
 
 
-class GribToSpec final : public Spec
+class GribToSpec final : public eccodes::Spec
 {
 public:
-    explicit GribToSpec(codes_handle*);
+    using cache_type = std::map<std::string, eckit::spec::Custom::value_type>;
+
+    // rotated: interpret the grid rotation if set (or not, for eg. for iterating in the rotated frame)
+    explicit GribToSpec(codes_handle*, bool rotated = true);
 
     bool has(const std::string& name) const override;
 
@@ -49,8 +54,11 @@ public:
     bool get(const std::string& name, std::vector<std::string>& value) const override;
 
 private:
-    mutable eckit::geo::spec::Custom cache_;
+    mutable cache_type cache_;
     codes_handle* handle_;
+    const bool rotated_;
+
+    void pl_expand_to_global(std::vector<long>&) const;
 
     void json(eckit::JSON&) const final;
 };

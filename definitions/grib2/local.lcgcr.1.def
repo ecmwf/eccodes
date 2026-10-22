@@ -1,0 +1,9 @@
+# LC-GCR local
+
+# follow post_meta_data.hook.products_destine.def
+concept modelName(unknown, "modelNameConcept.def", conceptsDir2, conceptsLocalDirAll): no_copy, dump;
+if (modelName isnot "unknown") {
+  concept modelVersion(unknown, "modelVersionConcept.[modelName].def", conceptsDir2, conceptsLocalDirAll): no_copy, dump, read_only;
+  alias ls.model = modelName;
+  alias mars.model = modelName;
+}

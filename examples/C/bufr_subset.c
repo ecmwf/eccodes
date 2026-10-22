@@ -20,7 +20,7 @@
 
 int main(int argc, char* argv[])
 {
-    char key[200] = {0,};
+    char key[200] = { 0 };
     FILE* in = NULL;
 
     /* message handle. Required in all the eccodes calls acting on a message.*/
@@ -30,7 +30,7 @@ int main(int argc, char* argv[])
     long longVal;
     double doubleVal;
     size_t stringLen;
-    char stringVal[100] = {0,};
+    char stringVal[100] = { 0 };
     int i, err = 0;
     int cnt = 0, ktype = 0;
     const char* infile = "../../data/bufr/synop_multi_subset.bufr";

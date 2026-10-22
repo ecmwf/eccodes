@@ -101,7 +101,7 @@ for file in $files; do
   infile=${data_dir}/$file
   outfile1=${infile}_bitsPerValue_1
   outfile2=${infile}_bitsPerValue_2
-  
+
   # Setting with setBitsPerValue key should be identical to using the repack option
   ${tools_dir}/grib_set -r -s bitsPerValue=10 $infile $outfile1
   ${tools_dir}/grib_set -s setBitsPerValue=10 $infile $outfile2

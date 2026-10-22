@@ -10,19 +10,16 @@
 
 #include "SectionPadding.h"
 
-eccodes::accessor::SectionPadding _grib_accessor_section_padding;
-eccodes::Accessor* grib_accessor_section_padding = &_grib_accessor_section_padding;
-
 namespace eccodes::accessor
 {
 
 size_t SectionPadding::preferred_size(int from_handle)
 {
-    grib_accessor* b              = this;
+    grib_accessor* b = this;
     grib_accessor* section_length = 0;
-    long length                   = 0;
-    size_t size                   = 1;
-    long alength                  = 0;
+    long length = 0;
+    size_t size = 1;
+    long alength = 0;
 
     if (!from_handle) {
         if (preserve_)
@@ -34,7 +31,7 @@ size_t SectionPadding::preferred_size(int from_handle)
     /* The section length should be a parameter */
     while (section_length == NULL && b != NULL) {
         section_length = b->parent_->aclength;
-        b              = b->parent_->owner;
+        b = b->parent_->owner;
     }
 
     if (!section_length) {
@@ -66,7 +63,7 @@ void SectionPadding::init(const long len, grib_arguments* arg)
 {
     Padding::init(len, arg);
     preserve_ = 1; /* This should be a parameter */
-    length_   = preferred_size(1);
+    length_ = preferred_size(1);
 }
 
 }  // namespace eccodes::accessor

@@ -1,0 +1,4 @@
+0 0 Observed value reported
+1 1 Actual value less than reported value
+2 2 Actual value greater than reported value
+3 3 Missing value

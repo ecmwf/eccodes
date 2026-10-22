@@ -58,11 +58,12 @@ static int compare_points(const void* a, const void* b)
     return 0;
 }
 
-namespace eccodes::geo_nearest {
+namespace eccodes::geo_nearest
+{
 
 int Nearest::init(grib_handle* h, grib_arguments* args)
 {
-    //h_ = h;
+    // h_ = h;
     return GRIB_SUCCESS;
 }
 
@@ -106,9 +107,9 @@ int Nearest::grib_nearest_find_generic(
 
     neighbours = (PointStore*)grib_context_malloc(h->context, nvalues * sizeof(PointStore));
     for (i = 0; i < nvalues; ++i) {
-        neighbours[i].m_dist  = 1e10; /* set all distances to large number to begin with */
-        neighbours[i].m_lat   = 0;
-        neighbours[i].m_lon   = 0;
+        neighbours[i].m_dist = 1e10; /* set all distances to large number to begin with */
+        neighbours[i].m_lat = 0;
+        neighbours[i].m_lon = 0;
         neighbours[i].m_value = 0;
         neighbours[i].m_index = 0;
     }
@@ -116,7 +117,7 @@ int Nearest::grib_nearest_find_generic(
     /* GRIB_NEAREST_SAME_GRID not yet implemented */
     {
         double the_value = 0;
-        double min_dist  = 1e10;
+        double min_dist = 1e10;
         size_t the_index = 0;
         int ilat = 0, ilon = 0;
         size_t idx_upper = 0, idx_lower = 0;
@@ -162,7 +163,7 @@ int Nearest::grib_nearest_find_generic(
         /* Second pass: Iterate again and collect candidate neighbours */
         grib_iterator_reset(iter);
         the_index = 0;
-        i         = 0;
+        i = 0;
         while (grib_iterator_next(iter, &lat, &lon, &the_value)) {
             if (lat > lat2 + LAT_DELTA || lat < lat1 - LAT_DELTA) {
                 /* Ignore latitudes too far from our point */
@@ -173,10 +174,10 @@ int Nearest::grib_nearest_find_generic(
                     min_dist = dist;
                 /*printf("Candidate: lat=%.5f lon=%.5f dist=%f Idx=%ld Val=%f\n",lat,lon,dist,the_index,the_value);*/
                 /* store this candidate point */
-                neighbours[i].m_dist  = dist;
+                neighbours[i].m_dist = dist;
                 neighbours[i].m_index = (int)the_index;
-                neighbours[i].m_lat   = lat;
-                neighbours[i].m_lon   = lon;
+                neighbours[i].m_lat = lat;
+                neighbours[i].m_lon = lon;
                 neighbours[i].m_value = the_value;
                 i++;
             }
@@ -209,9 +210,9 @@ int Nearest::grib_nearest_find_generic(
 
     for (i = 0; i < 4; ++i) {
         distances[i] = neighbours[i].m_dist;
-        outlats[i]   = neighbours[i].m_lat;
-        outlons[i]   = neighbours[i].m_lon;
-        indexes[i]   = neighbours[i].m_index;
+        outlats[i] = neighbours[i].m_lat;
+        outlons[i] = neighbours[i].m_lon;
+        indexes[i] = neighbours[i].m_index;
         if (values) {
             values[i] = neighbours[i].m_value;
         }
@@ -226,8 +227,8 @@ eccodes::geo_nearest::Nearest* gribNearestNew(const grib_handle* ch, int* error)
 {
     *error = GRIB_NOT_IMPLEMENTED;
 
-    grib_handle* h             = (grib_handle*)ch;
-    grib_accessor* a           = grib_find_accessor(h, "NEAREST");
+    grib_handle* h = (grib_handle*)ch;
+    grib_accessor* a = grib_find_accessor(h, "NEAREST");
     accessor::Nearest* n = (accessor::Nearest*)a;
 
     if (!a)
@@ -246,7 +247,6 @@ int gribNearestDelete(eccodes::geo_nearest::Nearest* i)
     if (i) {
         i->destroy();
         delete i;
-        i = nullptr;
     }
     return GRIB_SUCCESS;
 }
@@ -289,11 +289,11 @@ int grib_nearest_get_radius(grib_handle* h, double* radiusInKm)
 /* Note: the argument 'n' is NOT the size of the 'xx' array but its LAST index i.e. size of xx - 1 */
 void grib_binary_search(const double xx[], const size_t n, double x, size_t* ju, size_t* jl)
 {
-    size_t jm     = 0;
+    size_t jm = 0;
     int ascending = 0;
-    *jl           = 0;
-    *ju           = n;
-    ascending     = (xx[n] >= xx[0]);
+    *jl = 0;
+    *ju = n;
+    ascending = (xx[n] >= xx[0]);
     while (*ju - *jl > 1) {
         jm = (*ju + *jl) >> 1;
         if ((x >= xx[jm]) == ascending)
@@ -317,23 +317,23 @@ static int grib_nearest_find_multiple_(
     double* values, double* distances, int* indexes)
 {
     grib_nearest* nearest = 0;
-    double* pdistances    = distances;
-    double* poutlats      = outlats;
-    double* poutlons      = outlons;
-    double* pvalues       = values;
-    int* pindexes         = indexes;
+    double* pdistances = distances;
+    double* poutlats = outlats;
+    double* poutlons = outlons;
+    double* pvalues = values;
+    int* pindexes = indexes;
     int idx = 0, ii = 0;
     double max, min;
-    double qdistances[4] = {0,};
-    double qoutlats[4] = {0,};
-    double qoutlons[4] = {0,};
-    double qvalues[4] = {0,};
+    double qdistances[4] = { 0 };
+    double qoutlats[4] = { 0 };
+    double qoutlons[4] = { 0 };
+    double qvalues[4] = { 0 };
     double* rvalues = NULL;
-    int qindexes[4] = {0,};
-    int ret    = 0;
-    long i     = 0;
+    int qindexes[4] = { 0 };
+    int ret = 0;
+    long i = 0;
     size_t len = 4;
-    const unsigned long flags  = GRIB_NEAREST_SAME_GRID | GRIB_NEAREST_SAME_DATA;
+    const unsigned long flags = GRIB_NEAREST_SAME_GRID | GRIB_NEAREST_SAME_DATA;
 
     if (values)
         rvalues = qvalues;
@@ -431,7 +431,7 @@ static int grib_nearest_find_(
     double* outlats, double* outlons,
     double* values, double* distances, int* indexes, size_t* len)
 {
-    grib_handle* h        = (grib_handle*)ch;
+    grib_handle* h = (grib_handle*)ch;
     if (!nearest)
         return GRIB_INVALID_ARGUMENT;
     ECCODES_ASSERT(flags <= (GRIB_NEAREST_SAME_GRID | GRIB_NEAREST_SAME_DATA | GRIB_NEAREST_SAME_POINT));
@@ -456,7 +456,7 @@ int grib_nearest_find(
     double* values, double* distances, int* indexes, size_t* len)
 {
     auto result = eccodes::handleExceptions(
-          grib_nearest_find_, nearest, ch, inlat, inlon, flags, outlats, outlons, values, distances, indexes, len);
+        grib_nearest_find_, nearest, ch, inlat, inlon, flags, outlats, outlons, values, distances, indexes, len);
     return eccodes::getErrorCode(result);
 }
 
@@ -486,7 +486,7 @@ int grib_nearest_delete(grib_nearest* i)
 static grib_nearest* grib_nearest_new_(const grib_handle* ch, int* error)
 {
     grib_nearest* i = (grib_nearest*)grib_context_malloc_clear(ch->context, sizeof(grib_nearest));
-    i->nearest      = eccodes::geo_nearest::gribNearestNew(ch, error);
+    i->nearest = eccodes::geo_nearest::gribNearestNew(ch, error);
     if (!i->nearest) {
         grib_context_free(ch->context, i);
         return NULL;
@@ -494,7 +494,7 @@ static grib_nearest* grib_nearest_new_(const grib_handle* ch, int* error)
     return i;
 }
 #else
-grib_nearest* grib_nearest_new(const grib_handle* ch, int* error)
+static grib_nearest* grib_nearest_new_(const grib_handle* ch, int* error)
 {
     *error = GRIB_FUNCTIONALITY_NOT_ENABLED;
     grib_context_log(ch->context, GRIB_LOG_ERROR,

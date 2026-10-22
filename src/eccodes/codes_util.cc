@@ -25,15 +25,15 @@ double normalise_longitude_in_degrees(double lon)
 
 
 #ifdef ECCODES_ON_WINDOWS
-// Replace C99/Unix rint() for Windows Visual C++ (only before VC++ 2013 versions)
-#if defined _MSC_VER && _MSC_VER < 1800
+    // Replace C99/Unix rint() for Windows Visual C++ (only before VC++ 2013 versions)
+    #if defined _MSC_VER && _MSC_VER < 1800
 double rint(double x)
 {
-    char* buf   = 0;
+    char* buf = 0;
     int decimal = 0, sign = 0, err = 0;
     double result = 0;
-    buf           = (char*)malloc(_CVTBUFSIZE);
-    err           = _fcvt_s(buf, _CVTBUFSIZE, x, 0, &decimal, &sign);
+    buf = (char*)malloc(_CVTBUFSIZE);
+    err = _fcvt_s(buf, _CVTBUFSIZE, x, 0, &decimal, &sign);
     ECCODES_ASSERT(err == 0);
     result = atof(buf);
     if (sign == 1) {
@@ -42,16 +42,16 @@ double rint(double x)
     free(buf);
     return result;
 }
-#endif
+    #endif
 #endif
 
 
 char get_dir_separator_char(void)
 {
 #ifdef ECCODES_ON_WINDOWS
-#define DIR_SEPARATOR_CHAR '\\'
+    #define DIR_SEPARATOR_CHAR '\\'
 #else
-#define DIR_SEPARATOR_CHAR '/'
+    #define DIR_SEPARATOR_CHAR '/'
 #endif
     return DIR_SEPARATOR_CHAR;
 }
@@ -62,8 +62,8 @@ int path_is_regular_file(const char* path)
     struct stat s;
     int stat_val = stat(path, &s);
     if (stat_val != 0)
-        return 0; // error doing stat
-    return S_ISREG(s.st_mode); // 1 if it's a regular file
+        return 0;               // error doing stat
+    return S_ISREG(s.st_mode);  // 1 if it's a regular file
 }
 
 // Return 1 if the filepath is a directory, 0 otherwise
@@ -147,7 +147,7 @@ int codes_check_grib_ieee_packing_value(int value)
 int codes_flush_sync_close_file(FILE* f)
 {
     int err = 0;
-    int fd  = 0;
+    int fd = 0;
     const grib_context* c = grib_context_get_default();
     ECCODES_ASSERT(f);
 
@@ -159,12 +159,12 @@ int codes_flush_sync_close_file(FILE* f)
 
 #ifdef HAVE_FCNTL_H
     // Heavy handed way of getting the file access mode: only proceed if writing
-    //val = fcntl(fd, F_GETFL, 0);
-    //if (val < 0) {
+    // val = fcntl(fd, F_GETFL, 0);
+    // if (val < 0) {
     //    grib_context_log(c, GRIB_LOG_PERROR, "Call to fcntl failed");
     //    return err;
     //}
-    //if ((val & O_ACCMODE) != O_WRONLY) {
+    // if ((val & O_ACCMODE) != O_WRONLY) {
     //    // File is not being written
     //    return GRIB_SUCCESS;
     //}
@@ -199,7 +199,7 @@ int codes_flush_sync_close_file(FILE* f)
 int is_date_valid(long year, long month, long day, long hour, long minute, double second)
 {
     // Convert input date to Julian number
-    double result = 0; // Julian number in units of days
+    double result = 0;  // Julian number in units of days
     long year1, month1, day1, hour1, minute1, lSecond1;
 
     // For validating the date/time, we specify seconds as an integer
@@ -209,7 +209,7 @@ int is_date_valid(long year, long month, long day, long hour, long minute, doubl
     // Check conversion worked by going other way
     grib_julian_to_datetime(result, &year1, &month1, &day1, &hour1, &minute1, &lSecond1);
     if (year1 != year || month1 != month || day1 != day || minute1 != minute || lSecond1 != lSecond) {
-        return 0; // bad date
+        return 0;  // bad date
     }
 
     return 1;
@@ -251,12 +251,12 @@ int is_time_valid_HHMM(long number)
     }
 
     // Extract hours and minutes
-    long hours   = number / 100;  // Get the first two digits as hours
+    long hours = number / 100;    // Get the first two digits as hours
     long minutes = number % 100;  // Get the last two digits as minutes
 
     // Check if the time is valid
     if (!is_time_valid(hours, minutes, 0)) {
-        return 0; // bad time
+        return 0;  // bad time
     }
 
     // All checks pass
@@ -300,8 +300,8 @@ long convert_to_minutes(long step, long stepUnits)
 
 bool is_sorted_ascending(const double arr[], size_t n)
 {
-    for (size_t i = 0; i < n-1; i++) {
-        if (arr[i] > arr[i+1]) {
+    for (size_t i = 0; i < n - 1; i++) {
+        if (arr[i] > arr[i + 1]) {
             return false;
         }
     }
@@ -310,8 +310,8 @@ bool is_sorted_ascending(const double arr[], size_t n)
 
 bool is_sorted_descending(const double arr[], size_t n)
 {
-    for (size_t i = 0; i < n-1; i++) {
-        if (arr[i] < arr[i+1]) {
+    for (size_t i = 0; i < n - 1; i++) {
+        if (arr[i] < arr[i + 1]) {
             return false;
         }
     }
@@ -374,7 +374,7 @@ static int compute_scaled_value_and_scale_factor_algorithm2(
 {
     int64_t factor = 0, prev_factor = 0;
     int64_t value = 0, prev_value = 0;
-    double exact        = input;
+    double exact = input;
     const float epsilon = float_epsilon();
     int is_negative = 0;
     // Loop until we find a close enough approximation. Keep the last good values
@@ -390,12 +390,12 @@ static int compute_scaled_value_and_scale_factor_algorithm2(
         value = round(exact * pow(10., ++factor));
         if (value > maximum_value || factor > maximum_factor) {
             // One or more maxima exceeded. So stop and use the previous values
-            value  = prev_value;
+            value = prev_value;
             factor = prev_factor;
             break;
         }
         prev_factor = factor;
-        prev_value  = value;
+        prev_value = value;
     }
 
     if (is_negative) {
@@ -433,21 +433,23 @@ static const char* known_features[] = {
     "ECCODES_OMP_THREADS",
     "NETCDF",
     "FORTRAN",
-    "GEOGRAPHY"
+    "GEOGRAPHY",
+    "ECKIT_GEO"
 };
 
 #define NUMBER(x) (sizeof(x) / sizeof(x[0]))
 static int codes_is_feature_enabled_(const char* feature)
 {
-    int aec_enabled           = 0; // or CCSDS
-    int memfs_enabled         = 0;
-    int jpg_enabled           = 0; // JasPer or OpenJPEG or both
-    int png_enabled           = 0;
+    int aec_enabled = 0;  // or CCSDS
+    int memfs_enabled = 0;
+    int jpg_enabled = 0;  // JasPer or OpenJPEG or both
+    int png_enabled = 0;
     int posix_threads_enabled = 0;
-    int omp_threads_enabled   = 0;
-    int netcdf_enabled        = 0;
-    int fortran_enabled       = 0;
-    int geography_enabled     = 0;
+    int omp_threads_enabled = 0;
+    int netcdf_enabled = 0;
+    int fortran_enabled = 0;
+    int geography_enabled = 0;
+    int eckit_geo_enabled = 0;
 
     int found_feature = 0;
     const size_t num = NUMBER(known_features);
@@ -498,6 +500,9 @@ static int codes_is_feature_enabled_(const char* feature)
 #if defined(HAVE_GEOGRAPHY)
     geography_enabled = 1;
 #endif
+#if defined(HAVE_ECKIT_GEO)
+    eckit_geo_enabled = 1;
+#endif
 
     if (STR_EQUAL(feature, "AEC") || STR_EQUAL(feature, "CCSDS")) {
         return aec_enabled;
@@ -525,6 +530,9 @@ static int codes_is_feature_enabled_(const char* feature)
     }
     if (STR_EQUAL(feature, "GEOGRAPHY")) {
         return geography_enabled;
+    }
+    if (STR_EQUAL(feature, "ECKIT_GEO")) {
+        return eckit_geo_enabled;
     }
 
     return 0;

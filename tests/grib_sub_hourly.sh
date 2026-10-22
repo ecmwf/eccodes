@@ -3,7 +3,7 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
+#
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
@@ -21,7 +21,7 @@ tempText=temp.$label.txt
 
 sample_g2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
-grib_expect_failure() 
+grib_expect_failure()
 {
    a_file=$1
    a_params=$2
@@ -314,7 +314,7 @@ grib_check_key_equals $temp    "-p $low_level_keys" "24 h 1 D"
 # Use range unit: hour
 ${tools_dir}/grib_set -s endStep:d=30 $temp $temp2 # TODO(maee) remove in the future behavior
 #${tools_dir}/grib_set -s endStep:i=30 $temp $temp2 # TODO(maee) keep for backwards compatibility
-#${tools_dir}/grib_set -s endStep:s=30 $temp $temp2 
+#${tools_dir}/grib_set -s endStep:s=30 $temp $temp2
 #${tools_dir}/grib_set -s endStep:s=30h $temp $temp2
 #${tools_dir}/grib_set -s endStep=30h $temp $temp2 # TODO(maee) add to tests
 grib_check_key_equals $temp2   "-p $low_level_keys" "24 h 6 h"
@@ -488,27 +488,27 @@ ${tools_dir}/grib_set -s forecastTime=24,indicatorOfUnitOfTimeRange=h,lengthOfTi
 grib_check_key_equals $temp "-p $low_level_keys" "24 h 1 D"
 grib_check_key_equals $temp "-p $keys__" "24$HOUR-48$HOUR 24$HOUR 48$HOUR"
 grib_check_key_equals $temp "-p $keys_s" "24$HOUR-48$HOUR 24$HOUR 48$HOUR"
-grib_check_key_equals $temp "-p $keys_i" "48 24 48" 
-grib_check_key_equals $temp "-p $keys_d" "48 24 48" 
+grib_check_key_equals $temp "-p $keys_i" "48 24 48"
+grib_check_key_equals $temp "-p $keys_d" "48 24 48"
 
 ${tools_dir}/grib_set -s forecastTime=25,indicatorOfUnitOfTimeRange=h,lengthOfTimeRange=1,indicatorOfUnitForTimeRange=D $in $temp
 grib_check_key_equals $temp "-p $low_level_keys" "25 h 1 D"
 grib_check_key_equals $temp "-p $keys__" "25$HOUR-49$HOUR 25$HOUR 49$HOUR"
 grib_check_key_equals $temp "-p $keys_s" "25$HOUR-49$HOUR 25$HOUR 49$HOUR"
-grib_check_key_equals $temp "-p $keys_i" "49 25 49" 
-grib_check_key_equals $temp "-p $keys_d" "49 25 49" 
+grib_check_key_equals $temp "-p $keys_i" "49 25 49"
+grib_check_key_equals $temp "-p $keys_d" "49 25 49"
 
 ${tools_dir}/grib_set -s forecastTime=45,indicatorOfUnitOfTimeRange=m,lengthOfTimeRange=15,indicatorOfUnitForTimeRange=m $in $temp
 grib_check_key_equals $temp "-p $low_level_keys" "45 m 15 m"
-grib_check_key_equals $temp "-p $keys__" "45m-60m 45m 60m" 
-#grib_check_key_equals $temp    "-p $keys_s" "45-60 45 60"  
-grib_check_key_equals $temp "-p $keys_s" "45m-60m 45m 60m"  
-grib_check_key_equals $temp "-p $keys_i" "60 45 60"  
+grib_check_key_equals $temp "-p $keys__" "45m-60m 45m 60m"
+#grib_check_key_equals $temp    "-p $keys_s" "45-60 45 60"
+grib_check_key_equals $temp "-p $keys_s" "45m-60m 45m 60m"
+grib_check_key_equals $temp "-p $keys_i" "60 45 60"
 grib_check_key_equals $temp "-p $keys_d" "60 45 60"
 
 ${tools_dir}/grib_set -s forecastTime=60,indicatorOfUnitOfTimeRange=m,lengthOfTimeRange=2,indicatorOfUnitForTimeRange=h $in $temp
 grib_check_key_equals $temp "-p $low_level_keys" "60 m 2 h"
-grib_check_key_equals $temp "-p $keys__" "1$HOUR-3$HOUR 1$HOUR 3$HOUR" 
+grib_check_key_equals $temp "-p $keys__" "1$HOUR-3$HOUR 1$HOUR 3$HOUR"
 grib_check_key_equals $temp "-p $keys_s" "1$HOUR-3$HOUR 1$HOUR 3$HOUR"
 grib_check_key_equals $temp "-p $keys_i" "3 1 3"
 grib_check_key_equals $temp "-p $keys_d" "3 1 3"

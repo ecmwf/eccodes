@@ -11,9 +11,6 @@
 #include "LongVector.h"
 #include "AbstractLongVector.h"
 
-eccodes::accessor::LongVector _grib_accessor_long_vector;
-eccodes::Accessor* grib_accessor_long_vector = &_grib_accessor_long_vector;
-
 namespace eccodes::accessor
 {
 
@@ -25,8 +22,8 @@ void LongVector::init(const long l, grib_arguments* c)
     int n = 0;
 
     vector_ = c->get_name(get_enclosing_handle(), n++);
-    va      = (grib_accessor*)grib_find_accessor(get_enclosing_handle(), vector_);
-    v       = (AbstractLongVector*)va;
+    va = (grib_accessor*)grib_find_accessor(get_enclosing_handle(), vector_);
+    v = (AbstractLongVector*)va;
 
     index_ = c->get_long(get_enclosing_handle(), n++);
 
@@ -39,17 +36,17 @@ void LongVector::init(const long l, grib_arguments* c)
 int LongVector::unpack_long(long* val, size_t* len)
 {
     size_t size = 0;
-    int err     = 0;
+    int err = 0;
 
     grib_accessor* va = (grib_accessor*)grib_find_accessor(get_enclosing_handle(), vector_);
-    AbstractLongVector*  v  = (AbstractLongVector*)va;
+    AbstractLongVector* v = (AbstractLongVector*)va;
 
     /*TODO implement the dirty mechanism to avoid to unpack every time */
     err = grib_get_size(get_enclosing_handle(), vector_, &size);
     if (err) return err;
     DEBUG_ASSERT(size > 0);
     long* vector = (long*)grib_context_malloc(context_, sizeof(long) * size);
-    err    = va->unpack_long(vector, &size);
+    err = va->unpack_long(vector, &size);
     grib_context_free(context_, vector);
     if (err) return err;
 
@@ -65,7 +62,7 @@ int LongVector::unpack_double(double* val, size_t* len)
     grib_accessor* va = NULL;
     AbstractLongVector* v = NULL;
     va = (grib_accessor*)grib_find_accessor(get_enclosing_handle(), vector_);
-    v  = (AbstractLongVector*)va;
+    v = (AbstractLongVector*)va;
 
     err = unpack_long(&lval, len);
 
@@ -81,7 +78,7 @@ int LongVector::pack_long(const long* val, size_t* len)
     AbstractLongVector* v = NULL;
 
     va = (grib_accessor*)grib_find_accessor(get_enclosing_handle(), vector_);
-    v  = (AbstractLongVector*)va;
+    v = (AbstractLongVector*)va;
 
     v->pack_index_ = index_;
 

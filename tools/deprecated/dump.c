@@ -23,7 +23,7 @@ int dump_values(FILE* out,grib_handle* h,const char *name,int missingOK)
 	int type;
 
 	char *sval = NULL;
-	unsigned char *uval = NULL; 
+	unsigned char *uval = NULL;
 	double *dval = NULL;
 	long *lval = NULL;
 
@@ -242,4 +242,3 @@ int dump_file(const char* file,const char* out)
 	return 0;
 
 }
-

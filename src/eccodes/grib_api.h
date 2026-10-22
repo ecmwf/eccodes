@@ -430,6 +430,20 @@ int grib_count_in_filename(grib_context* c, const char* filename, int* n);
 grib_handle* grib_handle_new_from_file(grib_context* c, FILE* f, int* error);
 
 /**
+ *  Create a handle from a stream.
+ *  The stream is read until a message is found. A handle of the appropriate type is then created and the message is copied.
+ *  Remember always to delete the handle when it is not needed anymore to avoid
+ *  memory leaks.
+ *
+ * @param c               : the context from which the handle will be created (NULL for default context)
+ * @param stream_data    : pointer to user defined stream data
+ * @param stream_proc    : pointer to user defined stream read function
+ * @param error          : error code set if the returned handle is NULL and the end of file is not reached
+ * @return                the new handle, NULL if the resource is invalid or a problem is encountered
+ */
+grib_handle* grib_handle_new_from_stream(grib_context* c, void* stream_data, long (*stream_proc)(void*, void* buffer, long len), int* error);
+
+/**
  *  Write a coded message in a file.
  *
  * @param h           : grib_handle to be written
@@ -1172,6 +1186,8 @@ void grib_context_set_samples_path(grib_context* c, const char* path);
 
 void grib_context_set_debug(grib_context* c, int mode);
 void grib_context_set_data_quality_checks(grib_context* c, int val);
+int grib_context_get_data_quality_checks(const grib_context* c);
+
 char* grib_context_full_defs_path(grib_context* c, const char* basename);
 
 /**
@@ -1350,7 +1366,11 @@ int wmo_read_any_from_file(FILE* f, void* buffer, size_t* len);
 int wmo_read_grib_from_file(FILE* f, void* buffer, size_t* len);
 int wmo_read_bufr_from_file(FILE* f, void* buffer, size_t* len);
 int wmo_read_gts_from_file(FILE* f, void* buffer, size_t* len);
+/* if f support ftell, offset is updated with the absolute position within the file, */
+/* otherwise, it accumulates the position across a series of calls */
+int wmo_read_any_from_file_with_offset(FILE* f, void* buffer, size_t* len, off_t* offset);
 int wmo_read_any_from_stream(void* stream_data, long (*stream_proc)(void*, void* buffer, long len), void* buffer, size_t* len);
+int grib_handle_from_stream(void* stream_data, long (*stream_proc)(void*, void* buffer, long len), grib_handle** h);
 
 /* These functions allocate memory for the result so the user is responsible for freeing it */
 void* wmo_read_any_from_stream_malloc(void* stream_data, long (*stream_proc)(void*, void* buffer, long len), size_t* size, int* err);
@@ -1580,166 +1600,166 @@ Error codes returned by the grib_api functions.
 */
 /*! @{*/
 /** No error */
-#define GRIB_SUCCESS		0
+#define GRIB_SUCCESS 0
 /** End of resource reached */
-#define GRIB_END_OF_FILE		-1
+#define GRIB_END_OF_FILE -1
 /** Internal error */
-#define GRIB_INTERNAL_ERROR		-2
+#define GRIB_INTERNAL_ERROR -2
 /** Passed buffer is too small */
-#define GRIB_BUFFER_TOO_SMALL		-3
+#define GRIB_BUFFER_TOO_SMALL -3
 /** Function not yet implemented */
-#define GRIB_NOT_IMPLEMENTED		-4
+#define GRIB_NOT_IMPLEMENTED -4
 /** Missing 7777 at end of message */
-#define GRIB_7777_NOT_FOUND		-5
+#define GRIB_7777_NOT_FOUND -5
 /** Passed array is too small */
-#define GRIB_ARRAY_TOO_SMALL		-6
+#define GRIB_ARRAY_TOO_SMALL -6
 /** File not found */
-#define GRIB_FILE_NOT_FOUND		-7
+#define GRIB_FILE_NOT_FOUND -7
 /** Code not found in code table */
-#define GRIB_CODE_NOT_FOUND_IN_TABLE		-8
+#define GRIB_CODE_NOT_FOUND_IN_TABLE -8
 /** Array size mismatch */
-#define GRIB_WRONG_ARRAY_SIZE		-9
+#define GRIB_WRONG_ARRAY_SIZE -9
 /** Key/value not found */
-#define GRIB_NOT_FOUND		-10
+#define GRIB_NOT_FOUND -10
 /** Input output problem */
-#define GRIB_IO_PROBLEM		-11
+#define GRIB_IO_PROBLEM -11
 /** Message invalid */
-#define GRIB_INVALID_MESSAGE		-12
+#define GRIB_INVALID_MESSAGE -12
 /** Decoding invalid */
-#define GRIB_DECODING_ERROR		-13
+#define GRIB_DECODING_ERROR -13
 /** Encoding invalid */
-#define GRIB_ENCODING_ERROR		-14
+#define GRIB_ENCODING_ERROR -14
 /** Code cannot unpack because of string too small */
-#define GRIB_NO_MORE_IN_SET		-15
+#define GRIB_NO_MORE_IN_SET -15
 /** Problem with calculation of geographic attributes */
-#define GRIB_GEOCALCULUS_PROBLEM		-16
+#define GRIB_GEOCALCULUS_PROBLEM -16
 /** Memory allocation error */
-#define GRIB_OUT_OF_MEMORY		-17
+#define GRIB_OUT_OF_MEMORY -17
 /** Value is read only */
-#define GRIB_READ_ONLY		-18
+#define GRIB_READ_ONLY -18
 /** Invalid argument */
-#define GRIB_INVALID_ARGUMENT		-19
+#define GRIB_INVALID_ARGUMENT -19
 /** Null handle */
-#define GRIB_NULL_HANDLE		-20
+#define GRIB_NULL_HANDLE -20
 /** Invalid section number */
-#define GRIB_INVALID_SECTION_NUMBER		-21
+#define GRIB_INVALID_SECTION_NUMBER -21
 /** Value cannot be missing */
-#define GRIB_VALUE_CANNOT_BE_MISSING		-22
+#define GRIB_VALUE_CANNOT_BE_MISSING -22
 /** Wrong message length */
-#define GRIB_WRONG_LENGTH		-23
+#define GRIB_WRONG_LENGTH -23
 /** Invalid key type */
-#define GRIB_INVALID_TYPE		-24
+#define GRIB_INVALID_TYPE -24
 /** Unable to set step */
-#define GRIB_WRONG_STEP		-25
+#define GRIB_WRONG_STEP -25
 /** Wrong units for step (step must be integer) */
-#define GRIB_WRONG_STEP_UNIT		-26
+#define GRIB_WRONG_STEP_UNIT -26
 /** Invalid file id */
-#define GRIB_INVALID_FILE		-27
+#define GRIB_INVALID_FILE -27
 /** Invalid GRIB id */
-#define GRIB_INVALID_GRIB		-28
+#define GRIB_INVALID_GRIB -28
 /** Invalid index id */
-#define GRIB_INVALID_INDEX		-29
+#define GRIB_INVALID_INDEX -29
 /** Invalid iterator id */
-#define GRIB_INVALID_ITERATOR		-30
+#define GRIB_INVALID_ITERATOR -30
 /** Invalid keys iterator id */
-#define GRIB_INVALID_KEYS_ITERATOR		-31
+#define GRIB_INVALID_KEYS_ITERATOR -31
 /** Invalid nearest id */
-#define GRIB_INVALID_NEAREST		-32
+#define GRIB_INVALID_NEAREST -32
 /** Invalid order by */
-#define GRIB_INVALID_ORDERBY		-33
+#define GRIB_INVALID_ORDERBY -33
 /** Missing a key from the fieldset */
-#define GRIB_MISSING_KEY		-34
+#define GRIB_MISSING_KEY -34
 /** The point is out of the grid area */
-#define GRIB_OUT_OF_AREA		-35
+#define GRIB_OUT_OF_AREA -35
 /** Concept no match */
-#define GRIB_CONCEPT_NO_MATCH		-36
+#define GRIB_CONCEPT_NO_MATCH -36
 /** Hash array no match */
-#define GRIB_HASH_ARRAY_NO_MATCH		-37
+#define GRIB_HASH_ARRAY_NO_MATCH -37
 /** Definitions files not found */
-#define GRIB_NO_DEFINITIONS		-38
+#define GRIB_NO_DEFINITIONS -38
 /** Wrong type while packing */
-#define GRIB_WRONG_TYPE		-39
+#define GRIB_WRONG_TYPE -39
 /** End of resource */
-#define GRIB_END		-40
+#define GRIB_END -40
 /** Unable to code a field without values */
-#define GRIB_NO_VALUES		-41
+#define GRIB_NO_VALUES -41
 /** Grid description is wrong or inconsistent */
-#define GRIB_WRONG_GRID		-42
+#define GRIB_WRONG_GRID -42
 /** End of index reached */
-#define GRIB_END_OF_INDEX		-43
+#define GRIB_END_OF_INDEX -43
 /** Null index */
-#define GRIB_NULL_INDEX		-44
+#define GRIB_NULL_INDEX -44
 /** End of resource reached when reading message */
-#define GRIB_PREMATURE_END_OF_FILE		-45
+#define GRIB_PREMATURE_END_OF_FILE -45
 /** An internal array is too small */
-#define GRIB_INTERNAL_ARRAY_TOO_SMALL		-46
+#define GRIB_INTERNAL_ARRAY_TOO_SMALL -46
 /** Message is too large for the current architecture */
-#define GRIB_MESSAGE_TOO_LARGE		-47
+#define GRIB_MESSAGE_TOO_LARGE -47
 /** Constant field */
-#define GRIB_CONSTANT_FIELD		-48
+#define GRIB_CONSTANT_FIELD -48
 /** Switch unable to find a matching case */
-#define GRIB_SWITCH_NO_MATCH		-49
+#define GRIB_SWITCH_NO_MATCH -49
 /** Underflow */
-#define GRIB_UNDERFLOW		-50
+#define GRIB_UNDERFLOW -50
 /** Message malformed */
-#define GRIB_MESSAGE_MALFORMED		-51
+#define GRIB_MESSAGE_MALFORMED -51
 /** Index is corrupted */
-#define GRIB_CORRUPTED_INDEX		-52
+#define GRIB_CORRUPTED_INDEX -52
 /** Invalid number of bits per value */
-#define GRIB_INVALID_BPV		-53
+#define GRIB_INVALID_BPV -53
 /** Edition of two messages is different */
-#define GRIB_DIFFERENT_EDITION		-54
+#define GRIB_DIFFERENT_EDITION -54
 /** Value is different */
-#define GRIB_VALUE_DIFFERENT		-55
+#define GRIB_VALUE_DIFFERENT -55
 /** Invalid key value */
-#define GRIB_INVALID_KEY_VALUE		-56
+#define GRIB_INVALID_KEY_VALUE -56
 /** String is smaller than requested */
-#define GRIB_STRING_TOO_SMALL		-57
+#define GRIB_STRING_TOO_SMALL -57
 /** Wrong type conversion */
-#define GRIB_WRONG_CONVERSION		-58
+#define GRIB_WRONG_CONVERSION -58
 /** Missing BUFR table entry for descriptor */
-#define GRIB_MISSING_BUFR_ENTRY		-59
+#define GRIB_MISSING_BUFR_ENTRY -59
 /** Null pointer */
-#define GRIB_NULL_POINTER		-60
+#define GRIB_NULL_POINTER -60
 /** Attribute is already present, cannot add */
-#define GRIB_ATTRIBUTE_CLASH		-61
+#define GRIB_ATTRIBUTE_CLASH -61
 /** Too many attributes. Increase MAX_ACCESSOR_ATTRIBUTES */
-#define GRIB_TOO_MANY_ATTRIBUTES		-62
+#define GRIB_TOO_MANY_ATTRIBUTES -62
 /** Attribute not found. */
-#define GRIB_ATTRIBUTE_NOT_FOUND		-63
+#define GRIB_ATTRIBUTE_NOT_FOUND -63
 /** Edition not supported. */
-#define GRIB_UNSUPPORTED_EDITION		-64
+#define GRIB_UNSUPPORTED_EDITION -64
 /** Value out of coding range */
-#define GRIB_OUT_OF_RANGE		-65
+#define GRIB_OUT_OF_RANGE -65
 /** Size of bitmap is incorrect */
-#define GRIB_WRONG_BITMAP_SIZE		-66
+#define GRIB_WRONG_BITMAP_SIZE -66
 /** Functionality not enabled */
-#define GRIB_FUNCTIONALITY_NOT_ENABLED		-67
+#define GRIB_FUNCTIONALITY_NOT_ENABLED -67
 /** Value mismatch */
-#define GRIB_VALUE_MISMATCH		-68
+#define GRIB_VALUE_MISMATCH -68
 /** Double values are different */
-#define GRIB_DOUBLE_VALUE_MISMATCH		-69
+#define GRIB_DOUBLE_VALUE_MISMATCH -69
 /** Long values are different */
-#define GRIB_LONG_VALUE_MISMATCH		-70
+#define GRIB_LONG_VALUE_MISMATCH -70
 /** Byte values are different */
-#define GRIB_BYTE_VALUE_MISMATCH		-71
+#define GRIB_BYTE_VALUE_MISMATCH -71
 /** String values are different */
-#define GRIB_STRING_VALUE_MISMATCH		-72
+#define GRIB_STRING_VALUE_MISMATCH -72
 /** Offset mismatch */
-#define GRIB_OFFSET_MISMATCH		-73
+#define GRIB_OFFSET_MISMATCH -73
 /** Count mismatch */
-#define GRIB_COUNT_MISMATCH		-74
+#define GRIB_COUNT_MISMATCH -74
 /** Name mismatch */
-#define GRIB_NAME_MISMATCH		-75
+#define GRIB_NAME_MISMATCH -75
 /** Type mismatch */
-#define GRIB_TYPE_MISMATCH		-76
+#define GRIB_TYPE_MISMATCH -76
 /** Type and value mismatch */
-#define GRIB_TYPE_AND_VALUE_MISMATCH		-77
+#define GRIB_TYPE_AND_VALUE_MISMATCH -77
 /** Unable to compare accessors */
-#define GRIB_UNABLE_TO_COMPARE_ACCESSORS		-78
+#define GRIB_UNABLE_TO_COMPARE_ACCESSORS -78
 /** Assertion failure */
-#define GRIB_ASSERTION_FAILURE		-79
+#define GRIB_ASSERTION_FAILURE -79
 /** Runtime error */
-#define GRIB_RUNTIME_ERROR		-80
+#define GRIB_RUNTIME_ERROR -80
 /*! @}*/
 #endif

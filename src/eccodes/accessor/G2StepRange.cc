@@ -12,9 +12,6 @@
 #include "step_utilities.h"
 #include <iostream>
 
-eccodes::accessor::G2StepRange _grib_accessor_g2step_range;
-eccodes::Accessor* grib_accessor_g2step_range = &_grib_accessor_g2step_range;
-
 namespace eccodes::accessor
 {
 
@@ -25,7 +22,7 @@ void G2StepRange::init(const long l, grib_arguments* c)
     int n = 0;
 
     start_step_ = c->get_name(get_enclosing_handle(), n++);
-    end_step_   = c->get_name(get_enclosing_handle(), n++);
+    end_step_ = c->get_name(get_enclosing_handle(), n++);
 
     length_ = 0;
 }
@@ -37,11 +34,11 @@ void G2StepRange::init(const long l, grib_arguments* c)
 
 int G2StepRange::unpack_string(char* val, size_t* len)
 {
-    grib_handle* h          = get_enclosing_handle();
-    int ret                 = 0;
-    size_t size             = 0;
+    grib_handle* h = get_enclosing_handle();
+    int ret = 0;
+    size_t size = 0;
     double start_step_value = 0;
-    double end_step_value   = 0;
+    double end_step_value = 0;
     long step_units;
 
     int show_hours = context_->grib_hourly_steps_with_units;
@@ -56,7 +53,7 @@ int G2StepRange::unpack_string(char* val, size_t* len)
                 return ret;
         }
 
-        char fp_format[128]  = "%g";
+        char fp_format[128] = "%g";
         size_t fp_format_len = sizeof(fp_format);
         if ((ret = grib_get_string_internal(h, "formatForDoubles", fp_format, &fp_format_len)) != GRIB_SUCCESS)
             return ret;
@@ -104,7 +101,7 @@ int G2StepRange::unpack_string(char* val, size_t* len)
 int G2StepRange::pack_string(const char* val, size_t* len)
 {
     grib_handle* h = get_enclosing_handle();
-    int ret        = 0;
+    int ret = 0;
 
     long force_step_units;
     if ((ret = grib_get_long_internal(h, "forceStepUnits", &force_step_units)) != GRIB_SUCCESS)
@@ -182,7 +179,7 @@ size_t G2StepRange::string_length()
 
 int G2StepRange::pack_long(const long* val, size_t* len)
 {
-    char buff[100] = {0,};
+    char buff[100] = { 0 };
     size_t bufflen = 100;
 
     snprintf(buff, sizeof(buff), "%ld", *val);
@@ -191,11 +188,11 @@ int G2StepRange::pack_long(const long* val, size_t* len)
 
 int G2StepRange::unpack_long(long* val, size_t* len)
 {
-    grib_handle* h       = get_enclosing_handle();
-    int ret              = 0;
+    grib_handle* h = get_enclosing_handle();
+    int ret = 0;
     long end_start_value = 0;
-    long end_step_value  = 0;
-    long step_units      = 0;
+    long end_step_value = 0;
+    long step_units = 0;
 
     if ((ret = grib_get_long_internal(h, start_step_, &end_start_value)) != GRIB_SUCCESS)
         return ret;
@@ -228,11 +225,11 @@ int G2StepRange::unpack_long(long* val, size_t* len)
 
 int G2StepRange::unpack_double(double* val, size_t* len)
 {
-    grib_handle* h         = get_enclosing_handle();
-    int ret                = 0;
+    grib_handle* h = get_enclosing_handle();
+    int ret = 0;
     double end_start_value = 0;
-    double end_step_value  = 0;
-    long step_units        = 0;
+    double end_step_value = 0;
+    long step_units = 0;
 
     if ((ret = grib_get_double_internal(h, start_step_, &end_start_value)) != GRIB_SUCCESS)
         return ret;

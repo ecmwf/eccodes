@@ -24777,13 +24777,6 @@ const double values[] = {
     0.0000028036, 0.0000028071, 0.0000028152, 0.0000028178, 0.0000028148
 };
 
-static void usage(const char* prog)
-{
-    printf("Usage: %s packingType packingStage outfile\n", prog);
-    printf("packingStage: either packing_type_before_values or values_before_packing_type\n");
-    exit(1);
-}
-
 typedef enum
 {
     PACKING_TYPE_BEFORE_VALUES,
@@ -24793,18 +24786,20 @@ typedef enum
 
 #define EPSILON 1e-5
 
+// Usage: prog packingType packingStage outfile
+// packingStage: either packing_type_before_values or values_before_packing_type
 int main(int argc, char** argv)
 {
-    size_t values_len           = sizeof(values) / sizeof(values[0]);
+    size_t values_len = sizeof(values) / sizeof(values[0]);
     const char* sample_filename = "gg_sfc_grib2";
-    grib_handle* h              = NULL;
-    size_t str_len              = 0;
+    grib_handle* h = NULL;
+    size_t str_len = 0;
     PackingStage packing_stage;
     char* packing_type;
     char* outfile_name;
     int check = 1;
 
-    if (argc != 4) usage(argv[0]);
+    if (argc != 4) return 1;
 
     packing_type = argv[1];
     if (strcmp(argv[2], "packing_type_before_values") == 0)
@@ -24812,7 +24807,7 @@ int main(int argc, char** argv)
     else if (strcmp(argv[2], "values_before_packing_type") == 0)
         packing_stage = VALUES_BEFORE_PACKING_TYPE;
     else
-        exit(1);
+        return 1;
 
     outfile_name = argv[3];
 
@@ -24843,7 +24838,7 @@ int main(int argc, char** argv)
     fprintf(stderr, "%s checks on decoded values '%s' (%s) ...\n",
             (check ? "Doing" : "Skipping"), packing_type, argv[2]);
     if (check) {
-        size_t i     = 0;
+        size_t i = 0;
         double* vals = (double*)malloc(sizeof(double) * values_len);
         GRIB_CHECK(grib_get_double_array(h, "values", vals, &values_len), 0);
         for (i = 0; i < values_len; i++) {
@@ -24855,7 +24850,7 @@ int main(int argc, char** argv)
             }
         }
         if (strcmp(packing_type, "grid_simple") == 0 || strcmp(packing_type, "grid_ieee") == 0) {
-            double calc          = 0;
+            double calc = 0;
             long offsetAfterData = 0, offsetBeforeData = 0;
             GRIB_CHECK(grib_get_long(h, "offsetAfterData", &offsetAfterData), 0);
             GRIB_CHECK(grib_get_long(h, "offsetBeforeData", &offsetBeforeData), 0);

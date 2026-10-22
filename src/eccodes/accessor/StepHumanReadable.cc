@@ -10,21 +10,18 @@
 
 #include "StepHumanReadable.h"
 
-eccodes::accessor::StepHumanReadable _grib_accessor_step_human_readable;
-eccodes::Accessor* grib_accessor_step_human_readable = &_grib_accessor_step_human_readable;
-
 namespace eccodes::accessor
 {
 
 void StepHumanReadable::init(const long len, grib_arguments* params)
 {
     Gen::init(len, params);
-    int n          = 0;
+    int n = 0;
     grib_handle* h = get_enclosing_handle();
 
     stepUnits_ = params->get_name(h, n++);
-    step_      = params->get_name(h, n++);
-    length_    = 0;
+    step_ = params->get_name(h, n++);
+    length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
@@ -35,7 +32,7 @@ long StepHumanReadable::get_native_type()
 
 static int get_step_human_readable(grib_handle* h, char* result, size_t* length)
 {
-    int err     = 0;
+    int err = 0;
     size_t slen = 2;
     long step, hour, minute, second;
 
@@ -47,7 +44,7 @@ static int get_step_human_readable(grib_handle* h, char* result, size_t* length)
     if ((err = grib_get_long(h, "step", &step)) != GRIB_SUCCESS)
         return err;
 
-    hour   = step / 3600;
+    hour = step / 3600;
     minute = step / 60 % 60;
     second = step % 60;
     /* sprintf(result, "%ld:%ld:%ld", hour, minute, second); */
@@ -70,7 +67,7 @@ int StepHumanReadable::unpack_string(char* buffer, size_t* len)
 {
     grib_handle* h = get_enclosing_handle();
     long stepUnits = 0;
-    int err        = 0;
+    int err = 0;
 
     /* Save the current value of stepUnits */
     err = grib_get_long_internal(h, stepUnits_, &stepUnits);

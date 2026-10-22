@@ -3,4 +3,4 @@
 alias mars.fcmonth = forecastMonth;
 unalias mars.step;
 
-alias mars.date  = referenceDate; 
+alias mars.date  = referenceDate;

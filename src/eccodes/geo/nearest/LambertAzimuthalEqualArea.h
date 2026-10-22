@@ -12,11 +12,14 @@
 
 #include "Gen.h"
 
-namespace eccodes::geo_nearest {
+namespace eccodes::geo_nearest
+{
 
-class LambertAzimuthalEqualArea : public Gen {
+class LambertAzimuthalEqualArea : public Gen
+{
 public:
-    LambertAzimuthalEqualArea() {
+    LambertAzimuthalEqualArea()
+    {
         class_name_ = "lambert_azimuthal_equal_area";
     }
     Nearest* create() override { return new LambertAzimuthalEqualArea(); }

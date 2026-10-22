@@ -10,4 +10,3 @@ alias iteration = iterationNumber;
 
 alias local.iterationNumber =iterationNumber;
 alias local.totalNumberOfIterations=totalNumberOfIterations;
-

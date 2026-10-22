@@ -36,4 +36,3 @@ flags[1] scanningModeForOneDiamond 'grib2/tables/[tablesVersion]/3.10.table';
 
 unsigned[4] totalNumberOfGridPoints : dump ;
 alias nt = totalNumberOfGridPoints;
-

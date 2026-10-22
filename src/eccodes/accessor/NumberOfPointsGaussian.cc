@@ -10,9 +10,6 @@
 
 #include "NumberOfPointsGaussian.h"
 
-eccodes::accessor::NumberOfPointsGaussian _grib_accessor_number_of_points_gaussian;
-eccodes::Accessor* grib_accessor_number_of_points_gaussian = &_grib_accessor_number_of_points_gaussian;
-
 namespace eccodes::accessor
 {
 
@@ -21,18 +18,18 @@ namespace eccodes::accessor
 void NumberOfPointsGaussian::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
-    int n          = 0;
+    int n = 0;
     grib_handle* h = get_enclosing_handle();
 
-    ni_             = c->get_name(h, n++);
-    nj_             = c->get_name(h, n++);
-    plpresent_      = c->get_name(h, n++);
-    pl_             = c->get_name(h, n++);
-    order_          = c->get_name(h, n++);
-    lat_first_      = c->get_name(h, n++);
-    lon_first_      = c->get_name(h, n++);
-    lat_last_       = c->get_name(h, n++);
-    lon_last_       = c->get_name(h, n++);
+    ni_ = c->get_name(h, n++);
+    nj_ = c->get_name(h, n++);
+    plpresent_ = c->get_name(h, n++);
+    pl_ = c->get_name(h, n++);
+    order_ = c->get_name(h, n++);
+    lat_first_ = c->get_name(h, n++);
+    lon_first_ = c->get_name(h, n++);
+    lat_last_ = c->get_name(h, n++);
+    lon_last_ = c->get_name(h, n++);
     support_legacy_ = c->get_name(h, n++);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
@@ -82,7 +79,7 @@ static void correctWestEast(long max_pl, double angular_precision, double* pWest
 
 static int get_number_of_data_values(grib_handle* h, size_t* numDataValues)
 {
-    int err  = 0;
+    int err = 0;
     long bpv = 0, bitmapPresent = 0;
     size_t bitmapLength = 0;
 
@@ -114,9 +111,9 @@ static int get_number_of_data_values(grib_handle* h, size_t* numDataValues)
 
 int NumberOfPointsGaussian::unpack_long(long* val, size_t* len)
 {
-    int err             = GRIB_SUCCESS;
+    int err = GRIB_SUCCESS;
     long support_legacy = 1;
-    grib_handle* h      = get_enclosing_handle();
+    grib_handle* h = get_enclosing_handle();
 
     if ((err = grib_get_long_internal(h, support_legacy_, &support_legacy)) != GRIB_SUCCESS)
         return err;
@@ -130,18 +127,18 @@ int NumberOfPointsGaussian::unpack_long(long* val, size_t* len)
 /* New algorithm */
 int NumberOfPointsGaussian::unpack_long_new(long* val, size_t* len)
 {
-    int err                                         = GRIB_SUCCESS;
-    int is_global                                   = 0;
+    int err = GRIB_SUCCESS;
+    int is_global = 0;
     long ni = 0, nj = 0, plpresent = 0, order = 0;
     size_t plsize = 0;
     double lat_first, lat_last, lon_first, lon_last;
-    long* pl     = NULL;
+    long* pl = NULL;
     long* plsave = NULL;
     long row_count;
     long ilon_first = 0, ilon_last = 0;
     double angular_precision = 1.0 / 1000000.0;
-    long angleSubdivisions   = 0;
-    grib_handle* h           = get_enclosing_handle();
+    long angleSubdivisions = 0;
+    grib_handle* h = get_enclosing_handle();
 
     grib_context* c = context_;
 
@@ -181,7 +178,7 @@ int NumberOfPointsGaussian::unpack_long_new(long* val, size_t* len)
         if ((err = grib_get_size(h, pl_, &plsize)) != GRIB_SUCCESS)
             return err;
 
-        pl     = (long*)grib_context_malloc_clear(c, sizeof(long) * plsize);
+        pl = (long*)grib_context_malloc_clear(c, sizeof(long) * plsize);
         plsave = pl;
         grib_get_long_array_internal(h, pl_, pl, &plsize);
 
@@ -218,7 +215,7 @@ int NumberOfPointsGaussian::unpack_long_new(long* val, size_t* len)
             }
         }
         else {
-            *val  = 0;
+            *val = 0;
             for (size_t i = 0; i < plsize; i++)
                 *val += pl[i];
         }
@@ -241,14 +238,14 @@ int NumberOfPointsGaussian::unpack_long_with_legacy_support(long* val, size_t* l
     long ni = 0, nj = 0, plpresent = 0, order = 0;
     size_t plsize = 0;
     double lat_first, lat_last, lon_first, lon_last;
-    long* pl     = NULL;
+    long* pl = NULL;
     long* plsave = NULL;
     long row_count;
     long ilon_first = 0, ilon_last = 0;
     double angular_precision = 1.0 / 1000000.0;
-    long angleSubdivisions   = 0;
-    grib_handle* h           = get_enclosing_handle();
-    size_t numDataValues     = 0;
+    long angleSubdivisions = 0;
+    grib_handle* h = get_enclosing_handle();
+    size_t numDataValues = 0;
 
     grib_context* c = context_;
 
@@ -288,7 +285,7 @@ int NumberOfPointsGaussian::unpack_long_with_legacy_support(long* val, size_t* l
         if ((err = grib_get_size(h, pl_, &plsize)) != GRIB_SUCCESS)
             return err;
 
-        pl     = (long*)grib_context_malloc_clear(c, sizeof(long) * plsize);
+        pl = (long*)grib_context_malloc_clear(c, sizeof(long) * plsize);
         plsave = pl;
         grib_get_long_array_internal(h, pl_, pl, &plsize);
 
@@ -345,7 +342,7 @@ int NumberOfPointsGaussian::unpack_long_with_legacy_support(long* val, size_t* l
             }
         }
         else {
-            *val  = 0;
+            *val = 0;
             for (size_t i = 0; i < plsize; i++)
                 *val += pl[i];
         }
@@ -366,7 +363,7 @@ int NumberOfPointsGaussian::unpack_long_with_legacy_support(long* val, size_t* l
     /* ECC-756: Now decide whether this is legacy GRIB1 message. */
     /* Query data values to see if there is a mismatch */
     if (get_number_of_data_values(h, &numDataValues) == GRIB_SUCCESS) {
-        if ( (size_t)*val != numDataValues) {
+        if ((size_t)*val != numDataValues) {
             if (h->context->debug)
                 fprintf(stderr,
                         "ECCODES DEBUG number_of_points_gaussian: LEGACY MODE activated. "

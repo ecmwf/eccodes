@@ -10,9 +10,6 @@
 
 #include "JulianDate.h"
 
-eccodes::accessor::JulianDate _grib_accessor_julian_date;
-eccodes::Accessor* grib_accessor_julian_date = &_grib_accessor_julian_date;
-
 namespace eccodes::accessor
 {
 
@@ -21,26 +18,26 @@ void JulianDate::init(const long l, grib_arguments* c)
     Double::init(l, c);
     grib_handle* h = get_enclosing_handle();
     const int arg_count = c->get_count();
-    ECCODES_ASSERT( arg_count == 2 || arg_count == 6);
+    ECCODES_ASSERT(arg_count == 2 || arg_count == 6);
 
     int n = 0;
-    year_  = c->get_name(h, n++);
+    year_ = c->get_name(h, n++);
     month_ = c->get_name(h, n++);
 
     day_ = c->get_name(h, n++);
     if (day_ == NULL) {
-        hour_   = 0;
+        hour_ = 0;
         minute_ = 0;
         second_ = 0;
-        ymd_    = year_;
-        hms_    = month_;
-        year_   = 0;
-        month_  = 0;
+        ymd_ = year_;
+        hms_ = month_;
+        year_ = 0;
+        month_ = 0;
     }
     else {
-        ymd_    = 0;
-        hms_    = 0;
-        hour_   = c->get_name(h, n++);
+        ymd_ = 0;
+        hms_ = 0;
+        hour_ = c->get_name(h, n++);
         minute_ = c->get_name(h, n++);
         second_ = c->get_name(h, n++);
     }
@@ -106,8 +103,8 @@ int JulianDate::unpack_double(double* val, size_t* len)
 
 int JulianDate::pack_double(const double* val, size_t* len)
 {
-    int ret     = 0;
-    long hour   = 0;
+    int ret = 0;
+    long hour = 0;
     long minute = 0;
     long second = 0;
     long ymd = 0, hms = 0;
@@ -187,7 +184,7 @@ int JulianDate::unpack_string(char* val, size_t* len)
         // ECC-1999: If hms_ is passed in in 'hhmm' format
         // its largest value would be 2459
         if (hms < 2500) {
-            hms *= 100; // convert to seconds e.g., 1205 -> 120500
+            hms *= 100;  // convert to seconds e.g., 1205 -> 120500
         }
 
         hour = hms / 10000;
@@ -287,11 +284,11 @@ int JulianDate::pack_long(const long* v, size_t* len)
 
 int JulianDate::pack_expression(grib_expression* e)
 {
-    size_t len        = 1;
-    long lval         = 0;
-    double dval       = 0;
-    const char* cval  = NULL;
-    int ret           = 0;
+    size_t len = 1;
+    long lval = 0;
+    double dval = 0;
+    const char* cval = NULL;
+    int ret = 0;
     grib_handle* hand = get_enclosing_handle();
 
     switch (e->native_type(hand)) {
@@ -317,7 +314,7 @@ int JulianDate::pack_expression(grib_expression* e)
 
         case GRIB_TYPE_STRING: {
             char tmp[1024];
-            len  = sizeof(tmp);
+            len = sizeof(tmp);
             cval = e->evaluate_string(hand, tmp, &len, &ret);
             if (ret != GRIB_SUCCESS) {
                 grib_context_log(context_, GRIB_LOG_ERROR, "Unable to set %s as string", name_);

@@ -19,17 +19,17 @@ static void compare_doubles(const double d1, const double d2, const double epsil
 
 int main(int argc, char* argv[])
 {
-    FILE* in               = NULL;
-    codes_handle* h        = NULL;
-    size_t values_len      = 0;
-    int elem_index         = 0;
-    double a_value         = 0; /* value at index */
-    int err                = 0;
-    long compressed        = 0;
-    const char* infile     = "../data/bufr/mhen_55.bufr";
-    const char* key_name   = "#5#brightnessTemperature";
+    FILE* in = NULL;
+    codes_handle* h = NULL;
+    size_t values_len = 0;
+    int elem_index = 0;
+    double a_value = 0; /* value at index */
+    int err = 0;
+    long compressed = 0;
+    const char* infile = "../data/bufr/mhen_55.bufr";
+    const char* key_name = "#5#brightnessTemperature";
     const double tolerance = 1e-6;
-    ProductKind prod_kind  = PRODUCT_ANY;
+    ProductKind prod_kind = PRODUCT_ANY;
 
     in = fopen(infile, "rb");
     assert(in);

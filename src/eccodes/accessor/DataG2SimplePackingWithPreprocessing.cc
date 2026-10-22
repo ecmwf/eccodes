@@ -12,16 +12,13 @@
 #define DIRECT  0
 #define INVERSE 1
 
-eccodes::accessor::DataG2SimplePackingWithPreprocessing _grib_accessor_data_g2simple_packing_with_preprocessing;
-eccodes::Accessor* grib_accessor_data_g2simple_packing_with_preprocessing = &_grib_accessor_data_g2simple_packing_with_preprocessing;
-
 namespace eccodes::accessor
 {
 
 void DataG2SimplePackingWithPreprocessing::init(const long v, grib_arguments* args)
 {
     DataG2SimplePacking::init(v, args);
-    pre_processing_           = args->get_name(get_enclosing_handle(), carg_++);
+    pre_processing_ = args->get_name(get_enclosing_handle(), carg_++);
     pre_processing_parameter_ = args->get_name(get_enclosing_handle(), carg_++);
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
@@ -37,7 +34,7 @@ static int pre_processing_func(double* values, long length, long pre_processing,
                                double* pre_processing_parameter, int mode)
 {
     int i = 0, ret = 0;
-    double min      = values[0];
+    double min = values[0];
     double next_min = values[0];
     ECCODES_ASSERT(length > 0);
 
@@ -66,7 +63,7 @@ static int pre_processing_func(double* values, long length, long pre_processing,
                     }
                 }
                 else {
-                    double ppp                = 0;
+                    double ppp = 0;
                     *pre_processing_parameter = next_min - 2 * min;
                     if (next_min == min)
                         return ret;
@@ -100,13 +97,13 @@ static int pre_processing_func(double* values, long length, long pre_processing,
 int DataG2SimplePackingWithPreprocessing::unpack_double(double* val, size_t* len)
 {
     size_t n_vals = 0;
-    long nn       = 0;
-    int err       = 0;
+    long nn = 0;
+    int err = 0;
 
     long pre_processing;
     double pre_processing_parameter;
 
-    err    = value_count(&nn);
+    err = value_count(&nn);
     n_vals = nn;
     if (err)
         return err;
@@ -142,9 +139,9 @@ int DataG2SimplePackingWithPreprocessing::unpack_double(double* val, size_t* len
 int DataG2SimplePackingWithPreprocessing::pack_double(const double* val, size_t* len)
 {
     size_t n_vals = *len;
-    int err       = 0;
+    int err = 0;
 
-    long pre_processing             = 0;
+    long pre_processing = 0;
     double pre_processing_parameter = 0;
 
     dirty_ = 1;

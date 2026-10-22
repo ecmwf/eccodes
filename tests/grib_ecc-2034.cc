@@ -20,21 +20,22 @@ int main(int argc, char** argv)
     codes_context* c = codes_context_get_default();
 
     // This has parameter 167 which is 2m temperature
-    codes_handle* h = codes_grib_handle_new_from_samples(c,  "regular_ll_pl_grib1");
+    codes_handle* h = codes_grib_handle_new_from_samples(c, "regular_ll_pl_grib1");
     assert(h);
 
     // Check limits
     long pMin, pMax;
     CODES_CHECK(codes_get_long(h, "param_value_min", &pMin), 0);
     CODES_CHECK(codes_get_long(h, "param_value_max", &pMax), 0);
-    assert( pMin == 160 );
-    assert( pMax == 370 );
+    assert(pMin == 160);
+    assert(pMax == 370);
 
     size_t values_len = 0;
     CODES_CHECK(codes_get_size(h, "values", &values_len), 0);
 
     // Field values ranging from 0 to 1
     double* values = (double*)malloc(values_len * sizeof(double));
+    if (!values) return 1;
     e = d = 10e-8;
     for (size_t i = 0; i < values_len; i++) {
         if (count > 100) {
@@ -65,8 +66,8 @@ int main(int argc, char** argv)
     CODES_CHECK(codes_set_long(h, "paramId", 172), 0);
     CODES_CHECK(codes_get_long(h, "param_value_min", &pMin), 0);
     CODES_CHECK(codes_get_long(h, "param_value_max", &pMax), 0);
-    assert( pMin == 0 );
-    assert( pMax == 1 );
+    assert(pMin == 0);
+    assert(pMax == 1);
     err = codes_set_double_array(h, "values", values, values_len);
     assert(!err);
 

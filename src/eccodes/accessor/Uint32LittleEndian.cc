@@ -10,9 +10,6 @@
 
 #include "Uint32LittleEndian.h"
 
-eccodes::accessor::Uint32LittleEndian _grib_accessor_uint32_little_endian;
-eccodes::Accessor* grib_accessor_uint32_little_endian = &_grib_accessor_uint32_little_endian;
-
 namespace eccodes::accessor
 {
 

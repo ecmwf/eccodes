@@ -26,4 +26,3 @@ mv $install.new $install
 tar zcvf $definitions.tar.gz $definitions
 
 rm -rf $definitions $dir
-

@@ -21,21 +21,21 @@
 
 int main(int argc, char** argv)
 {
-    int err       = 0;
-    long NV       = 0;
-    size_t size   = 0;
-    double pv[4]  = { 1, 2, 3, 4 };
+    int err = 0;
+    long NV = 0;
+    size_t size = 0;
+    double pv[4] = { 1, 2, 3, 4 };
     size_t pvsize = 4;
 
-    FILE* in           = NULL;
-    char* infile       = NULL;
-    FILE* out          = NULL;
-    char* outfile      = NULL;
-    codes_handle* h    = NULL;
+    FILE* in = NULL;
+    const char* infile = NULL;
+    FILE* out = NULL;
+    const char* outfile = NULL;
+    codes_handle* h = NULL;
     const void* buffer = NULL;
 
     if (argc != 3) return 1;
-    infile  = argv[1];
+    infile = argv[1];
     outfile = argv[2];
 
     in = fopen(infile, "rb");

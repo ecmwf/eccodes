@@ -3,7 +3,7 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
+#
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
@@ -119,6 +119,20 @@ grep bitmap $tempLog
 status=$?
 set -e
 [ $status -ne 0 ]
+
+
+# ECC-2210: grib_ls with '-j' and empty output
+rm -f $tempLog
+input=sample.grib2
+${tools_dir}/grib_ls -j -w level=42 $input > $tempLog
+if test "x$JSON_CHECK" != "x"; then
+  json_xs -t none < $tempLog
+fi
+cat > $tempRef <<EOF
+{ "messages" : [
+]}
+EOF
+diff $tempRef $tempLog
 
 
 # Clean up

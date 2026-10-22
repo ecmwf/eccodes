@@ -9,6 +9,7 @@
  */
 
 #include "Template.h"
+#include "grib_accessor_factory.h"
 
 grib_action* grib_action_create_template(grib_context* context, int nofail, const char* name, const char* arg1, int lineno)
 {
@@ -21,10 +22,10 @@ namespace eccodes::action
 Template::Template(grib_context* context, int nofail, const char* name, const char* arg1, int lineno)
 {
     class_name_ = "action_class_template";
-    name_       = grib_context_strdup_persistent(context, name);
-    op_         = grib_context_strdup_persistent(context, "section");
-    context_    = context;
-    nofail_     = nofail;
+    name_ = grib_context_strdup_persistent(context, name);
+    op_ = grib_context_strdup_persistent(context, "section");
+    context_ = context;
+    nofail_ = nofail;
 
     if (arg1)
         arg_ = grib_context_strdup_persistent(context, arg1);
@@ -36,7 +37,7 @@ Template::Template(grib_context* context, int nofail, const char* name, const ch
         // number of statement
         char debug_info[1024];
         const size_t infoLen = sizeof(debug_info);
-        snprintf(debug_info, infoLen, "File=%s line=%d", file_being_parsed(), lineno+1);
+        snprintf(debug_info, infoLen, "File=%s line=%d", file_being_parsed(), lineno + 1);
         this->debug_info_ = grib_context_strdup_persistent(context, debug_info);
     }
 }
@@ -73,13 +74,13 @@ static grib_action* get_empty_template(grib_context* c, int* err)
 
 int Template::create_accessor(grib_section* p, grib_loader* h)
 {
-    int ret           = GRIB_SUCCESS;
-    grib_action* la   = NULL;
+    int ret = GRIB_SUCCESS;
+    grib_action* la = NULL;
     grib_action* next = NULL;
     grib_accessor* as = NULL;
-    grib_section* gs  = NULL;
+    grib_section* gs = NULL;
 
-    char fname[1024] = {0, };
+    char fname[1024] = { 0 };
     char* fpath = 0;
 
     as = grib_accessor_factory(p, this, 0, NULL);
@@ -103,7 +104,7 @@ int Template::create_accessor(grib_section* p, grib_loader* h)
             la = grib_parse_file(p->h->context, fpath);
     }
     as->flags_ |= GRIB_ACCESSOR_FLAG_HIDDEN;
-    gs         = as->sub_section_;
+    gs = as->sub_section_;
     gs->branch = la; /* Will be used to prevent unnecessary reparse */
 
     grib_push_accessor(as, p->block);

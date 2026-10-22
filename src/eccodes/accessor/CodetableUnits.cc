@@ -11,9 +11,6 @@
 #include "CodetableUnits.h"
 #include "Codetable.h"
 
-eccodes::accessor::CodetableUnits _grib_accessor_codetable_units;
-eccodes::Accessor* grib_accessor_codetable_units = &_grib_accessor_codetable_units;
-
 namespace eccodes::accessor
 {
 
@@ -21,9 +18,9 @@ void CodetableUnits::init(const long len, grib_arguments* params)
 {
     Gen::init(len, params);
 
-    int n      = 0;
+    int n = 0;
     codetable_ = params->get_name(get_enclosing_handle(), n++);
-    length_    = 0;
+    length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
@@ -59,7 +56,7 @@ int CodetableUnits::unpack_string(char* buffer, size_t* len)
     if (*len < l) {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
-                         class_name_, name_, l, *len);
+                         accessor_type().c_str(), name_, l, *len);
         *len = l;
         return GRIB_BUFFER_TOO_SMALL;
     }

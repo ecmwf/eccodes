@@ -13,94 +13,104 @@
  ***************************************************************************/
 
 #ifdef ECCODES_ON_WINDOWS
-#include <stdint.h>
+    #include <stdint.h>
 #endif
 
 #include "grib_scaling.h"
+#include "grib_api_internal.h"
+#include "sync/Mutex.h"
+#include <array>
 
-#if GRIB_PTHREADS
-static pthread_once_t once   = PTHREAD_ONCE_INIT;
-static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+// ECC-2252
+// LUT: A lookup table of 64 values, where the nth value has the n least significant bits set to 1 and the rest set to 0. For example:
+// v[0]  = 0b00000000'00000000'00000000'00000000'00000000'00000000'00000000'00000000;
+// v[1]  = 0b00000000'00000000'00000000'00000000'00000000'00000000'00000000'00000001;
+// v[2]  = 0b00000000'00000000'00000000'00000000'00000000'00000000'00000000'00000011;
+// ...
+// v[63] = 0b11111111'11111111'11111111'11111111'11111111'11111111'11111111'11111111;
 
-static void init_mutex()
-{
-    pthread_mutexattr_t attr;
-    pthread_mutexattr_init(&attr);
-    pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
-    pthread_mutex_init(&mutex, &attr);
-    pthread_mutexattr_destroy(&attr);
-}
-#elif GRIB_OMP_THREADS
-static int once = 0;
-static omp_nest_lock_t mutex;
+// Benchmark results (GCC 15.2.1, -O2, Intel i7-3770 @ 3.40GHz, 50M calls):
+//   mutex + runtime LUT:  9.37 ns/call  (11.3x slower)
+//   constexpr LUT:        0.83 ns/call  (fastest)
+//   bit shift:            1.06 ns/call  (1.3x slower)
 
-static void init_mutex()
-{
-    GRIB_OMP_CRITICAL(lock_grib_bits_any_endian_c)
-    {
-        if (once == 0) {
-            omp_init_nest_lock(&mutex);
-            once = 1;
-        }
+// static eccodes::sync::Mutex mutex;
+//
+// typedef struct bits_all_one_t
+// {
+//     int inited;
+//     int size;
+//     int64_t v[128];
+// } bits_all_one_t;
+//
+// static bits_all_one_t bits_all_one = { 0, 0, {0} };
+//
+// static void init_bits_all_one()
+// {
+//     int size            = sizeof(int64_t) * 8;
+//     int64_t* v             = 0;
+//     uint64_t cmask = -1;
+//     DEBUG_ASSERT(!bits_all_one.inited);
+//
+//     bits_all_one.size   = size;
+//     bits_all_one.inited = 1;
+//     v                   = bits_all_one.v + size;
+//     /*
+//         * The result of a shift operation is undefined if the RHS is negative or
+//         * greater than or equal to the number of bits in the (promoted) shift-expression
+//         */
+//     /* *v= cmask << size; */
+//     *v = -1;
+//     while (size > 0)
+//         *(--v) = ~(cmask << --size);
+// }
+//
+// static void init_bits_all_one_if_needed()
+// {
+//     eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
+//     if (!bits_all_one.inited)
+//         init_bits_all_one();
+// }
+//
+// int grib_is_all_bits_one(int64_t val, long nbits)
+// {
+//     /*if (!bits_all_one.inited) init_bits_all_one();*/
+//     init_bits_all_one_if_needed();
+//     return bits_all_one.v[nbits] == val;
+// }
+
+constexpr auto bits_all_one_array = []() constexpr {
+    std::array<int64_t, 64> v{};
+    for (int i = 1; i < 64; ++i) {
+        v[i] = 0xFFFF'FFFF'FFFF'FFFF >> (64 - i);
     }
-}
-#endif
+    v[0] = 0;
+    return v;
+}();
 
-typedef struct bits_all_one_t
-{
-    int inited;
-    int size;
-    int64_t v[128];
-} bits_all_one_t;
-
-static bits_all_one_t bits_all_one = { 0, 0, {0,} };
-
-static void init_bits_all_one()
-{
-    int size            = sizeof(int64_t) * 8;
-    int64_t* v             = 0;
-    uint64_t cmask = -1;
-    DEBUG_ASSERT(!bits_all_one.inited);
-
-    bits_all_one.size   = size;
-    bits_all_one.inited = 1;
-    v                   = bits_all_one.v + size;
-    /*
-        * The result of a shift operation is undefined if the RHS is negative or
-        * greater than or equal to the number of bits in the (promoted) shift-expression
-        */
-    /* *v= cmask << size; */
-    *v = -1;
-    while (size > 0)
-        *(--v) = ~(cmask << --size);
-}
-
-static void init_bits_all_one_if_needed()
-{
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex);
-    if (!bits_all_one.inited)
-        init_bits_all_one();
-    GRIB_MUTEX_UNLOCK(&mutex);
-}
 int grib_is_all_bits_one(int64_t val, long nbits)
 {
-    /*if (!bits_all_one.inited) init_bits_all_one();*/
-    init_bits_all_one_if_needed();
-    return bits_all_one.v[nbits] == val;
+    DEBUG_ASSERT(nbits > 0 && nbits <= 64);
+    return bits_all_one_array[nbits] == val;
 }
+
+// int grib_is_all_bits_one(int64_t val, long nbits)
+// {
+//     int64_t val_shifted = (~val) << (64 - nbits);
+//     return val_shifted == 0;
+// }
 
 int grib_encode_string(unsigned char* bitStream, long* bitOffset, size_t numberOfCharacters, const char* string)
 {
     size_t i = 0, slen = 0;
-    int err         = 0;
+    int err = 0;
     long byteOffset = *bitOffset / 8;
-    int remainder   = *bitOffset % 8;
+    int remainder = *bitOffset % 8;
     unsigned char c;
     unsigned char* p;
-    const unsigned char mask[]    = { 0, 0x80, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC, 0xFE };
+    const unsigned char mask[] = { 0, 0x80, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC, 0xFE };
     int remainderComplement = 8 - remainder;
-    char str[512]           = {0,};
+    char str[512] = { 0 };
     char* s = str;
 
     ECCODES_ASSERT(numberOfCharacters < 512);
@@ -111,7 +121,7 @@ int grib_encode_string(unsigned char* bitStream, long* bitOffset, size_t numberO
      *    call codes_set(ibufr,'shipOrMobileLandStationIdentifier','')
      * For some odd reason this gets passed in as a NULL string here!
      * To be further investigated
-    */
+     */
     if (string) {
         slen = strlen(string);
         if (slen > numberOfCharacters) {
@@ -151,10 +161,10 @@ char* grib_decode_string(const unsigned char* bitStream, long* bitOffset, size_t
 {
     size_t i;
     long byteOffset = *bitOffset / 8;
-    int remainder   = *bitOffset % 8;
+    int remainder = *bitOffset % 8;
     unsigned char c;
     unsigned char* p;
-    char* s                 = string;
+    char* s = string;
     const unsigned char mask[] = { 0, 0x80, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC, 0xFE };
     int remainderComplement = 8 - remainder;
 
@@ -194,19 +204,19 @@ char* grib_decode_string(const unsigned char* bitStream, long* bitOffset, size_t
  */
 unsigned long grib_decode_unsigned_long(const unsigned char* p, long* bitp, long nbits)
 {
-    unsigned long ret    = 0;
-    long oc              = *bitp / 8;
-    unsigned long mask   = 0;
-    long pi              = 0;
+    unsigned long ret = 0;
+    long oc = *bitp / 8;
+    unsigned long mask = 0;
+    long pi = 0;
     int usefulBitsInByte = 0;
-    long bitsToRead      = 0;
+    long bitsToRead = 0;
 
     if (nbits == 0)
         return 0;
 
     if (nbits > max_nbits) {
         int bits = nbits;
-        int mod  = bits % max_nbits;
+        int mod = bits % max_nbits;
 
         if (mod != 0) {
             int e = grib_decode_unsigned_long(p, bitp, mod);
@@ -262,15 +272,15 @@ unsigned long grib_decode_unsigned_long(const unsigned char* p, long* bitp, long
 
 int grib_encode_unsigned_long(unsigned char* p, unsigned long val, long* bitp, long nbits)
 {
-    long len          = nbits;
-    int s             = *bitp % 8;
-    int n             = 8 - s;
+    long len = nbits;
+    int s = *bitp % 8;
+    int n = 8 - s;
     unsigned char tmp = 0; /*for temporary results*/
 
     if (nbits > max_nbits) {
         /* TODO: Do some real code here, to support long longs */
-        int bits  = nbits;
-        int mod   = bits % max_nbits;
+        int bits = nbits;
+        int mod = bits % max_nbits;
         long zero = 0;
 
         if (mod != 0) {
@@ -327,19 +337,19 @@ int grib_encode_unsigned_long(unsigned char* p, unsigned long val, long* bitp, l
 
 size_t grib_decode_size_t(const unsigned char* p, long* bitp, long nbits)
 {
-    size_t ret           = 0;
-    long oc              = *bitp / 8;
-    size_t mask          = 0;
-    long pi              = 0;
+    size_t ret = 0;
+    long oc = *bitp / 8;
+    size_t mask = 0;
+    long pi = 0;
     int usefulBitsInByte = 0;
-    long bitsToRead      = 0;
+    long bitsToRead = 0;
 
     if (nbits == 0)
         return 0;
 
     if (nbits > max_nbits_size_t) {
         int bits = nbits;
-        int mod  = bits % max_nbits_size_t;
+        int mod = bits % max_nbits_size_t;
 
         if (mod != 0) {
             int e = grib_decode_size_t(p, bitp, mod);
@@ -432,9 +442,9 @@ int grib_encode_size_tb(unsigned char* p, size_t val, long* bitp, long nb)
 }
 
 #if OMP_PACKING
-#include "grib_bits_any_endian_omp.cc"
+    #include "grib_bits_any_endian_omp.cc"
 #elif VECTOR
-#include "grib_bits_any_endian_vector.cc"  /* Experimental */
+    #include "grib_bits_any_endian_vector.cc" /* Experimental */
 #else
-#include "grib_bits_any_endian_simple.cc"
+    #include "grib_bits_any_endian_simple.cc"
 #endif

@@ -10,9 +10,6 @@
 
 #include "CountMissing.h"
 
-eccodes::accessor::CountMissing _grib_accessor_count_missing;
-eccodes::Accessor* grib_accessor_count_missing = &_grib_accessor_count_missing;
-
 namespace eccodes::accessor
 {
 
@@ -38,13 +35,13 @@ static const unsigned char bitsoff[] = {
 void CountMissing::init(const long len, grib_arguments* arg)
 {
     Long::init(len, arg);
-    int n          = 0;
+    int n = 0;
     grib_handle* h = get_enclosing_handle();
-    length_        = 0;
+    length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-    bitmap_                     = arg->get_name(h, n++);
-    unusedBitsInBitmap_         = arg->get_name(h, n++);
-    numberOfDataPoints_         = arg->get_name(h, n++);
+    bitmap_ = arg->get_name(h, n++);
+    unusedBitsInBitmap_ = arg->get_name(h, n++);
+    numberOfDataPoints_ = arg->get_name(h, n++);
     missingValueManagementUsed_ = arg->get_name(h, n++); /* Can be NULL */
 }
 
@@ -52,11 +49,11 @@ static const int used[] = { 0, 1, 3, 7, 15, 31, 63, 127, 255 };
 
 static int get_count_of_missing_values(grib_handle* h, long* p_count_of_missing)
 {
-    int err               = 0;
+    int err = 0;
     long count_of_missing = 0;
     size_t vsize = 0, ii = 0;
     double* values = NULL;
-    double mv      = 0;
+    double mv = 0;
     if ((err = grib_get_double(h, "missingValue", &mv)) != GRIB_SUCCESS)
         return err;
     if ((err = grib_get_size(h, "values", &vsize)) != GRIB_SUCCESS)
@@ -76,14 +73,13 @@ static int get_count_of_missing_values(grib_handle* h, long* p_count_of_missing)
 }
 int CountMissing::unpack_long(long* val, size_t* len)
 {
-    unsigned char* p;
-    int i;
-    long size               = 0;
-    long offset             = 0;
+    const unsigned char* p = NULL;
+    long size = 0;
+    long offset = 0;
     long unusedBitsInBitmap = 0;
     long numberOfDataPoints = 0;
-    grib_handle* h          = get_enclosing_handle();
-    grib_accessor* bitmap   = grib_find_accessor(h, bitmap_);
+    grib_handle* h = get_enclosing_handle();
+    grib_accessor* bitmap = grib_find_accessor(h, bitmap_);
 
     *val = 0; /* By default assume none are missing */
     *len = 1;
@@ -102,7 +98,7 @@ int CountMissing::unpack_long(long* val, size_t* len)
         return GRIB_SUCCESS;
     }
 
-    size   = bitmap->byte_count();
+    size = bitmap->byte_count();
     offset = bitmap->byte_offset();
     if (grib_get_long(h, unusedBitsInBitmap_, &unusedBitsInBitmap) != GRIB_SUCCESS) {
         if (grib_get_long(h, numberOfDataPoints_, &numberOfDataPoints) != GRIB_SUCCESS) {
@@ -122,7 +118,7 @@ int CountMissing::unpack_long(long* val, size_t* len)
     size -= unusedBitsInBitmap / 8;
     unusedBitsInBitmap = unusedBitsInBitmap % 8;
 
-    for (i = 0; i < size - 1; i++)
+    for (long i = 0; i < size - 1; i++)
         *val += bitsoff[*(p++)];
 
     *val += bitsoff[(*p) | used[unusedBitsInBitmap]];

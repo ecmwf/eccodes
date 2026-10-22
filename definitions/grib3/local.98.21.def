@@ -1,6 +1,6 @@
 # (C) Copyright 2005- ECMWF.
 
-# Definition 21 - Sensitive area predictions 
+# Definition 21 - Sensitive area predictions
 
 unsigned[2] forecastOrSingularVectorNumber  : dump;
 
@@ -32,4 +32,3 @@ unsigned[1] shapeOfVerificationArea  : dump;
 
 # concept sensitiveAreaDomain(unknown,"sensitive_area_domain.def",conceptsMasterDir,conceptsLocalDir);
 alias mars.domain = marsDomain;
-

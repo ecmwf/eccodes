@@ -14,24 +14,21 @@
 #include <float.h>
 #include <type_traits>
 
-eccodes::accessor::DataSimplePacking _grib_accessor_data_simple_packing;
-eccodes::Accessor* grib_accessor_data_simple_packing = &_grib_accessor_data_simple_packing;
-
 namespace eccodes::accessor
 {
 
 void DataSimplePacking::init(const long v, grib_arguments* args)
 {
     Values::init(v, args);
-    grib_handle* gh          = get_enclosing_handle();
-    units_factor_            = args->get_name(gh, carg_++);
-    units_bias_              = args->get_name(gh, carg_++);
-    changing_precision_      = args->get_name(gh, carg_++);
-    number_of_values_        = args->get_name(gh, carg_++);
-    bits_per_value_          = args->get_name(gh, carg_++);
-    reference_value_         = args->get_name(gh, carg_++);
-    binary_scale_factor_     = args->get_name(gh, carg_++);
-    decimal_scale_factor_    = args->get_name(gh, carg_++);
+    grib_handle* gh = get_enclosing_handle();
+    units_factor_ = args->get_name(gh, carg_++);
+    units_bias_ = args->get_name(gh, carg_++);
+    changing_precision_ = args->get_name(gh, carg_++);
+    number_of_values_ = args->get_name(gh, carg_++);
+    bits_per_value_ = args->get_name(gh, carg_++);
+    reference_value_ = args->get_name(gh, carg_++);
+    binary_scale_factor_ = args->get_name(gh, carg_++);
+    decimal_scale_factor_ = args->get_name(gh, carg_++);
     optimize_scaling_factor_ = args->get_name(gh, carg_++);
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
     dirty_ = 1;
@@ -48,9 +45,9 @@ static const unsigned long nbits[32] = {
 
 static int number_of_bits(unsigned long x, long* result)
 {
-    const int count        = sizeof(nbits) / sizeof(nbits[0]);
+    const int count = sizeof(nbits) / sizeof(nbits[0]);
     const unsigned long* n = nbits;
-    *result                = 0;
+    *result = 0;
     while (x >= *n) {
         n++;
         (*result)++;
@@ -70,8 +67,8 @@ int DataSimplePacking::value_count(long* number_of_values)
 
 int DataSimplePacking::unpack_double_element(size_t idx, double* val)
 {
-    long n_vals     = 0;
-    int err         = 0;
+    long n_vals = 0;
+    int err = 0;
     grib_handle* gh = get_enclosing_handle();
 
     double reference_value;
@@ -79,9 +76,9 @@ int DataSimplePacking::unpack_double_element(size_t idx, double* val)
     long bits_per_value;
     long decimal_scale_factor;
     unsigned char* buf = gh->buffer->data;
-    double s           = 0;
-    double d           = 0;
-    long pos           = 0;
+    double s = 0;
+    double d = 0;
+    long pos = 0;
 
     err = value_count(&n_vals);
     if (err)
@@ -113,7 +110,7 @@ int DataSimplePacking::unpack_double_element(size_t idx, double* val)
 
     grib_context_log(context_, GRIB_LOG_DEBUG,
                      "%s: %s: creating %s, %ld values (idx=%zu)",
-                     class_name_, __func__, name_, n_vals, idx);
+                     accessor_type().c_str(), __func__, name_, n_vals, idx);
 
     buf += byte_offset();
     /*ECCODES_ASSERT(((bits_per_value*n_vals)/8) < (1<<29));*/ /* See GRIB-787 */
@@ -121,17 +118,17 @@ int DataSimplePacking::unpack_double_element(size_t idx, double* val)
     if (bits_per_value % 8) {
         grib_context_log(context_, GRIB_LOG_DEBUG,
                          "%s: calling outline function : bpv %ld, rv: %g, bsf: %ld, dsf: %ld ",
-                         class_name_, bits_per_value, reference_value, binary_scale_factor, decimal_scale_factor);
-        pos  = idx * bits_per_value;
+                         accessor_type().c_str(), bits_per_value, reference_value, binary_scale_factor, decimal_scale_factor);
+        pos = idx * bits_per_value;
         *val = (double)(((grib_decode_unsigned_long(buf, &pos, bits_per_value) * s) + reference_value) * d);
         /* val[i] = grib_decode_unsigned_long(buf, &pos, bits_per_value); */
         /* fprintf(stdout,"unpck uuu-o: %d vals %d bitspv buf %d by long \n", n_vals, bits_per_value, pos/8);*/
     }
     else {
-        int bc       = 0;
+        int bc = 0;
         size_t octet = 0;
-        long lvalue  = 0;
-        int l        = bits_per_value / 8;
+        long lvalue = 0;
+        int l = bits_per_value / 8;
 
         pos = idx * l;
         buf += pos;
@@ -149,7 +146,7 @@ int DataSimplePacking::unpack_double_element(size_t idx, double* val)
 
 int DataSimplePacking::unpack_double_element_set(const size_t* index_array, size_t len, double* val_array)
 {
-    int err  = 0;
+    int err = 0;
     size_t i = 0;
     for (i = 0; i < len; ++i) {
         if ((err = unpack_double_element(index_array[i], val_array + i)) != GRIB_SUCCESS)
@@ -166,21 +163,21 @@ int DataSimplePacking::unpack(T* val, size_t* len)
     grib_handle* gh = get_enclosing_handle();
     unsigned char* buf = gh->buffer->data;
 
-    size_t i      = 0;
-    int err       = 0;
+    size_t i = 0;
+    int err = 0;
     size_t n_vals = 0;
-    long pos      = 0;
-    long count    = 0;
+    long pos = 0;
+    long count = 0;
 
     double reference_value;
     long binary_scale_factor;
     long bits_per_value;
     long decimal_scale_factor;
     long offsetBeforeData;
-    double s            = 0;
-    double d            = 0;
+    double s = 0;
+    double d = 0;
     double units_factor = 1.0;
-    double units_bias   = 0.0;
+    double units_bias = 0.0;
 
     err = value_count(&count);
     if (err)
@@ -242,7 +239,7 @@ int DataSimplePacking::unpack(T* val, size_t* len)
     d = codes_power<T>(-decimal_scale_factor, 10);
 
     grib_context_log(context_, GRIB_LOG_DEBUG,
-                     "%s %s: Creating %s, %zu values", class_name_, __func__, name_, n_vals);
+                     "%s %s: Creating %s, %zu values", accessor_type().c_str(), __func__, name_, n_vals);
 
     offsetBeforeData = byte_offset();
     buf += offsetBeforeData;
@@ -253,14 +250,14 @@ int DataSimplePacking::unpack(T* val, size_t* len)
     if (!context_->ieee_packing) {
         /* Must turn off this check when the environment variable ECCODES_GRIB_IEEE_PACKING is on */
         long offsetAfterData = 0;
-        err                  = grib_get_long(gh, "offsetAfterData", &offsetAfterData);
+        err = grib_get_long(gh, "offsetAfterData", &offsetAfterData);
         if (!err && offsetAfterData > offsetBeforeData) {
             const long valuesSize = (bits_per_value * n_vals) / 8; /*in bytes*/
             if (offsetBeforeData + valuesSize > offsetAfterData) {
                 grib_context_log(context_, GRIB_LOG_ERROR,
                                  "%s: Data section size mismatch: "
                                  "offset before data=%ld, offset after data=%ld (num values=%zu, bits per value=%ld)",
-                                 class_name_, offsetBeforeData, offsetAfterData, n_vals, bits_per_value);
+                                 accessor_type().c_str(), offsetBeforeData, offsetAfterData, n_vals, bits_per_value);
                 return GRIB_DECODING_ERROR;
             }
         }
@@ -275,7 +272,7 @@ int DataSimplePacking::unpack(T* val, size_t* len)
 
     grib_context_log(context_, GRIB_LOG_DEBUG,
                      "%s %s: calling outline function: bpv: %ld, rv: %g, bsf: %ld, dsf: %ld",
-                     class_name_, __func__, bits_per_value, reference_value, binary_scale_factor, decimal_scale_factor);
+                     accessor_type().c_str(), __func__, bits_per_value, reference_value, binary_scale_factor, decimal_scale_factor);
     grib_decode_array<T>(buf, &pos, bits_per_value, reference_value, s, d, n_vals, val);
 
     *len = (long)n_vals;
@@ -316,17 +313,17 @@ int DataSimplePacking::_unpack_double(double* val, size_t* len, unsigned char* b
     grib_handle* gh = get_enclosing_handle();
 
     size_t i = 0;
-    int err  = 0;
+    int err = 0;
 
     double reference_value;
     long binary_scale_factor;
     long bits_per_value;
     long decimal_scale_factor;
     long offsetBeforeData;
-    double s            = 0;
-    double d            = 0;
+    double s = 0;
+    double d = 0;
     double units_factor = 1.0;
-    double units_bias   = 0.0;
+    double units_bias = 0.0;
 
     if (*len < n_vals) {
         *len = (long)n_vals;
@@ -383,7 +380,7 @@ int DataSimplePacking::_unpack_double(double* val, size_t* len, unsigned char* b
     d = codes_power<double>(-decimal_scale_factor, 10);
 
     grib_context_log(context_, GRIB_LOG_DEBUG,
-                     "%s %s: Creating %s, %zu values", class_name_, __func__, name_, n_vals);
+                     "%s %s: Creating %s, %zu values", accessor_type().c_str(), __func__, name_, n_vals);
 
     offsetBeforeData = byte_offset();
     buf += offsetBeforeData;
@@ -394,7 +391,7 @@ int DataSimplePacking::_unpack_double(double* val, size_t* len, unsigned char* b
     if (!context_->ieee_packing) {
         /* Must turn off this check when the environment variable ECCODES_GRIB_IEEE_PACKING is on */
         long offsetAfterData = 0;
-        err                  = grib_get_long(gh, "offsetAfterData", &offsetAfterData);
+        err = grib_get_long(gh, "offsetAfterData", &offsetAfterData);
         if (!err && offsetAfterData > offsetBeforeData) {
             const long valuesSize = (bits_per_value * n_vals) / 8; /*in bytes*/
             if (offsetBeforeData + valuesSize > offsetAfterData) {
@@ -438,12 +435,12 @@ int DataSimplePacking::_unpack_double(double* val, size_t* len, unsigned char* b
 
 int DataSimplePacking::unpack_double_subarray(double* val, size_t start, size_t len)
 {
-    unsigned char* buf  = get_enclosing_handle()->buffer->data;
-    size_t nvals        = len;
-    size_t* plen        = &len;
+    unsigned char* buf = get_enclosing_handle()->buffer->data;
+    size_t nvals = len;
+    size_t* plen = &len;
     long bits_per_value = 0;
-    long pos            = 0;
-    int err             = GRIB_SUCCESS;
+    long pos = 0;
+    int err = GRIB_SUCCESS;
 
     if ((err = grib_get_long_internal(get_enclosing_handle(), bits_per_value_, &bits_per_value)) !=
         GRIB_SUCCESS)
@@ -458,25 +455,25 @@ int DataSimplePacking::pack_double(const double* val, size_t* len)
 {
     grib_handle* gh = get_enclosing_handle();
 
-    size_t i                      = 0;
-    size_t n_vals                 = *len;
-    int err                       = 0;
-    double reference_value        = 0;
-    long binary_scale_factor      = 0;
-    long bits_per_value           = 0;
-    long decimal_scale_factor     = 0;
+    size_t i = 0;
+    size_t n_vals = *len;
+    int err = 0;
+    double reference_value = 0;
+    long binary_scale_factor = 0;
+    long bits_per_value = 0;
+    long decimal_scale_factor = 0;
     long decimal_scale_factor_get = 0;
-    long optimize_scaling_factor  = 0;
-    double decimal                = 1;
-    double max                    = 0;
-    double min                    = 0;
-    double unscaled_max           = 0;
-    double unscaled_min           = 0;
-    double f                      = 0;
-    double range                  = 0;
+    long optimize_scaling_factor = 0;
+    double decimal = 1;
+    double max = 0;
+    double min = 0;
+    double unscaled_max = 0;
+    double unscaled_min = 0;
+    double f = 0;
+    double range = 0;
     double minrange = 0, maxrange = 0;
     long changing_precision = 0;
-    const grib_context* c   = context_;
+    const grib_context* c = context_;
 
     decimal_scale_factor = 0;
 
@@ -531,7 +528,7 @@ int DataSimplePacking::pack_double(const double* val, size_t* len)
             grib_get_double_internal(gh, reference_value_, &ref);
             if (ref != reference_value) {
                 grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: %s (ref=%.10e != reference_value=%.10e)",
-                                 class_name_, __func__, reference_value_, ref, reference_value);
+                                 accessor_type().c_str(), __func__, reference_value_, ref, reference_value);
                 return GRIB_INTERNAL_ERROR;
             }
         }
@@ -585,9 +582,9 @@ int DataSimplePacking::pack_double(const double* val, size_t* len)
 
     if (bits_per_value == 0 || (binary_scale_factor == 0 && decimal_scale_factor_get != 0)) {
         /* decimal_scale_factor is given, binary_scale_factor=0 and bits_per_value is computed */
-        binary_scale_factor  = 0;
+        binary_scale_factor = 0;
         decimal_scale_factor = decimal_scale_factor_get;
-        decimal              = codes_power<double>(decimal_scale_factor, 10);
+        decimal = codes_power<double>(decimal_scale_factor, 10);
         min *= decimal;
         max *= decimal;
 
@@ -597,7 +594,7 @@ int DataSimplePacking::pack_double(const double* val, size_t* len)
         if (err) {
             grib_context_log(context_, GRIB_LOG_ERROR,
                              "%s %s: Range of values too large. Try a smaller value for decimal precision (less than %ld)",
-                             class_name_, __func__, decimal_scale_factor);
+                             accessor_type().c_str(), __func__, decimal_scale_factor);
             return err;
         }
 
@@ -635,25 +632,25 @@ int DataSimplePacking::pack_double(const double* val, size_t* len)
         else {
             /* printf("max=%g reference_value=%g codes_power<double>(-last,2)=%g decimal_scale_factor=%ld bits_per_value=%ld\n",
                max,reference_value,codes_power<double>(-last,2),decimal_scale_factor,bits_per_value);*/
-            range        = (max - min);
+            range = (max - min);
             unscaled_min = min;
             unscaled_max = max;
-            f            = (codes_power<double>(bits_per_value, 2) - 1);
-            minrange     = codes_power<double>(-last, 2) * f;
-            maxrange     = codes_power<double>(last, 2) * f;
+            f = (codes_power<double>(bits_per_value, 2) - 1);
+            minrange = codes_power<double>(-last, 2) * f;
+            maxrange = codes_power<double>(last, 2) * f;
 
             while (range < minrange) {
                 decimal_scale_factor += 1;
                 decimal *= 10;
-                min   = unscaled_min * decimal;
-                max   = unscaled_max * decimal;
+                min = unscaled_min * decimal;
+                max = unscaled_max * decimal;
                 range = (max - min);
             }
             while (range > maxrange) {
                 decimal_scale_factor -= 1;
                 decimal /= 10;
-                min   = unscaled_min * decimal;
-                max   = unscaled_max * decimal;
+                min = unscaled_min * decimal;
+                max = unscaled_max * decimal;
                 range = (max - min);
             }
 

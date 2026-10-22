@@ -10,9 +10,6 @@
 
 #include "Raw.h"
 
-eccodes::accessor::Raw _grib_accessor_raw;
-eccodes::Accessor* grib_accessor_raw = &_grib_accessor_raw;
-
 void accessor_raw_set_length(grib_accessor* a, size_t len)
 {
     a->length_ = len;
@@ -29,17 +26,17 @@ namespace eccodes::accessor
 void Raw::init(const long len, grib_arguments* arg)
 {
     Gen::init(len, arg);
-    int n   = 0;
+    int n = 0;
     int err = 0;
     long sectionLength;
     grib_expression* e;
     grib_handle* hand = get_enclosing_handle();
 
-    length_        = 0;
-    totalLength_   = arg->get_name(hand, n++);
+    length_ = 0;
+    totalLength_ = arg->get_name(hand, n++);
     sectionLength_ = arg->get_name(hand, n++);
 
-    e   = arg->get_expression(hand, n++);
+    e = arg->get_expression(hand, n++);
     err = e->evaluate_long(hand, &(relativeOffset_));
     if (err)
         grib_context_log(hand->context, GRIB_LOG_ERROR, "Unable to evaluate relativeOffset");
@@ -107,7 +104,7 @@ int Raw::pack_bytes(const unsigned char* val, size_t* len)
     long totalLength;
     long sectionLength;
     grib_handle* h = get_enclosing_handle();
-    long dlen      = length - length_;
+    long dlen = length - length_;
 
     grib_get_long(h, totalLength_, &totalLength);
     totalLength += dlen;

@@ -19,19 +19,22 @@ class BufrExtractSubsets : public Gen
 {
 public:
     BufrExtractSubsets() :
-        Gen() { class_name_ = "bufr_extract_subsets"; }
-    grib_accessor* create_empty_accessor() override { return new BufrExtractSubsets{}; }
+        Gen() {}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     long get_native_type() override;
     int pack_long(const long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
 
 private:
-    const char* numericValues_            = nullptr;
-    const char* pack_                     = nullptr;
+    const char* numericValues_ = nullptr;
+    const char* pack_ = nullptr;
     grib_accessor* numericValuesAccessor_ = nullptr;
-    grib_accessor* packAccessor_          = nullptr;
+    grib_accessor* packAccessor_ = nullptr;
 
     void get_accessors();
+
+public:
+    static constexpr AccessorType accessor_type_{ "bufr_extract_subsets" };
 };
 
 }  // namespace eccodes::accessor

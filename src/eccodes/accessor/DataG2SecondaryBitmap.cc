@@ -10,9 +10,6 @@
 
 #include "DataG2SecondaryBitmap.h"
 
-eccodes::accessor::DataG2SecondaryBitmap _grib_accessor_data_g2secondary_bitmap;
-eccodes::Accessor* grib_accessor_data_g2secondary_bitmap = &_grib_accessor_data_g2secondary_bitmap;
-
 namespace eccodes::accessor
 {
 
@@ -33,7 +30,7 @@ int DataG2SecondaryBitmap::pack_double(const double* val, size_t* len)
     int err = 0;
 
     long primary_len = 0, secondary_len = 0;
-    double* primary_bitmap   = NULL;
+    double* primary_bitmap = NULL;
     double* secondary_bitmap = NULL;
     long i = 0, j = 0, k = 0, m = 0;
     double missing_value = 0, present_value = 0;
@@ -55,12 +52,12 @@ int DataG2SecondaryBitmap::pack_double(const double* val, size_t* len)
         return GRIB_ENCODING_ERROR;
     }
 
-    primary_len    = *len / expand_by;
+    primary_len = *len / expand_by;
     primary_bitmap = (double*)grib_context_malloc_clear(context_, primary_len * sizeof(double));
     if (!primary_bitmap)
         return GRIB_OUT_OF_MEMORY;
 
-    secondary_len    = *len;
+    secondary_len = *len;
     secondary_bitmap = (double*)grib_context_malloc_clear(context_, secondary_len * sizeof(double));
     if (!secondary_bitmap) {
         grib_context_free(context_, primary_bitmap);

@@ -8,21 +8,21 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "ProjString.h"
+#include "eccodes/accessor/ProjString.h"
+
+#include "eccodes/geo/eckit.h"
 
 #if defined(HAVE_ECKIT_GEO)
     #include <cstdio>
     #include <memory>
 
     #include "eckit/geo/Grid.h"
+    #include "eckit/geo/Exceptions.h"
 
-    #include "eccodes/geo/EckitMainInit.h"
-    #include "eccodes/geo/GribToSpec.h"
+    #include "geo/GribToSpec.h"
 #endif
 
 eccodes::accessor::ProjString _grib_accessor_proj_string;
-eccodes::Accessor* grib_accessor_proj_string = &_grib_accessor_proj_string;
-
 namespace eccodes::accessor
 {
 
@@ -32,8 +32,8 @@ void ProjString::init(const long len, grib_arguments* arg)
     grib_handle* h = get_enclosing_handle();
 
     grid_type_ = arg->get_name(h, 0);
-    endpoint_  = arg->get_long(h, 1);
-    length_    = 0;
+    endpoint_ = arg->get_long(h, 1);
+    length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
 }
@@ -71,7 +71,7 @@ static int get_major_minor_axes(grib_handle* h, double* pMajor, double* pMinor)
 // Caller must have allocated enough space in the 'result' argument
 static int get_earth_shape(grib_handle* h, char* result)
 {
-    int err      = 0;
+    int err = 0;
     double major = 0, minor = 0;
     if ((err = get_major_minor_axes(h, &major, &minor)) != GRIB_SUCCESS)
         return err;
@@ -86,7 +86,7 @@ static int proj_space_view(grib_handle* h, char* result)
 {
     return GRIB_NOT_IMPLEMENTED;
     //     int err        = 0;
-    //     char shape[128] = {0,};
+    //     char shape[128] = {0};
     //     double latOfSubSatellitePointInDegrees, lonOfSubSatellitePointInDegrees;
     //     if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS)
     //         return err;
@@ -102,7 +102,7 @@ static int proj_space_view(grib_handle* h, char* result)
 static int proj_albers(grib_handle* h, char* result)
 {
     int err = 0;
-    char shape[128] = {0,};
+    char shape[128] = { 0 };
     double LoVInDegrees = 0, LaDInDegrees = 0, Latin1InDegrees = 0, Latin2InDegrees = 0;
 
     if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS)
@@ -131,8 +131,8 @@ static int proj_equatorial_azimuthal_equidistant(grib_handle* h, char* result)
 
 static int proj_lambert_conformal(grib_handle* h, char* result)
 {
-    int err         = 0;
-    char shape[128] = {0,};
+    int err = 0;
+    char shape[128] = { 0 };
     double LoVInDegrees = 0, LaDInDegrees = 0, Latin1InDegrees = 0, Latin2InDegrees = 0;
 
     if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS)
@@ -152,8 +152,8 @@ static int proj_lambert_conformal(grib_handle* h, char* result)
 
 static int proj_lambert_azimuthal_equal_area(grib_handle* h, char* result)
 {
-    int err         = 0;
-    char shape[128] = {0,};
+    int err = 0;
+    char shape[128] = { 0 };
     double standardParallel = 0, centralLongitude = 0;
 
     if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS)
@@ -169,11 +169,11 @@ static int proj_lambert_azimuthal_equal_area(grib_handle* h, char* result)
 
 static int proj_polar_stereographic(grib_handle* h, char* result)
 {
-    int err                 = 0;
+    int err = 0;
     double centralLongitude = 0, centralLatitude = 0;
-    int has_northPole         = 0;
+    int has_northPole = 0;
     long projectionCentreFlag = 0;
-    char shape[128]           = {0,};
+    char shape[128] = { 0 };
 
     if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS)
         return err;
@@ -194,7 +194,7 @@ static int proj_polar_stereographic(grib_handle* h, char* result)
 static int proj_unprojected(grib_handle* h, char* result)
 {
     int err = 0;
-    // char shape[128] = {0,};
+    // char shape[128] = {0};
     // if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS) return err;
     // snprintf(result, 1024, "+proj=longlat %s", shape);
     snprintf(result, 1024, "+proj=longlat +datum=WGS84 +no_defs +type=crs");
@@ -204,9 +204,9 @@ static int proj_unprojected(grib_handle* h, char* result)
 
 static int proj_mercator(grib_handle* h, char* result)
 {
-    int err             = 0;
+    int err = 0;
     double LaDInDegrees = 0;
-    char shape[128]     = {0,};
+    char shape[128] = { 0 };
 
     if ((err = grib_get_double_internal(h, "LaDInDegrees", &LaDInDegrees)) != GRIB_SUCCESS)
         return err;
@@ -238,18 +238,17 @@ static proj_mapping proj_mappings[] = {
 int ProjString::unpack_string(char* v, size_t* len)
 {
     int err = 0, found = 0;
-    size_t i           = 0;
-    char grid_type[64] = {0,};
+    size_t i = 0;
+    char grid_type[64] = { 0 };
     grib_handle* h = get_enclosing_handle();
-    size_t size    = sizeof(grid_type) / sizeof(*grid_type);
+    size_t size = sizeof(grid_type) / sizeof(*grid_type);
 
     ECCODES_ASSERT(endpoint_ == ENDPOINT_SOURCE || endpoint_ == ENDPOINT_TARGET);
 
 #if defined(HAVE_ECKIT_GEO)
-    const int eckit_geo = h->context->eckit_geo;  // check environment variable
-    if (eckit_geo != 0) {
+    if (eccodes::geo::eckit_geo_use_for_projstring(h)) {
         eccodes::geo::eckit_main_init();
-
+        grib_context_log(h->context, GRIB_LOG_DEBUG, "ProjString: using eckit/geo");
         try {
             geo::GribToSpec spec(h);
             std::unique_ptr<const eckit::geo::Grid> grid(eckit::geo::GridFactory::build(spec));
@@ -282,7 +281,7 @@ int ProjString::unpack_string(char* v, size_t* len)
     if (*len < l) {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s: Buffer too small for %s. It is at least %zu bytes long (len=%zu)",
-                         class_name_, name_, l, *len);
+                         accessor_type().c_str(), name_, l, *len);
         *len = l;
         return GRIB_BUFFER_TOO_SMALL;
     }

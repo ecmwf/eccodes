@@ -10,9 +10,6 @@
 
 #include "Bitmap.h"
 
-eccodes::accessor::Bitmap _grib_accessor_bitmap;
-eccodes::Accessor* grib_accessor_bitmap = &_grib_accessor_bitmap;
-
 namespace eccodes::accessor
 {
 
@@ -55,12 +52,12 @@ void Bitmap::init(const long len, grib_arguments* arg)
 {
     Bytes::init(len, arg);
     grib_handle* hand = get_enclosing_handle();
-    int n             = 0;
+    int n = 0;
 
     tableReference_ = arg->get_name(hand, n++);
-    missing_value_  = arg->get_name(hand, n++);
-    offsetbsec_     = arg->get_name(hand, n++);
-    sLength_        = arg->get_name(hand, n++);
+    missing_value_ = arg->get_name(hand, n++);
+    offsetbsec_ = arg->get_name(hand, n++);
+    sLength_ = arg->get_name(hand, n++);
 
     compute_size();
 }
@@ -73,7 +70,7 @@ long Bitmap::next_offset()
 void Bitmap::dump(eccodes::Dumper* dumper)
 {
     long len = 0;
-    char label[1024] = {0,};
+    char label[1024] = { 0 };
 
     value_count(&len);
     snprintf(label, sizeof(label), "Bitmap of %ld values", len);
@@ -82,8 +79,8 @@ void Bitmap::dump(eccodes::Dumper* dumper)
 
 int Bitmap::unpack_long(long* val, size_t* len)
 {
-    long pos                = offset_ * 8;
-    long tlen               = 0;
+    long pos = offset_ * 8;
+    long tlen = 0;
     const grib_handle* hand = get_enclosing_handle();
 
     int err = value_count(&tlen);
@@ -173,7 +170,7 @@ int Bitmap::unpack_string(char* val, size_t* len)
     if (*len < l) {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
-                         class_name_, name_, l, *len);
+                         accessor_type().c_str(), name_, l, *len);
         *len = l;
         return GRIB_BUFFER_TOO_SMALL;
     }

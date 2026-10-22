@@ -11,9 +11,6 @@
 #include "ExpandedDescriptors.h"
 #include "grib_scaling.h"
 
-eccodes::accessor::ExpandedDescriptors _grib_accessor_expanded_descriptors;
-eccodes::Accessor* grib_accessor_expanded_descriptors = &_grib_accessor_expanded_descriptors;
-
 namespace eccodes::accessor
 {
 
@@ -35,11 +32,11 @@ namespace eccodes::accessor
 void ExpandedDescriptors::init(const long len, grib_arguments* args)
 {
     Long::init(len, args);
-    int n               = 0;
-    grib_handle* hand   = get_enclosing_handle();
+    int n = 0;
+    grib_handle* hand = get_enclosing_handle();
     tablesAccessorName_ = args->get_name(hand, n++);
-    expandedName_       = args->get_name(hand, n++);
-    rank_               = args->get_long(hand, n++);
+    expandedName_ = args->get_name(hand, n++);
+    rank_ = args->get_long(hand, n++);
     if (rank_ != 0) {
         expandedAccessor_ = dynamic_cast<ExpandedDescriptors*>(grib_find_accessor(hand, expandedName_));
     }
@@ -47,10 +44,10 @@ void ExpandedDescriptors::init(const long len, grib_arguments* args)
         expandedAccessor_ = 0;
     }
     unexpandedDescriptors_ = args->get_name(hand, n++);
-    sequence_              = args->get_name(hand, n++);
-    do_expand_             = 1;
-    expanded_              = 0;
-    length_                = 0;
+    sequence_ = args->get_name(hand, n++);
+    do_expand_ = 1;
+    expanded_ = 0;
+    length_ = 0;
 
     tablesAccessor_ = NULL;
 }
@@ -91,21 +88,21 @@ static const char* descriptor_type_name(int dtype)
 void ExpandedDescriptors::__expand(bufr_descriptors_array* unexpanded, bufr_descriptors_array* expanded, change_coding_params* ccp, int* err)
 {
     int k, j, i;
-    size_t size         = 0;
-    long* v_array       = NULL;
-    bufr_descriptor* u  = NULL;
+    size_t size = 0;
+    long* v_array = NULL;
+    bufr_descriptor* u = NULL;
     bufr_descriptor* vv = NULL;
     /* ECC-1422: 'ur' is the array of bufr_descriptor pointers for replications.
      * Its max size is X (from FXY) which is 6 bits so no need for malloc */
-    bufr_descriptor* ur[65] = {0,};
-    bufr_descriptor* urc                     = NULL;
-    size_t idx                               = 0;
-    bufr_descriptor* u0                      = NULL;
-    grib_context* c                          = context_;
-    bufr_descriptor* us                      = NULL;
-    bufr_descriptors_array* inner_expanded   = NULL;
+    bufr_descriptor* ur[65] = { 0 };
+    bufr_descriptor* urc = NULL;
+    size_t idx = 0;
+    bufr_descriptor* u0 = NULL;
+    grib_context* c = context_;
+    bufr_descriptor* us = NULL;
+    bufr_descriptors_array* inner_expanded = NULL;
     bufr_descriptors_array* inner_unexpanded = NULL;
-    grib_handle* hand                        = get_enclosing_handle();
+    grib_handle* hand = get_enclosing_handle();
 #if MYDEBUG
     int idepth;
 #endif
@@ -113,7 +110,7 @@ void ExpandedDescriptors::__expand(bufr_descriptors_array* unexpanded, bufr_desc
     if (BUFR_DESCRIPTORS_ARRAY_USED_SIZE(unexpanded) == 0)
         return;
 
-    us          = grib_bufr_descriptor_clone(grib_bufr_descriptors_array_get(unexpanded, 0));
+    us = grib_bufr_descriptor_clone(grib_bufr_descriptors_array_get(unexpanded, 0));
     us->context = c;
 
     *err = 0;
@@ -138,13 +135,13 @@ void ExpandedDescriptors::__expand(bufr_descriptors_array* unexpanded, bufr_desc
             if (*err)
                 goto cleanup;
             v_array = (long*)grib_context_malloc_clear(c, sizeof(long) * size);
-            *err    = grib_get_long_array(hand, sequence_, v_array, &size);
+            *err = grib_get_long_array(hand, sequence_, v_array, &size);
             if (*err)
                 goto cleanup;
 
             inner_unexpanded = grib_bufr_descriptors_array_new(DESC_SIZE_INIT, DESC_SIZE_INCR);
             for (i = 0; i < size; i++) {
-                vv               = grib_bufr_descriptor_new(tablesAccessor_, v_array[i], !SILENT, err);
+                vv = grib_bufr_descriptor_new(tablesAccessor_, v_array[i], !SILENT, err);
                 inner_unexpanded = grib_bufr_descriptors_array_push(inner_unexpanded, vv);
             }
             grib_context_free(c, v_array);
@@ -177,8 +174,8 @@ void ExpandedDescriptors::__expand(bufr_descriptors_array* unexpanded, bufr_desc
                 printf("+++ push %06ld\n", u->code);
 #endif
                 grib_bufr_descriptors_array_push(expanded, u);
-                idx              = expanded->n - 1;
-                size             = 0;
+                idx = expanded->n - 1;
+                size = 0;
                 inner_unexpanded = grib_bufr_descriptors_array_new(DESC_SIZE_INIT, DESC_SIZE_INCR);
 
                 /* Number of descriptors to replicate cannot be more than what's left */
@@ -187,8 +184,9 @@ void ExpandedDescriptors::__expand(bufr_descriptors_array* unexpanded, bufr_desc
                                      "Delayed replication: %06ld: expected %d but only found %lu element(s)",
                                      u->code, us->X, unexpanded->n - 1);
                     grib_context_log(c, GRIB_LOG_ERROR,
-                        "Hint: After the delayed replication you need a replication factor (e.g. 31001)"
-                        " followed by %d descriptor(s)", us->X);
+                                     "Hint: After the delayed replication you need a replication factor (e.g. 31001)"
+                                     " followed by %d descriptor(s)",
+                                     us->X);
                     *err = GRIB_DECODING_ERROR;
                     return;
                 }
@@ -214,17 +212,17 @@ void ExpandedDescriptors::__expand(bufr_descriptors_array* unexpanded, bufr_desc
                 }
 #endif
                 expanded = grib_bufr_descriptors_array_append(expanded, inner_expanded);
-                uidx     = grib_bufr_descriptors_array_get(expanded, idx);
-                ECCODES_ASSERT( uidx->type == BUFR_DESCRIPTOR_TYPE_REPLICATION );
-                ECCODES_ASSERT( uidx->F == 1 );
-                ECCODES_ASSERT( uidx->Y == 0 );
+                uidx = grib_bufr_descriptors_array_get(expanded, idx);
+                ECCODES_ASSERT(uidx->type == BUFR_DESCRIPTOR_TYPE_REPLICATION);
+                ECCODES_ASSERT(uidx->F == 1);
+                ECCODES_ASSERT(uidx->Y == 0);
                 // ECC-1958 and ECC-1054:
                 // Here X is used to store the size which can exceed 63. The normal X is 6 bits wide so max=63
                 // We need to set X but not the descriptor code
                 uidx->X = (int)(size - 1);
                 if (size < 64)
                     uidx->code = (size - 1) * 1000 + 100000;
-                //grib_bufr_descriptor_set_code(uidx, (size - 1) * 1000 + 100000);
+                // grib_bufr_descriptor_set_code(uidx, (size - 1) * 1000 + 100000);
                 size++;
             }
             else {
@@ -285,7 +283,7 @@ void ExpandedDescriptors::__expand(bufr_descriptors_array* unexpanded, bufr_desc
             size = 1;
             if (ccp->associatedFieldWidth && u->X != 31) {
                 bufr_descriptor* au = grib_bufr_descriptor_new(tablesAccessor_, 999999, !SILENT, err);
-                au->width           = ccp->associatedFieldWidth;
+                au->width = ccp->associatedFieldWidth;
                 grib_bufr_descriptor_set_scale(au, 0);
                 strcpy(au->shortName, "associatedField");
                 /* au->name=grib_context_strdup(c,"associated field");  See ECC-489 */
@@ -309,9 +307,10 @@ void ExpandedDescriptors::__expand(bufr_descriptors_array* unexpanded, bufr_desc
 #endif
             if (u->type != BUFR_DESCRIPTOR_TYPE_FLAG &&
                 u->type != BUFR_DESCRIPTOR_TYPE_TABLE &&
-                u->type != BUFR_DESCRIPTOR_TYPE_STRING) {
+                u->type != BUFR_DESCRIPTOR_TYPE_STRING &&
+                u->X != 31) { /* ECC-912: class 31 (replication factors) not affected by 201/202 */
                 if (ccp->localDescriptorWidth > 0) {
-                    u->width     = ccp->localDescriptorWidth;
+                    u->width = ccp->localDescriptorWidth;
                     u->reference = 0;
                     grib_bufr_descriptor_set_scale(u, 0);
                     ccp->localDescriptorWidth = 0;
@@ -341,12 +340,12 @@ void ExpandedDescriptors::__expand(bufr_descriptors_array* unexpanded, bufr_desc
             switch (us->X) {
                 case 1:
                     ccp->extraWidth = us->Y ? us->Y - 128 : 0;
-                    size            = 0;
+                    size = 0;
                     grib_bufr_descriptor_delete(u);
                     break;
                 case 2:
                     ccp->extraScale = us->Y ? us->Y - 128 : 0;
-                    size            = 0;
+                    size = 0;
                     grib_bufr_descriptor_delete(u);
                     break;
                 case 4:
@@ -357,18 +356,18 @@ void ExpandedDescriptors::__expand(bufr_descriptors_array* unexpanded, bufr_desc
                 case 6:
                     /*signify data width*/
                     ccp->localDescriptorWidth = us->Y;
-                    size                      = 0;
+                    size = 0;
                     grib_bufr_descriptor_delete(u);
                     break;
                 case 7:
                     if (us->Y) {
-                        ccp->extraScale      = us->Y;
+                        ccp->extraScale = us->Y;
                         ccp->referenceFactor = codes_power<double>(us->Y, 10);
-                        ccp->extraWidth      = ((10 * us->Y) + 2) / 3;
+                        ccp->extraWidth = ((10 * us->Y) + 2) / 3;
                     }
                     else {
-                        ccp->extraWidth      = 0;
-                        ccp->extraScale      = 0;
+                        ccp->extraWidth = 0;
+                        ccp->extraScale = 0;
                         ccp->referenceFactor = 1;
                     }
                     size = 0;
@@ -474,27 +473,27 @@ bufr_descriptors_array* ExpandedDescriptors::do_expand(bufr_descriptors_array* u
 
 int ExpandedDescriptors::expand()
 {
-    int err               = 0;
+    int err = 0;
     size_t unexpandedSize = 0;
     /* grib_iarray* unexp=0; */
     int i;
-    long* u      = 0;
-    char key[50] = {0,};
+    long* u = 0;
+    char key[50] = { 0 };
     long centre, masterTablesVersionNumber, localTablesVersionNumber, masterTablesNumber;
     change_coding_params ccp;
-    bufr_descriptors_array* unexpanded      = NULL;
+    bufr_descriptors_array* unexpanded = NULL;
     bufr_descriptors_array* unexpanded_copy = NULL;
-    bufr_descriptors_array* expanded        = NULL;
-    grib_context* c                         = context_;
-    const grib_handle* h                    = get_enclosing_handle();
-    int operator206yyy_width                = 0; /* width specified by operator 206YYY */
+    bufr_descriptors_array* expanded = NULL;
+    grib_context* c = context_;
+    const grib_handle* h = get_enclosing_handle();
+    int operator206yyy_width = 0; /* width specified by operator 206YYY */
 
     if (!do_expand_) {
         return err;
     }
     do_expand_ = 0;
     if (rank_ != 0) {
-        err       = expandedAccessor_->expand();
+        err = expandedAccessor_->expand();
         expanded_ = ((ExpandedDescriptors*)expandedAccessor_)->expanded_;
         return err;
     }
@@ -542,16 +541,16 @@ int ExpandedDescriptors::expand()
         ECCODES_ASSERT(tablesAccessor_);
     }
 
-    unexpanded           = grib_bufr_descriptors_array_new(unexpandedSize, DESC_SIZE_INCR);
-    unexpanded_copy      = grib_bufr_descriptors_array_new(unexpandedSize, DESC_SIZE_INCR);
+    unexpanded = grib_bufr_descriptors_array_new(unexpandedSize, DESC_SIZE_INCR);
+    unexpanded_copy = grib_bufr_descriptors_array_new(unexpandedSize, DESC_SIZE_INCR);
     operator206yyy_width = 0;
     bool bad_descriptor = false;
     for (i = 0; i < unexpandedSize; i++) {
         bufr_descriptor *aDescriptor1, *aDescriptor2;
         /* ECC-1274: clear error and only issue msg once */
-        err          = 0;
+        err = 0;
         aDescriptor1 = grib_bufr_descriptor_new(tablesAccessor_, u[i], SILENT, &err);
-        err          = 0;
+        err = 0;
         aDescriptor2 = grib_bufr_descriptor_new(tablesAccessor_, u[i], !SILENT, &err);
 
         /* ECC-433: Operator 206YYY */
@@ -563,12 +562,12 @@ int ExpandedDescriptors::expand()
         else if (operator206yyy_width > 0) {
             if (err == GRIB_NOT_FOUND) {
                 DEBUG_ASSERT(aDescriptor1->type == BUFR_DESCRIPTOR_TYPE_UNKNOWN);
-                err                 = 0;                       /* Clear any error generated due to local descriptor */
+                err = 0;                                       /* Clear any error generated due to local descriptor */
                 aDescriptor1->nokey = aDescriptor2->nokey = 1; /* Do not show this descriptor in dump */
             }
             /* The width specified by operator takes precedence over element's own width */
             aDescriptor1->width = aDescriptor2->width = operator206yyy_width;
-            operator206yyy_width                      = 0; /* Restore. Operator no longer in scope */
+            operator206yyy_width = 0; /* Restore. Operator no longer in scope */
         }
 
         // Table B descriptors must have a non-zero width
@@ -585,16 +584,16 @@ int ExpandedDescriptors::expand()
     if (bad_descriptor) {
         grib_bufr_descriptors_array_delete(unexpanded);
         grib_bufr_descriptors_array_delete(unexpanded_copy);
-        return GRIB_DECODING_ERROR; // at least one descriptor with width==0 found
+        return GRIB_DECODING_ERROR;  // at least one descriptor with width==0 found
     }
 
-    ccp.extraWidth           = 0;
+    ccp.extraWidth = 0;
     ccp.localDescriptorWidth = -1;
-    ccp.extraScale           = 0;
-    ccp.referenceFactor      = 1;
+    ccp.extraScale = 0;
+    ccp.referenceFactor = 1;
     ccp.associatedFieldWidth = 0;
-    ccp.newStringWidth       = 0;
-    expanded_                = do_expand(unexpanded, &ccp, &err);
+    ccp.newStringWidth = 0;
+    expanded_ = do_expand(unexpanded, &ccp, &err);
     if (err) {
         grib_bufr_descriptors_array_delete(unexpanded);
         grib_bufr_descriptors_array_delete(unexpanded_copy);
@@ -620,13 +619,13 @@ bufr_descriptors_array* ExpandedDescriptors::grib_accessor_expanded_descriptors_
 
 int ExpandedDescriptors::unpack_double(double* val, size_t* len)
 {
-    int ret  = 0;
+    int ret = 0;
     size_t i = 0;
     size_t expandedSize;
 
     if (rank_ != 2) {
         long* lval = (long*)grib_context_malloc_clear(context_, *len * sizeof(long));
-        ret        = unpack_long(lval, len);
+        ret = unpack_long(lval, len);
         if (ret)
             return ret;
         for (i = 0; i < *len; i++)
@@ -654,9 +653,9 @@ int ExpandedDescriptors::unpack_double(double* val, size_t* len)
 
 int ExpandedDescriptors::unpack_long(long* val, size_t* len)
 {
-    int ret     = 0;
+    int ret = 0;
     size_t rlen = 0;
-    size_t i    = 0;
+    size_t i = 0;
 
     ret = expand();
     if (ret)
@@ -699,9 +698,9 @@ int ExpandedDescriptors::unpack_long(long* val, size_t* len)
 
 int ExpandedDescriptors::unpack_string_array(char** buffer, size_t* len)
 {
-    int err      = 0;
-    long* v      = NULL;
-    char buf[25] = {0,};
+    int err = 0;
+    long* v = NULL;
+    char buf[25] = { 0 };
     long llen = 0;
     size_t i = 0, size = 0;
     const grib_context* c = context_;
@@ -710,8 +709,8 @@ int ExpandedDescriptors::unpack_string_array(char** buffer, size_t* len)
     if (err) return err;
 
     size = llen;
-    v    = (long*)grib_context_malloc_clear(c, sizeof(long) * size);
-    err  = unpack_long(v, &size);
+    v = (long*)grib_context_malloc_clear(c, sizeof(long) * size);
+    err = unpack_long(v, &size);
     if (err) return err;
 
     for (i = 0; i < size; i++) {
@@ -733,7 +732,7 @@ int ExpandedDescriptors::pack_long(const long* val, size_t* len)
 int ExpandedDescriptors::value_count(long* rlen)
 {
     int err = 0;
-    *rlen   = 0;
+    *rlen = 0;
 
     err = expand();
     if (err) {

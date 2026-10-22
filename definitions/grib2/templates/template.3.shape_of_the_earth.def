@@ -26,8 +26,13 @@ alias scaledValueOfMinorAxisOfOblateSpheroidEarth=scaledValueOfEarthMinorAxis;
 
 alias earthIsOblate = true;
 
+# ECC-2339: The fixed radius/axes below are 'no_copy'. They depend only on
+# shapeOfTheEarth, so they must not be copied from the old message when this
+# section is rebuilt (e.g. by a gridType change), otherwise the constant of the
+# previous shape would overwrite that of the new one.
+
 _if (shapeOfTheEarth == 0) {
-  transient radius=6367470;
+  transient radius=6367470 : no_copy;
   alias radiusOfTheEarth=radius;
   alias radiusInMetres=radius;
   alias earthIsOblate=false;
@@ -41,14 +46,14 @@ _if (shapeOfTheEarth == 1){
   alias earthIsOblate=false;
 }
 _if (shapeOfTheEarth == 6){
-  transient radius=6371229;
+  transient radius=6371229 : no_copy;
   alias radiusOfTheEarth=radius;
   alias radiusInMetres=radius;
   alias earthIsOblate=false;
 }
 
 _if (shapeOfTheEarth == 8){
-  transient radius=6371200;
+  transient radius=6371200 : no_copy;
   alias radiusOfTheEarth=radius;
   alias radiusInMetres=radius;
   alias earthIsOblate=false;
@@ -57,8 +62,8 @@ _if (shapeOfTheEarth == 8){
 # Oblate spheroid cases
 _if (shapeOfTheEarth == 2){
   # IAU in 1965
-  transient earthMajorAxis = 6378160.0;
-  transient earthMinorAxis = 6356775.0;
+  transient earthMajorAxis = 6378160.0 : no_copy;
+  transient earthMinorAxis = 6356775.0 : no_copy;
   alias earthMajorAxisInMetres=earthMajorAxis;
   alias earthMinorAxisInMetres=earthMinorAxis;
 }
@@ -91,15 +96,15 @@ _if (shapeOfTheEarth == 7){
 _if (shapeOfTheEarth == 4 || shapeOfTheEarth == 5){
   # 4 -> IAG-GRS80 model
   # 5 -> WGS84
-  transient earthMajorAxis = 6378137.0;
-  transient earthMinorAxis = 6356752.314;
+  transient earthMajorAxis = 6378137.0 : no_copy;
+  transient earthMinorAxis = 6356752.314 : no_copy;
   alias earthMajorAxisInMetres=earthMajorAxis;
   alias earthMinorAxisInMetres=earthMinorAxis;
 }
 _if (shapeOfTheEarth == 9){
   # Airy 1830
-  transient earthMajorAxis = 6377563.396;
-  transient earthMinorAxis = 6356256.909;
+  transient earthMajorAxis = 6377563.396 : no_copy;
+  transient earthMinorAxis = 6356256.909 : no_copy;
   alias earthMajorAxisInMetres=earthMajorAxis;
   alias earthMinorAxisInMetres=earthMinorAxis;
 }

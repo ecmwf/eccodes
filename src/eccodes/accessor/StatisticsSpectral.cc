@@ -10,9 +10,6 @@
 
 #include "StatisticsSpectral.h"
 
-eccodes::accessor::StatisticsSpectral _grib_accessor_statistics_spectral;
-eccodes::Accessor* grib_accessor_statistics_spectral = &_grib_accessor_statistics_spectral;
-
 namespace eccodes::accessor
 {
 
@@ -20,13 +17,13 @@ void StatisticsSpectral::init(const long l, grib_arguments* c)
 {
     AbstractVector::init(l, c);
     int n = 0;
-    grib_handle* h  = get_enclosing_handle();
+    grib_handle* h = get_enclosing_handle();
 
     values_ = c->get_name(h, n++);
-    J_      = c->get_name(h, n++);
-    K_      = c->get_name(h, n++);
-    M_      = c->get_name(h, n++);
-    JS_     = c->get_name(h, n++);
+    J_ = c->get_name(h, n++);
+    K_ = c->get_name(h, n++);
+    M_ = c->get_name(h, n++);
+    JS_ = c->get_name(h, n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
@@ -35,7 +32,7 @@ void StatisticsSpectral::init(const long l, grib_arguments* c)
     v_ = (double*)grib_context_malloc(context_, sizeof(double) * number_of_elements_);
 
     length_ = 0;
-    dirty_  = 1;
+    dirty_ = 1;
 }
 
 int StatisticsSpectral::unpack_double(double* val, size_t* len)
@@ -46,7 +43,7 @@ int StatisticsSpectral::unpack_double(double* val, size_t* len)
     long J, K, M, N;
     double avg, enorm, sd;
     grib_context* c = context_;
-    grib_handle* h  = get_enclosing_handle();
+    grib_handle* h = get_enclosing_handle();
 
     if (!dirty_)
         return GRIB_SUCCESS;
@@ -87,7 +84,7 @@ int StatisticsSpectral::unpack_double(double* val, size_t* len)
     }
 
     avg = values[0];
-    sd  = 0;
+    sd = 0;
 
     for (i = 2; i < 2 * J; i += 2)
         sd += values[i] * values[i];
@@ -97,7 +94,7 @@ int StatisticsSpectral::unpack_double(double* val, size_t* len)
 
     enorm = sd + avg * avg;
 
-    sd    = sqrt(sd);
+    sd = sqrt(sd);
     enorm = sqrt(enorm);
 
     dirty_ = 0;
@@ -129,14 +126,14 @@ void StatisticsSpectral::destroy(grib_context* c)
 
 int StatisticsSpectral::compare(grib_accessor* b)
 {
-    int retval   = GRIB_SUCCESS;
+    int retval = GRIB_SUCCESS;
     double* aval = 0;
     double* bval = 0;
 
     size_t alen = 0;
     size_t blen = 0;
-    int err     = 0;
-    long count  = 0;
+    int err = 0;
+    long count = 0;
 
     err = value_count(&count);
     if (err)
@@ -155,7 +152,7 @@ int StatisticsSpectral::compare(grib_accessor* b)
     bval = (double*)grib_context_malloc(b->context_, blen * sizeof(double));
 
     b->dirty_ = 1;
-    dirty_    = 1;
+    dirty_ = 1;
 
     unpack_double(aval, &alen);
     b->unpack_double(bval, &blen);

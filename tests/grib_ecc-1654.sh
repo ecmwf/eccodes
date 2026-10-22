@@ -3,7 +3,7 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
+#
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
@@ -23,10 +23,10 @@ tempLog=temp.$label.log
 tempRef=temp.$label.ref
 
 sample_grib2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
-${tools_dir}/grib_set -s typeOfFirstFixedSurface:s=15 $sample_grib2 $tempGribA
-grib_check_key_equals $tempGribA 'typeOfFirstFixedSurface:i' '15'
+${tools_dir}/grib_set -s typeOfFirstFixedSurface:s=254 $sample_grib2 $tempGribA
+grib_check_key_equals $tempGribA 'typeOfFirstFixedSurface:i' '254'
 ${tools_dir}/grib_dump -O -p section_4 $tempGribA > $tempLog
-grep -q 'typeOfFirstFixedSurface = 15 .*Unknown code table entry' $tempLog
+grep -q 'typeOfFirstFixedSurface = 254 .*Unknown code table entry' $tempLog
 
 ${tools_dir}/grib_set -s productDefinitionTemplateNumber=0,typeOfFirstFixedSurface=15 $sample_grib2 $tempGribA
 ${tools_dir}/grib_set -s productDefinitionTemplateNumber=1 $tempGribA $tempGribB

@@ -1,0 +1,11 @@
+0 0 Shore not observed
+1 1 Shore extensively clear
+2 2 Ice blocking less than half of the shore
+3 3 Ice blocking more than half of the shore but some opeings visible
+4 4 Ice blocking entire shore
+5 5 Not used
+6 6 Not used
+7 7 Not used
+8 8 Radar indications of shre ice but extent of caverage undetermined
+9 9 Not determined or unknown
+15 15 Missing value

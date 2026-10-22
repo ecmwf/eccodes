@@ -1,0 +1,69 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-merge-conflict
+      - id: check-yaml
+        exclude: '^\.cd/conda/meta\.yaml$'  # conda recipe: Jinja, not YAML
+      - id: trailing-whitespace
+        # Expected output: tests diff against these byte for byte.
+        exclude: &expected-output |
+          (?x)^(
+          data/.*
+          | examples/F90/bufr_ecc-1284\.sh
+          | tests/asca_139\.t1\.ref
+          | tests/bufr_ecc-2300\.sh
+          | tests/bufr_ecc-313\.sh
+          | tests/bufr_ecc-433\.sh
+          | tests/bufr_ecc-690\.sh
+          | tests/bufr_ecc-875\.sh
+          | tests/bufr_filter_extract_area\.sh
+          | tests/bufr_filter_extract_datetime\.sh
+          | tests/bufr_filter_misc\.sh
+          | tests/bufr_get\.sh
+          | tests/filter_rules
+          | tests/grib_bitmap\.sh
+          | tests/grib_ecc-1212\.sh
+          | tests/grib_filter\.sh
+          | tests/grib_ieee\.sh
+          | tests/grib_indexing\.sh
+          | tests/grib_ls\.sh
+          | tests/grib_mars_keys1\.sh
+          | tests/grib_mars_keys2\.sh
+          | tests/grib_nearest_test\.sh
+          | tests/grib_step\.sh
+          | tests/mf\.rules
+          | tests/pseudo_budg\.sh
+          | tests/pseudo_diag\.sh
+          | tests/set_unexpandedDescriptors\.filter
+          | tests/taf\.sh
+          | tools/filter_rules
+          | tools/mf\.rules
+          )$
+      - id: end-of-file-fixer
+        exclude: *expected-output
+      - id: mixed-line-ending
+
+  - repo: https://github.com/pre-commit/mirrors-clang-format
+    rev: v23.1.1
+    hooks:
+      - id: clang-format
+        types_or: [c, c++]
+        exclude: |
+          (?x)^(
+          third_party/.*
+          | (.*/)?deprecated/.*
+          | fortran/grib_api_constants\.h
+          | fortran/grib_api_externals\.h
+          | fortran/grib_api_visibility\.h
+          | fortran/eccodes_visibility\.h
+          | fortran/eccodes_constants\.h
+          | src/eccodes/grib_yacc\.cc
+          | src/eccodes/grib_yacc\.h
+          | src/eccodes/grib_lex\.cc
+          )$
+
+  - repo: https://github.com/ecmwf/ci-infrastructure
+    rev: 97df4a44ee6bdb8677f36a1bacce8be9c6d90fe2
+    hooks:
+      - id: check-ci-approval

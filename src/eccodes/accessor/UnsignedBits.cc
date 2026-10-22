@@ -10,9 +10,6 @@
 
 #include "UnsignedBits.h"
 
-eccodes::accessor::UnsignedBits _grib_accessor_unsigned_bits;
-eccodes::Accessor* grib_accessor_unsigned_bits = &_grib_accessor_unsigned_bits;
-
 namespace eccodes::accessor
 {
 
@@ -41,16 +38,16 @@ long UnsignedBits::compute_byte_count()
 void UnsignedBits::init(const long len, grib_arguments* args)
 {
     Long::init(len, args);
-    int n             = 0;
-    numberOfBits_     = args->get_name(get_enclosing_handle(), n++);
+    int n = 0;
+    numberOfBits_ = args->get_name(get_enclosing_handle(), n++);
     numberOfElements_ = args->get_name(get_enclosing_handle(), n++);
-    length_           = compute_byte_count();
+    length_ = compute_byte_count();
 }
 
 int UnsignedBits::unpack_long(long* val, size_t* len)
 {
-    long pos          = offset_ * 8;
-    long rlen         = 0;
+    long pos = offset_ * 8;
+    long rlen = 0;
     long numberOfBits = 0;
 
     int ret = value_count(&rlen);
@@ -83,14 +80,14 @@ int UnsignedBits::unpack_long(long* val, size_t* len)
 
 int UnsignedBits::pack_long(const long* val, size_t* len)
 {
-    int ret            = 0;
-    long off           = 0;
-    long numberOfBits  = 0;
-    size_t buflen      = 0;
+    int ret = 0;
+    long off = 0;
+    long numberOfBits = 0;
+    size_t buflen = 0;
     unsigned char* buf = NULL;
-    unsigned long i    = 0;
-    long rlen          = 0;
-    ret                = value_count(&rlen);
+    unsigned long i = 0;
+    long rlen = 0;
+    ret = value_count(&rlen);
     if (ret) return ret;
 
     /*
@@ -113,7 +110,7 @@ int UnsignedBits::pack_long(const long* val, size_t* len)
     }
 
     buflen = compute_byte_count();
-    buf    = (unsigned char*)grib_context_malloc_clear(context_, buflen + sizeof(long));
+    buf = (unsigned char*)grib_context_malloc_clear(context_, buflen + sizeof(long));
 
     for (i = 0; i < *len; i++)
         grib_encode_unsigned_longb(buf, val[i], &off, numberOfBits);

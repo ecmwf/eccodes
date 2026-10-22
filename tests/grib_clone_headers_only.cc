@@ -14,8 +14,8 @@
 
 int main(int argc, char* argv[])
 {
-    FILE* in                    = NULL;
-    FILE* out                   = NULL;
+    FILE* in = NULL;
+    FILE* out = NULL;
     codes_handle* source_handle = NULL;
     const void* buffer = NULL;
     int err = 0;
@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    in  = fopen(argv[1], "rb");
+    in = fopen(argv[1], "rb");
     assert(in);
     out = fopen(argv[2], "wb");
     assert(out);
@@ -44,23 +44,22 @@ int main(int argc, char* argv[])
 
         printf("Processing message %d\n", ++count);
 
-        lVal=-1;
-        GRIB_CHECK( grib_get_long(source_handle, "isMessageValid", &lVal), 0);
-        //fprintf(stderr, "source_handle: isMessageValid=%ld\n", lVal);
-        assert( lVal == 1 );
+        lVal = -1;
+        GRIB_CHECK(grib_get_long(source_handle, "isMessageValid", &lVal), 0);
+        // fprintf(stderr, "source_handle: isMessageValid=%ld\n", lVal);
+        assert(lVal == 1);
 
-        lVal=-1;
-        GRIB_CHECK( grib_get_long(clone_handle, "isMessageValid", &lVal), 0);
-        //fprintf(stderr, "clone_handle:  isMessageValid=%ld\n", lVal);
-        assert( lVal == 1 );
+        lVal = -1;
+        GRIB_CHECK(grib_get_long(clone_handle, "isMessageValid", &lVal), 0);
+        // fprintf(stderr, "clone_handle:  isMessageValid=%ld\n", lVal);
+        assert(lVal == 1);
 
         codes_get_long(source_handle, "isConstant", &isConstant_src);
         codes_get_long(source_handle, "isGridded", &isGridded_src);
         if (isGridded_src && !isConstant_src) {
-
             CODES_CHECK(codes_get_message(source_handle, &buffer, &messageLength_src), 0);
             CODES_CHECK(codes_get_message(clone_handle, &buffer, &messageLength_dst), 0);
-            assert( messageLength_src > messageLength_dst );
+            assert(messageLength_src > messageLength_dst);
 
             CODES_CHECK(codes_get_long(source_handle, "totalLength", &totalLength_src), 0);
             CODES_CHECK(codes_get_long(clone_handle, "totalLength", &totalLength_dst), 0);
@@ -70,11 +69,12 @@ int main(int argc, char* argv[])
             if (edition == 1) {
                 CODES_CHECK(codes_get_long(source_handle, "section4Length", &dataSectionLength_src), 0);
                 CODES_CHECK(codes_get_long(clone_handle, "section4Length", &dataSectionLength_dst), 0);
-            } else if (edition == 2) {
+            }
+            else if (edition == 2) {
                 CODES_CHECK(codes_get_long(source_handle, "section7Length", &dataSectionLength_src), 0);
                 CODES_CHECK(codes_get_long(clone_handle, "section7Length", &dataSectionLength_dst), 0);
             }
-            assert( dataSectionLength_src > dataSectionLength_dst );
+            assert(dataSectionLength_src > dataSectionLength_dst);
 
             codes_get_long(clone_handle, "bitmapPresent", &bitmapPresent);
             assert(bitmapPresent == 0);

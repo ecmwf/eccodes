@@ -42,14 +42,14 @@ static grib_keys_iterator* grib_keys_iterator_new_(grib_handle* h, unsigned long
         return NULL;
 
     ki->filter_flags = filter_flags;
-    ki->handle       = h;
-    ki->name_space   = NULL;
+    ki->handle = h;
+    ki->name_space = NULL;
 
     if (name_space != NULL && strlen(name_space) > 0)
         ki->name_space = grib_context_strdup(h->context, name_space);
 
     ki->at_start = 1;
-    ki->match    = 0;
+    ki->match = 0;
 
     grib_keys_iterator_set_flags(ki, filter_flags);
 
@@ -115,7 +115,6 @@ static int was_seen(grib_keys_iterator* ki, const char* name)
     return grib_trie_get(ki->seen, name) != NULL;
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 int grib_keys_iterator_rewind(grib_keys_iterator* ki)
 {
     ki->at_start = 1;
@@ -177,7 +176,7 @@ static int skip(grib_keys_iterator* kiter)
 static int grib_keys_iterator_next_(grib_keys_iterator* kiter)
 {
     if (kiter->at_start) {
-        kiter->current  = kiter->handle->root->block->first;
+        kiter->current = kiter->handle->root->block->first;
         kiter->at_start = 0;
     }
     else {

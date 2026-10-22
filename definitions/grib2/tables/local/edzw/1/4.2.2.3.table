@@ -15,3 +15,8 @@
 209 209 Volumetric ice content of snow layer (m3 m-3)
 210 210 Volumetric water content of snow layer (m3 m-3)
 211 211 Volumetric air content of snow layer (m3 m-3)
+212 212 Saturated hydraulic conductivity of soil (m s-1)
+213 213 Water retention curve of soil - inverse air entry suction (Mualem-Van-Genuchten alpha parameter) (m-1)
+214 214 Water retention curve of soil - pore-size distribution (Mualem-Van-Genuchten n parameter) (Numeric)
+215 215 Volumetric air dryness point of soil (m3 m-3)
+216 216 Volumetric field capacity of soil (m3 m-3)

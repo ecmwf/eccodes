@@ -31,7 +31,7 @@ public:
 
     int rank() const { return rank_; }
 
-    grib_accessor* accessor    = nullptr;
+    grib_accessor* accessor = nullptr;
     AccessorsList* next_ = nullptr;
     AccessorsList* prev_ = nullptr;
     AccessorsList* last_ = nullptr;

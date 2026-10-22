@@ -19,7 +19,7 @@ foreach $name ( @ARGV )
 
     while(<IN>)
     {
-        if(/^\s*START_CLASS_DEF/) 
+        if(/^\s*START_CLASS_DEF/)
         {
             $tmp = { NAME => $name };
             $tmp->{NAME} =~ s/\..*//;
@@ -87,7 +87,7 @@ foreach $name ( @ARGV )
 
 sub cleanup {
     my ($x) = @_;
-    $x =~ s/^\s*//; 
+    $x =~ s/^\s*//;
     $x =~ s/\s*$//;
     return $x;
 }
@@ -121,7 +121,7 @@ sub output {
 
     my @implements = map { cleanup($_);} split(";",$args->{IMPLEMENTS});
 
- 
+
      push @implements, "init_class";
 
     my %implements;
@@ -252,7 +252,7 @@ EOF
   # disabled for the moment
   # the problem with this is that for pointers we need proper clone, not an assignement
   if (0) {
-    foreach my $proc ( grep { /clone/ } @procs ) { 
+    foreach my $proc ( grep { /clone/ } @procs ) {
         my $done=0;
         print OUT "static grib_$class* clone(grib_$class* s) {\n";
         print OUT "    grib_${class}_$name* c=grib_context_alloc_clear(a->parent->h,sizeof(grib_${class}_$name));\n";
@@ -267,7 +267,7 @@ EOF
             my $mtype=pop @ma;
             if ($mtype=~ /\*/) { $is_pointer=1; $mtype =~ s/\*//; }
 
-            if ($is_pointer) { 
+            if ($is_pointer) {
                 if ($mtype =~ "\bchar\b") {
                         print OUT "    if (self->$mname) \n        c->$mname=grib_context_strdup(a->parent->h,self->$mname);\n\n";
                 }
@@ -356,7 +356,7 @@ sub parse_super {
 
     while(<S>)
     {
-        if(/^\s*START_CLASS_DEF/) 
+        if(/^\s*START_CLASS_DEF/)
         {
             $tmp = { NAME => $name };
             $tmp->{NAME} =~ s/\..*//;

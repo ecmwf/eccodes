@@ -10,9 +10,6 @@
 
 #include "Label.h"
 
-eccodes::accessor::Label _grib_accessor_label;
-eccodes::Accessor* grib_accessor_label = &_grib_accessor_label;
-
 namespace eccodes::accessor
 {
 

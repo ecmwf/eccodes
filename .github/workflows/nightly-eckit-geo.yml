@@ -1,0 +1,23 @@
+name: nightly-eckit-geo
+
+on:
+  workflow_dispatch: ~
+
+  # Run at 21:00 UTC every day (on default branch)
+  schedule:
+    - cron: "0 21 * * *"
+
+jobs:
+  test-hpc:
+    runs-on: [self-hosted, linux, hpc]
+    env:
+      GH_TOKEN: ${{ secrets.GH_REPO_READ_TOKEN }}
+    steps:
+      - uses: ecmwf/reusable-workflows/ci-hpc@v2
+        with:
+          github_user: ${{ secrets.BUILD_PACKAGE_HPC_GITHUB_USER }}
+          github_token: ${{ secrets.GH_REPO_READ_TOKEN }}
+          troika_user: ${{ secrets.HPC_TEST_USER }}
+          # repository: ecmwf/eccodes@${{ github.event.pull_request.head.sha || github.sha }}
+          repository: ecmwf/eccodes@feature/eckit-geo
+          build_config: .github/nightly-ci-eckit-geo-hpc-config.yml

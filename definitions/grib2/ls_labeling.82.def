@@ -12,4 +12,3 @@ if (localDefinitionNumber == 83 ) {
   concept ls.landtype (unknown,"landTypeConcept.def",g1conceptsLocalDirAll,g1conceptsMasterDir);
   concept ls.aerosolbinnumber (unknown,"aerosolConcept.def",g1conceptsLocalDirAll,g1conceptsMasterDir);
 }
-

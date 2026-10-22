@@ -3,6 +3,13 @@
 set -eax
 echo "Script: $0"
 
+# ThreadSanitizer suppression file for known false positives (e.g. libgfortran)
+tsan_supp="@PROJECT_SOURCE_DIR@/cmake/tsan_suppressions.txt"
+if [ -f "$tsan_supp" ]; then
+    TSAN_OPTIONS="${TSAN_OPTIONS:-} suppressions=$tsan_supp"
+    export TSAN_OPTIONS
+fi
+
 # Unset any environment variable that could interfere with tests
 unset ECCODES_EXTRA_DEFINITION_PATH
 unset ECCODES_LOG_STREAM

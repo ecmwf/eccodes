@@ -10,17 +10,14 @@
 
 #include "PackingType.h"
 
-eccodes::accessor::PackingType _grib_accessor_packing_type;
-eccodes::Accessor* grib_accessor_packing_type = &_grib_accessor_packing_type;
-
 namespace eccodes::accessor
 {
 
 void PackingType::init(const long l, grib_arguments* args)
 {
     Gen::init(l, args);
-    int n         = 0;
-    values_       = args->get_name(get_enclosing_handle(), n++);
+    int n = 0;
+    values_ = args->get_name(get_enclosing_handle(), n++);
     packing_type_ = args->get_name(get_enclosing_handle(), n++);
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     length_ = 0;
@@ -38,11 +35,11 @@ long PackingType::get_native_type()
 
 int PackingType::pack_string(const char* sval, size_t* len)
 {
-    grib_handle* h  = get_enclosing_handle();
-    double* values  = NULL;
+    grib_handle* h = get_enclosing_handle();
+    double* values = NULL;
     grib_context* c = context_;
-    size_t size     = 0;
-    int err         = 0;
+    size_t size = 0;
+    int err = 0;
 
     if ((err = grib_get_size(h, values_, &size)) != GRIB_SUCCESS)
         return err;

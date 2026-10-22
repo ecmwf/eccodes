@@ -25,11 +25,11 @@ int main(int argc, char** argv)
     int err = 0;
     size_t values_len = 0;
     double* values = NULL;
-    #ifdef DEBUG
+#ifdef DEBUG
     const auto duration_max = std::chrono::milliseconds(1500);
-    #else
+#else
     const auto duration_max = std::chrono::milliseconds(600);
-    #endif
+#endif
     const int num_repetitions = 100;
 
     if (argc < 2) return 1;
@@ -56,12 +56,11 @@ int main(int argc, char** argv)
     auto duration_actual = duration_cast<milliseconds>(stop - start);
 
     if (duration_actual > duration_max) {
-        cerr << "ERROR: Decoding took longer than expected! actual time=" << duration_actual.count() <<
-                " ms, expected " << duration_max.count() << " ms" << endl;
+        cerr << "ERROR: Decoding took longer than expected! actual time=" << duration_actual.count() << " ms, expected " << duration_max.count() << " ms" << endl;
         return 1;
     }
-    cout << "Test passed. Actual decode time  = " << duration_actual.count() << " ms" <<endl;
-    cout << "Test passed. Maximum decode time = " << duration_max.count() << " ms" <<endl;
+    cout << "Test passed. Actual decode time  = " << duration_actual.count() << " ms" << endl;
+    cout << "Test passed. Maximum decode time = " << duration_max.count() << " ms" << endl;
     free(values);
     grib_handle_delete(h);
     fclose(in);

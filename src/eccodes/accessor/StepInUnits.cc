@@ -12,9 +12,6 @@
 #include "step_utilities.h"
 #include <stdexcept>
 
-eccodes::accessor::StepInUnits _grib_accessor_step_in_units;
-eccodes::Accessor* grib_accessor_step_in_units = &_grib_accessor_step_in_units;
-
 namespace eccodes::accessor
 {
 
@@ -25,10 +22,10 @@ void StepInUnits::init(const long l, grib_arguments* c)
     int n = 0;
 
     forecast_time_value_ = c->get_name(hand, n++);
-    forecast_time_unit_  = c->get_name(hand, n++);
-    step_units_          = c->get_name(hand, n++);
-    time_range_unit_     = c->get_name(hand, n++);
-    time_range_value_    = c->get_name(hand, n++);
+    forecast_time_unit_ = c->get_name(hand, n++);
+    step_units_ = c->get_name(hand, n++);
+    time_range_unit_ = c->get_name(hand, n++);
+    time_range_value_ = c->get_name(hand, n++);
 }
 
 void StepInUnits::dump(eccodes::Dumper* dumper)
@@ -119,7 +116,7 @@ int StepInUnits::pack_long_new_(const long start_step_value, const long start_st
 
     if (time_range_opt) {
         auto time_range = time_range_opt.value();
-        time_range      = time_range - (forecast_time - start_step_old);
+        time_range = time_range - (forecast_time - start_step_old);
         if (time_range.value<long>() < 0)
             time_range = eccodes::Step{ 0l, time_range.unit() };
         auto [sa, sb] = find_common_units(forecast_time.optimize_unit(), time_range.optimize_unit());
@@ -200,14 +197,14 @@ int StepInUnits::pack_string(const char* val, size_t* len)
 
 int StepInUnits::unpack_string(char* val, size_t* len)
 {
-    grib_handle* h        = get_enclosing_handle();
-    int ret               = GRIB_SUCCESS;
+    grib_handle* h = get_enclosing_handle();
+    int ret = GRIB_SUCCESS;
     long start_step_value = 0;
-    long start_step_unit  = 0;
-    long step_units       = 0;
-    char fp_format[128]   = "%g";
-    size_t fp_format_len  = sizeof(fp_format);
-    int show_hours        = context_->grib_hourly_steps_with_units;
+    long start_step_unit = 0;
+    long step_units = 0;
+    char fp_format[128] = "%g";
+    size_t fp_format_len = sizeof(fp_format);
+    int show_hours = context_->grib_hourly_steps_with_units;
 
     if ((ret = grib_get_long_internal(h, "startStep", &start_step_value)) != GRIB_SUCCESS)
         return ret;

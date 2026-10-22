@@ -1,5 +1,5 @@
 #!/bin/sh
-set -e 
+set -e
 
 echo "-# The bufr_filter sequentially processes all bufr messages contained in the input files and applies the rules to each of them. \\n"
 
@@ -18,9 +18,9 @@ echo "Applying this rules_file to the \"../data/split/multitype.bufr\" bufr file
 echo " messages split according to their key values\\n "
 echo "\\verbatim"
 
-if [[ -d ../data/split ]] 
+if [[ -d ../data/split ]]
 then
-    rm -f ../data/split/* 
+    rm -f ../data/split/*
 else
     mkdir ../data/split
 fi
@@ -57,7 +57,7 @@ echo ">bufr_filter rules_file ../data/bufr/syno_multi.bufr"
 
 echo "\\endverbatim\\n"
 
-# Unpack 
+# Unpack
 
 echo "-# To print values from the data section the messages have to be <b>unpacked</b>. To do that we need to set key <i>unpack</i> to 1. This rules_file: \\n"
 
@@ -106,7 +106,7 @@ echo ">bufr_filter rules_file ../data/bufr/syno_multi.bufr"
 ./bufr_filter rules_file ../data/bufr/syno_multi.bufr
 
 echo "\\endverbatim\\n"
- 
+
 #Conditional statements
 
 echo "-# We can use <b>conditional statements</b> in bufr_filter. The syntax is: \\n"
@@ -123,7 +123,7 @@ echo "transient statid=1000*blockNumber+stationNumber;"
 echo ""
 echo "if (dataCategory ==0 && statid == 1003) {"
 echo "  write \"out.bufr\";"
-echo "}"        
+echo "}"
 echo "\\endverbatim\\n"
 
 #Switch
@@ -145,8 +145,8 @@ echo "Otherwise, the default case is executed. The default case is mandatory if 
 echo "The \"~\" operator can be used to match \"anything\".\\n\\n"
 
 
-# Attributes 
- 
+# Attributes
+
 echo "-# To access the keys' <b>attributes</b> use the -> operator. \\n"
 echo " The example below prints the attributes of key <i>nonCoordinatePressure</i> from a SYNOP bufr message. \\n"
 
@@ -246,7 +246,7 @@ echo "\\endverbatim\\n"
 echo "-# Another example for accessing keys by condition is to read scatterometer data."
 echo "File asca_139.bufr contains a single message with 2016 subsets in a compressed form."
 echo "In this case each subset has exactly the same structure: they store one location with"
-echo "several beams and one backscatter value in each beam. To print the backScatter values for beamIdentifier=2 from all the subsets" 
+echo "several beams and one backscatter value in each beam. To print the backScatter values for beamIdentifier=2 from all the subsets"
 echo "we can simply define the condition like this: \\n"
 
 echo "\\verbatim"
@@ -274,7 +274,7 @@ echo "\\endverbatim\\n"
 
 echo "-# Accessing keys by condition provides the means to read individual <b>subsets</b> from uncompressed data."
 echo "File synop_multi_subset.bufr contains a single message with several subsets in an uncompressed form."
-echo "To access a given subset we can simply use key <b>subsetNumber</b> in the filter condition. The example below shows" 
+echo "To access a given subset we can simply use key <b>subsetNumber</b> in the filter condition. The example below shows"
 echo "how to read the blockNumber, stationNumber and airTemperaturefor the first 3 subsets in the message: \\n"
 
 echo "\\verbatim"

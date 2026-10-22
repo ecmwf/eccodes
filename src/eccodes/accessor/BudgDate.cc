@@ -10,9 +10,6 @@
 
 #include "BudgDate.h"
 
-eccodes::accessor::BudgDate _grib_accessor_budgdate;
-eccodes::Accessor* grib_accessor_budgdate = &_grib_accessor_budgdate;
-
 namespace eccodes::accessor
 {
 
@@ -21,18 +18,18 @@ void BudgDate::init(const long l, grib_arguments* c)
     Long::init(l, c);
     int n = 0;
 
-    year_  = c->get_name(get_enclosing_handle(), n++);
+    year_ = c->get_name(get_enclosing_handle(), n++);
     month_ = c->get_name(get_enclosing_handle(), n++);
-    day_   = c->get_name(get_enclosing_handle(), n++);
+    day_ = c->get_name(get_enclosing_handle(), n++);
 }
 
 int BudgDate::unpack_long(long* val, size_t* len)
 {
     int ret = 0;
 
-    long year  = 0;
+    long year = 0;
     long month = 0;
-    long day   = 0;
+    long day = 0;
 
     if ((ret = grib_get_long_internal(get_enclosing_handle(), day_, &day)) != GRIB_SUCCESS)
         return ret;
@@ -53,11 +50,11 @@ int BudgDate::unpack_long(long* val, size_t* len)
 int BudgDate::pack_long(const long* val, size_t* len)
 {
     int ret = 0;
-    long v  = val[0];
+    long v = val[0];
 
-    long year  = 0;
+    long year = 0;
     long month = 0;
-    long day   = 0;
+    long day = 0;
 
     if (*len != 1)
         return GRIB_WRONG_ARRAY_SIZE;

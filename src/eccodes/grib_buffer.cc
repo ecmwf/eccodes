@@ -14,16 +14,22 @@
 #include "grib_api_internal.h"
 #include "ExceptionHandler.h"
 
+void default_deleter(void* data)
+{
+    grib_context* c = grib_context_get_default();
+    grib_context_free(c, data);
+}
+
 static void grib_get_buffer_ownership(const grib_context* c, grib_buffer* b)
 {
     unsigned char* newdata = NULL;
-    if (b->property == CODES_MY_BUFFER)
+    if (b->deleter != NULL)
         return;
 
     newdata = (unsigned char*)grib_context_malloc(c, b->length);
     memcpy(newdata, b->data, b->length);
-    b->data     = newdata;
-    b->property = CODES_MY_BUFFER;
+    b->data = newdata;
+    b->deleter = default_deleter;
 }
 
 grib_buffer* grib_create_growable_buffer(const grib_context* c)
@@ -35,10 +41,10 @@ grib_buffer* grib_create_growable_buffer(const grib_context* c)
         return NULL;
     }
 
-    b->property = CODES_MY_BUFFER;
-    b->length   = 10240;
-    b->ulength  = 0;
-    b->data     = (unsigned char*)grib_context_malloc_clear(c, b->length);
+    b->deleter = default_deleter;
+    b->length = 10240;
+    b->ulength = 0;
+    b->data = (unsigned char*)grib_context_malloc_clear(c, b->length);
     b->growable = 1;
 
     if (!b->data) {
@@ -59,20 +65,20 @@ grib_buffer* grib_new_buffer(const grib_context* c, const unsigned char* data, s
         return NULL;
     }
 
-    b->property     = CODES_USER_BUFFER;
-    b->length       = buflen;
-    b->ulength      = buflen;
+    b->deleter = NULL;
+    b->length = buflen;
+    b->ulength = buflen;
     b->ulength_bits = buflen * 8;
-    b->data         = (unsigned char*)data;
+    b->data = (unsigned char*)data;
 
     return b;
 }
 
 void grib_buffer_delete(const grib_context* c, grib_buffer* b)
 {
-    if (b->property == CODES_MY_BUFFER)
-        grib_context_free(c, b->data);
-    b->length  = 0;
+    if (b->deleter)
+        b->deleter(b->data);
+    b->length = 0;
     b->ulength = 0;
     grib_context_free(c, b);
 }
@@ -84,7 +90,7 @@ static void grib_grow_buffer_to(const grib_context* c, grib_buffer* b, size_t ns
         unsigned char* newdata = (unsigned char*)grib_context_malloc_clear(c, ns);
         memcpy(newdata, b->data, b->length);
         grib_context_free(c, b->data);
-        b->data   = newdata;
+        b->data = newdata;
         b->length = ns;
     }
 }
@@ -94,7 +100,7 @@ void grib_grow_buffer(const grib_context* c, grib_buffer* b, size_t new_size)
     if (new_size > b->length) {
         size_t len = 0;
         size_t inc = b->length > 2048 ? b->length : 2048;
-        len        = ((new_size + 2 * inc) / 1024) * 1024;
+        len = ((new_size + 2 * inc) / 1024) * 1024;
         grib_grow_buffer_to(c, b, len);
     }
 }
@@ -106,13 +112,13 @@ void grib_buffer_set_ulength_bits(const grib_context* c, grib_buffer* b, size_t 
         length++;
     grib_grow_buffer(c, b, length);
     b->ulength_bits = length_bits;
-    b->ulength      = length;
+    b->ulength = length;
 }
 
 void grib_buffer_set_ulength(const grib_context* c, grib_buffer* b, size_t length)
 {
     grib_grow_buffer(c, b, length);
-    b->ulength      = length;
+    b->ulength = length;
     b->ulength_bits = length * 8;
 }
 
@@ -200,10 +206,10 @@ int grib_buffer_replace(grib_accessor* a, const unsigned char* data,
                         size_t newsize, int update_lengths, int update_paddings)
 {
     size_t offset = a->offset_;
-    long oldsize  = a->get_next_position_offset() - offset;
+    long oldsize = a->get_next_position_offset() - offset;
     long increase = (long)newsize - (long)oldsize;
 
-    grib_buffer* buffer   = a->get_enclosing_handle()->buffer;
+    grib_buffer* buffer = a->get_enclosing_handle()->buffer;
     size_t message_length = buffer->ulength;
 
     grib_context_log(a->context_, GRIB_LOG_DEBUG,

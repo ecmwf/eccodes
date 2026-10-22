@@ -10,9 +10,7 @@
 
 #include "Variable.h"
 #include <limits.h>
-
-eccodes::accessor::Variable _grib_accessor_variable;
-eccodes::Accessor* grib_accessor_variable = &_grib_accessor_variable;
+#include "grib_accessor_factory.h"
 
 namespace eccodes::accessor
 {
@@ -29,20 +27,20 @@ void Variable::init(const long length, grib_arguments* args)
 {
     Gen::init(length, args);
 
-    grib_handle* hand           = get_enclosing_handle();
+    grib_handle* hand = get_enclosing_handle();
     grib_expression* expression = nullptr;
     if (args) expression = args->get_expression(hand, 0);
 
     const char* p = 0;
-    size_t len    = 1;
-    long l        = 0;
-    int ret       = 0;
-    double d      = 0;
-    cname_        = NULL;
-    dval_         = 0;
-    fval_         = 0;
-    cval_         = NULL;
-    type_         = GRIB_TYPE_UNDEFINED;
+    size_t len = 1;
+    long l = 0;
+    int ret = 0;
+    double d = 0;
+    cname_ = NULL;
+    dval_ = 0;
+    fval_ = 0;
+    cval_ = NULL;
+    type_ = GRIB_TYPE_UNDEFINED;
 
     length_ = 0;
     if (type_ == GRIB_TYPE_UNDEFINED && expression) {
@@ -62,7 +60,7 @@ void Variable::init(const long length, grib_arguments* args)
             default: {
                 char tmp[1024];
                 len = sizeof(tmp);
-                p   = expression->evaluate_string(hand, tmp, &len, &ret);
+                p = expression->evaluate_string(hand, tmp, &len, &ret);
                 if (ret != GRIB_SUCCESS) {
                     grib_context_log(context_, GRIB_LOG_ERROR, "Unable to evaluate %s as string: %s",
                                      name_, grib_get_error_message(ret));
@@ -197,6 +195,12 @@ long Variable::get_native_type()
     return type_;
 }
 
+bool Variable::accepts_native_type(long type)
+{
+    // The type is not fixed, it follows the value last packed
+    return type == GRIB_TYPE_LONG || type == GRIB_TYPE_DOUBLE || type == GRIB_TYPE_STRING;
+}
+
 void Variable::destroy(grib_context* c)
 {
     int i = 0;
@@ -218,8 +222,8 @@ void Variable::destroy(grib_context* c)
 
 int Variable::unpack_string(char* val, size_t* len)
 {
-    char buf[80] = {0,};
-    char* p     = buf;
+    char buf[80] = { 0 };
+    char* p = buf;
     size_t slen = 0;
 
     if (type_ == GRIB_TYPE_STRING) {
@@ -237,7 +241,7 @@ int Variable::unpack_string(char* val, size_t* len)
     if (*len < slen) {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
-                         class_name_, name_, slen, *len);
+                         accessor_type().c_str(), name_, slen, *len);
         *len = slen;
         return GRIB_BUFFER_TOO_SMALL;
     }
@@ -252,10 +256,10 @@ int Variable::pack_string(const char* val, size_t* len)
     const grib_context* c = context_;
 
     grib_context_free(c, cval_);
-    cval_  = grib_context_strdup(c, val);
-    dval_  = atof(val);
-    fval_  = atof(val);
-    type_  = GRIB_TYPE_STRING;
+    cval_ = grib_context_strdup(c, val);
+    dval_ = atof(val);
+    fval_ = atof(val);
+    type_ = GRIB_TYPE_STRING;
     cname_ = NULL;
     return GRIB_SUCCESS;
 }
@@ -281,14 +285,14 @@ long Variable::byte_count()
 
 int Variable::compare(grib_accessor* b)
 {
-    int retval   = GRIB_SUCCESS;
+    int retval = GRIB_SUCCESS;
     double* aval = 0;
     double* bval = 0;
 
     size_t alen = 0;
     size_t blen = 0;
-    int err     = 0;
-    long count  = 0;
+    int err = 0;
+    long count = 0;
 
     err = value_count(&count);
     if (err)
@@ -322,22 +326,22 @@ int Variable::compare(grib_accessor* b)
 
 grib_accessor* Variable::make_clone(grib_section* s, int* err)
 {
-    grib_accessor* the_clone                   = NULL;
+    grib_accessor* the_clone = NULL;
     Variable* variableAccessor = NULL;
     grib_action creator;
-    creator.op_         = (char*)"variable";
+    creator.op_ = (char*)"variable";
     creator.name_space_ = (char*)"";
-    creator.set_        = 0;
+    creator.set_ = 0;
 
-    creator.name_             = grib_context_strdup(context_, name_);
-    the_clone                = grib_accessor_factory(s, &creator, 0, NULL);
-    the_clone->parent_       = NULL;
-    the_clone->h_            = s->h;
-    the_clone->flags_        = flags_;
-    variableAccessor         = (Variable*)the_clone;
+    creator.name_ = grib_context_strdup(context_, name_);
+    the_clone = grib_accessor_factory(s, &creator, 0, NULL);
+    the_clone->parent_ = NULL;
+    the_clone->h_ = s->h;
+    the_clone->flags_ = flags_;
+    variableAccessor = (Variable*)the_clone;
     variableAccessor->cname_ = creator.name_; /* ECC-765: Store for later freeing memory */
 
-    *err                    = 0;
+    *err = 0;
     variableAccessor->type_ = type_;
     if (type_ == GRIB_TYPE_STRING && cval_ != NULL) {
         variableAccessor->cval_ = grib_context_strdup(context_, cval_);

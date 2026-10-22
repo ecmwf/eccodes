@@ -10,42 +10,47 @@
 
 #include "step_unit.h"
 
-namespace eccodes {
+namespace eccodes
+{
 
-std::vector<Unit::Value> Unit::grib_selected_units = {
+const std::array<Unit::Value, 3> Unit::grib_selected_units = { {
     Unit::Value::SECOND,
     Unit::Value::MINUTE,
     Unit::Value::HOUR,
-};
+} };
 
-std::vector<Unit::Value> Unit::complete_unit_order_ = {
-    Unit::Value::MISSING   ,
-    Unit::Value::SECOND    ,
-    Unit::Value::MINUTE    ,
-    Unit::Value::MINUTES15 ,
-    Unit::Value::MINUTES30 ,
-    Unit::Value::HOUR      ,
-    Unit::Value::HOURS3    ,
-    Unit::Value::HOURS6    ,
-    Unit::Value::HOURS12   ,
-    Unit::Value::DAY       ,
-    Unit::Value::MONTH     ,
-    Unit::Value::YEAR      ,
-    Unit::Value::YEARS10   ,
-    Unit::Value::YEARS30   ,
-    Unit::Value::CENTURY
-};
+const std::array<Unit::Value, 15> Unit::complete_unit_order_ = { { Unit::Value::MISSING,
+                                                                   Unit::Value::SECOND,
+                                                                   Unit::Value::MINUTE,
+                                                                   Unit::Value::MINUTES15,
+                                                                   Unit::Value::MINUTES30,
+                                                                   Unit::Value::HOUR,
+                                                                   Unit::Value::HOURS3,
+                                                                   Unit::Value::HOURS6,
+                                                                   Unit::Value::HOURS12,
+                                                                   Unit::Value::DAY,
+                                                                   Unit::Value::MONTH,
+                                                                   Unit::Value::YEAR,
+                                                                   Unit::Value::YEARS10,
+                                                                   Unit::Value::YEARS30,
+                                                                   Unit::Value::CENTURY } };
 
-template <> long Unit::value<long>() const {
+template <>
+long Unit::value<long>() const
+{
     return get_converter().unit_to_long(internal_value_);
 }
 
-template <> Unit::Value Unit::value<Unit::Value>() const {
+template <>
+Unit::Value Unit::value<Unit::Value>() const
+{
     return internal_value_;
 }
 
-template <> std::string Unit::value<std::string>() const {
+template <>
+std::string Unit::value<std::string>() const
+{
     return get_converter().unit_to_name(internal_value_);
 }
 
-} // namespace eccodes
+}  // namespace eccodes

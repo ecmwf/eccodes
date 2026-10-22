@@ -32,7 +32,7 @@ void grib_accessors_list_delete(grib_context* c, AccessorsList* al)
 int AccessorsList::value_count(size_t* count)
 {
     long lcount = 0;
-    *count      = 0;
+    *count = 0;
     AccessorsList* al = this;
     while (al) {
         al->accessor->value_count(&lcount);
@@ -48,16 +48,16 @@ void AccessorsList::push(grib_accessor* a, int rank)
 
     AccessorsList* last_acc = this->last();
     if (last_acc && last_acc->accessor) {
-        last_acc->next_           = (AccessorsList*)grib_context_malloc_clear(c, sizeof(AccessorsList));
+        last_acc->next_ = (AccessorsList*)grib_context_malloc_clear(c, sizeof(AccessorsList));
         last_acc->next_->accessor = a;
-        last_acc->next_->prev_    = last_acc;
-        last_acc->next_->rank_    = rank;
-        this->last_               = last_acc->next_;
+        last_acc->next_->prev_ = last_acc;
+        last_acc->next_->rank_ = rank;
+        this->last_ = last_acc->next_;
     }
     else {
         this->accessor = a;
-        this->rank_    = rank;
-        this->last_    = this;
+        this->rank_ = rank;
+        this->last_ = this;
     }
 }
 
@@ -100,9 +100,9 @@ int AccessorsList::unpack_long(long* val, size_t* buffer_len)
 
 int AccessorsList::unpack_double(double* val, size_t* buffer_len)
 {
-    int ret             = GRIB_SUCCESS;
+    int ret = GRIB_SUCCESS;
     size_t unpacked_len = 0;
-    size_t len          = 0;
+    size_t len = 0;
 
     AccessorsList* al = this;
     while (al && ret == GRIB_SUCCESS) {
@@ -118,9 +118,9 @@ int AccessorsList::unpack_double(double* val, size_t* buffer_len)
 
 int AccessorsList::unpack_float(float* val, size_t* buffer_len)
 {
-    int ret             = GRIB_SUCCESS;
+    int ret = GRIB_SUCCESS;
     size_t unpacked_len = 0;
-    size_t len          = 0;
+    size_t len = 0;
 
     AccessorsList* al = this;
     while (al && ret == GRIB_SUCCESS) {
@@ -136,9 +136,9 @@ int AccessorsList::unpack_float(float* val, size_t* buffer_len)
 
 int AccessorsList::unpack_string(char** val, size_t* buffer_len)
 {
-    int ret             = GRIB_SUCCESS;
+    int ret = GRIB_SUCCESS;
     size_t unpacked_len = 0;
-    size_t len          = 0;
+    size_t len = 0;
 
     AccessorsList* al = this;
     while (al && ret == GRIB_SUCCESS) {

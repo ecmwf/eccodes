@@ -26,10 +26,9 @@ public:
     grib_action* reparse(grib_accessor* acc, int* doit) override;
 
     grib_expression* expression_ = nullptr;
-    grib_action* block_list_     = nullptr;
+    grib_action* block_list_ = nullptr;
 };
 
 }  // namespace eccodes::action
 
 grib_action* grib_action_create_list(grib_context* context, const char* name, grib_expression* expression, grib_action* block);
-

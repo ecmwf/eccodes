@@ -14,28 +14,34 @@
 extern "C" {
 #endif
 
-void f_sizeof_(void *x, void *y, int *size) {
-  *size=((char*)y)-((char*)x);
+void f_sizeof_(void* x, void* y, int* size)
+{
+    *size = ((char*)y) - ((char*)x);
 }
 
-void check_double_(double *x, double* y, char* ret) {
-  *ret = ((char*)y)-((char*)x) == sizeof(*x) ?  't' : 'f';
+void check_double_(double* x, double* y, char* ret)
+{
+    *ret = ((char*)y) - ((char*)x) == sizeof(*x) ? 't' : 'f';
 }
 
-void check_float_(float* x, float* y, char* ret) {
-  *ret = ((char*)y)-((char*)x) == sizeof(*x) ?  't' : 'f';
+void check_float_(float* x, float* y, char* ret)
+{
+    *ret = ((char*)y) - ((char*)x) == sizeof(*x) ? 't' : 'f';
 }
 
-void check_int_(int* x, int* y, char* ret) {
-  *ret = ((char*)y)-((char*)x) == sizeof(*x) ?  't' : 'f';
+void check_int_(int* x, int* y, char* ret)
+{
+    *ret = ((char*)y) - ((char*)x) == sizeof(*x) ? 't' : 'f';
 }
 
-void check_long_(long* x, long * y, char* ret) {
-  *ret = ((char*)y)-((char*)x) == sizeof(*x) ?  't' : 'f';
+void check_long_(long* x, long* y, char* ret)
+{
+    *ret = ((char*)y) - ((char*)x) == sizeof(*x) ? 't' : 'f';
 }
 
-void check_size_t_(size_t* x, size_t* y, char* ret) {
-  *ret = ((char*)y)-((char*)x) == sizeof(*x) ?  't' : 'f';
+void check_size_t_(size_t* x, size_t* y, char* ret)
+{
+    *ret = ((char*)y) - ((char*)x) == sizeof(*x) ? 't' : 'f';
 }
 
 #ifdef __cplusplus

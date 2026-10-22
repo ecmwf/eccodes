@@ -22,11 +22,11 @@ int BufrEncodeC::init()
 {
     grib_context* c = context_;
     section_offset_ = 0;
-    empty_          = 1;
-    count_          = 1;
-    isLeaf_         = 0;
-    isAttribute_    = 0;
-    keys_           = (grib_string_list*)grib_context_malloc_clear(c, sizeof(grib_string_list));
+    empty_ = 1;
+    count_ = 1;
+    isLeaf_ = 0;
+    isAttribute_ = 0;
+    keys_ = (grib_string_list*)grib_context_malloc_clear(c, sizeof(grib_string_list));
 
     return GRIB_SUCCESS;
 }
@@ -34,10 +34,10 @@ int BufrEncodeC::init()
 int BufrEncodeC::destroy()
 {
     grib_string_list* next = keys_;
-    grib_string_list* cur  = NULL;
-    grib_context* c        = context_;
+    grib_string_list* cur = NULL;
+    grib_context* c = context_;
     while (next) {
-        cur  = next;
+        cur = next;
         next = next->next;
         grib_context_free(c, cur->value);
         grib_context_free(c, cur);
@@ -48,7 +48,7 @@ int BufrEncodeC::destroy()
 static char* lval_to_string(grib_context* c, long v)
 {
     const size_t svalMaxLen = 40;
-    char* sval              = (char*)grib_context_malloc_clear(c, sizeof(char) * svalMaxLen);
+    char* sval = (char*)grib_context_malloc_clear(c, sizeof(char) * svalMaxLen);
     if (v == GRIB_MISSING_LONG)
         snprintf(sval, svalMaxLen, "CODES_MISSING_LONG");
     else
@@ -58,7 +58,7 @@ static char* lval_to_string(grib_context* c, long v)
 static char* dval_to_string(grib_context* c, double v)
 {
     const size_t svalMaxLen = 40;
-    char* sval              = (char*)grib_context_malloc_clear(c, sizeof(char) * svalMaxLen);
+    char* sval = (char*)grib_context_malloc_clear(c, sizeof(char) * svalMaxLen);
     if (v == GRIB_MISSING_DOUBLE)
         snprintf(sval, svalMaxLen, "CODES_MISSING_DOUBLE");
     else
@@ -71,13 +71,13 @@ void BufrEncodeC::dump_values(grib_accessor* a)
     double value = 0;
     size_t size = 0, size2 = 0;
     double* values = NULL;
-    int err        = 0;
+    int err = 0;
     int i, r, icount;
-    int cols   = 2;
+    int cols = 2;
     long count = 0;
     char* sval;
     grib_context* c = a->context_;
-    grib_handle* h  = a->get_enclosing_handle();
+    grib_handle* h = a->get_enclosing_handle();
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
         return;
@@ -87,7 +87,7 @@ void BufrEncodeC::dump_values(grib_accessor* a)
 
     if (size > 1) {
         values = (double*)grib_context_malloc_clear(c, sizeof(double) * size);
-        err    = a->unpack_double(values, &size2);
+        err = a->unpack_double(values, &size2);
     }
     else {
         err = a->unpack_double(&value, &size2);
@@ -130,7 +130,7 @@ void BufrEncodeC::dump_values(grib_accessor* a)
             fprintf(out_, "  CODES_CHECK(codes_set_double_array(h, \"%s\", rvalues, size), 0);\n", a->name_);
     }
     else {
-        r    = compute_bufr_key_rank(h, keys_, a->name_);
+        r = compute_bufr_key_rank(h, keys_, a->name_);
         sval = dval_to_string(c, value);
         if (r != 0)
             fprintf(out_, "  CODES_CHECK(codes_set_double(h, \"#%d#%s\", %s), 0);\n", r, a->name_, sval);
@@ -145,8 +145,8 @@ void BufrEncodeC::dump_values(grib_accessor* a)
 
         if (r != 0) {
             const size_t prefixMaxLen = strlen(a->name_) + 10;
-            prefix                    = (char*)grib_context_malloc_clear(c, sizeof(char) * prefixMaxLen);
-            dofree                    = 1;
+            prefix = (char*)grib_context_malloc_clear(c, sizeof(char) * prefixMaxLen);
+            dofree = 1;
             snprintf(prefix, prefixMaxLen, "#%d#%s", r, a->name_);
         }
         else
@@ -166,9 +166,9 @@ void BufrEncodeC::dump_values_attribute(grib_accessor* a, const char* prefix)
     double value = 0;
     size_t size = 0, size2 = 0;
     double* values = NULL;
-    int err        = 0;
+    int err = 0;
     int i, icount;
-    int cols   = 2;
+    int cols = 2;
     long count = 0;
     char* sval;
     grib_context* c = a->context_;
@@ -181,7 +181,7 @@ void BufrEncodeC::dump_values_attribute(grib_accessor* a, const char* prefix)
 
     if (size > 1) {
         values = (double*)grib_context_malloc_clear(c, sizeof(double) * size);
-        err    = a->unpack_double(values, &size2);
+        err = a->unpack_double(values, &size2);
     }
     else {
         err = a->unpack_double(&value, &size2);
@@ -228,7 +228,7 @@ void BufrEncodeC::dump_values_attribute(grib_accessor* a, const char* prefix)
 
     if (isLeaf_ == 0) {
         const size_t prefix1MaxLen = strlen(a->name_) + strlen(prefix) + 5;
-        char* prefix1              = (char*)grib_context_malloc_clear(c, sizeof(char) * prefix1MaxLen);
+        char* prefix1 = (char*)grib_context_malloc_clear(c, sizeof(char) * prefix1MaxLen);
         snprintf(prefix1, prefix1MaxLen, "%s->%s", prefix, a->name_);
 
         dump_attributes(a, prefix1);
@@ -247,16 +247,16 @@ static int is_hidden(grib_accessor* a)
 
 void BufrEncodeC::dump_long(grib_accessor* a, const char* comment)
 {
-    long value  = 0;
+    long value = 0;
     size_t size = 0, size2 = 0;
     long* values = NULL;
-    int err      = 0;
+    int err = 0;
     int i, r, icount;
-    int cols                        = 4;
-    long count                      = 0;
-    char* sval                      = NULL;
-    grib_context* c                 = a->context_;
-    grib_handle* h                  = a->get_enclosing_handle();
+    int cols = 4;
+    long count = 0;
+    char* sval = NULL;
+    grib_context* c = a->context_;
+    grib_handle* h = a->get_enclosing_handle();
     int doing_unexpandedDescriptors = 0;
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0) { /* key does not have the dump attribute */
@@ -278,8 +278,8 @@ void BufrEncodeC::dump_long(grib_accessor* a, const char* comment)
             r = compute_bufr_key_rank(h, keys_, a->name_);
             if (r != 0) {
                 const size_t prefixMaxLen = strlen(a->name_) + 10;
-                prefix                    = (char*)grib_context_malloc_clear(c, sizeof(char) * prefixMaxLen);
-                dofree                    = 1;
+                prefix = (char*)grib_context_malloc_clear(c, sizeof(char) * prefixMaxLen);
+                dofree = 1;
                 snprintf(prefix, prefixMaxLen, "#%d#%s", r, a->name_);
             }
             else
@@ -295,7 +295,7 @@ void BufrEncodeC::dump_long(grib_accessor* a, const char* comment)
 
     if (size > 1) {
         values = (long*)grib_context_malloc_clear(a->context_, sizeof(long) * size);
-        err    = a->unpack_long(values, &size2);
+        err = a->unpack_long(values, &size2);
     }
     else {
         err = a->unpack_long(&value, &size2);
@@ -342,7 +342,7 @@ void BufrEncodeC::dump_long(grib_accessor* a, const char* comment)
         }
     }
     else {
-        r    = compute_bufr_key_rank(h, keys_, a->name_);
+        r = compute_bufr_key_rank(h, keys_, a->name_);
         sval = lval_to_string(c, value);
         if (r != 0) {
             fprintf(out_, "  CODES_CHECK(codes_set_long(h, \"#%d#%s\", ", r, a->name_);
@@ -367,8 +367,8 @@ void BufrEncodeC::dump_long(grib_accessor* a, const char* comment)
 
         if (r != 0) {
             const size_t prefixMaxLen = strlen(a->name_) + 10;
-            prefix                    = (char*)grib_context_malloc_clear(c, sizeof(char) * prefixMaxLen);
-            dofree                    = 1;
+            prefix = (char*)grib_context_malloc_clear(c, sizeof(char) * prefixMaxLen);
+            dofree = 1;
             snprintf(prefix, prefixMaxLen, "#%d#%s", r, a->name_);
         }
         else
@@ -384,13 +384,13 @@ void BufrEncodeC::dump_long(grib_accessor* a, const char* comment)
 
 void BufrEncodeC::dump_long_attribute(grib_accessor* a, const char* prefix)
 {
-    long value  = 0;
+    long value = 0;
     size_t size = 0, size2 = 0;
     long* values = NULL;
-    int err      = 0;
+    int err = 0;
     int i, icount;
-    int cols        = 4;
-    long count      = 0;
+    int cols = 4;
+    long count = 0;
     grib_context* c = a->context_;
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
@@ -401,7 +401,7 @@ void BufrEncodeC::dump_long_attribute(grib_accessor* a, const char* prefix)
 
     if (size > 1) {
         values = (long*)grib_context_malloc_clear(a->context_, sizeof(long) * size);
-        err    = a->unpack_long(values, &size2);
+        err = a->unpack_long(values, &size2);
     }
     else {
         err = a->unpack_long(&value, &size2);
@@ -447,7 +447,7 @@ void BufrEncodeC::dump_long_attribute(grib_accessor* a, const char* prefix)
 
     if (isLeaf_ == 0) {
         const size_t prefix1MaxLen = strlen(a->name_) + strlen(prefix) + 5;
-        char* prefix1              = (char*)grib_context_malloc_clear(c, sizeof(char) * prefix1MaxLen);
+        char* prefix1 = (char*)grib_context_malloc_clear(c, sizeof(char) * prefix1MaxLen);
         snprintf(prefix1, prefix1MaxLen, "%s->%s", prefix, a->name_);
 
         dump_attributes(a, prefix1);
@@ -465,10 +465,10 @@ void BufrEncodeC::dump_bits(grib_accessor* a, const char* comment)
 void BufrEncodeC::dump_double(grib_accessor* a, const char* comment)
 {
     double value = 0;
-    size_t size  = 1;
+    size_t size = 1;
     int r;
     char* sval;
-    grib_handle* h  = a->get_enclosing_handle();
+    grib_handle* h = a->get_enclosing_handle();
     grib_context* c = h->context;
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
@@ -492,8 +492,8 @@ void BufrEncodeC::dump_double(grib_accessor* a, const char* comment)
 
         if (r != 0) {
             const size_t prefixMaxLen = strlen(a->name_) + 10;
-            prefix                    = (char*)grib_context_malloc_clear(c, sizeof(char) * prefixMaxLen);
-            dofree                    = 1;
+            prefix = (char*)grib_context_malloc_clear(c, sizeof(char) * prefixMaxLen);
+            dofree = 1;
             snprintf(prefix, prefixMaxLen, "#%d#%s", r, a->name_);
         }
         else
@@ -511,10 +511,10 @@ void BufrEncodeC::dump_string_array(grib_accessor* a, const char* comment)
     char** values;
     size_t size = 0, i = 0;
     grib_context* c = a->context_;
-    int err         = 0;
-    long count      = 0;
-    int r           = 0;
-    grib_handle* h  = a->get_enclosing_handle();
+    int err = 0;
+    long count = 0;
+    int r = 0;
+    grib_handle* h = a->get_enclosing_handle();
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
         return;
@@ -557,8 +557,8 @@ void BufrEncodeC::dump_string_array(grib_accessor* a, const char* comment)
 
         if (r != 0) {
             const size_t prefixMaxLen = strlen(a->name_) + 10;
-            prefix                    = (char*)grib_context_malloc_clear(c, sizeof(char) * prefixMaxLen);
-            dofree                    = 1;
+            prefix = (char*)grib_context_malloc_clear(c, sizeof(char) * prefixMaxLen);
+            dofree = 1;
             snprintf(prefix, prefixMaxLen, "#%d#%s", r, a->name_);
         }
         else
@@ -578,12 +578,12 @@ void BufrEncodeC::dump_string_array(grib_accessor* a, const char* comment)
 
 void BufrEncodeC::dump_string(grib_accessor* a, const char* comment)
 {
-    char* value     = NULL;
-    char* p         = NULL;
-    size_t size     = 0;
+    char* value = NULL;
+    char* p = NULL;
+    size_t size = 0;
     grib_context* c = a->context_;
     int r = 0, err = 0;
-    grib_handle* h       = a->get_enclosing_handle();
+    grib_handle* h = a->get_enclosing_handle();
     const char* acc_name = a->name_;
 
     grib_get_string_length_acc(a, &size);
@@ -602,8 +602,8 @@ void BufrEncodeC::dump_string(grib_accessor* a, const char* comment)
     empty_ = 0;
 
     err = a->unpack_string(value, &size);
-    p   = value;
-    r   = compute_bufr_key_rank(h, keys_, acc_name);
+    p = value;
+    r = compute_bufr_key_rank(h, keys_, acc_name);
     if (grib_is_missing_string(a, (unsigned char*)value, size)) {
         strcpy(value, ""); /* Empty string means MISSING string */
     }
@@ -632,8 +632,8 @@ void BufrEncodeC::dump_string(grib_accessor* a, const char* comment)
 
         if (r != 0) {
             const size_t prefixMaxLen = strlen(acc_name) + 10;
-            prefix                    = (char*)grib_context_malloc_clear(c, sizeof(char) * prefixMaxLen);
-            dofree                    = 1;
+            prefix = (char*)grib_context_malloc_clear(c, sizeof(char) * prefixMaxLen);
+            dofree = 1;
             snprintf(prefix, prefixMaxLen, "#%d#%s", r, acc_name);
         }
         else
@@ -698,8 +698,8 @@ void BufrEncodeC::dump_section(grib_accessor* a, grib_block_of_accessors* block)
         strcmp(a->name_, "GRIB") == 0 ||
         strcmp(a->name_, "META") == 0) {
         grib_handle* h = a->get_enclosing_handle();
-        depth_         = 2;
-        empty_         = 1;
+        depth_ = 2;
+        empty_ = 1;
         depth_ += 2;
         _dump_long_array(h, out_, "dataPresentIndicator", "inputDataPresentIndicator");
         _dump_long_array(h, out_, "delayedDescriptorReplicationFactor", "inputDelayedDescriptorReplicationFactor");
@@ -733,7 +733,7 @@ void BufrEncodeC::dump_attributes(grib_accessor* a, const char* prefix)
             continue;
         }
         isLeaf_ = a->attributes_[i]->attributes_[0] == NULL ? 1 : 0;
-        flags   = a->attributes_[i]->flags_;
+        flags = a->attributes_[i]->flags_;
         a->attributes_[i]->flags_ |= GRIB_ACCESSOR_FLAG_DUMP;
         switch (a->attributes_[i]->get_native_type()) {
             case GRIB_TYPE_LONG:
@@ -748,7 +748,7 @@ void BufrEncodeC::dump_attributes(grib_accessor* a, const char* prefix)
         a->attributes_[i]->flags_ = flags;
         i++;
     }
-    isLeaf_      = 0;
+    isLeaf_ = 0;
     isAttribute_ = 0;
 }
 
@@ -763,12 +763,18 @@ void BufrEncodeC::header(const grib_handle* h) const
     grib_get_long(h, "bufrHeaderCentre", &bufrHeaderCentre);
     grib_get_long(h, "edition", &edition);
 
-    if (localSectionPresent && bufrHeaderCentre == 98) {
-        grib_get_long(h, "isSatellite", &isSatellite);
-        if (isSatellite)
-            snprintf(sampleName, sizeof(sampleName), "BUFR%ld_local_satellite", edition);
-        else
-            snprintf(sampleName, sizeof(sampleName), "BUFR%ld_local", edition);
+    if (localSectionPresent) {
+        if (bufrHeaderCentre == 98) {
+            grib_get_long(h, "isSatellite", &isSatellite);
+            if (isSatellite)
+                snprintf(sampleName, sizeof(sampleName), "BUFR%ld_local_satellite", edition);
+            else
+                snprintf(sampleName, sizeof(sampleName), "BUFR%ld_local", edition);
+        }
+        else {
+            fprintf(stderr, "ECCODES WARNING :  Cannot generate code for section 2 (Only ECMWF local section is supported)\n");
+            snprintf(sampleName, sizeof(sampleName), "BUFR%ld", edition);
+        }
     }
     else {
         snprintf(sampleName, sizeof(sampleName), "BUFR%ld", edition);
@@ -780,7 +786,7 @@ void BufrEncodeC::header(const grib_handle* h) const
         grib_print_api_version(out_);
         fprintf(out_, " */\n\n");
         fprintf(out_, "#include \"eccodes.h\"\n");
-        fprintf(out_, "int main()\n");
+        fprintf(out_, "int main(void)\n");
         fprintf(out_, "{\n");
         fprintf(out_, "  size_t         size=0;\n");
         fprintf(out_, "  const void*    buffer = NULL;\n");

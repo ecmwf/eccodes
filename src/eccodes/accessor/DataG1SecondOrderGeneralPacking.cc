@@ -10,9 +10,6 @@
 
 #include "DataG1SecondOrderGeneralPacking.h"
 
-eccodes::accessor::DataG1SecondOrderGeneralPacking _grib_accessor_data_g1second_order_general_packing;
-eccodes::Accessor* grib_accessor_data_g1second_order_general_packing = &_grib_accessor_data_g1second_order_general_packing;
-
 namespace eccodes::accessor
 {
 
@@ -21,23 +18,23 @@ void DataG1SecondOrderGeneralPacking::init(const long v, grib_arguments* args)
     DataSimplePacking::init(v, args);
     grib_handle* hand = get_enclosing_handle();
 
-    half_byte_                       = args->get_name(hand, carg_++);
-    packingType_                     = args->get_name(hand, carg_++);
-    ieee_packing_                    = args->get_name(hand, carg_++);
-    precision_                       = args->get_name(hand, carg_++);
-    widthOfFirstOrderValues_         = args->get_name(hand, carg_++);
-    N1_                              = args->get_name(hand, carg_++);
-    N2_                              = args->get_name(hand, carg_++);
-    numberOfGroups_                  = args->get_name(hand, carg_++);
+    half_byte_ = args->get_name(hand, carg_++);
+    packingType_ = args->get_name(hand, carg_++);
+    ieee_packing_ = args->get_name(hand, carg_++);
+    precision_ = args->get_name(hand, carg_++);
+    widthOfFirstOrderValues_ = args->get_name(hand, carg_++);
+    N1_ = args->get_name(hand, carg_++);
+    N2_ = args->get_name(hand, carg_++);
+    numberOfGroups_ = args->get_name(hand, carg_++);
     numberOfSecondOrderPackedValues_ = args->get_name(hand, carg_++);
-    extraValues_                     = args->get_name(hand, carg_++);
-    Ni_                              = args->get_name(hand, carg_++);
-    Nj_                              = args->get_name(hand, carg_++);
-    pl_                              = args->get_name(hand, carg_++);
-    jPointsAreConsecutive_           = args->get_name(hand, carg_++);
-    bitmap_                          = args->get_name(hand, carg_++);
-    groupWidths_                     = args->get_name(hand, carg_++);
-    edition_                         = 1;
+    extraValues_ = args->get_name(hand, carg_++);
+    Ni_ = args->get_name(hand, carg_++);
+    Nj_ = args->get_name(hand, carg_++);
+    pl_ = args->get_name(hand, carg_++);
+    jPointsAreConsecutive_ = args->get_name(hand, carg_++);
+    bitmap_ = args->get_name(hand, carg_++);
+    groupWidths_ = args->get_name(hand, carg_++);
+    edition_ = 1;
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
@@ -56,12 +53,12 @@ int DataG1SecondOrderGeneralPacking::unpack_real(T* values, size_t* len)
     static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
     int ret = 0;
     long numberOfGroups, numberOfSecondOrderPackedValues;
-    long* groupWidths            = 0;
-    long* firstOrderValues       = 0;
-    long* X                      = 0;
-    long pos                     = 0;
+    long* groupWidths = 0;
+    long* firstOrderValues = 0;
+    long* X = 0;
+    long pos = 0;
     long widthOfFirstOrderValues = 0;
-    unsigned char* buf           = get_enclosing_handle()->buffer->data;
+    unsigned char* buf = get_enclosing_handle()->buffer->data;
     long i, n;
     double reference_value;
     long binary_scale_factor;
@@ -94,12 +91,12 @@ int DataG1SecondOrderGeneralPacking::unpack_real(T* values, size_t* len)
     if (*len < (size_t)numberOfSecondOrderPackedValues)
         return GRIB_ARRAY_TOO_SMALL;
 
-    groupWidths     = (long*)grib_context_malloc_clear(context_, sizeof(long) * numberOfGroups);
+    groupWidths = (long*)grib_context_malloc_clear(context_, sizeof(long) * numberOfGroups);
     groupWidthsSize = numberOfGroups;
     if ((ret = grib_get_long_array_internal(get_enclosing_handle(), groupWidths_, groupWidths, &groupWidthsSize)) != GRIB_SUCCESS)
         return ret;
 
-    secondaryBitmap                                  = (long*)grib_context_malloc_clear(context_, sizeof(long) * (numberOfSecondOrderPackedValues + 1));
+    secondaryBitmap = (long*)grib_context_malloc_clear(context_, sizeof(long) * (numberOfSecondOrderPackedValues + 1));
     secondaryBitmap[numberOfSecondOrderPackedValues] = 1;
     grib_decode_long_array(buf, &pos, 1, numberOfSecondOrderPackedValues, secondaryBitmap);
     pos = 8 * ((pos + 7) / 8);
@@ -110,12 +107,12 @@ int DataG1SecondOrderGeneralPacking::unpack_real(T* values, size_t* len)
 
     X = (long*)grib_context_malloc_clear(context_, sizeof(long) * numberOfSecondOrderPackedValues);
 
-    n           = 0;
-    i           = -1;
+    n = 0;
+    i = -1;
     groupLength = 0;
     while (n < numberOfSecondOrderPackedValues) {
         if (secondaryBitmap[n]) {
-            long* p     = secondaryBitmap + n + 1;
+            long* p = secondaryBitmap + n + 1;
             groupLength = 1;
             while (*p != 1) {
                 groupLength++;
@@ -166,8 +163,8 @@ int DataG1SecondOrderGeneralPacking::unpack_double(double* values, size_t* len)
 int DataG1SecondOrderGeneralPacking::pack_double(const double* cval, size_t* len)
 {
     /* return GRIB_NOT_IMPLEMENTED; */
-    char type[]       = "grid_second_order";
-    size_t size       = strlen(type);
+    char type[] = "grid_second_order";
+    size_t size = strlen(type);
     grib_handle* hand = get_enclosing_handle();
 
     int err = grib_set_string(hand, "packingType", type, &size);

@@ -3,7 +3,7 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
+#
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 
@@ -28,6 +28,16 @@ ${tools_dir}/grib_ls -l 60,0 $input
 
 # Scanning mode
 ${tools_dir}/grib_get_data -s iScansNegatively=1 $input > $tempOut
+
+# Projection centre flag
+input_grib1=$ECCODES_SAMPLES_PATH/polar_stereographic_pl_grib1.tmpl
+input_grib2=$ECCODES_SAMPLES_PATH/polar_stereographic_pl_grib2.tmpl
+grib_check_key_equals $input_grib1 southPoleOnProjectionPlane 0
+grib_check_key_equals $input_grib2 southPoleOnProjectionPlane 0
+
+grib_check_key_equals $input_grib1 bipolarAndSymmetricProjection 0
+grib_check_key_equals $input_grib2 bipolarAndSymmetricProjection 0
+
 
 # Failing case
 # -------------

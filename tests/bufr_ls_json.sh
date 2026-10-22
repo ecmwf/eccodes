@@ -3,7 +3,7 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
+#
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
@@ -39,6 +39,15 @@ do
     cat $tempLog | json_xs -t none
   fi
 done
+
+
+# ECC-2210: bufr_ls with '-j' and empty output
+rm -f $tempLog
+input=aaen_55.bufr
+${tools_dir}/bufr_ls -j -w localTablesVersionNumber=42 $input > $tempLog
+if test "x$JSON_CHECK" != "x"; then
+  cat $tempLog | json_xs -t none
+fi
 
 
 # Clean up

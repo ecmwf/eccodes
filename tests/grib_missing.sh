@@ -3,7 +3,7 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
+#
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
@@ -57,6 +57,12 @@ status=$?
 set -e
 [ $status -ne 0 ]
 grep -q "There is no 'missing' entry in Code Table 5.table" $tempText
+
+
+# ECC-2170: missingValuesPresent key
+sample2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+${tools_dir}/grib_set -rs bitmapPresent=1 $sample2 $tempGrib
+grib_check_key_equals $tempGrib bitmapPresent,numberOfMissing,missingValuesPresent '1 0 0'
 
 
 # Clean up

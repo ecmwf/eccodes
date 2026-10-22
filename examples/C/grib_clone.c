@@ -20,18 +20,18 @@
 
 int main(int argc, char* argv[])
 {
-    FILE* in                    = NULL;
-    FILE* out                   = NULL;
+    FILE* in = NULL;
+    FILE* out = NULL;
     codes_handle* source_handle = NULL;
-    const void* buffer          = NULL;
-    size_t size                 = 0;
-    int err                     = 0;
+    const void* buffer = NULL;
+    size_t size = 0;
+    int err = 0;
 
     if (argc != 3) {
         return 1;
     }
 
-    in  = fopen(argv[1], "rb");
+    in = fopen(argv[1], "rb");
     if (!in) {
         perror("ERROR: unable to open input file");
         return 1;

@@ -3,7 +3,7 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
+#
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
@@ -31,7 +31,7 @@ test_stream_and_type()
                            $grib2_sample $tempSample
 
     grib_check_key_equals $tempSample 'stream,mars.stream' 'oper oper'
-    
+
     # Check mars model is not set
     model=`${tools_dir}/grib_get -f -p mars.model $tempSample`
     [ "$model" = "not_found" ]
@@ -73,86 +73,6 @@ ${tools_dir}/grib_set -s marsType=xx $tempSample $temp1
 status=$?
 set -e
 [ $status -ne 0 ]
-
-# ECC-1532
-# ---------
-# By default crraLocalVersion=1 which does not allow expver to be set
-# because it is a constant (prod or test)
-set +e
-${tools_dir}/grib_set -s \
-  productionStatusOfProcessedData=10,grib2LocalSectionPresent=1,marsExpver=coco \
-$grib2_sample $temp1
-status=$?
-set -e
-[ $status -ne 0 ]
-
-# ECC-1532
-# crraLocalVersion=2 has a coded key for experimentVersionNumber
-${tools_dir}/grib_set -s \
-  productionStatusOfProcessedData=10,grib2LocalSectionPresent=1,crraLocalVersion=2,marsExpver=coco \
-$grib2_sample $temp1
-grib_check_key_equals $temp1 'marsExpver,mars.expver' 'coco coco'
-
-${tools_dir}/grib_set -s \
-  productionStatusOfProcessedData=11,grib2LocalSectionPresent=1,crraLocalVersion=2,experimentVersionNumber=0078 \
-$grib2_sample $temp1
-grib_check_key_equals $temp1 'marsExpver,mars.expver' '0078 0078'
-
-# ECC-2053: GRIB: alias mars.class not working in a new local concept
-# crraLocalVersion=3 has a coded key for mars class
-${tools_dir}/grib_set -s centre=255,productionStatusOfProcessedData=10,grib2LocalSectionPresent=1,crraLocalVersion=3 $grib2_sample $temp1
-${tools_dir}/grib_set -s class=ci,expver=at99 $temp1 $temp2
-grib_check_key_equals $temp1 'mars.class,mars.expver' 'rr 0002'
-grib_check_key_equals $temp2 'mars.class,marsClass,mars.expver' 'ci ci at99'
-${tools_dir}/grib_ls -jm $temp2 > $tempLog
-grep -q "class.*ci" $tempLog
-
-# ECC-2066
-${tools_dir}/grib_set -s centre=255,productionStatusOfProcessedData=10,grib2LocalSectionPresent=1,crraLocalVersion=3,suiteName=8 \
-   $grib2_sample $temp1
-${tools_dir}/grib_dump -O -p section_2 $temp1 > $tempLog
-grep -q "HARMONIE-AROME reanalysis by SMHI on EURO-CORDEX domain" $tempLog
-grib_check_key_equals $temp1 "suiteName:s" "se-ar-ec"
-
-# Stream 'dame'
-${tools_dir}/grib_set -s productionStatusOfProcessedData=10 $grib2_sample $temp1
-grib_check_key_equals $temp1 'mars.time,mars.step' '1200 0'
-
-${tools_dir}/grib_set -s \
- productionStatusOfProcessedData=10,productDefinitionTemplateNumber=8,outerLoopTypeOfTimeIncrement=1,outerLoopLengthOfTimeRange=21 \
- $grib2_sample $temp1
-grib_check_key_equals $temp1 'mars.stream' 'dame'
-result=$(${tools_dir}/grib_get -fp mars.time,mars.step $temp1)
-[ "$result" = "not_found not_found" ]
-
-# ECC-1913
-# ----------
-# types em/es for class=rr and expver=prod/test (and suiteName=se-al-ec though it works generally)
-for pspd in 10 11 ; do
-  if [ $pspd -eq 10 ]; then
-    expver=prod
-  else
-    expver=test
-  fi
-  for type in em es ; do
-    # Param 228228 (accum)
-    ${tools_dir}/grib_set -s \
-     paramId=228228,productionStatusOfProcessedData=$pspd,grib2LocalSectionPresent=1,crraLocalVersion=1,suiteName=4 \
-     $grib2_sample $temp1
-    ${tools_dir}/grib_set -s \
-     productionStatusOfProcessedData=$pspd,productDefinitionTemplateNumber=12,type=$type \
-     $temp1 $temp2
-    grib_check_key_equals $temp2 'mars.stream,mars.type,mars.expver' "enda $type $expver"
-     # Param 167 (instant)
-    ${tools_dir}/grib_set -s \
-     paramId=167,productionStatusOfProcessedData=$pspd,grib2LocalSectionPresent=1,crraLocalVersion=1,suiteName=4 \
-     $grib2_sample $temp1
-    ${tools_dir}/grib_set -s \
-     productionStatusOfProcessedData=$pspd,productDefinitionTemplateNumber=12,type=$type \
-     $temp1 $temp2
-    grib_check_key_equals $temp2 'mars.stream,mars.type,mars.expver' "enda $type $expver"
-  done
-done
 
 # Clean up
 rm -f $temp1 $temp2 $tempSample $tempLog

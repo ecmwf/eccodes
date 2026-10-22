@@ -43,4 +43,3 @@ pnames="
 for fn in $pnames; do
   perl -p -i -e "s|$fn\.py|<a href=\"https://software.ecmwf.int/wiki/display/ECC/$fn\" target=\"_blank\">$fn.py</a>|" ../html/namespaceec_codes.html
 done
-

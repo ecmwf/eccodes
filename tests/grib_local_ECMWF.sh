@@ -68,7 +68,7 @@ do
     ${tools_dir}/grib_set -s edition=2 loc1.grib1 loc1.grib2
     ${tools_dir}/grib_get -p localDefinitionNumber loc1.grib1 >> local.log
     ${tools_dir}/grib_get -p localDefinitionNumber loc1.grib2 >> local.log
-    
+
     for localEps in 1 15 26 30
     do
         ${tools_dir}/grib_set -s localDefinitionNumber=$localEps,eps=1,perturbationNumber=2,numberOfForecastsInEnsemble=50 loc1.grib2 eps.grib2
@@ -234,6 +234,11 @@ ${tools_dir}/grib_set -s paramId=210251,setLocalDefinition=1,localDefinitionNumb
 # ECC-2068: GRIB1: Setting local definition 11 issues error messages
 ${tools_dir}/grib_set -s localDefinitionNumber=11 $sample_g1 $temp
 grib_check_key_equals $temp "classOfAnalysis,typeOfAnalysis,streamOfAnalysis,originatingCentreOfAnalysis" "1 2 1025 98"
+
+# ECC-2215: GRIB2: Segmentation fault setting localDefinitionNumber=0
+infile=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
+${tools_dir}/grib_set -s localDefinitionNumber=0 $infile $temp
+cmp $infile $temp
 
 
 # Clean up

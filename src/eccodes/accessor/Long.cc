@@ -10,9 +10,6 @@
 
 #include "Long.h"
 
-eccodes::accessor::Long _grib_accessor_long;
-eccodes::Accessor* grib_accessor_long = &_grib_accessor_long;
-
 namespace eccodes::accessor
 {
 
@@ -37,7 +34,7 @@ int Long::unpack_string(char* v, size_t* len)
     size_t l = 1;
     char repres[1024];
     char format[32] = "%ld";
-    grib_handle* h  = get_enclosing_handle();
+    grib_handle* h = get_enclosing_handle();
 
     unpack_long(&val, &l);
     /* TODO: We should catch all errors but in this case the test ERA_Gen.sh will fail
@@ -57,7 +54,7 @@ int Long::unpack_string(char* v, size_t* len)
     if (*len < l) {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
-                         class_name_, name_, l, *len);
+                         accessor_type().c_str(), name_, l, *len);
         *len = l;
         return GRIB_BUFFER_TOO_SMALL;
     }
@@ -82,12 +79,12 @@ int Long::pack_missing()
 
 int Long::unpack_double(double* val, size_t* len)
 {
-    size_t rlen     = 0;
-    long count      = 0;
+    size_t rlen = 0;
+    long count = 0;
     unsigned long i = 0;
-    long* values    = NULL;
-    long oneval     = 0;
-    int ret         = GRIB_SUCCESS;
+    long* values = NULL;
+    long oneval = 0;
+    int ret = GRIB_SUCCESS;
 
     ret = value_count(&count);
     if (ret)
@@ -136,7 +133,7 @@ int Long::compare(grib_accessor* b)
 
     size_t alen = 0;
     size_t blen = 0;
-    int err     = 0;
+    int err = 0;
 
     err = value_count(&count);
     if (err)

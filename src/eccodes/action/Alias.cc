@@ -33,13 +33,13 @@ namespace eccodes::action
 Alias::Alias(grib_context* context, const char* name, const char* arg1, const char* name_space, int flags)
 {
     class_name_ = "action_class_alias";
-    context_    = context;
-    op_         = NULL;
-    name_       = grib_context_strdup_persistent(context, name);
+    context_ = context;
+    op_ = NULL;
+    name_ = grib_context_strdup_persistent(context, name);
     if (name_space)
         name_space_ = grib_context_strdup_persistent(context, name_space);
 
-    flags_  = flags;
+    flags_ = flags;
     target_ = arg1 ? grib_context_strdup_persistent(context, arg1) : NULL;
 }
 
@@ -64,9 +64,9 @@ static int same(const char* a, const char* b)
 
 int Alias::create_accessor(grib_section* p, grib_loader* h)
 {
-    int i, j, id;
-    grib_accessor* x  = NULL;
-    grib_accessor* y  = NULL;
+    int i, j;
+    grib_accessor* x = NULL;
+    grib_accessor* y = NULL;
     grib_handle* hand = NULL;
 
     /*if alias and target have the same name add only the namespace */
@@ -101,7 +101,7 @@ int Alias::create_accessor(grib_section* p, grib_loader* h)
         i = 0;
         while (i < MAX_ACCESSOR_NAMES) {
             if (x->all_names_[i] == NULL) {
-                x->all_names_[i]       = name_;
+                x->all_names_[i] = name_;
                 x->all_name_spaces_[i] = name_space_;
                 return GRIB_SUCCESS;
             }
@@ -130,21 +130,15 @@ int Alias::create_accessor(grib_section* p, grib_loader* h)
                  * i.e., when unaliasing "mars.step" it also unaliases "step"
                  */
 
-                // TODO(maee): Implement a new hash function, which uses the name and the name_space as well
-
-                // grib_handle* hand = y->get_enclosing_handle();
-                // if (hand->use_trie && y->all_name_spaces_[i] != NULL && strcmp(y->name_, name_) != 0) {
-                //     int id = grib_hash_keys_get_id(hand->context->keys, name_);
-                //     hand->accessors[id] = NULL;
-                // }
+                // TODO(maee): Implement removal using the name and the name_space as well
 
                 while (i < MAX_ACCESSOR_NAMES - 1) {
-                    y->all_names_[i]       = y->all_names_[i + 1];
+                    y->all_names_[i] = y->all_names_[i + 1];
                     y->all_name_spaces_[i] = y->all_name_spaces_[i + 1];
                     i++;
                 }
 
-                y->all_names_[MAX_ACCESSOR_NAMES - 1]       = NULL;
+                y->all_names_[MAX_ACCESSOR_NAMES - 1] = NULL;
                 y->all_name_spaces_[MAX_ACCESSOR_NAMES - 1] = NULL;
 
                 break;
@@ -169,17 +163,7 @@ int Alias::create_accessor(grib_section* p, grib_loader* h)
     }
 
     hand = x->get_enclosing_handle();
-    if (hand->use_trie) {
-        id                  = grib_hash_keys_get_id(x->context_->keys, name_);
-        hand->accessors[id] = x;
-
-        /*
-         if (hand->accessors[id] != x) {
-           x->same=hand->accessors[id];
-           hand->accessors[id] = x;
-         }
-        */
-    }
+    hand->accessor_store.add(name_, x);
 
     i = 0;
     while (i < MAX_ACCESSOR_NAMES) {
@@ -187,14 +171,14 @@ int Alias::create_accessor(grib_section* p, grib_loader* h)
             /* Only add entries if not already there */
             int found = 0;
             for (j = 0; j < i && !found; ++j) {
-                int nameSame      = same(x->all_names_[j], name_);
+                int nameSame = same(x->all_names_[j], name_);
                 int namespaceSame = same(x->all_name_spaces_[j], name_space_);
                 if (nameSame && namespaceSame) {
                     found = 1;
                 }
             }
             if (!found) { /* Not there. So add them */
-                x->all_names_[i]       = name_;
+                x->all_names_[i] = name_;
                 x->all_name_spaces_[i] = name_space_;
                 grib_context_log(p->h->context, GRIB_LOG_DEBUG, "alias %s.%s added (%s)",
                                  name_space_, name_, target_);

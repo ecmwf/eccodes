@@ -19,5 +19,3 @@ for anElement in root.iter('C14'):
             print(f"{code} {code} {meaning} {formula}")
         else:
             print(f"{code} {code} {meaning}")
-
-            

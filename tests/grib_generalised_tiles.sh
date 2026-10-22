@@ -3,7 +3,7 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
+#
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
@@ -33,7 +33,7 @@ grib_check_key_exists ${temp_grib_a} tileIndex,uuidOfDataGroup
 echo 'set numberOfUsedTileAttributesForTileAttributeCombination=2; set attributeOfTile={2, 4}; write;' | ${tools_dir}/grib_filter -o ${temp_grib_b} - ${temp_grib_a}
 output=$(echo 'print "[attributeOfTile]";' | ${tools_dir}/grib_filter - ${temp_grib_b})
 [ "$output" = "2 4" ]
-[ "$(${tools_dir}/grib_get -p tileAttribute ${temp_grib_b})" = "SNOW_ICE" ]
+[ "$(${tools_dir}/grib_get -p tileAttribute ${temp_grib_b})" = "snow_ice" ]
 
 # Check template is being picked up correctly
 

@@ -10,9 +10,6 @@
 
 #include "BufrExtractAreaSubsets.h"
 
-eccodes::accessor::BufrExtractAreaSubsets _grib_accessor_bufr_extract_area_subsets;
-eccodes::Accessor* grib_accessor_bufr_extract_area_subsets = &_grib_accessor_bufr_extract_area_subsets;
-
 /* Copy first element of array into all others */
 static void fill_in(double a[], long length)
 {
@@ -30,16 +27,16 @@ void BufrExtractAreaSubsets::init(const long len, grib_arguments* arg)
     grib_handle* h = get_enclosing_handle();
     int n = 0;
 
-    length_                       = 0;
-    doExtractSubsets_             = arg->get_name(h, n++);
-    numberOfSubsets_              = arg->get_name(h, n++);
-    extractSubsetList_            = arg->get_name(h, n++);
-    extractAreaWestLongitude_     = arg->get_name(h, n++);
-    extractAreaEastLongitude_     = arg->get_name(h, n++);
-    extractAreaNorthLatitude_     = arg->get_name(h, n++);
-    extractAreaSouthLatitude_     = arg->get_name(h, n++);
-    extractAreaLongitudeRank_     = arg->get_name(h, n++);
-    extractAreaLatitudeRank_      = arg->get_name(h, n++);
+    length_ = 0;
+    doExtractSubsets_ = arg->get_name(h, n++);
+    numberOfSubsets_ = arg->get_name(h, n++);
+    extractSubsetList_ = arg->get_name(h, n++);
+    extractAreaWestLongitude_ = arg->get_name(h, n++);
+    extractAreaEastLongitude_ = arg->get_name(h, n++);
+    extractAreaNorthLatitude_ = arg->get_name(h, n++);
+    extractAreaSouthLatitude_ = arg->get_name(h, n++);
+    extractAreaLongitudeRank_ = arg->get_name(h, n++);
+    extractAreaLatitudeRank_ = arg->get_name(h, n++);
     extractedAreaNumberOfSubsets_ = arg->get_name(h, n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
@@ -52,9 +49,9 @@ long BufrExtractAreaSubsets::get_native_type()
 
 int BufrExtractAreaSubsets::select_area()
 {
-    int ret         = 0;
+    int ret = 0;
     long compressed = 0;
-    grib_handle* h  = get_enclosing_handle();
+    grib_handle* h = get_enclosing_handle();
     grib_context* c = h->context;
 
     double* lat = NULL;
@@ -64,8 +61,8 @@ int BufrExtractAreaSubsets::select_area()
     long numberOfSubsets, i, latRank, lonRank;
     grib_iarray* subsets = NULL;
     size_t nsubsets = 0;
-    char latstr[32] = {0,};
-    char lonstr[32] = {0,};
+    char latstr[32] = { 0 };
+    char lonstr[32] = { 0 };
 
     ret = grib_get_long(h, "compressedData", &compressed);
     if (ret) return ret;
@@ -88,7 +85,7 @@ int BufrExtractAreaSubsets::select_area()
     }
 
     /* Latitudes */
-    n   = numberOfSubsets;
+    n = numberOfSubsets;
     lat = (double*)grib_context_malloc_clear(c, sizeof(double) * numberOfSubsets);
     if (compressed) {
         ret = grib_get_double_array(h, latstr, lat, &n);
@@ -114,7 +111,7 @@ int BufrExtractAreaSubsets::select_area()
     }
 
     /* Longitudes */
-    n   = numberOfSubsets;
+    n = numberOfSubsets;
     lon = (double*)grib_context_malloc_clear(c, sizeof(double) * numberOfSubsets);
     if (compressed) {
         ret = grib_get_double_array(h, lonstr, lon, &n);
@@ -157,12 +154,12 @@ int BufrExtractAreaSubsets::select_area()
     }
 
     nsubsets = grib_iarray_used_size(subsets);
-    ret      = grib_set_long(h, extractedAreaNumberOfSubsets_, nsubsets);
+    ret = grib_set_long(h, extractedAreaNumberOfSubsets_, nsubsets);
     if (ret) return ret;
 
     if (nsubsets != 0) {
         long* subsets_ar = grib_iarray_get_array(subsets);
-        ret              = grib_set_long_array(h, extractSubsetList_, subsets_ar, nsubsets);
+        ret = grib_set_long_array(h, extractSubsetList_, subsets_ar, nsubsets);
         grib_context_free(c, subsets_ar);
         if (ret) return ret;
 

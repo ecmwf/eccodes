@@ -11,34 +11,9 @@
 #include "grib_iterator_factory.h"
 #include "accessor/Iterator.h"
 #include "ExceptionHandler.h"
+#include "sync/Mutex.h"
 
-#if GRIB_PTHREADS
-static pthread_once_t once   = PTHREAD_ONCE_INIT;
-static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-
-static void init_mutex()
-{
-    pthread_mutexattr_t attr;
-    pthread_mutexattr_init(&attr);
-    pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
-    pthread_mutex_init(&mutex, &attr);
-    pthread_mutexattr_destroy(&attr);
-}
-#elif GRIB_OMP_THREADS
-static int once = 0;
-static omp_nest_lock_t mutex;
-
-static void init_mutex()
-{
-    GRIB_OMP_CRITICAL(lock_grib_iterator_factory_c)
-    {
-        if (once == 0) {
-            omp_init_nest_lock(&mutex);
-            once = 1;
-        }
-    }
-}
-#endif
+static eccodes::sync::Mutex mutex;
 
 struct table_entry
 {
@@ -46,6 +21,7 @@ struct table_entry
     eccodes::geo_iterator::Iterator** iterator;
 };
 
+// clang-format off
 static const struct table_entry table[] = {
     { "gaussian", &grib_iterator_gaussian, },
     { "gaussian_reduced", &grib_iterator_gaussian_reduced, },
@@ -60,6 +36,7 @@ static const struct table_entry table[] = {
     { "space_view", &grib_iterator_space_view, },
     // { "unstructured", &grib_iterator_unstructured, },
 };
+// clang-format on
 
 eccodes::geo_iterator::Iterator* grib_iterator_factory(grib_handle* h, grib_arguments* args, unsigned long flags, int* error)
 {
@@ -72,12 +49,12 @@ eccodes::geo_iterator::Iterator* grib_iterator_factory(grib_handle* h, grib_argu
         if (strcmp(type, table[i].type) == 0) {
             eccodes::geo_iterator::Iterator* builder = *(table[i].iterator);
             eccodes::geo_iterator::Iterator* it = builder->create();
-            it->flags_              = flags;
+            it->flags_ = flags;
 
-            GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-            GRIB_MUTEX_LOCK(&mutex);
-            *error = it->init(h, args);
-            GRIB_MUTEX_UNLOCK(&mutex);
+            {
+                eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
+                *error = it->init(h, args);
+            }
 
             if (*error == GRIB_SUCCESS)
                 return it;
@@ -95,7 +72,7 @@ eccodes::geo_iterator::Iterator* grib_iterator_factory(grib_handle* h, grib_argu
 
 static int grib_get_data_(const grib_handle* h, double* lats, double* lons, double* values)
 {
-    int err             = 0;
+    int err = 0;
     eccodes::geo_iterator::Iterator* iter = NULL;
     double *lat, *lon, *val;
 
@@ -146,7 +123,7 @@ static double* pointer_to_data(unsigned int i, unsigned int j,
 /* Apply the scanning mode flags which may require data array to be transformed
  * to standard west-to-east (+i) south-to-north (+j) mode.
  * The data array passed in should have 'numPoints' elements.
-*/
+ */
 int transform_iterator_data(grib_context* context, double* data,
                             long iScansNegatively, long jScansPositively,
                             long jPointsAreConsecutive, long alternativeRowScanning,
@@ -168,7 +145,7 @@ int transform_iterator_data(grib_context* context, double* data,
         nx > 0 && ny > 0) {
         /* Regular grid +i -j: convert from we:ns to we:sn */
         size_t row_size = ((size_t)nx) * sizeof(double);
-        data2           = (double*)grib_context_malloc(context, row_size);
+        data2 = (double*)grib_context_malloc(context, row_size);
         if (!data2) {
             grib_context_log(context, GRIB_LOG_ERROR, "Geoiterator data: Error allocating %ld bytes", row_size);
             return GRIB_OUT_OF_MEMORY;

@@ -10,9 +10,6 @@
 
 #include "ChangeAlternativeRowScanning.h"
 
-eccodes::accessor::ChangeAlternativeRowScanning _grib_accessor_change_alternative_row_scanning;
-eccodes::Accessor* grib_accessor_change_alternative_row_scanning = &_grib_accessor_change_alternative_row_scanning;
-
 namespace eccodes::accessor
 {
 
@@ -21,9 +18,9 @@ void ChangeAlternativeRowScanning::init(const long len, grib_arguments* args)
     Gen::init(len, args);
     int n = 0;
 
-    values_                 = args->get_name(get_enclosing_handle(), n++);
-    Ni_                     = args->get_name(get_enclosing_handle(), n++);
-    Nj_                     = args->get_name(get_enclosing_handle(), n++);
+    values_ = args->get_name(get_enclosing_handle(), n++);
+    Ni_ = args->get_name(get_enclosing_handle(), n++);
+    Nj_ = args->get_name(get_enclosing_handle(), n++);
     alternativeRowScanning_ = args->get_name(get_enclosing_handle(), n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
@@ -32,13 +29,13 @@ void ChangeAlternativeRowScanning::init(const long len, grib_arguments* args)
 
 int ChangeAlternativeRowScanning::pack_long(const long* val, size_t* len)
 {
-    int err               = 0;
+    int err = 0;
     const grib_context* c = context_;
-    grib_handle* h        = get_enclosing_handle();
+    grib_handle* h = get_enclosing_handle();
     long i, j, jr, theEnd, Ni, Nj, k, kp, alternativeRowScanning;
-    size_t size    = 0;
+    size_t size = 0;
     double* values = NULL;
-    double tmp     = 0.0;
+    double tmp = 0.0;
 
     if (*val == 0)
         return 0;
@@ -83,10 +80,10 @@ int ChangeAlternativeRowScanning::pack_long(const long* val, size_t* len)
         for (i = 0; i < theEnd; i++) {
             if (j % 2 == 1) {
                 /* Swap first and last value on every odd row */
-                k          = jr + i;
-                kp         = jr + Ni - i - 1;
-                tmp        = values[k];
-                values[k]  = values[kp];
+                k = jr + i;
+                kp = jr + Ni - i - 1;
+                tmp = values[k];
+                values[k] = values[kp];
                 values[kp] = tmp;
             }
         }

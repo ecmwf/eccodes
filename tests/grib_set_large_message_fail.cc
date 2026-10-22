@@ -18,15 +18,15 @@
 int main(int argc, char** argv)
 {
     int err = 0, i = 0, NUM_MISSING = 10;
-    codes_handle* h   = NULL;
+    codes_handle* h = NULL;
     size_t values_len = 0;
     long Ni = 0, Nj = 0;
     double* values = NULL;
     const double missing = 1.0e36;
     bool use_bitmap = false;
 
-    if (argc == 2 && strcmp(argv[1], "-b")==0) {
-         use_bitmap = true;
+    if (argc == 2 && strcmp(argv[1], "-b") == 0) {
+        use_bitmap = true;
     }
 
     h = codes_grib_handle_new_from_samples(NULL, "GRIB1");
@@ -38,6 +38,7 @@ int main(int argc, char** argv)
     values_len = Ni * Nj;
 
     values = (double*)calloc(values_len, sizeof(double));
+    if (!values) return 1;
 
     CODES_CHECK(codes_set_long(h, "Ni", Ni), 0);
     CODES_CHECK(codes_set_long(h, "Nj", Nj), 0);
@@ -48,7 +49,8 @@ int main(int argc, char** argv)
         for (i = 0; i < NUM_MISSING; i++) {
             values[i] = missing;
         }
-    } else {
+    }
+    else {
         printf("Not adding a bitmap...\n");
         values[0] = 42;
         values[1] = 52;
@@ -58,7 +60,8 @@ int main(int argc, char** argv)
     err = codes_set_double_array(h, "values", values, values_len);
     if (err) {
         printf("codes_set_double_array failed as expected: err=%s\n", codes_get_error_message(err));
-    } else {
+    }
+    else {
         fprintf(stderr, "Error: codes_set_double_array should have failed!\n");
         return 1;
     }

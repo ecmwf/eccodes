@@ -9,35 +9,9 @@
  */
 
 #include "Concept.h"
+#include "sync/Mutex.h"
 
-
-#if GRIB_PTHREADS
-static pthread_once_t once   = PTHREAD_ONCE_INIT;
-static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-
-static void init_mutex()
-{
-    pthread_mutexattr_t attr;
-    pthread_mutexattr_init(&attr);
-    pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
-    pthread_mutex_init(&mutex, &attr);
-    pthread_mutexattr_destroy(&attr);
-}
-#elif GRIB_OMP_THREADS
-static int once = 0;
-static omp_nest_lock_t mutex;
-
-static void init_mutex()
-{
-    GRIB_OMP_CRITICAL(lock_action_class_concept_c)
-    {
-        if (once == 0) {
-            omp_init_nest_lock(&mutex);
-            once = 1;
-        }
-    }
-}
-#endif
+static eccodes::sync::Mutex mutex;
 
 grib_concept_value* action_concept_get_concept(grib_accessor* a)
 {
@@ -68,18 +42,18 @@ Concept::Concept(grib_context* context,
                  grib_concept_value* concept_value,
                  const char* basename, const char* name_space, const char* defaultkey,
                  const char* masterDir, const char* localDir, const char* ecmfDir, int flags, int nofail) :
-Gen(context, name, "concept", 0, nullptr, nullptr, flags, name_space, nullptr)
+    Gen(context, name, "concept", 0, nullptr, nullptr, flags, name_space, nullptr)
 {
-    class_name_    = "action_class_concept";
-    basename_      = basename ? grib_context_strdup_persistent(context, basename) : nullptr;
-    masterDir_     = masterDir ? grib_context_strdup_persistent(context, masterDir) : nullptr;
-    localDir_      = localDir ? grib_context_strdup_persistent(context, localDir) : nullptr;
-    defaultkey_    = defaultkey ? grib_context_strdup_persistent(context, defaultkey) : nullptr;
+    class_name_ = "action_class_concept";
+    basename_ = basename ? grib_context_strdup_persistent(context, basename) : nullptr;
+    masterDir_ = masterDir ? grib_context_strdup_persistent(context, masterDir) : nullptr;
+    localDir_ = localDir ? grib_context_strdup_persistent(context, localDir) : nullptr;
+    defaultkey_ = defaultkey ? grib_context_strdup_persistent(context, defaultkey) : nullptr;
     concept_value_ = concept_value;
 
     if (concept_value) {
         grib_concept_value* conc_val = concept_value;
-        grib_trie* index             = grib_trie_new(context);
+        grib_trie* index = grib_trie_new(context);
         while (conc_val) {
             conc_val->index = index;
             grib_trie_insert_no_replace(index, conc_val->name, conc_val);
@@ -120,15 +94,15 @@ void Concept::dump(FILE* f, int lvl)
 
 grib_concept_value* Concept::get_concept_impl(grib_handle* h)
 {
-    char buf[4096]        = {0, };
-    char master[1024]     = {0, };
-    char local[1024]      = {0, };
-    char masterDir[1024]  = {0, };
-    size_t lenMasterDir   = sizeof(masterDir);
-    char key[4096]        = {0, };
-    char* full            = 0;
-    const size_t bufLen   = sizeof(buf);
-    const size_t keyLen   = sizeof(key);
+    char buf[4096] = { 0 };
+    char master[1024] = { 0 };
+    char local[1024] = { 0 };
+    char masterDir[1024] = { 0 };
+    size_t lenMasterDir = sizeof(masterDir);
+    char key[4096] = { 0 };
+    char* full = 0;
+    const size_t bufLen = sizeof(buf);
+    const size_t keyLen = sizeof(key);
     grib_context* context = context_;
     grib_concept_value* c = NULL;
 
@@ -139,19 +113,22 @@ grib_concept_value* Concept::get_concept_impl(grib_handle* h)
     grib_get_string(h, masterDir_, masterDir, &lenMasterDir);
 
     // See ECC-1920: The basename could be a key or a string
-    char* basename = basename_; // default is a string
+    char* basename = basename_;  // default is a string
     ECCODES_ASSERT(basename);
-    char baseNameValue[1024] = {0, }; // its value if a key
+    char baseNameValue[1024] = { 0 };  // its value if a key
     size_t lenBaseName = sizeof(baseNameValue);
-    if (grib_get_string(h, basename_, baseNameValue, &lenBaseName) == GRIB_SUCCESS) {
-        basename = baseNameValue;  // basename_ was a key whose value is baseNameValue
+    // All concept files have the .def extension so they are plain strings
+    if (!string_ends_with(basename_, ".def")) {
+        if (grib_get_string(h, basename_, baseNameValue, &lenBaseName) == GRIB_SUCCESS) {
+            basename = baseNameValue;  // basename_ was a key whose value is baseNameValue
+        }
     }
     snprintf(buf, bufLen, "%s/%s", masterDir, basename);
 
     grib_recompose_name(h, NULL, buf, master, 1);
 
     if (localDir_) {
-        char localDir[1024] = {0, };
+        char localDir[1024] = { 0 };
         size_t lenLocalDir = 1024;
         grib_get_string(h, localDir_, localDir, &lenLocalDir);
         snprintf(buf, bufLen, "%s/%s", localDir, basename);
@@ -212,24 +189,18 @@ grib_concept_value* Concept::get_concept_impl(grib_handle* h)
 
 grib_concept_value* Concept::get_concept(grib_handle* h)
 {
-    grib_concept_value* result = NULL;
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex);
-
-    result = get_concept_impl(h);
-
-    GRIB_MUTEX_UNLOCK(&mutex);
-    return result;
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
+    return get_concept_impl(h);
 }
 
 }  // namespace eccodes::action
 
 static int concept_condition_expression_true(grib_handle* h, grib_concept_condition* c, char* exprVal)
 {
-    long lval      = 0;
-    long lres      = 0;
-    int ok         = 0;
-    int err        = 0;
+    long lval = 0;
+    long lres = 0;
+    int ok = 0;
+    int err = 0;
     const int type = c->expression->native_type(h);
 
     switch (type) {
@@ -252,9 +223,9 @@ static int concept_condition_expression_true(grib_handle* h, grib_concept_condit
 
         case GRIB_TYPE_STRING: {
             const char* cval;
-            char buf[256] = {0,};
-            char tmp[256] = {0,};
-            size_t len  = sizeof(buf);
+            char buf[256] = { 0 };
+            char tmp[256] = { 0 };
+            size_t len = sizeof(buf);
             size_t size = sizeof(tmp);
 
             ok = (grib_get_string(h, c->name, buf, &len) == GRIB_SUCCESS) &&
@@ -281,14 +252,14 @@ static int concept_condition_expression_true(grib_handle* h, grib_concept_condit
  */
 int get_concept_condition_string(grib_handle* h, const char* key, const char* value, char* result)
 {
-    int err         = 0;
-    int length      = 0;
-    char strVal[64] = {0, };
-    char exprVal[256] = {0, };
-    const char* pValue                = value;
-    size_t len                        = sizeof(strVal);
+    int err = 0;
+    int length = 0;
+    char strVal[64] = { 0 };
+    char exprVal[256] = { 0 };
+    const char* pValue = value;
+    size_t len = sizeof(strVal);
     grib_concept_value* concept_value = NULL;
-    grib_accessor* acc                = grib_find_accessor(h, key);
+    grib_accessor* acc = grib_find_accessor(h, key);
     if (!acc)
         return GRIB_NOT_FOUND;
 
@@ -305,8 +276,8 @@ int get_concept_condition_string(grib_handle* h, const char* key, const char* va
         if (strcmp(pValue, concept_value->name) == 0) {
             while (concept_condition) {
                 // grib_expression* expression = concept_condition->expression;
-                const char* condition_name  = concept_condition->name;
-                //ECCODES_ASSERT(expression);
+                const char* condition_name = concept_condition->name;
+                // ECCODES_ASSERT(expression);
                 if (concept_condition_expression_true(h, concept_condition, exprVal) && strcmp(condition_name, "one") != 0) {
                     length += snprintf(result + length, 2048, "%s%s=%s",
                                        (length == 0 ? "" : ","), condition_name, exprVal);

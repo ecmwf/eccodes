@@ -10,9 +10,6 @@
 
 #include "When.h"
 
-eccodes::accessor::When _grib_accessor_when;
-eccodes::Accessor* grib_accessor_when = &_grib_accessor_when;
-
 namespace eccodes::accessor
 {
 

@@ -10,9 +10,6 @@
 
 #include "G1Date.h"
 
-eccodes::accessor::G1Date _grib_accessor_g1date;
-eccodes::Accessor* grib_accessor_g1date = &_grib_accessor_g1date;
-
 namespace eccodes::accessor
 {
 
@@ -20,19 +17,19 @@ void G1Date::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
     grib_handle* hand = get_enclosing_handle();
-    int n             = 0;
+    int n = 0;
 
     century_ = c->get_name(hand, n++);
-    year_    = c->get_name(hand, n++);
-    month_   = c->get_name(hand, n++);
-    day_     = c->get_name(hand, n++);
+    year_ = c->get_name(hand, n++);
+    month_ = c->get_name(hand, n++);
+    day_ = c->get_name(hand, n++);
 }
 
 int G1Date::unpack_long(long* val, size_t* len)
 {
     grib_handle* hand = get_enclosing_handle();
 
-    int ret   = 0;
+    int ret = 0;
     long year = 0, century = 0, month = 0, day = 0;
 
     if ((ret = grib_get_long_internal(hand, century_, &century)) != GRIB_SUCCESS)
@@ -64,8 +61,8 @@ int G1Date::pack_long(const long* val, size_t* len)
 {
     grib_handle* hand = get_enclosing_handle();
 
-    int ret   = 0;
-    long v    = val[0];
+    int ret = 0;
+    long v = val[0];
     long year = 0, century = 0, month = 0, day = 0;
 
     if (*len != 1)

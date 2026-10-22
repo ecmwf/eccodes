@@ -3599,7 +3599,7 @@
 	 table2Version = 162 ;
 	 indicatorOfParameter = 90 ;
 	}
-#Total column vertically-integrated northward cloud frozen water flux 
+#Total column vertically-integrated northward cloud frozen water flux
 'kg m**-1 s**-1' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 91 ;
@@ -16379,7 +16379,7 @@
 	 table2Version = 210 ;
 	 indicatorOfParameter = 98 ;
 	}
-#Wildfire radiative power
+#Wildfire radiative power density
 'W m**-2' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 99 ;

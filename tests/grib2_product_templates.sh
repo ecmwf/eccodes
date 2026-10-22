@@ -3,7 +3,7 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
+#
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
@@ -28,7 +28,7 @@ def_file="$ECCODES_DEFINITION_PATH/grib2/productDefinitionTemplateConcept.def"
 rm -f $tempText
 
 # uniq -d outputs a single copy of each line that is repeated in the input
-awk -F= '$0 ~ /product/ {print $3}' $def_file | tr -d ';} ' | sort -n | uniq -d > $tempText
+awk -F= '$0 ~ /product/ {print $3}' $def_file | tr -d ';} ' | sort -n | uniq -d | sed '/^$/d' > $tempText
 
 if [ -s "$tempText" ]; then
     # File exists and has a size greater than zero

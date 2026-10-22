@@ -11,23 +11,20 @@
 #include "SimplePackingError.h"
 #include "grib_scaling.h"
 
-eccodes::accessor::SimplePackingError _grib_accessor_simple_packing_error;
-eccodes::Accessor* grib_accessor_simple_packing_error = &_grib_accessor_simple_packing_error;
-
 namespace eccodes::accessor
 {
 
 void SimplePackingError::init(const long l, grib_arguments* c)
 {
     Double::init(l, c);
-    int n          = 0;
+    int n = 0;
     grib_handle* h = get_enclosing_handle();
 
-    bitsPerValue_       = c->get_name(h, n++);
-    binaryScaleFactor_  = c->get_name(h, n++);
+    bitsPerValue_ = c->get_name(h, n++);
+    binaryScaleFactor_ = c->get_name(h, n++);
     decimalScaleFactor_ = c->get_name(h, n++);
-    referenceValue_     = c->get_name(h, n++);
-    floatType_          = c->get_name(h, n++);
+    referenceValue_ = c->get_name(h, n++);
+    floatType_ = c->get_name(h, n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     length_ = 0;
@@ -35,12 +32,12 @@ void SimplePackingError::init(const long l, grib_arguments* c)
 
 int SimplePackingError::unpack_double(double* val, size_t* len)
 {
-    int ret                 = 0;
-    long binaryScaleFactor  = 0;
-    long bitsPerValue       = 0;
+    int ret = 0;
+    long binaryScaleFactor = 0;
+    long bitsPerValue = 0;
     long decimalScaleFactor = 0;
-    double referenceValue   = 0;
-    grib_handle* h          = get_enclosing_handle();
+    double referenceValue = 0;
+    grib_handle* h = get_enclosing_handle();
 
     if ((ret = grib_get_long_internal(h, binaryScaleFactor_, &binaryScaleFactor)) != GRIB_SUCCESS)
         return ret;

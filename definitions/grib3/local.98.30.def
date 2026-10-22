@@ -18,4 +18,3 @@ alias local.climateDateFrom=climateDateFrom ;
 alias local.climateDateTo=climateDateTo;
 
 alias mars._leg_number = legNumber;
-

@@ -10,9 +10,6 @@
 
 #include "NonAlpha.h"
 
-eccodes::accessor::NonAlpha _grib_accessor_non_alpha;
-eccodes::Accessor* grib_accessor_non_alpha = &_grib_accessor_non_alpha;
-
 namespace eccodes::accessor
 {
 
@@ -21,7 +18,7 @@ void NonAlpha::init(const long len, grib_arguments* arg)
     Gen::init(len, arg);
     const grib_buffer* buffer = this->get_enclosing_handle()->buffer;
     unsigned char* v = buffer->data + offset_;
-    size_t i            = 0;
+    size_t i = 0;
     while ((*v < 33 || *v > 126) && i <= buffer->ulength) {
         v++;
         i++;
@@ -69,17 +66,17 @@ int NonAlpha::unpack_string(char* val, size_t* len)
         val[i] = hand->buffer->data[offset_ + i];
     }
     val[i] = 0;
-    *len   = i;
+    *len = i;
     return GRIB_SUCCESS;
 }
 
 int NonAlpha::unpack_long(long* v, size_t* len)
 {
-    char val[1024] = {0,};
-    size_t l   = sizeof(val);
-    size_t i   = 0;
+    char val[1024] = { 0 };
+    size_t l = sizeof(val);
+    size_t i = 0;
     char* last = NULL;
-    int err    = unpack_string(val, &l);
+    int err = unpack_string(val, &l);
     if (err)
         return err;
 
@@ -101,7 +98,7 @@ int NonAlpha::unpack_long(long* v, size_t* len)
 
 int NonAlpha::unpack_double(double* v, size_t* len)
 {
-    char val[1024] = {0,};
+    char val[1024] = { 0 };
     size_t l = sizeof(val);
     char* last = NULL;
     unpack_string(val, &l);

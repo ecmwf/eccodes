@@ -23,8 +23,8 @@
 
 
 int exit_on_error = 1; /* By default exit if any check fails */
-int verbose       = 0; /* By default quiet unless errors */
-int error_count   = 0;
+int verbose = 0;       /* By default quiet unless errors */
+int error_count = 0;
 
 static int DBL_EQUAL(double d1, double d2, double tolerance)
 {
@@ -47,7 +47,7 @@ static void usage(const char* prog)
 /* Print an error message and optionally die */
 static void error(const char* filename, int msg_num, const char* fmt, ...)
 {
-    char buf[1024] = {0,};
+    char buf[1024] = { 0 };
     va_list list;
     va_start(list, fmt);
     if (verbose)
@@ -67,7 +67,7 @@ static int process_file(const char* filename)
 {
     int err = 0, msg_num = 0;
     grib_handle* h = NULL;
-    FILE* in       = NULL;
+    FILE* in = NULL;
 
     if (path_is_directory(filename)) {
         if (verbose)
@@ -93,9 +93,9 @@ static int process_file(const char* filename)
         long edition = 0, N = 0, Nj = 0, numberOfDataPoints, angleSubdivisions;
         size_t numberOfValues = 0;
         size_t len = 0, sizeOfValuesArray = 0;
-        double* lats       = NULL;
-        long* pl           = NULL;
-        char gridType[128] = {0,};
+        double* lats = NULL;
+        long* pl = NULL;
+        char gridType[128] = { 0 };
         double angular_tolerance, lat1, lon1, lat2, lon2, expected_lon2;
 
         if (err != GRIB_SUCCESS)
@@ -107,7 +107,7 @@ static int process_file(const char* filename)
         GRIB_CHECK(grib_get_string(h, "gridType", gridType, &len), 0);
         is_regular_gaussian = STR_EQUAL(gridType, "regular_gg");
         is_reduced_gaussian = STR_EQUAL(gridType, "reduced_gg");
-        grid_ok    = is_regular_gaussian || is_reduced_gaussian;
+        grid_ok = is_regular_gaussian || is_reduced_gaussian;
         if (!grid_ok) {
             /*error("ERROR: gridType should be Reduced or Regular Gaussian Grid!\n");*/
             if (verbose)
@@ -130,7 +130,7 @@ static int process_file(const char* filename)
 
         GRIB_CHECK(grib_get_long(h, "angleSubdivisions", &angleSubdivisions), 0);
         ECCODES_ASSERT(angleSubdivisions > 0);
-        angular_tolerance = 1.0/angleSubdivisions;
+        angular_tolerance = 1.0 / angleSubdivisions;
 
         if (N <= 0) {
             error(filename, msg_num, "N should be > 0\n", N);
@@ -169,7 +169,7 @@ static int process_file(const char* filename)
             long interpretationOfNumberOfPoints = 0;
             long iDirectionIncrementGiven = 0;
 
-            is_missing_Ni      = grib_is_missing(h, "Ni", &err);
+            is_missing_Ni = grib_is_missing(h, "Ni", &err);
             ECCODES_ASSERT(err == GRIB_SUCCESS);
             is_missing_Di = grib_is_missing(h, "iDirectionIncrement", &err);
             ECCODES_ASSERT(err == GRIB_SUCCESS);
@@ -197,7 +197,7 @@ static int process_file(const char* filename)
             /* Check pl is symmetric */
             for (i = 0; i < pl_len / 2; ++i) {
                 const long pl_start = pl[i];
-                const long pl_end   = pl[pl_len - 1 - i];
+                const long pl_end = pl[pl_len - 1 - i];
                 if (pl_start != pl_end) {
                     error(filename, msg_num, "pl array is not symmetric: pl[%ld]=%ld, pl[%ld]=%ld\n",
                           i, pl_start, pl_len - 1 - i, pl_end);
@@ -213,7 +213,7 @@ static int process_file(const char* filename)
             if (pl_sum != numberOfDataPoints) {
                 error(filename, msg_num, "Sum of pl array %ld does not match numberOfDataPoints %ld\n", pl_sum, numberOfDataPoints);
             }
-            if ( (size_t)pl_sum != numberOfValues ) {
+            if ((size_t)pl_sum != numberOfValues) {
                 error(filename, msg_num, "Sum of pl array %ld does not match size of values array %zu\n", pl_sum, numberOfValues);
             }
             GRIB_CHECK(grib_get_long(h, "isOctahedral", &is_octahedral), 0);
@@ -226,8 +226,9 @@ static int process_file(const char* filename)
 
             GRIB_CHECK(grib_get_long(h, "interpretationOfNumberOfPoints", &interpretationOfNumberOfPoints), 0);
             if (interpretationOfNumberOfPoints != 1) {
-                error(filename, msg_num, "For a reduced grid, interpretationOfNumberOfPoints should be 1 "
-                                         "(See Code Table 3.11)\n");
+                error(filename, msg_num,
+                      "For a reduced grid, interpretationOfNumberOfPoints should be 1 "
+                      "(See Code Table 3.11)\n");
             }
         }
 

@@ -10,27 +10,24 @@
 
 #include "GlobalGaussian.h"
 
-eccodes::accessor::GlobalGaussian _grib_accessor_global_gaussian;
-eccodes::Accessor* grib_accessor_global_gaussian = &_grib_accessor_global_gaussian;
-
 namespace eccodes::accessor
 {
 
 void GlobalGaussian::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
-    int n          = 0;
+    int n = 0;
     grib_handle* h = get_enclosing_handle();
 
-    N_           = c->get_name(h, n++);
-    Ni_          = c->get_name(h, n++);
-    di_          = c->get_name(h, n++);
-    latfirst_    = c->get_name(h, n++);
-    lonfirst_    = c->get_name(h, n++);
-    latlast_     = c->get_name(h, n++);
-    lonlast_     = c->get_name(h, n++);
-    plpresent_   = c->get_name(h, n++);
-    pl_          = c->get_name(h, n++);
+    N_ = c->get_name(h, n++);
+    Ni_ = c->get_name(h, n++);
+    di_ = c->get_name(h, n++);
+    latfirst_ = c->get_name(h, n++);
+    lonfirst_ = c->get_name(h, n++);
+    latlast_ = c->get_name(h, n++);
+    lonlast_ = c->get_name(h, n++);
+    plpresent_ = c->get_name(h, n++);
+    pl_ = c->get_name(h, n++);
     basic_angle_ = c->get_name(h, n++);
     subdivision_ = c->get_name(h, n++);
 }
@@ -41,11 +38,11 @@ int GlobalGaussian::unpack_long(long* val, size_t* len)
     long latfirst, latlast, lonfirst, lonlast, basic_angle, subdivision, N, Ni;
     double dlatfirst, dlatlast, dlonfirst, dlonlast;
     double angular_precision = 0;
-    double* lats             = NULL;
+    double* lats = NULL;
     long factor = 1000, plpresent = 0;
-    long max_pl     = 0; /* max. element of pl array */
+    long max_pl = 0; /* max. element of pl array */
     grib_context* c = context_;
-    grib_handle* h  = get_enclosing_handle();
+    grib_handle* h = get_enclosing_handle();
 
     if (basic_angle_ && subdivision_) {
         factor = 1000000;
@@ -88,9 +85,9 @@ int GlobalGaussian::unpack_long(long* val, size_t* len)
         return ret;
 
     dlatfirst = ((double)latfirst) / factor;
-    dlatlast  = ((double)latlast) / factor;
+    dlatlast = ((double)latlast) / factor;
     dlonfirst = ((double)lonfirst) / factor;
-    dlonlast  = ((double)lonlast) / factor;
+    dlonlast = ((double)lonlast) / factor;
 
     if (N == 0) {
         grib_context_log(c, GRIB_LOG_ERROR, "Key %s (unpack_long): N cannot be 0!", name_);
@@ -149,9 +146,9 @@ int GlobalGaussian::pack_long(const long* val, size_t* len)
     double* lats;
     double ddi, dlonlast;
     double dfactor, dNi;
-    long plpresent  = 0;
+    long plpresent = 0;
     grib_context* c = context_;
-    grib_handle* h  = get_enclosing_handle();
+    grib_handle* h = get_enclosing_handle();
 
     if (*val == 0)
         return ret;
@@ -197,8 +194,8 @@ int GlobalGaussian::pack_long(const long* val, size_t* len)
     /* GRIB-854: For octahedral grids, get max of pl array */
     if (plpresent) {
         size_t plsize = 0, i = 0;
-        long* pl    = NULL; /* pl array */
-        long max_pl = 0;    /* max. element of pl array */
+        long* pl = NULL; /* pl array */
+        long max_pl = 0; /* max. element of pl array */
 
         if ((ret = grib_get_size(h, pl_, &plsize)) != GRIB_SUCCESS)
             return ret;
@@ -218,15 +215,15 @@ int GlobalGaussian::pack_long(const long* val, size_t* len)
 
     /* rounding */
     latfirst = (long)(lats[0] * factor + 0.5);
-    latlast  = -latfirst;
+    latlast = -latfirst;
     lonfirst = 0;
-    dfactor  = (double)factor;
-    dNi      = (double)Ni;
-    ddi      = (360.0 * dfactor) / dNi;
+    dfactor = (double)factor;
+    dNi = (double)Ni;
+    ddi = (360.0 * dfactor) / dNi;
     dlonlast = (360.0 * dfactor) - ddi + 0.5;
-    ddi      = ddi + 0.5;
-    di       = (long)ddi;
-    lonlast  = (long)dlonlast;
+    ddi = ddi + 0.5;
+    di = (long)ddi;
+    lonlast = (long)dlonlast;
 
     grib_context_free(c, lats);
 

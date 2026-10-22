@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
     FILE* in;
     char *in_name1, *in_name2;
     int i = 0, err = 0;
-    const char* keys[]   = { "gridType", "pl", "values" };
+    const char* keys[] = { "gridType", "pl", "values" };
     const int keys_count = sizeof(keys) / sizeof(keys[0]);
 
     if (argc != 3) usage(argv[0]);

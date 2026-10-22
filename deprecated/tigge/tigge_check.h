@@ -58,7 +58,7 @@ parameter parameters[] = {
       {&point_in_time, &given_level},
    },
 
-/* 
+/*
    MOGREPS (origin = 1(mogreps-mo-eua))
    2014-01-10: minimum limit for 10_meter_u_velocity_sfc changed to <-100,5> because of 2014010715_00+0000
    2014-31-03: maximum changed from <1,100> because of forecasts from 27-31.3...
@@ -110,7 +110,7 @@ parameter parameters[] = {
       {&point_in_time, &given_level},
    },
 
-/* 
+/*
    MOGREPS (origin = 1(mogreps-mo-eua))  set up for 10_meter_u_velocity_sfc
    2014-01-08: minimum limit for 10_meter_v_velocity_sfc changed to <-100,10> because of one early January forecast..
    2014-31-03: minimum & maximum changed for u,v components changed to reflect better small UK domain..
@@ -228,7 +228,7 @@ parameter parameters[] = {
       },
       {&point_in_time, &predefined_thickness},
    },
-/* 
+/*
    eggr                  (centre=74, model=1) cin max ~ -30000
    aladinhuneps-omsz-eu  (origin=12) cin max ~ <-60000,1>
    aladinlaef-zamg-eu    (origin=)   cin max ~ <-...,1>
@@ -256,7 +256,7 @@ parameter parameters[] = {
       },
       {&point_in_time, &predefined_thickness},
    },
-   
+
    {
       "field_capacity_sfc",
       1e99,
@@ -320,7 +320,7 @@ parameter parameters[] = {
       {&point_in_time, &predefined_level},
    },
 
-/* 
+/*
    MOGREPS (origin = 1(mogreps-mo-eua))
    2014-01-08: limits for orog changed to <1000,8888>
 */
@@ -459,7 +459,7 @@ parameter parameters[] = {
       },
       {&point_in_time, &given_thickness},
    },
-/* 
+/*
    S2S/CAWCR: specific_humidity_pl minimum value -0.0108485 is not in [-0.01,0.001]
    s2s/ammc: warning: s2s.q_20160623_4.grib2, field 288 [specific_humidity_pl]: specific_humidity_pl minimum value -0.0209212 is not in [-0.02,0.001]
    s2s/ammc: warning: s2s.q_20160717_21.grib2, field 99 [specific_humidity_pl]: specific_humidity_pl maximum value 0.0820876 is not in [5e-05,0.08]
@@ -515,7 +515,7 @@ parameter parameters[] = {
       {&point_in_time, &given_level},
    },
 
-/* 
+/*
    cosmodeeps-dwd-eu (origin=7)
    2014-01-08: minimum limit for surface_air_dew_point_temperature_sfc changed to <160,290>
    2014-11-06: glameps: tigge_lam.20141106_00+042.mem012.grib2, surface_air_dew_point_temperature_sfc.lam minimum value 128.003 is not in [160,290]
@@ -568,7 +568,7 @@ parameter parameters[] = {
       },
       {&point_in_time, &given_level},
    },
-/* 
+/*
    S2S/CAWCR: surface_air_maximum_temperature_sfc maximum value 359.388 is not in [300,330]
 s2s/kwbc/enfh: warning: s2s.z_s2s_c_rhmc_20150819000000_glob_prod_0006_000.sl.grib2, field 2 [surface_air_maximum_temperature_sfc]: surface_air_maximum_temperature_sfc minimum value 179.427 is not in [190,240]
 s2s/kwbc/enfh: warning: s2s.z_tigge_c_kwbc_20071002000000_ncep_prod_pf_sl_0006_001_0000_mx2t6.grib2, field 146 [surface_air_maximum_temperature_sfc]: surface_air_maximum_temperature_sfc minimum value 240.208 is not in [175,240]
@@ -927,8 +927,8 @@ s2s/ammc: warning: s2s.mx2t6_20151224_26.grib2, field 47 [surface_air_maximum_te
    },
 
 
-/* 
-   cosmoleps-arpasimc-eu 20140323, 12UTC, prod: tigge_lam.vmax_10m.9999.grib2, field 11 [maximum_wind_gust.lam]: maximum_wind_gust.lam maximum value 106.861 is not in [0,100] 
+/*
+   cosmoleps-arpasimc-eu 20140323, 12UTC, prod: tigge_lam.vmax_10m.9999.grib2, field 11 [maximum_wind_gust.lam]: maximum_wind_gust.lam maximum value 106.861 is not in [0,100]
 */
 
    {
@@ -956,7 +956,7 @@ s2s/ammc: warning: s2s.mx2t6_20151224_26.grib2, field 47 [surface_air_maximum_te
       {&three_hourly, &given_level},
    },
 
-/* 
+/*
    MOGREPS (origin = 1(mogreps-mo-eua))
    2014-01-08 minimum limit for maximum_wind_gust changed to <0,12> because of mogreps data from 2014010203_03+0033
    2014-01-10 maximum limit for maximum_wind_gust changed to <0,200> because of mogreps data from 2014010403_06+0033
@@ -1114,7 +1114,7 @@ s2s/egrr-enfo warning: s2s.z_s2s_c_ukmo_20160520000000_glob_prod_pf_1440_003.rt.
       },
       {&point_in_time, &given_level, &pressure_level},
    },
-/* 
+/*
    S2S/ammc: warning: s2s.t_20150906_21.grib2, field 11 [temperature_pl]: temperature_pl minimum value 44.6657 is not in [50,260]
    S2S/ammc: warning: s2s.t_20150906_24.grib2, field 321 [temperature_pl]: temperature_pl minimum value -48.9135 is not in [50,260]
    S2S/ammc: warning: s2s.t_20160403_16.grib2, field 571 [temperature_pl.ammc]: temperature_pl.ammc maximum value 343.462 is not in [200,340]
@@ -1140,7 +1140,7 @@ s2s/egrr-enfo warning: s2s.z_s2s_c_ukmo_20160520000000_glob_prod_pf_1440_003.rt.
       },
       {&point_in_time, &given_level, &pressure_level},
    },
-/* 
+/*
    S2S/CAWCR: u_velocity_pl minimum value -137.331 is not in [-120,-10]
    S2S/CAWCR: u_velocity_pl minimum value -8.77315 is not in [-120,-10]
    s2s/ammc: warning: s2s.u_20150910_1.grib2, field 270 [u_velocity_pl]: u_velocity_pl minimum value -0.81584 is not in [-150,-1]
@@ -1172,7 +1172,7 @@ warning: s2s.z_tigge_c_kwbc_20020817000000_ncep_prod_pf_pl_0000_003_0010_u.grib2
    },
 
 
-/* 
+/*
    S2S/CAWCR: v_velocity_pl maximum value 8.54936 is not in [10,150]
    S2S/CAWCR: v_velocity_pl minimum value -128.209 is not in [-120,-10]
    ammc-s2s-enfo: warning: s2s.v_20160131_0.grib2, field 430 [v_velocity_pl]: v_velocity_pl minimum value -4.84592 is not in [-190,-5]
@@ -1234,7 +1234,7 @@ warning: s2s.z_tigge_c_kwbc_20020817000000_ncep_prod_pf_pl_0000_003_0010_u.grib2
       {&point_in_time, &given_level, &potential_vorticity_level},
    },
 /*
-   s2s_devel, ecmf, 20150101, 00UTC, test, enfh, warning: s2s.2015010100.test.768.10.pf.20020101.pl.0.grib2, field 372 [w_vertical_velocity_pl]: w_vertical_velocity_pl minimum value -5.02998 is not in [-5,0] 
+   s2s_devel, ecmf, 20150101, 00UTC, test, enfh, warning: s2s.2015010100.test.768.10.pf.20020101.pl.0.grib2, field 372 [w_vertical_velocity_pl]: w_vertical_velocity_pl minimum value -5.02998 is not in [-5,0]
 warning: s2s.z_tigge_c_kwbc_20150817000000_ncep_prod_pf_pl_0000_015_0500_w.grib2, field 3 [w_vertical_velocity_pl]: w_vertical_velocity_pl minimum value -7.25731 is not in [-6,0]
   s2s/kwbc/enfo: warning: s2s.z_tigge_c_kwbc_20151114000000_ncep_prod_pf_pl_0000_011_0500_w.grib2, field 7 [w_vertical_velocity_pl]: w_vertical_velocity_pl minimum value -10.202 is not in [-10,0]
   s2s/cwao/enfo: warning: s2s.z_s2s_c_cwao_20160512000000_glob_prod_??_pl_00_384_003.grib2, field 28 [w_vertical_velocity_pl]: w_vertical_velocity_pl minimum value -19.8681 is not in [-12,0]
@@ -1441,7 +1441,7 @@ uerra, eswi-an: an.sp.sfc.grib2, field 1 [surface_pressure_sfc]: surface_pressur
       {&point_in_time, &predefined_level, &has_bitmap},
    },
 
-/* 
+/*
   s2s/rums/enfo: warning: s2s.z_s2s_c_rhmc_20170301000000_glob_prod_00.sl.grib2, field 141 [sea_surface_temperature_sfc.glob.s2]: sea_surface_temperature_sfc.glob.s2 minimum value 0 is not in [200,290]
 
   SHOULD be fixed now!
@@ -1494,7 +1494,7 @@ uerra, eswi-an: an.sp.sfc.grib2, field 1 [surface_pressure_sfc]: surface_pressur
       },
       {&daily_average, &predefined_thickness, &resolution_s2s},
    },
-/* 
+/*
    S2S/CAWCR: total_column_water_sfc.glob minimum value 0.00832421 is not in [0.01,1]
 warning: s2s.z_tigge_c_kwbc_19990817000000_ncep_prod_cf_sl_0024_000_0000_tcw.grib2, field 33 [total_column_water_sfc.glob]: total_column_water_sfc.glob minimum value -0.168614 is not in [0.001,1]
 warning: s2s.z_tigge_c_kwbc_20090829000000_ncep_prod_pf_sl_0024_003_0000_tcw.grib2, field 11 [total_column_water_sfc.glob]: total_column_water_sfc.glob minimum value -2.00987 is not in [-2,1]
@@ -1588,7 +1588,7 @@ s2s/ammc: warning: s2s.2t_20151224_26.grib2, field 12 [surface_air_temperature_s
       {&point_in_time, &given_level},
    },
 
-/* 
+/*
    S2S/CAWCR: surface_air_dew_point_temperature_sfc.glob minimum value 32.4337 is not in [175,290]
 */
    {
@@ -1613,7 +1613,7 @@ s2s/ammc: warning: s2s.2t_20151224_26.grib2, field 12 [surface_air_temperature_s
       },
       {&daily_average, &given_level, &resolution_s2s},
    },
-/* 
+/*
    S2S/CAWCR: skin_temperature_sfc.glob maximum value 309.28 is not in [310,355]
 s2s/kwbc/enfh: warning: s2s.z_s2s_c_rhmc_20150819000000_glob_prod_1464_000.sl.grib2, field 17 [skin_temperature_sfc.glob]: skin_temperature_sfc.glob minimum value 237.261 is not in [
 s2s/rums/enfo warning: s2s.z_s2s_c_rhmc_20150826000000_glob_prod_1392_003.sl.grib2, field 15 [skin_temperature_sfc.glob]: skin_temperature_sfc.glob minimum value 240.467 is not in [180,240]
@@ -1639,7 +1639,7 @@ uerra/egrr/det/an: skin_temperature_sfc minimum value 266.875 is not in [160,250
       {&daily_average, &predefined_level, &resolution_s2s},
    },
 
-/* 
+/*
    S2S/CAWCR: soil_moisture_top_20_cm_sfc.glob maximum value 150 is not in [450,800]
 warning: s2s.z_s2s_c_babj_20150817000000_glob_prod_cf_1440_000.sl.grib2, field 1641 [soil_moisture_top_20_cm_sfc.glob]: soil_moisture_top_20_cm_sfc.glob minimum value 59.5781 is not in [-1e-17,0]
 */
@@ -1775,7 +1775,7 @@ s2s_prod/ammc/enfo:warning: s2s.st20_20151004_4.grib2, field 61 [soil_temperatur
    },
 
 
-/* 
+/*
    S2S/babj: warning: s2s.z_s2s_c_babj_20150908000000_glob_prod_cf_1440_000.sl.grib2, field 1816 [soil_temperature_top_100_cm_sfc.glob]: soil_temperature_top_100_cm_sfc.glob minimum value 199.941 is not in [200,240]
 */
    {
@@ -1807,7 +1807,7 @@ s2s_prod/ammc/enfo:warning: s2s.st20_20151004_4.grib2, field 61 [soil_temperatur
       {&daily_average, &given_thickness, &has_bitmap},
    },
 
-/* 
+/*
    S2S/rums: warning: s2s.z_s2s_c_rhmc_20150819000000_glob_prod_0024_000.sl.grib2, field 25 [soil_temperature_top_100_cm_sfc.glob]: soil_temperature_top_100_cm_sfc.glob minimum value 0 is not in [200,240]  xxx must be fixed!!!
    S2S/rums: warning: s2s.z_s2s_c_rhmc_20151021000000_glob_prod_0360_019.sl.grib2, field 23 [soil_temperature_top_100_cm_sfc.glob.s2.rums]: soil_temperature_top_100_cm_sfc.glob.s2.rums minimum value 240.084 is not in [0,240]
 */
@@ -1841,7 +1841,7 @@ s2s_prod/ammc/enfo:warning: s2s.st20_20151004_4.grib2, field 61 [soil_temperatur
       },
       {&daily_average, &given_thickness, &has_bitmap, &resolution_s2s},
    },
-/* 
+/*
    S2S/CAWCR: snow_depth_water_equivalent_sfc.glob maximum value 9066.25 is not in [10000,15000]
 warning: s2s.z_tigge_c_kwbc_19990817000000_ncep_prod_cf_sl_0024_000_0000_sd.grib2, field 19 [snow_depth_water_equivalent_sfc.glob]: snow_depth_water_equivalent_sfc.glob maximum value 219.94 is not in [9000,15000]
   s2s/isac:warning: s2s.z_s2s_c_isac_201510190000_glob_prod_cf_0744_00.sl.grib2, field 25 [snow_depth_water_equivalent_sfc.glob]: snow_depth_water_equivalent_sfc.glob maximum value 118.824
@@ -2127,7 +2127,7 @@ s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: t
       },
       {&point_in_time, &predefined_thickness},
    },
-/* 
+/*
 
 uerra/egrr (something like ad hoc 1 grid-point issue (similarly grid-point storms..)): warning: enda.2009-01-20.sfc.grib2, field 831 [low_cloud_cover_sfc]: low_cloud_cover_sfc maximum value 317.188 is not in [0.9999,100]
 */
@@ -3152,7 +3152,7 @@ uerra/egrr (something like ad hoc 1 grid-point issue (similarly grid-point storm
 
 /*
  ========================
- this skin_temperature_sfc  must be matched by tigge and uerra (not s2s!) 
+ this skin_temperature_sfc  must be matched by tigge and uerra (not s2s!)
  ========================
 
  uerra, cosmo-an: skin_temperature_sfc minimum value 245.905 is not in [160,245]
@@ -3799,9 +3799,9 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
          {"parameterCategory", GRIB_TYPE_LONG, 2},
          {"parameterNumber", GRIB_TYPE_LONG, 18},
          {"typeOfStatisticalProcessing", GRIB_TYPE_LONG, 1},
-         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1}, 
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
          {NULL, },
-      }, 
+      },
       {&from_start, &predefined_level},
    },
    {
@@ -3836,7 +3836,7 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
          {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
          {"localTablesVersion", GRIB_TYPE_LONG, 1},
          {NULL, },
-      }, 
+      },
       {&from_start, &predefined_level, &has_bitmap},
    },
    {

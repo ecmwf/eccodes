@@ -10,9 +10,6 @@
 
 #include "SectionLength.h"
 
-eccodes::accessor::SectionLength _grib_accessor_section_length;
-eccodes::Accessor* grib_accessor_section_length = &_grib_accessor_section_length;
-
 namespace eccodes::accessor
 {
 
@@ -20,7 +17,7 @@ void SectionLength::init(const long len, grib_arguments* arg)
 {
     Unsigned::init(len, arg);
     parent_->aclength = this;
-    length_           = len;
+    length_ = len;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
     ECCODES_ASSERT(length_ >= 0);

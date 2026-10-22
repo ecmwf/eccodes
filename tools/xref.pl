@@ -35,7 +35,7 @@ my @definitions;
 my %definitions;
 
 
-sub createdb { 
+sub createdb {
 	print "creating xref database...\n";
 	my $qh=$dbh->prepare("create database xref");
 	$qh->execute() or die $DBI::errstr;
@@ -81,8 +81,8 @@ foreach my $name (  @definitions )
 		{
 			my $dir = dirname($name);
 			my $inc = get_definition("$dir/$1");
-			push @{$def->{includes}},   $inc;		
-			push @{$inc->{included_by}},$def;		
+			push @{$def->{includes}},   $inc;
+			push @{$inc->{included_by}},$def;
 		}
 	}
 	close(IN);
@@ -92,7 +92,7 @@ foreach my $name (  @definitions )
 
 # First report: inclusions
 
-if(0)  { 
+if(0)  {
 
 foreach my $p ( sort keys %definitions )
 {
@@ -120,12 +120,12 @@ sub get_definition {
 	my ($path) = @_;
 
 
-	my $def = $definitions{$path} ;  
+	my $def = $definitions{$path} ;
 	unless(defined $def) {
 		my $name = $path;
 		$name =~ s/^$DEFINITIONS\/?//o;
 		$def = bless( {name => $name, path => $path,
-				includes => [], included_by => [] 
+				includes => [], included_by => []
 				}, "xref::definition") ;
 		$definitions{$path} = $def;
 	}
@@ -177,7 +177,7 @@ foreach my $name ( sort { lc $a cmp lc $b } keys %xref )
 		$visible ++ if($x->visible);
 		$edition{$x->edition}++;
 		$type{$x->type}++;
-		
+
 	}
 
 	next unless($visible);
@@ -185,7 +185,7 @@ foreach my $name ( sort { lc $a cmp lc $b } keys %xref )
 	my @edition = sort keys %edition;
 	my @type    = sort keys %type;
 
-	print "\n",$name," [@edition] [@type]\n\n";	
+	print "\n",$name," [@edition] [@type]\n\n";
 	foreach my $x ( sort { $a->{path} cmp $b->{path} } @{$xref{$name}} )
 	{
 		print "   ", $x->path, " " , $x->type , "[", $x->size, "] ";
@@ -199,8 +199,8 @@ foreach my $name ( sort { lc $a cmp lc $b } keys %xref )
 package xref::object;
 sub name { my ($self) = @_; return $self->{name}; }
 sub path { my ($self) = @_; return main::get_definition($self->{path})->{name} ; }
-#sub visible { my ($self) = @_; return !exists $self->{flags}->{GRIB_ACCESSOR_FLAG_HIDDEN}; } 
-sub visible { my ($self) = @_; return 1; } 
+#sub visible { my ($self) = @_; return !exists $self->{flags}->{GRIB_ACCESSOR_FLAG_HIDDEN}; }
+sub visible { my ($self) = @_; return 1; }
 
 sub insert {
     my $insert = "insert into xref (keyname,type,size,position,msgtype,file,flag,ref) values ";
@@ -240,7 +240,7 @@ sub size {
 
 sub position {
 	my ($self) = @_;
-	if ($self->{position}) { 
+	if ($self->{position}) {
 	  return $self->{position};
 	} else { return -1 ; }
 }

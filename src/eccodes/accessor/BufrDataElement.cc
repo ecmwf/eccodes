@@ -9,9 +9,7 @@
  */
 
 #include "BufrDataElement.h"
-
-eccodes::accessor::BufrDataElement _grib_accessor_bufr_data_element;
-eccodes::Accessor* grib_accessor_bufr_data_element = &_grib_accessor_bufr_data_element;
+#include "grib_accessor_factory.h"
 
 namespace eccodes::accessor
 {
@@ -25,32 +23,32 @@ grib_accessor* BufrDataElement::make_clone(grib_section* s, int* err)
     int i;
     grib_action creator;
 
-    creator.op_         = (char*)"bufr_data_element";
+    creator.op_ = (char*)"bufr_data_element";
     creator.name_space_ = (char*)"";
-    creator.set_        = 0;
-    creator.name_       = (char*)"unknown";
-    if (strcmp(class_name_, "bufr_data_element")) {
-        grib_context_log(context_, GRIB_LOG_FATAL, "wrong accessor type: '%s' should be '%s'", class_name_, "bufr_data_element");
+    creator.set_ = 0;
+    creator.name_ = (char*)"unknown";
+    if (accessor_type() != "bufr_data_element") {
+        grib_context_log(context_, GRIB_LOG_FATAL, "wrong accessor type: '%s' should be '%s'", accessor_type().c_str(), "bufr_data_element");
     }
     *err = 0;
 
-    the_clone                                  = grib_accessor_factory(s, &creator, 0, NULL);
-    copied_name                                = grib_context_strdup(context_, name_);
-    the_clone->name_                           = copied_name;
-    elementAccessor                            = dynamic_cast<BufrDataElement*>(the_clone);
-    the_clone->flags_                          = flags_;
-    the_clone->parent_                         = NULL;
-    the_clone->h_                              = s->h;
-    elementAccessor->index_                    = index_;
-    elementAccessor->type_                     = type_;
-    elementAccessor->numberOfSubsets_          = numberOfSubsets_;
-    elementAccessor->subsetNumber_             = subsetNumber_;
-    elementAccessor->compressedData_           = compressedData_;
-    elementAccessor->descriptors_              = descriptors_;
-    elementAccessor->numericValues_            = numericValues_;
-    elementAccessor->stringValues_             = stringValues_;
+    the_clone = grib_accessor_factory(s, &creator, 0, NULL);
+    copied_name = grib_context_strdup(context_, name_);
+    the_clone->name_ = copied_name;
+    elementAccessor = dynamic_cast<BufrDataElement*>(the_clone);
+    the_clone->flags_ = flags_;
+    the_clone->parent_ = NULL;
+    the_clone->h_ = s->h;
+    elementAccessor->index_ = index_;
+    elementAccessor->type_ = type_;
+    elementAccessor->numberOfSubsets_ = numberOfSubsets_;
+    elementAccessor->subsetNumber_ = subsetNumber_;
+    elementAccessor->compressedData_ = compressedData_;
+    elementAccessor->descriptors_ = descriptors_;
+    elementAccessor->numericValues_ = numericValues_;
+    elementAccessor->stringValues_ = stringValues_;
     elementAccessor->elementsDescriptorsIndex_ = elementsDescriptorsIndex_;
-    elementAccessor->cname_                    = copied_name; /* ECC-765 */
+    elementAccessor->cname_ = copied_name; /* ECC-765 */
 
     i = 0;
     while (attributes_[i]) {
@@ -69,16 +67,16 @@ void BufrDataElement::init(const long len, grib_arguments* params)
     length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_BUFR_DATA;
     /* flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY; */
-    index_                    = 0;
-    type_                     = 0;
-    compressedData_           = 0;
-    subsetNumber_             = 0;
-    numberOfSubsets_          = 0;
-    descriptors_              = NULL;
-    numericValues_            = NULL;
-    stringValues_             = NULL;
+    index_ = 0;
+    type_ = 0;
+    compressedData_ = 0;
+    subsetNumber_ = 0;
+    numberOfSubsets_ = 0;
+    descriptors_ = NULL;
+    numericValues_ = NULL;
+    stringValues_ = NULL;
     elementsDescriptorsIndex_ = NULL;
-    cname_                    = NULL;
+    cname_ = NULL;
 }
 
 void BufrDataElement::dump(eccodes::Dumper* dumper)
@@ -117,9 +115,9 @@ int BufrDataElement::unpack_string_array(char** val, size_t* len)
     else {
         DEBUG_ASSERT(subsetNumber_ < numericValues_->n);
         DEBUG_ASSERT(index_ < numericValues_->v[subsetNumber_]->n);
-        idx    = (int)numericValues_->v[subsetNumber_]->v[index_] / 1000 - 1;
+        idx = (int)numericValues_->v[subsetNumber_]->v[index_] / 1000 - 1;
         val[0] = grib_context_strdup(c, stringValues_->v[idx]->v[0]);
-        *len   = 1;
+        *len = 1;
     }
 
     return ret;
@@ -128,8 +126,8 @@ int BufrDataElement::unpack_string_array(char** val, size_t* len)
 int BufrDataElement::pack_string_array(const char** v, size_t* len)
 {
     int ret = GRIB_SUCCESS, idx = 0;
-    size_t i        = 0;
-    char* s         = NULL;
+    size_t i = 0;
+    char* s = NULL;
     grib_context* c = context_;
 
     if (compressedData_) {
@@ -157,7 +155,7 @@ int BufrDataElement::pack_string_array(const char** v, size_t* len)
         }
         for (i = 0; i < *len; i++) {
             // idx = (int)numericValues->v[subsetNumber]->v[index_ ] / 1000 - 1;
-            idx                         = (int)numericValues_->v[i]->v[index_] / 1000 - 1;
+            idx = (int)numericValues_->v[i]->v[index_] / 1000 - 1;
             stringValues_->v[idx]->v[0] = strdup(v[i]);
         }
         *len = 1;
@@ -168,8 +166,8 @@ int BufrDataElement::pack_string_array(const char** v, size_t* len)
 
 int BufrDataElement::unpack_string(char* val, size_t* len)
 {
-    char* str   = NULL;
-    char* p     = 0;
+    char* str = NULL;
+    char* p = 0;
     size_t slen = 0;
     double dval = 0;
     size_t dlen = 1;
@@ -177,7 +175,7 @@ int BufrDataElement::unpack_string(char* val, size_t* len)
     grib_context* c = context_;
 
     if (type_ != BUFR_DESCRIPTOR_TYPE_STRING) {
-        char sval[32] = {0,};
+        char sval[32] = { 0 };
         err = unpack_double(&dval, &dlen);
         if (err) return err;
         snprintf(sval, sizeof(sval), "%g", dval);
@@ -237,7 +235,7 @@ int BufrDataElement::unpack_string(char* val, size_t* len)
 int BufrDataElement::pack_string(const char* val, size_t* len)
 {
     int ret = GRIB_SUCCESS, idx = 0;
-    char* s         = NULL;
+    char* s = NULL;
     grib_context* c = context_;
 
     if (compressedData_) {
@@ -249,7 +247,7 @@ int BufrDataElement::pack_string(const char* val, size_t* len)
     grib_sarray_delete_content(stringValues_->v[idx]); /* ECC-1172 */
     grib_sarray_delete(stringValues_->v[idx]);
     stringValues_->v[idx] = grib_sarray_new(1, 1);
-    s                     = grib_context_strdup(c, val);
+    s = grib_context_strdup(c, val);
     grib_sarray_push(stringValues_->v[idx], s);
 
     return ret;
@@ -257,7 +255,7 @@ int BufrDataElement::pack_string(const char* val, size_t* len)
 
 int BufrDataElement::unpack_long(long* val, size_t* len)
 {
-    int ret    = GRIB_SUCCESS;
+    int ret = GRIB_SUCCESS;
     long count = 0, i = 0;
 
     value_count(&count);
@@ -277,7 +275,7 @@ int BufrDataElement::unpack_long(long* val, size_t* len)
         DEBUG_ASSERT(subsetNumber_ < numericValues_->n);
         DEBUG_ASSERT(index_ < numericValues_->v[subsetNumber_]->n);
         val[0] = numericValues_->v[subsetNumber_]->v[index_] == GRIB_MISSING_DOUBLE ? GRIB_MISSING_LONG : (long)numericValues_->v[subsetNumber_]->v[index_];
-        *len   = 1;
+        *len = 1;
     }
 
     return ret;
@@ -285,7 +283,7 @@ int BufrDataElement::unpack_long(long* val, size_t* len)
 
 int BufrDataElement::unpack_double(double* val, size_t* len)
 {
-    int ret    = GRIB_SUCCESS;
+    int ret = GRIB_SUCCESS;
     long count = 0, i = 0;
 
     value_count(&count);
@@ -305,7 +303,7 @@ int BufrDataElement::unpack_double(double* val, size_t* len)
         DEBUG_ASSERT(subsetNumber_ < numericValues_->n);
         DEBUG_ASSERT(index_ < numericValues_->v[subsetNumber_]->n);
         val[0] = numericValues_->v[subsetNumber_]->v[index_];
-        *len   = 1;
+        *len = 1;
     }
 
     return ret;
@@ -313,7 +311,7 @@ int BufrDataElement::unpack_double(double* val, size_t* len)
 
 int BufrDataElement::pack_double(const double* val, size_t* len)
 {
-    int ret      = GRIB_SUCCESS;
+    int ret = GRIB_SUCCESS;
     size_t count = 1, i = 0;
     grib_context* c = context_;
 
@@ -334,7 +332,7 @@ int BufrDataElement::pack_double(const double* val, size_t* len)
     }
     else {
         numericValues_->v[subsetNumber_]->v[index_] = val[0];
-        *len                                        = 1;
+        *len = 1;
     }
 
     return ret;
@@ -342,7 +340,7 @@ int BufrDataElement::pack_double(const double* val, size_t* len)
 
 int BufrDataElement::pack_long(const long* val, size_t* len)
 {
-    int ret      = 0;
+    int ret = 0;
     size_t count = 1, i = 0;
     grib_context* c = context_;
 
@@ -363,7 +361,7 @@ int BufrDataElement::pack_long(const long* val, size_t* len)
     }
     else {
         numericValues_->v[subsetNumber_]->v[index_] = val[0] == GRIB_MISSING_LONG ? GRIB_MISSING_DOUBLE : val[0];
-        *len                                        = 1;
+        *len = 1;
     }
 
     return ret;
@@ -382,7 +380,7 @@ int BufrDataElement::value_count(long* count)
 
     if (ntype == GRIB_TYPE_STRING) {
         DEBUG_ASSERT(index_ < numericValues_->n);
-        idx  = ((int)numericValues_->v[index_]->v[0] / 1000 - 1) / numberOfSubsets_;
+        idx = ((int)numericValues_->v[index_]->v[0] / 1000 - 1) / numberOfSubsets_;
         size = grib_sarray_used_size(stringValues_->v[idx]);
     }
     else {
@@ -398,7 +396,7 @@ int BufrDataElement::value_count(long* count)
 int BufrDataElement::unpack_double_element(size_t idx, double* val)
 {
     /* ECC-415 */
-    int ret    = GRIB_SUCCESS;
+    int ret = GRIB_SUCCESS;
     long count = 0;
 
     value_count(&count);
@@ -467,13 +465,13 @@ int BufrDataElement::is_missing()
 
     if (ktype == GRIB_TYPE_LONG) {
         long* values = NULL;
-        long value   = 0;
+        long value = 0;
 
         value_count(&count);
         size = size2 = count;
         if (size > 1) {
             values = (long*)grib_context_malloc_clear(c, sizeof(long) * size);
-            err    = unpack_long(values, &size2);
+            err = unpack_long(values, &size2);
         }
         else {
             err = unpack_long(&value, &size2);
@@ -494,14 +492,14 @@ int BufrDataElement::is_missing()
         }
     }
     else if (ktype == GRIB_TYPE_DOUBLE) {
-        double value   = 0;
+        double value = 0;
         double* values = NULL;
 
         value_count(&count);
         size = size2 = count;
         if (size > 1) {
             values = (double*)grib_context_malloc_clear(c, sizeof(double) * size);
-            err    = unpack_double(values, &size2);
+            err = unpack_double(values, &size2);
         }
         else {
             err = unpack_double(&value, &size2);
@@ -527,7 +525,7 @@ int BufrDataElement::is_missing()
         size = count;
         if (size > 1) {
             values = (char**)grib_context_malloc_clear(context_, size * sizeof(char*));
-            err    = unpack_string_array(values, &size);
+            err = unpack_string_array(values, &size);
             if (err) return 0; /* TODO: no way of propagating the error up */
             for (i = 0; i < size; i++) {
                 if (!grib_is_missing_string(this, (unsigned char*)values[i], size)) {
@@ -540,9 +538,9 @@ int BufrDataElement::is_missing()
             grib_context_free(c, values);
         }
         else {
-            char value[MAX_STRING_SIZE] = {0,}; /* See ECC-710 */
+            char value[MAX_STRING_SIZE] = { 0 }; /* See ECC-710 */
             size = MAX_STRING_SIZE;
-            err  = unpack_string(value, &size);
+            err = unpack_string(value, &size);
             if (err) return 0; /* TODO: no way of propagating the error up */
             result = grib_is_missing_string(this, (unsigned char*)value, size);
         }
@@ -555,9 +553,9 @@ int BufrDataElement::is_missing()
 
 int BufrDataElement::pack_missing()
 {
-    int ktype                = GRIB_TYPE_UNDEFINED;
-    int err                  = 0;
-    size_t size              = 1;
+    int ktype = GRIB_TYPE_UNDEFINED;
+    int err = 0;
+    size_t size = 1;
     const int can_be_missing = (flags_ & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING);
     if (!can_be_missing)
         return GRIB_VALUE_CANNOT_BE_MISSING;
@@ -565,11 +563,11 @@ int BufrDataElement::pack_missing()
     ktype = get_native_type();
     if (ktype == GRIB_TYPE_LONG) {
         long missing = GRIB_MISSING_LONG;
-        err          = pack_long(&missing, &size);
+        err = pack_long(&missing, &size);
     }
     else if (ktype == GRIB_TYPE_DOUBLE) {
         double missing = GRIB_MISSING_DOUBLE;
-        err            = pack_double(&missing, &size);
+        err = pack_double(&missing, &size);
     }
     else if (ktype == GRIB_TYPE_STRING) {
         err = pack_string("", &size);

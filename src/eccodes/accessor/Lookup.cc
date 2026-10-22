@@ -10,16 +10,13 @@
 
 #include "Lookup.h"
 
-eccodes::accessor::Lookup _grib_accessor_lookup;
-eccodes::Accessor* grib_accessor_lookup = &_grib_accessor_lookup;
-
 namespace eccodes::accessor
 {
 
 void Lookup::init(const long len, grib_arguments* arg)
 {
     Long::init(len, arg);
-    length_  = 0;
+    length_ = 0;
     llength_ = len;
     loffset_ = arg->get_long(get_enclosing_handle(), 0);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
@@ -35,9 +32,9 @@ void Lookup::post_init()
 
 void Lookup::dump(eccodes::Dumper* dumper)
 {
-    unsigned char bytes[1024] = {0,};
-    char msg[1024] = {0,};
-    char buf[2048] = {0,};
+    unsigned char bytes[1024] = { 0 };
+    char msg[1024] = { 0 };
+    char buf[2048] = { 0 };
     unsigned long v = 0;
 
     size_t llen = llength_;
@@ -58,7 +55,7 @@ void Lookup::dump(eccodes::Dumper* dumper)
 
 int Lookup::unpack_string(char* v, size_t* len)
 {
-    unsigned char bytes[1024] = {0,};
+    unsigned char bytes[1024] = { 0 };
 
     size_t llen = llength_;
     unpack_bytes(bytes, &llen);
@@ -72,8 +69,8 @@ int Lookup::unpack_string(char* v, size_t* len)
     if (llen == 1 && v[0] == '?') {
         /* Try unpack as long */
         size_t length = 10;
-        long lval     = 0;
-        int err       = unpack_long(&lval, &length);
+        long lval = 0;
+        int err = unpack_long(&lval, &length);
         if (!err) {
             char str[5];
             int conv = snprintf(str, sizeof(str), "%ld", lval);

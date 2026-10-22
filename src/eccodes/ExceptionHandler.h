@@ -14,7 +14,8 @@
 #include <tl/expected.hpp>
 #include <utility>
 
-namespace eccodes {
+namespace eccodes
+{
 
 // ExceptionHandler is a template class that handles exceptions thrown by a function.
 // It catches specific exceptions and returns an expected value or an error status.
@@ -22,7 +23,7 @@ template <typename Func, typename... Args>
 struct ExceptionHandler
 {
     using ReturnType = decltype(std::declval<Func>()(std::declval<Args>()...));
-    using ErrorType  = int;
+    using ErrorType = int;
 
     static tl::expected<ReturnType, ErrorType> handle(Func&& f, Args&&... args)
     {
@@ -74,6 +75,7 @@ ValueType updateErrorAndReturnValue(tl::expected<ValueType, ErrorType> result, i
         return result.value();
     }
     else {
+        // ECCODES_ASSERT(err != nullptr);
         *err = result.error();
         return {};
     }
@@ -111,4 +113,4 @@ void logErrorAndReturnValue(tl::expected<void, ErrorType> result)
     }
 }
 
-} // namespace eccodes
+}  // namespace eccodes

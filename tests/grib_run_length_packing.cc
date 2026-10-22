@@ -16,21 +16,26 @@
 
 int main(int argc, char* argv[])
 {
-    size_t str_len        = 0;
+    size_t str_len = 0;
     long number_of_values = 4, bits_per_value = 8, max_level_value = 3, number_of_level_values = 5, decimal_scale_factor = 1;
     size_t level_values_length = number_of_level_values;
-    long level_values[]        = { 101L, 102L, 103L, 104L, 105L };
-    double* values             = NULL;
-    size_t values_length       = number_of_values;
-    values                     = (double*)malloc(values_length * sizeof(double));
-    values[0]                  = 9999.0;
+    long level_values[] = { 101L, 102L, 103L, 104L, 105L };
+    double* values = NULL;
+    size_t values_length = number_of_values;
+    values = (double*)malloc(values_length * sizeof(double));
 
     assert(argc == 2);
 
+    // Set all values except the first which will be the missingValue
     for (size_t i = 1; i < values_length; i++) {
         values[i] = (double)((100.0 + i) / 10.0);
     }
     codes_handle* h = codes_grib_handle_new_from_samples(0, "GRIB2");
+    assert(h);
+
+    double missingValue = 0;
+    CODES_CHECK(codes_get_double(h, "missingValue", &missingValue), 0);
+    values[0] = missingValue;
 
     CODES_CHECK(codes_set_long(h, "numberOfDataPoints", number_of_values), 0);
     CODES_CHECK(codes_set_long(h, "Ni", sqrt(number_of_values)), 0);

@@ -5,7 +5,7 @@
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
  *
  * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+ * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
 #include "grib_scaling.h"
@@ -15,9 +15,7 @@
 #include "BufrElementsTable.h"
 #include "Variable.h"
 #include "ecc_numeric_limits.h"
-
-eccodes::accessor::BufrDataArray _grib_accessor_bufr_data_array;
-eccodes::Accessor* grib_accessor_bufr_data_array = &_grib_accessor_bufr_data_array;
+#include "grib_accessor_factory.h"
 
 namespace eccodes::accessor
 {
@@ -46,14 +44,14 @@ typedef int (*codec_replication_proc)(grib_context*, BufrDataArray*, int, grib_b
 
 void BufrDataArray::restart_bitmap()
 {
-    bitmapCurrent_                         = -1;
+    bitmapCurrent_ = -1;
     bitmapCurrentElementsDescriptorsIndex_ = bitmapStartElementsDescriptorsIndex_ - 1;
 }
 
 void BufrDataArray::cancel_bitmap()
 {
     bitmapCurrent_ = -1;
-    bitmapStart_   = -1;
+    bitmapStart_ = -1;
 }
 
 int BufrDataArray::is_bitmap_start_defined()
@@ -63,7 +61,7 @@ int BufrDataArray::is_bitmap_start_defined()
 
 size_t BufrDataArray::get_length()
 {
-    size_t len           = 0;
+    size_t len = 0;
     const grib_handle* h = get_enclosing_handle();
 
     grib_get_size(h, bufrDataEncodedName_, &len);
@@ -75,8 +73,8 @@ size_t BufrDataArray::get_length()
 void BufrDataArray::tableB_override_store_ref_val(grib_context* c, int code, long new_ref_val)
 {
     bufr_tableb_override* tb = (bufr_tableb_override*)grib_context_malloc_clear(c, sizeof(bufr_tableb_override));
-    tb->code                 = code;
-    tb->new_ref_val          = new_ref_val;
+    tb->code = code;
+    tb->new_ref_val = new_ref_val;
     if (!tableb_override_) {
         tableb_override_ = tb;
     }
@@ -92,7 +90,7 @@ void BufrDataArray::tableB_override_store_ref_val(grib_context* c, int code, lon
 /* Operator 203YYY: Retrieve changed reference value from linked list */
 int BufrDataArray::tableB_override_get_ref_val(int code, long* out_ref_val)
 {
-    bufr_tableb_override* p = tableb_override_;
+    const bufr_tableb_override* p = tableb_override_;
     while (p) {
         if (p->code == code) {
             *out_ref_val = p->new_ref_val;
@@ -118,11 +116,11 @@ void BufrDataArray::tableB_override_clear(grib_context* c)
 /* Operator 203YYY: Copy contents of linked list to the transient array key */
 int BufrDataArray::tableB_override_set_key(grib_handle* h)
 {
-    int err                  = GRIB_SUCCESS;
-    size_t size              = 0;
-    long* refVals            = NULL;
+    int err = GRIB_SUCCESS;
+    size_t size = 0;
+    long* refVals = NULL;
     grib_iarray* refValArray = grib_iarray_new(10, 10);
-    bufr_tableb_override* p  = tableb_override_;
+    bufr_tableb_override* p = tableb_override_;
     while (p) {
         grib_iarray_push(refValArray, p->new_ref_val);
         p = p->next;
@@ -130,7 +128,7 @@ int BufrDataArray::tableB_override_set_key(grib_handle* h)
     size = grib_iarray_used_size(refValArray);
     if (size > 0) {
         refVals = grib_iarray_get_array(refValArray);
-        err     = grib_set_long_array(h, OVERRIDDEN_REFERENCE_VALUES_KEY, refVals, size);
+        err = grib_set_long_array(h, OVERRIDDEN_REFERENCE_VALUES_KEY, refVals, size);
         grib_context_free(h->context, refVals);
     }
     grib_iarray_delete(refValArray);
@@ -141,7 +139,7 @@ static int check_overridden_reference_values(const grib_context* c, long* refVal
 {
     const long maxval = NumericLimits<long>::max(numBits);
     const long minval = NumericLimits<long>::min(numBits);
-    size_t i          = 0;
+    size_t i = 0;
     for (i = 0; i < refValListSize; ++i) {
         grib_context_log(c, GRIB_LOG_DEBUG, "check_overridden_reference_values: refValList[%ld]=%ld", i, refValList[i]);
         if (refValList[i] < minval || refValList[i] > maxval) {
@@ -171,64 +169,64 @@ void BufrDataArray::init(const long v, grib_arguments* params)
 {
     Gen::init(v, params);
     int n = 0;
-    const char* dataKeysName   = NULL;
-    grib_accessor* dataKeysAcc = NULL;
+    const char* dataKeysName = NULL;
+    const grib_accessor* dataKeysAcc = NULL;
 
-    bitmapStartElementsDescriptorsIndex_   = 0;
+    bitmapStartElementsDescriptorsIndex_ = 0;
     bitmapCurrentElementsDescriptorsIndex_ = 0;
 
-    unitsName_                  = NULL;
-    canBeMissing_               = NULL;
-    numberOfSubsets_            = 0;
-    compressedData_             = 0;
-    bitmapSize_                 = 0;
-    bitmapStart_                = 0;
-    bitmapCurrent_              = 0;
-    dataAccessors_              = NULL;
-    nInputBitmap_               = 0;
-    iInputBitmap_               = 0;
-    inputReplications_          = NULL;
-    nInputReplications_         = 0;
-    iInputReplications_         = 0;
-    inputExtendedReplications_  = NULL;
+    unitsName_ = NULL;
+    canBeMissing_ = NULL;
+    numberOfSubsets_ = 0;
+    compressedData_ = 0;
+    bitmapSize_ = 0;
+    bitmapStart_ = 0;
+    bitmapCurrent_ = 0;
+    dataAccessors_ = NULL;
+    nInputBitmap_ = 0;
+    iInputBitmap_ = 0;
+    inputReplications_ = NULL;
+    nInputReplications_ = 0;
+    iInputReplications_ = 0;
+    inputExtendedReplications_ = NULL;
     nInputExtendedReplications_ = 0;
     iInputExtendedReplications_ = 0;
-    inputShortReplications_     = NULL;
-    nInputShortReplications_    = 0;
-    iInputShortReplications_    = 0;
-    iss_list_                   = NULL;
-    tempStrings_                = NULL;
+    inputShortReplications_ = NULL;
+    nInputShortReplications_ = 0;
+    iInputShortReplications_ = 0;
+    iss_list_ = NULL;
+    tempStrings_ = NULL;
 
-    bufrDataEncodedName_          = params->get_name(get_enclosing_handle(), n++);
-    numberOfSubsetsName_          = params->get_name(get_enclosing_handle(), n++);
-    expandedDescriptorsName_      = params->get_name(get_enclosing_handle(), n++);
-    flagsName_                    = params->get_name(get_enclosing_handle(), n++);
+    bufrDataEncodedName_ = params->get_name(get_enclosing_handle(), n++);
+    numberOfSubsetsName_ = params->get_name(get_enclosing_handle(), n++);
+    expandedDescriptorsName_ = params->get_name(get_enclosing_handle(), n++);
+    flagsName_ = params->get_name(get_enclosing_handle(), n++);
     elementsDescriptorsIndexName_ = params->get_name(get_enclosing_handle(), n++);
-    compressedDataName_           = params->get_name(get_enclosing_handle(), n++);
-    dataKeysName                  = params->get_name(get_enclosing_handle(), n++);
+    compressedDataName_ = params->get_name(get_enclosing_handle(), n++);
+    dataKeysName = params->get_name(get_enclosing_handle(), n++);
 
-    dataKeysAcc               = grib_find_accessor(get_enclosing_handle(), dataKeysName);
-    dataKeys_                 = dataKeysAcc->parent_;
-    do_decode_                = 1;
+    dataKeysAcc = grib_find_accessor(get_enclosing_handle(), dataKeysName);
+    dataKeys_ = dataKeysAcc->parent_;
+    do_decode_ = 1;
     elementsDescriptorsIndex_ = 0;
-    numericValues_            = 0;
-    tempDoubleValues_         = 0;
-    stringValues_             = 0;
+    numericValues_ = 0;
+    tempDoubleValues_ = 0;
+    stringValues_ = 0;
     cancel_bitmap();
-    expanded_                       = 0;
-    expandedAccessor_               = 0;
-    dataAccessorsTrie_              = 0;
-    change_ref_value_operand_       = 0;    /* Operator 203YYY: 0, 255 or YYY */
-    refValListSize_                 = 0;    /* Operator 203YYY: size of overridden reference values array */
-    refValList_                     = NULL; /* Operator 203YYY: overridden reference values array */
-    refValIndex_                    = 0;    /* Operator 203YYY: index into overridden reference values array */
-    tableb_override_                = NULL; /* Operator 203YYY: Table B lookup linked list */
-    set_to_missing_if_out_of_range_ = 0;    /* By default fail if out of range */
+    expanded_ = 0;
+    expandedAccessor_ = 0;
+    dataAccessorsTrie_ = 0;
+    change_ref_value_operand_ = 0;       /* Operator 203YYY: 0, 255 or YYY */
+    refValListSize_ = 0;                 /* Operator 203YYY: size of overridden reference values array */
+    refValList_ = NULL;                  /* Operator 203YYY: overridden reference values array */
+    refValIndex_ = 0;                    /* Operator 203YYY: index into overridden reference values array */
+    tableb_override_ = NULL;             /* Operator 203YYY: Table B lookup linked list */
+    set_to_missing_if_out_of_range_ = 0; /* By default fail if out of range */
 
-    length_        = 0;
+    length_ = 0;
     bitsToEndData_ = get_length() * 8;
-    unpackMode_    = CODES_BUFR_UNPACK_STRUCTURE;
-    inputBitmap_   = NULL;
+    unpackMode_ = CODES_BUFR_UNPACK_STRUCTURE;
+    inputBitmap_ = NULL;
 }
 
 // void clean_string(char* s,int len)
@@ -259,6 +257,9 @@ int check_end_data(grib_context* c, bufr_descriptor* bd, BufrDataArray* self, in
 void BufrDataArray::self_clear()
 {
     grib_context_free(context_, canBeMissing_);
+    grib_context_free(context_, nokeys_);
+    grib_context_free(context_, refOverrides_);
+    grib_context_free(context_, hasRefOverride_);
     grib_vdarray_delete_content(numericValues_);
     grib_vdarray_delete(numericValues_);
 
@@ -277,7 +278,7 @@ void BufrDataArray::self_clear()
     if (inputShortReplications_)
         grib_context_free(context_, inputShortReplications_);
     change_ref_value_operand_ = 0;
-    refValListSize_           = 0;
+    refValListSize_ = 0;
     if (refValList_)
         grib_context_free(context_, refValList_);
     refValIndex_ = 0;
@@ -342,8 +343,8 @@ void BufrDataArray::accessor_bufr_data_array_set_unpackMode(int unpackMode)
 
 int BufrDataArray::get_descriptors()
 {
-    int ret         = 0, i, numberOfDescriptors;
-    grib_handle* h  = get_enclosing_handle();
+    int ret = 0, i, numberOfDescriptors;
+    grib_handle* h = get_enclosing_handle();
     grib_context* c = context_;
 
     if (!expandedAccessor_)
@@ -355,6 +356,12 @@ int BufrDataArray::get_descriptors()
     numberOfDescriptors = grib_bufr_descriptors_array_used_size(expanded_);
     if (canBeMissing_) grib_context_free(c, canBeMissing_);
     canBeMissing_ = (int*)grib_context_malloc_clear(c, numberOfDescriptors * sizeof(int));
+    if (nokeys_) grib_context_free(c, nokeys_);
+    nokeys_ = (int*)grib_context_malloc_clear(c, numberOfDescriptors * sizeof(int));
+    if (refOverrides_) grib_context_free(c, refOverrides_);
+    refOverrides_ = (long*)grib_context_malloc_clear(c, numberOfDescriptors * sizeof(long));
+    if (hasRefOverride_) grib_context_free(c, hasRefOverride_);
+    hasRefOverride_ = (int*)grib_context_malloc_clear(c, numberOfDescriptors * sizeof(int));
     for (i = 0; i < numberOfDescriptors; i++)
         canBeMissing_[i] = grib_bufr_descriptor_can_be_missing(expanded_->v[i]);
 
@@ -368,11 +375,11 @@ int BufrDataArray::get_descriptors()
 
 int BufrDataArray::decode_string_array(grib_context* c, unsigned char* data, long* pos, bufr_descriptor* bd)
 {
-    int ret    = 0;
-    int* err   = &ret;
+    int ret = 0;
+    int* err = &ret;
     char* sval = 0;
     int j, modifiedWidth, width;
-    grib_sarray* sa                        = grib_sarray_new(numberOfSubsets_, 10);
+    grib_sarray* sa = grib_sarray_new(numberOfSubsets_, 10);
     int bufr_multi_element_constant_arrays = c->bufr_multi_element_constant_arrays;
 
     modifiedWidth = bd->width;
@@ -424,21 +431,23 @@ int BufrDataArray::decode_string_array(grib_context* c, unsigned char* data, lon
     return ret;
 }
 
-grib_darray* BufrDataArray::decode_double_array(grib_context* c, unsigned char* data, long* pos,
-                                                bufr_descriptor* bd, int canBeMissing, int* err)
+// numeric (integer or double) or codetable or flagtable array
+grib_darray* BufrDataArray::decode_numeric_array(grib_context* c, unsigned char* data, long* pos,
+                                                 bufr_descriptor* bd, int canBeMissing, int* err)
 {
     grib_darray* ret = NULL;
     int j;
     size_t lval;
-    int localReference, localWidth, modifiedWidth, modifiedReference;
+    long localReference;
+    int localWidth, modifiedWidth, modifiedReference;
     double modifiedFactor, dval;
     int bufr_multi_element_constant_arrays = c->bufr_multi_element_constant_arrays;
 
     *err = 0;
 
     modifiedReference = bd->reference;
-    modifiedFactor    = bd->factor;
-    modifiedWidth     = bd->width;
+    modifiedFactor = bd->factor;
+    modifiedWidth = bd->width;
 
     CHECK_END_DATA_RETURN(c, bd, this, modifiedWidth + 6, NULL);
     if (*err) {
@@ -450,9 +459,9 @@ grib_darray* BufrDataArray::decode_double_array(grib_context* c, unsigned char* 
         *err = 0;
         return ret;
     }
-    lval           = grib_decode_size_t(data, pos, modifiedWidth);
+    lval = grib_decode_size_t(data, pos, modifiedWidth);
     localReference = (long)lval + modifiedReference;
-    localWidth     = grib_decode_unsigned_long(data, pos, 6);
+    localWidth = grib_decode_unsigned_long(data, pos, 6);
     grib_context_log(c, GRIB_LOG_DEBUG, "BUFR data decoding: \tlocalWidth=%d", localWidth);
     ret = grib_darray_new(numberOfSubsets_, 50);
     if (localWidth) {
@@ -512,7 +521,7 @@ int BufrDataArray::encode_string_array(grib_context* c, grib_buffer* buff, long*
     int k, j, modifiedWidth, width;
 
     if (iss_list_ == NULL) {
-        grib_context_log(c, GRIB_LOG_ERROR, "encode_string_array: iss_list_ ==NULL");
+        grib_context_log(c, GRIB_LOG_ERROR, "encode_string_array: iss_list_ == NULL");
         return GRIB_INTERNAL_ERROR;
     }
     if (!stringValues) {
@@ -524,7 +533,7 @@ int BufrDataArray::encode_string_array(grib_context* c, grib_buffer* buff, long*
         return GRIB_NO_VALUES;
 
     if (grib_sarray_used_size(stringValues) == 1) {
-        n    = 1;
+        n = 1;
         ival = 0;
     }
     else {
@@ -550,7 +559,7 @@ int BufrDataArray::encode_string_array(grib_context* c, grib_buffer* buff, long*
     if (width) {
         grib_buffer_set_ulength_bits(c, buff, buff->ulength_bits + width * n);
         for (j = 0; j < n; j++) {
-            k   = iss_list_->v[j];
+            k = iss_list_->v[j];
             err = grib_encode_string(buff->data, pos, width / 8, stringValues->v[k]);
             if (err) {
                 grib_context_log(c, GRIB_LOG_ERROR, "encode_string_array: %s. Failed to encode '%s'",
@@ -581,15 +590,15 @@ static int descriptor_get_min_max(bufr_descriptor* bd, long width, long referenc
     if (width <= 0)
         return GRIB_MISSING_BUFR_ENTRY; /* ECC-1395 */
 
-    DEBUG_ASSERT(width > 0 && width < 64);
+    DEBUG_ASSERT(width < 64);
 
     *maxAllowed = (max1 + reference) * factor;
     *minAllowed = reference * factor;
     return GRIB_SUCCESS;
 }
 
-int BufrDataArray::encode_double_array(grib_context* c, grib_buffer* buff, long* pos, bufr_descriptor* bd,
-                                       grib_darray* dvalues)
+int BufrDataArray::encode_numeric_array(grib_context* c, grib_buffer* buff, long* pos, bufr_descriptor* bd,
+                                        grib_darray* dvalues)
 {
     int err = 0;
     int j, i;
@@ -598,12 +607,12 @@ int BufrDataArray::encode_double_array(grib_context* c, grib_buffer* buff, long*
     long reference, allone;
     double localRange, modifiedFactor, inverseFactor;
     size_t ii, index_of_min, index_of_max;
-    int nvals  = 0;
+    int nvals = 0;
     double min = 0, max = 0, maxAllowed, minAllowed;
-    double* v            = NULL;
-    double* values       = NULL;
+    double* v = NULL;
+    double* values = NULL;
     bool thereIsAMissing = false;
-    bool is_constant     = true;
+    bool is_constant = true;
     double val0;
     /* ECC-379, ECC-830 */
     const int dont_fail_if_out_of_range = set_to_missing_if_out_of_range_;
@@ -614,9 +623,9 @@ int BufrDataArray::encode_double_array(grib_context* c, grib_buffer* buff, long*
     }
 
     modifiedReference = bd->reference;
-    modifiedFactor    = bd->factor;
-    inverseFactor     = codes_power<double>(bd->scale, 10);
-    modifiedWidth     = bd->width;
+    modifiedFactor = bd->factor;
+    inverseFactor = codes_power<double>(bd->scale, 10);
+    modifiedWidth = bd->width;
 
     err = descriptor_get_min_max(bd, modifiedWidth, modifiedReference, modifiedFactor, &minAllowed, &maxAllowed);
     if (err) return err;
@@ -666,8 +675,8 @@ int BufrDataArray::encode_double_array(grib_context* c, grib_buffer* buff, long*
 
     if (nvals > grib_darray_used_size(dvalues))
         return GRIB_ARRAY_TOO_SMALL;
-    values      = (double*)grib_context_malloc_clear(c, sizeof(double) * nvals);
-    val0        = dvalues->v[iss_list_->v[0]];
+    values = (double*)grib_context_malloc_clear(c, sizeof(double) * nvals);
+    val0 = dvalues->v[iss_list_->v[0]];
     is_constant = true;
     for (i = 0; i < nvals; i++) {
         values[i] = dvalues->v[iss_list_->v[i]];
@@ -723,16 +732,16 @@ int BufrDataArray::encode_double_array(grib_context* c, grib_buffer* buff, long*
             break;
         }
     }
-    ii           = 0;
+    ii = 0;
     index_of_min = index_of_max = 0;
-    v                           = values;
+    v = values;
     while (ii < nvals) {
         if (*v < min && *v != GRIB_MISSING_DOUBLE) {
-            min          = *v;
+            min = *v;
             index_of_min = ii;
         }
         if (*v > max && *v != GRIB_MISSING_DOUBLE) {
-            max          = *v;
+            max = *v;
             index_of_max = ii;
         }
         if (*v == GRIB_MISSING_DOUBLE)
@@ -751,13 +760,13 @@ int BufrDataArray::encode_double_array(grib_context* c, grib_buffer* buff, long*
         return GRIB_OUT_OF_RANGE;
     }
 
-    reference      = round(min * inverseFactor);
+    reference = round(min * inverseFactor);
     localReference = reference - modifiedReference;
     if (max != min) {
         localRange = (max - min) * inverseFactor + 1;
         localWidth = ceil(log(localRange) / log(2.0));
-        lval       = round(max * inverseFactor) - reference;
-        allone     = codes_power<double>(localWidth, 2) - 1;
+        lval = round(max * inverseFactor) - reference;
+        allone = codes_power<double>(localWidth, 2) - 1;
         while (allone <= lval) {
             localWidth++;
             allone = codes_power<double>(localWidth, 2) - 1;
@@ -806,7 +815,7 @@ int BufrDataArray::encode_double_array(grib_context* c, grib_buffer* buff, long*
     return err;
 }
 
-int BufrDataArray::encode_double_value(grib_context* c, grib_buffer* buff, long* pos, bufr_descriptor* bd, double value)
+int BufrDataArray::encode_numeric_value(grib_context* c, grib_buffer* buff, long* pos, bufr_descriptor* bd, double value)
 {
     size_t lval;
     double maxAllowed, minAllowed;
@@ -817,8 +826,8 @@ int BufrDataArray::encode_double_value(grib_context* c, grib_buffer* buff, long*
     const int dont_fail_if_out_of_range = set_to_missing_if_out_of_range_;
 
     modifiedReference = bd->reference;
-    modifiedFactor    = bd->factor;
-    modifiedWidth     = bd->width;
+    modifiedFactor = bd->factor;
+    modifiedWidth = bd->width;
 
     err = descriptor_get_min_max(bd, modifiedWidth, modifiedReference, modifiedFactor, &minAllowed, &maxAllowed);
     if (err) return err;
@@ -887,9 +896,10 @@ char* BufrDataArray::decode_string_value(grib_context* c, unsigned char* data, l
     return sval;
 }
 
-double BufrDataArray::decode_double_value(grib_context* c, unsigned char* data, long* pos,
-                                                            bufr_descriptor* bd, int canBeMissing,
-                                                            int* err)
+// numeric (integer or double) or codetable or flagtable
+double BufrDataArray::decode_numeric_value(grib_context* c, unsigned char* data, long* pos,
+                                           bufr_descriptor* bd, int canBeMissing,
+                                           int* err)
 {
     size_t lval;
     int modifiedWidth, modifiedReference;
@@ -899,8 +909,8 @@ double BufrDataArray::decode_double_value(grib_context* c, unsigned char* data, 
     *err = 0;
 
     modifiedReference = bd->reference;
-    modifiedFactor    = bd->factor;
-    modifiedWidth     = bd->width;
+    modifiedFactor = bd->factor;
+    modifiedWidth = bd->width;
 
     CHECK_END_DATA_RETURN(c, bd, this, modifiedWidth, 0);
     if (*err) {
@@ -918,30 +928,29 @@ double BufrDataArray::decode_double_value(grib_context* c, unsigned char* data, 
     return dval;
 }
 
-
 int decode_element(grib_context* c, BufrDataArray* self, int subsetIndex,
                    grib_buffer* b, unsigned char* data, long* pos, int i, bufr_descriptor* descriptor, long elementIndex,
                    grib_darray* dval, grib_sarray* sval)
 {
-    grib_darray* dar    = 0;
-    grib_sarray* sar    = 0;
-    int index           = 0, ii, stringValuesLen;
-    char* csval         = 0;
-    double cdval        = 0, x;
-    int err             = 0;
+    grib_darray* dar = 0;
+    grib_sarray* sar = 0;
+    int index = 0, ii, stringValuesLen;
+    char* csval = 0;
+    double cdval = 0, x;
+    int err = 0;
     bufr_descriptor* bd = descriptor == NULL ? self->expanded_->v[i] : descriptor;
     /* ECCODES_ASSERT( b->data == data); */
 
     if (self->change_ref_value_operand_ > 0 && self->change_ref_value_operand_ != 255) {
         /* Operator 203YYY: Change Reference Values: Definition phase */
         const int number_of_bits = self->change_ref_value_operand_;
-        long new_ref_val         = grib_decode_signed_longb(data, pos, number_of_bits);
+        long new_ref_val = grib_decode_signed_longb(data, pos, number_of_bits);
         grib_context_log(c, GRIB_LOG_DEBUG, "BUFR data decoding: -**- \tcode=203YYY width=%d pos=%ld -> %ld",
                          number_of_bits, (long)*pos, (long)(*pos - self->offset_ * 8));
         grib_context_log(c, GRIB_LOG_DEBUG, "Operator 203YYY: Store for code %6.6ld => new ref val %ld", bd->code, new_ref_val);
         self->tableB_override_store_ref_val(c, bd->code, new_ref_val);
-        bd->nokey = 1;
-        err       = check_end_data(c, NULL, self, number_of_bits); /*advance bitsToEnd*/
+        self->nokeys_[i] = 1;
+        err = check_end_data(c, NULL, self, number_of_bits); /*advance bitsToEnd*/
         return err;
     }
     grib_context_log(c, GRIB_LOG_DEBUG, "BUFR data decoding: -%d- \tcode=%6.6ld width=%ld scale=%ld ref=%ld type=%d (pos=%ld -> %ld)",
@@ -950,9 +959,9 @@ int decode_element(grib_context* c, BufrDataArray* self, int subsetIndex,
     if (bd->type == BUFR_DESCRIPTOR_TYPE_STRING) {
         /* string */
         if (self->compressedData_) {
-            err   = self->decode_string_array(c, data, pos, bd);
+            err = self->decode_string_array(c, data, pos, bd);
             index = grib_vsarray_used_size(self->stringValues_);
-            dar   = grib_darray_new(self->numberOfSubsets_, 10);
+            dar = grib_darray_new(self->numberOfSubsets_, 10);
             index = self->numberOfSubsets_ * (index - 1);
             for (ii = 1; ii <= self->numberOfSubsets_; ii++) {
                 x = (index + ii) * 1000 + bd->width / 8;
@@ -966,7 +975,7 @@ int decode_element(grib_context* c, BufrDataArray* self, int subsetIndex,
             sar = grib_sarray_push(sar, csval);
             grib_vsarray_push(self->stringValues_, sar);
             stringValuesLen = grib_vsarray_used_size(self->stringValues_);
-            index           = 0;
+            index = 0;
             for (ii = 0; ii < stringValuesLen; ii++) {
                 index += grib_sarray_used_size(self->stringValues_->v[ii]);
             }
@@ -976,9 +985,16 @@ int decode_element(grib_context* c, BufrDataArray* self, int subsetIndex,
     }
     else {
         /* numeric or codetable or flagtable */
-        /* Operator 203YYY: Check if we have changed ref value for this element. If so modify bd->reference */
-        if (self->change_ref_value_operand_ != 0 && self->tableB_override_get_ref_val(bd->code, &(bd->reference)) == GRIB_SUCCESS) {
-            grib_context_log(c, GRIB_LOG_DEBUG, "Operator 203YYY: For code %6.6ld, changed ref val: %ld", bd->code, bd->reference);
+        /* Operator 203YYY: Check if we have changed ref value for this element. If so use local copy */
+        bufr_descriptor bd_local;
+        long overridden_ref;
+        if (self->change_ref_value_operand_ != 0 && self->tableB_override_get_ref_val(bd->code, &overridden_ref) == GRIB_SUCCESS) {
+            grib_context_log(c, GRIB_LOG_DEBUG, "Operator 203YYY: For code %6.6ld, changed ref val: %ld", bd->code, overridden_ref);
+            bd_local = *bd;
+            bd_local.reference = overridden_ref;
+            bd = &bd_local;
+            self->hasRefOverride_[i] = 1;
+            self->refOverrides_[i] = overridden_ref;
         }
 
         if (bd->width > 64) {
@@ -986,12 +1002,12 @@ int decode_element(grib_context* c, BufrDataArray* self, int subsetIndex,
             return GRIB_DECODING_ERROR;
         }
         if (self->compressedData_) {
-            dar = self->decode_double_array(c, data, pos, bd, self->canBeMissing_[i], &err);
+            dar = self->decode_numeric_array(c, data, pos, bd, self->canBeMissing_[i], &err);
             grib_vdarray_push(self->numericValues_, dar);
         }
         else {
             /* Uncompressed */
-            cdval = self->decode_double_value(c, data, pos, bd, self->canBeMissing_[i], &err);
+            cdval = self->decode_numeric_value(c, data, pos, bd, self->canBeMissing_[i], &err);
             grib_context_log(c, GRIB_LOG_DEBUG, "BUFR data decoding: \t %s = %g",
                              bd->shortName, cdval);
             grib_darray_push(dval, cdval);
@@ -1000,15 +1016,15 @@ int decode_element(grib_context* c, BufrDataArray* self, int subsetIndex,
     return err;
 }
 
-
-int decode_replication(grib_context* c, BufrDataArray* self, int subsetIndex, grib_buffer* buff, unsigned char* data, long* pos, int i, long elementIndex, grib_darray* dval, long* numberOfRepetitions)
+int decode_replication(grib_context* c, BufrDataArray* self, int subsetIndex, grib_buffer* buff,
+                       unsigned char* data, long* pos, int i, long elementIndex, grib_darray* dval, long* numberOfRepetitions)
 {
     int ret = 0;
     int* err;
     int localReference, width;
     bufr_descriptor** descriptors = 0;
-    err                           = &ret;
-    descriptors                   = self->expanded_->v;
+    err = &ret;
+    descriptors = self->expanded_->v;
 
     /* ECCODES_ASSERT(buff->data == data); */
 
@@ -1065,12 +1081,11 @@ int decode_replication(grib_context* c, BufrDataArray* self, int subsetIndex, gr
     return ret;
 }
 
-
 int BufrDataArray::encode_new_bitmap(grib_context* c, grib_buffer* buff, long* pos, int idx)
 {
     grib_darray* doubleValues = NULL;
-    int err                   = 0;
-    double cdval              = 0;
+    int err = 0;
+    double cdval = 0;
     if (nInputBitmap_ > 0) {
         if (nInputBitmap_ < iInputBitmap_)
             return GRIB_ARRAY_TOO_SMALL;
@@ -1079,22 +1094,21 @@ int BufrDataArray::encode_new_bitmap(grib_context* c, grib_buffer* buff, long* p
     if (compressedData_) {
         doubleValues = grib_darray_new(1, 1);
         grib_darray_push(doubleValues, cdval);
-        err = encode_double_array(c, buff, pos, expanded_->v[idx], doubleValues);
+        err = encode_numeric_array(c, buff, pos, expanded_->v[idx], doubleValues);
         grib_darray_delete(doubleValues);
     }
     else {
-        err = encode_double_value(c, buff, pos, expanded_->v[idx], cdval);
+        err = encode_numeric_value(c, buff, pos, expanded_->v[idx], cdval);
     }
     return err;
 }
 
 /* Operator 203YYY: Change Reference Values: Encoding definition phase */
-int BufrDataArray::encode_overridden_reference_value(grib_context* c,
-                                                                       grib_buffer* buff, long* pos, bufr_descriptor* bd)
+int BufrDataArray::encode_overridden_reference_value(grib_context* c, grib_buffer* buff, long* pos, bufr_descriptor* bd)
 {
-    int err         = 0;
+    int err = 0;
     long currRefVal = -1;
-    long numBits    = change_ref_value_operand_;
+    long numBits = change_ref_value_operand_;
     /* We must be encoding between 203YYY and 203255 */
     ECCODES_ASSERT(change_ref_value_operand_ > 0 && change_ref_value_operand_ != 255);
     if (refValListSize_ == 0) {
@@ -1125,6 +1139,7 @@ int BufrDataArray::encode_overridden_reference_value(grib_context* c,
                          currRefVal, bd->shortName, bd->code);
     }
     refValIndex_++;
+    tableB_override_store_ref_val(c, bd->code, currRefVal);
     return err;
 }
 
@@ -1133,10 +1148,10 @@ int encode_new_element(grib_context* c, BufrDataArray* self, int subsetIndex,
                        long elementIndex, grib_darray* dval, grib_sarray* sval)
 {
     int ii;
-    char* csval               = 0;
+    char* csval = 0;
     unsigned char missingChar = 0xFF;
-    double cdval              = GRIB_MISSING_DOUBLE;
-    int err                   = 0;
+    double cdval = GRIB_MISSING_DOUBLE;
+    int err = 0;
     size_t slen;
     bufr_descriptor* bd = descriptor == NULL ? self->expanded_->v[i] : descriptor;
 
@@ -1151,7 +1166,7 @@ int encode_new_element(grib_context* c, BufrDataArray* self, int subsetIndex,
 
     if (bd->type == BUFR_DESCRIPTOR_TYPE_STRING) {
         /* string */
-        slen  = bd->width / 8;
+        slen = bd->width / 8;
         csval = (char*)grib_context_malloc_clear(c, slen + 1);
         for (ii = 0; ii < slen; ii++)
             csval[ii] = missingChar;
@@ -1171,6 +1186,14 @@ int encode_new_element(grib_context* c, BufrDataArray* self, int subsetIndex,
     }
     else {
         /* numeric or codetable or flagtable */
+        /* Operator 203YYY: Use overridden reference if available */
+        bufr_descriptor bd_new_local;
+        long overridden_ref;
+        if (self->change_ref_value_operand_ != 0 && self->tableB_override_get_ref_val(bd->code, &overridden_ref) == GRIB_SUCCESS) {
+            bd_new_local = *bd;
+            bd_new_local.reference = overridden_ref;
+            bd = &bd_new_local;
+        }
         grib_context_log(c, GRIB_LOG_DEBUG, "BUFR data encoding: \t %s = %g",
                          bd->shortName, cdval);
         if (bd->code == 31031)
@@ -1178,22 +1201,21 @@ int encode_new_element(grib_context* c, BufrDataArray* self, int subsetIndex,
         if (self->compressedData_) {
             grib_darray* doubleValues = grib_darray_new(1, 1);
             grib_darray_push(doubleValues, cdval);
-            err = self->encode_double_array(c, buff, pos, bd, doubleValues);
+            err = self->encode_numeric_array(c, buff, pos, bd, doubleValues);
             grib_darray_delete(doubleValues);
         }
         else {
-            err = self->encode_double_value(c, buff, pos, bd, cdval);
+            err = self->encode_numeric_value(c, buff, pos, bd, cdval);
         }
     }
     return err;
 }
 
-
 int encode_new_replication(grib_context* c, BufrDataArray* self, int subsetIndex,
                            grib_buffer* buff, unsigned char* data, long* pos, int i, long elementIndex, grib_darray* dval, long* numberOfRepetitions)
 {
-    int err                       = 0;
-    unsigned long repetitions     = 1;
+    int err = 0;
+    unsigned long repetitions = 1;
     bufr_descriptor** descriptors = self->expanded_->v;
     DEBUG_ASSERT(buff->data == data);
 
@@ -1252,13 +1274,12 @@ int encode_new_replication(grib_context* c, BufrDataArray* self, int subsetIndex
     return err;
 }
 
-
 int encode_element(grib_context* c, BufrDataArray* self, int subsetIndex,
                    grib_buffer* buff, unsigned char* data, long* pos, int i, bufr_descriptor* descriptor,
                    long elementIndex, grib_darray* dval, grib_sarray* sval)
 {
     int idx, j;
-    int err             = 0;
+    int err = 0;
     bufr_descriptor* bd = descriptor == NULL ? self->expanded_->v[i] : descriptor;
     /* ECCODES_ASSERT( buff->data == data); */
 
@@ -1277,7 +1298,7 @@ int encode_element(grib_context* c, BufrDataArray* self, int subsetIndex,
                  bd->shortName,csval); */
         if (self->compressedData_) {
             idx = ((int)self->numericValues_->v[elementIndex]->v[0] / 1000 - 1) / self->numberOfSubsets_;
-            if (idx >= self->stringValues_->size) { // ECC-2024: BUFR: Repeated subset extraction segfaults
+            if (idx >= self->stringValues_->size) {  // ECC-2024: BUFR: Repeated subset extraction segfaults
                 grib_context_log(c, GRIB_LOG_ERROR, "encode_element '%s': Invalid index %d", bd->shortName, idx);
                 return GRIB_INTERNAL_ERROR;
             }
@@ -1298,8 +1319,16 @@ int encode_element(grib_context* c, BufrDataArray* self, int subsetIndex,
     }
     else {
         /* numeric or codetable or flagtable */
+        /* Operator 203YYY: Use overridden reference if available */
+        bufr_descriptor bd_enc_local;
+        long overridden_ref;
+        if (self->change_ref_value_operand_ != 0 && self->tableB_override_get_ref_val(bd->code, &overridden_ref) == GRIB_SUCCESS) {
+            bd_enc_local = *bd;
+            bd_enc_local.reference = overridden_ref;
+            bd = &bd_enc_local;
+        }
         if (self->compressedData_) {
-            err = self->encode_double_array(c, buff, pos, bd, self->numericValues_->v[elementIndex]);
+            err = self->encode_numeric_array(c, buff, pos, bd, self->numericValues_->v[elementIndex]);
             if (err) {
                 grib_darray* varr = self->numericValues_->v[elementIndex];
                 grib_context_log(c, GRIB_LOG_ERROR, "Encoding key '%s' ( code=%6.6ld width=%ld scale=%ld reference=%ld )",
@@ -1319,7 +1348,7 @@ int encode_element(grib_context* c, BufrDataArray* self, int subsetIndex,
                 grib_context_log(c, GRIB_LOG_ERROR, "Invalid subset index %d (number of subsets=%ld)", subsetIndex, self->numberOfSubsets_);
                 return GRIB_INVALID_ARGUMENT;
             }
-            err = self->encode_double_value(c, buff, pos, bd, self->numericValues_->v[subsetIndex]->v[elementIndex]);
+            err = self->encode_numeric_value(c, buff, pos, bd, self->numericValues_->v[subsetIndex]->v[elementIndex]);
             if (err) {
                 grib_context_log(c, GRIB_LOG_ERROR, "Cannot encode %s=%g (subset=%d)", /*subsetIndex starts from 0*/
                                  bd->shortName, self->numericValues_->v[subsetIndex]->v[elementIndex], subsetIndex + 1);
@@ -1348,13 +1377,13 @@ int encode_replication(grib_context* c, BufrDataArray* self, int subsetIndex,
 
 
 int BufrDataArray::build_bitmap(unsigned char* data, long* pos,
-                                                  int iel, grib_iarray* elementsDescriptorsIndex, int iBitmapOperator)
+                                int iel, grib_iarray* elementsDescriptorsIndex, int iBitmapOperator)
 {
     int bitmapSize = 0, iDelayedReplication = 0;
     int i, localReference, width, bitmapEndElementsDescriptorsIndex;
     long ppos, n;
     bufr_descriptor** descriptors = expanded_->v;
-    const long* edi               = elementsDescriptorsIndex->v;
+    const long* edi = elementsDescriptorsIndex->v;
     /* int iel=grib_iarray_used_size(elementsDescriptorsIndex)-1; */
     int err = 0;
 
@@ -1391,15 +1420,15 @@ int BufrDataArray::build_bitmap(unsigned char* data, long* pos,
             if (descriptors[i]->code == 101000) {
                 iDelayedReplication = iBitmapOperator + 2;
                 ECCODES_ASSERT(descriptors[iDelayedReplication]->code == 31001 ||
-                       descriptors[iDelayedReplication]->code == 31002);
+                               descriptors[iDelayedReplication]->code == 31002);
                 i = iDelayedReplication;
                 if (compressedData_) {
                     ppos = *pos;
                     if (err)
                         return err;
                     localReference = grib_decode_unsigned_long(data, pos, descriptors[i]->width) + descriptors[i]->reference;
-                    width          = grib_decode_unsigned_long(data, pos, 6);
-                    *pos           = ppos;
+                    width = grib_decode_unsigned_long(data, pos, 6);
+                    *pos = ppos;
                     if (width) {
                         /* delayed replication number is not constant. NOT IMPLEMENTED */
                         grib_context_log(context_, GRIB_LOG_ERROR, "Delayed replication number is not constant");
@@ -1426,7 +1455,7 @@ int BufrDataArray::build_bitmap(unsigned char* data, long* pos,
                 }
             }
             iel = bitmapEndElementsDescriptorsIndex;
-            n   = bitmapSize - 1;
+            n = bitmapSize - 1;
             while (n > 0 && iel >= 0) {
                 if (descriptors[edi[iel]]->code < 100000)
                     n--;
@@ -1475,13 +1504,13 @@ int BufrDataArray::consume_bitmap(int iBitmapOperator)
 }
 
 int BufrDataArray::build_bitmap_new_data(unsigned char* data, long* pos,
-                                                           int iel, grib_iarray* elementsDescriptorsIndex, int iBitmapOperator)
+                                         int iel, grib_iarray* elementsDescriptorsIndex, int iBitmapOperator)
 {
     int bitmapSize = 0, iDelayedReplication = 0;
     int i, bitmapEndElementsDescriptorsIndex;
     long n;
     bufr_descriptor** descriptors = expanded_->v;
-    const long* edi               = elementsDescriptorsIndex->v;
+    const long* edi = elementsDescriptorsIndex->v;
 
     switch (descriptors[iBitmapOperator]->code) {
         case 222000:
@@ -1541,13 +1570,13 @@ int BufrDataArray::build_bitmap_new_data(unsigned char* data, long* pos,
                 }
             }
             iel = bitmapEndElementsDescriptorsIndex;
-            n   = bitmapSize - 1;
+            n = bitmapSize - 1;
             while (n > 0 && iel >= 0) {
                 if (descriptors[edi[iel]]->code < 100000)
                     n--;
                 iel--;
             }
-            bitmapStartElementsDescriptorsIndex_   = iel;
+            bitmapStartElementsDescriptorsIndex_ = iel;
             bitmapCurrentElementsDescriptorsIndex_ = iel - 1;
             break;
         default:
@@ -1652,18 +1681,19 @@ void BufrDataArray::push_zero_element(grib_darray* dval)
     }
 }
 
-grib_accessor* BufrDataArray::create_attribute_variable(const char* name, grib_section* section, int type, char* sval, double dval, long lval, unsigned long flags)
+grib_accessor* BufrDataArray::create_attribute_variable(const char* name, grib_section* section, int type, char* sval,
+                                                        double dval, long lval, unsigned long flags)
 {
     grib_action creator;
     size_t len;
-    creator.op_            = (char*)"variable";
-    creator.name_space_    = (char*)"";
-    creator.flags_         = GRIB_ACCESSOR_FLAG_READ_ONLY | GRIB_ACCESSOR_FLAG_BUFR_DATA | flags;
-    creator.set_           = 0;
-    creator.name_          = (char*)name;
-    grib_accessor* a       = grib_accessor_factory(section, &creator, 0, NULL);
-    a->parent_             = NULL;
-    a->h_                  = section->h;
+    creator.op_ = (char*)"variable";
+    creator.name_space_ = (char*)"";
+    creator.flags_ = GRIB_ACCESSOR_FLAG_READ_ONLY | GRIB_ACCESSOR_FLAG_BUFR_DATA | flags;
+    creator.set_ = 0;
+    creator.name_ = (char*)name;
+    grib_accessor* a = grib_accessor_factory(section, &creator, 0, NULL);
+    a->parent_ = NULL;
+    a->h_ = section->h;
     accessor::Variable* va = dynamic_cast<accessor::Variable*>(a);
     va->accessor_variable_set_type(type);
     len = 1;
@@ -1763,35 +1793,35 @@ static void set_creator_name(grib_action* creator, int code)
 static int adding_extra_key_attributes(grib_handle* h)
 {
     long skip = 0; /* default is to add */
-    int err   = 0;
-    err       = grib_get_long(h, "skipExtraKeyAttributes", &skip);
+    int err = 0;
+    err = grib_get_long(h, "skipExtraKeyAttributes", &skip);
     if (err)
         return 1;
     return (!skip);
 }
 
 grib_accessor* BufrDataArray::create_accessor_from_descriptor(grib_accessor* attribute, grib_section* section,
-                                                                                long ide, long subset, int add_dump_flag, int add_coord_flag,
-                                                                                int count, int add_extra_attributes)
+                                                              long ide, long subset, int add_dump_flag, int add_coord_flag,
+                                                              int count, int add_extra_attributes)
 {
-    char code[10] = {0,};
-    char* temp_str              = NULL;
-    int idx                     = 0;
-    unsigned long flags         = GRIB_ACCESSOR_FLAG_READ_ONLY;
+    char code[10] = { 0 };
+    char* temp_str = NULL;
+    int idx = 0;
+    unsigned long flags = GRIB_ACCESSOR_FLAG_READ_ONLY;
     grib_action operatorCreator;
     grib_accessor* accessor = NULL;
     BufrDataElement* elementAccessor = NULL;
     Variable* variableAccessor = NULL;
     grib_action creator;
-    creator.op_         = (char*)"bufr_data_element";
+    creator.op_ = (char*)"bufr_data_element";
     creator.name_space_ = (char*)"";
-    creator.set_        = 0;
+    creator.set_ = 0;
 
-    operatorCreator.op_         = (char*)"variable";
+    operatorCreator.op_ = (char*)"variable";
     operatorCreator.name_space_ = (char*)"";
-    operatorCreator.flags_      = GRIB_ACCESSOR_FLAG_READ_ONLY;
-    operatorCreator.set_        = 0;
-    operatorCreator.name_       = (char*)"operator";
+    operatorCreator.flags_ = GRIB_ACCESSOR_FLAG_READ_ONLY;
+    operatorCreator.set_ = 0;
+    operatorCreator.name_ = (char*)"operator";
 
     if (attribute) {
         DEBUG_ASSERT(attribute->parent_ == NULL);
@@ -1830,8 +1860,6 @@ grib_accessor* BufrDataArray::create_accessor_from_descriptor(grib_accessor* att
             elementAccessor->numberOfSubsets(numberOfSubsets_);
             elementAccessor->subsetNumber(subset);
 
-            expanded_->v[idx]->a = accessor;
-
             if (attribute) {
                 /* attribute->parent=accessor->parent; */
                 /*
@@ -1848,7 +1876,7 @@ grib_accessor* BufrDataArray::create_accessor_from_descriptor(grib_accessor* att
             accessor->add_attribute(attribute, 0);
 
             snprintf(code, sizeof(code), "%06ld", expanded_->v[idx]->code);
-            temp_str  = grib_context_strdup(context_, code);
+            temp_str = grib_context_strdup(context_, code);
             attribute = create_attribute_variable("code", section, GRIB_TYPE_STRING, temp_str, 0, 0, flags);
             if (!attribute)
                 return NULL;
@@ -1866,7 +1894,8 @@ grib_accessor* BufrDataArray::create_accessor_from_descriptor(grib_accessor* att
                     return NULL;
                 accessor->add_attribute(attribute, 0);
 
-                attribute = create_attribute_variable("reference", section, GRIB_TYPE_DOUBLE, 0, expanded_->v[idx]->reference, 0, flags);
+                attribute = create_attribute_variable("reference", section, GRIB_TYPE_DOUBLE, 0,
+                                                      hasRefOverride_[idx] ? refOverrides_[idx] : expanded_->v[idx]->reference, 0, flags);
                 if (!attribute)
                     return NULL;
                 accessor->add_attribute(attribute, 0);
@@ -1890,7 +1919,11 @@ grib_accessor* BufrDataArray::create_accessor_from_descriptor(grib_accessor* att
                 elementAccessor->numericValues(numericValues_);
                 elementAccessor->stringValues(stringValues_);
                 elementAccessor->compressedData(compressedData_);
-                elementAccessor->type(expanded_->v[idx]->type);
+                // Signify character (F=2, X=5) overrides type to STRING
+                if (expanded_->v[idx]->F == 2 && expanded_->v[idx]->X == 5)
+                    elementAccessor->type(BUFR_DESCRIPTOR_TYPE_STRING);
+                else
+                    elementAccessor->type(expanded_->v[idx]->type);
                 elementAccessor->numberOfSubsets(numberOfSubsets_);
                 elementAccessor->subsetNumber(subset);
 
@@ -1915,7 +1948,6 @@ grib_accessor* BufrDataArray::create_accessor_from_descriptor(grib_accessor* att
                     return NULL;
                 accessor->add_attribute(attribute, 0);
             }
-            expanded_->v[idx]->a = accessor;
             break;
         case 9:
             set_creator_name(&creator, expanded_->v[idx]->code);
@@ -1954,7 +1986,8 @@ grib_accessor* BufrDataArray::create_accessor_from_descriptor(grib_accessor* att
                     return NULL;
                 accessor->add_attribute(attribute, 0);
 
-                attribute = create_attribute_variable("reference", section, GRIB_TYPE_DOUBLE, 0, expanded_->v[idx]->reference, 0, flags);
+                attribute = create_attribute_variable("reference", section, GRIB_TYPE_DOUBLE, 0,
+                                                      hasRefOverride_[idx] ? refOverrides_[idx] : expanded_->v[idx]->reference, 0, flags);
                 if (!attribute)
                     return NULL;
                 accessor->add_attribute(attribute, 0);
@@ -1976,7 +2009,7 @@ grib_accessor* BufrDataArray::create_accessor_from_descriptor(grib_accessor* att
 #define NUMBER_OF_QUALIFIERS_CATEGORIES   7
 #define MAX_NUMBER_OF_BITMAPS             8  // See ECC-1699
 
-static const int number_of_qualifiers              = NUMBER_OF_QUALIFIERS_PER_CATEGORY * NUMBER_OF_QUALIFIERS_CATEGORIES;
+static const int number_of_qualifiers = NUMBER_OF_QUALIFIERS_PER_CATEGORY * NUMBER_OF_QUALIFIERS_CATEGORIES;
 static const int significanceQualifierIndexArray[] = { -1, 0, 1, -1, 2, 3, 4, 5, 6 };
 
 static GRIB_INLINE void reset_deeper_qualifiers(
@@ -2026,7 +2059,7 @@ static grib_accessor* get_element_from_bitmap(bitmap_s* bitmap)
 static void grib_convert_to_attribute(grib_accessor* a)
 {
     if (a->h_ == NULL && a->parent_ != NULL) {
-        a->h_      = a->get_enclosing_handle();
+        a->h_ = a->get_enclosing_handle();
         a->parent_ = NULL;
     }
 }
@@ -2037,7 +2070,7 @@ grib_iarray* BufrDataArray::set_subset_list(
     long onlySubset, long startSubset, long endSubset, const long* subsetList, size_t subsetListSize)
 {
     grib_iarray* list = grib_iarray_new(numberOfSubsets_, 10);
-    long s            = 0;
+    long s = 0;
 
 #ifdef DEBUG
     if (subsetList == NULL) {
@@ -2142,7 +2175,7 @@ static void print_bitmap_debug_info(grib_context* c, bitmap_s* bitmap, grib_acce
 {
     int i = 0, ret = 0;
     fprintf(stderr, "ECCODES DEBUG: bitmap_init: bitmapSize=%d\n", bitmapSize);
-    bitmap->cursor          = bitmapStart->next_;
+    bitmap->cursor = bitmapStart->next_;
     bitmap->referredElement = bitmapStart;
 
     while (bitmap_ref_skip(bitmap->referredElement, &ret)) {
@@ -2167,7 +2200,7 @@ static void print_bitmap_debug_info(grib_context* c, bitmap_s* bitmap, grib_acce
 static int bitmap_init(grib_context* c, bitmap_s* bitmap,
                        grib_accessors_list* bitmapStart, int bitmapSize, grib_accessors_list* lastAccessorInList)
 {
-    int ret        = 0, i;
+    int ret = 0, i;
     bitmap->cursor = bitmapStart->next_;
     if (bitmap->referredElementStart != NULL) {
         bitmap->referredElement = bitmap->referredElementStart;
@@ -2239,8 +2272,8 @@ int BufrDataArray::create_keys(long onlySubset, long startSubset, long endSubset
 {
     int err = 0;
     int rank;
-    grib_accessor* elementAccessor                     = 0;
-    grib_accessor* associatedFieldAccessor             = 0;
+    grib_accessor* elementAccessor = 0;
+    grib_accessor* associatedFieldAccessor = 0;
     grib_accessor* associatedFieldSignificanceAccessor = 0;
     long iss, end, elementsInSubset, ide;
     grib_section* section = NULL;
@@ -2253,35 +2286,35 @@ int BufrDataArray::create_keys(long onlySubset, long startSubset, long endSubset
     int depth;
     int max_depth = -1; /* highest value of depth */
     int idx;
-    grib_context* c    = context_;
+    grib_context* c = context_;
     int qualityPresent = 0;
-    bitmap_s bitmap    = {0,0,0};
-    int extraElement         = 0;
+    bitmap_s bitmap = { 0, 0, 0 };
+    int extraElement = 0;
     int add_extra_attributes = 1;
 
-    grib_accessor* gaGroup   = 0;
+    grib_accessor* gaGroup = 0;
     grib_action creatorGroup;
-    grib_accessor* significanceQualifierGroup[NUMBER_OF_QUALIFIERS_PER_CATEGORY * NUMBER_OF_QUALIFIERS_CATEGORIES] = {0,};
-    int significanceQualifierDepth[NUMBER_OF_QUALIFIERS_PER_CATEGORY * NUMBER_OF_QUALIFIERS_CATEGORIES] = {0,};
+    grib_accessor* significanceQualifierGroup[NUMBER_OF_QUALIFIERS_PER_CATEGORY * NUMBER_OF_QUALIFIERS_CATEGORIES] = { 0 };
+    int significanceQualifierDepth[NUMBER_OF_QUALIFIERS_PER_CATEGORY * NUMBER_OF_QUALIFIERS_CATEGORIES] = { 0 };
 
-    grib_accessor* bitmapGroup[MAX_NUMBER_OF_BITMAPS] = {0,};
-    int bitmapDepth[MAX_NUMBER_OF_BITMAPS] = {0,};
-    int bitmapSize[MAX_NUMBER_OF_BITMAPS] = {0,};
-    grib_accessors_list* bitmapStart[MAX_NUMBER_OF_BITMAPS] = {0,};
+    grib_accessor* bitmapGroup[MAX_NUMBER_OF_BITMAPS] = { 0 };
+    int bitmapDepth[MAX_NUMBER_OF_BITMAPS] = { 0 };
+    int bitmapSize[MAX_NUMBER_OF_BITMAPS] = { 0 };
+    grib_accessors_list* bitmapStart[MAX_NUMBER_OF_BITMAPS] = { 0 };
     grib_accessors_list* lastAccessorInList = NULL;
-    int bitmapIndex                         = -1;
-    int incrementBitmapIndex                = 1;
-    grib_accessor* elementFromBitmap        = NULL;
-    grib_handle* hand                       = get_enclosing_handle();
+    int bitmapIndex = -1;
+    int incrementBitmapIndex = 1;
+    grib_accessor* elementFromBitmap = NULL;
+    grib_handle* hand = get_enclosing_handle();
     /*int reuseBitmap=0;*/
     int add_dump_flag = 1, add_coord_flag = 0, count = 0;
     /*int forceGroupClosure=0;*/
 
-    creatorGroup.op_         = (char*)"bufr_group";
-    creatorGroup.name_       = (char*)"groupNumber";
+    creatorGroup.op_ = (char*)"bufr_group";
+    creatorGroup.name_ = (char*)"groupNumber";
     creatorGroup.name_space_ = (char*)"";
-    creatorGroup.flags_      = GRIB_ACCESSOR_FLAG_DUMP;
-    creatorGroup.set_        = 0;
+    creatorGroup.flags_ = GRIB_ACCESSOR_FLAG_DUMP;
+    creatorGroup.set_ = 0;
 
     if (dataAccessors_) {
         grib_accessors_list_delete(c, dataAccessors_);
@@ -2307,7 +2340,7 @@ int BufrDataArray::create_keys(long onlySubset, long startSubset, long endSubset
     gaGroup = grib_accessor_factory(dataKeys_, &creatorGroup, 0, NULL);
     // gaGroup->bufr_group_number = groupNumber;
     gaGroup->sub_section_ = grib_section_create(hand, gaGroup);
-    section               = gaGroup->sub_section_;
+    section = gaGroup->sub_section_;
     /*rootSection=section;*/
     /*sectionUp=self->dataKeys_;*/
     // accessor_constant_set_type(gaGroup, GRIB_TYPE_LONG);
@@ -2319,8 +2352,8 @@ int BufrDataArray::create_keys(long onlySubset, long startSubset, long endSubset
     grib_push_accessor(gaGroup, dataKeys_->block); /* Add group accessors to section 4 */
 
     /*indexOfGroupNumber=0;*/
-    depth                = 0;
-    extraElement         = 0;
+    depth = 0;
+    extraElement = 0;
     add_extra_attributes = adding_extra_key_attributes(hand);
 
     for (iss = 0; iss < end; iss++) {
@@ -2338,11 +2371,11 @@ int BufrDataArray::create_keys(long onlySubset, long startSubset, long endSubset
             idx = compressedData_ ? elementsDescriptorsIndex_->v[0]->v[ide] : elementsDescriptorsIndex_->v[iss]->v[ide];
 
             descriptor = expanded_->v[idx];
-            if (descriptor->nokey == 1) {
+            if (descriptor->nokey == 1 || nokeys_[idx] == 1) {
                 continue; /* Descriptor does not have an associated key e.g. inside op 203YYY */
             }
             elementFromBitmap = NULL;
-            add_coord_flag    = 0;
+            add_coord_flag = 0;
             if (descriptor->F == 0 && IS_COORDINATE_DESCRIPTOR(descriptor->X) &&
                 unpackMode_ == CODES_BUFR_UNPACK_STRUCTURE) {
                 const int sidx = descriptor->Y + significanceQualifierIndexArray[descriptor->X] * NUMBER_OF_QUALIFIERS_PER_CATEGORY;
@@ -2352,7 +2385,7 @@ int BufrDataArray::create_keys(long onlySubset, long startSubset, long endSubset
 
                 if (significanceQualifierGroup[sidx]) {
                     groupSection = significanceQualifierGroup[sidx]->parent_;
-                    depth        = significanceQualifierDepth[sidx];
+                    depth = significanceQualifierDepth[sidx];
                     if (depth < max_depth) {
                         /* If depth >= max_depth, then no entry will be deeper so no need for call */
                         reset_deeper_qualifiers(significanceQualifierGroup, significanceQualifierDepth,
@@ -2370,7 +2403,7 @@ int BufrDataArray::create_keys(long onlySubset, long startSubset, long endSubset
                     /* } */
                 }
 
-                gaGroup               = grib_accessor_factory(groupSection, &creatorGroup, 0, NULL);
+                gaGroup = grib_accessor_factory(groupSection, &creatorGroup, 0, NULL);
                 gaGroup->sub_section_ = grib_section_create(hand, gaGroup);
                 // gaGroup->bufr_group_number = groupNumber;
 
@@ -2386,7 +2419,7 @@ int BufrDataArray::create_keys(long onlySubset, long startSubset, long endSubset
                 if (depth > max_depth)
                     max_depth = depth;
                 incrementBitmapIndex = 1;
-                add_dump_flag        = 1;
+                add_dump_flag = 1;
             }
             else if (descriptor->code == 31031 && incrementBitmapIndex != 0) {
                 /* bitmap */
@@ -2400,13 +2433,13 @@ int BufrDataArray::create_keys(long onlySubset, long startSubset, long endSubset
                     bitmapIndex--;
                 }
                 bitmapStart[bitmapIndex] = dataAccessors_->last();
-                bitmapSize[bitmapIndex]  = 1;
+                bitmapSize[bitmapIndex] = 1;
                 if (expanded_->v[idx - 1]->code == 31002 || expanded_->v[idx - 1]->code == 31001)
                     extraElement += 1;
 
                 if (bitmapGroup[bitmapIndex]) {
                     groupSection = bitmapGroup[bitmapIndex]->parent_;
-                    depth        = bitmapDepth[bitmapIndex];
+                    depth = bitmapDepth[bitmapIndex];
                     reset_deeper_qualifiers(significanceQualifierGroup, significanceQualifierDepth,
                                             number_of_qualifiers, depth);
                     /* TODO(masn): This branch is not reached in our tests! */
@@ -2416,7 +2449,7 @@ int BufrDataArray::create_keys(long onlySubset, long startSubset, long endSubset
                     groupSection = section;
                     depth++;
                 }
-                gaGroup               = grib_accessor_factory(groupSection, &creatorGroup, 0, NULL);
+                gaGroup = grib_accessor_factory(groupSection, &creatorGroup, 0, NULL);
                 gaGroup->sub_section_ = grib_section_create(hand, gaGroup);
                 // gaGroup->bufr_group_number = groupNumber;
                 // accessor_constant_set_type(gaGroup, GRIB_TYPE_LONG);
@@ -2427,7 +2460,7 @@ int BufrDataArray::create_keys(long onlySubset, long startSubset, long endSubset
                 /*sectionUp=gaGroup->parent;*/
                 bitmapGroup[bitmapIndex] = gaGroup;
                 bitmapDepth[bitmapIndex] = depth;
-                add_dump_flag            = 1;
+                add_dump_flag = 1;
             }
             else if (descriptor->code == 31031) {
                 add_dump_flag = 1;
@@ -2436,15 +2469,15 @@ int BufrDataArray::create_keys(long onlySubset, long startSubset, long endSubset
             }
             else if (descriptor->code == 222000 || descriptor->code == 223000 || descriptor->code == 224000 || descriptor->code == 225000) {
                 bitmap.referredElement = NULL;
-                qualityPresent         = 1;
-                incrementBitmapIndex   = 1;
-                add_dump_flag          = 1;
-                bitmap.cursor          = 0;
+                qualityPresent = 1;
+                incrementBitmapIndex = 1;
+                add_dump_flag = 1;
+                bitmap.cursor = 0;
                 extraElement += 1;
             }
             else if (descriptor->code == 236000 || descriptor->code == 237000) {
                 bitmap.referredElement = NULL;
-                bitmap.cursor          = 0;
+                bitmap.cursor = 0;
                 /*reuseBitmap=1;*/
                 extraElement += 1;
                 add_dump_flag = 1;
@@ -2452,14 +2485,14 @@ int BufrDataArray::create_keys(long onlySubset, long startSubset, long endSubset
             else if (descriptor->code == 237255) {
                 /*reuseBitmap=0;*/
                 incrementBitmapIndex = 1;
-                bitmap.cursor        = 0;
-                add_dump_flag        = 1;
+                bitmap.cursor = 0;
+                add_dump_flag = 1;
             }
             else if ((descriptor->X == 33 || bufr_descriptor_is_marker(descriptor)) && qualityPresent) {
                 if (!bitmap.referredElement)
                     bitmap_init(c, &bitmap, bitmapStart[bitmapIndex], bitmapSize[bitmapIndex], lastAccessorInList);
                 elementFromBitmap = get_element_from_bitmap(&bitmap);
-                add_dump_flag     = 1;
+                add_dump_flag = 1;
                 /* } else if ( descriptor->Y==1 && IS_COORDINATE_DESCRIPTOR(self->expanded_ ->v[idx-1]->X)==0) { */
                 /* forceGroupClosure=1; */
                 /* reset_qualifiers(significanceQualifierGroup); */
@@ -2469,16 +2502,16 @@ int BufrDataArray::create_keys(long onlySubset, long startSubset, long endSubset
             }
 
             if (ide == 0 && !compressedData_) {
-                long subsetNumber     = iss + 1;
-                size_t len            = 1;
+                long subsetNumber = iss + 1;
+                size_t len = 1;
                 grib_action creatorsn;
-                creatorsn.op_         = (char*)"variable";
+                creatorsn.op_ = (char*)"variable";
                 creatorsn.name_space_ = (char*)"";
-                creatorsn.flags_      = GRIB_ACCESSOR_FLAG_READ_ONLY | GRIB_ACCESSOR_FLAG_DUMP;
-                creatorsn.set_        = 0;
+                creatorsn.flags_ = GRIB_ACCESSOR_FLAG_READ_ONLY | GRIB_ACCESSOR_FLAG_DUMP;
+                creatorsn.set_ = 0;
 
-                creatorsn.name_                = (char*)"subsetNumber";
-                grib_accessor* a              = grib_accessor_factory(section, &creatorsn, 0, NULL);
+                creatorsn.name_ = (char*)"subsetNumber";
+                grib_accessor* a = grib_accessor_factory(section, &creatorsn, 0, NULL);
                 accessor::Variable* asn = dynamic_cast<accessor::Variable*>(a);
                 asn->accessor_variable_set_type(GRIB_TYPE_LONG);
                 asn->pack_long(&subsetNumber, &len);
@@ -2501,10 +2534,10 @@ int BufrDataArray::create_keys(long onlySubset, long startSubset, long endSubset
             associatedFieldAccessor = NULL;
             if (elementFromBitmap && unpackMode_ == CODES_BUFR_UNPACK_STRUCTURE) {
                 if (descriptor->code != 33007 && descriptor->code != 223255) {
-                    char* aname                = grib_context_strdup(c, elementFromBitmap->name_);
+                    char* aname = grib_context_strdup(c, elementFromBitmap->name_);
                     grib_accessor* newAccessor = elementAccessor->clone(section, &err);
-                    newAccessor->parent_       = groupSection;
-                    newAccessor->name_         = aname;
+                    newAccessor->parent_ = groupSection;
+                    newAccessor->name_ = aname;
                     grib_sarray_push(tempStrings_, aname);
                     grib_push_accessor(newAccessor, groupSection->block);
                     rank = grib_data_accessors_trie_push(dataAccessorsTrie_, newAccessor);
@@ -2528,8 +2561,8 @@ int BufrDataArray::create_keys(long onlySubset, long startSubset, long endSubset
                                 return err;
                             }
                             associatedFieldAccessor->add_attribute(newAccessor, 1);
-                            //newAccessor->flags_ |= GRIB_ACCESSOR_FLAG_BUFR_DATA;
-                            //associatedFieldAccessor->flags_ |= GRIB_ACCESSOR_FLAG_BUFR_DATA;
+                            // newAccessor->flags_ |= GRIB_ACCESSOR_FLAG_BUFR_DATA;
+                            // associatedFieldAccessor->flags_ |= GRIB_ACCESSOR_FLAG_BUFR_DATA;
                         }
                         break;
                     case 31021:
@@ -2562,6 +2595,11 @@ int BufrDataArray::create_keys(long onlySubset, long startSubset, long endSubset
             }
         }
     }
+    if (associatedFieldSignificanceAccessor) {
+        associatedFieldSignificanceAccessor->destroy(c);
+        delete associatedFieldSignificanceAccessor;
+        associatedFieldSignificanceAccessor = nullptr;
+    }
     (void)extraElement;
     return err;
 }
@@ -2571,12 +2609,12 @@ void BufrDataArray::set_input_replications(grib_handle* h)
     size_t nInputReplications;
     size_t nInputExtendedReplications;
     size_t nInputShortReplications;
-    nInputReplications_         = -1;
+    nInputReplications_ = -1;
     nInputExtendedReplications_ = -1;
-    nInputShortReplications_    = -1;
-    iInputReplications_         = 0;
+    nInputShortReplications_ = -1;
+    iInputReplications_ = 0;
     iInputExtendedReplications_ = 0;
-    iInputShortReplications_    = 0;
+    iInputShortReplications_ = 0;
     if (grib_get_size(h, "inputDelayedDescriptorReplicationFactor", &nInputReplications) == 0 && nInputReplications != 0) {
         if (inputReplications_)
             grib_context_free(h->context, inputReplications_);
@@ -2645,17 +2683,17 @@ static int set_to_missing_if_out_of_range(grib_handle* h)
 int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset, long endSubset)
 {
     int err = 0;
-    long inr, innr, ir, ip;
-    long n[MAX_NESTED_REPLICATIONS] = {0,};
-    long nn[MAX_NESTED_REPLICATIONS] = {0,};
-    long numberOfElementsToRepeat[MAX_NESTED_REPLICATIONS] = {0,};
-    long numberOfRepetitions[MAX_NESTED_REPLICATIONS] = {0,};
-    long startRepetition[MAX_NESTED_REPLICATIONS] = {0,};
-    long numberOfNestedRepetitions = 0;
-    unsigned char* data            = 0;
-    size_t subsetListSize          = 0;
-    long* subsetList               = 0;
-    long satelliteID               = -1;// this may be undefined
+    long d;
+    long nReps[MAX_NESTED_REPLICATIONS] = { 0 };
+    long numberOfElementsToRepeat[MAX_NESTED_REPLICATIONS] = { 0 };
+    long numberOfRepetitions[MAX_NESTED_REPLICATIONS] = { 0 };
+    long startRepetition[MAX_NESTED_REPLICATIONS] = { 0 };
+    long depth = 0;
+    unsigned char* data = 0;
+    size_t subsetListSize = 0;
+    long* subsetList = 0;
+    long section2Present = 0;  // See ECC-2122
+    long satelliteID = -1;     // this may be undefined
     int i;
     grib_iarray* elementsDescriptorsIndex = 0;
 
@@ -2670,12 +2708,12 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
     codec_element_proc codec_element;
     codec_replication_proc codec_replication;
     grib_accessor* dataAccessor = NULL;
-    bufr_descriptor* bd         = 0;
+    bufr_descriptor* bd = 0;
 
     grib_darray* dval = NULL;
     grib_sarray* sval = NULL;
 
-    grib_handle* h  = get_enclosing_handle();
+    grib_handle* h = get_enclosing_handle();
     grib_context* c = h->context;
 
     totalSize = bitsToEndData_;
@@ -2684,44 +2722,46 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
         case PROCESS_DECODE:
             if (!do_decode_)
                 return 0;
-            do_decode_   = 0;
-            buffer       = h->buffer;
-            decoding     = 1;
-            do_clean     = 1;
+            do_decode_ = 0;
+            buffer = h->buffer;
+            decoding = 1;
+            do_clean = 1;
             dataAccessor = grib_find_accessor(get_enclosing_handle(), bufrDataEncodedName_);
             DEBUG_ASSERT(dataAccessor);
-            dataOffset        = accessor_raw_get_offset(dataAccessor);
-            pos               = dataOffset * 8;
-            codec_element     = &decode_element;
+            dataOffset = accessor_raw_get_offset(dataAccessor);
+            pos = dataOffset * 8;
+            codec_element = &decode_element;
             codec_replication = &decode_replication;
             break;
         case PROCESS_NEW_DATA:
-            buffer                          = grib_create_growable_buffer(c);
-            decoding                        = 0;
-            do_clean                        = 1;
-            do_decode_                      = 1;
+            buffer = grib_create_growable_buffer(c);
+            decoding = 0;
+            do_clean = 1;
+            do_decode_ = 1;
             set_to_missing_if_out_of_range_ = set_to_missing_if_out_of_range(h);
-            pos                             = 0;
-            codec_element                   = &encode_new_element;
-            codec_replication               = &encode_new_replication;
+            pos = 0;
+            codec_element = &encode_new_element;
+            codec_replication = &encode_new_replication;
 
             set_input_replications(h);
             set_input_bitmap(h);
 
             break;
         case PROCESS_ENCODE:
-            buffer                          = grib_create_growable_buffer(c);
-            decoding                        = 0;
-            do_clean                        = 0;
-            do_decode_                      = 0;
+            buffer = grib_create_growable_buffer(c);
+            decoding = 0;
+            do_clean = 0;
+            do_decode_ = 0;
             set_to_missing_if_out_of_range_ = set_to_missing_if_out_of_range(h);
-            pos                             = 0;
-            codec_element                   = &encode_element;
+            pos = 0;
+            codec_element = &encode_element;
             grib_get_long(get_enclosing_handle(), "extractSubset", &onlySubset);
             grib_get_long(get_enclosing_handle(), "extractSubsetIntervalStart", &startSubset);
             grib_get_long(get_enclosing_handle(), "extractSubsetIntervalEnd", &endSubset);
-            // satelliteID can be undefined. So do not check for errors
-            grib_get_long(get_enclosing_handle(), "satelliteID", &satelliteID);
+
+            err = grib_get_long(get_enclosing_handle(), "section2Present", &section2Present);
+            if (!err && section2Present == 1)  // satelliteID can be undefined. So do not check for errors
+                grib_get_long(get_enclosing_handle(), "satelliteID", &satelliteID);
 
             err = grib_get_size(get_enclosing_handle(), "extractSubsetList", &subsetListSize);
             if (err)
@@ -2730,7 +2770,7 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
                 grib_context_free(c, subsetList);
             if (subsetListSize) {
                 subsetList = (long*)grib_context_malloc_clear(c, subsetListSize * sizeof(long));
-                err        = grib_get_long_array(get_enclosing_handle(), "extractSubsetList", subsetList, &subsetListSize);
+                err = grib_get_long_array(get_enclosing_handle(), "extractSubsetList", subsetList, &subsetListSize);
                 if (err) return err;
             }
             codec_replication = &encode_replication;
@@ -2760,7 +2800,7 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
 
     if (flag != PROCESS_ENCODE) {
         numericValues_ = grib_vdarray_new(1000, 1000);
-        stringValues_  = grib_vsarray_new(10, 10);
+        stringValues_ = grib_vsarray_new(10, 10);
 
         if (elementsDescriptorsIndex_) {
             grib_viarray_delete_content(elementsDescriptorsIndex_);
@@ -2779,7 +2819,7 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
             grib_context_free(c, refValList_);
         if (refValListSize_ > 0) {
             refValList_ = (long*)grib_context_malloc_clear(c, refValListSize_ * sizeof(long));
-            err         = grib_get_long_array(get_enclosing_handle(), OVERRIDDEN_REFERENCE_VALUES_KEY, refValList_, &refValListSize_);
+            err = grib_get_long_array(get_enclosing_handle(), OVERRIDDEN_REFERENCE_VALUES_KEY, refValList_, &refValListSize_);
             if (err) return err;
         }
     }
@@ -2794,7 +2834,7 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
 
     if (flag != PROCESS_DECODE) {
         iss_list_ = set_subset_list(c, onlySubset, startSubset, endSubset, subsetList, subsetListSize);
-        end       = compressedData_ == 1 ? 1 : grib_iarray_used_size(iss_list_);
+        end = compressedData_ == 1 ? 1 : grib_iarray_used_size(iss_list_);
     }
 
     /* Go through all subsets */
@@ -2822,11 +2862,11 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
                 return GRIB_ENCODING_ERROR; /* See ECC-359 */
             }
             elementsDescriptorsIndex = elementsDescriptorsIndex_->v[iss];
-            dval                     = numericValues_->v[iss];
+            dval = numericValues_->v[iss];
         }
         elementIndex = 0;
 
-        numberOfNestedRepetitions = 0;
+        depth = 0;
 
         for (i = 0; i < numberOfDescriptors; i++) {
             bool op203_definition_phase = false;
@@ -2852,44 +2892,31 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
                     break;
                 case 1:
                     /* Delayed replication */
-                    inr = numberOfNestedRepetitions;
-                    numberOfNestedRepetitions++;
-                    DEBUG_ASSERT(numberOfNestedRepetitions <= MAX_NESTED_REPLICATIONS);
-                    numberOfElementsToRepeat[inr] = descriptors[i]->X;
-                    n[inr]                        = numberOfElementsToRepeat[inr];
+                    d = depth;
+                    depth++;
+                    DEBUG_ASSERT(depth <= MAX_NESTED_REPLICATIONS);
+                    numberOfElementsToRepeat[d] = descriptors[i]->X;  // X = number of descriptors in the repeated block
                     i++;
 
                     data = buffer->data; /* ECC-517 */
-                    err  = codec_replication(c, this, iss, buffer, data, &pos, i, elementIndex, dval, &(numberOfRepetitions[inr]));
+                    err = codec_replication(c, this, iss, buffer, data, &pos, i, elementIndex, dval, &(numberOfRepetitions[d]));
                     if (err) return err;
 
-                    startRepetition[inr] = i;
-                    nn[inr]              = numberOfRepetitions[inr];
+                    startRepetition[d] = i;  // index of the replication factor descriptor (031xxx)
+                    nReps[d] = numberOfRepetitions[d];
                     if (flag != PROCESS_ENCODE)
                         grib_iarray_push(elementsDescriptorsIndex, i);
                     elementIndex++;
-                    if (numberOfRepetitions[inr] == 0) {
-                        i += numberOfElementsToRepeat[inr];
-                        if (inr > 0) {
-                            n[inr - 1] -= numberOfElementsToRepeat[inr] + 2;
-                            /* if the empty nested repetition is at the end of the nesting repetition
-                           we need to re-point to the start of the nesting repetition */
-                            ip = inr - 1;
-                            while (ip >= 0 && n[ip] == 0) {
-                                nn[ip]--;
-                                if (nn[ip] <= 0) {
-                                    numberOfNestedRepetitions--;
-                                }
-                                else {
-                                    n[ip] = numberOfElementsToRepeat[ip];
-                                    i     = startRepetition[ip];
-                                }
-                                ip--;
-                            }
-                        }
-                        numberOfNestedRepetitions--;
+
+                    if (numberOfRepetitions[d] == 0) {
+                        // ECC-2300: Empty (zero) delayed replication.
+                        i += numberOfElementsToRepeat[d];  // i now points at the last descriptor of the skipped block
+                        depth--;
+                        break; /* fall through to the shared "Delayed repetition check" after the switch */
                     }
-                    continue;
+                    else {
+                        continue;
+                    }
                 case 2:
                     /* Operator */
                     switch (descriptors[i]->X) {
@@ -2938,15 +2965,19 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
                             break;
 
                         case 5: /* Signify character */
-                            descriptors[i]->width = descriptors[i]->Y * 8;
-                            descriptors[i]->type  = BUFR_DESCRIPTOR_TYPE_STRING;
-                            err                   = codec_element(c, this, iss, buffer, data, &pos, i, 0, elementIndex, dval, sval);
+                        {
+                            bufr_descriptor bd_signify = *(descriptors[i]);
+                            bd_signify.width = descriptors[i]->Y * 8;
+                            bd_signify.type = BUFR_DESCRIPTOR_TYPE_STRING;
+                            err = codec_element(c, this, iss, buffer, data, &pos, i, &bd_signify, elementIndex, dval, sval);
                             if (err) return err;
                             if (flag != PROCESS_ENCODE)
                                 grib_iarray_push(elementsDescriptorsIndex, i);
                             elementIndex++;
                             break;
-                        case 22: /* Quality information follows */
+                        }
+                        case 62:  // ECC-968: BUFR edition 0 operator! not in the WMO standard
+                        case 22:  /* Quality information follows */
                             if (descriptors[i]->Y == 0) {
                                 if (flag == PROCESS_DECODE) {
                                     grib_iarray_push(elementsDescriptorsIndex, i);
@@ -3050,7 +3081,7 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
                                     err = index;
                                     return err;
                                 }
-                                bd            = grib_bufr_descriptor_clone(expanded_->v[index]);
+                                bd = grib_bufr_descriptor_clone(expanded_->v[index]);
                                 bd->reference = -codes_power<double>(bd->width, 2);
                                 bd->width++;
 
@@ -3112,7 +3143,7 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
                             elementIndex++;
                             break;
                         default:
-                            grib_context_log(c, GRIB_LOG_ERROR, "process_elements: unsupported operator %d\n", descriptors[i]->X);
+                            grib_context_log(c, GRIB_LOG_ERROR, "process_elements: unsupported operator %d", descriptors[i]->X);
                             return GRIB_INTERNAL_ERROR;
                     } /* F == 2 */
                     break;
@@ -3134,39 +3165,19 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
                     return err;
             } /* switch F */
 
-            /* Delayed repetition check */
-            innr = numberOfNestedRepetitions - 1;
-            for (ir = innr; ir >= 0; ir--) {
-                if (nn[ir]) {
-                    if (n[ir] > 1) {
-                        n[ir]--;
-                        break;
-                    }
-                    else {
-                        n[ir] = numberOfElementsToRepeat[ir];
-                        nn[ir]--;
-                        if (nn[ir]) {
-                            i = startRepetition[ir];
-                            break;
-                        }
-                        else {
-                            if (ir > 0) {
-                                n[ir - 1] -= numberOfElementsToRepeat[ir] + 1;
-                            }
-                            i = startRepetition[ir] + numberOfElementsToRepeat[ir];
-                            numberOfNestedRepetitions--;
-                        }
-                    }
+            // Delayed repetition check.
+            while (depth > 0) {
+                const long dd = depth - 1;
+                const long blockLastIdx = startRepetition[dd] + numberOfElementsToRepeat[dd];
+                if (i != blockLastIdx)
+                    break; /* still inside the current repeated block */
+                if (nReps[dd] > 1) {
+                    nReps[dd]--;
+                    i = startRepetition[dd]; /* restart block; loop's i++ -> first block descriptor */
+                    break;
                 }
-                else {
-                    if (ir == 0) {
-                        i                         = startRepetition[ir] + numberOfElementsToRepeat[ir] + 1;
-                        numberOfNestedRepetitions = 0;
-                    }
-                    else {
-                        numberOfNestedRepetitions--;
-                    }
-                }
+                /* Last repetition of this level is complete: pop and re-check the parent */
+                depth--;
             }
         } /* for all descriptors */
 
@@ -3187,7 +3198,7 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
     /*grib_viarray_print("DBG process_elements: elementsDescriptorsIndex", elementsDescriptorsIndex_ );*/
 
     if (decoding) {
-        err            = create_keys(0, 0, 0);
+        err = create_keys(0, 0, 0);
         bitsToEndData_ = totalSize;
     }
     else {
@@ -3196,8 +3207,8 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
         grib_buffer_delete(c, buffer);
         if (numberOfSubsets_ != grib_iarray_used_size(iss_list_)) {
             err = grib_set_long(h, numberOfSubsetsName_, grib_iarray_used_size(iss_list_));
-            if (!err) {
-                // ECC-2055
+            if (!err && section2Present) {
+                // ECC-2122
                 if (grib_is_defined(h, "localNumberOfObservations")) {
                     grib_set_long(h, "localNumberOfObservations", grib_iarray_used_size(iss_list_));
                 }
@@ -3247,9 +3258,9 @@ int BufrDataArray::value_count(long* count)
 
 int BufrDataArray::unpack_double(double* val, size_t* len)
 {
-    int err              = 0, i, k, ii;
-    int proc_flag        = PROCESS_DECODE;
-    size_t l             = 0, elementsInSubset;
+    int err = 0, i, k, ii;
+    int proc_flag = PROCESS_DECODE;
+    size_t l = 0, elementsInSubset;
     long numberOfSubsets = 0;
 
     if (unpackMode_ == CODES_BUFR_NEW_DATA)
@@ -3265,14 +3276,14 @@ int BufrDataArray::unpack_double(double* val, size_t* len)
      * but when client requests a key like 'numericValues', then we end up here
      */
 
-    l   = grib_vdarray_used_size(numericValues_);
+    l = grib_vdarray_used_size(numericValues_);
     err = grib_get_long(get_enclosing_handle(), numberOfSubsetsName_, &numberOfSubsets);
     if (err)
         return err;
 
     if (compressedData_) {
         const size_t rlen = l * numberOfSubsets_;
-        ii                = 0;
+        ii = 0;
         if (*len < rlen) {
             grib_context_log(context_, GRIB_LOG_ERROR,
                              "wrong size (%ld) for %s, it contains %ld values ", *len, name_, rlen);

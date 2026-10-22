@@ -2,5 +2,3 @@ alias mars.iteration  = iterationNumber;
 alias mars.diagnostic = diagnosticNumber;
 alias mars.domain=globalDomain;
 #alias mars.domain=sensitiveAreaDomain;
-
-

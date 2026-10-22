@@ -30,10 +30,10 @@ int Section::notify_change(grib_accessor* notified,
     grib_loader loader = { 0, 0, 0, 0, 0 };
 
     grib_section* old_section = NULL;
-    grib_handle* h            = notified->get_enclosing_handle();
-    size_t len                = 0;
-    size_t size               = 0;
-    int err                   = 0;
+    grib_handle* h = notified->get_enclosing_handle();
+    size_t len = 0;
+    size_t size = 0;
+    int err = 0;
     grib_handle* tmp_handle;
     int doit = 0;
 
@@ -42,7 +42,7 @@ int Section::notify_change(grib_accessor* notified,
     DEBUG_ASSERT(context_);
 
     if (context_->debug > 0) {
-        char debug_str[1024] = {0, };
+        char debug_str[1024] = { 0 };
         if (debug_info_) {
             snprintf(debug_str, 1024, " (%s)", debug_info_);
         }
@@ -51,7 +51,7 @@ int Section::notify_change(grib_accessor* notified,
                          name_, notified->name_, changed->name_, debug_str);
     }
 
-    la          = reparse(notified, &doit);
+    la = reparse(notified, &doit);
     old_section = notified->sub_section_;
     if (!old_section) return GRIB_INTERNAL_ERROR;
 
@@ -89,8 +89,8 @@ int Section::notify_change(grib_accessor* notified,
     tmp_handle->buffer = grib_create_growable_buffer(context_);
     ECCODES_ASSERT(tmp_handle->buffer); /* FIXME */
 
-    loader.data          = h;
-    loader.lookup_long   = grib_lookup_long_from_handle;
+    loader.data = h;
+    loader.lookup_long = grib_lookup_long_from_handle;
     loader.init_accessor = grib_init_accessor_from_handle;
 
     if (h->kid != NULL) {
@@ -98,16 +98,13 @@ int Section::notify_change(grib_accessor* notified,
         return GRIB_INTERNAL_ERROR;
     }
 
-    ECCODES_ASSERT(h->kid == NULL);
     tmp_handle->loader = &loader;
-    tmp_handle->main   = h;
-    h->kid             = tmp_handle;
+    tmp_handle->main = h;
+    h->kid = tmp_handle;
     /* printf("tmp_handle- main %p %p\n",(void*)tmp_handle,(void*)h); */
 
     grib_context_log(context_, GRIB_LOG_DEBUG, "------------- CREATE TMP BLOCK act=%s notified=%s", name_, notified->name_);
     tmp_handle->root = grib_section_create(tmp_handle, NULL);
-
-    tmp_handle->use_trie = 1;
 
     err = create_accessor(tmp_handle->root, &loader);
     if (err) {
@@ -157,9 +154,8 @@ int Section::notify_change(grib_accessor* notified,
     }
     grib_handle_delete(tmp_handle);
 
-    h->use_trie     = 1;
     h->trie_invalid = 1;
-    h->kid          = NULL;
+    h->kid = NULL;
 
     err = grib_section_adjust_sizes(h->root, 1, 0);
     if (err)

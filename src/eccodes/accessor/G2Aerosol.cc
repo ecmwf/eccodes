@@ -10,9 +10,6 @@
 
 #include "G2Aerosol.h"
 
-eccodes::accessor::G2Aerosol _grib_accessor_g2_aerosol;
-eccodes::Accessor* grib_accessor_g2_aerosol = &_grib_accessor_g2_aerosol;
-
 namespace eccodes::accessor
 {
 
@@ -23,8 +20,8 @@ void G2Aerosol::init(const long l, grib_arguments* c)
     int n = 0;
 
     productDefinitionTemplateNumber_ = c->get_name(hand, n++);
-    stepType_                        = c->get_name(hand, n++);
-    optical_                         = c->get_long(hand, n++);
+    stepType_ = c->get_name(hand, n++);
+    optical_ = c->get_long(hand, n++);
 }
 
 int G2Aerosol::unpack_long(long* val, size_t* len)
@@ -42,13 +39,13 @@ int G2Aerosol::unpack_long(long* val, size_t* len)
 
 int G2Aerosol::pack_long(const long* val, size_t* len)
 {
-    grib_handle* hand                       = get_enclosing_handle();
-    long productDefinitionTemplateNumber    = -1;
+    grib_handle* hand = get_enclosing_handle();
+    long productDefinitionTemplateNumber = -1;
     long productDefinitionTemplateNumberNew = -1;
     // long type=-1;
     // long stream=-1;
-    long eps          = -1;
-    char stepType[15] = {0,};
+    long eps = -1;
+    char stepType[15] = { 0 };
     size_t slen = 15;
     // int aerosol = *val;
     int isInstant = 0;

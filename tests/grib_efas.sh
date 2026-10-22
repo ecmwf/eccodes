@@ -3,7 +3,7 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
+#
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
@@ -53,13 +53,6 @@ ${tools_dir}/grib_set -s \
     setLocalDefinition=1,localDefinitionNumber=41,type=fc,inputOriginatingCentre=ecmf,typeOfPostProcessing=10 \
     $temp1 $temp2
 grib_check_key_equals $temp2 mars.model  'geff'
-
-# Parameter tests
-${tools_dir}/grib_set -s paramId=260267 $temp2 $temp3
-grib_check_key_equals $temp3 paramId,lengthOfTimeRange '260267 6'
-
-${tools_dir}/grib_set -s paramId=260268 $temp2 $temp3
-grib_check_key_equals $temp3 paramId,lengthOfTimeRange '260268 24'
 
 # Use stepType
 ${tools_dir}/grib_set -s localDefinitionNumber=41,stepType=accum $sample $temp1

@@ -10,24 +10,21 @@
 
 #include "GdsNotPresentBitmap.h"
 
-eccodes::accessor::GdsNotPresentBitmap _grib_accessor_gds_not_present_bitmap;
-eccodes::Accessor* grib_accessor_gds_not_present_bitmap = &_grib_accessor_gds_not_present_bitmap;
-
 namespace eccodes::accessor
 {
 
 void GdsNotPresentBitmap::init(const long v, grib_arguments* args)
 {
     Gen::init(v, args);
-    int n             = 0;
+    int n = 0;
     grib_handle* hand = get_enclosing_handle();
 
-    missing_value_           = args->get_name(hand, n++);
-    number_of_values_        = args->get_name(hand, n++);
-    number_of_points_        = args->get_name(hand, n++);
+    missing_value_ = args->get_name(hand, n++);
+    number_of_values_ = args->get_name(hand, n++);
+    number_of_points_ = args->get_name(hand, n++);
     latitude_of_first_point_ = args->get_name(hand, n++);
-    ni_                      = args->get_name(hand, n++);
-    length_                  = 0;
+    ni_ = args->get_name(hand, n++);
+    length_ = 0;
 }
 
 int GdsNotPresentBitmap::value_count(long* number_of_points)
@@ -42,14 +39,14 @@ int GdsNotPresentBitmap::unpack_double(double* val, size_t* len)
 
     long number_of_points = 0, number_of_values = 0, ni = 0;
     long latitude_of_first_point = 0;
-    size_t i                     = 0;
-    size_t n_vals                = 0;
-    long nn                      = 0;
+    size_t i = 0;
+    size_t n_vals = 0;
+    long nn = 0;
     long missing_value;
 
     double* coded_vals = NULL;
-    int err            = value_count(&nn);
-    n_vals             = nn;
+    int err = value_count(&nn);
+    n_vals = nn;
     if (err)
         return err;
 

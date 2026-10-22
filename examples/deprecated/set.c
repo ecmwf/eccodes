@@ -70,7 +70,7 @@ int main(int argc, char** argv) {
   GRIB_CHECK(grib_get_message(h,&buffer,&size),0);
 
   /* write the buffer in a file*/
-  if(fwrite(buffer,1,size,out) != size) 
+  if(fwrite(buffer,1,size,out) != size)
   {
      perror(argv[1]);
      exit(1);

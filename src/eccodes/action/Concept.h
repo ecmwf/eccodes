@@ -31,10 +31,10 @@ public:
     grib_concept_value* get_concept(grib_handle* h);
 
     grib_concept_value* concept_value_ = nullptr;
-    char* basename_                    = nullptr;
-    char* masterDir_                   = nullptr;
-    char* localDir_                    = nullptr;
-    int nofail_                        = 0;
+    char* basename_ = nullptr;
+    char* masterDir_ = nullptr;
+    char* localDir_ = nullptr;
+    int nofail_ = 0;
 };
 
 }  // namespace eccodes::action

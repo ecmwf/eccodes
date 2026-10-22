@@ -5,6 +5,13 @@ set -ea
 # Not all Unix shells support this unfortunately
 #set -o pipefail
 
+# ThreadSanitizer suppression file for known false positives (e.g. libgfortran)
+tsan_supp="@PROJECT_SOURCE_DIR@/cmake/tsan_suppressions.txt"
+if [ -f "$tsan_supp" ]; then
+    TSAN_OPTIONS="${TSAN_OPTIONS:-} suppressions=$tsan_supp"
+    export TSAN_OPTIONS
+fi
+
 # Unset any environment variable that could interfere with tests
 unset ECCODES_EXTRA_DEFINITION_PATH
 unset ECCODES_LOG_STREAM
@@ -70,5 +77,8 @@ HAVE_ECKIT_GEO=@HAVE_ECKIT_GEO@
 HAVE_EXTRA_TESTS=@HAVE_EXTRA_TESTS@
 HAVE_MEMFS=@HAVE_MEMFS@
 ECCODES_ON_WINDOWS=@ECCODES_ON_WINDOWS@
+
+# eccodes handles eckit error messages directly
+export ECKIT_EXCEPTION_IS_SILENT=1
 
 echo "Current directory: `pwd`"

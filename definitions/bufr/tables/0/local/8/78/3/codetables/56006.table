@@ -1,0 +1,11 @@
+0 0 None
+1 1 Rime ice in cloud
+2 2 Clear ice in cloud
+3 3 Combination rime and clear ice in cloud
+4 4 Rime ice in precipitation
+5 5 Clear ice in precipitation
+6 6 Combination rime and clear ine in precipitation
+7 7 Frost (icing in clear air)
+8 8 Non-persistatnt contrails (less than 1/4 nmi (nautical mile?) long)
+9 9 Persistent contrails
+15 15 Missing value

@@ -10,9 +10,6 @@
 
 #include "Getenv.h"
 
-eccodes::accessor::Getenv _grib_accessor_getenv;
-eccodes::Accessor* grib_accessor_getenv = &_grib_accessor_getenv;
-
 namespace eccodes::accessor
 {
 
@@ -21,7 +18,7 @@ void Getenv::init(const long l, grib_arguments* args)
     Ascii::init(l, args);
     static char undefined[] = "undefined";
 
-    envvar_          = args->get_string(get_enclosing_handle(), 0);
+    envvar_ = args->get_string(get_enclosing_handle(), 0);
     default_value_ = args->get_string(get_enclosing_handle(), 1);
     if (!default_value_)
         default_value_ = undefined;
@@ -35,7 +32,7 @@ int Getenv::pack_string(const char* val, size_t* len)
 
 int Getenv::unpack_string(char* val, size_t* len)
 {
-    char* v  = 0;
+    char* v = 0;
     size_t l = 0;
 
     if (!value_) {

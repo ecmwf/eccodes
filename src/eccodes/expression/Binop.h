@@ -12,9 +12,11 @@
 
 #include "Expression.h"
 
-namespace eccodes::expression {
+namespace eccodes::expression
+{
 
-class Binop : public Expression {
+class Binop : public Expression
+{
 public:
     Binop(grib_context*, BinopLongProc, BinopDoubleProc, Expression*, Expression*);
 
@@ -33,6 +35,8 @@ private:
     BinopLongProc long_func_ = nullptr;
     BinopDoubleProc double_func_ = nullptr;
     // BinopStringProc string_func_ = nullptr;
+
+    void print_error(grib_handle* h) const;
 };
 
 }  // namespace eccodes::expression

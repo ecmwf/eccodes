@@ -9,50 +9,25 @@
  */
 
 #include "grib_api_internal.h"
+#include "sync/Mutex.h"
 
 #if HAVE_LIBJASPER
-/* Remove compiler warnings re macros being redefined */
-#undef PACKAGE_BUGREPORT
-#undef PACKAGE_NAME
-#undef PACKAGE_STRING
-#undef PACKAGE_TARNAME
-#undef PACKAGE_VERSION
-#include "jasper/jasper.h"
-#define MAXOPTSSIZE 1024
+    /* Remove compiler warnings re macros being redefined */
+    #undef PACKAGE_BUGREPORT
+    #undef PACKAGE_NAME
+    #undef PACKAGE_STRING
+    #undef PACKAGE_TARNAME
+    #undef PACKAGE_VERSION
+    #include "jasper/jasper.h"
+    #define MAXOPTSSIZE 1024
 
 // The number of active jasper initialisation actions which have not been cleaned up
 static int ecc_jasper_active_inits = 0;
-
-#if GRIB_PTHREADS
-static pthread_once_t once    = PTHREAD_ONCE_INIT;
-static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-static void init()
-{
-    pthread_mutexattr_t attr;
-    pthread_mutexattr_init(&attr);
-    pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
-    pthread_mutex_init(&mutex, &attr);
-    pthread_mutexattr_destroy(&attr);
-}
-#elif GRIB_OMP_THREADS
-static int once = 0;
-static omp_nest_lock_t mutex;
-static void init()
-{
-    GRIB_OMP_CRITICAL(lock_grib_jasper_c)
-    {
-        if (once == 0) {
-            omp_init_nest_lock(&mutex);
-            once = 1;
-        }
-    }
-}
-#endif
-
+static eccodes::sync::Mutex mutex;
 
 static int ecc_jasper_initialise()
 {
-#if JASPER_VERSION_MAJOR >= 3
+    #if JASPER_VERSION_MAJOR >= 3
     int jaserr = 0;
     if (ecc_jasper_active_inits == 0) {
         jas_conf_clear();
@@ -70,33 +45,33 @@ static int ecc_jasper_initialise()
     if (jaserr) return jaserr;
     // Jasper thread has been init, so add to the count
     ecc_jasper_active_inits += 1;
-#endif
+    #endif
     return 0;
 }
 
-static jas_image_t* ecc_jasper_decode(jas_stream_t *in)
+static jas_image_t* ecc_jasper_decode(jas_stream_t* in)
 {
-#if JASPER_VERSION_MAJOR >= 3
+    #if JASPER_VERSION_MAJOR >= 3
     /* Second argument (=fmt) < 0 means "If possible, try to determine the format of the input data" */
     return jas_image_decode(in, -1, 0);
-#else
+    #else
     return jpc_decode(in, NULL);
-#endif
+    #endif
 }
 
-static int ecc_jasper_encode(jas_image_t *image, jas_stream_t *jpcstream, char *optstr)
+static int ecc_jasper_encode(jas_image_t* image, jas_stream_t* jpcstream, char* optstr)
 {
-#if JASPER_VERSION_MAJOR >= 3
+    #if JASPER_VERSION_MAJOR >= 3
     const int fmt = jas_image_strtofmt("jpc");
     return jas_image_encode(image, jpcstream, fmt, optstr);
-#else
+    #else
     return jpc_encode(image, jpcstream, optstr);
-#endif
+    #endif
 }
 
 static void ecc_jasper_cleanup()
 {
-#if JASPER_VERSION_MAJOR >= 3
+    #if JASPER_VERSION_MAJOR >= 3
     jas_cleanup_thread();
     // Cleaned up a thread, so remove from the count
     ecc_jasper_active_inits -= 1;
@@ -105,24 +80,24 @@ static void ecc_jasper_cleanup()
         // Library has been cleaned up, so remove from the count
         ecc_jasper_active_inits -= 1;
     }
-#endif
+    #endif
 }
 
 int grib_jasper_decode(grib_context* c, unsigned char* buf, const size_t* buflen, double* values, const size_t* n_vals)
 {
     /* jas_setdbglevel(99999); */
-    jas_image_t* image   = NULL;
-    jas_stream_t* jpeg   = NULL;
-    int code             = GRIB_SUCCESS;
+    jas_image_t* image = NULL;
+    jas_stream_t* jpeg = NULL;
+    int code = GRIB_SUCCESS;
     jas_matrix_t* matrix = NULL;
     jas_image_cmpt_t* p;
     int i, j, k;
     int jaserr = 0; /* 0 means success */
 
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
-    GRIB_MUTEX_LOCK(&mutex);
-    jaserr = ecc_jasper_initialise();
-    GRIB_MUTEX_UNLOCK(&mutex);
+    {
+        eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
+        jaserr = ecc_jasper_initialise();
+    }
     if (jaserr) {
         grib_context_log(c, GRIB_LOG_ERROR, "grib_jasper_decode: Failed to initialize JasPer library. JasPer error %d", jaserr);
         code = GRIB_DECODING_ERROR;
@@ -179,10 +154,10 @@ cleanup:
         jas_image_destroy(image);
     if (jpeg)
         jas_stream_close(jpeg);
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
-    GRIB_MUTEX_LOCK(&mutex);
-    ecc_jasper_cleanup();
-    GRIB_MUTEX_UNLOCK(&mutex);
+    {
+        eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
+        ecc_jasper_cleanup();
+    }
 
     return code;
 }
@@ -194,49 +169,49 @@ int grib_jasper_encode(grib_context* c, j2k_encode_helper* helper)
 
     char opts[MAXOPTSSIZE];
     double reference_value = helper->reference_value;
-    double decimal         = helper->decimal;
-    double divisor         = helper->divisor;
-    const double* values   = helper->values;
-    long no_values         = helper->no_values;
+    double decimal = helper->decimal;
+    double divisor = helper->divisor;
+    const double* values = helper->values;
+    long no_values = helper->no_values;
     long bits8;
     int i;
 
-    size_t buflen          = 0;
+    size_t buflen = 0;
     unsigned char* encoded = NULL;
-    unsigned char* p       = NULL;
+    unsigned char* p = NULL;
 
-    jas_image_t image       = { 0 };
+    jas_image_t image = { 0 };
     jas_stream_t* jpcstream = 0;
-    jas_stream_t* istream   = 0;
-    jas_image_cmpt_t cmpt   = {0,};
+    jas_stream_t* istream = 0;
+    jas_image_cmpt_t cmpt = { 0 };
     jas_image_cmpt_t* pcmpt = 0;
 
-    image.tlx_      = 0;
-    image.tly_      = 0;
-    image.brx_      = helper->width;
-    image.bry_      = helper->height;
+    image.tlx_ = 0;
+    image.tly_ = 0;
+    image.brx_ = helper->width;
+    image.bry_ = helper->height;
     image.numcmpts_ = 1;
     image.maxcmpts_ = 1;
-    image.clrspc_   = JAS_CLRSPC_SGRAY;
-    image.cmprof_   = 0;
+    image.clrspc_ = JAS_CLRSPC_SGRAY;
+    image.cmprof_ = 0;
 
-#if JASPER_VERSION_MAJOR == 1
+    #if JASPER_VERSION_MAJOR == 1
     /* ECC-396: Support for Jasper 2.0
      * Jasper version 1 had the 'inmem_' data member but
      * version 2 removed it from the interface */
     image.inmem_ = 1;
-#endif
+    #endif
 
-    cmpt.tlx_    = 0;
-    cmpt.tly_    = 0;
-    cmpt.hstep_  = 1;
-    cmpt.vstep_  = 1;
-    cmpt.width_  = helper->width;
+    cmpt.tlx_ = 0;
+    cmpt.tly_ = 0;
+    cmpt.hstep_ = 1;
+    cmpt.vstep_ = 1;
+    cmpt.width_ = helper->width;
     cmpt.height_ = helper->height;
-    cmpt.type_   = JAS_IMAGE_CT_COLOR(JAS_CLRSPC_CHANIND_GRAY_Y);
-    cmpt.prec_   = helper->bits_per_value;
-    cmpt.sgnd_   = 0;
-    cmpt.cps_    = (helper->bits_per_value + 7) / 8;
+    cmpt.type_ = JAS_IMAGE_CT_COLOR(JAS_CLRSPC_CHANIND_GRAY_Y);
+    cmpt.prec_ = helper->bits_per_value;
+    cmpt.sgnd_ = 0;
+    cmpt.cps_ = (helper->bits_per_value + 7) / 8;
 
     /* Simple packing encoding */
     bits8 = (helper->bits_per_value + 7) / 8 * 8;
@@ -249,10 +224,10 @@ int grib_jasper_encode(grib_context* c, j2k_encode_helper* helper)
     }
 
     buflen = 0;
-    p      = encoded;
+    p = encoded;
 
     for (i = 0; i < no_values; i++) {
-        long blen                  = bits8;
+        long blen = bits8;
         unsigned long unsigned_val = (unsigned long)((((values[i] * decimal) - (reference_value)) * divisor) + 0.5);
         while (blen >= 8) {
             blen -= 8;
@@ -262,10 +237,10 @@ int grib_jasper_encode(grib_context* c, j2k_encode_helper* helper)
         }
     }
 
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
-    GRIB_MUTEX_LOCK(&mutex);
-    jaserr = ecc_jasper_initialise();
-    GRIB_MUTEX_UNLOCK(&mutex);
+    {
+        eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
+        jaserr = ecc_jasper_initialise();
+    }
     if (jaserr) {
         grib_context_log(c, GRIB_LOG_ERROR, "grib_jasper_encode: Failed to initialize JasPer library. JasPer error %d", jaserr);
         code = GRIB_ENCODING_ERROR;
@@ -282,10 +257,10 @@ int grib_jasper_encode(grib_context* c, j2k_encode_helper* helper)
     ECCODES_ASSERT(cmpt.width_ * cmpt.height_ * cmpt.cps_ == buflen);
     grib_context_log(c, GRIB_LOG_DEBUG, "grib_jasper_encode: JasPer version %s", jas_getversion());
 
-    pcmpt        = &cmpt;
+    pcmpt = &cmpt;
     image.cmpts_ = &pcmpt;
 
-    istream      = jas_stream_memopen((char*)encoded, buflen);
+    istream = jas_stream_memopen((char*)encoded, buflen);
     cmpt.stream_ = istream;
 
     jpcstream = jas_stream_memopen((char*)helper->jpeg_buffer, helper->buffer_size);
@@ -300,10 +275,10 @@ int grib_jasper_encode(grib_context* c, j2k_encode_helper* helper)
         jas_stream_close(jpcstream);
         jpcstream = 0;
 
-        istream      = jas_stream_memopen((char*)encoded, buflen);
+        istream = jas_stream_memopen((char*)encoded, buflen);
         cmpt.stream_ = istream;
-        jpcstream    = jas_stream_memopen((char*)helper->jpeg_buffer, helper->buffer_size);
-        jaserr       = ecc_jasper_encode(&image, jpcstream, opts);
+        jpcstream = jas_stream_memopen((char*)helper->jpeg_buffer, helper->buffer_size);
+        jaserr = ecc_jasper_encode(&image, jpcstream, opts);
     }
 
     if (jaserr) {
@@ -314,9 +289,9 @@ int grib_jasper_encode(grib_context* c, j2k_encode_helper* helper)
 
     helper->jpeg_length = jpcstream->rwcnt_;
     jas_stream_close(istream);
-    istream             = 0;
+    istream = 0;
     jas_stream_close(jpcstream);
-    jpcstream           = 0;
+    jpcstream = 0;
 
 cleanup:
     grib_context_free(c, encoded);
@@ -324,14 +299,14 @@ cleanup:
         jas_stream_close(istream);
     if (jpcstream)
         jas_stream_close(jpcstream);
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
-    GRIB_MUTEX_LOCK(&mutex);
-    ecc_jasper_cleanup();
-    GRIB_MUTEX_UNLOCK(&mutex);
+    {
+        eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
+        ecc_jasper_cleanup();
+    }
     return code;
 }
 
-#else // HAVE_LIBJASPER
+#else  // HAVE_LIBJASPER
 
 int grib_jasper_decode(grib_context* c, unsigned char* buf, const size_t* buflen, double* val, const size_t* n_vals)
 {

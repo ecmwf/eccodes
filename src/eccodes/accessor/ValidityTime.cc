@@ -10,9 +10,6 @@
 
 #include "ValidityTime.h"
 
-eccodes::accessor::ValidityTime _grib_accessor_validity_time;
-eccodes::Accessor* grib_accessor_validity_time = &_grib_accessor_validity_time;
-
 namespace eccodes::accessor
 {
 
@@ -20,14 +17,14 @@ void ValidityTime::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
     grib_handle* hand = get_enclosing_handle();
-    int n             = 0;
+    int n = 0;
 
-    date_      = c->get_name(hand, n++);
-    time_      = c->get_name(hand, n++);
-    step_      = c->get_name(hand, n++);
+    date_ = c->get_name(hand, n++);
+    time_ = c->get_name(hand, n++);
+    step_ = c->get_name(hand, n++);
     stepUnits_ = c->get_name(hand, n++);
-    hours_     = c->get_name(hand, n++);
-    minutes_   = c->get_name(hand, n++);
+    hours_ = c->get_name(hand, n++);
+    minutes_ = c->get_name(hand, n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
@@ -35,11 +32,11 @@ void ValidityTime::init(const long l, grib_arguments* c)
 int ValidityTime::unpack_long(long* val, size_t* len)
 {
     grib_handle* hand = get_enclosing_handle();
-    int ret           = 0;
-    long date         = 0;
-    long time         = 0;
-    long step         = 0;
-    long stepUnits    = 0;
+    int ret = 0;
+    long date = 0;
+    long time = 0;
+    long step = 0;
+    long stepUnits = 0;
     long hours = 0, minutes = 0, step_mins = 0, tmp, tmp_hrs, tmp_mins;
 
     if (hours_) {
@@ -67,10 +64,10 @@ int ValidityTime::unpack_long(long* val, size_t* len)
         step_mins = convert_to_minutes(step, stepUnits);
     }
 
-    minutes  = time % 100;
-    hours    = time / 100;
-    tmp      = minutes + step_mins; /* add the step to our minutes */
-    tmp_hrs  = tmp / 60;            /* how many hours and mins is that? */
+    minutes = time % 100;
+    hours = time / 100;
+    tmp = minutes + step_mins; /* add the step to our minutes */
+    tmp_hrs = tmp / 60;        /* how many hours and mins is that? */
     tmp_mins = tmp % 60;
     hours += tmp_hrs; /* increment hours */
     if (hours > 0) {
@@ -94,8 +91,8 @@ int ValidityTime::unpack_long(long* val, size_t* len)
 
 int ValidityTime::unpack_string(char* val, size_t* len)
 {
-    int err      = 0;
-    long v       = 0;
+    int err = 0;
+    long v = 0;
     size_t lsize = 1, lmin = 5;
 
     err = unpack_long(&v, &lsize);
@@ -104,7 +101,7 @@ int ValidityTime::unpack_string(char* val, size_t* len)
     if (*len < lmin) {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
-                         class_name_, name_, lmin, *len);
+                         accessor_type().c_str(), name_, lmin, *len);
         *len = lmin;
         return GRIB_BUFFER_TOO_SMALL;
     }

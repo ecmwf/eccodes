@@ -9,34 +9,9 @@
  */
 
 #include "HashArray.h"
+#include "sync/Mutex.h"
 
-#if GRIB_PTHREADS
-static pthread_once_t once   = PTHREAD_ONCE_INIT;
-static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-
-static void init_mutex()
-{
-    pthread_mutexattr_t attr;
-    pthread_mutexattr_init(&attr);
-    pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
-    pthread_mutex_init(&mutex, &attr);
-    pthread_mutexattr_destroy(&attr);
-}
-#elif GRIB_OMP_THREADS
-static int once = 0;
-static omp_nest_lock_t mutex;
-
-static void init_mutex()
-{
-    GRIB_OMP_CRITICAL(lock_action_class_hash_array_c)
-    {
-        if (once == 0) {
-            omp_init_nest_lock(&mutex);
-            once = 1;
-        }
-    }
-}
-#endif
+static eccodes::sync::Mutex mutex;
 
 grib_action* grib_action_create_hash_array(grib_context* context,
                                            const char* name,
@@ -58,12 +33,12 @@ HashArray::HashArray(grib_context* context,
     Gen(context, name, "hash_array", 0, NULL, NULL, flags, name_space, NULL)
 {
     class_name_ = "action_class_hash_array";
-    basename_   = basename ? grib_context_strdup_persistent(context, basename) : nullptr;
-    masterDir_  = masterDir ? grib_context_strdup_persistent(context, masterDir) : nullptr;
-    localDir_   = localDir ? grib_context_strdup_persistent(context, localDir) : nullptr;
-    ecmfDir_    = ecmfDir ? grib_context_strdup_persistent(context, ecmfDir) : nullptr;
+    basename_ = basename ? grib_context_strdup_persistent(context, basename) : nullptr;
+    masterDir_ = masterDir ? grib_context_strdup_persistent(context, masterDir) : nullptr;
+    localDir_ = localDir ? grib_context_strdup_persistent(context, localDir) : nullptr;
+    ecmfDir_ = ecmfDir ? grib_context_strdup_persistent(context, ecmfDir) : nullptr;
     defaultkey_ = defaultkey ? grib_context_strdup_persistent(context, defaultkey) : nullptr;
-    nofail_     = nofail;
+    nofail_ = nofail;
     hash_array_ = hash_array;
 
     if (hash_array) {
@@ -109,21 +84,21 @@ void HashArray::dump(FILE* f, int lvl)
 
 grib_hash_array_value* HashArray::get_hash_array_impl(grib_handle* h)
 {
-    char buf[4096]       = {0, };
-    char master[1024]    = {0, };
-    char local[1024]     = {0, };
-    char ecmf[1024]      = {0, };
-    char masterDir[1024] = {0, };
-    size_t lenMasterDir  = 1024;
-    char localDir[1024]  = {0, };
-    size_t lenLocalDir   = 1024;
-    char ecmfDir[1024]   = {0, };
-    size_t lenEcmfDir    = 1024;
-    char key[4096]       = {0, };
-    char* full           = 0;
+    char buf[4096] = { 0 };
+    char master[1024] = { 0 };
+    char local[1024] = { 0 };
+    char ecmf[1024] = { 0 };
+    char masterDir[1024] = { 0 };
+    size_t lenMasterDir = 1024;
+    char localDir[1024] = { 0 };
+    size_t lenLocalDir = 1024;
+    char ecmfDir[1024] = { 0 };
+    size_t lenEcmfDir = 1024;
+    char key[4096] = { 0 };
+    char* full = 0;
     int id;
 
-    grib_context* context    = context_;
+    grib_context* context = context_;
     grib_hash_array_value* c = NULL;
 
     if (hash_array_ != NULL)
@@ -219,14 +194,8 @@ const char* HashArray::get_hash_array_full_path()
 
 grib_hash_array_value* HashArray::get_hash_array(grib_handle* h)
 {
-    grib_hash_array_value* result = NULL;
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex);
-
-    result = get_hash_array_impl(h);
-
-    GRIB_MUTEX_UNLOCK(&mutex);
-    return result;
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
+    return get_hash_array_impl(h);
 }
 
 }  // namespace eccodes::action

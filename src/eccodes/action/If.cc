@@ -9,6 +9,7 @@
  */
 
 #include "If.h"
+#include "grib_accessor_factory.h"
 
 
 grib_action* grib_action_create_if(grib_context* context,
@@ -30,20 +31,20 @@ If::If(grib_context* context,
     char name[1024];
     const size_t nameLen = sizeof(name);
 
-    class_name_  = "action_class_if";
-    op_          = grib_context_strdup_persistent(context, "section");
-    context_     = context;
-    expression_  = expression;
-    block_true_  = block_true;
+    class_name_ = "action_class_if";
+    op_ = grib_context_strdup_persistent(context, "section");
+    context_ = context;
+    expression_ = expression;
+    block_true_ = block_true;
     block_false_ = block_false;
-    transient_   = transient;
+    transient_ = transient;
 
     if (transient)
         snprintf(name, nameLen, "__if%p", (void*)this);
     else
         snprintf(name, nameLen, "_if%p", (void*)this);
 
-    name_       = grib_context_strdup_persistent(context, name);
+    name_ = grib_context_strdup_persistent(context, name);
     debug_info_ = NULL;
     if (context->debug > 0 && file_being_parsed) {
         /* Construct debug information showing definition file and line */
@@ -83,11 +84,11 @@ If::~If()
 int If::create_accessor(grib_section* p, grib_loader* h)
 {
     grib_action* next = NULL;
-    int ret           = GRIB_SUCCESS;
-    long lres         = 0;
+    int ret = GRIB_SUCCESS;
+    long lres = 0;
 
     grib_accessor* as = NULL;
-    grib_section* gs  = NULL;
+    grib_section* gs = NULL;
 
     as = grib_accessor_factory(p, this, 0, NULL);
     if (!as)
@@ -134,8 +135,8 @@ int If::execute(grib_handle* h)
 {
     grib_action* next = NULL;
     grib_context* ctx = h->context;
-    int ret           = 0;
-    long lres         = 0;
+    int ret = 0;
+    long lres = 0;
 
     /* See GRIB-394 */
     int type = expression_->native_type(h);
@@ -152,8 +153,8 @@ int If::execute(grib_handle* h)
     }
     else {
         double dres = 0.0;
-        ret         = expression_->evaluate_double(h, &dres);
-        lres        = (long)dres;
+        ret = expression_->evaluate_double(h, &dres);
+        lres = (long)dres;
         if (ret != GRIB_SUCCESS) {
             if (ret == GRIB_NOT_FOUND)
                 lres = 0;
@@ -211,7 +212,7 @@ void If::dump(FILE* f, int lvl)
 
 grib_action* If::reparse(grib_accessor* acc, int* doit)
 {
-    int ret   = 0;
+    int ret = 0;
     long lres = 0;
 
     /* printf("reparse %s %s\n",name_,acc->name); */

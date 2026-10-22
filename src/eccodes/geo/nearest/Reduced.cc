@@ -13,7 +13,8 @@
 eccodes::geo_nearest::Reduced _grib_nearest_reduced{};
 eccodes::geo_nearest::Nearest* grib_nearest_reduced = &_grib_nearest_reduced;
 
-namespace eccodes::geo_nearest {
+namespace eccodes::geo_nearest
+{
 
 #define NUM_NEIGHBOURS 4
 
@@ -23,10 +24,10 @@ int Reduced::init(grib_handle* h, grib_arguments* args)
     if ((ret = Gen::init(h, args) != GRIB_SUCCESS))
         return ret;
 
-    Nj_      = args->get_name(h, cargs_++);
-    pl_      = args->get_name(h, cargs_++);
-    j_       = (size_t*)grib_context_malloc(h->context, 2 * sizeof(size_t));
-    legacy_  = -1;
+    Nj_ = args->get_name(h, cargs_++);
+    pl_ = args->get_name(h, cargs_++);
+    j_ = (size_t*)grib_context_malloc(h->context, 2 * sizeof(size_t));
+    legacy_ = -1;
     rotated_ = -1;
     if (!j_)
         return GRIB_OUT_OF_MEMORY;
@@ -52,8 +53,8 @@ typedef void (*get_reduced_row_proc)(long pl, double lon_first, double lon_last,
 static int is_legacy(grib_handle* h, int* legacy)
 {
     long lVal = 0;
-    *legacy   = 0;  // false by default
-    int err   = grib_get_long(h, "legacyGaussSubarea", &lVal);
+    *legacy = 0;  // false by default
+    int err = grib_get_long(h, "legacyGaussSubarea", &lVal);
     if (err) return err;
     *legacy = (int)lVal;
     return GRIB_SUCCESS;
@@ -61,8 +62,8 @@ static int is_legacy(grib_handle* h, int* legacy)
 static int is_rotated(grib_handle* h, int* rotated)
 {
     long lVal = 0;
-    *rotated  = 0;  // false by default
-    int err   = grib_get_long(h, "isRotatedGrid", &lVal);
+    *rotated = 0;  // false by default
+    int err = grib_get_long(h, "isRotatedGrid", &lVal);
     if (err) return err;
     *rotated = (int)lVal;
     return GRIB_SUCCESS;
@@ -113,10 +114,10 @@ int Reduced::find_global(grib_handle* h,
                          double* distances, int* indexes, size_t* len)
 {
     int err = 0, kk = 0, ii = 0;
-    size_t jj           = 0;
-    long* pla           = NULL;
-    long* pl            = NULL;
-    size_t nvalues      = 0;
+    size_t jj = 0;
+    long* pla = NULL;
+    long* pl = NULL;
+    size_t nvalues = 0;
     grib_iterator* iter = NULL;
     double lat = 0, lon = 0;
     double radiusInKm;
@@ -143,7 +144,7 @@ int Reduced::find_global(grib_handle* h,
      * and reuse for other messages */
     if (!h_ || (flags & GRIB_NEAREST_SAME_GRID) == 0) {
         double olat = 1.e10;
-        long n      = 0;
+        long n = 0;
 
         ilat = 0;
         ilon = 0;
@@ -172,7 +173,7 @@ int Reduced::find_global(grib_handle* h,
         while (grib_iterator_next(iter, &lat, &lon, NULL)) {
             if (ilat < lats_count_ && olat != lat) {
                 lats_[ilat++] = lat;
-                olat          = lat;
+                olat = lat;
             }
             while (lon > 360)
                 lon -= 360;
@@ -193,10 +194,10 @@ int Reduced::find_global(grib_handle* h,
      * This is for performance: if the grid and the input point have not changed
      * we only do this once and reuse for other messages */
     if (!distances_ || (flags & GRIB_NEAREST_SAME_POINT) == 0 || (flags & GRIB_NEAREST_SAME_GRID) == 0) {
-        double* lons           = NULL;
-        int nlon               = 0;
-        size_t plsize          = 0;
-        long nplm1             = 0;
+        double* lons = NULL;
+        int nlon = 0;
+        size_t plsize = 0;
+        long nplm1 = 0;
         int nearest_lons_found = 0;
         long row_count, ilon_first, ilon_last;
 
@@ -247,11 +248,11 @@ int Reduced::find_global(grib_handle* h,
         else {
             nlon = 0;
             for (jj = 0; jj < j_[0]; jj++) {
-                row_count  = ilon_first = ilon_last = 0;
+                row_count = ilon_first = ilon_last = 0;
                 get_reduced_row_func(pl[jj], lon_first_, lon_last_, &row_count, &ilon_first, &ilon_last);
                 nlon += row_count;
             }
-            row_count  = ilon_first = ilon_last = 0;
+            row_count = ilon_first = ilon_last = 0;
             get_reduced_row_func(pl[j_[0]], lon_first_, lon_last_, &row_count, &ilon_first, &ilon_last);
             nplm1 = row_count - 1;
         }
@@ -266,8 +267,8 @@ int Reduced::find_global(grib_handle* h,
         if (lons[nplm1] > lons[0]) {
             if (inlon < lons[0] || inlon > lons[nplm1]) {
                 if (lons[nplm1] - lons[0] - 360 <= lons[nplm1] - lons[nplm1 - 1]) {
-                    k_[0]              = 0;
-                    k_[1]              = nplm1;
+                    k_[0] = 0;
+                    k_[1] = nplm1;
                     nearest_lons_found = 1;
                 }
                 else
@@ -277,8 +278,8 @@ int Reduced::find_global(grib_handle* h,
         else {
             if (inlon > lons[0] || inlon < lons[nplm1]) {
                 if (lons[0] - lons[nplm1] - 360 <= lons[0] - lons[1]) {
-                    k_[0]              = 0;
-                    k_[1]              = nplm1;
+                    k_[0] = 0;
+                    k_[1] = nplm1;
                     nearest_lons_found = 1;
                 }
                 else
@@ -288,7 +289,7 @@ int Reduced::find_global(grib_handle* h,
 
         if (!nearest_lons_found) {
             if (!global_) {
-                row_count  = ilon_first = ilon_last  = 0;
+                row_count = ilon_first = ilon_last = 0;
                 get_reduced_row_func(pl[j_[0]], lon_first_, lon_last_, &row_count, &ilon_first, &ilon_last);
             }
             else {
@@ -309,11 +310,11 @@ int Reduced::find_global(grib_handle* h,
         }
         else {
             for (jj = 0; jj < j_[1]; jj++) {
-                row_count  = ilon_first = ilon_last = 0;
+                row_count = ilon_first = ilon_last = 0;
                 get_reduced_row_func(pl[jj], lon_first_, lon_last_, &row_count, &ilon_first, &ilon_last);
                 nlon += row_count;
             }
-            row_count  = ilon_first = ilon_last = 0;
+            row_count = ilon_first = ilon_last = 0;
             get_reduced_row_func(pl[j_[1]], lon_first_, lon_last_, &nplm1, &ilon_first, &ilon_last);
             nplm1--;
         }
@@ -324,8 +325,8 @@ int Reduced::find_global(grib_handle* h,
             if (inlon < lons[0] || inlon > lons[nplm1]) {
                 if (lons[nplm1] - lons[0] - 360 <=
                     lons[nplm1] - lons[nplm1 - 1]) {
-                    k_[2]              = 0;
-                    k_[3]              = nplm1;
+                    k_[2] = 0;
+                    k_[3] = nplm1;
                     nearest_lons_found = 1;
                 }
                 else
@@ -336,8 +337,8 @@ int Reduced::find_global(grib_handle* h,
             if (inlon > lons[0] || inlon < lons[nplm1]) {
                 if (lons[0] - lons[nplm1] - 360 <=
                     lons[0] - lons[1]) {
-                    k_[2]              = 0;
-                    k_[3]              = nplm1;
+                    k_[2] = 0;
+                    k_[3] = nplm1;
                     nearest_lons_found = 1;
                 }
                 else
@@ -347,7 +348,7 @@ int Reduced::find_global(grib_handle* h,
 
         if (!nearest_lons_found) {
             if (!global_) {
-                row_count  = ilon_first = ilon_last  = 0;
+                row_count = ilon_first = ilon_last = 0;
                 get_reduced_row_func(pl[j_[1]], lon_first_, lon_last_, &row_count, &ilon_first, &ilon_last);
             }
             else {
@@ -383,8 +384,8 @@ int Reduced::find_global(grib_handle* h,
     for (jj = 0; jj < 2; jj++) {
         for (ii = 0; ii < 2; ii++) {
             distances[kk] = distances_[kk];
-            outlats[kk]   = lats_[j_[jj]];
-            outlons[kk]   = lons_[k_[kk]];
+            outlats[kk] = lats_[j_[jj]];
+            outlons[kk] = lons_[k_[kk]];
             /*if (values) {
              *    grib_get_double_element_internal(h, values_key_, k_[kk], &(values[kk]));
              *}

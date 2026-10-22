@@ -10,9 +10,6 @@
 
 #include "CountFile.h"
 
-eccodes::accessor::CountFile _grib_accessor_count_file;
-eccodes::Accessor* grib_accessor_count_file = &_grib_accessor_count_file;
-
 namespace eccodes::accessor
 {
 

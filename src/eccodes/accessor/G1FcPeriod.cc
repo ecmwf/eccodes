@@ -10,9 +10,6 @@
 
 #include "G1FcPeriod.h"
 
-eccodes::accessor::G1FcPeriod _grib_accessor_g1fcperiod;
-eccodes::Accessor* grib_accessor_g1fcperiod = &_grib_accessor_g1fcperiod;
-
 namespace eccodes::accessor
 {
 
@@ -21,8 +18,8 @@ int G1FcPeriod::unpack_string(char* val, size_t* len)
     long start = 0, theEnd = 0;
     char tmp[1024];
     const size_t tmpLen = sizeof(tmp);
-    int err             = grib_g1_step_get_steps(&start, &theEnd);
-    size_t l            = 0;
+    int err = grib_g1_step_get_steps(&start, &theEnd);
+    size_t l = 0;
 
     if (err)
         return err;

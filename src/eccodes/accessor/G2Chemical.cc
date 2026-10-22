@@ -10,9 +10,6 @@
 
 #include "G2Chemical.h"
 
-eccodes::accessor::G2Chemical _grib_accessor_g2_chemical;
-eccodes::Accessor* grib_accessor_g2_chemical = &_grib_accessor_g2_chemical;
-
 namespace eccodes::accessor
 {
 
@@ -29,11 +26,11 @@ void G2Chemical::init(const long l, grib_arguments* c)
 {
     Unsigned::init(l, c);
     grib_handle* hand = get_enclosing_handle();
-    int n             = 0;
+    int n = 0;
 
     productDefinitionTemplateNumber_ = c->get_name(hand, n++);
-    stepType_                        = c->get_name(hand, n++);
-    chemical_type_                   = c->get_long(hand, n++);
+    stepType_ = c->get_name(hand, n++);
+    chemical_type_ = c->get_long(hand, n++);
 }
 
 int G2Chemical::unpack_long(long* val, size_t* len)
@@ -54,13 +51,13 @@ int G2Chemical::unpack_long(long* val, size_t* len)
 
 int G2Chemical::pack_long(const long* val, size_t* len)
 {
-    grib_handle* hand                       = get_enclosing_handle();
-    long productDefinitionTemplateNumber    = -1;
+    grib_handle* hand = get_enclosing_handle();
+    long productDefinitionTemplateNumber = -1;
     long productDefinitionTemplateNumberNew = -1;
     // long type=-1;
     // long stream=-1;
-    long eps          = -1;
-    char stepType[15] = {0,};
+    long eps = -1;
+    char stepType[15] = { 0 };
     size_t slen = 15;
     // int chemical = *val;
     int isInstant = 0;

@@ -10,9 +10,6 @@
 
 #include "Section.h"
 
-eccodes::accessor::Section _grib_accessor_section;
-eccodes::Accessor* grib_accessor_section = &_grib_accessor_section;
-
 namespace eccodes::accessor
 {
 
@@ -20,7 +17,7 @@ void Section::init(const long len, grib_arguments* arg)
 {
     Gen::init(len, arg);
     sub_section_ = grib_section_create(get_enclosing_handle(), this);
-    length_      = 0;
+    length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
@@ -68,7 +65,7 @@ grib_section* Section::sub_section()
 void Section::update_size(size_t length)
 {
     size_t size = 1;
-    long len    = length;
+    long len = length;
     ECCODES_ASSERT(length <= 0x7fffffff);
     if (sub_section_->aclength) {
         int e = sub_section_->aclength->pack_long(&len, &size);
@@ -79,7 +76,7 @@ void Section::update_size(size_t length)
     }
 
     sub_section_->length = length_ = length;
-    sub_section_->padding          = 0;
+    sub_section_->padding = 0;
 
     // printf("update_size %s %ld\n", a->name, length_ );
 

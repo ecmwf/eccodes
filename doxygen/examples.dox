@@ -2,7 +2,7 @@
 
 \example grib_get_keys.c grib_get_keys.c How to get values through the key names.
 \example set.c set.c How to set values through the key names.
-\example grib_keys_iterator.c grib_keys_iterator.c How to get the names of all the keys 
+\example grib_keys_iterator.c grib_keys_iterator.c How to get the names of all the keys
 defined in a message and how to iterate through them.
 \example grib_iterator.c grib_iterator.c How to use an iterator on latitude, longitude, values.
 \example grib_precision.c grib_precision.c How to control precision when coding a grib field.
@@ -11,9 +11,9 @@ defined in a message and how to iterate through them.
 \example grib_print_data.c grib_print_data.c How to print all the data from a grib message.
 \example grib_nearest.c grib_nearest.c How to find the nearest grid points.
 
-\example grib_index.f90 How access a grib file through and index. 
-\example grib_get_keys.f90 How to get values through the key names. 
-\example count_messages.f90 count the messages in a file and loop through them. 
+\example grib_index.f90 How access a grib file through and index.
+\example grib_get_keys.f90 How to get values through the key names.
+\example count_messages.f90 count the messages in a file and loop through them.
 \example get_pl.f90 How to get the list of number of points for each parallel in reduced grids.
 \example get_pv.f90 How to get the list of levels.
 \example grib_get_data.f90 How to get latitude/longitude/values.
@@ -34,20 +34,20 @@ defined in a message and how to iterate through them.
 
 \example get_fortran.F get_fortran.F How to get values through the key names.
 \example set_fortran.F set_fortran.F How to set values through the key names.
-\example keys_iterator_fortran.F keys_iterator_fortran.F How to get the names of all the keys 
+\example keys_iterator_fortran.F keys_iterator_fortran.F How to get the names of all the keys
 defined in a message and how to iterate through them.
 \example iterator_fortran.F iterator_fortran.F How to use an iterator on latitude, longitude, values.
 \example precision_fortran.F precision_fortran.F How to control precision when coding a grib field.
 \example multi_fortran.F multi_fortran.F How to decode a grib message containing many fields.
 \example print_data_fortran.F print_data_fortran.F How to print all the data from a grib message.
 
-\example index.py How access a grib file through and index. 
-\example grib_get_keys.py How to get values through the key names. 
+\example index.py How access a grib file through and index.
+\example grib_get_keys.py How to get values through the key names.
 \example grib_print_data.py How to print all the data contained in a grib file.
 \example set.py How to set values through the key names.
 \example grib_nearest.py How to find the nearest grid points.
 \example grib_set_missing.py How to set a missing value in the GRIB header.
-\example count_messages.py How to count the messages in a file and loop through them. 
+\example count_messages.py How to count the messages in a file and loop through them.
 \example grib_samples.py How to create a new message from a sample.
 \example grib_clone.py How to clone a message.
 \example grib_iterator.py How to use an iterator on latitude, longitude, values.

@@ -1,0 +1,31 @@
+{# SPDX-FileCopyrightText: 2005- European Centre for Medium-Range Weather Forecasts (ECMWF)
+   SPDX-License-Identifier: Apache-2.0 #}
+{% extends "ci-infrastructure/cmake-all-lanes.sh.j2" %}
+{% block cmake_args %}
+  -DENABLE_FORTRAN={{ "ON" if "eccodes-fortran" in ci_packages else "OFF" }} \
+{% endblock %}
+{% block test %}
+# Fetch the test data first; a download failure otherwise surfaces as dozens of
+# unrelated test failures.
+ctest --test-dir "$build" --output-on-failure -L download_data -j 6
+{% if options == "eckit-geo" %}
+failed=0
+for geo in 0 1; do
+  ECCODES_ECKIT_GEO=$geo ctest --test-dir "$build" --output-on-failure -LE download_data -j "$jobs" || failed=1
+done
+[ "$failed" -eq 0 ]
+{% else %}
+ctest --test-dir "$build" --output-on-failure -LE download_data -j "$jobs"
+{% endif %}
+{% endblock %}
+{% block install %}
+{% if execution == "hpc-atos" %}
+# ~24k small definition files: installing straight onto shared scratch is
+# metadata-bound (7 to >35 min), so stage on node-local SSD and tar from there.
+stage="${TMPDIR:-/tmp}/stage"
+DESTDIR="$stage" cmake --install "$build"
+install_root="$stage$CI_INSTALL_PREFIX"
+{% else %}
+{{ super() }}
+{% endif %}
+{% endblock %}

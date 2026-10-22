@@ -1,4 +1,2 @@
 alias mars.instrument = instrumentType;
 alias mars.ident = satelliteNumber;
-
-

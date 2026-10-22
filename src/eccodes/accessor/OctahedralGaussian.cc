@@ -10,22 +10,19 @@
 
 #include "OctahedralGaussian.h"
 
-eccodes::accessor::OctahedralGaussian _grib_accessor_octahedral_gaussian;
-eccodes::Accessor* grib_accessor_octahedral_gaussian = &_grib_accessor_octahedral_gaussian;
-
 namespace eccodes::accessor
 {
 
 void OctahedralGaussian::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
-    int n             = 0;
+    int n = 0;
     grib_handle* hand = get_enclosing_handle();
 
-    N_         = c->get_name(hand, n++);
-    Ni_        = c->get_name(hand, n++);
+    N_ = c->get_name(hand, n++);
+    Ni_ = c->get_name(hand, n++);
     plpresent_ = c->get_name(hand, n++);
-    pl_        = c->get_name(hand, n++);
+    pl_ = c->get_name(hand, n++);
 }
 
 /* Returns 1 (=true) if input pl array is Octahedral, 0 otherwise.
@@ -74,9 +71,9 @@ int OctahedralGaussian::unpack_long(long* val, size_t* len)
 {
     int ret = GRIB_SUCCESS;
     long Ni;
-    long plpresent    = 0;
-    long* pl          = NULL; /* pl array */
-    size_t plsize     = 0;
+    long plpresent = 0;
+    long* pl = NULL; /* pl array */
+    size_t plsize = 0;
     grib_handle* hand = get_enclosing_handle();
 
     grib_context* c = context_;

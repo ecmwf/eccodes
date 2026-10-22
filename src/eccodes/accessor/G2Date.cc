@@ -10,9 +10,6 @@
 
 #include "G2Date.h"
 
-eccodes::accessor::G2Date _grib_accessor_g2date;
-eccodes::Accessor* grib_accessor_g2date = &_grib_accessor_g2date;
-
 namespace eccodes::accessor
 {
 
@@ -21,17 +18,17 @@ void G2Date::init(const long l, grib_arguments* c)
     Long::init(l, c);
     int n = 0;
 
-    year_  = c->get_name(get_enclosing_handle(), n++);
+    year_ = c->get_name(get_enclosing_handle(), n++);
     month_ = c->get_name(get_enclosing_handle(), n++);
-    day_   = c->get_name(get_enclosing_handle(), n++);
+    day_ = c->get_name(get_enclosing_handle(), n++);
 }
 
 int G2Date::unpack_long(long* val, size_t* len)
 {
-    int ret    = 0;
-    long year  = 0;
+    int ret = 0;
+    long year = 0;
     long month = 0;
-    long day   = 0;
+    long day = 0;
 
     if ((ret = grib_get_long_internal(get_enclosing_handle(), day_, &day)) != GRIB_SUCCESS)
         return ret;
@@ -56,11 +53,11 @@ int G2Date::unpack_long(long* val, size_t* len)
 
 int G2Date::pack_long(const long* val, size_t* len)
 {
-    int ret    = GRIB_SUCCESS;
-    long v     = val[0];
-    long year  = 0;
+    int ret = GRIB_SUCCESS;
+    long v = val[0];
+    long year = 0;
     long month = 0;
-    long day   = 0;
+    long day = 0;
 
     if (*len != 1)
         return GRIB_WRONG_ARRAY_SIZE;
@@ -74,7 +71,7 @@ int G2Date::pack_long(const long* val, size_t* len)
     if (!is_date_valid(year, month, day, 0, 0, 0)) {
         // ECC-1777: For now just a warning. Will later change to an error
         fprintf(stderr, "ECCODES WARNING :  %s:%s: Date is not valid! year=%ld month=%ld day=%ld\n",
-                class_name_, __func__, year, month, day);
+                accessor_type().c_str(), __func__, year, month, day);
         // return GRIB_ENCODING_ERROR;
     }
 

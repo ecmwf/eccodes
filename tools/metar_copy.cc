@@ -13,7 +13,7 @@
 const char* tool_description =
     "Copies the content of METAR files printing"
     " values of some keys.";
-const char* tool_name  = "metar_copy";
+const char* tool_name = "metar_copy";
 const char* tool_online_doc = NULL;
 const char* tool_usage = "[options] file file ... output_file";
 
@@ -72,14 +72,14 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
 
 int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 {
-    ECCODES_ASSERT(options->set_values_count==0); // Cannot set keys in this tool
+    ECCODES_ASSERT(options->set_values_count == 0);  // Cannot set keys in this tool
 
     // int err = 0;
     // if (!options->skip) {
-        // if (options->set_values_count != 0)
-        //     err = grib_set_values(h, options->set_values, options->set_values_count);
-        // if (err != GRIB_SUCCESS && options->fail)
-        //     exit(err);
+    // if (options->set_values_count != 0)
+    //     err = grib_set_values(h, options->set_values, options->set_values_count);
+    // if (err != GRIB_SUCCESS && options->fail)
+    //     exit(err);
     // }
 
     grib_tools_write_message(options, h);

@@ -21,11 +21,11 @@ namespace eccodes::action
 Remove::Remove(grib_context* context, grib_arguments* args)
 {
     class_name_ = "action_class_remove";
-    next_       = NULL;
-    name_       = grib_context_strdup_persistent(context, "DELETE");
-    op_         = grib_context_strdup_persistent(context, "remove");
-    context_    = context;
-    args_       = args;
+    next_ = NULL;
+    name_ = grib_context_strdup_persistent(context, "DELETE");
+    op_ = grib_context_strdup_persistent(context, "remove");
+    context_ = context;
+    args_ = args;
 }
 
 Remove::~Remove()
@@ -38,15 +38,13 @@ Remove::~Remove()
 static void remove_accessor(grib_accessor* a)
 {
     grib_section* s = NULL;
-    int id;
 
     if (!a || !a->previous_)
         return;
     s = a->parent_;
 
-    if (a->get_enclosing_handle()->use_trie && *(a->all_names_[0]) != '_') {
-        id = grib_hash_keys_get_id(a->context_->keys, a->all_names_[0]);
-        a->get_enclosing_handle()->accessors[id] = NULL;
+    if (a->get_enclosing_handle() && *(a->all_names_[0]) != '_') {
+        a->get_enclosing_handle()->accessor_store.remove(a->all_names_[0]);
     }
 
     if (a->next_)

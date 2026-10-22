@@ -24,7 +24,7 @@ int main(int argc, char* argv[])
 {
     codes_handle *hfrom, *hto, *h;
     FILE* in;
-    char *in_name1, *in_name2, *what_str, *out_name;
+    const char *in_name1, *in_name2, *what_str, *out_name;
     int i, err = 0, what = 0;
 
     if (argc < 5) usage(argv[0]);

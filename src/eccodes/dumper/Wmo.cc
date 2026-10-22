@@ -72,8 +72,8 @@ void Wmo::aliases(grib_accessor* a)
 
 void Wmo::dump_long(grib_accessor* a, const char* comment)
 {
-    long value   = 0;
-    size_t size  = 0;
+    long value = 0;
+    size_t size = 0;
     long* values = NULL;
     int err = 0, i = 0;
     long count = 0;
@@ -87,7 +87,7 @@ void Wmo::dump_long(grib_accessor* a, const char* comment)
 
     if (size > 1) {
         values = (long*)grib_context_malloc_clear(a->context_, sizeof(long) * size);
-        err    = a->unpack_long(values, &size);
+        err = a->unpack_long(values, &size);
     }
     else {
         err = a->unpack_long(&value, &size);
@@ -105,7 +105,7 @@ void Wmo::dump_long(grib_accessor* a, const char* comment)
         fprintf(out_, "%s (int) ", a->creator_->op_);
 
     if (size > 1) {
-        int cols   = 19;
+        int cols = 19;
         int icount = 0;
         fprintf(out_, "%s = { \t", a->name_);
         if (values) {
@@ -148,9 +148,9 @@ static int test_bit(long a, long b)
 
 void Wmo::dump_bits(grib_accessor* a, const char* comment)
 {
-    long value  = 0;
+    long value = 0;
     size_t size = 1;
-    int err     = 0;
+    int err = 0;
 
     if (a->length_ == 0 &&
         (option_flags_ & GRIB_DUMP_FLAG_CODED) != 0)
@@ -198,8 +198,8 @@ void Wmo::dump_bits(grib_accessor* a, const char* comment)
 void Wmo::dump_double(grib_accessor* a, const char* comment)
 {
     double value = 0;
-    size_t size  = 1;
-    int err      = 0;
+    size_t size = 1;
+    int err = 0;
 
     if (a->length_ == 0 &&
         (option_flags_ & GRIB_DUMP_FLAG_CODED) != 0)
@@ -233,8 +233,8 @@ void Wmo::dump_string(grib_accessor* a, const char* comment)
 {
     size_t size = 0;
     char* value = NULL;
-    char* p     = NULL;
-    int err     = 0;
+    char* p = NULL;
+    int err = 0;
 
     if (a->length_ == 0 &&
         (option_flags_ & GRIB_DUMP_FLAG_CODED) != 0) {
@@ -247,7 +247,7 @@ void Wmo::dump_string(grib_accessor* a, const char* comment)
         return;
     }
     err = a->unpack_string(value, &size);
-    p   = value;
+    p = value;
 
     set_begin_end(a);
 
@@ -278,8 +278,8 @@ void Wmo::dump_string(grib_accessor* a, const char* comment)
 void Wmo::dump_bytes(grib_accessor* a, const char* comment)
 {
     int i, k, err = 0;
-    size_t more        = 0;
-    size_t size        = a->length_;
+    size_t more = 0;
+    size_t size = a->length_;
     unsigned char* buf = (unsigned char*)grib_context_malloc(context_, size);
 
     if (a->length_ == 0 &&
@@ -353,7 +353,7 @@ void Wmo::dump_values(grib_accessor* a)
     size_t more = 0;
     double* buf = NULL;
     size_t size = 0;
-    long count  = 0;
+    long count = 0;
     int is_char = 0;
 
     if (a->length_ == 0 &&
@@ -378,7 +378,7 @@ void Wmo::dump_values(grib_accessor* a)
 
     print_offset(out_, begin_, theEnd_, 12);  // ECC-1749
     if ((option_flags_ & GRIB_DUMP_FLAG_TYPE) != 0) {
-        char type_name[32]     = "";
+        char type_name[32] = "";
         const long native_type = a->get_native_type();
         if (native_type == GRIB_TYPE_LONG)
             strcpy(type_name, "(int)");
@@ -450,9 +450,9 @@ void Wmo::dump_label(grib_accessor* a, const char* comment)
 
 void Wmo::dump_section(grib_accessor* a, grib_block_of_accessors* block)
 {
-    grib_section* s    = a->sub_section_;
+    const grib_section* s = a->sub_section_;
     int is_wmo_section = 0;
-    char* upper        = NULL;
+    char* upper = NULL;
     char tmp[512];
     char *p = NULL, *q = NULL;
     if (!strncmp(a->name_, "section", 7))
@@ -489,20 +489,20 @@ void Wmo::dump_section(grib_accessor* a, grib_block_of_accessors* block)
 void Wmo::set_begin_end(grib_accessor* a)
 {
     if ((option_flags_ & GRIB_DUMP_FLAG_OCTET) != 0) {
-        begin_  = a->offset_ - section_offset_ + 1;
+        begin_ = a->offset_ - section_offset_ + 1;
         theEnd_ = a->get_next_position_offset() - section_offset_;
     }
     else {
-        begin_  = a->offset_;
+        begin_ = a->offset_;
         theEnd_ = a->get_next_position_offset();
     }
 }
 
 static void print_hexadecimal(FILE* out, unsigned long flags, grib_accessor* a)
 {
-    int i                = 0;
+    int i = 0;
     unsigned long offset = 0;
-    grib_handle* h       = a->get_enclosing_handle();
+    const grib_handle* h = a->get_enclosing_handle();
     if ((flags & GRIB_DUMP_FLAG_HEXADECIMAL) != 0 && a->length_ != 0) {
         fprintf(out, " (");
         offset = a->offset_;
@@ -519,9 +519,9 @@ void Wmo::dump_string_array(grib_accessor* a, const char* comment)
     char** values;
     size_t size = 0, i = 0;
     grib_context* c = NULL;
-    int err         = 0;
-    int tab         = 0;
-    long count      = 0;
+    int err = 0;
+    int tab = 0;
+    long count = 0;
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0)
         return;

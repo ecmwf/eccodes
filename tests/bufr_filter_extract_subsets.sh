@@ -3,7 +3,7 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
+#
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
@@ -22,6 +22,7 @@ touch $fLog
 
 fBufrTmp1=temp1.${label}.bufr
 fBufrTmp2=temp2.${label}.bufr
+fBufrTmp3=temp3.${label}.bufr
 
 # Define filter rules file
 fRules=${label}.filter
@@ -83,7 +84,7 @@ stationNumber=308 371 381 382 84
 stationNumber=308 371 381 382 84 27 270
 EOF
 
-diff ${fOut}.log.ref ${fOut}.log 
+diff ${fOut}.log.ref ${fOut}.log
 
 rm -f ${fOut}.log ${fOut}.log.ref
 rm -f $fLog $fRules ${fOut}
@@ -139,10 +140,10 @@ orbitNumber=2147483647
 casRegistryNumber=10102-44-0
 EOF
 
-diff ${f}.log.ref ${f}.log 
+diff ${f}.log.ref ${f}.log
 
 rm -f ${f}.log ${f}.log.ref
-rm -f $fLog $fOut $fRules 
+rm -f $fLog $fOut $fRules
 
 #-----------------------------------------------------------
 # Test: Simple thinning
@@ -176,7 +177,7 @@ longitude=118.16205 117.41896 116.66977 115.91467 99.56805
 height=119 231 587 187 23
 EOF
 
-diff ${f}.log.ref ${f}.log 
+diff ${f}.log.ref ${f}.log
 
 rm -f ${f}.log ${f}.log.ref $fBufrTmp1 $fLog $fRules
 #-----------------------------------------------------------
@@ -218,7 +219,7 @@ ${tools_dir}/codes_bufr_filter $fRules $fBufrTmp2 > ${f}.log
 cat > ${f}.log.ref <<EOF
 latitude=0
 EOF
-diff ${f}.log.ref ${f}.log 
+diff ${f}.log.ref ${f}.log
 
 
 # ECC-2055: Splitting subsets with bufr_filter produces incorrect header values
@@ -233,6 +234,35 @@ EOF
 ${tools_dir}/codes_bufr_filter $fRules mhen_55.bufr
 
 
+# Extract to different output files
+# ---------------------------------
+cat > $fRules <<EOF
+  set numberOfSubsets=3;
+  set unexpandedDescriptors={1021};
+  set synopticFeatureIdentifier={11,12,13};
+  set pack=1;
+  write;
+EOF
+${tools_dir}/codes_bufr_filter -o $fBufrTmp1 $fRules $ECCODES_SAMPLES_PATH/BUFR4_local_satellite.tmpl
+cat > $fRules <<EOF
+ set unpack=1;
+ set extractSubset=2;
+ set doExtractSubsets=1;
+ write "$fBufrTmp2";
+
+ set extractSubset=3;
+ set doExtractSubsets=1;
+ write "$fBufrTmp3";
+EOF
+${tools_dir}/codes_bufr_filter $fRules $fBufrTmp1
+
+v2=$( ${tools_dir}/bufr_get -s unpack=1 -p synopticFeatureIdentifier $fBufrTmp2)
+v3=$( ${tools_dir}/bufr_get -s unpack=1 -p synopticFeatureIdentifier $fBufrTmp3)
+[ "$v2" = "12" ]
+[ "$v3" = "13" ]
+${tools_dir}/bufr_compare -b synopticFeatureIdentifier $fBufrTmp2 $fBufrTmp3
+
 
 # Clean up
-rm -f ${f}.log ${f}.log.ref $fBufrTmp1 $fBufrTmp2 $fLog $fRules
+rm -f ${f}.log ${f}.log.ref
+rm -f $fBufrTmp1 $fBufrTmp2 $fBufrTmp3 $fLog $fRules

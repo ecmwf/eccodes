@@ -10,19 +10,16 @@
 
 #include "DataSecondaryBitmap.h"
 
-eccodes::accessor::DataSecondaryBitmap _grib_accessor_data_secondary_bitmap;
-eccodes::Accessor* grib_accessor_data_secondary_bitmap = &_grib_accessor_data_secondary_bitmap;
-
 namespace eccodes::accessor
 {
 
 void DataSecondaryBitmap::init(const long v, grib_arguments* args)
 {
     Gen::init(v, args);
-    primary_bitmap_   = args->get_name(get_enclosing_handle(), 0);
+    primary_bitmap_ = args->get_name(get_enclosing_handle(), 0);
     secondary_bitmap_ = args->get_name(get_enclosing_handle(), 1);
-    missing_value_    = args->get_name(get_enclosing_handle(), 2);
-    expand_by_        = args->get_name(get_enclosing_handle(), 3);
+    missing_value_ = args->get_name(get_enclosing_handle(), 2);
+    expand_by_ = args->get_name(get_enclosing_handle(), 3);
 
     length_ = 0;
 }
@@ -34,19 +31,19 @@ void DataSecondaryBitmap::dump(eccodes::Dumper* dumper)
 
 int DataSecondaryBitmap::unpack_double(double* val, size_t* len)
 {
-    size_t i       = 0;
-    size_t j       = 0;
-    size_t k       = 0;
-    size_t m       = 0;
-    size_t n_vals  = 0;
-    long nn        = 0;
+    size_t i = 0;
+    size_t j = 0;
+    size_t k = 0;
+    size_t m = 0;
+    size_t n_vals = 0;
+    long nn = 0;
     long expand_by = 0;
-    int err        = 0;
+    int err = 0;
     size_t primary_len;
     size_t secondary_len;
     double* primary_vals;
     double* secondary_vals;
-    err    = value_count(&nn);
+    err = value_count(&nn);
     n_vals = nn;
     if (err)
         return err;

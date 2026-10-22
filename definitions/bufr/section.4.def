@@ -19,4 +19,3 @@ section_padding section4Padding;
 position offsetEndSection4;
 meta md5Data md5(offsetSection4,section4Length);
 alias dataAccessors=numericValues;
-

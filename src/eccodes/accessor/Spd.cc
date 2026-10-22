@@ -10,9 +10,6 @@
 
 #include "Spd.h"
 
-eccodes::accessor::Spd _grib_accessor_spd;
-eccodes::Accessor* grib_accessor_spd = &_grib_accessor_spd;
-
 namespace eccodes::accessor
 {
 
@@ -23,8 +20,8 @@ long Spd::byte_count()
 
 long Spd::compute_byte_count()
 {
-    long numberOfBits         = 0;
-    long numberOfElements     = 0;
+    long numberOfBits = 0;
+    long numberOfElements = 0;
 
     int ret = grib_get_long(get_enclosing_handle(), numberOfBits_, &numberOfBits);
     if (ret) {
@@ -47,16 +44,16 @@ long Spd::compute_byte_count()
 void Spd::init(const long len, grib_arguments* args)
 {
     Long::init(len, args);
-    int n             = 0;
-    numberOfBits_     = args->get_name(get_enclosing_handle(), n++);
+    int n = 0;
+    numberOfBits_ = args->get_name(get_enclosing_handle(), n++);
     numberOfElements_ = args->get_name(get_enclosing_handle(), n++);
-    length_           = compute_byte_count();
+    length_ = compute_byte_count();
 }
 
 int Spd::unpack_long(long* val, size_t* len)
 {
-    long pos          = offset_ * 8;
-    long rlen         = 0;
+    long pos = offset_ * 8;
+    long rlen = 0;
     long numberOfBits = 0;
 
     int ret = value_count(&rlen);
@@ -90,13 +87,13 @@ int Spd::unpack_long(long* val, size_t* len)
 
 int Spd::pack_long(const long* val, size_t* len)
 {
-    int ret            = 0;
-    long off           = 0;
-    long numberOfBits  = 0;
-    size_t buflen      = 0;
+    int ret = 0;
+    long off = 0;
+    long numberOfBits = 0;
+    size_t buflen = 0;
     unsigned char* buf = NULL;
-    unsigned long i    = 0;
-    long rlen          = 0;
+    unsigned long i = 0;
+    long rlen = 0;
 
     ret = value_count(&rlen);
     if (ret)
@@ -112,7 +109,7 @@ int Spd::pack_long(const long* val, size_t* len)
         return ret;
 
     buflen = compute_byte_count();
-    buf    = (unsigned char*)grib_context_malloc_clear(context_, buflen);
+    buf = (unsigned char*)grib_context_malloc_clear(context_, buflen);
 
     for (i = 0; i < rlen - 1; i++) {
         grib_encode_unsigned_longb(buf, val[i], &off, numberOfBits);

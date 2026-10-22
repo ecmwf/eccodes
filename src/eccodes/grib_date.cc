@@ -18,8 +18,7 @@
 #include "grib_api_internal.h"
 #include "ExceptionHandler.h"
 
-// C-API: Ensure all exceptions are converted to error codes
-#define ROUND(a) ((a) >= 0 ? (long)((a) + 0.5) : (long)((a)-0.5))
+#define ROUND(a) ((a) >= 0 ? (long)((a) + 0.5) : (long)((a) - 0.5))
 int grib_julian_to_datetime(double jd, long* year, long* month, long* day,
                             long* hour, long* minute, long* second)
 {
@@ -36,7 +35,7 @@ int grib_julian_to_datetime(double jd, long* year, long* month, long* day,
         a = z;
     else {
         alpha = (long)((z - 1867216.25) / 36524.25);
-        a     = z + 1 + alpha - (long)(((double)alpha) / 4);
+        a = z + 1 + alpha - (long)(((double)alpha) / 4);
     }
     b = a + 1524;
     c = (long)((b - 122.1) / 365.25);
@@ -48,8 +47,8 @@ int grib_julian_to_datetime(double jd, long* year, long* month, long* day,
     dday -= *day;
 
     /* ANF-CG 02.03.2012 */
-    s       = ROUND((double)(dday * 86400)); /* total in sec , no msec*/
-    *hour   = (long)s / 3600;
+    s = ROUND((double)(dday * 86400)); /* total in sec , no msec*/
+    *hour = (long)s / 3600;
     *minute = (long)((s % 3600) / 60);
     *second = (long)(s % 60);
 
@@ -74,7 +73,6 @@ int grib_julian_to_datetime(double jd, long* year, long* month, long* day,
     return GRIB_SUCCESS;
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 int grib_datetime_to_julian(long year, long month, long day,
                             long hour, long minute, long second, double* jd)
 {
@@ -111,7 +109,6 @@ int grib_datetime_to_julian_d(
     return GRIB_SUCCESS;
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 long grib_julian_to_date(long jdate)
 {
     long x, y, d, m, e;
@@ -137,13 +134,12 @@ long grib_julian_to_date(long jdate)
     else
         month = m - 10;
 
-    day  = d;
+    day = d;
     year = y + m / 11;
 
     return year * 10000 + month * 100 + day;
 }
 
-// C-API: Ensure all exceptions are converted to error codes
 long grib_date_to_julian(long ddate)
 {
     long m1, y1, a, b, c, d, j1;
@@ -168,10 +164,10 @@ long grib_date_to_julian(long ddate)
         m1 = month + 9;
         y1 = year - 1;
     }
-    a  = 146097 * (y1 / 100) / 4;
-    d  = y1 % 100;
-    b  = 1461 * d / 4;
-    c  = (153 * m1 + 2) / 5 + day + 1721119;
+    a = 146097 * (y1 / 100) / 4;
+    d = y1 % 100;
+    b = 1461 * d / 4;
+    c = (153 * m1 + 2) / 5 + day + 1721119;
     j1 = a + b + c;
 
     return (j1);

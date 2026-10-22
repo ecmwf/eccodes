@@ -10,9 +10,6 @@
 
 #include "RdbTimeGuessDate.h"
 
-eccodes::accessor::RdbTimeGuessDate _grib_accessor_rdbtime_guess_date;
-eccodes::Accessor* grib_accessor_rdbtime_guess_date = &_grib_accessor_rdbtime_guess_date;
-
 namespace eccodes::accessor
 {
 
@@ -21,11 +18,11 @@ void RdbTimeGuessDate::init(const long l, grib_arguments* c)
     Long::init(l, c);
     int n = 0;
 
-    typicalYear_  = c->get_name(get_enclosing_handle(), n++);
+    typicalYear_ = c->get_name(get_enclosing_handle(), n++);
     typicalMonth_ = c->get_name(get_enclosing_handle(), n++);
-    typicalDay_   = c->get_name(get_enclosing_handle(), n++);
-    rdbDay_       = c->get_name(get_enclosing_handle(), n++);
-    yearOrMonth_  = c->get_long(get_enclosing_handle(), n++);
+    typicalDay_ = c->get_name(get_enclosing_handle(), n++);
+    rdbDay_ = c->get_name(get_enclosing_handle(), n++);
+    yearOrMonth_ = c->get_long(get_enclosing_handle(), n++);
 
     /* flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY; */
 }
@@ -51,27 +48,27 @@ int RdbTimeGuessDate::unpack_long(long* val, size_t* len)
 
     if (rdbDay < typicalDay) {
         if (typicalDay == 31 && typicalMonth == 12) {
-            rdbYear  = typicalYear + 1;
+            rdbYear = typicalYear + 1;
             rdbMonth = 1;
         }
         else {
-            rdbYear  = typicalYear;
+            rdbYear = typicalYear;
             rdbMonth = typicalMonth + 1;
         }
     }
     // ECC-2100
     else if ((rdbDay - typicalDay) >= 27 && typicalDay == 1) {
         if (typicalMonth == 1) {
-            rdbYear  = typicalYear - 1;
+            rdbYear = typicalYear - 1;
             rdbMonth = 12;
         }
         else {
-            rdbYear  = typicalYear;
+            rdbYear = typicalYear;
             rdbMonth = typicalMonth - 1;
         }
     }
     else {
-        rdbYear  = typicalYear;
+        rdbYear = typicalYear;
         rdbMonth = typicalMonth;
     }
 

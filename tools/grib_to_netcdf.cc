@@ -12,41 +12,41 @@
 
 #ifdef HAVE_NETCDF
 
-#include <cmath>
-#include <stdarg.h>
-#include <stdlib.h>
-#include <ctype.h>
+    #include <cmath>
+    #include <stdarg.h>
+    #include <stdlib.h>
+    #include <ctype.h>
 
-#include <time.h>
-#include <float.h>
-#include <netcdf.h>
+    #include <time.h>
+    #include <float.h>
+    #include <netcdf.h>
 
-#include "grib_tools.h"
-#include "eccodes_windef.h"
+    #include "grib_tools.h"
+    #include "eccodes_windef.h"
 
-#ifdef ECCODES_ON_WINDOWS
-#include <stdint.h>
-#endif
+    #ifdef ECCODES_ON_WINDOWS
+        #include <stdint.h>
+    #endif
 
 const char* tool_description =
     "Convert GRIB file(s) to netCDF format."
     "\n\tNote: The GRIB geometry should be a regular lat/lon grid or a regular Gaussian grid"
     "\n\t(the key \"typeOfGrid\" should be \"regular_ll\" or \"regular_gg\")";
-const char* tool_name        = "grib_to_netcdf";
-const char* tool_online_doc  = "https://confluence.ecmwf.int/display/ECC/grib_to_netcdf";
-const char* tool_usage       = "[options] -o output_file grib_file grib_file ... ";
-static char argvString[2048] = {0,};
+const char* tool_name = "grib_to_netcdf";
+const char* tool_online_doc = "https://confluence.ecmwf.int/display/ECC/grib_to_netcdf";
+const char* tool_usage = "[options] -o output_file grib_file grib_file ... ";
+static char argvString[2048] = { 0 };
 
 /*=====================================================================*/
 
-static grib_context* ctx           = NULL;
+static grib_context* ctx = NULL;
 static double global_missing_value = 9.9692099683868690e+36; /* See GRIB-953 */
 
 /*===============================================================================*/
 /* request from mars client */
 /*===============================================================================*/
 
-#define NUMBER(x) (sizeof(x) / sizeof(x[0]))
+    #define NUMBER(x) (sizeof(x) / sizeof(x[0]))
 
 typedef int err;
 typedef off_t file_offset;
@@ -85,7 +85,7 @@ static bool parsedate(const char* name, long* julian, long* second, bool* isjul)
 
 void usage_and_exit(void)
 {
-    usage(); // this calls exit(1)
+    usage();  // this calls exit(1)
 }
 
 static bool eq_string(const char* l, const char* r)
@@ -166,10 +166,10 @@ static void ecc_reqmerge(parameter* pa, const parameter* pb, request* a)
         return;
 
     while (vb) {
-        value* va      = pa->values;
-        value* last    = 0;
+        value* va = pa->values;
+        value* last = 0;
         const char* nb = vb->name;
-        bool add    = true;
+        bool add = true;
 
         while (va) {
             if (strcmp(va->name, nb) == 0) {
@@ -178,7 +178,7 @@ static void ecc_reqmerge(parameter* pa, const parameter* pb, request* a)
             }
 
             last = va;
-            va   = va->next;
+            va = va->next;
         }
 
         if (add) {
@@ -197,7 +197,7 @@ static void ecc_reqmerge(parameter* pa, const parameter* pb, request* a)
 /* Fast version if a && b same */
 static bool ecc_reqmerge1(request* a, const request* b)
 {
-    parameter* pa       = a->params;
+    parameter* pa = a->params;
     const parameter* pb = b->params;
 
     while (pa && pb) {
@@ -281,7 +281,7 @@ static parameter* new_parameter(char* name, value* v)
 {
     parameter* p = (parameter*)calloc(1, sizeof(parameter));
     ECCODES_ASSERT(p);
-    p->name   = grib_context_strdup(ctx, name);
+    p->name = grib_context_strdup(ctx, name);
     p->values = v;
     return p;
 }
@@ -355,7 +355,7 @@ static void put_value(request* r, const char* parname, const char* valname, bool
                 }
             }
             else {
-                v         = new_value(grib_context_strdup(ctx, valname));
+                v = new_value(grib_context_strdup(ctx, valname));
                 p->values = v;
                 /* p->count = 1; */
                 p->count = 0;
@@ -365,8 +365,8 @@ static void put_value(request* r, const char* parname, const char* valname, bool
     else {
         parameter* q = NULL;
         parameter* s = r->params;
-        v            = new_value(grib_context_strdup(ctx, valname));
-        p            = new_parameter(grib_context_strdup(ctx, parname), v);
+        v = new_value(grib_context_strdup(ctx, valname));
+        p = new_parameter(grib_context_strdup(ctx, parname), v);
         while (s) {
             q = s;
             s = s->next;
@@ -541,9 +541,9 @@ static err handle_to_request(request* r, grib_handle* g)
 {
     grib_keys_iterator* ks;
     char name[256];
-    char value[256];
+    char value[256] = { 0 };
     size_t len = sizeof(value);
-    int e      = 0;
+    int e = 0;
 
     if (!g)
         return -1;
@@ -728,7 +728,7 @@ static value* clone_all_values(const value* p)
 {
     if (p) {
         value* q = clone_one_value(p);
-        q->next  = clone_all_values(p->next);
+        q->next = clone_all_values(p->next);
         /* q->alias = cone_value(p->alias); */
         return q;
     }
@@ -739,8 +739,8 @@ static parameter* clone_one_parameter(const parameter* p)
 {
     parameter* q = (parameter*)calloc(1, sizeof(parameter));
     ECCODES_ASSERT(q);
-    q->next   = NULL;
-    q->name   = grib_context_strdup(ctx, p->name);
+    q->next = NULL;
+    q->name = grib_context_strdup(ctx, p->name);
     q->values = clone_all_values(p->values);
     return q;
 }
@@ -749,7 +749,7 @@ static parameter* clone_all_parameters(const parameter* p)
 {
     if (p) {
         parameter* q = clone_one_parameter(p);
-        q->next      = clone_all_parameters(p->next);
+        q->next = clone_all_parameters(p->next);
         return q;
     }
     return NULL;
@@ -763,7 +763,7 @@ static request* clone_one_request(const request* r)
         p->name = grib_context_strdup(ctx, r->name);
 
         p->params = clone_all_parameters(r->params);
-        p->next   = NULL;
+        p->next = NULL;
         return p;
     }
     return NULL;
@@ -773,7 +773,7 @@ static request* new_request(const char* name, parameter* p)
 {
     request* r = (request*)calloc(1, sizeof(request));
     ECCODES_ASSERT(r);
-    r->name   = grib_context_strdup(ctx, name);
+    r->name = grib_context_strdup(ctx, name);
     r->params = p;
     return r;
 }
@@ -786,7 +786,7 @@ static request* empty_request(const char* name)
 static field_request* new_field_request(request* r)
 {
     field_request* g = (field_request*)grib_context_malloc_clear(ctx, sizeof(field_request));
-    g->r             = clone_one_request(r);
+    g->r = clone_one_request(r);
     return g;
 }
 
@@ -838,7 +838,7 @@ static field* new_field()
     return (field*)grib_context_malloc_clear(ctx, sizeof(field));
 }
 
-#define INIT_SIZE 1024
+    #define INIT_SIZE 1024
 static void grow_fieldset(fieldset* v, int n)
 {
     int m = v->count;
@@ -887,10 +887,10 @@ static field* read_field(grib_file* file, file_offset pos, long length)
 {
     field* g = new_field();
 
-    g->file   = file;
+    g->file = file;
     g->offset = pos;
     g->length = length;
-    g->shape  = packed_file;
+    g->shape = packed_file;
 
     return g;
 }
@@ -900,7 +900,7 @@ static err set_field(fieldset* v, field* g, int pos)
     if (pos >= 0) {
         field* h;
         grow_fieldset(v, pos + 1);
-        h              = v->fields[pos];
+        h = v->fields[pos];
         v->fields[pos] = g;
         g->refcnt++;
         if (h)
@@ -911,7 +911,7 @@ static err set_field(fieldset* v, field* g, int pos)
 
 static void count_parval(parameter* p)
 {
-    int n    = 0;
+    int n = 0;
     value* v = p->values;
 
     while (v) {
@@ -966,9 +966,9 @@ static err to_packed_mem(field* g)
     if (g->shape == expand_mem) {
         if (g->values)
             grib_context_free(ctx, g->values);
-        g->values      = NULL;
+        g->values = NULL;
         g->value_count = 0;
-        g->shape       = packed_mem;
+        g->shape = packed_mem;
 
         return 0;
     }
@@ -1014,7 +1014,7 @@ static err to_expand_mem(field* g)
 
     if (g->values == NULL) {
         size_t count = 0;
-        long bitmap  = 0;
+        long bitmap = 0;
 
         if ((e = grib_get_size(g->handle, "values", &g->value_count))) {
             grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get number of values: %s", grib_get_error_message(e));
@@ -1044,9 +1044,9 @@ static err to_expand_mem(field* g)
 
         g->has_bitmap = (bitmap != 0);
 
-#ifdef COMEBACK
+    #ifdef COMEBACK
         set g->missing
-#endif
+    #endif
     }
 
     g->shape = expand_mem;
@@ -1088,7 +1088,7 @@ static void release_field(field* g)
         if (g->values)
             grib_context_free(ctx, g->values);
         g->values = NULL;
-        g->shape  = packed_file;
+        g->shape = packed_file;
         grib_handle_delete(g->handle);
         g->handle = NULL;
     }
@@ -1098,12 +1098,12 @@ static request* field_to_request(field* f)
 {
     if (f->r == 0) {
         field_state state = f->shape;
-        request* r        = empty_request(
-#ifdef COMEBACK
+        request* r = empty_request(
+    #ifdef COMEBACK
             ((f->ksec1 == NULL) || (f->ksec1[2] != mars.computeflg)) ? "GRIB" : "COMPUTED");
-#else
+    #else
             "GRIB");
-#endif
+    #endif
 
         set_field_state(f, packed_mem);
         handle_to_request(r, f->handle);
@@ -1315,7 +1315,7 @@ static int axisindex(const char* name)
 {
     size_t i = 0;
     for (i = 0; i < NUMBER(global_axis); i++) {
-        if (STR_EQUAL(name, global_axis[i].name)){
+        if (STR_EQUAL(name, global_axis[i].name)) {
             return (int)i;
         }
     }
@@ -1325,12 +1325,12 @@ static int axisindex(const char* name)
 static namecmp comparator(const char* name)
 {
     static char* dontcompare = NULL;
-    static bool first     = 1;
-    int i                    = 0;
+    static bool first = 1;
+    int i = 0;
 
     if (first) {
         dontcompare = getenv("MARS_DONT_CHECK");
-        first       = false;
+        first = false;
     }
 
     if (dontcompare != NULL) {
@@ -1456,7 +1456,7 @@ static void valcpy(request* a, request* b, char* aname, char* bname)
     parameter* p;
     if (a && b && (p = find_parameter(b, bname))) {
         bool z = false;
-        value* v  = p->values;
+        value* v = p->values;
         while (v) {
             put_value(a, aname, v->name, z, false, false);
             z = true;
@@ -1474,7 +1474,7 @@ static int count_dimensions(const hypercube*, const char*);
 
 static int set_axis(hypercube* h)
 {
-    int i     = 0;
+    int i = 0;
     int count = (h && h->r) ? 1 : -1;
 
     reset_axis(h);
@@ -1552,27 +1552,27 @@ static void reserve_index_cache(hypercube* h, int size)
 static int ecc_cube_position(const hypercube* h, const request* r, bool remove_holes)
 {
     request* cube = h->cube;
-    int c         = count_axis(h);
-    int index     = 0;
-    int i         = 0;
-    int n         = 1;
-    int ok        = 0;
+    int c = count_axis(h);
+    int index = 0;
+    int i = 0;
+    int n = 1;
+    int ok = 0;
 
     if (h->index_cache == 0 || h->index_cache_size != c)
         reserve_index_cache((hypercube*)h, c);
 
     for (i = 0; i < c; ++i) {
         const char* axis = get_axis(h, i);
-        const char* v    = get_value(r, axis, 0);
-        const char* w    = NULL;
-        int dims         = count_dimensions(h, axis);
-        int k            = 0;
-        int count        = count_values(cube, axis);
-        int last         = h->index_cache[i];
+        const char* v = get_value(r, axis, 0);
+        const char* w = NULL;
+        int dims = count_dimensions(h, axis);
+        int k = 0;
+        int count = count_values(cube, axis);
+        int last = h->index_cache[i];
 
         for (k = 0; k < count; k++) {
             int j = (k + last) % count;
-            w     = get_value(cube, axis, j);
+            w = get_value(cube, axis, j);
             if (h->compare ? h->compare[i](w, v) : (strcmp(w, v) == 0)) {
                 index += j * n;
                 n *= dims;
@@ -1601,10 +1601,10 @@ static void cube_indexes(
     int* indexes, int size)
 {
     request* cube = h->cube;
-    int c         = count_axis(h);
-    int i         = 0;
-    int index     = 0;
-    int n         = 1;
+    int c = count_axis(h);
+    int i = 0;
+    int index = 0;
+    int n = 1;
 
     if (size < c) {
         grib_context_log(ctx, GRIB_LOG_ERROR, "Internal error in cube_indexes. size=%d < axis=%d", size, c);
@@ -1614,14 +1614,14 @@ static void cube_indexes(
         reserve_index_cache((hypercube*)h, c);
 
     for (i = 0; i < c; ++i) {
-        const char* axis           = get_axis(h, i);
-        const char* v              = get_value(r, axis, 0);
-        const char* w              = NULL;
-        int dims                   = count_dimensions(h, axis);
-        int j                      = 0;
-        int k                      = 0;
-        int count                  = count_values(cube, axis);
-        int last                   = h->index_cache[i];
+        const char* axis = get_axis(h, i);
+        const char* v = get_value(r, axis, 0);
+        const char* w = NULL;
+        int dims = count_dimensions(h, axis);
+        int j = 0;
+        int k = 0;
+        int count = count_values(cube, axis);
+        int last = h->index_cache[i];
         const bool is_time_axis = (STR_EQUAL(axis, "time"));
         if (is_time_axis) {
             ECCODES_ASSERT(times_array);
@@ -1663,14 +1663,14 @@ static hypercube* new_hypercube(const request* r)
 {
     hypercube* h = (hypercube*)calloc(1, sizeof(hypercube));
     int total = 0, count = 0;
-    size_t n        = 0;
+    size_t n = 0;
     const char* val = 0;
     ECCODES_ASSERT(h);
-    h->r    = clone_one_request(r);
+    h->r = clone_one_request(r);
     h->cube = empty_request("CUBE");
 
     h->count = total = count_hypercube(r);
-    count            = set_axis(h);
+    count = set_axis(h);
 
     h->compare = 0;
 
@@ -1741,12 +1741,12 @@ static hypercube* new_hypercube_from_mars_request(const request* r)
 
     struct stuff_1 s;
 
-//     const request *lang = mars_language_from_request(r);
-//     int count = 0;
-//     count = init_axis(lang);
-//     grib_context_log(ctx,GRIB_LOG_DEBUG,"cube %s",r->kind);
-//     /* print_all_requests(mars_language_from_request(r)); */
-//     grib_context_log(ctx,GRIB_LOG_INFO,"NUMBER(axis): %d, number axisnew: %d",NUMBER(axis),count);
+    //     const request *lang = mars_language_from_request(r);
+    //     int count = 0;
+    //     count = init_axis(lang);
+    //     grib_context_log(ctx,GRIB_LOG_DEBUG,"cube %s",r->kind);
+    //     /* print_all_requests(mars_language_from_request(r)); */
+    //     grib_context_log(ctx,GRIB_LOG_INFO,"NUMBER(axis): %d, number axisnew: %d",NUMBER(axis),count);
 
     s.c = new_hypercube(r);
     s.r = clone_one_request(r);
@@ -1852,13 +1852,13 @@ typedef struct filter_type
  *     dataset_t *filters;
  *     int ncid;
  * } ncfile_t;
-*/
+ */
 
 typedef struct ncoptions
 {
     bool usevalidtime; /* Whether to use valid TIME only or not */
     bool auto_refdate; /* Automatic Reference Date */
-    long refdate;         /* Reference date */
+    long refdate;      /* Reference date */
     const char* version;
 
     char* title;
@@ -1874,7 +1874,7 @@ typedef struct ncoptions
 
 ncoptions_t setup;
 
-#define NC_TYPES 7
+    #define NC_TYPES 7
 struct nc_types_values
 {
     double nc_type_max;
@@ -1895,18 +1895,18 @@ struct nc_types_values
 static long fcmonth2days(long date, long months)
 {
     long julianfrom = grib_date_to_julian(date);
-    long years      = (long)(months / 12);
-    long leap       = (long)(years / 4) - (long)(years / 100);
-    long to         = years * 365 + (months % 12) * 32 + 1 + leap; /* FCMONTH can't be > 28 */
-    long julianto   = julianfrom + to;
-    long days       = 0;
+    long years = (long)(months / 12);
+    long leap = (long)(years / 4) - (long)(years / 100);
+    long to = years * 365 + (months % 12) * 32 + 1 + leap; /* FCMONTH can't be > 28 */
+    long julianto = julianfrom + to;
+    long days = 0;
 
-    long dd       = date % 100;
-    long dateto   = grib_julian_to_date(julianto);
+    long dd = date % 100;
+    long dateto = grib_julian_to_date(julianto);
     long nextdate = (dateto / 100) * 100 + dd;
 
     julianto = grib_date_to_julian(nextdate);
-    days     = julianto - julianfrom;
+    days = julianto - julianfrom;
 
     grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: date: %ld + %ld months = %ld days", date, months, days);
 
@@ -1915,7 +1915,7 @@ static long fcmonth2days(long date, long months)
 
 static long request_fields(request* r)
 {
-    long cnt     = 1;
+    long cnt = 1;
     parameter* p = r->params;
     while (p) {
         if (p->name[0] != '_') {
@@ -1941,7 +1941,7 @@ static void fcmonth2nbmonths(request* r)
 static long monthnumber(const char* m)
 {
     const char* months[] = { "JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC" };
-    int i                = 0;
+    int i = 0;
 
     while (i < 12)
         if (strcmp(m, months[i++]) == 0)
@@ -1964,18 +1964,18 @@ static int check_stepUnits(const char* step_units_str)
 /* The argument represents 1 field */
 static void validation_time(request* r)
 {
-    long date        = 0;
-    long time        = 0;
-    double step      = 0;
+    long date = 0;
+    long time = 0;
+    double step = 0;
     long fcmonthdays = 0;
-    long fcmonth     = 0;
+    long fcmonth = 0;
     double v;
-    long julian            = 0;
+    long julian = 0;
     const char* step_units = NULL;
 
-    long nstep    = count_values(r, "step");
-    long ndate    = count_values(r, "date");
-    long ntime    = count_values(r, "time");
+    long nstep = count_values(r, "step");
+    long ndate = count_values(r, "date");
+    long ntime = count_values(r, "time");
     long nfcmonth = count_values(r, "fcmonth");
 
     static long julianrefdate = 0;
@@ -1997,7 +1997,7 @@ static void validation_time(request* r)
         step = atof(get_value(r, "step", 0));
 
     if (ndate) {
-        const char* p         = get_value(r, "date", 0);
+        const char* p = get_value(r, "date", 0);
         const char* marsClass = get_value(r, "class", 0);
         if (eq_string(marsClass, "s2")) {
             /* S2S Data. See GRIB-699 and GRIB-762 */
@@ -2024,7 +2024,7 @@ static void validation_time(request* r)
                 grib_context_log(ctx, GRIB_LOG_ERROR, "Climatology data. Setting usevalidtime=OFF");
             setup.auto_refdate = false;
             setup.usevalidtime = false;
-            setup.climatology  = true;
+            setup.climatology = true;
         }
     }
 
@@ -2041,7 +2041,7 @@ static void validation_time(request* r)
         fcmonthdays = fcmonth2days(date, fcmonth);
     }
 
-    julian     = grib_date_to_julian(date);
+    julian = grib_date_to_julian(date);
     step_units = get_value(r, "stepUnits", 0);
     if (step_units) {
         if (check_stepUnits(step_units) != GRIB_SUCCESS) {
@@ -2085,27 +2085,27 @@ static void free_nc_options()
 static void get_nc_options(const request* user_r)
 {
     const char* checkvalidtime_env = NULL;
-    const char* validtime          = get_value(user_r, "usevalidtime", 0);
-    const char* refdate            = get_value(user_r, "referencedate", 0);
-    const char* shuffle            = get_value(user_r, "shuffle", 0);
-    const char* deflate            = get_value(user_r, "deflate", 0);
+    const char* validtime = get_value(user_r, "usevalidtime", 0);
+    const char* refdate = get_value(user_r, "referencedate", 0);
+    const char* shuffle = get_value(user_r, "shuffle", 0);
+    const char* deflate = get_value(user_r, "deflate", 0);
 
-    const char* title     = get_value(user_r, "title", 0);
-    const char* history   = get_value(user_r, "history", 0);
+    const char* title = get_value(user_r, "title", 0);
+    const char* history = get_value(user_r, "history", 0);
     const char* unlimited = get_value(user_r, "unlimited", 0);
 
-    setup.shuffle      = shuffle ? (strcmp(shuffle, "true") == 0) : false;
-    setup.deflate      = deflate ? ((strcmp(deflate, "none") == 0) ? -1 : atol(deflate)) : -1;
+    setup.shuffle = shuffle ? (strcmp(shuffle, "true") == 0) : false;
+    setup.deflate = deflate ? ((strcmp(deflate, "none") == 0) ? -1 : atol(deflate)) : -1;
     setup.usevalidtime = validtime ? (strcmp(validtime, "true") == 0) : false;
-    setup.refdate      = refdate ? atol(refdate) : 19000101;
+    setup.refdate = refdate ? atol(refdate) : 19000101;
     setup.auto_refdate = refdate ? (strcmp(get_value(user_r, "referencedate", 0), "AUTOMATIC") == 0) : false;
 
-    setup.title     = title ? grib_context_strdup(ctx, (title)) : NULL;
-    setup.history   = history ? grib_context_strdup(ctx, (history)) : NULL;
+    setup.title = title ? grib_context_strdup(ctx, (title)) : NULL;
+    setup.history = history ? grib_context_strdup(ctx, (history)) : NULL;
     setup.unlimited = unlimited ? grib_context_strdup(ctx, ((unlimited))) : NULL;
 
-    setup.checkvalidtime   = true;
-    checkvalidtime_env     = getenv("GRIB_TO_NETCDF_CHECKVALIDTIME");
+    setup.checkvalidtime = true;
+    checkvalidtime_env = getenv("GRIB_TO_NETCDF_CHECKVALIDTIME");
     if (checkvalidtime_env) {
         const long v = atol(checkvalidtime_env);
         if (v == 0) setup.checkvalidtime = false;
@@ -2152,22 +2152,22 @@ static void check_err(const char* function, const int stat, const int line)
     }
 }
 
-#define DIM_ID 1
+    #define DIM_ID 1
 static int set_dimension(int ncid, const char* name, int n, int xtype, const char* units, const char* long_name)
 {
     int var_id = 0;
-    int stat   = 0;
+    int stat = 0;
     int dim_id = DIM_ID;
     int dim_vec[DIM_ID];
 
-    if ( setup.unlimited && (STR_EQUAL(name, setup.unlimited)) )
+    if (setup.unlimited && (STR_EQUAL(name, setup.unlimited)))
         n = NC_UNLIMITED;
 
     stat = nc_def_dim(ncid, name, n, &dim_id);
     check_err("nc_def_dim", stat, __LINE__);
 
     dim_vec[0] = dim_id;
-    stat       = nc_def_var(ncid, name, (nc_type)xtype, 1, dim_vec, &var_id);
+    stat = nc_def_var(ncid, name, (nc_type)xtype, 1, dim_vec, &var_id);
     check_err("nc_def_var", stat, __LINE__);
 
     if (units != NULL) {
@@ -2194,7 +2194,7 @@ static int check_grid(field* f)
         return e;
     }
 
-    if ( !STR_EQUAL(grid_type, "regular_ll") && !STR_EQUAL(grid_type, "regular_gg") ) {
+    if (!STR_EQUAL(grid_type, "regular_ll") && !STR_EQUAL(grid_type, "regular_gg")) {
         grib_context_log(ctx, GRIB_LOG_ERROR, "Grid type = %s", grid_type);
         grib_context_log(ctx, GRIB_LOG_ERROR, "First GRIB is not on a regular lat/lon grid or on a regular Gaussian grid. Exiting.\n");
         return GRIB_GEOCALCULUS_PROBLEM;
@@ -2240,7 +2240,7 @@ static int get_num_latitudes_longitudes(grib_handle* h, size_t* nlats, size_t* n
 
 static int def_latlon(int ncid, fieldset* fs)
 {
-    int n        = 0;
+    int n = 0;
     size_t nlats = 0, nlons = 0;
     err e = 0;
 
@@ -2270,21 +2270,21 @@ static int def_latlon(int ncid, fieldset* fs)
 static int put_latlon(int ncid, fieldset* fs)
 {
     int var_id = 0;
-    size_t i   = 0;
-    size_t n   = 0;
-    int stat   = 0;
-    err e      = 0;
+    size_t i = 0;
+    size_t n = 0;
+    int stat = 0;
+    err e = 0;
 
     field* g = get_field(fs, 0, expand_mem);
 
     double* dvalues = NULL;
-    float* fvalues  = NULL;
-    long nv         = 0;
+    float* fvalues = NULL;
+    long nv = 0;
 
     size_t ni;
     size_t nj;
 
-#if 0
+    #if 0
     /* Get info in degrees */
     if((e = grib_get_double(g->handle, "iDirectionIncrementInDegrees", &ew_stride)) != GRIB_SUCCESS)
     {
@@ -2311,7 +2311,7 @@ static int put_latlon(int ncid, fieldset* fs)
         return e;
     }
 
-#endif
+    #endif
     if ((e = get_num_latitudes_longitudes(g->handle, &nj, &ni)) != GRIB_SUCCESS) {
         grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: put_latlon: cannot get distinctLatitudes: %s", grib_get_error_message(e));
         return e;
@@ -2326,7 +2326,7 @@ static int put_latlon(int ncid, fieldset* fs)
     dvalues = (double*)grib_context_malloc(ctx, sizeof(double) * nv);
 
     /* longitude */
-    n    = ni;
+    n = ni;
     stat = nc_inq_varid(ncid, "longitude", &var_id);
     check_err("nc_inq_varid", stat, __LINE__);
     if ((e = grib_get_double_array(g->handle, "distinctLongitudes", dvalues, &n)) != GRIB_SUCCESS) {
@@ -2334,7 +2334,7 @@ static int put_latlon(int ncid, fieldset* fs)
         return e;
     }
     if (n != ni) {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "Number of distinctLongitudes is not the same as Ni (%zu!=%zu)",n,ni);
+        grib_context_log(ctx, GRIB_LOG_ERROR, "Number of distinctLongitudes is not the same as Ni (%zu!=%zu)", n, ni);
         return GRIB_GEOCALCULUS_PROBLEM;
     }
 
@@ -2346,7 +2346,7 @@ static int put_latlon(int ncid, fieldset* fs)
     check_err("nc_put_var_float", stat, __LINE__);
 
     /* latitude */
-    n    = nj;
+    n = nj;
     stat = nc_inq_varid(ncid, "latitude", &var_id);
     check_err("nc_inq_varid", stat, __LINE__);
     if ((e = grib_get_double_array(g->handle, "distinctLatitudes", dvalues, &n)) != GRIB_SUCCESS) {
@@ -2354,7 +2354,7 @@ static int put_latlon(int ncid, fieldset* fs)
         return e;
     }
     if (n != nj) {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "Number of distinctLatitudes is not the same as Nj (%zu!=%zu)",n,nj);
+        grib_context_log(ctx, GRIB_LOG_ERROR, "Number of distinctLatitudes is not the same as Nj (%zu!=%zu)", n, nj);
         return GRIB_GEOCALCULUS_PROBLEM;
     }
 
@@ -2374,30 +2374,30 @@ static int put_latlon(int ncid, fieldset* fs)
 
 static int compute_scale(dataset_t* subset)
 {
-    double max            = -DBL_MAX;
-    double min            = DBL_MAX;
-    double median         = 0;
-    long i                = 0;
-    size_t j              = 0;
-    int64_t scaled_max    = 0;
-    int64_t scaled_min    = 0;
+    double max = -DBL_MAX;
+    double min = DBL_MAX;
+    double median = 0;
+    long i = 0;
+    size_t j = 0;
+    int64_t scaled_max = 0;
+    int64_t scaled_min = 0;
     int64_t scaled_median = 0;
     double ao = 0.0, sf = 0.0;
     double x;
 
-    char test_scaled_max    = 0;
-    char test_scaled_min    = 0;
+    char test_scaled_max = 0;
+    char test_scaled_min = 0;
     char test_scaled_median = 0;
 
     err e = 0;
 
     fieldset* fs = subset->fset;
-    int idx      = subset->att.nctype;
+    int idx = subset->att.nctype;
 
     for (i = 0; i < fs->count; i++) {
         field* g = get_field(fs, i, expand_mem);
         size_t len;
-        static double* vals    = NULL;
+        static double* vals = NULL;
         static size_t vals_len = 0;
 
         if ((e = grib_get_size(g->handle, "values", &len)) != GRIB_SUCCESS) {
@@ -2408,7 +2408,7 @@ static int compute_scale(dataset_t* subset)
         if (len > vals_len) {
             if (vals)
                 grib_context_free(ctx, vals);
-            vals     = (double*)grib_context_malloc(ctx, sizeof(double) * len);
+            vals = (double*)grib_context_malloc(ctx, sizeof(double) * len);
             vals_len = len;
         }
         if ((e = grib_get_double_array(g->handle, "values", vals, &len)) != GRIB_SUCCESS) {
@@ -2456,8 +2456,8 @@ static int compute_scale(dataset_t* subset)
     x /= sf;
     grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: x=%lf", x);
 
-    scaled_max    = rint((max - ao) / sf);
-    scaled_min    = rint((min - ao) / sf);
+    scaled_max = rint((max - ao) / sf);
+    scaled_min = rint((min - ao) / sf);
     scaled_median = rint((median - ao) / sf);
 
     if (scaled_max > nc_type_values[idx].nc_type_max) {
@@ -2466,8 +2466,8 @@ static int compute_scale(dataset_t* subset)
         sf = 1.0; /* ECC-685 */
     }
 
-    test_scaled_max    = (char)scaled_max;
-    test_scaled_min    = (char)scaled_min;
+    test_scaled_max = (char)scaled_max;
+    test_scaled_min = (char)scaled_min;
     test_scaled_median = (char)scaled_median;
 
     grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: scaled_max: %lld, scaled_min: %lld, scaled_median: %lld, x: %lf",
@@ -2476,14 +2476,14 @@ static int compute_scale(dataset_t* subset)
     grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: test_scaled_max: %x, test_scaled_min: %x, test_scaled_median: %x",
                      test_scaled_max, test_scaled_min, test_scaled_median);
 
-    max    = scaled_max * sf + ao;
-    min    = scaled_min * sf + ao;
+    max = scaled_max * sf + ao;
+    min = scaled_min * sf + ao;
     median = scaled_median * sf + ao;
 
     grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: max: %lf, min: %lf, median: %lf", max, min, median);
 
     subset->scale_factor = sf;
-    subset->add_offset   = ao;
+    subset->add_offset = ao;
 
     return 0;
 }
@@ -2494,27 +2494,27 @@ static int nc_put_att_type(int ncid, int varid, const char* name, nc_type nctype
     switch (nctype) {
         case NC_BYTE: {
             unsigned char val_uchar = (unsigned char)value;
-            r                       = nc_put_att_uchar(ncid, varid, name, nctype, n, &val_uchar);
+            r = nc_put_att_uchar(ncid, varid, name, nctype, n, &val_uchar);
             break;
         }
         case NC_SHORT: {
             short int val_short = (short int)value;
-            r                   = nc_put_att_short(ncid, varid, name, nctype, n, &val_short);
+            r = nc_put_att_short(ncid, varid, name, nctype, n, &val_short);
             break;
         }
         case NC_INT: {
             int val_int = (int)value;
-            r           = nc_put_att_int(ncid, varid, name, nctype, n, &val_int);
+            r = nc_put_att_int(ncid, varid, name, nctype, n, &val_int);
             break;
         }
         case NC_FLOAT: {
             float val_flt = (float)value;
-            r             = nc_put_att_float(ncid, varid, name, nctype, n, &val_flt);
+            r = nc_put_att_float(ncid, varid, name, nctype, n, &val_flt);
             break;
         }
         case NC_DOUBLE: {
             double val_dbl = (double)value;
-            r              = nc_put_att_double(ncid, varid, name, nctype, n, &val_dbl);
+            r = nc_put_att_double(ncid, varid, name, nctype, n, &val_dbl);
             break;
         }
         default:
@@ -2552,7 +2552,7 @@ static int nc_put_vara_type(int ncid, int varid, const size_t start[], const siz
 
 static void scale_bitmap(double* vals, long n, void* data, dataset_t* subset)
 {
-    int i          = 0;
+    int i = 0;
     nc_type nctype = subset->att.nctype;
 
     /* if(!subset->bitmap) {
@@ -2623,10 +2623,10 @@ static void scale_bitmap(double* vals, long n, void* data, dataset_t* subset)
 
 static void scale(double* vals, long n, void* data, dataset_t* g)
 {
-    int i               = 0;
-    nc_type nctype      = g->att.nctype;
+    int i = 0;
+    nc_type nctype = g->att.nctype;
     double scale_factor = g->scale_factor;
-    double add_offset   = g->add_offset;
+    double add_offset = g->add_offset;
 
     /*
     if(!subset->scale)
@@ -2707,7 +2707,7 @@ static void scale(double* vals, long n, void* data, dataset_t* g)
             for (i = 0; i < n; ++i) {
                 if (!g->bitmap || (vals[i] != global_missing_value)) {
                     double d = vals[i];
-                    if(!(d >= nc_type_values[nctype].nc_type_min && d <= nc_type_values[nctype].nc_type_max)) {
+                    if (!(d >= nc_type_values[nctype].nc_type_min && d <= nc_type_values[nctype].nc_type_max)) {
                         grib_context_log(ctx, GRIB_LOG_ERROR, "Scaling for type NC_DOUBLE failed");
                         return;
                     }
@@ -2726,10 +2726,10 @@ static void scale(double* vals, long n, void* data, dataset_t* g)
 /* Return array of strings which are the "time" values */
 static char** create_times_array(const request* cube, size_t* size)
 {
-    char** result         = NULL;
+    char** result = NULL;
     const char* time_axis = "time"; /* special case */
-    parameter* the_param  = find_parameter(cube, time_axis);
-    *size                 = 0;
+    parameter* the_param = find_parameter(cube, time_axis);
+    *size = 0;
     if (the_param) {
         size_t i = 0, num_values = 0;
         value* va = NULL;
@@ -2745,10 +2745,10 @@ static char** create_times_array(const request* cube, size_t* size)
         }
         /* Create and populate array */
         result = (char**)grib_context_malloc(ctx, sizeof(char*) * num_values);
-        va     = the_param->values;
+        va = the_param->values;
         while (va) {
             result[i++] = va->name;
-            va          = va->next;
+            va = va->next;
         }
         *size = num_values;
     }
@@ -2757,18 +2757,18 @@ static char** create_times_array(const request* cube, size_t* size)
 
 static int put_data(hypercube* h, int ncid, const char* name, dataset_t* subset)
 {
-    int i      = 0;
-    int stat   = 0;
+    int i = 0;
+    int stat = 0;
     int dataid = 0;
-    int naxis  = count_axis(h);
+    int naxis = count_axis(h);
     size_t start[NC_MAX_DIMS];
     size_t count[NC_MAX_DIMS];
-    char** times_array      = NULL;
+    char** times_array = NULL;
     size_t times_array_size = 0;
-    fieldset* fs            = subset->fset;
-    field* f                = get_field(fs, 0, expand_mem);
+    fieldset* fs = subset->fset;
+    field* f = get_field(fs, 0, expand_mem);
 
-    void* vscaled       = NULL;
+    void* vscaled = NULL;
     size_t vscaled_length = 0;
 
     long ni;
@@ -2794,7 +2794,7 @@ static int put_data(hypercube* h, int ncid, const char* name, dataset_t* subset)
     for (i = 0; i < naxis; ++i)
         count[naxis - i - 1] = 1;
 
-    count[naxis]     = nj; /* latitude */
+    count[naxis] = nj;     /* latitude */
     count[naxis + 1] = ni; /* longitude */
 
     /* f->purge_header = true; */
@@ -2810,9 +2810,9 @@ static int put_data(hypercube* h, int ncid, const char* name, dataset_t* subset)
     for (i = 0; i < fs->count; i++) {
         field* g = get_field(fs, i, expand_mem);
         size_t len;
-        static double* vals    = NULL;
+        static double* vals = NULL;
         static size_t vals_len = 0;
-        bool missing        = 0;
+        bool missing = 0;
 
         request* r;
         int j = 0;
@@ -2827,7 +2827,7 @@ static int put_data(hypercube* h, int ncid, const char* name, dataset_t* subset)
         if (len > vals_len) {
             if (vals)
                 grib_context_free(ctx, vals);
-            vals     = (double*)grib_context_malloc(ctx, sizeof(double) * len);
+            vals = (double*)grib_context_malloc(ctx, sizeof(double) * len);
             vals_len = len;
         }
         if ((e = grib_get_double_array(g->handle, "values", vals, &len)) != GRIB_SUCCESS) {
@@ -2844,7 +2844,7 @@ static int put_data(hypercube* h, int ncid, const char* name, dataset_t* subset)
             if ((vscaled_length == 0) || (vscaled_length < sizeof(double) * len)) {
                 if (vscaled)
                     grib_context_free(ctx, vscaled);
-                vscaled        = (void*)grib_context_malloc(ctx, sizeof(double) * len);
+                vscaled = (void*)grib_context_malloc(ctx, sizeof(double) * len);
                 vscaled_length = sizeof(double) * len;
             }
 
@@ -2910,14 +2910,14 @@ static void set_always_a_time(hypercube* h, request* data_r)
 static int define_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid, dataset_t* subsets, int subsetcnt, const request* data_r)
 {
     const request* cube = h->cube;
-    int naxis           = count_axis(h);
-    int i               = 0;
-    int stat            = 0;
-    int n               = 0;
-    int var_id          = 0; /* Variable ID */
+    int naxis = count_axis(h);
+    int i = 0;
+    int stat = 0;
+    int n = 0;
+    int var_id = 0; /* Variable ID */
     int dims[1024];
 
-    size_t chunks[NC_MAX_DIMS] = {0,}; /* For chunking */
+    size_t chunks[NC_MAX_DIMS] = { 0 }; /* For chunking */
     err e = 0;
 
     long ni;
@@ -2944,7 +2944,7 @@ static int define_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid, datase
     for (i = 0; i < naxis; ++i)
         chunks[naxis - i - 1] = 1;
 
-    chunks[naxis]     = nj; /* latitude */
+    chunks[naxis] = nj;     /* latitude */
     chunks[naxis + 1] = ni; /* longitude */
 
     /* START DEFINITIONS */
@@ -2956,13 +2956,13 @@ static int define_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid, datase
 
     /* Define netCDF dimensions */
     for (i = 0; i < naxis; ++i) {
-        int nctype       = NC_INT;
+        int nctype = NC_INT;
         const char* axis = get_axis(h, i);
-        const char* units      = NULL;
+        const char* units = NULL;
         char u[10240];
         const char* lowaxis = (axis);
         const char* longname = (char*)lowaxis;
-        n                   = count_values(cube, axis);
+        n = count_values(cube, axis);
 
         if (count_values(data_r, "levtype") > 1) {
             grib_context_log(ctx, GRIB_LOG_ERROR, "Cannot handle fields for different levtypes.\n");
@@ -2979,7 +2979,7 @@ static int define_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid, datase
             const char* levtype = get_value(data_r, "levtype", 0);
             if (levtype) {
                 if (strcmp("pl", levtype) == 0) {
-                    units    = "millibars";
+                    units = "millibars";
                     longname = "pressure_level";
                 }
 
@@ -2997,7 +2997,7 @@ static int define_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid, datase
 
         if (strcmp(axis, "date") == 0) {
             snprintf(u, sizeof(u), "days since %ld-%02ld-%02ld 00:00:0.0", setup.refdate / 10000, (setup.refdate % 10000) / 100, (setup.refdate % 100));
-            units    = u;
+            units = u;
             longname = "Base_date";
             if (setup.climatology) {
                 snprintf(u, sizeof(u), "months");
@@ -3021,14 +3021,14 @@ static int define_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid, datase
         }
 
         if (strcmp(axis, "step") == 0) {
-            units    = "hours";
+            units = "hours";
             longname = "time_step";
             if (count_values(cube, "date") == 0 && count_values(cube, "time") == 0) {
                 const char* d = get_value(data_r, "date", 0);
                 const char* t = get_value(data_r, "time", 0);
-                long date     = d ? atol(d) : 0;
-                long hour     = t ? atol(t) : 0;
-                long min      = t ? 60 * (atof(t) - hour) : 0;
+                long date = d ? atol(d) : 0;
+                long hour = t ? atol(t) : 0;
+                long min = t ? 60 * (atof(t) - hour) : 0;
                 snprintf(u, sizeof(u), "hours since %ld-%02ld-%02ld %02ld:%02ld:00.0", date / 10000, (date % 10000) / 100, (date % 100), hour, min);
                 units = u;
             }
@@ -3036,7 +3036,7 @@ static int define_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid, datase
 
         if ((strcmp(axis, "fcmonth") == 0)) {
             const char* date = get_value(data_r, "date", 0);
-            char ymd[32]     = "";
+            char ymd[32] = "";
 
             if (date) {
                 strncat(ymd, date, 4);
@@ -3051,7 +3051,7 @@ static int define_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid, datase
                 snprintf(ymd, sizeof(ymd), "00-00-00");
             }
             snprintf(u, sizeof(u), "months since %s 00:00:00.0", ymd);
-            units    = u;
+            units = u;
             longname = "time";
         }
 
@@ -3063,7 +3063,7 @@ static int define_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid, datase
 
                 if (setup.mmeans) {
                     const char* period = "0000-01-00 00:00:00";
-                    stat         = nc_put_att_text(ncid, var_id, "avg_period", strlen(period), period);
+                    stat = nc_put_att_text(ncid, var_id, "avg_period", strlen(period), period);
                     check_err("nc_put_att_text", stat, __LINE__);
                 }
 
@@ -3085,17 +3085,17 @@ static int define_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid, datase
         check_err("nc_def_var", stat, __LINE__);
 
         if (setup.deflate > -1) {
-#ifdef NC_NETCDF4
+    #ifdef NC_NETCDF4
             stat = nc_def_var_chunking(ncid, var_id, NC_CHUNKED, chunks);
             check_err("nc_def_var_chunking", stat, __LINE__);
 
             /* Set compression settings for a variable */
             stat = nc_def_var_deflate(ncid, var_id, setup.shuffle, 1, setup.deflate);
             check_err("nc_def_var_deflate", stat, __LINE__);
-#else
+    #else
             (void)chunks;
             grib_context_log(ctx, GRIB_LOG_ERROR, "Deflate option only supported in netCDF4");
-#endif
+    #endif
         }
         if (subsets[i].scale) {
             compute_scale(&subsets[i]);
@@ -3113,25 +3113,25 @@ static int define_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid, datase
 
         if (subsets[i].att.units) {
             const char* txt = subsets[i].att.units;
-            stat            = nc_put_att_text(ncid, var_id, "units", strlen(txt), txt);
+            stat = nc_put_att_text(ncid, var_id, "units", strlen(txt), txt);
             check_err("nc_put_att_text", stat, __LINE__);
         }
 
         if (subsets[i].att.long_name) {
             const char* txt = subsets[i].att.long_name;
-            stat            = nc_put_att_text(ncid, var_id, "long_name", strlen(txt), txt);
+            stat = nc_put_att_text(ncid, var_id, "long_name", strlen(txt), txt);
             check_err("nc_put_att_text", stat, __LINE__);
         }
 
         if (subsets[i].att.short_name) {
             const char* txt = subsets[i].att.short_name;
-            stat            = nc_put_att_text(ncid, var_id, "short_name", strlen(txt), txt);
+            stat = nc_put_att_text(ncid, var_id, "short_name", strlen(txt), txt);
             check_err("nc_put_att_text", stat, __LINE__);
         }
 
         if (subsets[i].att.standard_name) {
             const char* txt = subsets[i].att.standard_name;
-            stat            = nc_put_att_text(ncid, var_id, "standard_name", strlen(txt), txt);
+            stat = nc_put_att_text(ncid, var_id, "standard_name", strlen(txt), txt);
             check_err("nc_put_att_text", stat, __LINE__);
         }
 
@@ -3147,7 +3147,7 @@ static int define_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid, datase
 
             while (p) {
                 const char* txt = p->values->name;
-                stat            = nc_put_att_text(ncid, var_id, p->name, strlen(txt), txt);
+                stat = nc_put_att_text(ncid, var_id, p->name, strlen(txt), txt);
                 check_err("nc_put_att_text", stat, __LINE__);
 
                 p = p->next;
@@ -3160,7 +3160,7 @@ static int define_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid, datase
     {
         /* parameter *p = data_r->params; */
         parameter* p = setup.mars_description->params;
-        stat         = nc_def_var(ncid, "MARS", NC_CHAR, 0, 0, &var_id);
+        stat = nc_def_var(ncid, "MARS", NC_CHAR, 0, 0, &var_id);
         check_err("nc_def_var", stat, __LINE__);
 
         /* Store request for those parameters with single value */
@@ -3170,11 +3170,11 @@ static int define_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid, datase
                 char par[1024];
                 char val[1024000] = "";
                 snprintf(par, sizeof(par), "%s", (p->name));
-#if 0
+    #if 0
                 value2string(p->values,val);
-#else
+    #else
                 snprintf(val, sizeof(val), "%s", (p->values->name));
-#endif
+    #endif
                 stat = nc_put_att_text(ncid, var_id, par, strlen(val), (val));
                 if (stat != NC_NOERR) {
                     printf("Error setting request for %s = %s\n", par, val);
@@ -3203,8 +3203,8 @@ static int define_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid, datase
             snprintf(history, sizeof(history), "%s", setup.history);
         }
         else {
-            int major    = ECCODES_MAJOR_VERSION;
-            int minor    = ECCODES_MINOR_VERSION;
+            int major = ECCODES_MAJOR_VERSION;
+            int minor = ECCODES_MINOR_VERSION;
             int revision = ECCODES_REVISION_VERSION;
 
             time(&now);
@@ -3214,10 +3214,10 @@ static int define_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid, datase
         stat = nc_put_att_text(ncid, NC_GLOBAL, "history", strlen(history), history);
         check_err("nc_put_att_text", stat, __LINE__);
 
-        //stat = nc_put_att_text(ncid, NC_GLOBAL, "source",strlen(setup.source),setup.source);
-        //check_err(stat,__LINE__,__FILE__);
-        //stat = nc_put_att_text(ncid, NC_GLOBAL, "institution",strlen(institution),institution);
-        //check_err(stat,__LINE__,__FILE__);
+        // stat = nc_put_att_text(ncid, NC_GLOBAL, "source",strlen(setup.source),setup.source);
+        // check_err(stat,__LINE__,__FILE__);
+        // stat = nc_put_att_text(ncid, NC_GLOBAL, "institution",strlen(institution),institution);
+        // check_err(stat,__LINE__,__FILE__);
 
         if (setup.title) {
             stat = nc_put_att_text(ncid, NC_GLOBAL, "title", strlen(setup.title), setup.title);
@@ -3232,17 +3232,28 @@ static size_t string_to_unique_number(const char* axis, const char* str)
     size_t result = 0;
     if (strcmp(axis, "type") == 0) {
         /* TODO: not ideal but capture the most common MARS types */
-        if      (strcmp(str, "an") == 0) return 2;
-        else if (strcmp(str, "fc") == 0) return 9;
-        else if (strcmp(str, "cf") == 0) return 10;
-        else if (strcmp(str, "pf") == 0) return 11;
-        else if (strcmp(str, "em") == 0) return 17;
-        else if (strcmp(str, "es") == 0) return 18;
-        else if (strcmp(str, "ep") == 0) return 30;
-        else if (strcmp(str, "4i") == 0) return 33;
-        else if (strcmp(str, "4g") == 0) return 8;
-        else if (strcmp(str, "ia") == 0) return 3;
-        else if (strcmp(str, "efi") == 0) return 27;
+        if (strcmp(str, "an") == 0)
+            return 2;
+        else if (strcmp(str, "fc") == 0)
+            return 9;
+        else if (strcmp(str, "cf") == 0)
+            return 10;
+        else if (strcmp(str, "pf") == 0)
+            return 11;
+        else if (strcmp(str, "em") == 0)
+            return 17;
+        else if (strcmp(str, "es") == 0)
+            return 18;
+        else if (strcmp(str, "ep") == 0)
+            return 30;
+        else if (strcmp(str, "4i") == 0)
+            return 33;
+        else if (strcmp(str, "4g") == 0)
+            return 8;
+        else if (strcmp(str, "ia") == 0)
+            return 3;
+        else if (strcmp(str, "efi") == 0)
+            return 27;
     }
     /* Fallback general case: Use hashing */
     result = 5381;
@@ -3255,10 +3266,10 @@ static size_t string_to_unique_number(const char* axis, const char* str)
 static int fill_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid)
 {
     const request* cube = h->cube;
-    int naxis           = count_axis(h);
-    int i               = 0;
-    int var_id          = 0;
-    int stat            = 0;
+    int naxis = count_axis(h);
+    int i = 0;
+    int var_id = 0;
+    int stat = 0;
 
     /* Put latitude/longitude values */
     grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: Put latitude/longitude values");
@@ -3267,10 +3278,10 @@ static int fill_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid)
     /* Put netCDF axis values */
     grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: Put netcdf axis values");
     for (i = 0; i < naxis; ++i) {
-        int j               = 0;
-        const char* axis    = get_axis(h, i);
-        int n               = count_values(cube, axis);
-        int* values         = (int*)grib_context_malloc(ctx, sizeof(int) * n);
+        int j = 0;
+        const char* axis = get_axis(h, i);
+        int n = count_values(cube, axis);
+        int* values = (int*)grib_context_malloc(ctx, sizeof(int) * n);
         const char* lowaxis = (axis);
 
         if (!values) {
@@ -3291,7 +3302,7 @@ static int fill_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid)
         }
         else {
             for (j = 0; j < n; ++j) {
-                long lv        = 0;
+                long lv = 0;
                 const char* sv = get_value(cube, axis, j);
                 if (is_number(sv)) {
                     lv = atol(sv); /* Detect error? */
@@ -3351,7 +3362,7 @@ static void remove_param(request* r, void* data, const char* p)
 static void print_ignored_keys(FILE* f, request* data)
 {
     const char* ignore = NULL;
-    int i              = 0;
+    int i = 0;
     while ((ignore = get_value(data, "ignore", i)) != NULL) {
         if (i == 0) {
             fprintf(f, "%s: Ignoring key(s): %s", tool_name, ignore);
@@ -3365,13 +3376,13 @@ static void print_ignored_keys(FILE* f, request* data)
         fprintf(f, "\n");
 }
 
-#define NO_TABLE -1
-#define NO_PARAM 0
+    #define NO_TABLE -1
+    #define NO_PARAM 0
 
 static void paramtable(const char* p, long* param, long* table, bool paramIdMode)
 {
     const char* q = p;
-    int len       = strlen(p);
+    int len = strlen(p);
 
     *param = atol(p);
 
@@ -3402,10 +3413,10 @@ static void paramtable(const char* p, long* param, long* table, bool paramIdMode
 
 static void find_nc_attributes(const request* subset_r, const request* user_r, ncatt_t* att, const request* config_r, const request* data_r)
 {
-    const char* split         = NULL;
-    int j                     = 0;
+    const char* split = NULL;
+    int j = 0;
     bool set_param_as_name = true;
-    long datatable            = 0; /* = atol(get_value(data_r,"_CODETABLE2",0)); */
+    long datatable = 0; /* = atol(get_value(data_r,"_CODETABLE2",0)); */
 
     if (count_values(user_r, "split") == 0)
         strcat(att->name, "data");
@@ -3419,8 +3430,8 @@ static void find_nc_attributes(const request* subset_r, const request* user_r, n
 
     j = 0;
     while ((split = get_value(user_r, "split", j++)) != NULL) {
-        bool found    = false;
-        request* cfg     = (request*)config_r;
+        bool found = false;
+        request* cfg = (request*)config_r;
         bool is_param = strcmp(split, "param") == 0;
         /* Only use this parameter in the name if there is more
            than one value in the original request or if param */
@@ -3428,30 +3439,30 @@ static void find_nc_attributes(const request* subset_r, const request* user_r, n
 
         while (cfg) {
             const char* cfgname = get_value(cfg, "NAME", 0);
-            const char* cfgval  = get_value(cfg, "VALUE", 0);
+            const char* cfgval = get_value(cfg, "VALUE", 0);
             const char* dataval = NULL;
-            int i               = 0;
+            int i = 0;
 
             if (strcmp(split, cfgname) == 0) {
                 while ((dataval = get_value(subset_r, cfgname, i++)) != NULL) {
                     const char* tablestr = get_value(cfg, "TABLE2", 0);
-                    long cfgtable        = (is_param && tablestr != NULL) ? atol(get_value(cfg, "TABLE2", 0)) : -1;
+                    long cfgtable = (is_param && tablestr != NULL) ? atol(get_value(cfg, "TABLE2", 0)) : -1;
 
-                    long cfgparam  = atol(cfgval);
+                    long cfgparam = atol(cfgval);
                     long dataparam = atol(dataval);
                     paramtable(dataval, &dataparam, &datatable, false);
 
                     /* If it is not param and they're EXACTLY equal or
                        being param, they're the same parameter and table */
                     if ((!is_param && (strcmp(dataval, cfgval) == 0)) || (is_param && (dataparam == cfgparam) && (datatable == cfgtable || (datatable == 0 && (cfgtable == 128))))) {
-                        const char* val      = NULL;
+                        const char* val = NULL;
                         const char* metafile = NULL;
 
                         if ((val = get_value(cfg, "accuracy", 0)) != NULL)
                             att->nctype = translate_nctype(val);
-                        att->long_name  = grib_context_strdup(ctx, (get_value(cfg, "LONG_NAME", 0)));
+                        att->long_name = grib_context_strdup(ctx, (get_value(cfg, "LONG_NAME", 0)));
                         att->short_name = grib_context_strdup(ctx, (get_value(cfg, "SHORT_NAME", 0)));
-                        att->units      = grib_context_strdup(ctx, (get_value(cfg, "UNITS", 0)));
+                        att->units = grib_context_strdup(ctx, (get_value(cfg, "UNITS", 0)));
 
                         /* Check if there is more metadata for this variable */
                         if ((metafile = get_value(cfg, "METADATA", 0)) != NULL) {
@@ -3558,7 +3569,7 @@ static void values_loop(const request* r, int count, axis_t* parnames, loopproc 
 {
     char** values = (char**)grib_context_malloc(ctx, sizeof(char*) * count);
     const char* p = get_value(r, "levtype", 0);
-    bool ml    = (bool)(p && (strcmp(p, "ml") == 0));
+    bool ml = (bool)(p && (strcmp(p, "ml") == 0));
 
     if (ml) {
         p = get_value(r, "expect", 0);
@@ -3589,13 +3600,13 @@ static request* unwind_one_request(const request* r)
 
 static int split_fieldset(fieldset* fs, request* data_r, dataset_t** subsets, const request* user_r, const request* config_r)
 {
-    const char* split  = NULL;
-    int count          = 1;
-    int i              = 0;
-    request* s         = NULL;
-    request* u         = NULL;
+    const char* split = NULL;
+    int count = 1;
+    int i = 0;
+    request* s = NULL;
+    request* u = NULL;
     dataset_t* filters = NULL;
-    nc_type nctype     = translate_nctype(get_value(user_r, "accuracy", 0));
+    nc_type nctype = translate_nctype(get_value(user_r, "accuracy", 0));
 
     s = empty_request("filter");
     while ((split = get_value(user_r, "split", i++)) != NULL) {
@@ -3616,11 +3627,11 @@ static int split_fieldset(fieldset* fs, request* data_r, dataset_t** subsets, co
     s = u;
     for (i = 0; i < count; ++i) {
         ECCODES_ASSERT(s);
-        filters[i].filter         = new_hypercube_from_mars_request(s);
-        filters[i].fset           = new_fieldset(1);
-        filters[i].count          = 0;
+        filters[i].filter = new_hypercube_from_mars_request(s);
+        filters[i].fset = new_fieldset(1);
+        filters[i].count = 0;
         filters[i].filter_request = clone_one_request(s);
-        filters[i].bitmap         = false;
+        filters[i].bitmap = false;
         /* filters[i].mmeans  = false; */
 
         s = s->next;
@@ -3628,9 +3639,9 @@ static int split_fieldset(fieldset* fs, request* data_r, dataset_t** subsets, co
 
     for (i = 0; i < fs->count; ++i) {
         bool ok = false;
-        field* f   = get_field(fs, i, packed_mem);
+        field* f = get_field(fs, i, packed_mem);
         request* g = field_to_request(f);
-        int j      = 0;
+        int j = 0;
 
         while (!ok && (j < count)) {
             ok = (cube_order(filters[j].filter, g) != -1);
@@ -3664,8 +3675,8 @@ static int split_fieldset(fieldset* fs, request* data_r, dataset_t** subsets, co
 
     for (i = 0; i < count; ++i) {
         filters[i].att.nctype = nctype;
-        filters[i].scale      = true;
-        filters[i].missing    = nc_type_values[nctype].nc_type_missing;
+        filters[i].scale = true;
+        filters[i].missing = nc_type_values[nctype].nc_type_missing;
         find_nc_attributes(filters[i].filter_request, user_r, &(filters[i].att), config_r, data_r);
         grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: filter[%d] found.- Var. name '%s', nctype: %d, found nctype: %d", i, filters[i].att.name, nctype, filters[i].att.nctype);
 
@@ -3733,7 +3744,7 @@ static bool parsedate(const char* name, long* julian, long* second, bool* isjul)
     int y = 0, m = 0, d = 0, H = 0, M = 0, S = 0;
 
     *julian = *second = 0;
-    *isjul            = false;
+    *isjul = false;
 
     if (p == 0 || *p == 0)
         return false;
@@ -3776,10 +3787,10 @@ static bool parsedate(const char* name, long* julian, long* second, bool* isjul)
     }
     else if (n == 3) {
         long j = grib_date_to_julian(y * 10000 + 101) + m - 1;
-        j      = grib_julian_to_date(j);
+        j = grib_julian_to_date(j);
         /* julian day */;
-        d      = j % 100;
-        m      = (j % 10000) / 100;
+        d = j % 100;
+        m = (j % 10000) / 100;
         *isjul = true;
     }
     else
@@ -3858,7 +3869,7 @@ static int get_creation_mode(int option_kind)
             creation_mode |= NC_64BIT_OFFSET;
             printf("%s: Creating large (64 bit) file format.\n", tool_name);
             break;
-#ifdef NC_NETCDF4
+    #ifdef NC_NETCDF4
         case NC_FORMAT_NETCDF4:
             creation_mode |= NC_NETCDF4;
             printf("%s: Creating netCDF-4/HDF5 format.\n", tool_name);
@@ -3867,13 +3878,13 @@ static int get_creation_mode(int option_kind)
             creation_mode |= NC_NETCDF4 | NC_CLASSIC_MODEL;
             printf("%s: Creating netCDF-4 classic model file format.\n", tool_name);
             break;
-#else
+    #else
         case NC_FORMAT_NETCDF4:
         case NC_FORMAT_NETCDF4_CLASSIC:
             grib_context_log(ctx, GRIB_LOG_ERROR, "%s not built with netCDF4, cannot create netCDF-4 files.", tool_name);
             exit(1);
             break;
-#endif
+    #endif
         default:
             fprintf(stderr, "Bad value (%d) for -k option\n", option_kind);
             exit(1);
@@ -3913,11 +3924,11 @@ grib_option grib_options[] = {
     { "h", 0, 0, 0, 1, 0 },
 };
 
-int grib_options_count    = sizeof(grib_options) / sizeof(grib_option);
-static fieldset* fs       = NULL;
-static request* data_r    = NULL;
-request* user_r           = NULL;
-static int option_kind    = 2; /* By default NetCDF3, 64-bit offset */
+int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
+static fieldset* fs = NULL;
+static request* data_r = NULL;
+request* user_r = NULL;
+static int option_kind = 2; /* By default NetCDF3, 64-bit offset */
 static int deflate_option = 0;
 
 /* Table of formats for legal -k values. Inspired by nccopy */
@@ -3957,7 +3968,7 @@ int main(int argc, char* argv[])
 
     /* GRIB-413: Collect all program arguments into a string */
     const size_t maxLen = sizeof(argvString);
-    size_t currLen      = 0;
+    size_t currLen = 0;
     for (i = 0; i < argc; ++i) {
         currLen += strlen(argv[i]);
         if (currLen >= maxLen - 1)
@@ -3976,13 +3987,13 @@ int grib_tool_before_getopt(grib_runtime_options* options)
 
 int grib_tool_init(grib_runtime_options* options)
 {
-    char* p            = NULL;
-    char* list         = NULL;
-    ctx                = grib_context_get_default();
+    char* p = NULL;
+    char* list = NULL;
+    ctx = grib_context_get_default();
     options->onlyfiles = 1;
-    fs                 = new_fieldset(0);
-    data_r             = empty_request(0);
-    user_r             = empty_request(0);
+    fs = new_fieldset(0);
+    data_r = empty_request(0);
+    user_r = empty_request(0);
 
     printf("%s: Version ", tool_name);
     grib_print_api_version(stdout);
@@ -3997,9 +4008,9 @@ int grib_tool_init(grib_runtime_options* options)
 
     /* Option -S: Split according to keys */
     if (grib_options_on("S:")) {
-        char* lasts         = NULL;
+        char* lasts = NULL;
         list = grib_options_get_option("S:");
-        p    = strtok_r(list, ",", &lasts);
+        p = strtok_r(list, ",", &lasts);
         set_value(user_r, "split", p);
         p = strtok_r(NULL, ",", &lasts);
         while (p != NULL) {
@@ -4016,7 +4027,7 @@ int grib_tool_init(grib_runtime_options* options)
     if (grib_options_on("I:")) {
         char* lasts = NULL;
         list = grib_options_get_option("I:");
-        p    = strtok_r(list, ",", &lasts);
+        p = strtok_r(list, ",", &lasts);
         set_value(user_r, "ignore", p);
         p = strtok_r(NULL, ",", &lasts);
         while (p != NULL) {
@@ -4115,10 +4126,10 @@ int grib_tool_init(grib_runtime_options* options)
 
 int grib_tool_new_filename_action(grib_runtime_options* options, const char* filename)
 {
-    char buf[1024] = {0,};
-    int e           = 0;
-    int i           = 0;
-    grib_handle* h  = NULL;
+    char buf[1024] = { 0 };
+    int e = 0;
+    int i = 0;
+    grib_handle* h = NULL;
     grib_file* file = NULL;
 
     printf("%s: Processing input file '%s'.\n", tool_name, filename);
@@ -4159,7 +4170,7 @@ int grib_tool_new_filename_action(grib_runtime_options* options, const char* fil
 
         if (i == 1) {
             const char* mmeans = get_value(r, "_MONTHLY_MEANS", 0);
-            setup.mmeans       = mmeans ? (atol(mmeans) == 1) : false;
+            setup.mmeans = mmeans ? (atol(mmeans) == 1) : false;
         }
         fcmonth2nbmonths(r);
 
@@ -4257,14 +4268,14 @@ int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
 
 int grib_tool_finalise_action(grib_runtime_options* options)
 {
-    request* config_r  = NULL;
-    hypercube* dims    = NULL;
+    request* config_r = NULL;
+    hypercube* dims = NULL;
     dataset_t* subsets = NULL;
     int count;
     int i;
     int ncid;
     int stat;
-    int err           = 0;
+    int err = 0;
     int creation_mode = NC_CLOBBER;
 
     if (options->outfile == NULL || options->outfile->name == NULL) {
@@ -4305,7 +4316,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     printf("%s: NetCDF library version: %s\n", tool_name, nc_inq_libvers());
 
     creation_mode = get_creation_mode(option_kind);
-    stat          = nc_create(options->outfile->name, creation_mode, &ncid);
+    stat = nc_create(options->outfile->name, creation_mode, &ncid);
     if (stat != NC_NOERR) {
         char msg[1024];
         snprintf(msg, sizeof(msg), "nc_create: '%s'", options->outfile->name);
@@ -4364,7 +4375,7 @@ int grib_no_handle_action(grib_runtime_options* options, int err)
 
 
 #else
-#include <stdio.h>
+    #include <stdio.h>
 int main(int argc, char** argv)
 {
     printf("\n");

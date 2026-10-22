@@ -1,0 +1,11 @@
+0 0 Dry
+1 1 Wet
+2 2 Pools of water on the surface
+3 3 Flooded
+4 4 Ground frozen 0 - 4 cm (use of spade possible)
+5 5 Ground forzen >0 5 cm
+6 6 Snow depth 0 to 4 cm
+7 7 Snow depth 4 to 24 cm
+8 8 Snow depth 25 to 44 cm
+9 9 Snow depth >= 45 cm
+15 15 Missing value

@@ -10,9 +10,6 @@
 
 #include "Round.h"
 
-eccodes::accessor::Round _grib_accessor_round;
-eccodes::Accessor* grib_accessor_round = &_grib_accessor_round;
-
 namespace eccodes::accessor
 {
 
@@ -35,13 +32,13 @@ int Round::unpack_double(double* val, size_t* len)
 {
     int ret = GRIB_SUCCESS;
 
-    size_t replen             = 0;
+    size_t replen = 0;
     double rounding_precision = 0;
-    double rounded            = 0;
-    double toround            = 0;
+    double rounded = 0;
+    double toround = 0;
 
     const char* oval = NULL;
-    oval             = arg_->get_name(get_enclosing_handle(), 0);
+    oval = arg_->get_name(get_enclosing_handle(), 0);
 
     if ((ret = grib_get_double_internal(get_enclosing_handle(), oval, &toround)) != 0)
         return ret;
@@ -60,7 +57,7 @@ int Round::unpack_double(double* val, size_t* len)
 int Round::unpack_string(char* val, size_t* len)
 {
     char result[1024];
-    int ret       = GRIB_SUCCESS;
+    int ret = GRIB_SUCCESS;
     size_t replen = 1;
 
     double value = 0;

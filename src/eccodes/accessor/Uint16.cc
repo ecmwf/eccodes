@@ -10,9 +10,6 @@
 
 #include "Uint16.h"
 
-eccodes::accessor::Uint16 _grib_accessor_uint16;
-eccodes::Accessor* grib_accessor_uint16 = &_grib_accessor_uint16;
-
 namespace eccodes::accessor
 {
 

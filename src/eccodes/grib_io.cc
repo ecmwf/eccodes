@@ -10,37 +10,11 @@
 
 #include "grib_api_internal.h"
 #include "ExceptionHandler.h"
+#include "sync/Mutex.h"
 
-#if GRIB_PTHREADS
-static pthread_once_t once    = PTHREAD_ONCE_INIT;
-static pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
-static pthread_mutex_t mutex2 = PTHREAD_MUTEX_INITIALIZER;
-static void init_mutex()
-{
-    pthread_mutexattr_t attr;
-    pthread_mutexattr_init(&attr);
-    pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
-    pthread_mutex_init(&mutex1, &attr);
-    pthread_mutex_init(&mutex2, &attr);
-    pthread_mutexattr_destroy(&attr);
-}
-#elif GRIB_OMP_THREADS
-static int once = 0;
-static omp_nest_lock_t mutex1;
-static omp_nest_lock_t mutex2;
-static void init_mutex()
-{
-    GRIB_OMP_CRITICAL(lock_grib_io_c)
-    {
-        if (once == 0) {
-            omp_init_nest_lock(&mutex1);
-            omp_init_nest_lock(&mutex2);
-            once = 1;
-        }
-    }
-}
-#endif
+static eccodes::sync::Mutex mutex;
 
+#define IDENTIFIER_SIZE 4  // Size of the identifiers like GRIB, BUFR, etc.
 
 #define GRIB 0x47524942
 #define BUDG 0x42554447
@@ -97,18 +71,19 @@ static int read_the_rest(reader* r, size_t message_length, unsigned char* tmp, i
     if (message_length == 0)
         return GRIB_BUFFER_TOO_SMALL;
 
-    buffer_size     = message_length; // store the whole message in the buffer
+    buffer_size = message_length;  // store the whole message in the buffer
     if (no_alloc)
-        buffer_size = 5; // big enough to store the 7777
-    rest            = message_length - already_read;
+        buffer_size = 5;  // big enough to store the 7777
+    rest = message_length - already_read;
     r->message_size = message_length;
-    buffer          = (unsigned char*)r->alloc(r->alloc_data, &buffer_size, &err);
+    buffer = (unsigned char*)r->alloc(r->alloc_data, &buffer_size, &err);
     if (err)
         return err;
 
     if (no_alloc) {
-        r->seek(r->read_data,  rest - 4); // jump to the end before the 7777
-    } else {
+        r->seek(r->read_data, rest - 4);  // jump to the end before the 7777
+    }
+    else {
         if (buffer == NULL || (buffer_size < message_length)) {
             return GRIB_BUFFER_TOO_SMALL;
         }
@@ -134,8 +109,7 @@ static int read_the_rest(reader* r, size_t message_length, unsigned char* tmp, i
         (buffer[mlen - 4] != '7' ||
          buffer[mlen - 3] != '7' ||
          buffer[mlen - 2] != '7' ||
-         buffer[mlen - 1] != '7'))
-    {
+         buffer[mlen - 1] != '7')) {
         if (c->debug)
             fprintf(stderr, "ECCODES DEBUG %s: No final 7777 at expected location (Coded length=%zu)\n", __func__, message_length);
         return GRIB_WRONG_LENGTH;
@@ -160,28 +134,28 @@ static int read_the_rest(reader* r, size_t message_length, unsigned char* tmp, i
 
 static int read_GRIB(reader* r, int no_alloc)
 {
-    unsigned char* tmp  = NULL;
-    size_t length       = 0;
+    unsigned char* tmp = NULL;
+    size_t length = 0;
     size_t total_length = 0;
-    long edition        = 0;
-    int err             = 0;
-    int i               = 0, j;
-    size_t sec1len      = 0;
-    size_t sec2len      = 0;
-    size_t sec3len      = 0;
-    size_t sec4len      = 0;
+    long edition = 0;
+    int err = 0;
+    int i = 0, j;
+    size_t sec1len = 0;
+    size_t sec2len = 0;
+    size_t sec3len = 0;
+    size_t sec4len = 0;
     unsigned long flags;
     size_t buflen = 32768; /* See ECC-515: was 16368 */
     grib_context* c;
     grib_buffer* buf;
 
     /*TODO proper context*/
-    c   = grib_context_get_default();
+    c = grib_context_get_default();
     tmp = (unsigned char*)malloc(buflen);
     if (!tmp)
         return GRIB_OUT_OF_MEMORY;
-    buf           = grib_new_buffer(c, tmp, buflen);
-    buf->property = CODES_MY_BUFFER;
+    buf = grib_new_buffer(c, tmp, buflen);
+    buf->deleter = default_deleter;
 
     tmp[i++] = 'G';
     tmp[i++] = 'R';
@@ -439,7 +413,7 @@ static int read_PSEUDO(reader* r, const char* type, int no_alloc)
     unsigned char tmp[32]; /* Should be enough */
     size_t sec1len = 0;
     size_t sec4len = 0;
-    int err        = 0;
+    int err = 0;
     int i = 0, j = 0;
 
     ECCODES_ASSERT(strlen(type) == 4);
@@ -520,8 +494,8 @@ static int read_HDF5(reader* r)
     unsigned char version_of_superblock, size_of_offsets, size_of_lengths, consistency_flags;
     unsigned long base_address, superblock_extension_address, end_of_file_address;
 
-    int i           = 0, j;
-    int err         = 0;
+    int i = 0, j;
+    int err = 0;
     grib_context* c = grib_context_get_default();
 
     tmp[i++] = 137;
@@ -680,7 +654,7 @@ static int read_WRAP(reader* r)
 
     unsigned long long length = 0;
 
-    int i   = 0, j;
+    int i = 0, j;
     int err = 0;
 
     tmp[i++] = 'W';
@@ -705,23 +679,23 @@ static int read_WRAP(reader* r)
 static int read_BUFR(reader* r, int no_alloc)
 {
     /* unsigned char tmp[65536];*/ /* Should be enough */
-    size_t length      = 0;
-    long edition       = 0;
-    int err            = 0;
-    int i              = 0, j;
-    size_t buflen      = 2048;
+    size_t length = 0;
+    long edition = 0;
+    int err = 0;
+    int i = 0, j;
+    size_t buflen = 2048;
     unsigned char* tmp = NULL;
-    grib_context* c    = NULL;
-    grib_buffer* buf   = NULL;
+    grib_context* c = NULL;
+    grib_buffer* buf = NULL;
 
     /*TODO proper context*/
-    c   = grib_context_get_default();
+    c = grib_context_get_default();
     tmp = (unsigned char*)malloc(buflen);
     if (!tmp)
         return GRIB_OUT_OF_MEMORY;
-    buf           = grib_new_buffer(c, tmp, buflen);
-    buf->property = CODES_MY_BUFFER;
-    r->offset     = r->tell(r->read_data) - 4;
+    buf = grib_new_buffer(c, tmp, buflen);
+    buf->deleter = default_deleter;
+    r->offset = r->tell(r->read_data) - 4;
 
     tmp[i++] = 'B';
     tmp[i++] = 'U';
@@ -821,10 +795,10 @@ static int read_BUFR(reader* r, int no_alloc)
 
             /* Read section 3 */
             if (sec3len < 5) {
-                return GRIB_INVALID_MESSAGE; // ECC-1778
+                return GRIB_INVALID_MESSAGE;  // ECC-1778
             }
             if (sec3len > 10'000'000) {
-                return GRIB_INVALID_MESSAGE; // ECC-1938
+                return GRIB_INVALID_MESSAGE;  // ECC-1938
             }
             if ((r->read(r->read_data, tmp + i, sec3len - 3, &err) != sec3len - 3) || err)
                 return err;
@@ -866,10 +840,12 @@ static int read_BUFR(reader* r, int no_alloc)
 static int ecc_read_any(reader* r, int no_alloc, int grib_ok, int bufr_ok, int hdf5_ok, int wrap_ok)
 {
     unsigned char c;
-    int err             = 0;
+    int err = 0;
     unsigned long magic = 0;
+    off_t offset = r->offset;
 
     while (r->read(r->read_data, &c, 1, &err) == 1 && err == 0) {
+        offset++;
         magic <<= 8;
         magic |= c;
 
@@ -877,6 +853,10 @@ static int ecc_read_any(reader* r, int no_alloc, int grib_ok, int bufr_ok, int h
             case GRIB:
                 if (grib_ok) {
                     err = read_GRIB(r, no_alloc);
+                    // ECC-2167: Offset support in streams (if ftello() fails)
+                    if (r->offset < 0) {                       // ftello() returns -1
+                        r->offset = offset - IDENTIFIER_SIZE;  // Adjust offset manually by subtracting 4 bytes read for 'GRIB'
+                    }
                     return err == GRIB_END_OF_FILE ? GRIB_PREMATURE_END_OF_FILE : err; /* Premature EOF */
                 }
                 break;
@@ -884,6 +864,9 @@ static int ecc_read_any(reader* r, int no_alloc, int grib_ok, int bufr_ok, int h
             case BUFR:
                 if (bufr_ok) {
                     err = read_BUFR(r, no_alloc);
+                    if (r->offset < 0) {
+                        r->offset = offset - IDENTIFIER_SIZE;
+                    }
                     return err == GRIB_END_OF_FILE ? GRIB_PREMATURE_END_OF_FILE : err; /* Premature EOF */
                 }
                 break;
@@ -905,18 +888,27 @@ static int ecc_read_any(reader* r, int no_alloc, int grib_ok, int bufr_ok, int h
             case BUDG:
                 if (grib_ok) {
                     err = read_PSEUDO(r, "BUDG", no_alloc);
+                    if (r->offset < 0) {
+                        r->offset = offset - IDENTIFIER_SIZE;
+                    }
                     return err == GRIB_END_OF_FILE ? GRIB_PREMATURE_END_OF_FILE : err; /* Premature EOF */
                 }
                 break;
             case DIAG:
                 if (grib_ok) {
                     err = read_PSEUDO(r, "DIAG", no_alloc);
+                    if (r->offset < 0) {
+                        r->offset = offset - IDENTIFIER_SIZE;
+                    }
                     return err == GRIB_END_OF_FILE ? GRIB_PREMATURE_END_OF_FILE : err; /* Premature EOF */
                 }
                 break;
             case TIDE:
                 if (grib_ok) {
                     err = read_PSEUDO(r, "TIDE", no_alloc);
+                    if (r->offset < 0) {
+                        r->offset = offset - IDENTIFIER_SIZE;
+                    }
                     return err == GRIB_END_OF_FILE ? GRIB_PREMATURE_END_OF_FILE : err; /* Premature EOF */
                 }
                 break;
@@ -928,39 +920,33 @@ static int ecc_read_any(reader* r, int no_alloc, int grib_ok, int bufr_ok, int h
 
 static int read_any(reader* r, int no_alloc, int grib_ok, int bufr_ok, int hdf5_ok, int wrap_ok)
 {
-    int result = 0;
-
 #ifndef ECCODES_EACH_THREAD_OWN_FILE
     /* If several threads can open the same file, then we need the locks
      * so each thread gets its own message. Otherwise if threads are passed
      * different files, then the lock is not needed
      */
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex1);
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
 #endif
 
-    result = ecc_read_any(r, no_alloc, grib_ok, bufr_ok, hdf5_ok, wrap_ok);
-
-#ifndef ECCODES_EACH_THREAD_OWN_FILE
-    GRIB_MUTEX_UNLOCK(&mutex1);
-#endif
-    return result;
+    return ecc_read_any(r, no_alloc, grib_ok, bufr_ok, hdf5_ok, wrap_ok);
 }
 
 static int read_any_gts(reader* r)
 {
     unsigned char c;
-    int err                 = 0;
-    unsigned char* buffer   = NULL;
-    unsigned long magic     = 0;
-    unsigned long start     = 0x010d0d0a; /* SOH CR CR LF */
-    unsigned long theEnd    = 0x0d0d0a03; /* CR CR LF ETX */
-    unsigned char tmp[16384] = {0,}; /* See ECC-735 */
+    int err = 0;
+    unsigned char* buffer = NULL;
+    unsigned long magic = 0;
+    unsigned long start = 0x010d0d0a;  /* SOH CR CR LF */
+    unsigned long theEnd = 0x0d0d0a03; /* CR CR LF ETX */
+    unsigned char tmp[16384] = { 0 };  /* See ECC-735 */
     size_t message_size = 0;
     size_t already_read = 0;
-    int i               = 0;
+    int i = 0;
+    off_t offset = r->offset;
 
     while (r->read(r->read_data, &c, 1, &err) == 1 && err == 0) {
+        offset++;
         magic <<= 8;
         magic |= c;
         magic &= 0xffffffff;
@@ -971,7 +957,8 @@ static int read_any_gts(reader* r)
             tmp[i++] = 0x0d;
             tmp[i++] = 0x0a;
 
-            r->offset = r->tell(r->read_data) - 4;
+            off_t rTell = r->tell(r->read_data);
+            r->offset = (rTell != -1 ? rTell : offset) - 4;
 
             if (r->read(r->read_data, &tmp[i], 6, &err) != 6 || err)
                 return err == GRIB_END_OF_FILE ? GRIB_PREMATURE_END_OF_FILE : err; /* Premature EOF */
@@ -980,7 +967,7 @@ static int read_any_gts(reader* r)
                 r->seek(r->read_data, -6);
                 continue;
             }
-            magic        = 0;
+            magic = 0;
             already_read = 10;
             message_size = already_read;
             while (r->read(r->read_data, &c, 1, &err) == 1 && err == 0) {
@@ -1010,27 +997,30 @@ static int read_any_gts(reader* r)
 static int read_any_taf(reader* r)
 {
     unsigned char c;
-    int err                 = 0;
-    unsigned char* buffer   = NULL;
-    unsigned long magic     = 0;
-    unsigned long start     = 0x54414620; // 4 chars: TAF plus a space
-    unsigned char tmp[1000] = {0,}; /* Should be enough */
+    int err = 0;
+    unsigned char* buffer = NULL;
+    unsigned long magic = 0;
+    unsigned long start = 0x54414620;  // 4 chars: TAF plus a space
+    unsigned char tmp[1000] = { 0 };   /* Should be enough */
     size_t message_size = 0;
     size_t already_read = 0;
-    int i               = 0;
+    int i = 0;
+    off_t offset = r->offset;
 
     while (r->read(r->read_data, &c, 1, &err) == 1 && err == 0) {
+        offset++;
         magic <<= 8;
         magic |= c;
         magic &= 0xffffffff;
 
         if (magic == start) {
-            tmp[i++] = 0x54; //T
-            tmp[i++] = 0x41; //A
-            tmp[i++] = 0x46; //F
-            tmp[i++] = 0x20; //space
+            tmp[i++] = 0x54;  // T
+            tmp[i++] = 0x41;  // A
+            tmp[i++] = 0x46;  // F
+            tmp[i++] = 0x20;  // space
 
-            r->offset = r->tell(r->read_data) - 4;
+            off_t rTell = r->tell(r->read_data);
+            r->offset = (rTell != -1 ? rTell : offset) - 4;
 
             already_read = 4;
             message_size = already_read;
@@ -1058,16 +1048,18 @@ static int read_any_taf(reader* r)
 static int read_any_metar(reader* r)
 {
     unsigned char c;
-    int err               = 0;
+    int err = 0;
     unsigned char* buffer = NULL;
-    unsigned long magic   = 0;
-    unsigned long start   = 0x4d455441; // 4 chars: META
-    unsigned char tmp[32] = {0,}; /* Should be enough */
+    unsigned long magic = 0;
+    unsigned long start = 0x4d455441;  // 4 chars: META
+    unsigned char tmp[32] = { 0 };     /* Should be enough */
     size_t message_size = 0;
     size_t already_read = 0;
-    int i               = 0;
+    int i = 0;
+    off_t offset = r->offset;
 
     while (r->read(r->read_data, &c, 1, &err) == 1 && err == 0) {
+        offset++;
         magic <<= 8;
         magic |= c;
         magic &= 0xffffffff;
@@ -1076,15 +1068,16 @@ static int read_any_metar(reader* r)
             if (r->read(r->read_data, &c, 1, &err) != 1 || err != 0)
                 break;
             if (c == 'R') {
-                tmp[i++] = 0x4d; // M
-                tmp[i++] = 0x45; // E
-                tmp[i++] = 0x54; // T
-                tmp[i++] = 0x41; // A
+                tmp[i++] = 0x4d;  // M
+                tmp[i++] = 0x45;  // E
+                tmp[i++] = 0x54;  // T
+                tmp[i++] = 0x41;  // A
                 tmp[i++] = 'R';
 
-                r->offset = r->tell(r->read_data) - 4;
-
                 already_read = 5;
+                off_t rTell = r->tell(r->read_data);
+                r->offset = (rTell != -1 ? rTell : offset) - already_read;
+
                 message_size = already_read;
                 while (r->read(r->read_data, &c, 1, &err) == 1 && err == 0) {
                     message_size++;
@@ -1165,7 +1158,7 @@ typedef struct user_buffer_t
 static void* user_provider_buffer(void* data, size_t* length, int* err)
 {
     user_buffer_t* u = (user_buffer_t*)data;
-    *length        = u->buffer_size;
+    *length = u->buffer_size;
     return u->user_buffer;
 }
 
@@ -1179,24 +1172,28 @@ static int ecc_wmo_read_any_from_file(FILE* f, void* buffer, size_t* len, off_t*
     u.user_buffer = buffer;
     u.buffer_size = *len;
 
-    r.read_data       = f;
-    r.read            = &stdio_read;
-    r.alloc_data      = &u;
-    r.alloc           = &user_provider_buffer;
-    r.headers_only    = 0;
-    r.seek            = &stdio_seek;
+    r.read_data = f;
+    r.read = &stdio_read;
+    r.alloc_data = &u;
+    r.alloc = &user_provider_buffer;
+    r.headers_only = 0;
+    r.seek = &stdio_seek;
     r.seek_from_start = &stdio_seek_from_start;
-    r.tell            = &stdio_tell;
-    r.offset          = 0;
-    r.message_size    = 0;
+    r.tell = &stdio_tell;
+    r.offset = *offset;
+    r.message_size = 0;
 
-    err  = read_any(&r, no_alloc, grib_ok, bufr_ok, hdf5_ok, wrap_ok);
+    err = read_any(&r, no_alloc, grib_ok, bufr_ok, hdf5_ok, wrap_ok);
     *len = r.message_size;
     *offset = r.offset;
 
     return err;
 }
 
+int wmo_read_any_from_file_with_offset(FILE* f, void* buffer, size_t* len, off_t* offset)
+{
+    return ecc_wmo_read_any_from_file(f, buffer, len, offset, /*no_alloc=*/0, 1, 1, 1, 1);
+}
 int wmo_read_any_from_file(FILE* f, void* buffer, size_t* len)
 {
     off_t offset = 0;
@@ -1216,31 +1213,31 @@ int wmo_read_bufr_from_file(FILE* f, void* buffer, size_t* len)
 // Fast versions
 int wmo_read_any_from_file_fast(FILE* f, size_t* msg_len, off_t* msg_offset)
 {
-    unsigned char buffer[64] = {0,};
+    unsigned char buffer[64] = { 0 };
     *msg_len = sizeof(buffer);
     return ecc_wmo_read_any_from_file(f, buffer, msg_len, msg_offset, /*no_alloc=*/1, 1, 1, 1, 1);
 }
 int wmo_read_grib_from_file_fast(FILE* f, size_t* msg_len, off_t* msg_offset)
 {
-    unsigned char buffer[64] = {0,};
+    unsigned char buffer[64] = { 0 };
     *msg_len = sizeof(buffer);
     return ecc_wmo_read_any_from_file(f, buffer, msg_len, msg_offset, /*no_alloc=*/1, 1, 0, 0, 0);
 }
 int wmo_read_bufr_from_file_fast(FILE* f, size_t* msg_len, off_t* msg_offset)
 {
-    unsigned char buffer[64] = {0,};
+    unsigned char buffer[64] = { 0 };
     *msg_len = sizeof(buffer);
     return ecc_wmo_read_any_from_file(f, buffer, msg_len, msg_offset, /*no_alloc=*/1, 0, 1, 0, 0);
 }
 int wmo_read_gts_from_file_fast(FILE* f, size_t* msg_len, off_t* msg_offset)
 {
-    //TODO(masn): Needs proper implementation; no malloc
-    //unsigned char buffer[1024] = {0,};
-    void* mesg   = NULL;
-    int err      = GRIB_SUCCESS;
+    // TODO(masn): Needs proper implementation; no malloc
+    // unsigned char buffer[1024] = {0};
+    void* mesg = NULL;
+    int err = GRIB_SUCCESS;
     grib_context* c = grib_context_get_default();
 
-    *msg_len = 1024; // sizeof(buffer)
+    *msg_len = 1024;  // sizeof(buffer)
     mesg = wmo_read_gts_from_file_malloc(f, 0, msg_len, msg_offset, &err);
     grib_context_free(c, mesg);
     return err;
@@ -1255,18 +1252,18 @@ int wmo_read_gts_from_file(FILE* f, void* buffer, size_t* len)
     u.user_buffer = buffer;
     u.buffer_size = *len;
 
-    r.read_data       = f;
-    r.read            = &stdio_read;
-    r.alloc_data      = &u;
-    r.alloc           = &user_provider_buffer;
-    r.headers_only    = 0;
-    r.seek            = &stdio_seek;
+    r.read_data = f;
+    r.read = &stdio_read;
+    r.alloc_data = &u;
+    r.alloc = &user_provider_buffer;
+    r.headers_only = 0;
+    r.seek = &stdio_seek;
     r.seek_from_start = &stdio_seek_from_start;
-    r.tell            = &stdio_tell;
-    r.offset          = 0;
-    r.message_size    = 0;
+    r.tell = &stdio_tell;
+    r.offset = 0;
+    r.message_size = 0;
 
-    err  = read_any_gts(&r);
+    err = read_any_gts(&r);
     *len = r.message_size;
 
     return err;
@@ -1337,7 +1334,7 @@ static int stream_seek(void* data, off_t len)
 static size_t stream_read(void* data, void* buffer, size_t len, int* err)
 {
     stream_struct* s = (stream_struct*)data;
-    long n           = 0;
+    long n = 0;
 
     if (len > LONG_MAX) {
         /* size_t cannot be coded into long */
@@ -1360,8 +1357,8 @@ static size_t stream_read(void* data, void* buffer, size_t len, int* err)
 static void* allocate_buffer(void* data, size_t* length, int* err)
 {
     alloc_buffer* u = (alloc_buffer*)data;
-    u->buffer       = malloc(*length);
-    u->size         = *length;
+    u->buffer = malloc(*length);
+    u->size = *length;
     if (u->buffer == NULL)
         *err = GRIB_OUT_OF_MEMORY; /* Cannot allocate buffer */
     return u->buffer;
@@ -1380,18 +1377,18 @@ int wmo_read_any_from_stream(void* stream_data, long (*stream_proc)(void*, void*
     u.user_buffer = buffer;
     u.buffer_size = *len;
 
-    r.message_size    = 0;
-    r.offset          = 0;
-    r.read_data       = &s;
-    r.read            = &stream_read;
-    r.seek            = &stream_seek;
+    r.message_size = 0;
+    r.offset = 0;
+    r.read_data = &s;
+    r.read = &stream_read;
+    r.seek = &stream_seek;
     r.seek_from_start = &stream_seek;
-    r.tell            = &stream_tell;
-    r.alloc_data      = &u;
-    r.alloc           = &user_provider_buffer;
-    r.headers_only    = 0;
+    r.tell = &stream_tell;
+    r.alloc_data = &u;
+    r.alloc = &user_provider_buffer;
+    r.headers_only = 0;
 
-    err  = read_any(&r, /*no_alloc=*/0, 1, 1, 1, 1);
+    err = read_any(&r, /*no_alloc=*/0, 1, 1, 1, 1);
     *len = r.message_size;
 
     return err;
@@ -1409,18 +1406,18 @@ void* wmo_read_any_from_stream_malloc(void* stream_data, long (*stream_proc)(voi
     s.stream_data = stream_data;
     s.stream_proc = stream_proc;
 
-    r.message_size    = 0;
-    r.offset          = 0;
-    r.read_data       = &s;
-    r.read            = &stream_read;
-    r.seek            = &stream_seek;
+    r.message_size = 0;
+    r.offset = 0;
+    r.read_data = &s;
+    r.read = &stream_read;
+    r.seek = &stream_seek;
     r.seek_from_start = &stream_seek;
-    r.tell            = &stream_tell;
-    r.alloc_data      = &u;
-    r.alloc           = &allocate_buffer;
-    r.headers_only    = 0;
+    r.tell = &stream_tell;
+    r.alloc_data = &u;
+    r.alloc = &allocate_buffer;
+    r.headers_only = 0;
 
-    *err  = read_any(&r, /*no_alloc=*/0, 1, 1, 1, 1);
+    *err = read_any(&r, /*no_alloc=*/0, 1, 1, 1, 1);
     *size = r.message_size;
 
     return u.buffer;
@@ -1437,18 +1434,18 @@ void* wmo_read_gts_from_file_malloc(FILE* f, int headers_only, size_t* size, off
     u.buffer = NULL;
     r.offset = 0;
 
-    r.message_size    = 0;
-    r.read_data       = f;
-    r.read            = &stdio_read;
-    r.seek            = &stdio_seek;
+    r.message_size = 0;
+    r.read_data = f;
+    r.read = &stdio_read;
+    r.seek = &stdio_seek;
     r.seek_from_start = &stdio_seek_from_start;
-    r.tell            = &stdio_tell;
-    r.alloc_data      = &u;
-    r.alloc           = &allocate_buffer;
-    r.headers_only    = headers_only;
+    r.tell = &stdio_tell;
+    r.alloc_data = &u;
+    r.alloc = &allocate_buffer;
+    r.headers_only = headers_only;
 
-    *err    = read_any_gts(&r);
-    *size   = r.message_size;
+    *err = read_any_gts(&r);
+    *size = r.message_size;
     *offset = r.offset;
 
     return u.buffer;
@@ -1462,19 +1459,19 @@ void* wmo_read_taf_from_file_malloc(FILE* f, int headers_only, size_t* size, off
 
     u.buffer = NULL;
 
-    r.read_data       = f;
-    r.read            = &stdio_read;
-    r.alloc_data      = &u;
-    r.alloc           = &allocate_buffer;
-    r.headers_only    = headers_only;
-    r.seek            = &stdio_seek;
+    r.read_data = f;
+    r.read = &stdio_read;
+    r.alloc_data = &u;
+    r.alloc = &allocate_buffer;
+    r.headers_only = headers_only;
+    r.seek = &stdio_seek;
     r.seek_from_start = &stdio_seek_from_start;
-    r.tell            = &stdio_tell;
-    r.offset          = 0;
-    r.message_size    = 0;
+    r.tell = &stdio_tell;
+    r.offset = 0;
+    r.message_size = 0;
 
-    *err    = read_any_taf(&r);
-    *size   = r.message_size;
+    *err = read_any_taf(&r);
+    *size = r.message_size;
     *offset = r.offset;
 
     return u.buffer;
@@ -1488,19 +1485,19 @@ void* wmo_read_metar_from_file_malloc(FILE* f, int headers_only, size_t* size, o
 
     u.buffer = NULL;
 
-    r.read_data       = f;
-    r.read            = &stdio_read;
-    r.alloc_data      = &u;
-    r.alloc           = &allocate_buffer;
-    r.headers_only    = headers_only;
-    r.seek            = &stdio_seek;
+    r.read_data = f;
+    r.read = &stdio_read;
+    r.alloc_data = &u;
+    r.alloc = &allocate_buffer;
+    r.headers_only = headers_only;
+    r.seek = &stdio_seek;
     r.seek_from_start = &stdio_seek_from_start;
-    r.tell            = &stdio_tell;
-    r.offset          = 0;
-    r.message_size    = 0;
+    r.tell = &stdio_tell;
+    r.offset = 0;
+    r.message_size = 0;
 
-    *err    = read_any_metar(&r);
-    *size   = r.message_size;
+    *err = read_any_metar(&r);
+    *size = r.message_size;
     *offset = r.offset;
 
     return u.buffer;
@@ -1508,28 +1505,28 @@ void* wmo_read_metar_from_file_malloc(FILE* f, int headers_only, size_t* size, o
 
 /* This function allocates memory for the result so the user is responsible for freeing it */
 static void* ecc_wmo_read_any_from_file_malloc(FILE* f, int* err, size_t* size, off_t* offset,
-                                            int grib_ok, int bufr_ok, int hdf5_ok, int wrap_ok, int headers_only)
+                                               int grib_ok, int bufr_ok, int hdf5_ok, int wrap_ok, int headers_only)
 {
     alloc_buffer u;
     reader r;
 
     u.buffer = NULL;
-    u.size   = 0;
+    u.size = 0;
 
-    r.message_size    = 0;
-    r.read_data       = f;
-    r.read            = &stdio_read;
-    r.seek            = &stdio_seek;
+    r.message_size = 0;
+    r.read_data = f;
+    r.read = &stdio_read;
+    r.seek = &stdio_seek;
     r.seek_from_start = &stdio_seek_from_start;
-    r.tell            = &stdio_tell;
-    r.alloc_data      = &u;
-    r.alloc           = &allocate_buffer;
-    r.headers_only    = headers_only;
-    r.offset          = 0;
+    r.tell = &stdio_tell;
+    r.alloc_data = &u;
+    r.alloc = &allocate_buffer;
+    r.headers_only = headers_only;
+    r.offset = 0;
 
     *err = read_any(&r, /*no_alloc=*/0, grib_ok, bufr_ok, hdf5_ok, wrap_ok);
 
-    *size   = r.message_size;
+    *size = r.message_size;
     *offset = r.offset;
 
     return u.buffer;
@@ -1563,8 +1560,8 @@ typedef struct context_alloc_buffer
 static void* context_allocate_buffer(void* data, size_t* length, int* err)
 {
     context_alloc_buffer* u = (context_alloc_buffer*)data;
-    u->buffer               = grib_context_malloc(u->ctx, *length);
-    u->length               = *length;
+    u->buffer = grib_context_malloc(u->ctx, *length);
+    u->length = *length;
 
     if (u->buffer == NULL)
         *err = GRIB_OUT_OF_MEMORY; /* Cannot allocate buffer */
@@ -1580,16 +1577,16 @@ int grib_read_any_headers_only_from_file(grib_context* ctx, FILE* f, void* buffe
     u.user_buffer = buffer;
     u.buffer_size = *len;
 
-    r.read_data       = f;
-    r.read            = &stdio_read;
-    r.alloc_data      = &u;
-    r.alloc           = &user_provider_buffer;
-    r.headers_only    = 1;
-    r.seek            = &stdio_seek;
+    r.read_data = f;
+    r.read = &stdio_read;
+    r.alloc_data = &u;
+    r.alloc = &user_provider_buffer;
+    r.headers_only = 1;
+    r.seek = &stdio_seek;
     r.seek_from_start = &stdio_seek_from_start;
-    r.tell            = &stdio_tell;
-    r.offset          = 0;
-    r.message_size    = 0;
+    r.tell = &stdio_tell;
+    r.offset = 0;
+    r.message_size = 0;
 
     err = read_any(&r, /*no_alloc=*/0, 1, ECCODES_READS_BUFR, ECCODES_READS_HDF5, ECCODES_READS_WRAP);
 
@@ -1608,16 +1605,16 @@ int grib_read_any_from_file(grib_context* ctx, FILE* f, void* buffer, size_t* le
     u.user_buffer = buffer;
     u.buffer_size = *len;
 
-    r.read_data       = f;
-    r.read            = &stdio_read;
-    r.alloc_data      = &u;
-    r.alloc           = &user_provider_buffer;
-    r.headers_only    = 0;
-    r.seek            = &stdio_seek;
+    r.read_data = f;
+    r.read = &stdio_read;
+    r.alloc_data = &u;
+    r.alloc = &user_provider_buffer;
+    r.headers_only = 0;
+    r.seek = &stdio_seek;
     r.seek_from_start = &stdio_seek_from_start;
-    r.tell            = &stdio_tell;
-    r.offset          = 0;
-    r.message_size    = 0;
+    r.tell = &stdio_tell;
+    r.offset = 0;
+    r.message_size = 0;
 
     offset = ftello(f);
 
@@ -1674,30 +1671,30 @@ int grib_read_any_from_memory_alloc(grib_context* ctx, unsigned char** data, siz
     context_alloc_buffer u;
     reader r;
 
-    m.data     = *data;
+    m.data = *data;
     m.data_len = *data_length;
 
     u.buffer = NULL;
     u.length = 0;
-    u.ctx    = ctx ? ctx : grib_context_get_default();
+    u.ctx = ctx ? ctx : grib_context_get_default();
 
-    r.read_data       = &m;
-    r.read            = &memory_read;
-    r.alloc_data      = &u;
-    r.alloc           = &context_allocate_buffer;
-    r.headers_only    = 0;
-    r.seek            = &memory_seek;
+    r.read_data = &m;
+    r.read = &memory_read;
+    r.alloc_data = &u;
+    r.alloc = &context_allocate_buffer;
+    r.headers_only = 0;
+    r.seek = &memory_seek;
     r.seek_from_start = &memory_seek;
-    r.tell            = &memory_tell;
-    r.offset          = 0;
-    r.message_size    = 0;
+    r.tell = &memory_tell;
+    r.offset = 0;
+    r.message_size = 0;
 
-    err     = read_any(&r, /*no_alloc=*/0, 1, ECCODES_READS_BUFR, ECCODES_READS_HDF5, ECCODES_READS_WRAP);
+    err = read_any(&r, /*no_alloc=*/0, 1, ECCODES_READS_BUFR, ECCODES_READS_HDF5, ECCODES_READS_WRAP);
     *buffer = u.buffer;
     *length = u.length;
 
     *data_length = m.data_len;
-    *data        = m.data;
+    *data = m.data;
 
     return err;
 }
@@ -1709,27 +1706,27 @@ int grib_read_any_from_memory(grib_context* ctx, unsigned char** data, size_t* d
     user_buffer_t u;
     reader r;
 
-    m.data     = *data;
+    m.data = *data;
     m.data_len = *data_length;
 
     u.user_buffer = buffer;
     u.buffer_size = *len;
 
-    r.read_data       = &m;
-    r.read            = &memory_read;
-    r.alloc_data      = &u;
-    r.alloc           = &user_provider_buffer;
-    r.headers_only    = 0;
-    r.seek            = &memory_seek;
+    r.read_data = &m;
+    r.read = &memory_read;
+    r.alloc_data = &u;
+    r.alloc = &user_provider_buffer;
+    r.headers_only = 0;
+    r.seek = &memory_seek;
     r.seek_from_start = &memory_seek;
-    r.tell            = &memory_tell;
-    r.offset          = 0;
-    r.message_size    = 0;
+    r.tell = &memory_tell;
+    r.offset = 0;
+    r.message_size = 0;
 
-    err  = read_any(&r, /*no_alloc=*/0, 1, ECCODES_READS_BUFR, ECCODES_READS_HDF5, ECCODES_READS_WRAP);
+    err = read_any(&r, /*no_alloc=*/0, 1, ECCODES_READS_BUFR, ECCODES_READS_HDF5, ECCODES_READS_WRAP);
     *len = r.message_size;
     *data_length = m.data_len;
-    *data        = m.data;
+    *data = m.data;
 
     return err;
 }
@@ -1737,7 +1734,7 @@ int grib_read_any_from_memory(grib_context* ctx, unsigned char** data, size_t* d
 static int grib_count_in_file_(grib_context* c, FILE* f, int* n)
 {
     int err = 0;
-    *n      = 0;
+    *n = 0;
     if (!c)
         c = grib_context_get_default();
 
@@ -1750,7 +1747,7 @@ static int grib_count_in_file_(grib_context* c, FILE* f, int* n)
         }
     }
     else {
-        size_t size  = 0;
+        size_t size = 0;
         off_t offset = 0;
         while ((err = wmo_read_any_from_file_fast(f, &size, &offset)) == GRIB_SUCCESS) {
             (*n)++;
@@ -1771,7 +1768,7 @@ int grib_count_in_file(grib_context* c, FILE* f, int* n)
 
 static int grib_count_in_filename_(grib_context* c, const char* filename, int* n)
 {
-    int err  = 0;
+    int err = 0;
     FILE* fp = NULL;
     if (!c)
         c = grib_context_get_default();
@@ -1798,10 +1795,14 @@ typedef int (*decoder_proc)(FILE* f, size_t* size, off_t* offset);
 static decoder_proc get_reader_for_product(ProductKind product)
 {
     decoder_proc decoder = NULL;
-    if      (product == PRODUCT_GRIB) decoder = &wmo_read_grib_from_file_fast;
-    else if (product == PRODUCT_BUFR) decoder = &wmo_read_bufr_from_file_fast;
-    else if (product == PRODUCT_GTS)  decoder = &wmo_read_gts_from_file_fast;
-    else if (product == PRODUCT_ANY)  decoder = &wmo_read_any_from_file_fast;
+    if (product == PRODUCT_GRIB)
+        decoder = &wmo_read_grib_from_file_fast;
+    else if (product == PRODUCT_BUFR)
+        decoder = &wmo_read_bufr_from_file_fast;
+    else if (product == PRODUCT_GTS)
+        decoder = &wmo_read_gts_from_file_fast;
+    else if (product == PRODUCT_ANY)
+        decoder = &wmo_read_any_from_file_fast;
     return decoder;
 }
 
@@ -1824,7 +1825,7 @@ static int count_product_in_file(grib_context* c, FILE* f, ProductKind product, 
         err = GRIB_NOT_IMPLEMENTED;
     }
     else {
-        size_t size  = 0;
+        size_t size = 0;
         off_t offset = 0;
         while ((err = decoder(f, &size, &offset)) == GRIB_SUCCESS) {
             (*count)++;
@@ -1841,8 +1842,8 @@ static int codes_extract_offsets_malloc_internal(
     int* number_of_elements,
     int strict_mode)
 {
-    int err      = 0;
-    size_t size  = 0;
+    int err = 0;
+    size_t size = 0;
     off_t offset = 0;
     int num_messages = 0, i = 0;
     decoder_proc decoder = NULL;

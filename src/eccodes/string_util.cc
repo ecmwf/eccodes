@@ -9,6 +9,7 @@
  */
 
 #include "grib_api_internal.h"
+#include <algorithm>
 
 // Compare two strings ignoring case.
 // strcasecmp is not in the C standard. However, it's defined by
@@ -78,15 +79,15 @@ const char* extract_filename(const char* filepath)
 //       Splitting with several delimiters is not supported.
 char** string_split(char* inputString, const char* delimiter)
 {
-    char** result       = NULL;
-    char* p             = inputString;
+    char** result = NULL;
+    char* p = inputString;
     char* lastDelimiter = NULL;
-    char* aToken        = NULL;
-    char* lasts         = NULL;
-    size_t numTokens    = 0;
-    size_t strLength    = 0;
-    size_t index        = 0;
-    char delimiterChar  = 0;
+    char* aToken = NULL;
+    char* lasts = NULL;
+    size_t numTokens = 0;
+    size_t strLength = 0;
+    size_t index = 0;
+    char delimiterChar = 0;
 
     DEBUG_ASSERT(inputString);
     DEBUG_ASSERT(delimiter && (strlen(delimiter) == 1));
@@ -101,9 +102,9 @@ char** string_split(char* inputString, const char* delimiter)
     }
     strLength = strlen(inputString);
     if (lastDelimiter < (inputString + strLength - 1)) {
-        ++numTokens; // there is a trailing token
+        ++numTokens;  // there is a trailing token
     }
-    ++numTokens; // terminating NULL string to mark the end
+    ++numTokens;  // terminating NULL string to mark the end
 
     result = (char**)malloc(numTokens * sizeof(char*));
     ECCODES_ASSERT(result);
@@ -113,7 +114,7 @@ char** string_split(char* inputString, const char* delimiter)
     while (aToken) {
         ECCODES_ASSERT(index < numTokens);
         *(result + index++) = strdup(aToken);
-        aToken              = strtok_r(NULL, delimiter, &lasts);
+        aToken = strtok_r(NULL, delimiter, &lasts);
     }
     ECCODES_ASSERT(index == numTokens - 1);
     *(result + index) = NULL;
@@ -134,7 +135,7 @@ int string_to_long(const char* input, long* output, int strict)
         return GRIB_INVALID_ARGUMENT;
 
     errno = 0;
-    val   = strtol(input, &endptr, base);
+    val = strtol(input, &endptr, base);
     if ((errno == ERANGE && (val == LONG_MAX || val == LONG_MIN)) ||
         (errno != 0 && val == 0)) {
         // perror("strtol");
@@ -169,7 +170,7 @@ int string_count_char(const char* str, char c)
 {
     int i = 0, count = 0;
     DEBUG_ASSERT(str);
-    for (i=0; str[i]; i++) {
+    for (i = 0; str[i]; i++) {
         if (str[i] == c) count++;
     }
     return count;
@@ -215,7 +216,7 @@ const char* grib_get_type_name(int type)
 
 // Replace all occurrences of character in string.
 // Returns pointer to the NUL byte at the end of 's'
-char* string_replace_char(char *s, char oldc, char newc)
+char* string_replace_char(char* s, char oldc, char newc)
 {
     for (; *s; ++s)
         if (*s == oldc)
@@ -229,13 +230,37 @@ void string_remove_char(char* str, char c)
     size_t i, j;
     DEBUG_ASSERT(str);
     size_t len = strlen(str);
-    for(i=0; i<len; i++) {
-        if(str[i] == c) {
-            for(j=i; j<len; j++) {
-                str[j] = str[j+1];
+    for (i = 0; i < len; i++) {
+        if (str[i] == c) {
+            for (j = i; j < len; j++) {
+                str[j] = str[j + 1];
             }
             len--;
             i--;
         }
     }
+}
+
+
+size_t levenshteinDistance(const char* a, const char* b)
+{
+    const size_t m = strlen(a);
+    const size_t n = strlen(b);
+
+    // Use a single-row approach: prev holds the previous row, curr the current
+    std::vector<size_t> prev(n + 1);
+    std::vector<size_t> curr(n + 1);
+
+    for (size_t j = 0; j <= n; ++j)
+        prev[j] = j;
+
+    for (size_t i = 1; i <= m; ++i) {
+        curr[0] = i;
+        for (size_t j = 1; j <= n; ++j) {
+            size_t cost = (a[i - 1] == b[j - 1]) ? 0 : 1;
+            curr[j] = std::min({ prev[j] + 1, curr[j - 1] + 1, prev[j - 1] + cost });
+        }
+        std::swap(prev, curr);
+    }
+    return prev[n];
 }

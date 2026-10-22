@@ -74,7 +74,7 @@ int main(int argc, char** argv) {
      are preserved when packing.  */
   decimalPrecision=2;
   GRIB_CHECK(grib_set_long(h,"setDecimalPrecision",decimalPrecision),0);
-   
+
   /* bitsPerValue after changing the packing parameters */
   GRIB_CHECK(grib_get_long(h,"bitsPerValue",&bitsPerValue2),0);
 
@@ -107,7 +107,7 @@ int main(int argc, char** argv) {
   GRIB_CHECK(grib_get_message(h,&buffer,&size),0);
 
   /* write the buffer in a file*/
-  if(fwrite(buffer,1,size,out) != size) 
+  if(fwrite(buffer,1,size,out) != size)
   {
      perror(argv[1]);
      exit(1);
@@ -121,4 +121,3 @@ int main(int argc, char** argv) {
 
   return 0;
 }
-

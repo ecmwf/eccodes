@@ -24,7 +24,6 @@ class Figure;
 class Grid;
 class Iterator;
 class Projection;
-class Spec;
 }  // namespace eckit::geo
 
 
@@ -32,9 +31,8 @@ namespace eccodes::geo
 {
 
 
-using Grid       = ::eckit::geo::Grid;
+using Grid = ::eckit::geo::Grid;
 using Projection = ::eckit::geo::Projection;
-using Spec       = ::eckit::geo::Spec;
 
 
 bool codes_check_error(int e, const char* call);
@@ -49,11 +47,11 @@ struct grib_info
 {
     grib_info();
     grib_info(const grib_info&) = delete;
-    grib_info(grib_info&&)      = delete;
+    grib_info(grib_info&&) = delete;
 
     ~grib_info() = default;
 
-    void operator=(grib_info&&)      = delete;
+    void operator=(grib_info&&) = delete;
     void operator=(const grib_info&) = delete;
 
     void extra_set(const char* key, long);

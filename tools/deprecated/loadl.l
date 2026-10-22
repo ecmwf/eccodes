@@ -79,4 +79,3 @@ FLOAT3    {DIGIT}+{EXP}?
 .       return *yytext;
 
 %%
-

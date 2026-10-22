@@ -1,4 +1,4 @@
-#SET( CMAKE_C_FLAGS "-fsanitize=thread" CACHE STRING "Enable clang thread sanitizer" ) 
+#SET( CMAKE_C_FLAGS "-fsanitize=thread" CACHE STRING "Enable clang thread sanitizer" )
 
 # Compilation fails for fortran bindings and clang
 #SET( ENABLE_FORTRAN OFF CACHE BOOL "Disable Fortran")

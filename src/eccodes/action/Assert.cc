@@ -9,6 +9,7 @@
  */
 
 #include "Assert.h"
+#include "grib_accessor_factory.h"
 
 grib_action* grib_action_create_assert(grib_context* context, grib_expression* expression)
 {
@@ -21,10 +22,10 @@ namespace eccodes::action
 Assert::Assert(grib_context* context, grib_expression* expression)
 {
     class_name_ = "action_class_assert";
-    next_       = NULL;
-    name_       = grib_context_strdup_persistent(context, "assertion");
-    op_         = grib_context_strdup_persistent(context, "evaluate");
-    context_    = context;
+    next_ = NULL;
+    name_ = grib_context_strdup_persistent(context, "assertion");
+    op_ = grib_context_strdup_persistent(context, "evaluate");
+    context_ = context;
     expression_ = expression;
 }
 
@@ -53,18 +54,18 @@ int Assert::create_accessor(grib_section* p, grib_loader* h)
     return GRIB_SUCCESS;
 }
 
-//void Assert::dump(FILE* f, int lvl)
+// void Assert::dump(FILE* f, int lvl)
 //{
-    // int i = 0;
-    // for (i = 0; i < lvl; i++)
-    //     grib_context_print(act->context, f, "     ");
-    // grib_expression_print(act->context, self->expression, 0);
-    // printf("\n");
+//  int i = 0;
+//  for (i = 0; i < lvl; i++)
+//      grib_context_print(act->context, f, "     ");
+//  grib_expression_print(act->context, self->expression, 0);
+//  printf("\n");
 //}
 
 int Assert::execute(grib_handle* h)
 {
-    int ret    = 0;
+    int ret = 0;
     double res = 0;
 
     if ((ret = expression_->evaluate_double(h, &res)) != GRIB_SUCCESS)

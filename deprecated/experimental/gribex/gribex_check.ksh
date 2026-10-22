@@ -23,7 +23,7 @@ do
 
 	if [ $ngribex != $ngrib_api ]
 	then
-		echo gribex count != grib_api count:  $ngribex != $ngrib_api 
+		echo gribex count != grib_api count:  $ngribex != $ngrib_api
 		echo $file - ERR -
 #	exit 1
 	fi
@@ -31,13 +31,9 @@ do
 	(( diff=ngrib_api_all - ngrib_api ))
 	if [ $diff != 0 ]
 	then
-		echo $file == $diff GRIB 2 messages == 
+		echo $file == $diff GRIB 2 messages ==
 	else
 		echo $file - OK -
 	fi
 
 done
-
-
-
-

@@ -16,42 +16,10 @@
 #define UNDEF_LONG   -99999
 #define UNDEF_DOUBLE -99999
 
-#define NULL_MARKER 0
+#define NULL_MARKER     0
 #define NOT_NULL_MARKER 255
 
 #define GRIB_KEY_UNDEF "undef"
-
-/* #if GRIB_PTHREADS */
-// static pthread_once_t once  = PTHREAD_ONCE_INIT;
-// static pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
-// static pthread_mutex_t mutex2 = PTHREAD_MUTEX_INITIALIZER;
-
-// static void init() {
-//     pthread_mutexattr_t attr;
-//     pthread_mutexattr_init(&attr);
-//     pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE);
-//     pthread_mutex_init(&mutex1,&attr);
-//     pthread_mutex_init(&mutex2,&attr);
-//     pthread_mutexattr_destroy(&attr);
-
-// }
-// /* #elif GRIB_OMP_THREADS */
-// static int once = 0;
-// static omp_nest_lock_t mutex1;
-// static omp_nest_lock_t mutex2;
-
-// static void init()
-// {
-//     GRIB_OMP_CRITICAL(lock_grib_index_c)
-//     {
-//         if (once == 0)
-//         {
-//             omp_init_nest_lock(&mutex1);
-//             omp_init_nest_lock(&mutex2);
-//             once = 1;
-//         }
-//     }
-// }
 
 static const char* mars_keys =
     "mars.date,mars.time,mars.expver,mars.stream,mars.class,mars.type,mars.channel,mars.generation,"
@@ -71,12 +39,12 @@ static int codes_index_add_file_internal(grib_index* index, const char* filename
 static char* get_key(char** keys, int* type)
 {
     char* key = NULL;
-    char* p   = NULL;
+    char* p = NULL;
 
     if (keys == NULL || *keys == 0)
         return NULL;
     *type = GRIB_TYPE_UNDEFINED;
-    p     = *keys;
+    p = *keys;
     while (*p == ' ')
         p++;
 
@@ -84,7 +52,7 @@ static char* get_key(char** keys, int* type)
         p++;
     if (*p == ':') {
         *type = grib_type_to_int(*(p + 1));
-        *p    = 0;
+        *p = 0;
         p++;
         while (*p != 0 && *p != ',') {
             *(p++) = 0;
@@ -96,7 +64,7 @@ static char* get_key(char** keys, int* type)
         *p = 0;
         p++;
     }
-    key   = *keys;
+    key = *keys;
     *keys = *p == 0 ? NULL : p;
     return key;
 }
@@ -141,7 +109,7 @@ static int grib_index_keys_compress(grib_context* c, grib_index* index, int* com
 {
     grib_index_key* keys = index->keys->next;
     grib_index_key* prev = index->keys;
-    int level            = 0;
+    int level = 0;
 
     if (!keys)
         return 0;
@@ -152,20 +120,20 @@ static int grib_index_keys_compress(grib_context* c, grib_index* index, int* com
             prev->next = keys->next;
             grib_context_free(c, keys->name);
             grib_context_free(c, keys);
-            keys            = prev->next;
+            keys = prev->next;
             compress[level] = 1;
             level++;
         }
         else {
-            prev            = keys;
-            keys            = keys->next;
+            prev = keys;
+            keys = keys->next;
             compress[level] = 0;
             level++;
         }
     }
 
     if (index->keys->values_count == 1) {
-        keys        = index->keys;
+        keys = index->keys;
         index->keys = index->keys->next;
         grib_context_free(c, keys->name);
         grib_context_free(c, keys);
@@ -216,9 +184,9 @@ static int grib_index_fields_compress(grib_context* c,
 
 int grib_index_compress(grib_index* index)
 {
-    int err           = 0;
-    grib_context* c   = index->context;
-    int compress[200] = {0,};
+    int err = 0;
+    grib_context* c = index->context;
+    int compress[200] = { 0 };
 
     if (!index->keys->next)
         return 0;
@@ -260,7 +228,7 @@ static grib_index_key* grib_index_new_key(grib_context* c, grib_index_key* keys,
     next->values = values;
 
     if (!keys) {
-        keys    = next;
+        keys = next;
         current = keys;
     }
     else {
@@ -268,7 +236,7 @@ static grib_index_key* grib_index_new_key(grib_context* c, grib_index_key* keys,
         while (current->next)
             current = current->next;
         current->next = next;
-        current       = current->next;
+        current = current->next;
     }
 
     current->type = type;
@@ -378,8 +346,8 @@ static int grib_write_not_null_marker(FILE* fh)
 static char* grib_read_string(grib_context* c, FILE* fh, int* err)
 {
     unsigned char len = 0;
-    char* s           = NULL;
-    *err              = grib_read_uchar(fh, &len);
+    char* s = NULL;
+    *err = grib_read_uchar(fh, &len);
 
     if (*err)
         return NULL;
@@ -443,18 +411,18 @@ static grib_field* grib_read_field(grib_context* c, FILE* fh, grib_file** files,
 
     index_count++;
     field = (grib_field*)grib_context_malloc(c, sizeof(grib_field));
-    *err  = grib_read_short(fh, &file_id);
+    *err = grib_read_short(fh, &file_id);
     if (*err)
         return NULL;
 
     field->file = files[file_id];
 
-    *err          = grib_read_unsigned_long(fh, &offset);
+    *err = grib_read_unsigned_long(fh, &offset);
     field->offset = offset;
     if (*err)
         return NULL;
 
-    *err          = grib_read_unsigned_long(fh, &length);
+    *err = grib_read_unsigned_long(fh, &length);
     field->length = length;
     if (*err)
         return NULL;
@@ -496,8 +464,8 @@ static int grib_write_field_tree(FILE* fh, grib_field_tree* tree)
 grib_field_tree* grib_read_field_tree(grib_context* c, FILE* fh, grib_file** files, int* err)
 {
     grib_field_tree* tree = NULL;
-    unsigned char marker  = 0;
-    *err                  = grib_read_uchar(fh, &marker);
+    unsigned char marker = 0;
+    *err = grib_read_uchar(fh, &marker);
 
     if (marker == NULL_MARKER)
         return NULL;
@@ -506,7 +474,7 @@ grib_field_tree* grib_read_field_tree(grib_context* c, FILE* fh, grib_file** fil
         return NULL;
     }
 
-    tree        = (grib_field_tree*)grib_context_malloc(c, sizeof(grib_field_tree));
+    tree = (grib_field_tree*)grib_context_malloc(c, sizeof(grib_field_tree));
     tree->field = grib_read_field(c, fh, files, err);
     if (*err)
         return NULL;
@@ -559,7 +527,7 @@ static grib_index* grib_index_new_(grib_context* c, const char* key, int* err)
         if (*err)
             return NULL;
     }
-    index->keys   = keys;
+    index->keys = keys;
     index->fields = (grib_field_tree*)grib_context_malloc_clear(c,
                                                                 sizeof(grib_field_tree));
     if (!index->fields) {
@@ -618,7 +586,7 @@ static grib_string_list* grib_read_key_values(grib_context* c, FILE* fh, int* er
 
     values_count++;
 
-    values        = (grib_string_list*)grib_context_malloc_clear(c, sizeof(grib_string_list));
+    values = (grib_string_list*)grib_context_malloc_clear(c, sizeof(grib_string_list));
     values->value = grib_read_string(c, fh, err);
     if (*err)
         return NULL;
@@ -656,7 +624,7 @@ static grib_index_key* grib_read_index_keys(grib_context* c, FILE* fh, int* err)
 {
     grib_index_key* keys = NULL;
     unsigned char marker = 0;
-    unsigned char type   = 0;
+    unsigned char type = 0;
 
     if (!c)
         c = grib_context_get_default();
@@ -669,12 +637,12 @@ static grib_index_key* grib_read_index_keys(grib_context* c, FILE* fh, int* err)
         return NULL;
     }
 
-    keys       = (grib_index_key*)grib_context_malloc_clear(c, sizeof(grib_index_key));
+    keys = (grib_index_key*)grib_context_malloc_clear(c, sizeof(grib_index_key));
     keys->name = grib_read_string(c, fh, err);
     if (*err)
         return NULL;
 
-    *err       = grib_read_uchar(fh, &type);
+    *err = grib_read_uchar(fh, &type);
     keys->type = type;
     if (*err)
         return NULL;
@@ -762,7 +730,7 @@ static void grib_field_list_delete(grib_context* c, grib_field_list* field_list)
         return;
     while (p) {
         grib_field_list* q = p;
-        p                  = p->next;
+        p = p->next;
         grib_context_free(c, q);
     }
 }
@@ -775,7 +743,7 @@ static void grib_index_delete_(grib_index* index)
     grib_field_list_delete(index->context, index->fieldset);
     while (file) {
         grib_file* f = file;
-        file         = file->next;
+        file = file->next;
         grib_file_pool_delete_clone(f);
     }
     grib_context_free(index->context, index);
@@ -812,7 +780,7 @@ static int grib_write_files(FILE* fh, grib_file* files)
 static grib_file* grib_read_files(grib_context* c, FILE* fh, int* err)
 {
     unsigned char marker = 0;
-    short id             = 0;
+    short id = 0;
     grib_file* file;
     *err = grib_read_uchar(fh, &marker);
     if (marker == NULL_MARKER)
@@ -822,12 +790,12 @@ static grib_file* grib_read_files(grib_context* c, FILE* fh, int* err)
         return NULL;
     }
 
-    file       = (grib_file*)grib_context_malloc(c, sizeof(grib_file));
+    file = (grib_file*)grib_context_malloc(c, sizeof(grib_file));
     file->name = grib_read_string(c, fh, err);
     if (*err)
         return NULL;
 
-    *err     = grib_read_short(fh, &id);
+    *err = grib_read_short(fh, &id);
     file->id = id;
     if (*err)
         return NULL;
@@ -875,7 +843,7 @@ static int grib_index_write_(grib_index* index, const char* filename)
     /* See GRIB-32: Do not use the file pool */
     /* files=grib_file_pool_get_files(); */
     files = index->files;
-    err   = grib_write_files(fh, files);
+    err = grib_write_files(fh, files);
     if (err) {
         grib_context_log(index->context, (GRIB_LOG_ERROR) | (GRIB_LOG_PERROR),
                          "Unable to write in file %s", filename);
@@ -920,11 +888,11 @@ static grib_index* grib_index_read_(grib_context* c, const char* filename, int* 
 {
     grib_file *file, *f;
     grib_file** files;
-    grib_index* index    = NULL;
+    grib_index* index = NULL;
     unsigned char marker = 0;
-    char* identifier     = NULL;
-    int max              = 0;
-    FILE* fh             = NULL;
+    char* identifier = NULL;
+    int max = 0;
+    FILE* fh = NULL;
     ProductKind product_kind = PRODUCT_GRIB;
 
     if (!c)
@@ -945,7 +913,7 @@ static grib_index* grib_index_read_(grib_context* c, const char* filename, int* 
         return NULL;
     }
 
-    if (strcmp(identifier, "BFRIDX1")==0) product_kind = PRODUCT_BUFR;
+    if (strcmp(identifier, "BFRIDX1") == 0) product_kind = PRODUCT_BUFR;
     grib_context_free(c, identifier);
 
     *err = grib_read_uchar(fh, &marker);
@@ -978,17 +946,17 @@ static grib_index* grib_index_read_(grib_context* c, const char* filename, int* 
         if (*err)
             return NULL;
         files[f->id] = grib_get_file(f->name, err); /* fetch from pool */
-        f            = f->next;
+        f = f->next;
     }
 
     while (file) {
-        f    = file;
+        f = file;
         file = file->next;
         grib_context_free(c, f->name);
         grib_context_free(c, f);
     }
 
-    index          = (grib_index*)grib_context_malloc_clear(c, sizeof(grib_index));
+    index = (grib_index*)grib_context_malloc_clear(c, sizeof(grib_index));
     index->context = c;
     index->product_kind = product_kind;
 
@@ -996,7 +964,7 @@ static grib_index* grib_index_read_(grib_context* c, const char* filename, int* 
     if (*err)
         return NULL;
 
-    index_count   = 0;
+    index_count = 0;
     index->fields = grib_read_field_tree(c, fh, files, err);
     if (*err)
         return NULL;
@@ -1017,11 +985,11 @@ grib_index* grib_index_read(grib_context* c, const char* filename, int* err)
 
 int grib_index_search_same(grib_index* index, grib_handle* h)
 {
-    int err        = 0;
-    char buf[STRING_VALUE_LEN] = {0,};
+    int err = 0;
+    char buf[STRING_VALUE_LEN] = { 0 };
     size_t buflen = STRING_VALUE_LEN;
     grib_index_key* keys;
-    long lval   = 0;
+    long lval = 0;
     double dval = 0.0;
     grib_context* c = NULL;
 
@@ -1078,9 +1046,12 @@ int grib_index_search_same(grib_index* index, grib_handle* h)
 static int grib_index_add_file_(grib_index* index, const char* filename)
 {
     int message_type = 0;
-    if (index->product_kind == PRODUCT_GRIB) message_type = CODES_GRIB;
-    else if (index->product_kind == PRODUCT_BUFR) message_type = CODES_BUFR;
-    else return GRIB_INVALID_ARGUMENT;
+    if (index->product_kind == PRODUCT_GRIB)
+        message_type = CODES_GRIB;
+    else if (index->product_kind == PRODUCT_BUFR)
+        message_type = CODES_BUFR;
+    else
+        return GRIB_INVALID_ARGUMENT;
 
     return codes_index_add_file_internal(index, filename, message_type);
 }
@@ -1110,12 +1081,12 @@ static int codes_index_add_file_internal(grib_index* index, const char* filename
     size_t svallen;
     size_t message_count = 0;
     long length, lval;
-    char buf[1024] = {0,};
+    char buf[1024] = { 0 };
     int err = 0;
     grib_file* indfile;
 
     grib_index_key* index_key = NULL;
-    grib_handle* h            = NULL;
+    grib_handle* h = NULL;
     grib_field* field;
     grib_field_tree* field_tree;
     grib_file* file = NULL;
@@ -1154,8 +1125,8 @@ static int codes_index_add_file_internal(grib_index* index, const char* filename
     std::map<off_t, grib_handle*> map_of_offsets;
     while ((h = new_message_from_file(message_type, c, file->handle, &err)) != NULL) {
         grib_string_list* v = 0;
-        index_key           = index->keys;
-        field_tree          = index->fields;
+        index_key = index->keys;
+        field_tree = index->fields;
         index_key->value[0] = 0;
         message_count++;
 
@@ -1165,17 +1136,18 @@ static int codes_index_add_file_internal(grib_index* index, const char* filename
             if (envsetkeys) {
                 grib_values set_values[MAX_NUM_KEYS];
                 int set_values_count = MAX_NUM_KEYS;
-                std::string copy_of_env(envsetkeys); //parse_keyval_string changes envsetkeys!
+                std::string copy_of_env(envsetkeys);  // parse_keyval_string changes envsetkeys!
                 int error = parse_keyval_string(NULL, envsetkeys, 1, GRIB_TYPE_UNDEFINED,
-                        set_values, &set_values_count);
+                                                set_values, &set_values_count);
                 if (!error && set_values_count != 0) {
                     err = grib_set_values(h, set_values, set_values_count);
                     if (err) {
                         grib_context_log(c, GRIB_LOG_ERROR,
-                                        "codes_index_add_file: Unable to set %s", copy_of_env.c_str());
+                                         "codes_index_add_file: Unable to set %s", copy_of_env.c_str());
                         return err;
                     }
-                } else {
+                }
+                else {
                     grib_context_log(c, GRIB_LOG_ERROR, "codes_index_add_file: Unable to parse %s (%s)",
                                      set_keys_env_var, grib_get_error_message(error));
                     return error;
@@ -1241,7 +1213,7 @@ static int codes_index_add_file_internal(grib_index* index, const char* filename
                     index_key->values_count++;
                     if (v->next)
                         v = v->next;
-                    v->next        = (grib_string_list*)grib_context_malloc_clear(c, sizeof(grib_string_list));
+                    v->next = (grib_string_list*)grib_context_malloc_clear(c, sizeof(grib_string_list));
                     v->next->value = grib_context_strdup(c, buf);
                 }
             }
@@ -1259,7 +1231,7 @@ static int codes_index_add_file_internal(grib_index* index, const char* filename
                     field_tree->next =
                         (grib_field_tree*)grib_context_malloc_clear(c,
                                                                     sizeof(grib_field_tree));
-                    field_tree        = field_tree->next;
+                    field_tree = field_tree->next;
                     field_tree->value = grib_context_strdup(c, buf);
                 }
             }
@@ -1274,12 +1246,12 @@ static int codes_index_add_file_internal(grib_index* index, const char* filename
             index_key = index_key->next;
         }
 
-        field       = (grib_field*)grib_context_malloc_clear(c, sizeof(grib_field));
+        field = (grib_field*)grib_context_malloc_clear(c, sizeof(grib_field));
         field->file = file;
         index->count++;
         field->offset = h->offset;
         if (warn_about_duplicates) {
-            const bool offset_is_unique = map_of_offsets.insert( std::pair<off_t, grib_handle*>(h->offset, h) ).second;
+            const bool offset_is_unique = map_of_offsets.insert(std::pair<off_t, grib_handle*>(h->offset, h)).second;
             if (!offset_is_unique) {
                 fprintf(stderr, "ECCODES WARNING :  File '%s': field offset %ld is not unique.\n", filename, (long)h->offset);
                 long edition = 0;
@@ -1306,7 +1278,7 @@ static int codes_index_add_file_internal(grib_index* index, const char* filename
             field_tree->field = field;
 
         grib_handle_delete(h);
-    }/*foreach message*/
+    } /*foreach message*/
 
     grib_file_close(file->name, 0, &err);
 
@@ -1330,7 +1302,7 @@ static int codes_index_add_file_internal(grib_index* index, const char* filename
 //     double dval;
 //     size_t svallen;
 //     long length,lval;
-//     char buf[1024]={0,};
+//     char buf[1024]={0};
 //     int err=0;
 //     grib_file* indfile;
 //     grib_file* newfile;
@@ -1546,7 +1518,7 @@ static int grib_index_get_string_(const grib_index* index, const char* key, char
         if (kv->value == NULL)
             return GRIB_IO_PROBLEM;
         values[i++] = grib_context_strdup(index->context, kv->value);
-        kv          = kv->next;
+        kv = kv->next;
     }
     *size = k->values_count;
     qsort(values, *size, sizeof(char*), &compare_string);
@@ -1637,7 +1609,7 @@ int grib_index_get_double(const grib_index* index, const char* key, double* valu
 static int grib_index_select_long_(grib_index* index, const char* skey, long value)
 {
     grib_index_key* key = NULL;
-    int err             = GRIB_NOT_FOUND;
+    int err = GRIB_NOT_FOUND;
 
     if (!index) {
         grib_context* c = grib_context_get_default();
@@ -1645,7 +1617,7 @@ static int grib_index_select_long_(grib_index* index, const char* skey, long val
         return GRIB_INTERNAL_ERROR;
     }
     index->orderby = 0;
-    key            = index->keys;
+    key = index->keys;
 
     while (key) {
         if (!strcmp(key->name, skey)) {
@@ -1676,7 +1648,7 @@ int grib_index_select_long(grib_index* index, const char* skey, long value)
 static int grib_index_select_double_(grib_index* index, const char* skey, double value)
 {
     grib_index_key* key = NULL;
-    int err             = GRIB_NOT_FOUND;
+    int err = GRIB_NOT_FOUND;
 
     if (!index) {
         grib_context* c = grib_context_get_default();
@@ -1684,7 +1656,7 @@ static int grib_index_select_double_(grib_index* index, const char* skey, double
         return GRIB_INTERNAL_ERROR;
     }
     index->orderby = 0;
-    key            = index->keys;
+    key = index->keys;
 
     while (key) {
         if (!strcmp(key->name, skey)) {
@@ -1715,7 +1687,7 @@ int grib_index_select_double(grib_index* index, const char* skey, double value)
 static int grib_index_select_string_(grib_index* index, const char* skey, const char* value)
 {
     grib_index_key* key = NULL;
-    int err             = GRIB_NOT_FOUND;
+    int err = GRIB_NOT_FOUND;
 
     if (!index) {
         grib_context* c = grib_context_get_default();
@@ -1723,7 +1695,7 @@ static int grib_index_select_string_(grib_index* index, const char* skey, const 
         return GRIB_INTERNAL_ERROR;
     }
     index->orderby = 0;
-    key            = index->keys;
+    key = index->keys;
 
     while (key) {
         if (!strcmp(key->name, skey)) {
@@ -1798,7 +1770,7 @@ static int grib_index_execute(grib_index* index)
         return GRIB_INTERNAL_ERROR;
     keys = index->keys;
 
-    fields        = index->fields;
+    fields = index->fields;
     index->rewind = 0;
 
     while (keys) {
@@ -1816,7 +1788,7 @@ static int grib_index_execute(grib_index* index)
             fields = fields->next;
         if (fields && !strcmp(fields->value, value)) {
             if (fields->next_level) {
-                keys   = keys->next;
+                keys = keys->next;
                 fields = fields->next_level;
             }
             else {
@@ -1837,7 +1809,7 @@ static int grib_index_execute(grib_index* index)
 static void grib_dump_key_values(FILE* fout, grib_string_list* values)
 {
     grib_string_list* sl = values;
-    int first            = 1; /* boolean for commas */
+    int first = 1; /* boolean for commas */
     fprintf(fout, "values = ");
     while (sl) {
         if (!first) {
@@ -1845,7 +1817,7 @@ static void grib_dump_key_values(FILE* fout, grib_string_list* values)
         }
         fprintf(fout, "%s", sl->value);
         first = 0;
-        sl    = sl->next;
+        sl = sl->next;
     }
     fprintf(fout, "\n");
 }
@@ -1883,22 +1855,22 @@ static void grib_dump_field(FILE* fout, grib_field* field)
 }
 static void grib_dump_field_tree(FILE* fout, grib_field_tree* tree)
 {
-    if(!tree) return;
-    grib_dump_field(fout,tree->field);
+    if (!tree) return;
+    grib_dump_field(fout, tree->field);
 
     fprintf(fout, "tree value = %s\n", tree->value);
 
-    grib_dump_field_tree(fout,tree->next_level);
-    grib_dump_field_tree(fout,tree->next);
+    grib_dump_field_tree(fout, tree->next_level);
+    grib_dump_field_tree(fout, tree->next);
 }
 #endif
 
 int grib_index_dump_file(FILE* fout, const char* filename, unsigned long flags)
 {
-    int err           = 0;
+    int err = 0;
     grib_index* index = NULL;
-    grib_context* c   = grib_context_get_default();
-    FILE* fh          = NULL;
+    grib_context* c = grib_context_get_default();
+    FILE* fh = NULL;
 
     ECCODES_ASSERT(fout);
     ECCODES_ASSERT(filename);
@@ -1912,7 +1884,7 @@ int grib_index_dump_file(FILE* fout, const char* filename, unsigned long flags)
     if (fh) {
         grib_file *file, *f;
         unsigned char marker = 0;
-        char* identifier     = grib_read_string(c, fh, &err);
+        char* identifier = grib_read_string(c, fh, &err);
         if (err)
             return err;
         grib_context_free(c, identifier);
@@ -1965,7 +1937,7 @@ char* grib_get_field_file(grib_index* index, off_t* offset)
 {
     char* file = NULL;
     if (index && index->current && index->current->field) {
-        file    = index->current->field->file->name;
+        file = index->current->field->file->name;
         *offset = index->current->field->offset;
     }
     return file;
@@ -1992,7 +1964,7 @@ grib_handle* codes_new_from_index(grib_index* index, int message_type, int* err)
 {
     /*grib_index_key* keys;*/
     grib_field_list *fieldset, *next;
-    grib_handle* h  = NULL;
+    grib_handle* h = NULL;
     grib_context* c = NULL;
     *err = 0;
 
@@ -2037,13 +2009,13 @@ grib_handle* codes_new_from_index(grib_index* index, int message_type, int* err)
             fieldset = next;
         }
         fieldset->field = NULL;
-        fieldset->next  = NULL;
+        fieldset->next = NULL;
         index->fieldset = fieldset;
-        index->current  = fieldset;
+        index->current = fieldset;
     }
 
     *err = GRIB_END_OF_INDEX;
-    h    = NULL;
+    h = NULL;
     /*keys=index->keys;*/
 
     if ((*err = grib_index_execute(index)) == GRIB_SUCCESS) {
@@ -2052,7 +2024,7 @@ grib_handle* codes_new_from_index(grib_index* index, int message_type, int* err)
             return NULL;
         }
         index->current = index->fieldset;
-        h              = codes_index_get_handle(index->current->field, message_type, err);
+        h = codes_index_get_handle(index->current->field, message_type, err);
     }
     return h;
 }
@@ -2096,7 +2068,8 @@ int codes_index_set_product_kind(grib_index* index, ProductKind product_kind)
 
     if (product_kind == PRODUCT_GRIB || product_kind == PRODUCT_BUFR) {
         index->product_kind = product_kind;
-    } else {
+    }
+    else {
         return GRIB_INVALID_ARGUMENT;
     }
     return GRIB_SUCCESS;
@@ -2116,13 +2089,13 @@ int codes_index_set_unpack_bufr(grib_index* index, int unpack)
 int is_index_file(const char* filename)
 {
     FILE* fh;
-    char buf[8] = {0,};
+    char buf[8] = { 0 };
     /* Only read the first 6 characters of identifier. Exclude version */
     const size_t numChars = 6;
-    const char* id_grib   = "GRBIDX";
-    const char* id_bufr   = "BFRIDX";
-    int ret         = 0;
-    size_t size     = 0;
+    const char* id_grib = "GRBIDX";
+    const char* id_bufr = "BFRIDX";
+    int ret = 0;
+    size_t size = 0;
 
     fh = fopen(filename, "r");
     if (!fh)
@@ -2139,7 +2112,7 @@ int is_index_file(const char* filename)
         return 0;
     }
 
-    ret = (strcmp(buf, id_grib)==0 || strcmp(buf, id_bufr)==0);
+    ret = (strcmp(buf, id_grib) == 0 || strcmp(buf, id_bufr) == 0);
 
     fclose(fh);
 

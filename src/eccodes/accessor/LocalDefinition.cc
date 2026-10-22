@@ -10,9 +10,6 @@
 
 #include "LocalDefinition.h"
 
-eccodes::accessor::LocalDefinition _grib_accessor_local_definition;
-eccodes::Accessor* grib_accessor_local_definition = &_grib_accessor_local_definition;
-
 namespace eccodes::accessor
 {
 
@@ -22,15 +19,15 @@ void LocalDefinition::init(const long l, grib_arguments* c)
     grib_handle* hand = get_enclosing_handle();
     int n = 0;
 
-    grib2LocalSectionNumber_                 = c->get_name(hand, n++);
-    productDefinitionTemplateNumber_         = c->get_name(hand, n++);
+    grib2LocalSectionNumber_ = c->get_name(hand, n++);
+    productDefinitionTemplateNumber_ = c->get_name(hand, n++);
     productDefinitionTemplateNumberInternal_ = c->get_name(hand, n++);
-    type_                                    = c->get_name(hand, n++);
-    stream_                                  = c->get_name(hand, n++);
-    the_class_                               = c->get_name(hand, n++);
-    eps_                                     = c->get_name(hand, n++);
-    stepType_                                = c->get_name(hand, n++);
-    derivedForecast_                         = c->get_name(hand, n++);
+    type_ = c->get_name(hand, n++);
+    stream_ = c->get_name(hand, n++);
+    the_class_ = c->get_name(hand, n++);
+    eps_ = c->get_name(hand, n++);
+    stepType_ = c->get_name(hand, n++);
+    derivedForecast_ = c->get_name(hand, n++);
 }
 
 int LocalDefinition::unpack_long(long* val, size_t* len)
@@ -40,24 +37,24 @@ int LocalDefinition::unpack_long(long* val, size_t* len)
 
 int LocalDefinition::pack_long(const long* val, size_t* len)
 {
-    grib_handle* hand                            = get_enclosing_handle();
-    long productDefinitionTemplateNumber         = -1;
+    grib_handle* hand = get_enclosing_handle();
+    long productDefinitionTemplateNumber = -1;
     long productDefinitionTemplateNumberInternal = -1;
-    long productDefinitionTemplateNumberNew      = -1;
-    long grib2LocalSectionNumber                 = -1;
-    long type                                    = -1;
-    long stream                                  = -1;
-    long the_class                               = -1;
-    long eps                                     = -1;
-    long chemical                                = -1;
-    long aerosol                                 = -1;
-    char stepType[15]                            = {0,};
-    size_t slen               = 15;
+    long productDefinitionTemplateNumberNew = -1;
+    long grib2LocalSectionNumber = -1;
+    long type = -1;
+    long stream = -1;
+    long the_class = -1;
+    long eps = -1;
+    long chemical = -1;
+    long aerosol = -1;
+    char stepType[15] = { 0 };
+    size_t slen = 15;
     int localDefinitionNumber = *val;
-    int isInstant             = 0;
-    int tooEarly              = 0;
-    long derivedForecast      = -1;
-    long editionNumber        = 0;
+    int isInstant = 0;
+    int tooEarly = 0;
+    long derivedForecast = -1;
+    long editionNumber = 0;
 
     if (grib_get_long(hand, "editionNumber", &editionNumber) == GRIB_SUCCESS) {
         ECCODES_ASSERT(editionNumber != 1);
@@ -115,14 +112,14 @@ int LocalDefinition::pack_long(const long* val, size_t* len)
                 // type=em || type=es
                 if (type == 17) {
                     productDefinitionTemplateNumberNew = 2;
-                    derivedForecast                    = 0;
+                    derivedForecast = 0;
                 }
                 else if (type == 18) {
                     productDefinitionTemplateNumberNew = 2;
-                    derivedForecast                    = 4;
-                    // eps or enda or elda or ewla
+                    derivedForecast = 4;
+                    // eps or enda or elda or ewla or xwda
                 }
-                else if (eps == 1 || stream == 1030 || stream == 1249 || stream == 1250) {
+                else if (eps == 1 || stream == 1030 || stream == 1249 || stream == 1250 || stream == 1259) {
                     productDefinitionTemplateNumberNew = 1;
                 }
                 else {
@@ -133,14 +130,14 @@ int LocalDefinition::pack_long(const long* val, size_t* len)
                 // type=em || type=es
                 if (type == 17) {
                     productDefinitionTemplateNumberNew = 12;
-                    derivedForecast                    = 0;
+                    derivedForecast = 0;
                 }
                 else if (type == 18) {
                     productDefinitionTemplateNumberNew = 12;
-                    derivedForecast                    = 4;
-                    // eps or enda or elda or ewla
+                    derivedForecast = 4;
+                    // eps or enda or elda or ewla or xwda
                 }
-                else if (eps == 1 || stream == 1030 || stream == 1249 || stream == 1250) {
+                else if (eps == 1 || stream == 1030 || stream == 1249 || stream == 1250 || stream == 1259) {
                     productDefinitionTemplateNumberNew = 11;
                 }
                 else {
@@ -231,7 +228,9 @@ int LocalDefinition::pack_long(const long* val, size_t* len)
     if (derivedForecast >= 0)
         grib_set_long(hand, derivedForecast_, derivedForecast);
 
-    grib_set_long(hand, grib2LocalSectionNumber_, *val);
+    if (*val > 0) {  // ECC-2215
+        grib_set_long(hand, grib2LocalSectionNumber_, *val);
+    }
 
     return 0;
 }

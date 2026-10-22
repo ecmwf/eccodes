@@ -10,9 +10,6 @@
 
 #include "G2Grid.h"
 
-eccodes::accessor::G2Grid _grib_accessor_g2grid;
-eccodes::Accessor* grib_accessor_g2grid = &_grib_accessor_g2grid;
-
 namespace eccodes::accessor
 {
 
@@ -20,16 +17,16 @@ void G2Grid::init(const long l, grib_arguments* c)
 {
     Double::init(l, c);
     grib_handle* hand = get_enclosing_handle();
-    int n             = 0;
+    int n = 0;
 
-    latitude_first_  = c->get_name(hand, n++);
+    latitude_first_ = c->get_name(hand, n++);
     longitude_first_ = c->get_name(hand, n++);
-    latitude_last_   = c->get_name(hand, n++);
-    longitude_last_  = c->get_name(hand, n++);
-    i_increment_     = c->get_name(hand, n++);
-    j_increment_     = c->get_name(hand, n++);
-    basic_angle_     = c->get_name(hand, n++);
-    sub_division_    = c->get_name(hand, n++);
+    latitude_last_ = c->get_name(hand, n++);
+    longitude_last_ = c->get_name(hand, n++);
+    i_increment_ = c->get_name(hand, n++);
+    j_increment_ = c->get_name(hand, n++);
+    basic_angle_ = c->get_name(hand, n++);
+    sub_division_ = c->get_name(hand, n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC | GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
@@ -54,7 +51,7 @@ int G2Grid::unpack_double(double* val, size_t* len)
         return ret;
     }
 
-    long basic_angle  = 0;
+    long basic_angle = 0;
     if ((ret = grib_get_long_internal(hand, basic_angle_, &basic_angle)) != GRIB_SUCCESS)
         return ret;
 
@@ -118,18 +115,17 @@ static long lcm(long a, long b)
 
 static int is_ok(const double* val, long v[6], double basic_angle, double sub_division)
 {
-    int i;
     int ok = 1;
 
-    for (i = 0; i < 6; i++) {
+    for (int i = 0; i < 6; i++) {
         if (val[i] == GRIB_MISSING_DOUBLE)
             v[i] = GRIB_MISSING_LONG;
         else {
             double d = (val[i] * sub_division) / basic_angle;
             double e;
-            d    = round(d); /* GRIB-941 */
+            d = round(d); /* GRIB-941 */
             v[i] = d;
-            e    = (v[i] * basic_angle) / sub_division;
+            e = (v[i] * basic_angle) / sub_division;
 
             /* if(fabs(e - val[i]) >= 1e-6) */
             if (fabs(e - val[i]) > 0) {
@@ -158,7 +154,7 @@ static int trial(const double* val, long v[6], long* basic_angle, long* sub_divi
     ni = (long)(0.5 + fabs((val[0] - val[2]) / val[4])) + 1;
     nj = (long)(0.5 + fabs((val[1] - val[3]) / val[5])) + 1;
 
-    *basic_angle  = 360;
+    *basic_angle = 360;
     *sub_division = lcm(ni, nj);
 
     // printf("ni = %ld, nj = %ld , basic_angle=%ld sub_division = %ld\n",
@@ -188,13 +184,13 @@ int G2Grid::pack_double(const double* val, size_t* len)
     /* printf("pack_double %g %g %g %g %g %g\n",val[0],val[1],val[2],val[3],val[4],val[5]);*/
 
     if (is_ok(val, v, 1, ANGLE_SUBDIVISIONS)) {
-        basic_angle  = 1;
+        basic_angle = 1;
         sub_division = ANGLE_SUBDIVISIONS;
     }
     else if (trial(val, v, &basic_angle, &sub_division)) {
     }
     else {
-        basic_angle  = 1;
+        basic_angle = 1;
         sub_division = ANGLE_SUBDIVISIONS;
 
         if (!is_ok(val, v, basic_angle, sub_division))
@@ -202,7 +198,7 @@ int G2Grid::pack_double(const double* val, size_t* len)
     }
 
     if (basic_angle == 1 && sub_division == ANGLE_SUBDIVISIONS) {
-        basic_angle  = 0;
+        basic_angle = 0;
         sub_division = GRIB_MISSING_LONG;
     }
 

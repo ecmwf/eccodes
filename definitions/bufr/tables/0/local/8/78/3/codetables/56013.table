@@ -1,0 +1,11 @@
+0 0 No distinct orientation
+1 1 NE - SW
+2 2 E - W
+3 3 SE - NW
+4 4 N - S
+5 5 Parallels shore at east
+6 6 Parallels shore at south
+7 7 Parallels shore at west
+8 8 Parallels shore at north
+9 9 Not determined or unknown
+15 15 Missing value

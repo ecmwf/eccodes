@@ -9,6 +9,7 @@
  */
 
 #include "grib_api_internal.h"
+#include "sync/Mutex.h"
 
 /* Note: all non-alpha are mapped to 0 */
 static const int mapping[] = {
@@ -272,33 +273,8 @@ static const int mapping[] = {
 
 #define SIZE 40
 
-#if GRIB_PTHREADS
-static pthread_once_t once   = PTHREAD_ONCE_INIT;
-static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+static eccodes::sync::Mutex mutex;
 
-static void init_mutex()
-{
-    pthread_mutexattr_t attr;
-    pthread_mutexattr_init(&attr);
-    pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
-    pthread_mutex_init(&mutex, &attr);
-    pthread_mutexattr_destroy(&attr);
-}
-#elif GRIB_OMP_THREADS
-static int once = 0;
-static omp_nest_lock_t mutex;
-
-static void init_mutex()
-{
-    GRIB_OMP_CRITICAL(lock_grib_itrie_c)
-    {
-        if (once == 0) {
-            omp_init_nest_lock(&mutex);
-            once = 1;
-        }
-    }
-}
-#endif
 struct grib_itrie
 {
     grib_itrie* next[SIZE];
@@ -311,17 +287,15 @@ struct grib_itrie
 grib_itrie* grib_itrie_new(grib_context* c, int* count)
 {
     grib_itrie* t = (grib_itrie*)grib_context_malloc_clear(c, sizeof(grib_itrie));
-    t->context    = c;
-    t->id         = -1;
-    t->count      = count;
+    t->context = c;
+    t->id = -1;
+    t->count = count;
     return t;
 }
 
 void grib_itrie_delete(grib_itrie* t)
 {
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex);
-
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
     if (t) {
         int i;
         for (i = 0; i < SIZE; i++)
@@ -330,39 +304,33 @@ void grib_itrie_delete(grib_itrie* t)
 
         grib_context_free(t->context, t);
     }
-
-    GRIB_MUTEX_UNLOCK(&mutex);
 }
 
 int grib_itrie_get_id(grib_itrie* t, const char* key)
 {
-    const char* k    = key;
+    const char* k = key;
     grib_itrie* last = t;
     if (!t) {
         ECCODES_ASSERT(!"grib_itrie_get_id: grib_trie==NULL");
         return -1;
     }
 
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex);
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
 
     while (*k && t)
         t = t->next[mapping[(int)*k++]];
 
     if (t != NULL && t->id != -1) {
-        GRIB_MUTEX_UNLOCK(&mutex);
         return t->id;
     }
     else {
-        int ret = grib_itrie_insert(last, key);
-        GRIB_MUTEX_UNLOCK(&mutex);
-        return ret;
+        return grib_itrie_insert(last, key);
     }
 }
 
 int grib_itrie_insert(grib_itrie* t, const char* key)
 {
-    const char* k    = key;
+    const char* k = key;
     grib_itrie* last = t;
     int* count;
 
@@ -371,14 +339,13 @@ int grib_itrie_insert(grib_itrie* t, const char* key)
         return -1;
     }
 
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex);
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
 
     count = t->count;
 
     while (*k && t) {
         last = t;
-        t    = t->next[mapping[(int)*k]];
+        t = t->next[mapping[(int)*k]];
         if (t)
             k++;
     }
@@ -386,9 +353,9 @@ int grib_itrie_insert(grib_itrie* t, const char* key)
     if (*k != 0) {
         t = last;
         while (*k) {
-            int j      = mapping[(int)*k++];
+            int j = mapping[(int)*k++];
             t->next[j] = grib_itrie_new(t->context, count);
-            t          = t->next[j];
+            t = t->next[j];
         }
     }
     if (*(t->count) < MAX_NUM_CONCEPTS) {
@@ -400,8 +367,6 @@ int grib_itrie_insert(grib_itrie* t, const char* key)
                          "grib_itrie_insert: too many accessors, increase MAX_NUM_CONCEPTS\n");
         ECCODES_ASSERT(*(t->count) < MAX_NUM_CONCEPTS);
     }
-
-    GRIB_MUTEX_UNLOCK(&mutex);
 
     /*printf("grib_itrie_get_id: %s -> %d\n",key,t->id);*/
 

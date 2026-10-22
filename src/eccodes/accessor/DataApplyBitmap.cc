@@ -10,9 +10,6 @@
 
 #include "DataApplyBitmap.h"
 
-eccodes::accessor::DataApplyBitmap _grib_accessor_data_apply_bitmap;
-eccodes::Accessor* grib_accessor_data_apply_bitmap = &_grib_accessor_data_apply_bitmap;
-
 namespace eccodes::accessor
 {
 
@@ -22,12 +19,12 @@ void DataApplyBitmap::init(const long v, grib_arguments* args)
     int n = 0;
     grib_handle* hand = get_enclosing_handle();
 
-    coded_values_          = args->get_name(hand, n++);
-    bitmap_                = args->get_name(hand, n++);
-    missing_value_         = args->get_name(hand, n++);
-    binary_scale_factor_   = args->get_name(hand, n++);
-    number_of_data_points_ = args->get_name(hand, n++); // can be NULL
-    number_of_values_      = args->get_name(hand, n++); // can be NULL
+    coded_values_ = args->get_name(hand, n++);
+    bitmap_ = args->get_name(hand, n++);
+    missing_value_ = args->get_name(hand, n++);
+    binary_scale_factor_ = args->get_name(hand, n++);
+    number_of_data_points_ = args->get_name(hand, n++);  // can be NULL
+    number_of_values_ = args->get_name(hand, n++);       // can be NULL
 
     length_ = 0;
 }
@@ -57,12 +54,12 @@ int DataApplyBitmap::unpack_double_element(size_t idx, double* val)
     grib_handle* gh = get_enclosing_handle();
     size_t i = 0, cidx = 0;
     double missing_value = 0;
-    double* bvals        = NULL;
-    size_t n_vals        = 0;
-    long nn              = 0;
+    double* bvals = NULL;
+    size_t n_vals = 0;
+    long nn = 0;
 
     int err = value_count(&nn);
-    n_vals  = nn;
+    n_vals = nn;
     if (err)
         return err;
 
@@ -101,15 +98,15 @@ int DataApplyBitmap::unpack_double_element_set(const size_t* index_array, size_t
 {
     grib_handle* gh = get_enclosing_handle();
     int err = 0, all_missing = 1;
-    size_t cidx          = 0;    /* index into the coded_values array */
-    size_t* cidx_array   = NULL; /* array of indexes into the coded_values */
-    double* cval_array   = NULL; /* array of values of the coded_values */
+    size_t cidx = 0;           /* index into the coded_values array */
+    size_t* cidx_array = NULL; /* array of indexes into the coded_values */
+    double* cval_array = NULL; /* array of values of the coded_values */
     double missing_value = 0;
-    double* bvals        = NULL;
+    double* bvals = NULL;
     size_t n_vals = 0, i = 0, j = 0, idx = 0, count_1s = 0, ci = 0;
     long nn = 0;
 
-    err    = value_count(&nn);
+    err = value_count(&nn);
     n_vals = nn;
     if (err) return err;
 
@@ -150,7 +147,7 @@ int DataApplyBitmap::unpack_double_element_set(const size_t* index_array, size_t
     ci = 0;
     for (i = 0; i < len; i++) {
         if (val_array[i] == 1) {
-            idx  = index_array[i];
+            idx = index_array[i];
             cidx = 0;
             for (j = 0; j < idx; j++) {
                 cidx += bvals[j];
@@ -179,14 +176,14 @@ int DataApplyBitmap::unpack_double_element_set(const size_t* index_array, size_t
 
 int DataApplyBitmap::pack_double(const double* val, size_t* len)
 {
-    int err              = 0;
-    size_t bmaplen       = *len;
-    long coded_n_vals    = 0;
-    double* coded_vals   = NULL;
-    long j               = 0;
+    int err = 0;
+    size_t bmaplen = *len;
+    long coded_n_vals = 0;
+    double* coded_vals = NULL;
+    long j = 0;
     double missing_value = 0;
-    grib_handle* hand    = get_enclosing_handle();
-    grib_context* ctxt   = context_;
+    grib_handle* hand = get_enclosing_handle();
+    grib_context* ctxt = context_;
 
     if (*len == 0)
         return GRIB_NO_VALUES;
@@ -240,17 +237,17 @@ int DataApplyBitmap::unpack(T* val, size_t* len)
 {
     static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
 
-    size_t i             = 0;
-    size_t j             = 0;
-    size_t n_vals        = 0;
-    long nn              = 0;
-    size_t coded_n_vals  = 0;
-    T* coded_vals        = NULL;
+    size_t i = 0;
+    size_t j = 0;
+    size_t n_vals = 0;
+    long nn = 0;
+    size_t coded_n_vals = 0;
+    T* coded_vals = NULL;
     double missing_value = 0;
-    grib_handle* hand    = get_enclosing_handle();
+    grib_handle* hand = get_enclosing_handle();
 
     int err = value_count(&nn);
-    n_vals  = nn;
+    n_vals = nn;
     if (err)
         return err;
 
@@ -351,14 +348,14 @@ long DataApplyBitmap::get_native_type()
 
 int DataApplyBitmap::compare(grib_accessor* b)
 {
-    int retval   = GRIB_SUCCESS;
+    int retval = GRIB_SUCCESS;
     double* aval = 0;
     double* bval = 0;
 
     size_t alen = 0;
     size_t blen = 0;
-    int err     = 0;
-    long count  = 0;
+    int err = 0;
+    long count = 0;
 
     err = value_count(&count);
     if (err)

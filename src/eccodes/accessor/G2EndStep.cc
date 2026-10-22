@@ -12,39 +12,36 @@
 #include "step_utilities.h"
 #include <stdexcept>
 
-eccodes::accessor::G2EndStep _grib_accessor_g2end_step;
-eccodes::Accessor* grib_accessor_g2end_step = &_grib_accessor_g2end_step;
-
 namespace eccodes::accessor
 {
 
 void G2EndStep::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
-    int n          = 0;
+    int n = 0;
     grib_handle* h = get_enclosing_handle();
 
     start_step_value_ = c->get_name(h, n++);
-    step_units_       = c->get_name(h, n++);
+    step_units_ = c->get_name(h, n++);
 
-    year_   = c->get_name(h, n++);
-    month_  = c->get_name(h, n++);
-    day_    = c->get_name(h, n++);
-    hour_   = c->get_name(h, n++);
+    year_ = c->get_name(h, n++);
+    month_ = c->get_name(h, n++);
+    day_ = c->get_name(h, n++);
+    hour_ = c->get_name(h, n++);
     minute_ = c->get_name(h, n++);
     second_ = c->get_name(h, n++);
 
-    year_of_end_of_interval_   = c->get_name(h, n++);
-    month_of_end_of_interval_  = c->get_name(h, n++);
-    day_of_end_of_interval_    = c->get_name(h, n++);
-    hour_of_end_of_interval_   = c->get_name(h, n++);
+    year_of_end_of_interval_ = c->get_name(h, n++);
+    month_of_end_of_interval_ = c->get_name(h, n++);
+    day_of_end_of_interval_ = c->get_name(h, n++);
+    hour_of_end_of_interval_ = c->get_name(h, n++);
     minute_of_end_of_interval_ = c->get_name(h, n++);
     second_of_end_of_interval_ = c->get_name(h, n++);
 
-    time_range_unit_     = c->get_name(h, n++);
-    time_range_value_    = c->get_name(h, n++);
+    time_range_unit_ = c->get_name(h, n++);
+    time_range_value_ = c->get_name(h, n++);
     typeOfTimeIncrement_ = c->get_name(h, n++);
-    numberOfTimeRanges_  = c->get_name(h, n++);
+    numberOfTimeRanges_ = c->get_name(h, n++);
 }
 
 void G2EndStep::dump(eccodes::Dumper* dumper)
@@ -55,14 +52,14 @@ void G2EndStep::dump(eccodes::Dumper* dumper)
 // See GRIB-488
 static bool is_special_expver(const grib_handle* h)
 {
-    char strMarsExpVer[50] = {0,};
-    char strMarsClass[50] = {0,};
+    char strMarsExpVer[50] = { 0 };
+    char strMarsClass[50] = { 0 };
     size_t slen = 50;
     int ret = grib_get_string(h, "mars.class", strMarsClass, &slen);
     if (ret == GRIB_SUCCESS && STR_EQUAL(strMarsClass, "em")) {
         // em = ERA-CLIM model integration for the 20th-century (ERA-20CM)
         slen = 50;
-        ret  = grib_get_string(h, "experimentVersionNumber", strMarsExpVer, &slen);
+        ret = grib_get_string(h, "experimentVersionNumber", strMarsExpVer, &slen);
         if (ret == GRIB_SUCCESS && STR_EQUAL(strMarsExpVer, "1605")) {
             return true;  // Special case of expVer 1605 in class "em"
         }
@@ -99,7 +96,9 @@ int G2EndStep::unpack_one_time_range_long_(long* val, size_t* len)
     long step_units;
     long time_range_unit;
     long time_range_value, typeOfTimeIncrement;
-    int add_time_range = 1; /* whether we add lengthOfTimeRange */
+    int add_time_range = 1;             /* whether we add lengthOfTimeRange */
+    long MTG2Switch = 0;                /* use the MTG2 switch value to deprecate old hacky logic */
+    long typeOfTimeIncrementSwitch = 0; /* configurable switch to enable endStep for typeOfTimeIncrement=1 */
 
     grib_handle* h = get_enclosing_handle();
 
@@ -113,16 +112,21 @@ int G2EndStep::unpack_one_time_range_long_(long* val, size_t* len)
         return err;
     if ((err = grib_get_long_internal(h, typeOfTimeIncrement_, &typeOfTimeIncrement)))
         return err;
+    if ((err = grib_get_long_internal(h, "MTG2Switch", &MTG2Switch)))
+        return err;
+    if ((err = grib_get_long_internal(h, "typeOfTimeIncrementSwitch", &typeOfTimeIncrementSwitch)))
+        return err;
 
     err = convert_time_range_long_(h, step_units, time_range_unit, &time_range_value);
     if (err != GRIB_SUCCESS)
         return err;
 
-    if (typeOfTimeIncrement == 1) {
-        /* See GRIB-488 */
+    if (typeOfTimeIncrement == 1 && MTG2Switch == 0) {
+        /* See GRIB-488 & ECC-1734 */
         /* Note: For this case, lengthOfTimeRange is not related to step and should not be used to calculate step */
         add_time_range = 0;
-        if (is_special_expver(h)) {
+        /* Check if typeOfTimeIncrementSwitch is enabled, or if it's a special expver case */
+        if (typeOfTimeIncrementSwitch == 1 || is_special_expver(h)) {
             add_time_range = 1;
         }
     }
@@ -142,14 +146,16 @@ int G2EndStep::unpack_one_time_range_long_(long* val, size_t* len)
 
 int G2EndStep::unpack_one_time_range_double_(double* val, size_t* len)
 {
-    int err                          = 0;
+    int err = 0;
     double start_step_value;
     long start_step_unit;
     long step_units;
     long time_range_unit;
     double time_range_value;
     long typeOfTimeIncrement;
-    int add_time_range = 1; /* whether we add lengthOfTimeRange */
+    int add_time_range = 1;             /* whether we add lengthOfTimeRange */
+    long MTG2Switch = 0;                /* use the MTG2 switch value to deprecate old hacky logic */
+    long typeOfTimeIncrementSwitch = 0; /* configurable switch to enable endStep for typeOfTimeIncrement=1 */
 
     grib_handle* h = get_enclosing_handle();
 
@@ -165,15 +171,20 @@ int G2EndStep::unpack_one_time_range_double_(double* val, size_t* len)
         return err;
     if ((err = grib_get_long_internal(h, typeOfTimeIncrement_, &typeOfTimeIncrement)))
         return err;
+    if ((err = grib_get_long_internal(h, "MTG2Switch", &MTG2Switch)))
+        return err;
+    if ((err = grib_get_long_internal(h, "typeOfTimeIncrementSwitch", &typeOfTimeIncrementSwitch)))
+        return err;
 
     eccodes::Step start_step{ start_step_value, start_step_unit };
     eccodes::Step time_range{ time_range_value, time_range_unit };
 
-    if (typeOfTimeIncrement == 1) {
-        /* See GRIB-488 */
+    if (typeOfTimeIncrement == 1 && MTG2Switch == 0) {
+        /* See GRIB-488 & ECC-1734 */
         /* Note: For this case, lengthOfTimeRange is not related to step and should not be used to calculate step */
         add_time_range = 0;
-        if (is_special_expver(h)) {
+        /* Check if typeOfTimeIncrementSwitch is enabled, or if it's a special expver case */
+        if (typeOfTimeIncrementSwitch == 1 || is_special_expver(h)) {
             add_time_range = 1;
         }
     }
@@ -195,13 +206,13 @@ int G2EndStep::unpack_one_time_range_double_(double* val, size_t* len)
 int G2EndStep::unpack_multiple_time_ranges_long_(long* val, size_t* len)
 {
     int err = 0;
-    grib_handle* h          = get_enclosing_handle();
+    grib_handle* h = get_enclosing_handle();
     long numberOfTimeRanges = 0, step_units = 0, start_step_value = 0;
 
     size_t count = 0;
-    long arr_typeOfTimeIncrement[MAX_NUM_TIME_RANGES] = {0,};
-    long arr_coded_unit[MAX_NUM_TIME_RANGES] = {0,};
-    long arr_coded_time_range[MAX_NUM_TIME_RANGES] = {0,};
+    long arr_typeOfTimeIncrement[MAX_NUM_TIME_RANGES] = { 0 };
+    long arr_coded_unit[MAX_NUM_TIME_RANGES] = { 0 };
+    long arr_coded_time_range[MAX_NUM_TIME_RANGES] = { 0 };
 
     if ((err = grib_get_long_internal(h, start_step_value_, &start_step_value)))
         return err;
@@ -223,20 +234,48 @@ int G2EndStep::unpack_multiple_time_ranges_long_(long* val, size_t* len)
     if ((err = grib_get_long_array(h, time_range_value_, arr_coded_time_range, &count)))
         return err;
 
-    /* Look in the array of typeOfTimeIncrements for first entry whose typeOfTimeIncrement == 2 */
-    for (size_t i = 0; i < count; i++) {
-        if (arr_typeOfTimeIncrement[i] == 2) {
-            /* Found the required time range. Get the other two keys from it */
-            long the_coded_unit       = arr_coded_unit[i];
+    long MTG2Switch = 0, typeOfTimeIncrementSwitch = 0;
+    if ((err = grib_get_long_internal(h, "MTG2Switch", &MTG2Switch)))
+        return err;
+    if ((err = grib_get_long_internal(h, "typeOfTimeIncrementSwitch", &typeOfTimeIncrementSwitch)))
+        return err;
+
+    if (MTG2Switch == 0 && typeOfTimeIncrementSwitch == 0) {
+        /* Look in the array of typeOfTimeIncrements for first entry whose typeOfTimeIncrement == 2 */
+        for (size_t i = 0; i < count; i++) {
+            if (arr_typeOfTimeIncrement[i] == 2) {
+                /* Found the required time range. Get the other two keys from it */
+                long the_coded_unit = arr_coded_unit[i];
+                long the_coded_time_range = arr_coded_time_range[i];
+
+                err = convert_time_range_long_(h, step_units, the_coded_unit, &the_coded_time_range);
+                if (err != GRIB_SUCCESS)
+                    return err;
+
+                *val = start_step_value + the_coded_time_range;
+                return GRIB_SUCCESS;
+            }
+        }
+    }
+    else {
+        /* The largest time range with typeOfTimeIncrement 1, 2, 3, 4 or 5 wins */
+        bool found = false;
+        for (size_t i = 0; i < count; i++) {
+            if (arr_typeOfTimeIncrement[i] < 1 || arr_typeOfTimeIncrement[i] > 5)
+                continue;
+            long the_coded_unit = arr_coded_unit[i];
             long the_coded_time_range = arr_coded_time_range[i];
 
             err = convert_time_range_long_(h, step_units, the_coded_unit, &the_coded_time_range);
             if (err != GRIB_SUCCESS)
                 return err;
 
-            *val = start_step_value + the_coded_time_range;
-            return GRIB_SUCCESS;
+            if (!found || start_step_value + the_coded_time_range > *val)
+                *val = start_step_value + the_coded_time_range;
+            found = true;
         }
+        if (found)
+            return GRIB_SUCCESS;
     }
 
     grib_context_log(h->context, GRIB_LOG_ERROR,
@@ -247,16 +286,16 @@ int G2EndStep::unpack_multiple_time_ranges_long_(long* val, size_t* len)
 int G2EndStep::unpack_multiple_time_ranges_double_(double* val, size_t* len)
 {
     int err = 0;
-    grib_handle* h          = get_enclosing_handle();
+    grib_handle* h = get_enclosing_handle();
     long numberOfTimeRanges = 0;
-    long step_units         = 0;
-    long start_step_value   = 0;
-    long start_step_unit    = 0;
+    long step_units = 0;
+    long start_step_value = 0;
+    long start_step_unit = 0;
 
     size_t count = 0;
-    long arr_typeOfTimeIncrement[MAX_NUM_TIME_RANGES] = {0,};
-    long arr_coded_unit[MAX_NUM_TIME_RANGES] = {0,};
-    long arr_coded_time_range[MAX_NUM_TIME_RANGES] = {0,};
+    long arr_typeOfTimeIncrement[MAX_NUM_TIME_RANGES] = { 0 };
+    long arr_coded_unit[MAX_NUM_TIME_RANGES] = { 0 };
+    long arr_coded_time_range[MAX_NUM_TIME_RANGES] = { 0 };
 
     if ((err = grib_get_long_internal(h, start_step_value_, &start_step_value)))
         return err;
@@ -284,18 +323,44 @@ int G2EndStep::unpack_multiple_time_ranges_double_(double* val, size_t* len)
     if ((err = grib_get_long_array(h, time_range_value_, arr_coded_time_range, &count)))
         return err;
 
-    /* Look in the array of typeOfTimeIncrements for first entry whose typeOfTimeIncrement == 2 */
-    for (size_t i = 0; i < count; i++) {
-        if (arr_typeOfTimeIncrement[i] == 2) {
-            /* Found the required time range. Get the other two keys from it */
-            long the_coded_unit       = arr_coded_unit[i];
+    long MTG2Switch = 0, typeOfTimeIncrementSwitch = 0;
+    if ((err = grib_get_long_internal(h, "MTG2Switch", &MTG2Switch)))
+        return err;
+    if ((err = grib_get_long_internal(h, "typeOfTimeIncrementSwitch", &typeOfTimeIncrementSwitch)))
+        return err;
+
+    if (MTG2Switch == 0 && typeOfTimeIncrementSwitch == 0) {
+        /* Look in the array of typeOfTimeIncrements for first entry whose typeOfTimeIncrement == 2 */
+        for (size_t i = 0; i < count; i++) {
+            if (arr_typeOfTimeIncrement[i] == 2) {
+                /* Found the required time range. Get the other two keys from it */
+                long the_coded_unit = arr_coded_unit[i];
+                long the_coded_time_range = arr_coded_time_range[i];
+
+                eccodes::Step time_range{ the_coded_time_range, the_coded_unit };
+                *val = (start_step + time_range).value<double>(eccodes::Unit(step_units));
+
+                return GRIB_SUCCESS;
+            }
+        }
+    }
+    else {
+        /* The largest time range with typeOfTimeIncrement 1, 2, 3, 4 or 5 wins */
+        bool found = false;
+        for (size_t i = 0; i < count; i++) {
+            if (arr_typeOfTimeIncrement[i] < 1 || arr_typeOfTimeIncrement[i] > 5)
+                continue;
+            long the_coded_unit = arr_coded_unit[i];
             long the_coded_time_range = arr_coded_time_range[i];
 
             eccodes::Step time_range{ the_coded_time_range, the_coded_unit };
-            *val = (start_step + time_range).value<double>(eccodes::Unit(step_units));
-
-            return GRIB_SUCCESS;
+            double end_step = (start_step + time_range).value<double>(eccodes::Unit(step_units));
+            if (!found || end_step > *val)
+                *val = end_step;
+            found = true;
         }
+        if (found)
+            return GRIB_SUCCESS;
     }
 
     grib_context_log(h->context, GRIB_LOG_ERROR,
@@ -308,10 +373,10 @@ int G2EndStep::unpack_multiple_time_ranges_double_(double* val, size_t* len)
 //
 int G2EndStep::unpack_long(long* val, size_t* len)
 {
-    grib_handle* h          = get_enclosing_handle();
-    int ret                 = 0;
-    long start_step_value   = 0;
-    long start_step_unit    = 0;
+    grib_handle* h = get_enclosing_handle();
+    int ret = 0;
+    long start_step_value = 0;
+    long start_step_unit = 0;
     long numberOfTimeRanges = 0;
 
     if ((ret = grib_get_long_internal(h, start_step_value_, &start_step_value)))
@@ -351,7 +416,7 @@ int G2EndStep::unpack_long(long* val, size_t* len)
 int G2EndStep::unpack_double(double* val, size_t* len)
 {
     grib_handle* h = get_enclosing_handle();
-    int ret        = 0;
+    int ret = 0;
     long start_step_value;
     long start_step_unit;
     long numberOfTimeRanges;
@@ -474,7 +539,7 @@ int G2EndStep::pack_long_(const long end_step_value, const long end_step_unit)
         grib_context_log(h->context, GRIB_LOG_ERROR,
                          "%s:%s: Date/Time is not valid! "
                          "year=%ld month=%ld day=%ld hour=%ld minute=%ld second=%ld",
-                         class_name_, __func__, year, month, day, hour, minute, second);
+                         accessor_type().c_str(), __func__, year, month, day, hour, minute, second);
         return GRIB_DECODING_ERROR;
     }
 
@@ -505,7 +570,7 @@ int G2EndStep::pack_long_(const long end_step_value, const long end_step_unit)
         return err;
 
     const char* forecast_time_value_key = "forecastTime";
-    const char* forecast_time_unit_key  = "indicatorOfUnitOfTimeRange";
+    const char* forecast_time_unit_key = "indicatorOfUnitOfTimeRange";
     eccodes::Step forecast_time_opt;
     eccodes::Step time_range_opt;
     if (eccodes::Unit{ force_step_units } == eccodes::Unit{ eccodes::Unit::Value::MISSING }) {
@@ -513,7 +578,7 @@ int G2EndStep::pack_long_(const long end_step_value, const long end_step_unit)
     }
     else {
         forecast_time_opt = eccodes::Step{ start_step.value<long>(eccodes::Unit{ force_step_units }), eccodes::Unit{ force_step_units } };
-        time_range_opt    = eccodes::Step{ time_range.value<long>(eccodes::Unit{ force_step_units }), eccodes::Unit{ force_step_units } };
+        time_range_opt = eccodes::Step{ time_range.value<long>(eccodes::Unit{ force_step_units }), eccodes::Unit{ force_step_units } };
     }
 
     if ((err = grib_set_long_internal(h, time_range_value_, time_range_opt.value<long>())) != GRIB_SUCCESS)
@@ -530,11 +595,11 @@ int G2EndStep::pack_long_(const long end_step_value, const long end_step_unit)
 
 int G2EndStep::unpack_string(char* val, size_t* len)
 {
-    grib_handle* h       = get_enclosing_handle();
-    int ret              = 0;
-    char fp_format[128]  = "%g";
+    grib_handle* h = get_enclosing_handle();
+    int ret = 0;
+    char fp_format[128] = "%g";
     size_t fp_format_len = sizeof(fp_format);
-    size_t step_len      = 0;
+    size_t step_len = 0;
     long step_value;
     long step_units;
     const int show_units_for_hours = context_->grib_hourly_steps_with_units;
@@ -604,7 +669,7 @@ int G2EndStep::pack_long(const long* val, size_t* len)
 int G2EndStep::pack_string(const char* val, size_t* len)
 {
     grib_handle* h = get_enclosing_handle();
-    int ret        = 0;
+    int ret = 0;
     long force_step_units;
     if ((ret = grib_get_long_internal(h, "forceStepUnits", &force_step_units)) != GRIB_SUCCESS)
         return ret;

@@ -22,12 +22,12 @@ namespace eccodes::action
 Rename::Rename(grib_context* context, char* the_old, char* the_new)
 {
     class_name_ = "action_class_rename";
-    next_       = NULL;
-    name_       = grib_context_strdup_persistent(context, "RENAME");
-    op_         = grib_context_strdup_persistent(context, "rename");
-    context_    = context;
-    the_old_    = grib_context_strdup_persistent(context, the_old);
-    the_new_    = grib_context_strdup_persistent(context, the_new);
+    next_ = NULL;
+    name_ = grib_context_strdup_persistent(context, "RENAME");
+    op_ = grib_context_strdup_persistent(context, "rename");
+    context_ = context;
+    the_old_ = grib_context_strdup_persistent(context, the_old);
+    the_new_ = grib_context_strdup_persistent(context, the_new);
 }
 
 Rename::~Rename()
@@ -40,17 +40,14 @@ Rename::~Rename()
 
 static void rename_accessor(grib_accessor* a, char* name)
 {
-    int id;
     char* the_old = (char*)a->all_names_[0];
 
-    if (a->get_enclosing_handle()->use_trie && *(a->all_names_[0]) != '_') {
-        id = grib_hash_keys_get_id(a->context_->keys, a->all_names_[0]);
-        a->get_enclosing_handle()->accessors[id] = NULL;
-        id = grib_hash_keys_get_id(a->context_->keys, name);
-        a->get_enclosing_handle()->accessors[id] = a;
+    if (*(a->all_names_[0]) != '_') {
+        a->get_enclosing_handle()->accessor_store.remove(a->all_names_[0]);
+        a->get_enclosing_handle()->accessor_store.add(name, a);
     }
     a->all_names_[0] = grib_context_strdup_persistent(a->context_, name);
-    a->name_         = a->all_names_[0];
+    a->name_ = a->all_names_[0];
     grib_context_log(a->context_, GRIB_LOG_DEBUG, "Renaming %s to %s", the_old, name);
     /* grib_context_free(a->context,the_old); */
 }

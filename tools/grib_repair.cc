@@ -28,7 +28,7 @@ int main(int argc, char** argv)
 
     size_t data_len = SIZE;
     unsigned long count = 0;
-    unsigned long MAX_NUM_MESSAGES = 100*1000;
+    unsigned long MAX_NUM_MESSAGES = 100 * 1000;
     unsigned char* data;
     char* sMaxNumMessages = NULL;
 
@@ -42,7 +42,7 @@ int main(int argc, char** argv)
     }
 
     cout = argv[2];
-    out  = fopen(argv[2], "w");
+    out = fopen(argv[2], "w");
     if (!out) {
         perror(argv[2]);
         exit(1);
@@ -50,14 +50,14 @@ int main(int argc, char** argv)
 
     if (argc == 4) {
         cbad = argv[3];
-        bad  = fopen(argv[3], "w");
+        bad = fopen(argv[3], "w");
         if (!bad) {
             perror(argv[3]);
             exit(1);
         }
     }
     else {
-        bad  = out;
+        bad = out;
         cbad = cout;
     }
 
@@ -96,8 +96,8 @@ int main(int argc, char** argv)
                 fseek(in, -4, SEEK_CUR);
                 memset(buffer + len - 4, '7', 4); /* add in 7777 at end */
                 len = data_len = SIZE;
-                data           = (unsigned char*)&buffer[0];
-                ret            = grib_read_any_from_memory(NULL, &data, &data_len, buffer, &len);
+                data = (unsigned char*)&buffer[0];
+                ret = grib_read_any_from_memory(NULL, &data, &data_len, buffer, &len);
                 printf("   -> GRIB %lu: size: %zu code: %d (%s)\n", count, len, ret, grib_get_error_message(ret));
                 if (ret == 0) {
                     if (fwrite(buffer, 1, len, bad) != len) {

@@ -1,0 +1,10 @@
+0 0 90% to 100% reliable - multiple drift with closed wind star, or small open star whenwinds are 50 kt or greater - short radar wind runs, wind obtained using Doppler radaror inertial omega system
+1 1 85% to 100% reliable - multiple drift with small open star, or double drift or single driftwith average ground speed by timing - short radar wind run
+2 2 80% to 100% reliable - fix to fix winds using the following pin point visual fixes, radarfixes or accurate loran fixes using good ground wave
+3 3 75% to 90% reliable - fix to fix winds using two or three lines of position (LOPs) eitherloran, celestial, radio, or sight bearings or any combination of the three above whenall lines of position are considered reliabl
+4 4 60% to 80% reliable - winds obtained using single drift and single LOP (Speed Line),air-plot, etc
+5 5 50% to 75% reliable - fix to fix winds using two or three lines of position either loran,celestial, radio, or sight bearings or any combination of the above when one of thelines is not considered reliabl
+6 6 Less than 50% reliable - winds obtained by any of the above methods that the navigatorbelieves to be inaccurate or of questionable accurac
+7 7 No reliability - assumed or estimated wind
+8 8 No wind - navigator unable to determine a wind
+15 15 Missing value

@@ -10,9 +10,6 @@
 
 #include "G2ConceptDir.h"
 
-eccodes::accessor::G2ConceptDir _grib_accessor_g2_concept_dir;
-eccodes::Accessor* grib_accessor_g2_concept_dir = &_grib_accessor_g2_concept_dir;
-
 namespace eccodes::accessor
 {
 
@@ -22,10 +19,10 @@ void G2ConceptDir::init(const long len, grib_arguments* arg)
     grib_handle* h = get_enclosing_handle();
 
     this->preferLocal_ = arg->get_name(h, 0);
-    this->masterDir_   = arg->get_name(h, 1);
-    this->localDir_    = arg->get_name(h, 2);
-    datasetForLocal_   = arg->get_name(h, 3);
-    mode_              = arg->get_long(h, 4);
+    this->masterDir_ = arg->get_name(h, 1);
+    this->localDir_ = arg->get_name(h, 2);
+    datasetForLocal_ = arg->get_name(h, 3);
+    mode_ = arg->get_long(h, 4);
     ECCODES_ASSERT(mode_ == 1 || mode_ == 2);
     length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
@@ -42,9 +39,9 @@ int G2ConceptDir::unpack_string(char* v, size_t* len)
     grib_handle* h = get_enclosing_handle();
     int err = 0;
     long preferLocal = 0;
-    char masterDir[128] = {0,};
-    char localDir[128] = {0,};
-    char datasetForLocal[128] = {0,};
+    char masterDir[128] = { 0 };
+    char localDir[128] = { 0 };
+    char datasetForLocal[128] = { 0 };
 
     err = grib_get_long(h, preferLocal_, &preferLocal);
     if (err) return err;
@@ -71,28 +68,32 @@ int G2ConceptDir::unpack_string(char* v, size_t* len)
         }
     }
 
-    const size_t dsize = string_length() - 1; // size for destination string "v"
+    const size_t dsize = string_length() - 1;  // size for destination string "v"
     if (preferLocal) {
         // ECC-806: Local concepts precedence order
         if (mode_ == 1) {
-            snprintf(v, dsize, "%s", masterDir); // conceptsDir1
-        } else {
+            snprintf(v, dsize, "%s", masterDir);  // conceptsDir1
+        }
+        else {
             snprintf(v, dsize, "%s", localDir);  // conceptsDir2
         }
-    } else {
+    }
+    else {
         if (mode_ == 1) {
             snprintf(v, dsize, "%s", localDir);  // conceptsDir1
-        } else {
-            snprintf(v, dsize, "%s", masterDir); // conceptsDir2
+        }
+        else {
+            snprintf(v, dsize, "%s", masterDir);  // conceptsDir2
         }
     }
 
     // Override if datasetForLocal exists and is not unknown
     if (datasetForLocalExists && !STR_EQUAL(datasetForLocal, "unknown")) {
         if (mode_ == 1) {
-            snprintf(v, dsize, "%s", masterDir); // conceptsDir1
-        } else {
-            snprintf(v, dsize, "grib2/localConcepts/%s", datasetForLocal); // conceptsDir2
+            snprintf(v, dsize, "%s", masterDir);  // conceptsDir1
+        }
+        else {
+            snprintf(v, dsize, "grib2/localConcepts/%s", datasetForLocal);  // conceptsDir2
         }
     }
 

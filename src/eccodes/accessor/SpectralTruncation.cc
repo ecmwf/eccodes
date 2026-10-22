@@ -10,9 +10,6 @@
 
 #include "SpectralTruncation.h"
 
-eccodes::accessor::SpectralTruncation _grib_accessor_spectral_truncation;
-eccodes::Accessor* grib_accessor_spectral_truncation = &_grib_accessor_spectral_truncation;
-
 namespace eccodes::accessor
 {
 

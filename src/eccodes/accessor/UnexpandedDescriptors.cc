@@ -11,9 +11,6 @@
 #include "ExpandedDescriptors.h"
 #include "UnexpandedDescriptors.h"
 
-eccodes::accessor::UnexpandedDescriptors _grib_accessor_unexpanded_descriptors;
-eccodes::Accessor* grib_accessor_unexpanded_descriptors = &_grib_accessor_unexpanded_descriptors;
-
 namespace eccodes::accessor
 {
 
@@ -21,17 +18,17 @@ void UnexpandedDescriptors::init(const long len, grib_arguments* args)
 {
     Long::init(len, args);
 
-    int n                         = 0;
-    grib_handle* hand             = get_enclosing_handle();
+    int n = 0;
+    grib_handle* hand = get_enclosing_handle();
     unexpandedDescriptorsEncoded_ = grib_find_accessor(hand, args->get_name(hand, n++));
-    createNewData_                = args->get_name(hand, n++);
-    length_                       = 0;
+    createNewData_ = args->get_name(hand, n++);
+    length_ = 0;
 }
 
 int UnexpandedDescriptors::unpack_long(long* val, size_t* len)
 {
-    int ret   = 0;
-    long pos  = 0;
+    int ret = 0;
+    long pos = 0;
     long rlen = 0;
     long f, x, y;
     long* v = val;
@@ -58,9 +55,9 @@ int UnexpandedDescriptors::unpack_long(long* val, size_t* len)
     }
 
     for (i = 0; i < rlen; i++) {
-        f    = grib_decode_unsigned_long(hand->buffer->data, &pos, 2);
-        x    = grib_decode_unsigned_long(hand->buffer->data, &pos, 6);
-        y    = grib_decode_unsigned_long(hand->buffer->data, &pos, 8);
+        f = grib_decode_unsigned_long(hand->buffer->data, &pos, 2);
+        x = grib_decode_unsigned_long(hand->buffer->data, &pos, 6);
+        y = grib_decode_unsigned_long(hand->buffer->data, &pos, 8);
         *v++ = f * 100000 + x * 1000 + y;
     }
     *len = rlen;
@@ -69,15 +66,15 @@ int UnexpandedDescriptors::unpack_long(long* val, size_t* len)
 
 int UnexpandedDescriptors::pack_long(const long* val, size_t* len)
 {
-    int ret  = 0;
+    int ret = 0;
     long pos = 0;
     unsigned long f, x, y;
-    unsigned char* buf      = NULL;
+    unsigned char* buf = NULL;
     ExpandedDescriptors* expanded = NULL;
-    size_t buflen           = *len * 2;
+    size_t buflen = *len * 2;
     size_t i = 0, length = *len;
     long createNewData = 1;
-    grib_handle* hand  = get_enclosing_handle();
+    grib_handle* hand = get_enclosing_handle();
 
     grib_get_long(hand, createNewData_, &createNewData);
 
@@ -85,9 +82,9 @@ int UnexpandedDescriptors::pack_long(const long* val, size_t* len)
 
     for (i = 0; i < length; i++) {
         const long tmp = val[i] % 100000;
-        f              = val[i] / 100000;
-        x              = tmp / 1000;
-        y              = tmp % 1000;
+        f = val[i] / 100000;
+        x = tmp / 1000;
+        y = tmp % 1000;
         grib_encode_unsigned_longb(buf, f, &pos, 2);
         grib_encode_unsigned_longb(buf, x, &pos, 6);
         grib_encode_unsigned_longb(buf, y, &pos, 8);

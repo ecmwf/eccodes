@@ -11,9 +11,6 @@
 #include "Unsigned.h"
 #include "ecc_numeric_limits.h"
 
-eccodes::accessor::Unsigned _grib_accessor_unsigned;
-eccodes::Accessor* grib_accessor_unsigned = &_grib_accessor_unsigned;
-
 namespace eccodes::accessor
 {
 
@@ -21,13 +18,13 @@ void Unsigned::init(const long len, grib_arguments* arg)
 {
     Long::init(len, arg);
     nbytes_ = len;
-    arg_    = arg;
+    arg_ = arg;
 
     if (flags_ & GRIB_ACCESSOR_FLAG_TRANSIENT) {
         length_ = 0;
         if (!vvalue_)
             vvalue_ = (grib_virtual_value*)grib_context_malloc_clear(context_, sizeof(grib_virtual_value));
-        vvalue_->type   = GRIB_TYPE_LONG;
+        vvalue_->type = GRIB_TYPE_LONG;
         vvalue_->length = len;
     }
     else {
@@ -67,13 +64,13 @@ int value_is_missing(long val)
 
 int Unsigned::pack_long_unsigned_helper(const long* val, size_t* len, int check)
 {
-    int ret   = 0;
-    long off  = 0;
+    int ret = 0;
+    long off = 0;
     long rlen = 0;
 
-    size_t buflen         = 0;
-    unsigned char* buf    = NULL;
-    unsigned long i       = 0;
+    size_t buflen = 0;
+    unsigned char* buf = NULL;
+    unsigned long i = 0;
     unsigned long missing = 0;
 
     int err = value_count(&rlen);
@@ -123,8 +120,12 @@ int Unsigned::pack_long_unsigned_helper(const long* val, size_t* len, int check)
                     unsigned long maxval = NumericLimits<unsigned long>::max(nbits);
                     if (maxval > 0 && v > maxval) { /* See ECC-1002 */
                         grib_context_log(context_, GRIB_LOG_ERROR,
-                            "Key \"%s\": Trying to encode value of %ld but the maximum allowable value is %lu (number of bits=%ld)",
-                             name_, v, maxval, nbits);
+                                         "Key \"%s\": Trying to encode value of %ld but the maximum allowable value is %lu (number of bits=%ld)",
+                                         name_, v, maxval, nbits);
+                        long edition = -1;
+                        if (grib_get_long_internal(get_enclosing_handle(), "edition", &edition) == GRIB_SUCCESS && edition == 1) {
+                            grib_context_log(context_, GRIB_LOG_ERROR, "Hint: Consider using GRIB edition 2");
+                        }
                         return GRIB_ENCODING_ERROR;
                     }
                 }
@@ -137,7 +138,7 @@ int Unsigned::pack_long_unsigned_helper(const long* val, size_t* len, int check)
             len[0] = 1;
         if (*len > 1)
             grib_context_log(context_, GRIB_LOG_WARNING,
-                "grib_accessor_unsigned : Trying to pack %d values in a scalar %s, packing first value", *len, name_);
+                             "grib_accessor_unsigned : Trying to pack %d values in a scalar %s, packing first value", *len, name_);
         len[0] = 1;
         return ret;
     }
@@ -163,13 +164,13 @@ int Unsigned::pack_long_unsigned_helper(const long* val, size_t* len, int check)
 
 int Unsigned::unpack_long(long* val, size_t* len)
 {
-    long rlen             = 0;
-    unsigned long i       = 0;
+    long rlen = 0;
+    unsigned long i = 0;
     unsigned long missing = 0;
-    long count            = 0;
-    int err               = 0;
-    long pos              = offset_ * 8;
-    grib_handle* hand     = get_enclosing_handle();
+    long count = 0;
+    int err = 0;
+    long pos = offset_ * 8;
+    grib_handle* hand = get_enclosing_handle();
 
     err = value_count(&count);
     if (err)
@@ -241,8 +242,8 @@ long Unsigned::next_offset()
 
 int Unsigned::is_missing()
 {
-    const unsigned char ff  = 0xff;
-    unsigned long offset    = offset_;
+    const unsigned char ff = 0xff;
+    unsigned long offset = offset_;
     const grib_handle* hand = get_enclosing_handle();
 
     if (length_ == 0) {

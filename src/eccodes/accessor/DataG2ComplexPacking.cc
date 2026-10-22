@@ -10,9 +10,6 @@
 
 #include "DataG2ComplexPacking.h"
 
-eccodes::accessor::DataG2ComplexPacking _grib_accessor_data_g2complex_packing;
-eccodes::Accessor* grib_accessor_data_g2complex_packing = &_grib_accessor_data_g2complex_packing;
-
 namespace eccodes::accessor
 {
 
@@ -20,7 +17,7 @@ void DataG2ComplexPacking::init(const long v, grib_arguments* args)
 {
     DataComplexPacking::init(v, args);
     numberOfValues_ = args->get_name(get_enclosing_handle(), carg_++);
-    edition_        = 2;
+    edition_ = 2;
 
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }

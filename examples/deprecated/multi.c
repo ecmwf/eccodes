@@ -9,7 +9,7 @@
  */
 
 /*
- * C Implementation: multi  
+ * C Implementation: multi
  *
  * Description: How to decode grib messages containing multiple
  *              fields. Try to turn on and off multi support to

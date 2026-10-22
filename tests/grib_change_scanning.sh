@@ -3,7 +3,7 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
+#
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
@@ -27,7 +27,7 @@ if [ $HAVE_GEOGRAPHY -eq 0 ]; then
 fi
 
 editions="1 2"
-gridTypes="regular_ll rotated_ll" 
+gridTypes="regular_ll rotated_ll"
 Ni_list="5 8"
 Nj_list="7 4"
 
@@ -39,7 +39,7 @@ for edition in `echo ${editions}`; do
       for Nj in `echo ${Nj_list}`; do
 
       #echo $gridType Ni=$Ni Nj=$Nj
-    
+
       N=`expr $Ni \* $Nj`
       cat > ${data_dir}/change_scanning_${gridType}.filter <<EOF
         set edition=$edition;
@@ -63,24 +63,24 @@ EOF
         list="$list,$i"
         i=`expr $i + 1`
       done
-    
+
       cat >> ${data_dir}/change_scanning_${gridType}.filter <<EOF
       $list };
       write "${data_dir}/scan1.grib";
 EOF
-    
+
       ${tools_dir}/grib_filter ${data_dir}/change_scanning_${gridType}.filter $file
       #ed=`${tools_dir}/grib_get -p edition ${data_dir}/scan1.grib`
       #echo edition=$ed
-    
+
       ${tools_dir}/grib_set -s swapScanningX=1 ${data_dir}/scan1.grib ${data_dir}/scan.grib
       ${tools_dir}/grib_get_data -F "%g" ${data_dir}/scan.grib > ${data_dir}/scan_x_${gridType}_${Ni}_${Nj}.dump
       diff ${data_dir}/scan_x_${gridType}_${Ni}_${Nj}.dump ${data_dir}/scan_x_${gridType}_${Ni}_${Nj}_good.dump
       rm -f ${data_dir}/scan_x_${gridType}_${Ni}_${Nj}.dump
-    
+
       ${tools_dir}/grib_set -s swapScanningY=1 ${data_dir}/scan1.grib ${data_dir}/scan.grib
       ${tools_dir}/grib_get_data -F "%g" ${data_dir}/scan.grib > ${data_dir}/scan_y_${gridType}_${Ni}_${Nj}.dump
-      diff ${data_dir}/scan_y_${gridType}_${Ni}_${Nj}.dump ${data_dir}/scan_y_${gridType}_${Ni}_${Nj}_good.dump 
+      diff ${data_dir}/scan_y_${gridType}_${Ni}_${Nj}.dump ${data_dir}/scan_y_${gridType}_${Ni}_${Nj}_good.dump
       rm -f ${data_dir}/scan_y_${gridType}_${Ni}_${Nj}.dump
       rm -f ${data_dir}/change_scanning_${gridType}.filter
 
@@ -101,14 +101,14 @@ cat > $tempFilt <<EOF
   set DjInDegrees = 1;
   set DiInDegrees = 1;
 
-  set alternativeRowScanning = 1;
+  set alternateRowScanning = 1; # use the more correct alias
   set values={ 12, 13, 14, 15, 16, 17 };
   write;
 EOF
 
 ${tools_dir}/grib_filter -o $tempGribA $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl
 ${tools_dir}/grib_set -s swapScanningAlternativeRows=1 $tempGribA $tempGribB
-grib_check_key_equals $tempGribB alternativeRowScanning 0
+grib_check_key_equals $tempGribB alternativeRowScanning,alternateRowScanning '0 0'
 
 ${tools_dir}/grib_get_data -F "%.2f" $tempGribB > $tempText
 cat > $tempRef << EOF

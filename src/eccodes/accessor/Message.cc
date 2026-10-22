@@ -10,9 +10,6 @@
 
 #include "Message.h"
 
-eccodes::accessor::Message _grib_accessor_message;
-eccodes::Accessor* grib_accessor_message = &_grib_accessor_message;
-
 namespace eccodes::accessor
 {
 
@@ -38,7 +35,7 @@ void Message::update_size(size_t new_size)
 
 void Message::resize(size_t new_size)
 {
-    grib_context_log(context_, GRIB_LOG_FATAL, "%s %s: Not supported", class_name_, __func__);
+    grib_context_log(context_, GRIB_LOG_FATAL, "%s %s: Not supported", accessor_type().c_str(), __func__);
 
     // void* zero = grib_context_malloc_clear(context_ , new_size);
     // grib_buffer_replace(a, (const unsigned char*)zero, new_size, 1, 0);
@@ -56,14 +53,14 @@ int Message::value_count(long* count)
 
 int Message::unpack_string(char* val, size_t* len)
 {
-    long i         = 0;
-    size_t l       = string_length() + 1;
+    long i = 0;
+    size_t l = string_length() + 1;
     grib_handle* h = get_enclosing_handle();
 
     if (*len < l) {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
-                         class_name_, name_, l, *len);
+                         accessor_type().c_str(), name_, l, *len);
         *len = l;
         return GRIB_BUFFER_TOO_SMALL;
     }
@@ -71,7 +68,7 @@ int Message::unpack_string(char* val, size_t* len)
     for (i = 0; i < length_; i++)
         val[i] = h->buffer->data[offset_ + i];
     val[i] = 0;
-    *len   = i;
+    *len = i;
     return GRIB_SUCCESS;
 }
 

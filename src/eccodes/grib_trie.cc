@@ -9,6 +9,7 @@
  */
 
 #include "grib_api_internal.h"
+#include "sync/Mutex.h"
 
 /* Note: all non-alpha are mapped to 0 */
 static const int mapping[] = {
@@ -274,47 +275,21 @@ static const int mapping[] = {
 #ifdef DEBUG
 static const size_t NUM_MAPPINGS = sizeof(mapping) / sizeof(mapping[0]);
 
-#define DebugCheckBounds(index, value)                                                                  \
-    do {                                                                                                \
-        if (!((index) >= 0 && (index) < NUM_MAPPINGS)) {                                                \
-            printf("ERROR: string='%s' index=%ld @ %s +%d \n", value, (long)index, __FILE__, __LINE__); \
-            abort();                                                                                    \
-        }                                                                                               \
-    } while (0)
+    #define DebugCheckBounds(index, value)                                                                  \
+        do {                                                                                                \
+            if (!((index) >= 0 && (index) < NUM_MAPPINGS)) {                                                \
+                printf("ERROR: string='%s' index=%ld @ %s +%d \n", value, (long)index, __FILE__, __LINE__); \
+                abort();                                                                                    \
+            }                                                                                               \
+        } while (0)
 #else
-#define DebugCheckBounds(index, value)
+    #define DebugCheckBounds(index, value)
 #endif
 
 
 #define SIZE 39
 
-#if GRIB_PTHREADS
-static pthread_once_t once   = PTHREAD_ONCE_INIT;
-static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-
-static void init_mutex()
-{
-    pthread_mutexattr_t attr;
-    pthread_mutexattr_init(&attr);
-    pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
-    pthread_mutex_init(&mutex, &attr);
-    pthread_mutexattr_destroy(&attr);
-}
-#elif GRIB_OMP_THREADS
-static int once = 0;
-static omp_nest_lock_t mutex;
-
-static void init_mutex()
-{
-    GRIB_OMP_CRITICAL(lock_grib_trie_c)
-    {
-        if (once == 0) {
-            omp_init_nest_lock(&mutex);
-            once = 1;
-        }
-    }
-}
-#endif
+static eccodes::sync::Mutex mutex;
 
 struct grib_trie
 {
@@ -333,15 +308,14 @@ grib_trie* grib_trie_new(grib_context* c)
     grib_trie* t = (grib_trie*)grib_context_malloc_clear(c, sizeof(grib_trie));
 #endif
     t->context = c;
-    t->first   = SIZE;
-    t->last    = -1;
+    t->first = SIZE;
+    t->last = -1;
     return t;
 }
 
 void grib_trie_delete_container(grib_trie* t)
 {
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex);
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
     if (t) {
         int i;
         for (i = t->first; i <= t->last; i++)
@@ -354,13 +328,11 @@ void grib_trie_delete_container(grib_trie* t)
         grib_context_free(t->context, t);
 #endif
     }
-    GRIB_MUTEX_UNLOCK(&mutex);
 }
 
 void grib_trie_delete(grib_trie* t)
 {
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex);
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
     if (t) {
         int i;
         for (i = t->first; i <= t->last; i++)
@@ -374,7 +346,6 @@ void grib_trie_delete(grib_trie* t)
         grib_context_free(t->context, t);
 #endif
     }
-    GRIB_MUTEX_UNLOCK(&mutex);
 }
 
 void grib_trie_clear(grib_trie* t)
@@ -391,16 +362,15 @@ void grib_trie_clear(grib_trie* t)
 void* grib_trie_insert(grib_trie* t, const char* key, void* data)
 {
     grib_trie* last = t;
-    const char* k   = key;
-    void* old       = NULL;
+    const char* k = key;
+    void* old = NULL;
 
     if (!t) {
         ECCODES_ASSERT(!"grib_trie_insert: grib_trie==NULL");
         return NULL;
     }
 
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex);
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
 
     while (*k && t) {
         last = t;
@@ -411,7 +381,7 @@ void* grib_trie_insert(grib_trie* t, const char* key, void* data)
     }
 
     if (*k == 0) {
-        old     = t->data;
+        old = t->data;
         t->data = data;
     }
     else {
@@ -426,17 +396,16 @@ void* grib_trie_insert(grib_trie* t, const char* key, void* data)
                 t->last = j;
             t = t->next[j] = grib_trie_new(t->context);
         }
-        old     = t->data;
+        old = t->data;
         t->data = data;
     }
-    GRIB_MUTEX_UNLOCK(&mutex);
     return data == old ? NULL : old;
 }
 
 void* grib_trie_insert_no_replace(grib_trie* t, const char* key, void* data)
 {
     grib_trie* last = t;
-    const char* k   = key;
+    const char* k = key;
     ECCODES_ASSERT(t);
 
     while (*k && t) {
@@ -470,19 +439,16 @@ void* grib_trie_insert_no_replace(grib_trie* t, const char* key, void* data)
 void* grib_trie_get(grib_trie* t, const char* key)
 {
     const char* k = key;
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex);
 
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
     while (*k && t) {
         DebugCheckBounds((int)*k, key);
         t = t->next[mapping[(int)*k++]];
     }
 
     if (*k == 0 && t != NULL && t->data != NULL) {
-        GRIB_MUTEX_UNLOCK(&mutex);
         return t->data;
     }
-    GRIB_MUTEX_UNLOCK(&mutex);
     return NULL;
 }
 

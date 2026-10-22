@@ -10,9 +10,6 @@
 
 #include "Element.h"
 
-eccodes::accessor::Element _grib_accessor_element;
-eccodes::Accessor* grib_accessor_element = &_grib_accessor_element;
-
 namespace eccodes::accessor
 {
 
@@ -21,8 +18,8 @@ void Element::init(const long l, grib_arguments* c)
     Long::init(l, c);
     grib_handle* hand = get_enclosing_handle();
 
-    int n    = 0;
-    array_   = c->get_name(hand, n++);
+    int n = 0;
+    array_ = c->get_name(hand, n++);
     element_ = c->get_long(hand, n++);
 }
 
@@ -39,12 +36,12 @@ static int check_element_index(const char* func, const char* array_name, long in
 
 int Element::unpack_long(long* val, size_t* len)
 {
-    int ret               = 0;
-    size_t size           = 0;
-    long* ar              = NULL;
+    int ret = 0;
+    size_t size = 0;
+    long* ar = NULL;
     const grib_context* c = context_;
-    grib_handle* hand     = get_enclosing_handle();
-    long index            = element_;
+    grib_handle* hand = get_enclosing_handle();
+    long index = element_;
 
     if (*len < 1) {
         ret = GRIB_ARRAY_TOO_SMALL;
@@ -81,12 +78,12 @@ the_end:
 
 int Element::pack_long(const long* val, size_t* len)
 {
-    int ret               = 0;
-    size_t size           = 0;
-    long* ar              = NULL;
+    int ret = 0;
+    size_t size = 0;
+    long* ar = NULL;
     const grib_context* c = context_;
-    grib_handle* hand     = get_enclosing_handle();
-    long index            = element_;
+    grib_handle* hand = get_enclosing_handle();
+    long index = element_;
 
     if (*len < 1) {
         ret = GRIB_ARRAY_TOO_SMALL;
@@ -121,7 +118,7 @@ int Element::pack_long(const long* val, size_t* len)
     }
 
     ECCODES_ASSERT(index >= 0);
-    ECCODES_ASSERT( (size_t)index < size);
+    ECCODES_ASSERT((size_t)index < size);
     ar[index] = *val;
 
     if ((ret = grib_set_long_array_internal(hand, array_, ar, size)) != GRIB_SUCCESS)
@@ -134,12 +131,12 @@ the_end:
 
 int Element::pack_double(const double* v, size_t* len)
 {
-    int ret               = 0;
-    size_t size           = 0;
-    double* ar            = NULL;
+    int ret = 0;
+    size_t size = 0;
+    double* ar = NULL;
     const grib_context* c = context_;
-    grib_handle* hand     = get_enclosing_handle();
-    long index            = element_;
+    grib_handle* hand = get_enclosing_handle();
+    long index = element_;
 
     if (*len < 1) {
         ret = GRIB_ARRAY_TOO_SMALL;
@@ -168,7 +165,7 @@ int Element::pack_double(const double* v, size_t* len)
     }
 
     ECCODES_ASSERT(index >= 0);
-    ECCODES_ASSERT( (size_t)index < size);
+    ECCODES_ASSERT((size_t)index < size);
     ar[index] = *v;
 
     if ((ret = grib_set_double_array_internal(hand, array_, ar, size)) != GRIB_SUCCESS)
@@ -181,12 +178,12 @@ the_end:
 
 int Element::unpack_double(double* val, size_t* len)
 {
-    int ret                 = 0;
-    size_t size             = 0;
-    double* ar              = NULL;
-    const grib_context* c   = context_;
+    int ret = 0;
+    size_t size = 0;
+    double* ar = NULL;
+    const grib_context* c = context_;
     const grib_handle* hand = get_enclosing_handle();
-    long index              = element_;
+    long index = element_;
 
     if (*len < 1) {
         ret = GRIB_ARRAY_TOO_SMALL;

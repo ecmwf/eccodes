@@ -31,7 +31,7 @@ def main():
                 print "%.6f" % value
 
             i += 1
-            
+
         grib_iterator_delete(iterid)
         grib_release(gid)
 

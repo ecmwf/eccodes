@@ -11,35 +11,32 @@
 #include "Md5.h"
 #include "md5_core.h"
 
-eccodes::accessor::Md5 _grib_accessor_md5;
-eccodes::Accessor* grib_accessor_md5 = &_grib_accessor_md5;
-
 namespace eccodes::accessor
 {
 
 void Md5::init(const long len, grib_arguments* arg)
 {
     Gen::init(len, arg);
-    char* b                   = 0;
-    int n                     = 0;
+    char* b = 0;
+    int n = 0;
     grib_string_list* current = 0;
-    grib_context* context     = context_;
+    grib_context* context = context_;
 
-    offset_key_    = arg->get_name(get_enclosing_handle(), n++);
-    length_key_    = arg->get_expression(get_enclosing_handle(), n++);
+    offset_key_ = arg->get_name(get_enclosing_handle(), n++);
+    length_key_ = arg->get_expression(get_enclosing_handle(), n++);
     blocklist_ = NULL;
     while ((b = (char*)arg->get_name(get_enclosing_handle(), n++)) != NULL) {
         if (!blocklist_) {
-            blocklist_        = (grib_string_list*)grib_context_malloc_clear(context, sizeof(grib_string_list));
+            blocklist_ = (grib_string_list*)grib_context_malloc_clear(context, sizeof(grib_string_list));
             blocklist_->value = grib_context_strdup(context, b);
-            current           = blocklist_;
+            current = blocklist_;
         }
         else {
             ECCODES_ASSERT(current);
             if (current) {
-                current->next        = (grib_string_list*)grib_context_malloc_clear(context, sizeof(grib_string_list));
+                current->next = (grib_string_list*)grib_context_malloc_clear(context, sizeof(grib_string_list));
                 current->next->value = grib_context_strdup(context, b);
-                current              = current->next;
+                current = current->next;
             }
         }
     }
@@ -60,8 +57,8 @@ int Md5::compare(grib_accessor* b)
 
     size_t alen = 0;
     size_t blen = 0;
-    int err     = 0;
-    long count  = 0;
+    int err = 0;
+    long count = 0;
 
     err = value_count(&count);
     if (err)
@@ -86,14 +83,14 @@ int Md5::unpack_string(char* v, size_t* len)
     unsigned char* p;
     long offset = 0, length = 0;
     grib_string_list* blocklist = NULL;
-    int ret                     = GRIB_SUCCESS;
-    long i                      = 0;
+    int ret = GRIB_SUCCESS;
+    long i = 0;
     struct grib_md5_state md5c;
 
     if (*len < 32) {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s: Buffer too small for %s. It is %d bytes long (len=%zu)",
-                         class_name_, name_, 32, *len);
+                         accessor_type().c_str(), name_, 32, *len);
         *len = 32;
         return GRIB_BUFFER_TOO_SMALL;
     }
@@ -142,9 +139,9 @@ void Md5::destroy(grib_context* c)
 {
     if (blocklist_) {
         grib_string_list* next = blocklist_;
-        grib_string_list* cur  = NULL;
+        grib_string_list* cur = NULL;
         while (next) {
-            cur  = next;
+            cur = next;
             next = next->next;
             grib_context_free(c, cur->value);
             grib_context_free(c, cur);

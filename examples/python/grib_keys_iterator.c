@@ -14,75 +14,73 @@
 
 #include "eccodes.h"
 
-#define MAX_VAL_LEN  1024
+#define MAX_VAL_LEN 1024
 
 static void usage(char* progname);
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
-  /* To skip read only and not coded keys
-     unsigned long key_iterator_filter_flags=CODES_KEYS_ITERATOR_SKIP_READ_ONLY ||
-     CODES_KEYS_ITERATOR_SKIP_COMPUTED;
-  */
-    unsigned long key_iterator_filter_flags=CODES_KEYS_ITERATOR_ALL_KEYS;
+    /* To skip read only and not coded keys
+       unsigned long key_iterator_filter_flags=CODES_KEYS_ITERATOR_SKIP_READ_ONLY ||
+       CODES_KEYS_ITERATOR_SKIP_COMPUTED;
+    */
+    unsigned long key_iterator_filter_flags = CODES_KEYS_ITERATOR_ALL_KEYS;
 
-  /* Choose a namespace. E.g. "ls", "time", "parameter", "geography", "statistics" */
-  const char* name_space="ls";
+    /* Choose a namespace. E.g. "ls", "time", "parameter", "geography", "statistics" */
+    const char* name_space = "ls";
 
-  /* name_space=NULL to get all the keys */
-  /* char* name_space=0; */
+    /* name_space=NULL to get all the keys */
+    /* char* name_space=0; */
 
-  FILE* f = NULL;
-  codes_handle* h=NULL;
-  
-  int err=0;
-  int msg_count=0;
+    FILE* f = NULL;
+    codes_handle* h = NULL;
 
-  char value[MAX_VAL_LEN];
-  size_t vlen=MAX_VAL_LEN;
+    int err = 0;
+    int msg_count = 0;
 
-  if (argc != 2) usage(argv[0]);
+    char value[MAX_VAL_LEN];
+    size_t vlen = MAX_VAL_LEN;
 
-    f = fopen(argv[1],"rb");
-  if(!f) {
-    perror(argv[1]);
-    exit(1);
-  }
+    if (argc != 2) usage(argv[0]);
 
-    while((h = codes_handle_new_from_file(0,f,PRODUCT_GRIB,&err)) != NULL)
-  {
-    codes_keys_iterator* kiter=NULL;
-    msg_count++;
-    /*printf("-- GRIB N. %d --\n",msg_count);*/
-    if(!h) {
-      printf("ERROR: Unable to create grib handle\n");
-      exit(1);
+    f = fopen(argv[1], "rb");
+    if (!f) {
+        perror(argv[1]);
+        exit(1);
     }
 
-        kiter=codes_keys_iterator_new(h,key_iterator_filter_flags,name_space);
-    if (!kiter) {
-      printf("ERROR: Unable to create keys iterator\n");
-      exit(1);
-    }
+    while ((h = codes_handle_new_from_file(0, f, PRODUCT_GRIB, &err)) != NULL) {
+        codes_keys_iterator* kiter = NULL;
+        msg_count++;
+        /*printf("-- GRIB N. %d --\n",msg_count);*/
+        if (!h) {
+            printf("ERROR: Unable to create grib handle\n");
+            exit(1);
+        }
 
-    while(codes_keys_iterator_next(kiter))
-    {
-      const char* name = codes_keys_iterator_get_name(kiter);
-      vlen=MAX_VAL_LEN;
-      memset(value, 0, vlen);
-      CODES_CHECK(codes_get_string(h,name,value,&vlen),name);
-      printf("%s = %s\n",name,value);
-    }
+        kiter = codes_keys_iterator_new(h, key_iterator_filter_flags, name_space);
+        if (!kiter) {
+            printf("ERROR: Unable to create keys iterator\n");
+            exit(1);
+        }
 
-    codes_keys_iterator_delete(kiter);
-    codes_handle_delete(h);
-  }
-  fclose(f);
-  return 0;
+        while (codes_keys_iterator_next(kiter)) {
+            const char* name = codes_keys_iterator_get_name(kiter);
+            vlen = MAX_VAL_LEN;
+            memset(value, 0, vlen);
+            CODES_CHECK(codes_get_string(h, name, value, &vlen), name);
+            printf("%s = %s\n", name, value);
+        }
+
+        codes_keys_iterator_delete(kiter);
+        codes_handle_delete(h);
+    }
+    fclose(f);
+    return 0;
 }
 
 static void usage(char* progname)
 {
-  printf("\nUsage: %s grib_file\n",progname);
-  exit(1);
+    printf("\nUsage: %s grib_file\n", progname);
+    exit(1);
 }

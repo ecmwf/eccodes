@@ -10,11 +10,11 @@
 
 #include "grib_api_internal.h"
 
-#include "grib_sh_values.h" // array 'values' defined here
+#include "grib_sh_values.h"  // array 'values' defined here
 
-#define ILCHAM 992
-#define MTRONC 30
-#define STRONC 10
+#define ILCHAM    992
+#define MTRONC    30
+#define STRONC    10
 #define TOLERANCE 1e-5
 
 int main(int argc, char* argv[])
@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
     const void* buffer = NULL;
     char* in_filename = NULL;
     char* out_filename = NULL;
-    char packingType[50] = {0,};
+    char packingType[50] = { 0 };
     bool do_compare = true;
 
     ECCODES_ASSERT(argc == 3);
@@ -45,7 +45,7 @@ int main(int argc, char* argv[])
 
     len = sizeof(packingType);
     GRIB_CHECK(grib_get_string(h, "packingType", packingType, &len), 0);
-    ECCODES_ASSERT( STR_EQUAL(packingType, "spectral_complex") || STR_EQUAL(packingType, "spectral_simple") );
+    ECCODES_ASSERT(STR_EQUAL(packingType, "spectral_complex") || STR_EQUAL(packingType, "spectral_simple"));
 
     GRIB_CHECK(grib_set_long(h, "pentagonalResolutionParameterJ", MTRONC), 0);
     GRIB_CHECK(grib_set_long(h, "pentagonalResolutionParameterK", MTRONC), 0);
@@ -58,7 +58,8 @@ int main(int argc, char* argv[])
         GRIB_CHECK(grib_set_long(h, "subSetK", STRONC), 0);
         GRIB_CHECK(grib_set_long(h, "subSetM", STRONC), 0);
         GRIB_CHECK(grib_set_long(h, "unpackedSubsetPrecision", 1), 0);
-    } else {
+    }
+    else {
         do_compare = false;
     }
 
@@ -68,6 +69,7 @@ int main(int argc, char* argv[])
     // Write to a temporary GRIB file
     printf("Save to file '%s'...\n", out_filename);
     fout = fopen(out_filename, "wb");
+    if (!fout) return 1;
     GRIB_CHECK(grib_get_message(h, &buffer, &size), 0);
     if (fwrite(buffer, 1, size, fout) != size) {
         ECCODES_ASSERT(!"Failed to write data");
@@ -104,8 +106,10 @@ int main(int argc, char* argv[])
     // Read in the saved GRIB file
     if (do_compare) {
         printf("Load values from saved file and compare....\n");
-        fin = fopen(out_filename, "rb"); ECCODES_ASSERT(fin);
-        h = grib_handle_new_from_file(0, fin, &err); ECCODES_ASSERT(h);
+        fin = fopen(out_filename, "rb");
+        ECCODES_ASSERT(fin);
+        h = grib_handle_new_from_file(0, fin, &err);
+        ECCODES_ASSERT(h);
         GRIB_CHECK(grib_get_double_array(h, "values", zval, &len), 0);
         for (i = 0; i < ILCHAM; ++i) {
             const double diff = fabs(zval[i] - values[i]);

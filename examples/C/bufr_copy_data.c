@@ -21,16 +21,16 @@ static void usage(const char* progname);
 
 int main(int argc, char* argv[])
 {
-    FILE* f          = NULL;
-    codes_handle* h  = NULL;
+    FILE* f = NULL;
+    codes_handle* h = NULL;
     codes_handle* ho = NULL;
     long size;
-    char** keys            = NULL;
-    size_t nkeys           = 0, i;
-    int err                = 0;
-    char* outfile          = NULL;
+    char** keys = NULL;
+    size_t nkeys = 0, i;
+    int err = 0;
+    char* outfile = NULL;
     const char* sampleName = "BUFR3";
-    const long ibitmap[]   = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    const long ibitmap[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                              0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                              1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1,
                              1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,

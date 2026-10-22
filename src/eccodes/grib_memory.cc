@@ -9,39 +9,13 @@
  */
 
 #include "grib_api_internal.h"
+#include "sync/Mutex.h"
 
 /* #define CHECK_FOR_LEAKS */
 
 #if MANAGE_MEM
 
-#if GRIB_PTHREADS
-static pthread_once_t once   = PTHREAD_ONCE_INIT;
-static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-
-static void init_mutex()
-{
-    pthread_mutexattr_t attr;
-
-    pthread_mutexattr_init(&attr);
-    pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
-    pthread_mutex_init(&mutex, &attr);
-    pthread_mutexattr_destroy(&attr);
-}
-#elif GRIB_OMP_THREADS
-static int once = 0;
-static omp_nest_lock_t mutex;
-
-static void init_mutex()
-{
-    GRIB_OMP_CRITICAL(lock_grib_memory_c)
-    {
-        if (once == 0) {
-            omp_init_nest_lock(&mutex);
-            once = 1;
-        }
-    }
-}
-#endif
+static eccodes::sync::Mutex mutex;
 
 union align
 {
@@ -51,7 +25,7 @@ union align
     long l;
 };
 
-#define WORD sizeof(union align)
+    #define WORD sizeof(union align)
 
 static size_t page_size = 0;
 
@@ -85,7 +59,7 @@ static memblk* reserve = NULL;
    static memprocs *mprocs = NULL;
  */
 
-#define HEADER_SIZE (sizeof(memblk) - WORD)
+    #define HEADER_SIZE (sizeof(memblk) - WORD)
 
 static mempool _transient_mem = {
     10,
@@ -108,8 +82,7 @@ static void* fast_new(size_t s, mempool* pool)
     char* p;
     memblk* m;
 
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex);
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
 
     m = (memblk*)pool->priv;
 
@@ -141,22 +114,20 @@ static void* fast_new(size_t s, mempool* pool)
 
         p = (memblk*)(pool->clear ? calloc(size, 1) : malloc(size));
         if (!p) {
-            GRIB_MUTEX_UNLOCK(&mutex);
             return NULL;
         }
 
         p->next = (memblk*)pool->priv;
-        p->cnt  = 0;
+        p->cnt = 0;
         p->size = p->left = size - HEADER_SIZE;
-        m                 = p;
-        pool->priv        = (void*)p;
+        m = p;
+        pool->priv = (void*)p;
     }
 
     p = &m->buffer[m->size - m->left];
     m->left -= s;
     m->cnt++;
 
-    GRIB_MUTEX_UNLOCK(&mutex);
 
     return p;
 }
@@ -167,8 +138,7 @@ static void fast_delete(void* p, mempool* pool)
     memblk* m;
     memblk* n = NULL;
 
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex);
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
 
     m = (memblk*)pool->priv;
 
@@ -183,7 +153,6 @@ static void fast_delete(void* p, mempool* pool)
                     pool->priv = (void*)m->next;
                 free((void*)m);
             }
-            GRIB_MUTEX_UNLOCK(&mutex);
             return;
         }
 
@@ -271,8 +240,7 @@ void* grib_buffer_malloc(const grib_context* c, size_t s)
 {
     memblk* r;
 
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex);
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
 
     s = ((s + WORD - 1) / WORD) * WORD;
     r = reserve;
@@ -295,9 +263,7 @@ void* grib_buffer_malloc(const grib_context* c, size_t s)
         reserve = r;
     }
     r->size = s;
-    r->cnt  = 1;
-
-    GRIB_MUTEX_UNLOCK(&mutex);
+    r->cnt = 1;
 
     return &r->buffer[0];
 }
@@ -307,8 +273,7 @@ void grib_buffer_free(const grib_context* c, void* p)
     memblk* r;
     memblk* s;
 
-    GRIB_MUTEX_INIT_ONCE(&once, &init_mutex);
-    GRIB_MUTEX_LOCK(&mutex);
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
 
     r = (memblk*)(((char*)p) - HEADER_SIZE);
     s = reserve;
@@ -319,14 +284,12 @@ void grib_buffer_free(const grib_context* c, void* p)
     else {
         s->cnt = 0;
     }
-
-    GRIB_MUTEX_UNLOCK(&mutex);
 }
 
 void* grib_buffer_realloc(const grib_context* c, void* p, size_t s)
 {
     memblk* r = (memblk*)(((char*)p) - HEADER_SIZE);
-    void* n   = grib_buffer_malloc(c, s);
+    void* n = grib_buffer_malloc(c, s);
     memcpy(n, p, r->size < s ? r->size : s);
     grib_buffer_free(c, p);
     return n;

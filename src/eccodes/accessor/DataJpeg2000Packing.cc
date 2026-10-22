@@ -10,9 +10,6 @@
 
 #include "DataJpeg2000Packing.h"
 
-eccodes::accessor::DataJpeg2000Packing _grib_accessor_data_jpeg2000_packing;
-eccodes::Accessor* grib_accessor_data_jpeg2000_packing = &_grib_accessor_data_jpeg2000_packing;
-
 namespace eccodes::accessor
 {
 
@@ -25,17 +22,17 @@ void DataJpeg2000Packing::init(const long v, grib_arguments* args)
 {
     DataSimplePacking::init(v, args);
     const char* user_lib = NULL;
-    grib_handle* hand    = get_enclosing_handle();
+    grib_handle* hand = get_enclosing_handle();
 
-    jpeg_lib_                 = 0;
+    jpeg_lib_ = 0;
     type_of_compression_used_ = args->get_name(hand, carg_++);
     target_compression_ratio_ = args->get_name(hand, carg_++);
-    ni_                       = args->get_name(hand, carg_++);
-    nj_                       = args->get_name(hand, carg_++);
-    list_defining_points_     = args->get_name(hand, carg_++);
-    number_of_data_points_    = args->get_name(hand, carg_++);
-    scanning_mode_            = args->get_name(hand, carg_++);
-    edition_                  = 2;
+    ni_ = args->get_name(hand, carg_++);
+    nj_ = args->get_name(hand, carg_++);
+    list_defining_points_ = args->get_name(hand, carg_++);
+    number_of_data_points_ = args->get_name(hand, carg_++);
+    scanning_mode_ = args->get_name(hand, carg_++);
+    edition_ = 2;
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 
 #if HAVE_LIBJASPER
@@ -97,25 +94,25 @@ int DataJpeg2000Packing::unpack_float(float* val, size_t* len)
 int DataJpeg2000Packing::unpack_double(double* val, size_t* len)
 {
     int err = GRIB_SUCCESS;
-    grib_handle* hand  = get_enclosing_handle();
+    grib_handle* hand = get_enclosing_handle();
 
-    size_t i           = 0;
-    size_t buflen      = byte_count();
-    double bscale      = 0;
-    double dscale      = 0;
+    size_t i = 0;
+    size_t buflen = byte_count();
+    double bscale = 0;
+    double dscale = 0;
     unsigned char* buf = NULL;
-    size_t n_vals      = 0;
-    long nn            = 0;
+    size_t n_vals = 0;
+    long nn = 0;
 
-    long binary_scale_factor  = 0;
+    long binary_scale_factor = 0;
     long decimal_scale_factor = 0;
-    double reference_value    = 0;
-    long bits_per_value       = 0;
-    double units_factor       = 1.0;
-    double units_bias         = 0.0;
+    double reference_value = 0;
+    long bits_per_value = 0;
+    double units_factor = 1.0;
+    double units_bias = 0.0;
 
     n_vals = 0;
-    err    = value_count(&nn);
+    err = value_count(&nn);
     n_vals = nn;
     if (err)
         return err;
@@ -198,15 +195,15 @@ int DataJpeg2000Packing::unpack_double(double* val, size_t* len)
 int DataJpeg2000Packing::pack_double(const double* cval, size_t* len)
 {
     size_t n_vals = *len;
-    int err       = 0;
-    double reference_value     = 0;
-    long binary_scale_factor   = 0;
-    long bits_per_value        = 0;
-    long decimal_scale_factor  = 0;
-    double decimal             = 1;
+    int err = 0;
+    double reference_value = 0;
+    long binary_scale_factor = 0;
+    long bits_per_value = 0;
+    long decimal_scale_factor = 0;
+    double decimal = 1;
     size_t simple_packing_size = 0;
-    unsigned char* buf         = NULL;
-    double divisor             = 1;
+    unsigned char* buf = NULL;
+    double divisor = 1;
     long width;
     long height;
     long ni;
@@ -218,9 +215,9 @@ int DataJpeg2000Packing::pack_double(const double* cval, size_t* len)
     long number_of_data_points;
     int ret = 0;
     j2k_encode_helper helper;
-    double units_factor     = 1.0;
-    double units_bias       = 0.0;
-    double* val             = (double*)cval;
+    double units_factor = 1.0;
+    double units_bias = 0.0;
+    double* val = (double*)cval;
 
     dirty_ = 1;
 
@@ -261,7 +258,7 @@ int DataJpeg2000Packing::pack_double(const double* cval, size_t* len)
         case GRIB_SUCCESS:
             break;
         default:
-            grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: Unable to compute packing parameters", class_name_, __func__);
+            grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: Unable to compute packing parameters", accessor_type().c_str(), __func__);
             return ret;
     }
 
@@ -282,7 +279,7 @@ int DataJpeg2000Packing::pack_double(const double* cval, size_t* len)
     divisor = codes_power<double>(-binary_scale_factor, 2);
 
     simple_packing_size = (((bits_per_value * n_vals) + 7) / 8) * sizeof(unsigned char);
-    buf                 = (unsigned char*)grib_context_malloc_clear(context_, simple_packing_size + EXTRA_BUFFER_SIZE);
+    buf = (unsigned char*)grib_context_malloc_clear(context_, simple_packing_size + EXTRA_BUFFER_SIZE);
     if (!buf) {
         err = GRIB_OUT_OF_MEMORY;
         goto cleanup;
@@ -303,31 +300,31 @@ int DataJpeg2000Packing::pack_double(const double* cval, size_t* len)
     if ((err = grib_get_long_internal(get_enclosing_handle(), number_of_data_points_, &number_of_data_points)) != GRIB_SUCCESS)
         return err;
 
-    width  = ni;
+    width = ni;
     height = nj;
 
     if ((scanning_mode & (1 << 5)) != 0) {
         long tmp = width;
-        width    = height;
-        height   = tmp;
+        width = height;
+        height = tmp;
     }
 
     /* The grid is not regular */
     if (list_defining_points != 0) {
-        width  = *len;
+        width = *len;
         height = 1;
     }
 
     /* There is a bitmap */
     if (*len != number_of_data_points) {
-        width  = *len;
+        width = *len;
         height = 1;
     }
 
     if (width * height != *len) {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s %s: width=%ld height=%ld len=%zu. width*height should equal len!",
-                         class_name_, __func__, width, height, *len);
+                         accessor_type().c_str(), __func__, width, height, *len);
         /* ECC-802: We cannot bomb out here as the user might have changed Ni/Nj and the packingType
          * but has not yet submitted the new data values. So len will be out of sync!
          * So issue a warning but proceed.
@@ -342,7 +339,7 @@ int DataJpeg2000Packing::pack_double(const double* cval, size_t* len)
             if (target_compression_ratio != 255) {
                 grib_context_log(context_, GRIB_LOG_ERROR,
                                  "%s %s: When %s=0 (Lossless), %s must be set to 255",
-                                 class_name_, __func__, type_of_compression_used_, target_compression_ratio_);
+                                 accessor_type().c_str(), __func__, type_of_compression_used_, target_compression_ratio_);
                 return GRIB_ENCODING_ERROR;
             }
             helper.compression = 0;
@@ -352,7 +349,7 @@ int DataJpeg2000Packing::pack_double(const double* cval, size_t* len)
             if (target_compression_ratio == 255 || target_compression_ratio == 0) {
                 grib_context_log(context_, GRIB_LOG_ERROR,
                                  "%s %s: When %s=1 (Lossy), %s must be specified",
-                                 class_name_, __func__, type_of_compression_used_, target_compression_ratio_);
+                                 accessor_type().c_str(), __func__, type_of_compression_used_, target_compression_ratio_);
                 return GRIB_ENCODING_ERROR;
             }
             helper.compression = target_compression_ratio;
@@ -364,26 +361,26 @@ int DataJpeg2000Packing::pack_double(const double* cval, size_t* len)
     }
 
     helper.jpeg_buffer = buf;
-    helper.width       = width;
-    helper.height      = height;
+    helper.width = width;
+    helper.height = height;
 
     /* See GRIB-438 */
     if (bits_per_value == 0) {
         const long bits_per_value_adjusted = 1;
         grib_context_log(context_, GRIB_LOG_DEBUG,
                          "%s (%s) : bits per value was zero, changed to %ld",
-                         class_name_, jpeg_lib_ == OPENJPEG_LIB ? "openjpeg" : "jasper", bits_per_value_adjusted);
+                         accessor_type().c_str(), jpeg_lib_ == OPENJPEG_LIB ? "openjpeg" : "jasper", bits_per_value_adjusted);
         bits_per_value = bits_per_value_adjusted;
     }
     helper.bits_per_value = bits_per_value;
 
-    helper.buffer_size     = simple_packing_size + EXTRA_BUFFER_SIZE;
-    helper.values          = val;
-    helper.no_values       = n_vals;
+    helper.buffer_size = simple_packing_size + EXTRA_BUFFER_SIZE;
+    helper.values = val;
+    helper.no_values = n_vals;
     helper.reference_value = reference_value;
-    helper.divisor         = divisor;
-    helper.decimal         = decimal;
-    helper.jpeg_length     = 0;
+    helper.divisor = divisor;
+    helper.decimal = decimal;
+    helper.jpeg_length = 0;
 
     switch (jpeg_lib_) {
         case OPENJPEG_LIB:
@@ -399,7 +396,7 @@ int DataJpeg2000Packing::pack_double(const double* cval, size_t* len)
     if (helper.jpeg_length > simple_packing_size)
         grib_context_log(context_, GRIB_LOG_WARNING,
                          "%s (%s) : jpeg data (%ld) larger than input data (%ld)",
-                         class_name_, jpeg_lib_ == OPENJPEG_LIB ? "openjpeg" : "jasper",
+                         accessor_type().c_str(), jpeg_lib_ == OPENJPEG_LIB ? "openjpeg" : "jasper",
                          helper.jpeg_length, simple_packing_size);
 
     ECCODES_ASSERT(helper.jpeg_length <= helper.buffer_size);
@@ -454,12 +451,12 @@ int DataJpeg2000Packing::pack_double(const double* val, size_t* len)
 
 int DataJpeg2000Packing::unpack_double_element(size_t idx, double* val)
 {
-    grib_handle* hand      = get_enclosing_handle();
-    size_t size            = 0;
-    double* values         = NULL;
-    int err                = 0;
+    grib_handle* hand = get_enclosing_handle();
+    size_t size = 0;
+    double* values = NULL;
+    int err = 0;
     double reference_value = 0;
-    long bits_per_value    = 0;
+    long bits_per_value = 0;
 
     if ((err = grib_get_long_internal(hand, bits_per_value_, &bits_per_value)) != GRIB_SUCCESS)
         return err;
@@ -480,7 +477,7 @@ int DataJpeg2000Packing::unpack_double_element(size_t idx, double* val)
         return GRIB_INVALID_ARGUMENT;
 
     values = (double*)grib_context_malloc_clear(context_, size * sizeof(double));
-    err    = grib_get_double_array(hand, "codedValues", values, &size);
+    err = grib_get_double_array(hand, "codedValues", values, &size);
     if (err) {
         grib_context_free(context_, values);
         return err;
@@ -494,10 +491,10 @@ int DataJpeg2000Packing::unpack_double_element_set(const size_t* index_array, si
 {
     grib_handle* hand = get_enclosing_handle();
     size_t size = 0, i = 0;
-    double* values         = NULL;
-    int err                = 0;
+    double* values = NULL;
+    int err = 0;
     double reference_value = 0;
-    long bits_per_value    = 0;
+    long bits_per_value = 0;
 
     if ((err = grib_get_long_internal(hand, bits_per_value_, &bits_per_value)) != GRIB_SUCCESS)
         return err;
@@ -520,7 +517,7 @@ int DataJpeg2000Packing::unpack_double_element_set(const size_t* index_array, si
     }
 
     values = (double*)grib_context_malloc_clear(context_, size * sizeof(double));
-    err    = grib_get_double_array(hand, "codedValues", values, &size);
+    err = grib_get_double_array(hand, "codedValues", values, &size);
     if (err) {
         grib_context_free(context_, values);
         return err;

@@ -11,19 +11,16 @@
 #include "BufrStringValues.h"
 #include "BufrDataArray.h"
 
-eccodes::accessor::BufrStringValues _grib_accessor_bufr_string_values;
-eccodes::Accessor* grib_accessor_bufr_string_values = &_grib_accessor_bufr_string_values;
-
 namespace eccodes::accessor
 {
 
 void BufrStringValues::init(const long len, grib_arguments* args)
 {
     Ascii::init(len, args);
-    int n             = 0;
+    int n = 0;
     dataAccessorName_ = args->get_name(get_enclosing_handle(), n++);
-    dataAccessor_     = NULL;
-    length_           = 0;
+    dataAccessor_ = NULL;
+    length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
@@ -48,7 +45,7 @@ int BufrStringValues::unpack_string_array(char** buffer, size_t* len)
     size_t i, j, n = 0;
     char** b = buffer;
 
-  accessor::BufrDataArray* data = dynamic_cast<accessor::BufrDataArray*>(get_accessor());
+    accessor::BufrDataArray* data = dynamic_cast<accessor::BufrDataArray*>(get_accessor());
     if (!data)
         return GRIB_NOT_FOUND;
 

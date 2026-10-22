@@ -20,9 +20,10 @@ class DataCcsdsPacking : public Values
 {
 public:
     DataCcsdsPacking() :
-        Values() { class_name_ = "data_ccsds_packing"; }
-    grib_accessor* create_empty_accessor() override { return new DataCcsdsPacking{}; }
+        Values() {}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     int pack_double(const double* val, size_t* len) override;
+    int pack_bytes(const unsigned char*, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
     int unpack_float(float* val, size_t* len) override;
     int value_count(long*) override;
@@ -42,7 +43,11 @@ private:
     const char* ccsds_block_size_ = nullptr;
     const char* ccsds_rsi_ = nullptr;
 
-    template <typename T> int unpack(T* val, size_t* len);
+    template <typename T>
+    int unpack(T* val, size_t* len);
+
+public:
+    static constexpr AccessorType accessor_type_{ "data_ccsds_packing" };
 };
 
 }  // namespace eccodes::accessor

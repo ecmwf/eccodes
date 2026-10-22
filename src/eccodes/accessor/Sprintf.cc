@@ -10,9 +10,6 @@
 
 #include "Sprintf.h"
 
-eccodes::accessor::Sprintf _grib_accessor_sprintf;
-eccodes::Accessor* grib_accessor_sprintf = &_grib_accessor_sprintf;
-
 namespace eccodes::accessor
 {
 
@@ -28,15 +25,15 @@ int Sprintf::unpack_string(char* val, size_t* len)
     char result[1024];
     char tempBuffer[2048];
     char sres[1024];
-    long ires            = 0;
-    double dres          = 0;
-    size_t replen        = 1024;
-    int ret              = GRIB_SUCCESS;
-    int carg             = 0;
-    int is_missing       = 0;
-    const char* uname    = NULL;
+    long ires = 0;
+    double dres = 0;
+    size_t replen = 1024;
+    int ret = GRIB_SUCCESS;
+    int carg = 0;
+    int is_missing = 0;
+    const char* uname = NULL;
     const char* tempname = NULL;
-    size_t uname_len     = 0;
+    size_t uname_len = 0;
 
     uname = args_->get_string(get_enclosing_handle(), carg++);
     snprintf(result, sizeof(result), "%s", "");
@@ -48,8 +45,8 @@ int Sprintf::unpack_string(char* val, size_t* len)
             i++;
             if (uname[i] == '.') {
                 char *theEnd = NULL, *start;
-                start        = (char*)&(uname[++i]);
-                precision    = strtol(start, &theEnd, 10);
+                start = (char*)&(uname[++i]);
+                precision = strtol(start, &theEnd, 10);
                 ECCODES_ASSERT(*theEnd != 0);
                 while (uname[i] != *theEnd)
                     i++;
