@@ -8,7 +8,7 @@ alias number=clusterIdentifier;
 unsigned[1]  NH : dump, can_be_missing;
 
 # Number of cluster to which the low resolution control belongs
-unsigned[1] NL : dump ;
+unsigned[1] NL : dump, can_be_missing ;
 
 # Total number of clusters
 unsigned[1] totalNumberOfClusters : dump ;
