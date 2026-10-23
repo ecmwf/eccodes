@@ -56,6 +56,12 @@ int GeoIterator::init(grib_handle* h, grib_arguments*)
         return err;
     }
 
+    if (static_cast<size_t>(numberOfPoints) != grid_->size()) {
+        grib_context_log(h_->context, GRIB_LOG_ERROR, "Geoiterator: Wrong number of points: numberOfPoints != grid size (%ld!=%zu)",
+                         numberOfPoints, grid_->size());
+        return GRIB_WRONG_GRID;
+    }
+
     if ((flags_ & GRIB_GEOITERATOR_NO_VALUES) == 0) {
         // printf("GeoIterator::init WE WANT values - numberOfPoints=%ld nv_=%zu\n", numberOfPoints , nv_);
         if (static_cast<size_t>(numberOfPoints) != nv_) {
