@@ -89,6 +89,8 @@ v12="set values={1,2,3,4,5,6,7,8,9,10,11,12}; set numberOfDataPoints=12; set num
 ll="set Nj=3; set latitudeOfFirstGridPointInDegrees=60; set latitudeOfLastGridPointInDegrees=58; set Ni=4; set longitudeOfFirstGridPointInDegrees=0; set longitudeOfLastGridPointInDegrees=3; set DjInDegrees=1; set DiInDegrees=1"
 polar='set gridType="polar_stereographic"; set Nx=4; set Ny=3; set shapeOfTheEarth=6; set latitudeOfFirstGridPointInDegrees=38.7017; set longitudeOfFirstGridPointInDegrees=268.656832; set LaDInDegrees=60; set orientationOfTheGridInDegrees=280; set DxInMetres=50000; set DyInMetres=50000'
 mercator='set gridType="mercator"; set Ni=4; set Nj=3; set shapeOfTheEarth=6; set longitudeOfFirstGridPointInDegrees=262.036499; set longitudeOfLastGridPointInDegrees=263.287713; set LaDInDegrees=14; set DiInMetres=45000; set DjInMetres=45000'
+# regular Gaussian sub-area, longitudes encoded to microdegrees (65.0390625 = 925 * 360 / 5120, truncated or rounded)
+f1280="set N=1280; set Ni=4; set Nj=3; set latitudeOfFirstGridPointInDegrees=89.946188; set latitudeOfLastGridPointInDegrees=89.806357; set longitudeOfLastGridPointInDegrees=65.25; set iDirectionIncrementInDegrees=0.070313; $v12"
 while IFS='|' read -r sample keys; do
     echo "$keys; write;" > $tempFilt
     ${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample
@@ -104,6 +106,9 @@ $ECCODES_SAMPLES_PATH/GRIB2.tmpl|$mercator; $v12; set latitudeOfFirstGridPointIn
 $ECCODES_SAMPLES_PATH/GRIB2.tmpl|$mercator; $v12; set latitudeOfFirstGridPointInDegrees=15.541634; set latitudeOfLastGridPointInDegrees=14.736453; set jScansPositively=0
 $ECCODES_SAMPLES_PATH/GRIB2.tmpl|$polar; $v12; set jScansPositively=1; set alternativeRowScanning=1
 $ECCODES_SAMPLES_PATH/GRIB2.tmpl|$polar; $v12; set jScansPositively=0
+$ECCODES_SAMPLES_PATH/regular_gg_sfc_grib2.tmpl|$f1280; set longitudeOfFirstGridPointInDegrees=65.039062
+$ECCODES_SAMPLES_PATH/regular_gg_sfc_grib2.tmpl|$f1280; set longitudeOfFirstGridPointInDegrees=65.039063
+$ECCODES_SAMPLES_PATH/regular_gg_sfc_grib2.tmpl|$f1280; set longitudeOfFirstGridPointInDegrees=65.039063; set alternativeRowScanning=1
 EOF
 
 # space_view window, alternativeRowScanning
@@ -113,6 +118,22 @@ ${tools_dir}/grib_filter -o $tempGrib $tempFilt $tempGrib.in
 check $tempGrib
 rm -f $tempGrib $tempGrib.in
 
+# Messages the eccodes iterator accepts, wrongly: reduced Gaussian sub-areas encoded as PRODGEN/LIBEMOS did (legacy,
+# rows rounded differently); errors with eckit::geo
+while IFS='|' read -r input error; do
+    for l in 1 2; do
+        set +e
+        ECCODES_ECKIT_GEO=$l ${tools_dir}/grib_get_data $input > $tempGrib.out 2>&1
+        status=$?
+        set -e
+        [ $status -ne 0 ]
+        grep -q "$error" $tempGrib.out
+    done
+done <<EOF
+${data_dir}/reduced_gaussian_sub_area.legacy.grib1|Wrong number of points
+EOF
+rm -f $tempGrib.out
+
 compare ${data_dir}/regular_latlon_surface.grib1
 compare ${data_dir}/regular_latlon_surface.grib2
 compare "${data_dir}/gridspec/gridType=regular_ll,scanningMode=96.grib"
@@ -120,7 +141,15 @@ compare ${data_dir}/constant_field.grib2
 compare ${data_dir}/gridspec/gridType=rotated_ll.grib
 compare ${data_dir}/reduced_latlon_surface.grib2
 compare ${data_dir}/gridspec/gridType=reduced_ll.grib 2/4
+compare ${data_dir}/regular_gaussian_pressure_level_constant.grib2
+compare ${data_dir}/high_level_api.grib2 1
+compare ${data_dir}/gridspec/gridType=regular_gg.grib
+compare ${data_dir}/gridspec/gridType=rotated_gg.grib
+compare ${data_dir}/reduced_gaussian_pressure_level.grib2
+compare ${data_dir}/reduced_gaussian_sub_area.grib1
+compare ${data_dir}/reduced_gaussian_sub_area.grib2
 compare "${data_dir}/gridspec/gridType=reduced_gg,N320.area.grib"
+compare ${data_dir}/gridspec/gridType=reduced_rotated_gg.grib
 compare ${data_dir}/gridspec/gridType=healpix.grib 1/2/3/4
 compare ${data_dir}/gridspec/gridType=lambert.grib 1/2/3/4/5/7/8/9/10/11
 compare ${data_dir}/gridspec/gridType=lambert_azimuthal_equal_area.grib 1/2

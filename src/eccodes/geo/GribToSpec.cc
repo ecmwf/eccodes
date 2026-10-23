@@ -298,20 +298,31 @@ const char* get_key(const std::string& name, codes_handle* h)
         { "west_east_increment", "iDirectionIncrementInDegrees" },
         { "south_north_increment", "jDirectionIncrementInDegrees" },
 
+        { "ni", "ni_fix_for_regular_gaussian_grids", _or(is("gridType", "regular_gg"), is("gridType", "rotated_gg")) },
+
+        { "west", "longitudeOfLastGridPointInDegrees_fix_for_gaussian_grids",
+          _and(is("iScansNegatively", 1L), _or(is("gridType", "regular_gg"), is("gridType", "rotated_gg"))) },
+        { "east", "longitudeOfFirstGridPointInDegrees_fix_for_gaussian_grids",
+          _and(is("iScansNegatively", 1L), _or(is("gridType", "regular_gg"), is("gridType", "rotated_gg"))) },
+        { "west", "longitudeOfFirstGridPointInDegrees_fix_for_gaussian_grids",
+          _or(is("gridType", "regular_gg"), is("gridType", "rotated_gg")) },
+        { "east", "longitudeOfLastGridPointInDegrees_fix_for_gaussian_grids",
+          _or(is("gridType", "regular_gg"), is("gridType", "rotated_gg")) },
+
         { "west", "longitudeOfLastGridPointInDegrees", is("iScansNegatively", 1L) },
         { "east", "longitudeOfFirstGridPointInDegrees", is("iScansNegatively", 1L) },
         { "west", "longitudeOfFirstGridPointInDegrees" },
-        { "east", "longitudeOfLastGridPointInDegrees_fix_for_global_reduced_grids", is("gridType", "reduced_gg") },
+        { "east", "longitudeOfLastGridPointInDegrees_fix_for_global_reduced_grids",
+          _or(_or(is("gridType", "reduced_gg"), is("gridType", "reduced_rotated_gg")),
+              _or(is("gridType", "reduced_stretched_gg"), is("gridType", "reduced_stretched_rotated_gg"))) },
         { "east", "longitudeOfLastGridPointInDegrees" },
 
-        { "north", "latitudeOfFirstGridPointInDegrees_fix_for_gaussian_grids",
-          _and(is("scanningMode", 0L), is_gaussian()) },
-        { "south", "latitudeOfLastGridPointInDegrees_fix_for_gaussian_grids",
-          _and(is("scanningMode", 0L), is_gaussian()) },
         { "north", "latitudeOfLastGridPointInDegrees_fix_for_gaussian_grids",
-          _and(is("scanningMode", 1L), is_gaussian()) },
+          _and(is("jScansPositively", 1L), is_gaussian()) },
         { "south", "latitudeOfFirstGridPointInDegrees_fix_for_gaussian_grids",
-          _and(is("scanningMode", 1L), is_gaussian()) },
+          _and(is("jScansPositively", 1L), is_gaussian()) },
+        { "north", "latitudeOfFirstGridPointInDegrees_fix_for_gaussian_grids", is_gaussian() },
+        { "south", "latitudeOfLastGridPointInDegrees_fix_for_gaussian_grids", is_gaussian() },
 
         { "north", "latitudeOfLastGridPointInDegrees", is("jScansPositively", 1L) },
         { "south", "latitudeOfFirstGridPointInDegrees", is("jScansPositively", 1L) },
@@ -483,18 +494,113 @@ bool codes_is_well_defined(codes_handle* h, const char* key)
 }
 
 
+template <typename T>
+bool cache_get(const GribToSpec::cache_type& cache, const std::string& name, T& value)
+{
+    if (auto it = cache.find(name); it != cache.end()) {
+        if (std::holds_alternative<T>(it->second)) {
+            value = std::get<T>(it->second);
+            return true;
+        }
+    }
+    return false;
+}
+
+
+template <typename T>
+void cache_set(GribToSpec::cache_type& cache, const std::string& name, const T& value)
+{
+    cache.insert_or_assign(name, eckit::spec::Custom::value_type{ std::in_place_type<T>, value });
+}
+
+
+/// Known GRIB messages encoded wrongly (by md5GridSection), with the values that should have been encoded
+const std::pair<const std::string, const GribToSpec::cache_type>* fixes(codes_handle* h)
+{
+    if (!eckit_geo_use_grib_fixes(h)) {
+        return nullptr;
+    }
+
+    using fixes_type = std::map<std::string, const GribToSpec::cache_type>;
+    static const fixes_type FIXES{
+
+        // gridName=N640, edition=2
+        { "51ea7dcd62e71c9707157a2d15247593", { { "longitudeOfLastGridPointInDegrees", 359.859375 } } },
+
+        // gridName=O2560, edition=1, experimentVersionNumber=h5xa/h5zi
+        { "8a6f6c4cc9ad3f64546773b87566bc72", { { "latitudeOfFirstGridPointInDegrees", 89.973 }, { "latitudeOfLastGridPointInDegrees", -89.973 } } },
+
+        // gridName=O640, edition=1, experimentVersionNumber=h5wk/h6en/hc9k
+        { "f5dc74ec36353f4c83f7de3bf46e1aef", { { "latitudeOfFirstGridPointInDegrees", 89.892396 }, { "latitudeOfLastGridPointInDegrees", -89.892396 } } },
+
+        // COPINT-1137: specific wrong dates/times (centre=ecmf)
+        // gridName=N256, centre:i=98, edition=2, experimentVersionNumber=0080
+        { "45ec9d2d5e7a14306a0d0f89ffc59fc7", { { "latitudeOfFirstGridPointInDegrees", 89.731149 }, { "latitudeOfLastGridPointInDegrees", -89.731149 } } },
+
+        // gridType=regular_ll, edition=2, centre=egrr (Arakawa C-grid UM)
+        { "026edb6c52792bc15957072536dbe7c2", { { "longitudeOfLastGridPointInDegrees", 359.0625 } } },                                                   // N96, T
+        { "379bbee20b78c58b9e86e1377c14a3da", { { "longitudeOfLastGridPointInDegrees", 358.125 } } },                                                    // N96, U
+        { "2e0f685a14d8ad3615dbc7252d5ebbb9", { { "longitudeOfLastGridPointInDegrees", 359.0625 } } },                                                   // N96, V
+        { "fd45c3ec374370a77222de303aa00a23", { { "latitudeOfFirstGridPointInDegrees", -89.8125 }, { "latitudeOfLastGridPointInDegrees", 89.8125 } } },  // N320, T
+
+        // gridName=N48, edition=2 (IFS samples grib1_mlgrib2*/gg_ml.tmpl, before re-encoding): latitudes to millidegrees
+        { "7d2a7c83e39921ec51bc6525b6996d29", { { "latitudeOfFirstGridPointInDegrees", 88.572169 }, { "latitudeOfLastGridPointInDegrees", -88.572169 } } },
+
+        // ecCodes test data (centre=ecmf, edition=2 unless noted): latitudes to millidegrees, or wrong
+        { "6e70fa5a258bd30484c2aba9d23e4666", { { "latitudeOfFirstGridPointInDegrees", 89.655964 }, { "latitudeOfLastGridPointInDegrees", 0.224719 } } },     // N200, reduced_gaussian_sub_area.grib2
+        { "6fcea9a744c0c8f139b43cd69c43b1bb", { { "latitudeOfFirstGridPointInDegrees", 89.570090 }, { "latitudeOfLastGridPointInDegrees", -89.570090 } } },   // O160, edition=1
+        { "5c5e90b13535db11eedfb8fe2dc2d4fc", { { "latitudeOfFirstGridPointInDegrees", 89.892396 }, { "latitudeOfLastGridPointInDegrees", -89.892396 } } },   // N640
+        { "64021b41ad213494812ff8077a260c07", { { "latitudeOfFirstGridPointInDegrees", 89.892396 }, { "latitudeOfLastGridPointInDegrees", -89.892396 } } },   // N640
+        { "305081a0333d578417638769fc7ab693", { { "latitudeOfFirstGridPointInDegrees", 89.892396 }, { "latitudeOfLastGridPointInDegrees", -89.892396 } } },   // O640
+        { "879c3e3c947ed060a1886c5eb48a7c18", { { "latitudeOfFirstGridPointInDegrees", 89.946188 }, { "latitudeOfLastGridPointInDegrees", -89.946188 } } },   // O1280
+        { "20c512aa7c25d2f73f48b5963a42264f", { { "latitudeOfFirstGridPointInDegrees", -25.091759 }, { "latitudeOfLastGridPointInDegrees", -46.880120 } } },  // N640
+        { "31b7a754d56b0126fc805ad7fbec503b", { { "latitudeOfFirstGridPointInDegrees", 57.985155 }, { "latitudeOfLastGridPointInDegrees", 25.091759 } } },    // N640
+        { "40feb8df77fdee9ef0cce4cc9a69cc20", { { "latitudeOfFirstGridPointInDegrees", 69.933608 }, { "latitudeOfLastGridPointInDegrees", 36.056225 } } },    // N640
+        { "6d1bc30d2ad9f0d442618aa0150d2925", { { "latitudeOfFirstGridPointInDegrees", 43.928149 }, { "latitudeOfLastGridPointInDegrees", 21.015227 } } },    // N640
+        { "7ad53b2bb45738fdc6b9b40fa0308e52", { { "latitudeOfFirstGridPointInDegrees", 89.946188 }, { "latitudeOfLastGridPointInDegrees", 15.008787 } } },    // N1280
+    };
+
+    char buffer[34];
+    auto size = sizeof(buffer);
+    CHECK_CALL(codes_get_string(h, "md5GridSection", buffer, &size));
+
+    const auto fix = FIXES.find(buffer);
+    return fix != FIXES.end() ? &*fix : nullptr;
+}
+
+
+/// Angle as encoded, or as fixed (see fixes)
+double get_angle(codes_handle* h, const char* key)
+{
+    double value = 0;
+    if (const auto* fix = fixes(h); fix == nullptr || !cache_get(fix->second, key, value)) {
+        CHECK_CALL(codes_get_double(h, key, &value));
+    }
+    return value;
+}
+
+
+double precision(codes_handle* h)
+{
+    // edition=2 angles can be encoded as fractions of a basic angle (if not 0 or missing, the default)
+    if (codes_is_well_defined(h, "basicAngleOfTheInitialProductionDomain") &&
+        codes_is_well_defined(h, "subdivisionsOfBasicAngle")) {
+        const auto basic = get_long(h, "basicAngleOfTheInitialProductionDomain");
+        const auto subdivisions = get_long(h, "subdivisionsOfBasicAngle");
+        if (basic > 0 && subdivisions > 0) {
+            return static_cast<double>(basic) / static_cast<double>(subdivisions);
+        }
+    }
+
+    const auto angleSubdivisions = get_long(h, "angleSubdivisions");
+    return angleSubdivisions > 0 ? 1. / static_cast<double>(angleSubdivisions) : 0.;
+}
+
+
 ProcessingT<double>* angular_precision()
 {
     return new ProcessingT<double>([](codes_handle* h, double& value) {
-        if (codes_is_well_defined(h, "basicAngleOfTheInitialProductionDomain") && codes_is_well_defined(h, "subdivisionsOfBasicAngle")) {
-            value = 0.;
-            return true;
-        }
-
-        long angleSubdivisions = 0;
-        CHECK_CALL(codes_get_long(h, "angleSubdivisions", &angleSubdivisions));
-
-        value = angleSubdivisions > 0 ? 1. / static_cast<double>(angleSubdivisions) : 0.;
+        value = precision(h);
         return true;
     });
 }
@@ -503,12 +609,10 @@ ProcessingT<double>* angular_precision()
 ProcessingT<double>* longitudeOfLastGridPointInDegrees_fix_for_global_reduced_grids()
 {
     return new ProcessingT<double>([](codes_handle* h, double& Lon2) {
-        Lon2 = 0;
-        CHECK_CALL(codes_get_double(h, "longitudeOfLastGridPointInDegrees", &Lon2));
+        Lon2 = get_angle(h, "longitudeOfLastGridPointInDegrees");
 
         if (codes_is_defined(h, "pl") != 0) {
-            double Lon1 = 0;
-            CHECK_CALL(codes_get_double(h, "longitudeOfFirstGridPointInDegrees", &Lon1));
+            const auto Lon1 = get_angle(h, "longitudeOfFirstGridPointInDegrees");
 
             if (eckit::types::is_approximately_equal<double>(Lon1, 0)) {
                 // get pl array maximum and sum
@@ -536,9 +640,7 @@ ProcessingT<double>* longitudeOfLastGridPointInDegrees_fix_for_global_reduced_gr
                 CHECK_CALL(codes_get_long(h, "numberOfDataPoints", &numberOfDataPoints));
 
                 if (static_cast<size_t>(plSum) == numberOfDataPoints) {
-                    double eps = 0.;
-                    ASSERT(std::unique_ptr<ProcessingT<double>>(angular_precision())->eval(h, eps));
-
+                    const auto eps = precision(h);
                     eckit::Fraction Lon2_expected(360L * (plMax - 1L), plMax);
 
                     if (!eckit::types::is_approximately_greater_or_equal<double>(Lon2, Lon2_expected, eps)) {
@@ -565,53 +667,78 @@ ProcessingT<double>* longitudeOfLastGridPointInDegrees_fix_for_global_reduced_gr
 }
 
 
-ProcessingT<double>* latitudeOfFirstGridPointInDegrees_fix_for_gaussian_grids()
+/// Index (north to south) of the Gaussian latitude encoded (to the precision given), or 2N if none
+size_t gaussian_latitude_index(long N, double lat, double eps)
 {
-    return new ProcessingT<double>([](codes_handle* h, double& lat) {
-        double eps = 0.;
-        ASSERT(std::unique_ptr<ProcessingT<double>>(angular_precision())->eval(h, eps));
+    ASSERT(N > 0);
+    const auto& lats = eckit::geo::util::gaussian_latitudes(N, false);
 
-        long N = 0L;
-        CHECK_CALL(codes_get_long(h, "N", &N));
-        ASSERT(N > 0);
+    auto it = std::lower_bound(lats.begin(), lats.end(), lat, std::greater<double>{});
+    if (it == lats.end() || (it != lats.begin() && std::abs(*(it - 1) - lat) < std::abs(*it - lat))) {
+        --it;
+    }
 
-        double& Lat1 = lat;
-        CHECK_CALL(codes_get_double(h, "latitudeOfFirstGridPointInDegrees", &Lat1));
-
-        double Lat2 = 0.;
-        CHECK_CALL(codes_get_double(h, "latitudeOfLastGridPointInDegrees", &Lat2));
-
-        const auto snap = eckit::geo::util::gaussian_latitudes(N, Lat1 < Lat2).front();
-        if (eckit::types::is_approximately_equal(Lat1, snap, eps)) {
-            lat = snap < 0. ? eckit::geo::SOUTH_POLE.lat() : eckit::geo::NORTH_POLE.lat();
-        }
-
-        return true;
-    });
+    return eckit::types::is_approximately_equal(lat, *it, eps)
+             ? static_cast<size_t>(std::distance(lats.begin(), it))
+             : lats.size();
 }
 
 
-ProcessingT<double>* latitudeOfLastGridPointInDegrees_fix_for_gaussian_grids()
+/// The Gaussian latitude encoded, or the pole for the first/last (global in latitude)
+double snap_to_gaussian_latitude(codes_handle* h, double lat)
 {
-    return new ProcessingT<double>([](codes_handle* h, double& lat) {
-        double eps = 0.;
-        ASSERT(std::unique_ptr<ProcessingT<double>>(angular_precision())->eval(h, eps));
+    const auto N = get_long(h, "N");
+    const auto& lats = eckit::geo::util::gaussian_latitudes(N, false);
+    const auto j = gaussian_latitude_index(N, lat, precision(h));
 
-        long N = 0L;
-        CHECK_CALL(codes_get_long(h, "N", &N));
-        ASSERT(N > 0);
+    return j >= lats.size()     ? lat
+         : j == 0               ? eckit::geo::NORTH_POLE.lat()
+         : j + 1 == lats.size() ? eckit::geo::SOUTH_POLE.lat()
+                                : lats[j];
+}
 
-        double Lat1 = 0.;
-        CHECK_CALL(codes_get_double(h, "latitudeOfFirstGridPointInDegrees", &Lat1));
 
-        double& Lat2 = lat;
-        CHECK_CALL(codes_get_double(h, "latitudeOfLastGridPointInDegrees", &Lat2));
+/// Regular Gaussian grids number of longitudes (global) from the increment, if not 4N
+bool regular_gaussian_ni(codes_handle* h, long& ni)
+{
+    long N = 0;
+    long given = 0;
+    double inc = 0;
+    if (codes_get_long(h, "N", &N) != CODES_SUCCESS || N <= 0 ||
+        codes_get_long(h, "iDirectionIncrementGiven", &given) != CODES_SUCCESS || given == 0 ||
+        codes_get_double(h, "iDirectionIncrementInDegrees", &inc) != CODES_SUCCESS || !(inc > 0.)) {
+        return false;
+    }
 
-        const auto snap = eckit::geo::util::gaussian_latitudes(N, Lat1 < Lat2).back();
-        if (eckit::types::is_approximately_equal(Lat2, snap, eps)) {
-            lat = snap < 0. ? eckit::geo::SOUTH_POLE.lat() : eckit::geo::NORTH_POLE.lat();
-        }
+    const auto eps = precision(h);
+    const auto n = std::lround(360. / inc);
+    if (eckit::types::is_approximately_equal(360. / static_cast<double>(4 * N), inc, eps) || n <= 0 ||
+        !eckit::types::is_approximately_equal(360. / static_cast<double>(n), inc, eps)) {
+        return false;
+    }
 
+    ni = n;
+    return true;
+}
+
+
+/// The regular Gaussian grid longitude encoded (multiple of 360/ni)
+double snap_to_gaussian_longitude(codes_handle* h, double lon)
+{
+    long ni = 4 * get_long(h, "N");
+    regular_gaussian_ni(h, ni);
+
+    const auto inc = 360. / static_cast<double>(ni);
+    const auto snap = std::round(lon / inc) * inc;
+    return eckit::types::is_approximately_equal(lon, snap, precision(h)) ? snap : lon;
+}
+
+
+/// Angle of a key, snapped (to the grid, as encoded)
+ProcessingT<double>* snapped(const char* key, double (*snap)(codes_handle*, double))
+{
+    return new ProcessingT<double>([key, snap](codes_handle* h, double& value) {
+        value = snap(h, get_angle(h, key));
         return true;
     });
 }
@@ -627,11 +754,9 @@ ProcessingT<double>* iDirectionIncrementInDegrees_fix_for_periodic_regular_grids
         CHECK_CALL(codes_get_double(h, "iDirectionIncrementInDegrees", &we));
         ASSERT(we > 0.);
 
-        double Lon1 = 0.;
-        double Lon2 = 0.;
+        const auto Lon1 = get_angle(h, "longitudeOfFirstGridPointInDegrees");
+        auto Lon2 = get_angle(h, "longitudeOfLastGridPointInDegrees");
         long Ni = 0;
-        CHECK_CALL(codes_get_double(h, "longitudeOfFirstGridPointInDegrees", &Lon1));
-        CHECK_CALL(codes_get_double(h, "longitudeOfLastGridPointInDegrees", &Lon2));
         CHECK_CALL(codes_get_long(h, "Ni", &Ni));
         ASSERT(Ni > 0);
 
@@ -639,9 +764,7 @@ ProcessingT<double>* iDirectionIncrementInDegrees_fix_for_periodic_regular_grids
         ASSERT(Lon2 >= Lon1);
 
         // angles are within +-1/2 precision, so (Lon2 - Lon1 + we) uses factor 3*1/2
-        double eps = 0.;
-        ASSERT(std::unique_ptr<ProcessingT<double>>(angular_precision())->eval(h, eps));
-        eps *= 1.5;
+        const auto eps = precision(h) * 1.5;
 
         constexpr double GLOBE = 360;
 
@@ -835,28 +958,6 @@ class lock_type
 };
 
 
-template <typename T>
-bool cache_get(const GribToSpec::cache_type& cache, const std::string& name, T& value)
-{
-    if (auto it = cache.find(name); it != cache.end()) {
-        if (std::holds_alternative<T>(it->second)) {
-            value = std::get<T>(it->second);
-            return true;
-        }
-    }
-    return false;
-}
-
-
-template <typename T>
-void cache_set(GribToSpec::cache_type& cache, const std::string& name, const T& value)
-{
-    cache.insert_or_assign(name, eckit::spec::Custom::value_type{ std::in_place_type<T>, value });
-}
-
-
-
-
 using Custom = eckit::spec::Custom;
 
 
@@ -955,7 +1056,7 @@ Custom* make_projected_spec(codes_handle* h, const Projected& p)
 
     std::unique_ptr<const eckit::geo::Projection> to_xy(eckit::geo::ProjectionFactory::build(*projection));
     const auto first = std::get<eckit::geo::PointXY>(to_xy->fwd(eckit::geo::PointLonLat{
-        get_double(h, "longitudeOfFirstGridPointInDegrees"), get_double(h, "latitudeOfFirstGridPointInDegrees") }));
+        get_angle(h, "longitudeOfFirstGridPointInDegrees"), get_angle(h, "latitudeOfFirstGridPointInDegrees") }));
 
     if (!std::isfinite(first.X()) || !std::isfinite(first.Y())) {
         throw eckit::geo::exception::ProjectionError("GribToSpec: first grid point is not projectable", Here());
@@ -1051,42 +1152,10 @@ GribToSpec::GribToSpec(codes_handle* h, bool rotated) :
 {
     ASSERT(handle_ != nullptr);
 
-    if (eckit_geo_use_grib_fixes(h)) {
-        using fixes_type = std::map<std::string, const cache_type>;
-        static const fixes_type FIXES{
-
-            // gridName=N640, edition=2
-            { "51ea7dcd62e71c9707157a2d15247593", { { "longitudeOfLastGridPointInDegrees", 359.859375 } } },
-
-            // gridName=O2560, edition=1, experimentVersionNumber=h5xa/h5zi
-            { "8a6f6c4cc9ad3f64546773b87566bc72", { { "latitudeOfFirstGridPointInDegrees", 89.973 }, { "latitudeOfLastGridPointInDegrees", -89.973 } } },
-
-            // gridName=O640, edition=1, experimentVersionNumber=h5wk/h6en/hc9k
-            { "f5dc74ec36353f4c83f7de3bf46e1aef", { { "latitudeOfFirstGridPointInDegrees", 89.892396 }, { "latitudeOfLastGridPointInDegrees", -89.892396 } } },
-
-            // COPINT-1137: specific wrong dates/times (centre=ecmf)
-            // gridName=N256, centre:i=98, edition=2, experimentVersionNumber=0080
-            { "45ec9d2d5e7a14306a0d0f89ffc59fc7", { { "latitudeOfFirstGridPointInDegrees", 89.731149 }, { "latitudeOfLastGridPointInDegrees", -89.731149 } } },
-
-            // gridType=regular_ll, edition=2, centre=egrr (Arakawa C-grid UM)
-            { "026edb6c52792bc15957072536dbe7c2", { { "longitudeOfLastGridPointInDegrees", 359.0625 } } },                                                   // N96, T
-            { "379bbee20b78c58b9e86e1377c14a3da", { { "longitudeOfLastGridPointInDegrees", 358.125 } } },                                                    // N96, U
-            { "2e0f685a14d8ad3615dbc7252d5ebbb9", { { "longitudeOfLastGridPointInDegrees", 359.0625 } } },                                                   // N96, V
-            { "fd45c3ec374370a77222de303aa00a23", { { "latitudeOfFirstGridPointInDegrees", -89.8125 }, { "latitudeOfLastGridPointInDegrees", 89.8125 } } },  // N320, T
-        };
-
-        char buffer[34];
-        auto size = sizeof(buffer);
-        CHECK_CALL(codes_get_string(handle_, "md5GridSection", buffer, &size));
-
-        const std::string md5GridSection(buffer);
-        ASSERT(md5GridSection.size() == 32);
-
-        if (const auto& fix = FIXES.find(md5GridSection); fix != FIXES.end()) {
-            grib_context_log(nullptr, GRIB_LOG_WARNING, "GribToSpec: applying fix for md5GridSection=%s", md5GridSection.c_str());
-            cache_ = fix->second;
-        }
-    };
+    if (const auto* fix = fixes(h); fix != nullptr) {
+        grib_context_log(nullptr, GRIB_LOG_WARNING, "GribToSpec: applying fix for md5GridSection=%s", fix->first.c_str());
+        cache_ = fix->second;
+    }
 
     if (std::string type; get("gridType", type)) {
         if (const auto& p = projected().find(type); p != projected().end()) {
@@ -1162,7 +1231,14 @@ bool GribToSpec::has(const std::string& name) const
         return false;
     }
 
-    return cache_.find(key) != cache_.end() || codes_is_defined(handle_, key) != 0;
+    if (cache_.find(key) != cache_.end() || codes_is_defined(handle_, key) != 0) {
+        return true;
+    }
+
+    // keys calculated (see get), eg. *_fix_for_gaussian_grids
+    double d = 0;
+    long l = 0;
+    return get(name, d) || get(name, l);
 }
 
 
@@ -1282,6 +1358,15 @@ bool GribToSpec::get(const std::string& name, long& value) const
     // FIXME: make sure that 'value' is not set if CODES_MISSING_LONG
     int err = codes_get_long(handle_, key.c_str(), &value);
     if (err == CODES_NOT_FOUND || codes_is_missing(handle_, key.c_str(), &err) != 0) {
+        static const ProcessingList<long> process{
+            { "ni_fix_for_regular_gaussian_grids", new ProcessingT<long>(regular_gaussian_ni) },
+        };
+
+        if (get_value(key, handle_, value, process)) {
+            cache_set(cache_, name, value);
+            return true;
+        }
+
         return false;
     }
 
@@ -1361,10 +1446,14 @@ bool GribToSpec::get(const std::string& name, double& value) const
               longitudeOfLastGridPointInDegrees_fix_for_global_reduced_grids() },
             { "iDirectionIncrementInDegrees_fix_for_periodic_regular_grids",
               iDirectionIncrementInDegrees_fix_for_periodic_regular_grids() },
+            { "longitudeOfFirstGridPointInDegrees_fix_for_gaussian_grids",
+              snapped("longitudeOfFirstGridPointInDegrees", snap_to_gaussian_longitude) },
+            { "longitudeOfLastGridPointInDegrees_fix_for_gaussian_grids",
+              snapped("longitudeOfLastGridPointInDegrees", snap_to_gaussian_longitude) },
             { "latitudeOfFirstGridPointInDegrees_fix_for_gaussian_grids",
-              latitudeOfFirstGridPointInDegrees_fix_for_gaussian_grids() },
+              snapped("latitudeOfFirstGridPointInDegrees", snap_to_gaussian_latitude) },
             { "latitudeOfLastGridPointInDegrees_fix_for_gaussian_grids",
-              latitudeOfLastGridPointInDegrees_fix_for_gaussian_grids() },
+              snapped("latitudeOfLastGridPointInDegrees", snap_to_gaussian_latitude) },
         };
 
         if (get_value(key, handle_, value, process)) {
@@ -1416,8 +1505,13 @@ bool GribToSpec::get(const std::string& name, std::vector<long>& value) const
     CHECK_CALL(codes_get_long_array(handle_, key, value.data(), &size));
     ASSERT(count == size);
 
-    // gridType=reduced_ll pl is (assumed) regional, otherwise assumed global
+    // gridType=reduced_ll pl is (assumed) regional, otherwise assumed global (and with every entry positive)
     if (name == "pl" && get_string("gridType") != "reduced_ll") {
+        if (auto it = std::find_if(value.begin(), value.end(), [](long n) { return n <= 0; }); it != value.end()) {
+            wrongly_encoded_grib_error("GribToSpec: invalid pl array: entry at index=" +
+                                       std::to_string(std::distance(value.begin(), it)));
+        }
+
         pl_expand_to_global(value);
     }
 
@@ -1539,20 +1633,22 @@ void GribToSpec::pl_expand_to_global(std::vector<long>& pl) const
 
     const auto lat1 = get_double("latitudeOfFirstGridPointInDegrees");
     const auto lat2 = get_double("latitudeOfLastGridPointInDegrees");
+    const auto eps = precision(handle_);
 
-    const auto increasing = lat1 < lat2;
-    const auto& lats(eckit::geo::util::gaussian_latitudes(N, increasing));
-    const auto eps = std::max(eckit::geo::PointLonLat::EPS, get_double("angular_precision"));
-
-    auto approx = [=](double a, double b) { return increasing ? a + eps < b : a - eps > b; };
-    const auto j = std::distance(lats.begin(), std::lower_bound(lats.begin(), lats.end(), lat1, approx));
-    const auto lat2_expected = lats[j + pl.size() - 1];
-    if (j + pl.size() > 2 * N || !eckit::types::is_approximately_equal<double>(lat2, lat2_expected, eps)) {
-        wrongly_encoded_grib_error("GribToSpec: cropped 'pl' doesn't align to global latitudes: start=" + std::to_string(j) + " + #pl=" + std::to_string(pl.size()) + " <= #lats=" + std::to_string(lats.size()));
+    // the first and last latitudes as Gaussian latitudes (north to south)
+    const auto j1 = gaussian_latitude_index(N, std::max(lat1, lat2), eps);
+    const auto j2 = gaussian_latitude_index(N, std::min(lat1, lat2), eps);
+    if (j1 >= 2 * N || j2 >= 2 * N || j1 > j2 || j2 - j1 + 1 != pl.size()) {
+        wrongly_encoded_grib_error("GribToSpec: cropped 'pl' doesn't align to global latitudes: #pl=" +
+                                   std::to_string(pl.size()) + ", latitudes " + std::to_string(lat1) + " to " +
+                                   std::to_string(lat2) + " of N=" + std::to_string(N));
     }
 
+    // pl (global) in the direction of the message latitudes
+    const auto j = lat1 < lat2 ? 2 * N - 1 - j2 : j1;
+
     std::vector<long> pl_global(2 * N, 0);
-    std::copy(pl.begin(), pl.end(), pl_global.begin() + j);
+    std::copy(pl.begin(), pl.end(), pl_global.begin() + static_cast<std::ptrdiff_t>(j));
     pl.swap(pl_global);
 }
 
@@ -1561,7 +1657,6 @@ const Spec& GribToSpec::spec(const std::string& name) const
 {
     return spec_ ? spec_->spec(name) : Spec::spec(name);
 }
-
 
 
 void GribToSpec::json(eckit::JSON& j) const
