@@ -7,8 +7,10 @@ on:
   schedule:
     - cron: "0 20 * * *"
 
+# Every job is off: they run outside the Kubernetes runners, which may trust the compromised eMudhra CAs (Oct 2026).
 jobs:
   benchmark-hpc:
+    if: false
     runs-on: [self-hosted, linux, hpc]
     env:
       GH_TOKEN: ${{ secrets.GH_REPO_READ_TOKEN }}
@@ -25,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - benchmark-hpc
-    if: always()
+    if: ${{ false && (always()) }}
     steps:
       - name: Trigger Teams notification
         uses: ecmwf/notify-teams@v1

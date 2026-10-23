@@ -7,8 +7,10 @@ on:
   schedule:
     - cron: "0 21 * * *"
 
+# Every job is off: they run outside the Kubernetes runners, which may trust the compromised eMudhra CAs (Oct 2026).
 jobs:
   test-hpc:
+    if: false
     runs-on: [self-hosted, linux, hpc]
     env:
       GH_TOKEN: ${{ secrets.GH_REPO_READ_TOKEN }}

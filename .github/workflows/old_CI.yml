@@ -12,11 +12,12 @@ on:
   # Trigger the workflow manually
   workflow_dispatch: ~
 
+# Every job is off: they run outside the Kubernetes runners, which may trust the compromised eMudhra CAs (Oct 2026).
 jobs:
   # Run CI including downstream packages on self-hosted runners
   downstream-ci:
     name: downstream-ci
-    if: ${{ github.event_name == 'workflow_dispatch' || (github.event.workflow_run.event == 'push' && github.event.workflow_run.conclusion == 'success') }}
+    if: ${{ false && (github.event_name == 'workflow_dispatch' || (github.event.workflow_run.event == 'push' && github.event.workflow_run.conclusion == 'success')) }}
     uses: ecmwf/downstream-ci/.github/workflows/downstream-ci.yml@main
     with:
       ci_group: only-self
@@ -27,7 +28,7 @@ jobs:
   # Run Rust CI (fmt + clippy + test) on the rust/ workspace
   ci-rust:
     name: ci-rust
-    if: ${{ github.event_name == 'workflow_dispatch' || (github.event.workflow_run.event == 'push' && github.event.workflow_run.conclusion == 'success') }}
+    if: ${{ false && (github.event_name == 'workflow_dispatch' || (github.event.workflow_run.event == 'push' && github.event.workflow_run.conclusion == 'success')) }}
     uses: ecmwf/reusable-workflows/.github/workflows/ci-rust.yml@main
     with:
       manifest-path: rust/Cargo.toml
@@ -39,7 +40,7 @@ jobs:
   # Build downstream packages on HPC
   downstream-ci-hpc:
     name: downstream-ci-hpc
-    if: ${{ github.event_name == 'workflow_dispatch' || (github.event.workflow_run.event == 'push' && github.event.workflow_run.conclusion == 'success') }}
+    if: ${{ false && (github.event_name == 'workflow_dispatch' || (github.event.workflow_run.event == 'push' && github.event.workflow_run.conclusion == 'success')) }}
     uses: ecmwf/downstream-ci/.github/workflows/downstream-ci-hpc.yml@main
     with:
       ci_group: only-self

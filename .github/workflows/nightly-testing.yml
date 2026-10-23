@@ -7,8 +7,10 @@ on:
   schedule:
     - cron: "0 20 * * *"
 
+# Every job is off: they run outside the Kubernetes runners, which may trust the compromised eMudhra CAs (Oct 2026).
 jobs:
   test-hpc:
+    if: false
     runs-on: [self-hosted, linux, hpc]
     env:
       GH_TOKEN: ${{ secrets.GH_REPO_READ_TOKEN }}
@@ -22,6 +24,7 @@ jobs:
           build_config: .github/nightly-ci-hpc-testing-config.yml
 
   test-macos:
+    if: false
     strategy:
       matrix:
         name:
@@ -60,6 +63,7 @@ jobs:
           build_config: .github/ci-config.yml
 
   deploy:
+    if: false
     needs: [test-hpc, test-macos]
     uses: ecmwf/reusable-workflows/.github/workflows/create-package.yml@v2
     with:
@@ -80,7 +84,7 @@ jobs:
       - test-hpc
       - test-macos
       - deploy
-    if: always()
+    if: ${{ false && (always()) }}
     steps:
       - name: Trigger Teams notification
         uses: ecmwf/notify-teams@v1
