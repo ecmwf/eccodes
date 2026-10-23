@@ -13,6 +13,7 @@ on:
   workflow_dispatch: ~
 
 # Every job is off: they run outside the Kubernetes runners, which may trust the compromised eMudhra CAs (Oct 2026).
+# To switch them back on, grep for 'false &&' and 'if: false' and remove them.
 jobs:
   # Run CI including downstream packages on self-hosted runners
   downstream-ci:
