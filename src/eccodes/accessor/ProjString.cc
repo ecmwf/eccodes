@@ -16,7 +16,7 @@
     #include <cstdio>
     #include <memory>
 
-    #include "eckit/geo/Grid.h"
+    #include "eckit/geo/Projection.h"
     #include "eckit/geo/Exceptions.h"
 
     #include "geo/GribToSpec.h"
@@ -251,19 +251,20 @@ int ProjString::unpack_string(char* v, size_t* len)
         grib_context_log(h->context, GRIB_LOG_DEBUG, "ProjString: using eckit/geo");
         try {
             geo::GribToSpec spec(h);
-            std::unique_ptr<const eckit::geo::Grid> grid(eckit::geo::GridFactory::build(spec));
+            std::unique_ptr<const eckit::geo::Projection> projection(
+                eckit::geo::ProjectionFactory::build(spec));
+            const auto proj_str = projection->proj_str();
 
-            auto proj_str = grid->projection().proj_str();
-
-            auto buf_size = *len;
-            if (*len = std::snprintf(v, buf_size, "%s", proj_str.c_str()); *len >= buf_size) {
+            // length including the terminating null character (as below)
+            const auto buf_size = *len;
+            if (*len = proj_str.size() + 1; buf_size < *len) {
                 grib_context_log(h->context, GRIB_LOG_ERROR,
                                  "%s: Buffer too small for %s. It is at least %zu bytes long (len=%zu)",
                                  class_name_, name_, *len, buf_size);
-                *len = buf_size;
                 return GRIB_BUFFER_TOO_SMALL;
             }
 
+            std::snprintf(v, buf_size, "%s", proj_str.c_str());
             return CODES_SUCCESS;
         }
         catch (eckit::geo::Exception& e) {
