@@ -11,7 +11,6 @@
       "cacheVariables": {
         "ENABLE_EXTRA_TESTS": "ON",
         "ENABLE_ECCODES_THREADS": "ON"
-
       }
     },
     {
@@ -27,6 +26,67 @@
       "inherits": "ci",
       "cacheVariables": {
         "BUILD_SHARED_LIBS": "OFF"
+      }
+    },
+    {
+      "name": "strict",
+      "description": "The trailing -Wno-* flags are the warnings not yet fixed; each fix drops its flag",
+      "inherits": "ci",
+      "cacheVariables": {
+        "CMAKE_C_FLAGS": "-Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wformat=2 -Wnull-dereference -Wno-unused-parameter -Wno-conversion -Wno-sign-conversion -Wno-sign-compare -Wno-missing-field-initializers -Wno-shadow -Wno-format-nonliteral -Wno-missing-braces",
+        "CMAKE_CXX_FLAGS": "-Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wformat=2 -Wnull-dereference -Wnon-virtual-dtor -Woverloaded-virtual -Wno-unused-parameter -Wno-conversion -Wno-sign-conversion -Wno-sign-compare -Wno-missing-field-initializers -Wno-shadow -Wno-format-nonliteral -Wno-missing-braces -D_GLIBCXX_ASSERTIONS",
+        "CMAKE_COMPILE_WARNING_AS_ERROR": "ON"
+      }
+    },
+    {
+      "name": "clang-tidy",
+      "inherits": "ci",
+      "cacheVariables": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      }
+    },
+    {
+      "name": "cppcheck",
+      "inherits": "clang-tidy"
+    },
+    {
+      "name": "valgrind",
+      "inherits": "ci"
+    },
+    {
+      "name": "asan-ubsan",
+      "inherits": "ci",
+      "cacheVariables": {
+        "CMAKE_C_FLAGS": "-fsanitize=address,undefined -fno-sanitize-recover=all -fno-omit-frame-pointer",
+        "CMAKE_CXX_FLAGS": "-fsanitize=address,undefined -fno-sanitize-recover=all -fno-omit-frame-pointer -D_GLIBCXX_ASSERTIONS",
+        "CMAKE_EXE_LINKER_FLAGS": "-fsanitize=address,undefined",
+        "CMAKE_SHARED_LINKER_FLAGS": "-fsanitize=address,undefined"
+      }
+    },
+    {
+      "name": "tsan",
+      "description": "POSIX threads, not OpenMP: libgomp is not instrumented and floods TSan with false positives",
+      "inherits": "ci",
+      "cacheVariables": {
+        "ENABLE_ECCODES_OMP_THREADS": "OFF",
+        "ENABLE_ECCODES_THREADS": "ON",
+        "CMAKE_C_FLAGS": "-fsanitize=thread",
+        "CMAKE_CXX_FLAGS": "-fsanitize=thread",
+        "CMAKE_EXE_LINKER_FLAGS": "-fsanitize=thread",
+        "CMAKE_SHARED_LINKER_FLAGS": "-fsanitize=thread"
+      }
+    },
+    {
+      "name": "coverage",
+      "description": "No compiler launcher: an sccache hit restores the object without its .gcno",
+      "inherits": "ci",
+      "cacheVariables": {
+        "CMAKE_C_FLAGS": "--coverage",
+        "CMAKE_CXX_FLAGS": "--coverage",
+        "CMAKE_EXE_LINKER_FLAGS": "--coverage",
+        "CMAKE_SHARED_LINKER_FLAGS": "--coverage",
+        "CMAKE_C_COMPILER_LAUNCHER": "",
+        "CMAKE_CXX_COMPILER_LAUNCHER": ""
       }
     }
   ]
