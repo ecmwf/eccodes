@@ -100,6 +100,12 @@ int GridSpec::unpack_string(char* v, size_t* len)
         std::unique_ptr<const eckit::geo::Grid> grid(eckit::geo::GridFactory::build(*spec));
         ASSERT(grid);
 
+        if (long n = 0; grib_get_long(h, "numberOfDataPoints", &n) == GRIB_SUCCESS && static_cast<size_t>(n) != grid->size()) {
+            grib_context_log(context_, GRIB_LOG_ERROR,
+                             "GridSpec: Wrong number of points: numberOfDataPoints != grid size (%ld!=%zu)", n, grid->size());
+            return GRIB_WRONG_GRID;
+        }
+
         spec_str = grid->spec_str();
     }
     catch (eckit::geo::Exception& e) {
