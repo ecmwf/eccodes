@@ -64,6 +64,8 @@ set climatologicalRegime = 2;
 write;
 EOF
 
+${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample_grib2
+
 result=$(${tools_dir}/grib_get -p mars.number $tempGrib)
 [ "$result" = "1" ]
 
