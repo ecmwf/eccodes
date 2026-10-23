@@ -97,7 +97,7 @@ bool eckit_geo_use_for_iterator(const grib_handle* h)
 
 bool eckit_geo_use_for_projstring(const grib_handle* h)
 {
-    return eckit_geo_level(h) >= EckitGeoLevel::ENABLED;
+    return eckit_geo_level(h) > EckitGeoLevel::DISABLED;
 }
 
 
