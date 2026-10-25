@@ -22,10 +22,10 @@ void Md5::init(const long len, grib_arguments* arg)
     grib_string_list* current = 0;
     grib_context* context = context_;
 
-    offset_key_ = arg->get_name(get_enclosing_handle(), n++);
-    length_key_ = arg->get_expression(get_enclosing_handle(), n++);
+    offset_key_ = arg->get_name(n++);
+    length_key_ = arg->get_expression(n++);
     blocklist_ = NULL;
-    while ((b = (char*)arg->get_name(get_enclosing_handle(), n++)) != NULL) {
+    while ((b = (char*)arg->get_name(n++)) != NULL) {
         if (!blocklist_) {
             blocklist_ = (grib_string_list*)grib_context_malloc_clear(context, sizeof(grib_string_list));
             blocklist_->value = grib_context_strdup(context, b);

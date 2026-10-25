@@ -18,7 +18,7 @@ void ToInteger::init(const long len, grib_arguments* arg)
     Gen::init(len, arg);
     grib_handle* hand = get_enclosing_handle();
 
-    key_ = arg->get_name(hand, 0);
+    key_ = arg->get_name(0);
     start_ = arg->get_long(hand, 1);
     str_length_ = arg->get_long(hand, 2);
 

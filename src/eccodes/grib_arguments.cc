@@ -55,7 +55,7 @@ void Arguments::print(grib_handle* f) const
     }
 }
 
-const char* Arguments::get_name(grib_handle* /*h*/, int n) const
+const char* Arguments::get_name(int n) const
 {
     const Expression* e = NULL;
     const Arguments* args = this;
@@ -118,7 +118,7 @@ double Arguments::get_double(grib_handle* h, int n) const
     return dres;
 }
 
-grib_expression* Arguments::get_expression(grib_handle* /*h*/, int n) const
+grib_expression* Arguments::get_expression(int n) const
 {
     const Arguments* args = this;
     while (args && n-- > 0) {

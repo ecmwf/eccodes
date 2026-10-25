@@ -17,7 +17,7 @@ void Bit::init(const long len, grib_arguments* arg)
 {
     Long::init(len, arg);
     length_ = 0;
-    owner_ = arg->get_name(get_enclosing_handle(), 0);
+    owner_ = arg->get_name(0);
     bit_index_ = arg->get_long(get_enclosing_handle(), 1);
 }
 

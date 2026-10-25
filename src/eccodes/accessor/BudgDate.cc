@@ -18,9 +18,9 @@ void BudgDate::init(const long l, grib_arguments* c)
     Long::init(l, c);
     int n = 0;
 
-    year_ = c->get_name(get_enclosing_handle(), n++);
-    month_ = c->get_name(get_enclosing_handle(), n++);
-    day_ = c->get_name(get_enclosing_handle(), n++);
+    year_ = c->get_name(n++);
+    month_ = c->get_name(n++);
+    day_ = c->get_name(n++);
 }
 
 int BudgDate::unpack_long(long* val, size_t* len)

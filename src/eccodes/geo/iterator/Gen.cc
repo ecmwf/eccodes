@@ -25,10 +25,10 @@ int Gen::init(grib_handle* h, grib_arguments* args)
     // e.g., latlon, gaussian_reduced etc
     carg_ = 1;  // start from 1 and not 0
 
-    const char* s_numPoints = args->get_name(h, carg_++);
+    const char* s_numPoints = args->get_name(carg_++);
     // The missingValue argument is not currently used. Skip it
-    carg_++;  // const char* s_missingValue = args->get_name(h, carg_++);
-    const char* s_rawData = args->get_name(h, carg_++);
+    carg_++;  // const char* s_missingValue = args->get_name(carg_++);
+    const char* s_rawData = args->get_name(carg_++);
 
     size_t dli = 0;
     if ((err = grib_get_size(h, s_rawData, &dli)) != GRIB_SUCCESS)

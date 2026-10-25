@@ -19,14 +19,14 @@ void LatLonIncrement::init(const long l, grib_arguments* c)
     int n = 0;
     grib_handle* hand = get_enclosing_handle();
 
-    directionIncrementGiven_ = c->get_name(hand, n++);
-    directionIncrement_ = c->get_name(hand, n++);
-    scansPositively_ = c->get_name(hand, n++);
-    first_ = c->get_name(hand, n++);
-    last_ = c->get_name(hand, n++);
-    numberOfPoints_ = c->get_name(hand, n++);
-    angleMultiplier_ = c->get_name(hand, n++);
-    angleDivisor_ = c->get_name(hand, n++);
+    directionIncrementGiven_ = c->get_name(n++);
+    directionIncrement_ = c->get_name(n++);
+    scansPositively_ = c->get_name(n++);
+    first_ = c->get_name(n++);
+    last_ = c->get_name(n++);
+    numberOfPoints_ = c->get_name(n++);
+    angleMultiplier_ = c->get_name(n++);
+    angleDivisor_ = c->get_name(n++);
     isLongitude_ = c->get_long(hand, n++);
 }
 

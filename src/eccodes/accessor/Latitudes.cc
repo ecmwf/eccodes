@@ -47,7 +47,7 @@ void Latitudes::init(const long l, grib_arguments* args)
     Double::init(l, args);
     int n = 0;
 
-    values_ = args->get_name(get_enclosing_handle(), n++);
+    values_ = args->get_name(n++);
     distinct_ = args->get_long(get_enclosing_handle(), n++);
     save_ = 0;
 

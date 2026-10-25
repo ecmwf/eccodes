@@ -16,12 +16,11 @@ namespace eccodes::accessor
 void Time::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
-    grib_handle* hand = get_enclosing_handle();
     int n = 0;
 
-    hour_ = c->get_name(hand, n++);
-    minute_ = c->get_name(hand, n++);
-    second_ = c->get_name(hand, n++);
+    hour_ = c->get_name(n++);
+    minute_ = c->get_name(n++);
+    second_ = c->get_name(n++);
 }
 
 int Time::unpack_long(long* val, size_t* len)

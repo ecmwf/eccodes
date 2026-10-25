@@ -16,13 +16,12 @@ namespace eccodes::accessor
 void G1Date::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
-    grib_handle* hand = get_enclosing_handle();
     int n = 0;
 
-    century_ = c->get_name(hand, n++);
-    year_ = c->get_name(hand, n++);
-    month_ = c->get_name(hand, n++);
-    day_ = c->get_name(hand, n++);
+    century_ = c->get_name(n++);
+    year_ = c->get_name(n++);
+    month_ = c->get_name(n++);
+    day_ = c->get_name(n++);
 }
 
 int G1Date::unpack_long(long* val, size_t* len)

@@ -18,8 +18,8 @@ void DataRawPacking::init(const long v, grib_arguments* args)
 {
     Values::init(v, args);
 
-    number_of_values_ = args->get_name(get_enclosing_handle(), carg_++);
-    precision_ = args->get_name(get_enclosing_handle(), carg_++);
+    number_of_values_ = args->get_name(carg_++);
+    precision_ = args->get_name(carg_++);
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
 

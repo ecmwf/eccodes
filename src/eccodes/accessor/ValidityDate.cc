@@ -16,16 +16,15 @@ namespace eccodes::accessor
 void ValidityDate::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
-    grib_handle* hand = get_enclosing_handle();
     int n = 0;
 
-    date_ = c->get_name(hand, n++);
-    time_ = c->get_name(hand, n++);
-    step_ = c->get_name(hand, n++);
-    stepUnits_ = c->get_name(hand, n++);
-    year_ = c->get_name(hand, n++);
-    month_ = c->get_name(hand, n++);
-    day_ = c->get_name(hand, n++);
+    date_ = c->get_name(n++);
+    time_ = c->get_name(n++);
+    step_ = c->get_name(n++);
+    stepUnits_ = c->get_name(n++);
+    year_ = c->get_name(n++);
+    month_ = c->get_name(n++);
+    day_ = c->get_name(n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }

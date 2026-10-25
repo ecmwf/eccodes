@@ -16,14 +16,13 @@ namespace eccodes::accessor
 void NumberOfCodedValues::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
-    grib_handle* h = get_enclosing_handle();
 
     int n = 0;
-    bitsPerValue_ = c->get_name(h, n++);
-    offsetBeforeData_ = c->get_name(h, n++);
-    offsetAfterData_ = c->get_name(h, n++);
-    unusedBits_ = c->get_name(h, n++);
-    numberOfValues_ = c->get_name(h, n++);
+    bitsPerValue_ = c->get_name(n++);
+    offsetBeforeData_ = c->get_name(n++);
+    offsetAfterData_ = c->get_name(n++);
+    unusedBits_ = c->get_name(n++);
+    numberOfValues_ = c->get_name(n++);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     length_ = 0;

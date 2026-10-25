@@ -17,7 +17,7 @@ void BufrdcExpandedDescriptors::init(const long len, grib_arguments* args)
 {
     Long::init(len, args);
     int n = 0;
-    expandedDescriptors_ = args->get_name(get_enclosing_handle(), n++);
+    expandedDescriptors_ = args->get_name(n++);
     expandedDescriptorsAccessor_ = 0;
     length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;

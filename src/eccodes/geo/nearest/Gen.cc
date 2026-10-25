@@ -21,8 +21,8 @@ int Gen::init(grib_handle* h, grib_arguments* args)
 
     cargs_ = 1;
 
-    values_key_ = args->get_name(h, cargs_++);
-    radius_ = args->get_name(h, cargs_++);
+    values_key_ = args->get_name(cargs_++);
+    radius_ = args->get_name(cargs_++);
     values_ = NULL;
 
     return ret;

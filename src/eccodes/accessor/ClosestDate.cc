@@ -17,18 +17,17 @@ namespace eccodes::accessor
 void ClosestDate::init(const long l, grib_arguments* c)
 {
     Double::init(l, c);
-    grib_handle* h = get_enclosing_handle();
     int n = 0;
 
-    dateLocal_ = c->get_name(h, n++);
-    timeLocal_ = c->get_name(h, n++);
-    numForecasts_ = c->get_name(h, n++);
-    year_ = c->get_name(h, n++);
-    month_ = c->get_name(h, n++);
-    day_ = c->get_name(h, n++);
-    hour_ = c->get_name(h, n++);
-    minute_ = c->get_name(h, n++);
-    second_ = c->get_name(h, n++);
+    dateLocal_ = c->get_name(n++);
+    timeLocal_ = c->get_name(n++);
+    numForecasts_ = c->get_name(n++);
+    year_ = c->get_name(n++);
+    month_ = c->get_name(n++);
+    day_ = c->get_name(n++);
+    hour_ = c->get_name(n++);
+    minute_ = c->get_name(n++);
+    second_ = c->get_name(n++);
 
     length_ = 0;
 }

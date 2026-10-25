@@ -40,7 +40,7 @@ int Unstructured::init(grib_handle* h, grib_arguments* args)
     // if ((ret = Gen::init(h, args)) != GRIB_SUCCESS)
     //     return ret;
 
-    // const char* s_uuidOfHGrid = args->get_name(h, carg_++);
+    // const char* s_uuidOfHGrid = args->get_name(carg_++);
     // char uuidOfHGrid[32] = {0};
     // auto slen = sizeof(uuidOfHGrid);
     // if ((ret = grib_get_string_internal(h, s_uuidOfHGrid, uuidOfHGrid, &slen)) != GRIB_SUCCESS) {

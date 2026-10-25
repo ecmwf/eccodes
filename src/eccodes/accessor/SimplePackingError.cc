@@ -18,13 +18,12 @@ void SimplePackingError::init(const long l, grib_arguments* c)
 {
     Double::init(l, c);
     int n = 0;
-    grib_handle* h = get_enclosing_handle();
 
-    bitsPerValue_ = c->get_name(h, n++);
-    binaryScaleFactor_ = c->get_name(h, n++);
-    decimalScaleFactor_ = c->get_name(h, n++);
-    referenceValue_ = c->get_name(h, n++);
-    floatType_ = c->get_name(h, n++);
+    bitsPerValue_ = c->get_name(n++);
+    binaryScaleFactor_ = c->get_name(n++);
+    decimalScaleFactor_ = c->get_name(n++);
+    referenceValue_ = c->get_name(n++);
+    floatType_ = c->get_name(n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     length_ = 0;

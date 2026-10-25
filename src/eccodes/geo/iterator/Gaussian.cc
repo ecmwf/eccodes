@@ -34,10 +34,10 @@ int Gaussian::init(grib_handle* h, grib_arguments* args)
     double start;
     long istart = 0;
 
-    const char* latofirst = args->get_name(h, carg_++);
-    const char* latoflast = args->get_name(h, carg_++);
-    const char* numtrunc = args->get_name(h, carg_++);
-    const char* s_jScansPositively = args->get_name(h, carg_++);
+    const char* latofirst = args->get_name(carg_++);
+    const char* latoflast = args->get_name(carg_++);
+    const char* numtrunc = args->get_name(carg_++);
+    const char* s_jScansPositively = args->get_name(carg_++);
 
     if ((ret = grib_get_double_internal(h, latofirst, &laf)))
         return ret;

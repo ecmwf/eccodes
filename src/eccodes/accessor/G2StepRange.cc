@@ -21,8 +21,8 @@ void G2StepRange::init(const long l, grib_arguments* c)
 
     int n = 0;
 
-    start_step_ = c->get_name(get_enclosing_handle(), n++);
-    end_step_ = c->get_name(get_enclosing_handle(), n++);
+    start_step_ = c->get_name(n++);
+    end_step_ = c->get_name(n++);
 
     length_ = 0;
 }

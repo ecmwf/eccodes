@@ -24,8 +24,8 @@ int Regular::init(grib_handle* h, grib_arguments* args)
     if ((ret = Gen::init(h, args) != GRIB_SUCCESS))
         return ret;
 
-    Ni_ = args->get_name(h, cargs_++);
-    Nj_ = args->get_name(h, cargs_++);
+    Ni_ = args->get_name(cargs_++);
+    Nj_ = args->get_name(cargs_++);
     i_ = (size_t*)grib_context_malloc(h->context, 2 * sizeof(size_t));
     j_ = (size_t*)grib_context_malloc(h->context, 2 * sizeof(size_t));
     return ret;

@@ -17,13 +17,12 @@ namespace eccodes::accessor
 void OptimalStepUnits::init(const long l, grib_arguments* c)
 {
     Gen::init(l, c);
-    grib_handle* hand = get_enclosing_handle();
     int n = 0;
 
-    forecast_time_value_ = c->get_name(hand, n++);
-    forecast_time_unit_ = c->get_name(hand, n++);
-    time_range_value_ = c->get_name(hand, n++);
-    time_range_unit_ = c->get_name(hand, n++);
+    forecast_time_value_ = c->get_name(n++);
+    forecast_time_unit_ = c->get_name(n++);
+    time_range_value_ = c->get_name(n++);
+    time_range_unit_ = c->get_name(n++);
     length_ = 0;
     overwriteStepUnits_ = eccodes::Unit{ eccodes::Unit::Value::MISSING }.value<long>();
 }

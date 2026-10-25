@@ -17,10 +17,9 @@ void StepHumanReadable::init(const long len, grib_arguments* params)
 {
     Gen::init(len, params);
     int n = 0;
-    grib_handle* h = get_enclosing_handle();
 
-    stepUnits_ = params->get_name(h, n++);
-    step_ = params->get_name(h, n++);
+    stepUnits_ = params->get_name(n++);
+    step_ = params->get_name(n++);
     length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }

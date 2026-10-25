@@ -18,7 +18,7 @@ void LatLonValues::init(const long l, grib_arguments* c)
     Double::init(l, c);
     int n = 0;
 
-    values_ = c->get_name(get_enclosing_handle(), n++);
+    values_ = c->get_name(n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }

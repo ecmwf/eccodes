@@ -16,11 +16,11 @@ namespace eccodes::accessor
 void DataG1ComplexPacking::init(const long v, grib_arguments* args)
 {
     DataComplexPacking::init(v, args);
-    half_byte_ = args->get_name(get_enclosing_handle(), carg_++);
-    N_ = args->get_name(get_enclosing_handle(), carg_++);
-    packingType_ = args->get_name(get_enclosing_handle(), carg_++);
-    ieee_packing_ = args->get_name(get_enclosing_handle(), carg_++);
-    precision_ = args->get_name(get_enclosing_handle(), carg_++);
+    half_byte_ = args->get_name(carg_++);
+    N_ = args->get_name(carg_++);
+    packingType_ = args->get_name(carg_++);
+    ieee_packing_ = args->get_name(carg_++);
+    precision_ = args->get_name(carg_++);
     edition_ = 1;
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }

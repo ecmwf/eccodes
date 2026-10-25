@@ -25,7 +25,7 @@ int Evaluate::unpack_long(long* val, size_t* len)
     if (!arg_) return GRIB_INVALID_ARGUMENT;
 
     grib_handle* h = get_enclosing_handle();
-    grib_expression* e = arg_->get_expression(h, 0);
+    grib_expression* e = arg_->get_expression(0);
 
     int ret = e->evaluate_long(h, val);
     *len = 1;

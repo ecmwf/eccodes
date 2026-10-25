@@ -18,10 +18,10 @@ void G2ConceptDir::init(const long len, grib_arguments* arg)
     Gen::init(len, arg);
     grib_handle* h = get_enclosing_handle();
 
-    this->preferLocal_ = arg->get_name(h, 0);
-    this->masterDir_ = arg->get_name(h, 1);
-    this->localDir_ = arg->get_name(h, 2);
-    datasetForLocal_ = arg->get_name(h, 3);
+    this->preferLocal_ = arg->get_name(0);
+    this->masterDir_ = arg->get_name(1);
+    this->localDir_ = arg->get_name(2);
+    datasetForLocal_ = arg->get_name(3);
     mode_ = arg->get_long(h, 4);
     ECCODES_ASSERT(mode_ == 1 || mode_ == 2);
     length_ = 0;

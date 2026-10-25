@@ -19,8 +19,8 @@ void G2Probability::init(const long l, grib_arguments* c)
     grib_handle* hand = get_enclosing_handle();
     int n = 0;
 
-    productDefinitionTemplateNumber_ = c->get_name(hand, n++);
-    stepType_ = c->get_name(hand, n++);
+    productDefinitionTemplateNumber_ = c->get_name(n++);
+    stepType_ = c->get_name(n++);
     referencePeriod_ = c->get_long(hand, n++);
 }
 

@@ -17,16 +17,15 @@ void DataApplyBoustrophedonicBitmap::init(const long v, grib_arguments* args)
 {
     Gen::init(v, args);
     int n = 0;
-    grib_handle* gh = get_enclosing_handle();
 
-    coded_values_ = args->get_name(gh, n++);
-    bitmap_ = args->get_name(gh, n++);
-    missing_value_ = args->get_name(gh, n++);
-    binary_scale_factor_ = args->get_name(gh, n++);
+    coded_values_ = args->get_name(n++);
+    bitmap_ = args->get_name(n++);
+    missing_value_ = args->get_name(n++);
+    binary_scale_factor_ = args->get_name(n++);
 
-    numberOfRows_ = args->get_name(gh, n++);
-    numberOfColumns_ = args->get_name(gh, n++);
-    numberOfPoints_ = args->get_name(gh, n++);
+    numberOfRows_ = args->get_name(n++);
+    numberOfColumns_ = args->get_name(n++);
+    numberOfPoints_ = args->get_name(n++);
 
     length_ = 0;
 }

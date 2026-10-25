@@ -6,7 +6,7 @@ namespace eccodes::accessor
 void G2ReferencePeriod::init(const long length, grib_arguments* args)
 {
     Unsigned::init(length, args);
-    productDefinitionTemplateNumber_ = args->get_name(get_enclosing_handle(), 0);
+    productDefinitionTemplateNumber_ = args->get_name(0);
 }
 
 int G2ReferencePeriod::unpack_long(long* val, size_t* /*len*/)

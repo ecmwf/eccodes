@@ -36,7 +36,7 @@ void Debug::default_long_value(grib_accessor* a, long actualValue)
         return;
 
     grib_handle* h = a->get_enclosing_handle();
-    grib_expression* expression = act->default_value_->get_expression(h, 0);
+    grib_expression* expression = act->default_value_->get_expression(0);
     if (!expression)
         return;
 

@@ -18,11 +18,11 @@ void DataApplyBoustrophedonic::init(const long v, grib_arguments* args)
     Gen::init(v, args);
 
     int n = 0;
-    values_ = args->get_name(get_enclosing_handle(), n++);
-    numberOfRows_ = args->get_name(get_enclosing_handle(), n++);
-    numberOfColumns_ = args->get_name(get_enclosing_handle(), n++);
-    numberOfPoints_ = args->get_name(get_enclosing_handle(), n++);
-    pl_ = args->get_name(get_enclosing_handle(), n++);
+    values_ = args->get_name(n++);
+    numberOfRows_ = args->get_name(n++);
+    numberOfColumns_ = args->get_name(n++);
+    numberOfPoints_ = args->get_name(n++);
+    pl_ = args->get_name(n++);
 
     length_ = 0;
 }

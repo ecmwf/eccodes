@@ -18,10 +18,10 @@ void ChangeAlternativeRowScanning::init(const long len, grib_arguments* args)
     Gen::init(len, args);
     int n = 0;
 
-    values_ = args->get_name(get_enclosing_handle(), n++);
-    Ni_ = args->get_name(get_enclosing_handle(), n++);
-    Nj_ = args->get_name(get_enclosing_handle(), n++);
-    alternativeRowScanning_ = args->get_name(get_enclosing_handle(), n++);
+    values_ = args->get_name(n++);
+    Ni_ = args->get_name(n++);
+    Nj_ = args->get_name(n++);
+    alternativeRowScanning_ = args->get_name(n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     length_ = 0;
