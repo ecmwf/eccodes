@@ -524,7 +524,7 @@ jobs:
   ci-result:
     name: collect results
     if: always()
-    needs: [ci-approval, hpc-gate, pre-commit, resolve, build, rust, wait-fortran, fortran]
+    needs: [ci-approval, hpc-gate, pre-commit, resolve, build, rust, wait-fortran, fortran, lint]
     runs-on: ubuntu-latest
     permissions:
       statuses: write
