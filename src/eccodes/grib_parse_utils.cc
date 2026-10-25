@@ -441,7 +441,7 @@ int grib_recompose_print(grib_handle* h, const char* uname, int fail, FILE* out)
                         /* Columns specification is invalid integer */
                         maxcols = maxcolsd;
                     }
-                    strtol(uname + i + 1, &pp, 10);
+                    (void)strtol(uname + i + 1, &pp, 10);
                     while (pp && *pp != '%' && *pp != '!' && *pp != ']' && *pp != ':' && *pp != '\'')
                         pp++;
                     i += pp - uname - i - 1;

@@ -1,4 +1,6 @@
 ---
+# bugprone-assignment-in-if-condition stays off: -Wparentheses already catches
+# `if (a = b)`, and `if ((err = f()))` is the idiom here.
 # The trailing -<check> entries are findings not yet fixed; each fix drops its entry.
 Checks: >
   -*,
@@ -9,8 +11,8 @@ Checks: >
   concurrency-mt-unsafe,
   misc-redundant-expression,
   readability-misleading-indentation,
-  -bugprone-argument-comment,
   -bugprone-assignment-in-if-condition,
+  -bugprone-argument-comment,
   -bugprone-branch-clone,
   -bugprone-easily-swappable-parameters,
   -bugprone-empty-catch,
@@ -38,10 +40,33 @@ Checks: >
   -clang-analyzer-optin.performance.Padding,
   -clang-analyzer-security.insecureAPI.strcpy,
   -clang-analyzer-unix.Malloc,
-  -cert-err33-c,
   -concurrency-mt-unsafe,
   -performance-enum-size,
   -performance-inefficient-vector-operation,
   -performance-unnecessary-value-param
 WarningsAsErrors: '*'
+CheckOptions:
+  # The default list without the printf family and fclose: a failed write to a
+  # stream or buffer is rarely something the caller can handle, and most files
+  # here are read-only. Files that are written check their fclose by hand.
+  cert-err33-c.CheckedFunctions: >-
+    ::asctime_s; ::at_quick_exit; ::atexit; ::bsearch; ::bsearch_s; ::btowc; ::c16rtomb; ::c32rtomb;
+    ::calloc; ::clock; ::cnd_broadcast; ::cnd_init; ::cnd_signal; ::cnd_timedwait; ::cnd_wait;
+    ::ctime_s; ::fflush; ::fgetc; ::fgetpos; ::fgets; ::fgetwc; ::fopen; ::fopen_s;
+    ::fread; ::freopen; ::freopen_s; ::fscanf; ::fscanf_s; ::fseek; ::fsetpos; ::ftell; ::fwrite;
+    ::fwscanf; ::fwscanf_s; ::getc; ::getchar; ::getenv; ::getenv_s; ::gets_s; ::getwc; ::getwchar;
+    ::gmtime; ::gmtime_s; ::localtime; ::localtime_s; ::malloc; ::mbrtoc16; ::mbrtoc32; ::mbsrtowcs;
+    ::mbsrtowcs_s; ::mbstowcs; ::mbstowcs_s; ::memchr; ::mktime; ::mtx_init; ::mtx_lock;
+    ::mtx_timedlock; ::mtx_trylock; ::mtx_unlock; ::raise; ::realloc; ::remove; ::rename; ::scanf;
+    ::scanf_s; ::setlocale; ::setvbuf; ::signal; ::sscanf; ::sscanf_s; ::strchr; ::strerror_s;
+    ::strftime; ::strpbrk; ::strrchr; ::strstr; ::strtod; ::strtof; ::strtoimax; ::strtok;
+    ::strtok_s; ::strtol; ::strtold; ::strtoll; ::strtoul; ::strtoull; ::strtoumax; ::strxfrm;
+    ::swscanf; ::swscanf_s; ::thrd_create; ::thrd_detach; ::thrd_join; ::thrd_sleep; ::time;
+    ::timespec_get; ::tmpfile; ::tmpfile_s; ::tmpnam; ::tmpnam_s; ::tss_create; ::tss_get;
+    ::tss_set; ::ungetc; ::ungetwc; ::vfscanf; ::vfscanf_s; ::vfwscanf; ::vfwscanf_s; ::vscanf;
+    ::vscanf_s; ::vsscanf; ::vsscanf_s; ::vswscanf; ::vswscanf_s; ::vwscanf; ::vwscanf_s; ::wcrtomb;
+    ::wcschr; ::wcsftime; ::wcspbrk; ::wcsrchr; ::wcsrtombs; ::wcsrtombs_s; ::wcsstr; ::wcstod;
+    ::wcstof; ::wcstoimax; ::wcstok; ::wcstok_s; ::wcstol; ::wcstold; ::wcstoll; ::wcstombs;
+    ::wcstombs_s; ::wcstoul; ::wcstoull; ::wcstoumax; ::wcsxfrm; ::wctob; ::wctrans; ::wctype;
+    ::wmemchr; ::wscanf; ::wscanf_s
 ...
