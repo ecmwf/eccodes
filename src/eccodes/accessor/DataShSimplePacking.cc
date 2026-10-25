@@ -17,8 +17,8 @@ void DataShSimplePacking::init(const long v, grib_arguments* args)
 {
     Gen::init(v, args);
 
-    coded_values_ = args->get_name(get_enclosing_handle(), 0);
-    real_part_ = args->get_name(get_enclosing_handle(), 1);
+    coded_values_ = args->get_name(0);
+    real_part_ = args->get_name(1);
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 
     length_ = 0;

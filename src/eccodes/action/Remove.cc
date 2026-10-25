@@ -61,14 +61,14 @@ static void remove_accessor(grib_accessor* a)
 
 int Remove::create_accessor(grib_section* p, grib_loader* /*h*/)
 {
-    grib_accessor* ga = grib_find_accessor(p->h, args_->get_name(p->h, 0));
+    grib_accessor* ga = grib_find_accessor(p->h, args_->get_name(0));
 
     if (ga) {
         remove_accessor(ga);
     }
     else {
         grib_context_log(context_, GRIB_LOG_DEBUG,
-                         "Action_class_remove: create_accessor: No accessor named %s to remove", args_->get_name(p->h, 0));
+                         "Action_class_remove: create_accessor: No accessor named %s to remove", args_->get_name(0));
     }
     return GRIB_SUCCESS;
 }

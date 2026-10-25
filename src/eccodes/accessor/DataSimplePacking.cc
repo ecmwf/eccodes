@@ -20,16 +20,15 @@ namespace eccodes::accessor
 void DataSimplePacking::init(const long v, grib_arguments* args)
 {
     Values::init(v, args);
-    grib_handle* gh = get_enclosing_handle();
-    units_factor_ = args->get_name(gh, carg_++);
-    units_bias_ = args->get_name(gh, carg_++);
-    changing_precision_ = args->get_name(gh, carg_++);
-    number_of_values_ = args->get_name(gh, carg_++);
-    bits_per_value_ = args->get_name(gh, carg_++);
-    reference_value_ = args->get_name(gh, carg_++);
-    binary_scale_factor_ = args->get_name(gh, carg_++);
-    decimal_scale_factor_ = args->get_name(gh, carg_++);
-    optimize_scaling_factor_ = args->get_name(gh, carg_++);
+    units_factor_ = args->get_name(carg_++);
+    units_bias_ = args->get_name(carg_++);
+    changing_precision_ = args->get_name(carg_++);
+    number_of_values_ = args->get_name(carg_++);
+    bits_per_value_ = args->get_name(carg_++);
+    reference_value_ = args->get_name(carg_++);
+    binary_scale_factor_ = args->get_name(carg_++);
+    decimal_scale_factor_ = args->get_name(carg_++);
+    optimize_scaling_factor_ = args->get_name(carg_++);
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
     dirty_ = 1;
 }

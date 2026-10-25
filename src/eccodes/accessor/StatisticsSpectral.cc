@@ -17,13 +17,12 @@ void StatisticsSpectral::init(const long l, grib_arguments* c)
 {
     AbstractVector::init(l, c);
     int n = 0;
-    grib_handle* h = get_enclosing_handle();
 
-    values_ = c->get_name(h, n++);
-    J_ = c->get_name(h, n++);
-    K_ = c->get_name(h, n++);
-    M_ = c->get_name(h, n++);
-    JS_ = c->get_name(h, n++);
+    values_ = c->get_name(n++);
+    J_ = c->get_name(n++);
+    K_ = c->get_name(n++);
+    M_ = c->get_name(n++);
+    JS_ = c->get_name(n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;

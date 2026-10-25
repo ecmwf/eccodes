@@ -23,11 +23,11 @@ public:
     ~Arguments();
 
     void print(grib_handle* f) const;
-    const char* get_name(grib_handle* h, int n) const;
+    const char* get_name(int n) const;
     const char* get_string(grib_handle* h, int n) const;
     long get_long(grib_handle* h, int n) const;
     double get_double(grib_handle* h, int n) const;
-    grib_expression* get_expression(grib_handle* h, int n) const;
+    grib_expression* get_expression(int n) const;
     int get_count() const;
 
     // TODO(maee): make this private

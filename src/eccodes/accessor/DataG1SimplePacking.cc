@@ -18,10 +18,10 @@ void DataG1SimplePacking::init(const long v, grib_arguments* args)
 {
     DataSimplePacking::init(v, args);
 
-    half_byte_ = args->get_name(get_enclosing_handle(), carg_++);
-    packingType_ = args->get_name(get_enclosing_handle(), carg_++);
-    ieee_packing_ = args->get_name(get_enclosing_handle(), carg_++);
-    precision_ = args->get_name(get_enclosing_handle(), carg_++);
+    half_byte_ = args->get_name(carg_++);
+    packingType_ = args->get_name(carg_++);
+    ieee_packing_ = args->get_name(carg_++);
+    precision_ = args->get_name(carg_++);
     edition_ = 1;
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }

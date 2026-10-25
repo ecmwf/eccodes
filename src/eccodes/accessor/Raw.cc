@@ -33,10 +33,10 @@ void Raw::init(const long len, grib_arguments* arg)
     grib_handle* hand = get_enclosing_handle();
 
     length_ = 0;
-    totalLength_ = arg->get_name(hand, n++);
-    sectionLength_ = arg->get_name(hand, n++);
+    totalLength_ = arg->get_name(n++);
+    sectionLength_ = arg->get_name(n++);
 
-    e = arg->get_expression(hand, n++);
+    e = arg->get_expression(n++);
     err = e->evaluate_long(hand, &(relativeOffset_));
     if (err)
         grib_context_log(hand->context, GRIB_LOG_ERROR, "Unable to evaluate relativeOffset");

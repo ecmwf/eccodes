@@ -16,18 +16,17 @@ namespace eccodes::accessor
 void DataComplexPacking::init(const long v, grib_arguments* args)
 {
     DataSimplePacking::init(v, args);
-    grib_handle* gh = get_enclosing_handle();
 
-    GRIBEX_sh_bug_present_ = args->get_name(gh, carg_++);
-    ieee_floats_ = args->get_name(gh, carg_++);
-    laplacianOperatorIsSet_ = args->get_name(gh, carg_++);
-    laplacianOperator_ = args->get_name(gh, carg_++);
-    sub_j_ = args->get_name(gh, carg_++);
-    sub_k_ = args->get_name(gh, carg_++);
-    sub_m_ = args->get_name(gh, carg_++);
-    pen_j_ = args->get_name(gh, carg_++);
-    pen_k_ = args->get_name(gh, carg_++);
-    pen_m_ = args->get_name(gh, carg_++);
+    GRIBEX_sh_bug_present_ = args->get_name(carg_++);
+    ieee_floats_ = args->get_name(carg_++);
+    laplacianOperatorIsSet_ = args->get_name(carg_++);
+    laplacianOperator_ = args->get_name(carg_++);
+    sub_j_ = args->get_name(carg_++);
+    sub_k_ = args->get_name(carg_++);
+    sub_m_ = args->get_name(carg_++);
+    pen_j_ = args->get_name(carg_++);
+    pen_k_ = args->get_name(carg_++);
+    pen_m_ = args->get_name(carg_++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }

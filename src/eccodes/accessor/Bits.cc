@@ -23,10 +23,10 @@ void Bits::init(const long l, grib_arguments* c)
     int n = 0;
     referenceValue_ = 0;
 
-    argument_ = c->get_name(hand, n++);
+    argument_ = c->get_name(n++);
     start_ = c->get_long(hand, n++);
     len_ = c->get_long(hand, n++);
-    e = c->get_expression(hand, n++);
+    e = c->get_expression(n++);
     if (e) {
         e->evaluate_double(hand, &(referenceValue_));
         referenceValuePresent_ = 1;

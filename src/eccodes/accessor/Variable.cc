@@ -29,7 +29,7 @@ void Variable::init(const long length, grib_arguments* args)
 
     grib_handle* hand = get_enclosing_handle();
     grib_expression* expression = nullptr;
-    if (args) expression = args->get_expression(hand, 0);
+    if (args) expression = args->get_expression(0);
 
     const char* p = 0;
     size_t len = 1;

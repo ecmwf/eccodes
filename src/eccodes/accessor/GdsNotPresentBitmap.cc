@@ -19,11 +19,11 @@ void GdsNotPresentBitmap::init(const long v, grib_arguments* args)
     int n = 0;
     grib_handle* hand = get_enclosing_handle();
 
-    missing_value_ = args->get_name(hand, n++);
-    number_of_values_ = args->get_name(hand, n++);
-    number_of_points_ = args->get_name(hand, n++);
-    latitude_of_first_point_ = args->get_name(hand, n++);
-    ni_ = args->get_name(hand, n++);
+    missing_value_ = args->get_name(n++);
+    number_of_values_ = args->get_name(n++);
+    number_of_points_ = args->get_name(n++);
+    latitude_of_first_point_ = args->get_name(n++);
+    ni_ = args->get_name(n++);
     length_ = 0;
 }
 

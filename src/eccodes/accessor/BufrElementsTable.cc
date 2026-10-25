@@ -39,8 +39,8 @@ void BufrElementsTable::init(const long len, grib_arguments* params)
     int n = 0;
 
     dictionary_ = params->get_string(get_enclosing_handle(), n++);
-    masterDir_ = params->get_name(get_enclosing_handle(), n++);
-    localDir_ = params->get_name(get_enclosing_handle(), n++);
+    masterDir_ = params->get_name(n++);
+    localDir_ = params->get_name(n++);
 
     length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;

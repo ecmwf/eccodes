@@ -16,31 +16,30 @@ namespace eccodes::accessor
 void DataG22OrderPacking::init(const long v, grib_arguments* args)
 {
     Values::init(v, args);
-    grib_handle* gh = get_enclosing_handle();
 
-    numberOfValues_ = args->get_name(gh, carg_++);
-    bits_per_value_ = args->get_name(gh, carg_++);
-    reference_value_ = args->get_name(gh, carg_++);
-    binary_scale_factor_ = args->get_name(gh, carg_++);
-    decimal_scale_factor_ = args->get_name(gh, carg_++);
-    optimize_scale_factor_ = args->get_name(gh, carg_++);
+    numberOfValues_ = args->get_name(carg_++);
+    bits_per_value_ = args->get_name(carg_++);
+    reference_value_ = args->get_name(carg_++);
+    binary_scale_factor_ = args->get_name(carg_++);
+    decimal_scale_factor_ = args->get_name(carg_++);
+    optimize_scale_factor_ = args->get_name(carg_++);
 
-    typeOfOriginalFieldValues_ = args->get_name(gh, carg_++);
-    groupSplittingMethodUsed_ = args->get_name(gh, carg_++);
-    missingValueManagementUsed_ = args->get_name(gh, carg_++);
-    primaryMissingValueSubstitute_ = args->get_name(gh, carg_++);
-    secondaryMissingValueSubstitute_ = args->get_name(gh, carg_++);
-    numberOfGroupsOfDataValues_ = args->get_name(gh, carg_++);
-    referenceForGroupWidths_ = args->get_name(gh, carg_++);
-    numberOfBitsUsedForTheGroupWidths_ = args->get_name(gh, carg_++);
-    referenceForGroupLengths_ = args->get_name(gh, carg_++);
-    lengthIncrementForTheGroupLengths_ = args->get_name(gh, carg_++);
-    trueLengthOfLastGroup_ = args->get_name(gh, carg_++);
-    numberOfBitsUsedForTheScaledGroupLengths_ = args->get_name(gh, carg_++);
+    typeOfOriginalFieldValues_ = args->get_name(carg_++);
+    groupSplittingMethodUsed_ = args->get_name(carg_++);
+    missingValueManagementUsed_ = args->get_name(carg_++);
+    primaryMissingValueSubstitute_ = args->get_name(carg_++);
+    secondaryMissingValueSubstitute_ = args->get_name(carg_++);
+    numberOfGroupsOfDataValues_ = args->get_name(carg_++);
+    referenceForGroupWidths_ = args->get_name(carg_++);
+    numberOfBitsUsedForTheGroupWidths_ = args->get_name(carg_++);
+    referenceForGroupLengths_ = args->get_name(carg_++);
+    lengthIncrementForTheGroupLengths_ = args->get_name(carg_++);
+    trueLengthOfLastGroup_ = args->get_name(carg_++);
+    numberOfBitsUsedForTheScaledGroupLengths_ = args->get_name(carg_++);
 
-    orderOfSpatialDifferencing_ = args->get_name(gh, carg_++);
-    numberOfOctetsExtraDescriptors_ = args->get_name(gh, carg_++);
-    dataRepresentationTemplateNumber_ = args->get_name(gh, carg_++);
+    orderOfSpatialDifferencing_ = args->get_name(carg_++);
+    numberOfOctetsExtraDescriptors_ = args->get_name(carg_++);
+    dataRepresentationTemplateNumber_ = args->get_name(carg_++);
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
 

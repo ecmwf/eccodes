@@ -18,10 +18,10 @@ void RdbTimeGuessDate::init(const long l, grib_arguments* c)
     Long::init(l, c);
     int n = 0;
 
-    typicalYear_ = c->get_name(get_enclosing_handle(), n++);
-    typicalMonth_ = c->get_name(get_enclosing_handle(), n++);
-    typicalDay_ = c->get_name(get_enclosing_handle(), n++);
-    rdbDay_ = c->get_name(get_enclosing_handle(), n++);
+    typicalYear_ = c->get_name(n++);
+    typicalMonth_ = c->get_name(n++);
+    typicalDay_ = c->get_name(n++);
+    rdbDay_ = c->get_name(n++);
     yearOrMonth_ = c->get_long(get_enclosing_handle(), n++);
 
     /* flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY; */

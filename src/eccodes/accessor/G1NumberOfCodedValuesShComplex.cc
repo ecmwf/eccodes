@@ -17,14 +17,14 @@ void G1NumberOfCodedValuesShComplex::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
     int n = 0;
-    bitsPerValue_ = c->get_name(get_enclosing_handle(), n++);
-    offsetBeforeData_ = c->get_name(get_enclosing_handle(), n++);
-    offsetAfterData_ = c->get_name(get_enclosing_handle(), n++);
-    unusedBits_ = c->get_name(get_enclosing_handle(), n++);
-    numberOfValues_ = c->get_name(get_enclosing_handle(), n++);
-    JS_ = c->get_name(get_enclosing_handle(), n++);
-    KS_ = c->get_name(get_enclosing_handle(), n++);
-    MS_ = c->get_name(get_enclosing_handle(), n++);
+    bitsPerValue_ = c->get_name(n++);
+    offsetBeforeData_ = c->get_name(n++);
+    offsetAfterData_ = c->get_name(n++);
+    unusedBits_ = c->get_name(n++);
+    numberOfValues_ = c->get_name(n++);
+    JS_ = c->get_name(n++);
+    KS_ = c->get_name(n++);
+    MS_ = c->get_name(n++);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     length_ = 0;

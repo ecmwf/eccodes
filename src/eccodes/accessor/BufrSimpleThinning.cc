@@ -16,16 +16,15 @@ namespace eccodes::accessor
 void BufrSimpleThinning::init(const long len, grib_arguments* arg)
 {
     Gen::init(len, arg);
-    grib_handle* h = get_enclosing_handle();
     int n = 0;
 
     length_ = 0;
-    doExtractSubsets_ = arg->get_name(h, n++);
-    numberOfSubsets_ = arg->get_name(h, n++);
-    extractSubsetList_ = arg->get_name(h, n++);
-    simpleThinningStart_ = arg->get_name(h, n++);
-    simpleThinningMissingRadius_ = arg->get_name(h, n++);
-    simpleThinningSkip_ = arg->get_name(h, n++);
+    doExtractSubsets_ = arg->get_name(n++);
+    numberOfSubsets_ = arg->get_name(n++);
+    extractSubsetList_ = arg->get_name(n++);
+    simpleThinningStart_ = arg->get_name(n++);
+    simpleThinningMissingRadius_ = arg->get_name(n++);
+    simpleThinningSkip_ = arg->get_name(n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
 }

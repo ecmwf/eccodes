@@ -17,7 +17,7 @@ void Pad::init(const long len, grib_arguments* arg)
 {
     Padding::init(len, arg);
 
-    expression_ = arg->get_expression(get_enclosing_handle(), 0);
+    expression_ = arg->get_expression(0);
     length_ = preferred_size(1);
 }
 

@@ -22,16 +22,15 @@ void DataJpeg2000Packing::init(const long v, grib_arguments* args)
 {
     DataSimplePacking::init(v, args);
     const char* user_lib = NULL;
-    grib_handle* hand = get_enclosing_handle();
 
     jpeg_lib_ = 0;
-    type_of_compression_used_ = args->get_name(hand, carg_++);
-    target_compression_ratio_ = args->get_name(hand, carg_++);
-    ni_ = args->get_name(hand, carg_++);
-    nj_ = args->get_name(hand, carg_++);
-    list_defining_points_ = args->get_name(hand, carg_++);
-    number_of_data_points_ = args->get_name(hand, carg_++);
-    scanning_mode_ = args->get_name(hand, carg_++);
+    type_of_compression_used_ = args->get_name(carg_++);
+    target_compression_ratio_ = args->get_name(carg_++);
+    ni_ = args->get_name(carg_++);
+    nj_ = args->get_name(carg_++);
+    list_defining_points_ = args->get_name(carg_++);
+    number_of_data_points_ = args->get_name(carg_++);
+    scanning_mode_ = args->get_name(carg_++);
     edition_ = 2;
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 

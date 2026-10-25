@@ -18,7 +18,7 @@ void G2Lon::init(const long l, grib_arguments* c)
     Double::init(l, c);
     int n = 0;
 
-    longitude_ = c->get_name(get_enclosing_handle(), n++);
+    longitude_ = c->get_name(n++);
 }
 
 int G2Lon::unpack_double(double* val, size_t* /*len*/)

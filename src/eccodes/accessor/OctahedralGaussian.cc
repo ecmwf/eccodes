@@ -17,12 +17,11 @@ void OctahedralGaussian::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
     int n = 0;
-    grib_handle* hand = get_enclosing_handle();
 
-    N_ = c->get_name(hand, n++);
-    Ni_ = c->get_name(hand, n++);
-    plpresent_ = c->get_name(hand, n++);
-    pl_ = c->get_name(hand, n++);
+    N_ = c->get_name(n++);
+    Ni_ = c->get_name(n++);
+    plpresent_ = c->get_name(n++);
+    pl_ = c->get_name(n++);
 }
 
 /* Returns 1 (=true) if input pl array is Octahedral, 0 otherwise.

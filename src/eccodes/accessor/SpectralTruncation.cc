@@ -18,10 +18,10 @@ void SpectralTruncation::init(const long l, grib_arguments* c)
     Long::init(l, c);
     int n = 0;
 
-    J_ = c->get_name(get_enclosing_handle(), n++);
-    K_ = c->get_name(get_enclosing_handle(), n++);
-    M_ = c->get_name(get_enclosing_handle(), n++);
-    T_ = c->get_name(get_enclosing_handle(), n++);
+    J_ = c->get_name(n++);
+    K_ = c->get_name(n++);
+    M_ = c->get_name(n++);
+    T_ = c->get_name(n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }

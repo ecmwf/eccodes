@@ -16,17 +16,16 @@ namespace eccodes::accessor
 void ChangeScanningDirection::init(const long len, grib_arguments* args)
 {
     Gen::init(len, args);
-    grib_handle* h = get_enclosing_handle();
     int n = 0;
 
-    values_ = args->get_name(h, n++);
-    Ni_ = args->get_name(h, n++);
-    Nj_ = args->get_name(h, n++);
-    i_scans_negatively_ = args->get_name(h, n++);
-    j_scans_positively_ = args->get_name(h, n++);
-    first_ = args->get_name(h, n++);
-    last_ = args->get_name(h, n++);
-    axis_ = args->get_name(h, n++);
+    values_ = args->get_name(n++);
+    Ni_ = args->get_name(n++);
+    Nj_ = args->get_name(n++);
+    i_scans_negatively_ = args->get_name(n++);
+    j_scans_positively_ = args->get_name(n++);
+    first_ = args->get_name(n++);
+    last_ = args->get_name(n++);
+    axis_ = args->get_name(n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     length_ = 0;

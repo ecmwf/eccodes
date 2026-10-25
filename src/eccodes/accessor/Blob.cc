@@ -17,7 +17,7 @@ void Blob::init(const long len, grib_arguments* arg)
 {
     Gen::init(len, arg);
     grib_get_long_internal(get_enclosing_handle(),
-                           arg->get_name(parent_->h, 0), &length_);
+                           arg->get_name(0), &length_);
     ECCODES_ASSERT(length_ >= 0);
 }
 

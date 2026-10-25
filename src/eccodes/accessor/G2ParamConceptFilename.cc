@@ -27,8 +27,8 @@ void G2ParamConceptFilename::init(const long /*len*/, grib_arguments* arg)
     }
 
     basename_ = arg->get_string(h, 0);
-    MTG2Switch_ = arg->get_name(h, 1);
-    tablesVersionMTG2Switch_ = arg->get_name(h, 2);
+    MTG2Switch_ = arg->get_name(1);
+    tablesVersionMTG2Switch_ = arg->get_name(2);
 
     length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;

@@ -17,11 +17,10 @@ void GdsIsPresent::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
     int n = 0;
-    grib_handle* h = get_enclosing_handle();
-    gds_present_ = c->get_name(h, n++);
-    grid_definition_ = c->get_name(h, n++);
-    bitmap_present_ = c->get_name(h, n++);
-    values_ = c->get_name(h, n++);
+    gds_present_ = c->get_name(n++);
+    grid_definition_ = c->get_name(n++);
+    bitmap_present_ = c->get_name(n++);
+    values_ = c->get_name(n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     flags_ |= GRIB_ACCESSOR_FLAG_HIDDEN;

@@ -24,17 +24,16 @@ void DataCcsdsPacking::init(const long v, grib_arguments* args)
 {
     Values::init(v, args);
 
-    grib_handle* h = get_enclosing_handle();
-    number_of_values_ = args->get_name(h, carg_++);
-    reference_value_ = args->get_name(h, carg_++);
-    binary_scale_factor_ = args->get_name(h, carg_++);
-    decimal_scale_factor_ = args->get_name(h, carg_++);
-    optimize_scaling_factor_ = args->get_name(h, carg_++);
-    bits_per_value_ = args->get_name(h, carg_++);
-    number_of_data_points_ = args->get_name(h, carg_++);
-    ccsds_flags_ = args->get_name(h, carg_++);
-    ccsds_block_size_ = args->get_name(h, carg_++);
-    ccsds_rsi_ = args->get_name(h, carg_++);
+    number_of_values_ = args->get_name(carg_++);
+    reference_value_ = args->get_name(carg_++);
+    binary_scale_factor_ = args->get_name(carg_++);
+    decimal_scale_factor_ = args->get_name(carg_++);
+    optimize_scaling_factor_ = args->get_name(carg_++);
+    bits_per_value_ = args->get_name(carg_++);
+    number_of_data_points_ = args->get_name(carg_++);
+    ccsds_flags_ = args->get_name(carg_++);
+    ccsds_block_size_ = args->get_name(carg_++);
+    ccsds_rsi_ = args->get_name(carg_++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }

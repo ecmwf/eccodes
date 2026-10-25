@@ -22,10 +22,10 @@ int LatlonReduced::init(grib_handle* h, grib_arguments* args)
     if ((ret = Gen::init(h, args) != GRIB_SUCCESS))
         return ret;
 
-    Nj_ = args->get_name(h, cargs_++);
-    pl_ = args->get_name(h, cargs_++);
-    lonFirst_ = args->get_name(h, cargs_++);
-    lonLast_ = args->get_name(h, cargs_++);
+    Nj_ = args->get_name(cargs_++);
+    pl_ = args->get_name(cargs_++);
+    lonFirst_ = args->get_name(cargs_++);
+    lonLast_ = args->get_name(cargs_++);
     j_ = (size_t*)grib_context_malloc(h->context, 2 * sizeof(size_t));
     if (!j_)
         return GRIB_OUT_OF_MEMORY;
