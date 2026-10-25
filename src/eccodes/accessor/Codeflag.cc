@@ -63,7 +63,8 @@ int Codeflag::grib_get_codeflag(long code, char* codename)
     // j = strlen(codename);
 
     while (fgets(line, sizeof(line) - 1, f)) {
-        sscanf(line, "%49s %49s", num, bval);
+        if (sscanf(line, "%49s %49s", num, bval) != 2)
+            continue;
 
         if (num[0] != '#') {
             if ((test_bit(code, length_ * 8 - atol(num)) > 0) == atol(bval)) {

@@ -217,7 +217,9 @@ grib_file* grib_file_open(const char* filename, const char* mode, int* err)
                 grib_context_log(file->context, GRIB_LOG_FATAL, "Unable to allocate io_buffer\n");
             }
 #endif
-            setvbuf(file->handle, file->buffer, _IOFBF, file_pool.context->io_buffer_size);
+            if (setvbuf(file->handle, file->buffer, _IOFBF, file_pool.context->io_buffer_size) != 0) {
+                grib_context_log(file->context, GRIB_LOG_WARNING, "Unable to set io_buffer for %s", file->name);
+            }
         }
 
         file_pool.number_of_opened_files++;

@@ -74,8 +74,10 @@ int Print::execute(grib_handle* h)
 
     err = grib_recompose_print(h, name2_, 0, out);
 
-    if (outname_)
-        fclose(out);
+    if (outname_ && fclose(out) != 0 && err == GRIB_SUCCESS) {
+        grib_context_log(context_, (GRIB_LOG_ERROR) | (GRIB_LOG_PERROR), "IO ERROR: %s", outname_);
+        err = GRIB_IO_PROBLEM;
+    }
 
     return err;
 }
