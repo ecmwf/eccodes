@@ -16,8 +16,7 @@ namespace eccodes::accessor
 void CfVarName::init(const long l, grib_arguments* arg)
 {
     Ascii::init(l, arg);
-    grib_handle* h = get_enclosing_handle();
-    defaultKey_ = arg->get_name(h, 0);
+    defaultKey_ = arg->get_name(0);
 }
 
 int CfVarName::unpack_string(char* val, size_t* len)

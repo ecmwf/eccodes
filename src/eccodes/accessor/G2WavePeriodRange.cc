@@ -18,11 +18,10 @@ namespace eccodes::accessor
 void G2WavePeriodRange::init(const long l, grib_arguments* c)
 {
     Unsigned::init(l, c);
-    grib_handle* hand = get_enclosing_handle();
     int n = 0;
 
-    productDefinitionTemplateNumber_ = c->get_name(hand, n++);
-    stepType_ = c->get_name(hand, n++);
+    productDefinitionTemplateNumber_ = c->get_name(n++);
+    stepType_ = c->get_name(n++);
 }
 
 int G2WavePeriodRange::unpack_long(long* val, size_t* /*len*/)

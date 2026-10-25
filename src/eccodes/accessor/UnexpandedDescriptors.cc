@@ -20,8 +20,8 @@ void UnexpandedDescriptors::init(const long len, grib_arguments* args)
 
     int n = 0;
     grib_handle* hand = get_enclosing_handle();
-    unexpandedDescriptorsEncoded_ = grib_find_accessor(hand, args->get_name(hand, n++));
-    createNewData_ = args->get_name(hand, n++);
+    unexpandedDescriptorsEncoded_ = grib_find_accessor(hand, args->get_name(n++));
+    createNewData_ = args->get_name(n++);
     length_ = 0;
 }
 

@@ -18,8 +18,8 @@ namespace eccodes::accessor
 void DataG2SimplePackingWithPreprocessing::init(const long v, grib_arguments* args)
 {
     DataG2SimplePacking::init(v, args);
-    pre_processing_ = args->get_name(get_enclosing_handle(), carg_++);
-    pre_processing_parameter_ = args->get_name(get_enclosing_handle(), carg_++);
+    pre_processing_ = args->get_name(carg_++);
+    pre_processing_parameter_ = args->get_name(carg_++);
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
 

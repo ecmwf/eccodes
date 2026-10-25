@@ -19,7 +19,7 @@ void SmartTableColumn::init(const long len, grib_arguments* params)
     Gen::init(len, params);
     int n = 0;
 
-    smartTable_ = params->get_name(get_enclosing_handle(), n++);
+    smartTable_ = params->get_name(n++);
     index_ = params->get_long(get_enclosing_handle(), n++);
 
     length_ = 0;

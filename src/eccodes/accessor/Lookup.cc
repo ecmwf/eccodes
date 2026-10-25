@@ -20,7 +20,7 @@ void Lookup::init(const long len, grib_arguments* arg)
     llength_ = len;
     loffset_ = arg->get_long(get_enclosing_handle(), 0);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-    real_name_ = arg->get_expression(get_enclosing_handle(), 1);
+    real_name_ = arg->get_expression(1);
 }
 
 void Lookup::post_init()

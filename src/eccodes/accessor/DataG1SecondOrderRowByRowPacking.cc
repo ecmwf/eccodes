@@ -16,24 +16,23 @@ namespace eccodes::accessor
 void DataG1SecondOrderRowByRowPacking::init(const long v, grib_arguments* args)
 {
     DataSimplePacking::init(v, args);
-    grib_handle* gh = get_enclosing_handle();
 
-    half_byte_ = args->get_name(gh, carg_++);
-    packingType_ = args->get_name(gh, carg_++);
-    ieee_packing_ = args->get_name(gh, carg_++);
-    precision_ = args->get_name(gh, carg_++);
-    widthOfFirstOrderValues_ = args->get_name(gh, carg_++);
-    N1_ = args->get_name(gh, carg_++);
-    N2_ = args->get_name(gh, carg_++);
-    numberOfGroups_ = args->get_name(gh, carg_++);
-    numberOfSecondOrderPackedValues_ = args->get_name(gh, carg_++);
-    extraValues_ = args->get_name(gh, carg_++);
-    Ni_ = args->get_name(gh, carg_++);
-    Nj_ = args->get_name(gh, carg_++);
-    pl_ = args->get_name(gh, carg_++);
-    jPointsAreConsecutive_ = args->get_name(gh, carg_++);
-    groupWidths_ = args->get_name(gh, carg_++);
-    bitmap_ = args->get_name(gh, carg_++);
+    half_byte_ = args->get_name(carg_++);
+    packingType_ = args->get_name(carg_++);
+    ieee_packing_ = args->get_name(carg_++);
+    precision_ = args->get_name(carg_++);
+    widthOfFirstOrderValues_ = args->get_name(carg_++);
+    N1_ = args->get_name(carg_++);
+    N2_ = args->get_name(carg_++);
+    numberOfGroups_ = args->get_name(carg_++);
+    numberOfSecondOrderPackedValues_ = args->get_name(carg_++);
+    extraValues_ = args->get_name(carg_++);
+    Ni_ = args->get_name(carg_++);
+    Nj_ = args->get_name(carg_++);
+    pl_ = args->get_name(carg_++);
+    jPointsAreConsecutive_ = args->get_name(carg_++);
+    groupWidths_ = args->get_name(carg_++);
+    bitmap_ = args->get_name(carg_++);
     edition_ = 1;
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }

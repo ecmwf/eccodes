@@ -16,17 +16,16 @@ namespace eccodes::accessor
 void G2Grid::init(const long l, grib_arguments* c)
 {
     Double::init(l, c);
-    grib_handle* hand = get_enclosing_handle();
     int n = 0;
 
-    latitude_first_ = c->get_name(hand, n++);
-    longitude_first_ = c->get_name(hand, n++);
-    latitude_last_ = c->get_name(hand, n++);
-    longitude_last_ = c->get_name(hand, n++);
-    i_increment_ = c->get_name(hand, n++);
-    j_increment_ = c->get_name(hand, n++);
-    basic_angle_ = c->get_name(hand, n++);
-    sub_division_ = c->get_name(hand, n++);
+    latitude_first_ = c->get_name(n++);
+    longitude_first_ = c->get_name(n++);
+    latitude_last_ = c->get_name(n++);
+    longitude_last_ = c->get_name(n++);
+    i_increment_ = c->get_name(n++);
+    j_increment_ = c->get_name(n++);
+    basic_angle_ = c->get_name(n++);
+    sub_division_ = c->get_name(n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC | GRIB_ACCESSOR_FLAG_READ_ONLY;
 }

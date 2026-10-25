@@ -16,10 +16,10 @@ namespace eccodes::accessor
 void DataSecondaryBitmap::init(const long v, grib_arguments* args)
 {
     Gen::init(v, args);
-    primary_bitmap_ = args->get_name(get_enclosing_handle(), 0);
-    secondary_bitmap_ = args->get_name(get_enclosing_handle(), 1);
-    missing_value_ = args->get_name(get_enclosing_handle(), 2);
-    expand_by_ = args->get_name(get_enclosing_handle(), 3);
+    primary_bitmap_ = args->get_name(0);
+    secondary_bitmap_ = args->get_name(1);
+    missing_value_ = args->get_name(2);
+    expand_by_ = args->get_name(3);
 
     length_ = 0;
 }

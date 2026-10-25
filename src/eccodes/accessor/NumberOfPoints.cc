@@ -17,12 +17,11 @@ void NumberOfPoints::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
     int n = 0;
-    grib_handle* hand = get_enclosing_handle();
 
-    ni_ = c->get_name(hand, n++);
-    nj_ = c->get_name(hand, n++);
-    plpresent_ = c->get_name(hand, n++);
-    pl_ = c->get_name(hand, n++);
+    ni_ = c->get_name(n++);
+    nj_ = c->get_name(n++);
+    plpresent_ = c->get_name(n++);
+    pl_ = c->get_name(n++);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     length_ = 0;

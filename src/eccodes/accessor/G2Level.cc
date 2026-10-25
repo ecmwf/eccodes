@@ -16,13 +16,12 @@ namespace eccodes::accessor
 void G2Level::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
-    grib_handle* hand = get_enclosing_handle();
     int n = 0;
 
-    type_first_ = c->get_name(hand, n++);
-    scale_first_ = c->get_name(hand, n++);
-    value_first_ = c->get_name(hand, n++);
-    pressure_units_ = c->get_name(hand, n++);
+    type_first_ = c->get_name(n++);
+    scale_first_ = c->get_name(n++);
+    value_first_ = c->get_name(n++);
+    pressure_units_ = c->get_name(n++);
 
     // See ECC-1644
     flags_ |= GRIB_ACCESSOR_FLAG_COPY_IF_CHANGING_EDITION;

@@ -17,7 +17,6 @@ void Mtg2SwitchDefault::init(const long len, grib_arguments* arg)
 {
     Long::init(len, arg);
 
-    grib_handle* h = get_enclosing_handle();
 
     if (context_->debug) {
         const int numActualArgs = arg->get_count();
@@ -28,10 +27,10 @@ void Mtg2SwitchDefault::init(const long len, grib_arguments* arg)
         }
     }
 
-    tablesVersion_ = arg->get_name(h, 0);
-    tablesVersionMTG2Switch_ = arg->get_name(h, 1);
-    marsClass_ = arg->get_name(h, 2);
-    MTG2SwitchViaTablesVersion_ = arg->get_name(h, 3);
+    tablesVersion_ = arg->get_name(0);
+    tablesVersionMTG2Switch_ = arg->get_name(1);
+    marsClass_ = arg->get_name(2);
+    MTG2SwitchViaTablesVersion_ = arg->get_name(3);
 
     length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;

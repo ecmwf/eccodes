@@ -18,8 +18,8 @@ void ReferenceValueError::init(const long l, grib_arguments* c)
     Double::init(l, c);
     int n = 0;
 
-    referenceValue_ = c->get_name(get_enclosing_handle(), n++);
-    floatType_ = c->get_name(get_enclosing_handle(), n++);
+    referenceValue_ = c->get_name(n++);
+    floatType_ = c->get_name(n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     length_ = 0;

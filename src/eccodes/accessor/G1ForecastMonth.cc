@@ -16,16 +16,15 @@ namespace eccodes::accessor
 void G1ForecastMonth::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
-    grib_handle* h = get_enclosing_handle();
     int n = 0;
     const int count = c->get_count();
     if (count == 6) { /* GRIB1 case -- this needs to be refactored */
-        verification_yearmonth_ = c->get_name(h, n++);
-        base_date_ = c->get_name(h, n++);
-        day_ = c->get_name(h, n++);
-        hour_ = c->get_name(h, n++);
-        fcmonth_ = c->get_name(h, n++);
-        check_ = c->get_name(h, n++);
+        verification_yearmonth_ = c->get_name(n++);
+        base_date_ = c->get_name(n++);
+        day_ = c->get_name(n++);
+        hour_ = c->get_name(n++);
+        fcmonth_ = c->get_name(n++);
+        check_ = c->get_name(n++);
     }
 }
 

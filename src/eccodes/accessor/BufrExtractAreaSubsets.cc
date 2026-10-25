@@ -24,20 +24,19 @@ namespace eccodes::accessor
 void BufrExtractAreaSubsets::init(const long len, grib_arguments* arg)
 {
     Gen::init(len, arg);
-    grib_handle* h = get_enclosing_handle();
     int n = 0;
 
     length_ = 0;
-    doExtractSubsets_ = arg->get_name(h, n++);
-    numberOfSubsets_ = arg->get_name(h, n++);
-    extractSubsetList_ = arg->get_name(h, n++);
-    extractAreaWestLongitude_ = arg->get_name(h, n++);
-    extractAreaEastLongitude_ = arg->get_name(h, n++);
-    extractAreaNorthLatitude_ = arg->get_name(h, n++);
-    extractAreaSouthLatitude_ = arg->get_name(h, n++);
-    extractAreaLongitudeRank_ = arg->get_name(h, n++);
-    extractAreaLatitudeRank_ = arg->get_name(h, n++);
-    extractedAreaNumberOfSubsets_ = arg->get_name(h, n++);
+    doExtractSubsets_ = arg->get_name(n++);
+    numberOfSubsets_ = arg->get_name(n++);
+    extractSubsetList_ = arg->get_name(n++);
+    extractAreaWestLongitude_ = arg->get_name(n++);
+    extractAreaEastLongitude_ = arg->get_name(n++);
+    extractAreaNorthLatitude_ = arg->get_name(n++);
+    extractAreaSouthLatitude_ = arg->get_name(n++);
+    extractAreaLongitudeRank_ = arg->get_name(n++);
+    extractAreaLatitudeRank_ = arg->get_name(n++);
+    extractedAreaNumberOfSubsets_ = arg->get_name(n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
 }

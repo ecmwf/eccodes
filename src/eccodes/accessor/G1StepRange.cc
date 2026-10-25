@@ -18,13 +18,13 @@ void G1StepRange::init(const long l, grib_arguments* c)
     AbstractLongVector::init(l, c);
     grib_handle* h = get_enclosing_handle();
     int n = 0;
-    p1_ = c->get_name(h, n++);
-    p2_ = c->get_name(h, n++);
-    timeRangeIndicator_ = c->get_name(h, n++);
-    unit_ = c->get_name(h, n++);
-    step_unit_ = c->get_name(h, n++);
-    stepType_ = c->get_name(h, n++);
-    patch_fp_precip_ = c->get_name(h, n++);
+    p1_ = c->get_name(n++);
+    p2_ = c->get_name(n++);
+    timeRangeIndicator_ = c->get_name(n++);
+    unit_ = c->get_name(n++);
+    step_unit_ = c->get_name(n++);
+    stepType_ = c->get_name(n++);
+    patch_fp_precip_ = c->get_name(n++);
     error_on_units_ = 1;
 
     number_of_elements_ = 2;

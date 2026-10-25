@@ -19,18 +19,17 @@ void NumberOfPointsGaussian::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
     int n = 0;
-    grib_handle* h = get_enclosing_handle();
 
-    ni_ = c->get_name(h, n++);
-    nj_ = c->get_name(h, n++);
-    plpresent_ = c->get_name(h, n++);
-    pl_ = c->get_name(h, n++);
-    order_ = c->get_name(h, n++);
-    lat_first_ = c->get_name(h, n++);
-    lon_first_ = c->get_name(h, n++);
-    lat_last_ = c->get_name(h, n++);
-    lon_last_ = c->get_name(h, n++);
-    support_legacy_ = c->get_name(h, n++);
+    ni_ = c->get_name(n++);
+    nj_ = c->get_name(n++);
+    plpresent_ = c->get_name(n++);
+    pl_ = c->get_name(n++);
+    order_ = c->get_name(n++);
+    lat_first_ = c->get_name(n++);
+    lon_first_ = c->get_name(n++);
+    lat_last_ = c->get_name(n++);
+    lon_last_ = c->get_name(n++);
+    support_legacy_ = c->get_name(n++);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     length_ = 0;

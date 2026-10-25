@@ -39,8 +39,8 @@ void PadToEven::init(const long len, grib_arguments* args)
 {
     Padding::init(len, args);
 
-    section_offset_ = args->get_name(get_enclosing_handle(), 0);
-    section_length_ = args->get_name(get_enclosing_handle(), 1);
+    section_offset_ = args->get_name(0);
+    section_length_ = args->get_name(1);
 
     length_ = preferred_size(1);
 }
