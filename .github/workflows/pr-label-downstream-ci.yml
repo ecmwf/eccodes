@@ -17,10 +17,9 @@ jobs:
   gate:
     runs-on: ubuntu-slim
     steps:
-    - uses: ecmwf/ci-infrastructure/actions/require-label-decision@main
+    - uses: ecmwf/ci-infrastructure/actions/post-downstream-decision@main
       with:
-        context: downstream-ci-label
-        description-decided: Downstream-CI decision recorded
+        contexts: downstream/runner downstream/hpc-atos
     - uses: ecmwf/ci-infrastructure/actions/dispatch-downstream@main
       with:
         workflows: trigger-downstream.yml trigger-downstream-hpc-atos.yml
