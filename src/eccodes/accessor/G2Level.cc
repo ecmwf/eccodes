@@ -164,7 +164,7 @@ int G2Level::pack_double(const double* val, size_t* len)
     // value_first *= 100;
     // value_first = value_first + 0.5; //round up
 
-    // TODO(masn): These maxima should come from the respective accessors
+    // TODO(maee): These maxima should come from the respective accessors
     const int64_t scaled_value_max = (1ULL << 32) - 1;  // scaledValueOf*FixedSurface is 4 octets
     const int64_t scale_factor_max = (1ULL << 8) - 1;   // scaleFactorOf*FixedSurface is 1 octet
     int64_t lscaled_value = 0, lscale_factor = 0;

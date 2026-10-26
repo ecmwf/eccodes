@@ -81,7 +81,7 @@ int Ascii::pack_string(const char* val, size_t* len)
             hand->buffer->data[offset_ + i] = 0;
     }
 
-    // TODO(masn): Make this an error.
+    // TODO(maee): Make this an error.
     // But we have to allow this case unfortunately as returning an error breaks
     // clients e.g. grib1 local def 40 has marsDomain of 2 bytes but local def 21
     // has the same key with 1 byte! Legacy stuff that cannot be changed easily.

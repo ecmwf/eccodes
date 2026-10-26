@@ -265,7 +265,7 @@ int Gen::unpack_string_array(char** v, size_t* len)
     if (err)
         return err;
     v[0] = (char*)grib_context_malloc_clear(context_, length);
-    unpack_string(v[0], &length);  // TODO(masn): check return value
+    unpack_string(v[0], &length);  // TODO(maee): check return value
     *len = 1;
 
     return GRIB_SUCCESS;
