@@ -135,7 +135,7 @@ int LambertAzimuthalEqualArea::init_oblate(grib_handle* h,
         Q->mode = OBLIQ;
     */
     Q__qp = pj_qsfn(1.0, e, one_es);
-    /* Q__mmf = 0.5 / one_es;  ----  TODO(masn): do I need this? */
+    /* Q__mmf = 0.5 / one_es;  ----  TODO(maee): do I need this? */
     pj_authset(es, APA); /* sets up APA array */
     Q__rq = sqrt(0.5 * Q__qp);
     sinphi_ = sin(standardParallelInRadians); /*  (P->phi0); */
@@ -189,7 +189,7 @@ int LambertAzimuthalEqualArea::init_oblate(grib_handle* h,
                 xy_x /= Q__dd;
                 xy_y *= Q__dd;
                 rho = hypot(xy_x, xy_y);
-                ECCODES_ASSERT(rho >= EPS10); /* TODO(masn): check */
+                ECCODES_ASSERT(rho >= EPS10); /* TODO(maee): check */
                 const double asin_arg = (0.5 * rho / Q__rq);
                 if (asin_arg < -1.0 || asin_arg > 1.0) {
                     grib_context_log(h->context, GRIB_LOG_ERROR, "Invalid value: arcsin argument=%g", asin_arg);

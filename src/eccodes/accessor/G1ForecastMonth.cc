@@ -166,7 +166,7 @@ int G1ForecastMonth::unpack_long(long* val, size_t* len)
     return GRIB_UNSUPPORTED_EDITION;
 }
 
-/* TODO(masn): Check for a valid date */
+/* TODO(maee): Check for a valid date */
 int G1ForecastMonth::pack_long(const long* val, size_t* len)
 {
     return grib_set_long_internal(get_enclosing_handle(), fcmonth_, *val);

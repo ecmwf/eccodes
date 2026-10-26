@@ -97,7 +97,7 @@ int Binop::evaluate_double(grib_handle* h, double* dres) const
 void Binop::print(grib_context* c, grib_handle* f, FILE* out) const
 {
     // Cover a subset of the most commonly used functions
-    // TODO(masn): Can be done in a much better way!
+    // TODO(maee): Can be done in a much better way!
     //             e.g., the yacc parser passing in the functions name
     if (long_func_ && long_func_.target<std::equal_to<long>>()) {
         fprintf(out, "equals(");

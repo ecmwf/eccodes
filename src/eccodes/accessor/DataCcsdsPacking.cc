@@ -445,7 +445,7 @@ int DataCcsdsPacking::unpack(T* val, size_t* len)
 
     modify_aec_flags(&ccsds_flags);
 
-    // TODO(masn): This should be called upstream
+    // TODO(maee): This should be called upstream
     if (*len < n_vals)
         return GRIB_ARRAY_TOO_SMALL;
 
