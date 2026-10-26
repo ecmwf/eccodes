@@ -15114,13 +15114,13 @@
 	 table2Version = 173 ;
 	 indicatorOfParameter = 145 ;
 	}
-#Surface sensible heat flux anomalous rate of accumulation
-'Surface sensible heat flux anomalous rate of accumulation' = {
+#Time-mean surface sensible heat flux anomaly
+'Time-mean surface sensible heat flux anomaly' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 146 ;
 	}
-#Surface latent heat flux anomalous rate of accumulation
-'Surface latent heat flux anomalous rate of accumulation' = {
+#Time-mean surface latent heat flux anomaly
+'Time-mean surface latent heat flux anomaly' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 147 ;
 	}
@@ -15139,43 +15139,43 @@
 	 table2Version = 173 ;
 	 indicatorOfParameter = 154 ;
 	}
-#Surface solar radiation downwards anomalous rate of accumulation
-'Surface solar radiation downwards anomalous rate of accumulation' = {
+#Time-mean surface short-wave (solar) radiation downward flux anomaly
+'Time-mean surface short-wave (solar) radiation downward flux anomaly' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 169 ;
 	}
-#Surface thermal radiation downwards anomalous rate of accumulation
-'Surface thermal radiation downwards anomalous rate of accumulation' = {
+#Time-mean surface long-wave (thermal) radiation downward flux anomaly
+'Time-mean surface long-wave (thermal) radiation downward flux anomaly' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 175 ;
 	}
-#Surface solar radiation anomalous rate of accumulation
-'Surface solar radiation anomalous rate of accumulation' = {
+#Time-mean surface short-wave (solar) radiation flux anomaly
+'Time-mean surface short-wave (solar) radiation flux anomaly' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 176 ;
 	}
-#Surface thermal radiation anomalous rate of accumulation
-'Surface thermal radiation anomalous rate of accumulation' = {
+#Time-mean surface long-wave (thermal) radiation flux anomaly
+'Time-mean surface long-wave (thermal) radiation flux anomaly' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 177 ;
 	}
-#Top solar radiation anomalous rate of accumulation
-'Top solar radiation anomalous rate of accumulation' = {
+#Time-mean top short-wave (solar) radiation flux anomaly
+'Time-mean top short-wave (solar) radiation flux anomaly' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 178 ;
 	}
-#Top thermal radiation anomalous rate of accumulation
-'Top thermal radiation anomalous rate of accumulation' = {
+#Time-mean top long-wave (thermal) radiation flux anomaly
+'Time-mean top long-wave (thermal) radiation flux anomaly' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 179 ;
 	}
-#East-West surface stress anomalous rate of accumulation
-'East-West surface stress anomalous rate of accumulation' = {
+#Time-mean east-west surface stress anomaly
+'Time-mean east-west surface stress anomaly' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 180 ;
 	}
-#North-South surface stress anomalous rate of accumulation
-'North-South surface stress anomalous rate of accumulation' = {
+#Time-mean north-south surface stress anomaly
+'Time-mean north-south surface stress anomaly' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 181 ;
 	}
@@ -15184,8 +15184,8 @@
 	 table2Version = 173 ;
 	 indicatorOfParameter = 182 ;
 	}
-#Sunshine duration anomalous rate of accumulation
-'Sunshine duration anomalous rate of accumulation' = {
+#Time-mean sunshine duration anomaly
+'Time-mean sunshine duration anomaly' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 189 ;
 	}
@@ -15229,8 +15229,8 @@
 	 table2Version = 173 ;
 	 indicatorOfParameter = 211 ;
 	}
-#Solar insolation anomalous rate of accumulation
-'Solar insolation anomalous rate of accumulation' = {
+#Time-mean solar insolation flux anomaly
+'Time-mean solar insolation flux anomaly' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 212 ;
 	}
