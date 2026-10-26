@@ -48,7 +48,7 @@ int DataG2SecondaryBitmap::pack_double(const double* val, size_t* len)
         return err;
 
     if (*len % expand_by) {
-        /*TODO(masn): issue warning */
+        /*TODO(maee): issue warning */
         return GRIB_ENCODING_ERROR;
     }
 

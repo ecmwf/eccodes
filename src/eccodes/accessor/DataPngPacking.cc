@@ -122,7 +122,7 @@ int DataPngPacking::unpack_double(double* val, size_t* len)
     bscale = codes_power<double>(binary_scale_factor, 2);
     dscale = codes_power<double>(-decimal_scale_factor, 10);
 
-    /* TODO(masn): This should be called upstream */
+    /* TODO(maee): This should be called upstream */
     if (*len < n_vals)
         return GRIB_ARRAY_TOO_SMALL;
 

@@ -1169,7 +1169,7 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
         case GRIB_UTIL_GRID_SPEC_UNSTRUCTURED:
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
-            // TODO(masn): Other keys
+            // TODO(maee): Other keys
             break;
         case GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL:
             COPY_SPEC_LONG(bitmapPresent);
@@ -1191,7 +1191,7 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
 
             // Note: DxInMetres and DyInMetres
             // should be 'double' and not integer. WMO GRIB2 uses millimetres!
-            // TODO(masn): Add other keys like Latin1, LoV etc
+            // TODO(maee): Add other keys like Latin1, LoV etc
             break;
         case GRIB_UTIL_GRID_SPEC_HEALPIX:
             COPY_SPEC_LONG(bitmapPresent);
@@ -1623,7 +1623,7 @@ static grib_handle* grib_util_set_spec_(grib_handle* h,
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
             SET_LONG_VALUE("ijDirectionIncrementGiven", 1);
 
-            // TODO(masn): add ECCODES_ASSERT
+            // TODO(maee): add ECCODES_ASSERT
             COPY_SPEC_LONG(Ni);
             COPY_SPEC_DOUBLE(iDirectionIncrementInDegrees);
             COPY_SPEC_LONG(Nj);
@@ -1682,7 +1682,7 @@ static grib_handle* grib_util_set_spec_(grib_handle* h,
             COPY_SPEC_LONG(iScansNegatively);
             COPY_SPEC_LONG(jScansPositively);
 
-            // TODO(masn): pass in extra keys e.g. Dx, Dy, standardParallel and centralLongitude
+            // TODO(maee): pass in extra keys e.g. Dx, Dy, standardParallel and centralLongitude
             // COPY_SPEC_LONG(DxInMetres);
             // COPY_SPEC_LONG(DyInMetres);
             // COPY_SPEC_LONG(xDirectionGridLengthInMillimetres);
@@ -1716,7 +1716,7 @@ static grib_handle* grib_util_set_spec_(grib_handle* h,
 
             // Note: DxInMetres and DyInMetres
             // should be 'double' and not integer. WMO GRIB2 uses millimetres!
-            // TODO(masn): Add other keys like Latin1, LoV etc
+            // TODO(maee): Add other keys like Latin1, LoV etc
             break;
         case GRIB_UTIL_GRID_SPEC_HEALPIX:
             COPY_SPEC_LONG(bitmapPresent);

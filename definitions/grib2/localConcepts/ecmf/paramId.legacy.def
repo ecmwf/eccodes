@@ -2757,73 +2757,73 @@
 	 parameterCategory = 172 ;
 	 parameterNumber = 228 ;
 	}
-#Surface sensible heat flux anomalous rate of accumulation
+#Time-mean surface sensible heat flux anomaly
 '173146' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 146 ;
 	}
-#Surface latent heat flux anomalous rate of accumulation
+#Time-mean surface latent heat flux anomaly
 '173147' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 147 ;
 	}
-#Surface solar radiation downwards anomalous rate of accumulation
+#Time-mean surface short-wave (solar) radiation downward flux anomaly
 '173169' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 169 ;
 	}
-#Surface thermal radiation downwards anomalous rate of accumulation
+#Time-mean surface long-wave (thermal) radiation downward flux anomaly
 '173175' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 175 ;
 	}
-#Surface solar radiation anomalous rate of accumulation
+#Time-mean surface short-wave (solar) radiation flux anomaly
 '173176' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 176 ;
 	}
-#Surface thermal radiation anomalous rate of accumulation
+#Time-mean surface long-wave (thermal) radiation flux anomaly
 '173177' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 177 ;
 	}
-#Top solar radiation anomalous rate of accumulation
+#Time-mean top short-wave (solar) radiation flux anomaly
 '173178' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 178 ;
 	}
-#Top thermal radiation anomalous rate of accumulation
+#Time-mean top long-wave (thermal) radiation flux anomaly
 '173179' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 179 ;
 	}
-#East-West surface stress anomalous rate of accumulation
+#Time-mean east-west surface stress anomaly
 '173180' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 180 ;
 	}
-#North-South surface stress anomalous rate of accumulation
+#Time-mean north-south surface stress anomaly
 '173181' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 181 ;
 	}
-#Sunshine duration anomalous rate of accumulation
+#Time-mean sunshine duration anomaly
 '173189' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 189 ;
 	}
-#Solar insolation anomalous rate of accumulation
+#Time-mean solar insolation flux anomaly
 '173212' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;

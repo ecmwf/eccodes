@@ -19,3 +19,5 @@ jobs:
   regenerate:
     uses: ecmwf/ci-infrastructure/.github/workflows/regenerate-workflows.yml@main
     secrets: inherit
+    with:
+      mode: pr-auto-merge

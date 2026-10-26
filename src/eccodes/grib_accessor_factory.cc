@@ -257,7 +257,7 @@ int grib_get_block_length(grib_section* s, size_t* l)
     *l = s->length;
     return GRIB_SUCCESS;
 
-    // TODO(masn): Because grib_pack_long takes a SIGNED value, we may have problems
+    // TODO(maee): Because grib_pack_long takes a SIGNED value, we may have problems
     //     if(s->aclength) {
     //         size_t  len = 1;
     //         long plen = 0;

@@ -1231,7 +1231,7 @@ int wmo_read_bufr_from_file_fast(FILE* f, size_t* msg_len, off_t* msg_offset)
 }
 int wmo_read_gts_from_file_fast(FILE* f, size_t* msg_len, off_t* msg_offset)
 {
-    // TODO(masn): Needs proper implementation; no malloc
+    // TODO(maee): Needs proper implementation; no malloc
     // unsigned char buffer[1024] = {0};
     void* mesg = NULL;
     int err = GRIB_SUCCESS;

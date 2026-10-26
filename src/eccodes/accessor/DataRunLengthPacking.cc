@@ -170,7 +170,7 @@ int DataRunLengthPacking::pack_double(const double* val, size_t* len)
     }
 
     if (bits_per_value == 0) {
-        // TODO(masn): What are we meant to do with constant fields?
+        // TODO(maee): What are we meant to do with constant fields?
         return GRIB_SUCCESS;
     }
 
