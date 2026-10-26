@@ -2757,74 +2757,74 @@
 	 parameterCategory = 172 ;
 	 parameterNumber = 228 ;
 	}
-#Surface sensible heat flux anomalous rate of accumulation
-'Surface sensible heat flux anomalous rate of accumulation' = {
+#Time-mean surface sensible heat flux anomaly
+'Time-mean surface sensible heat flux anomaly' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 146 ;
 	}
-#Surface latent heat flux anomalous rate of accumulation
-'Surface latent heat flux anomalous rate of accumulation' = {
+#Time-mean surface latent heat flux anomaly
+'Time-mean surface latent heat flux anomaly' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 147 ;
 	}
-#Surface solar radiation downwards anomalous rate of accumulation
-'Surface solar radiation downwards anomalous rate of accumulation' = {
+#Time-mean surface short-wave (solar) radiation downward flux anomaly
+'Time-mean surface short-wave (solar) radiation downward flux anomaly' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 169 ;
 	}
-#Surface thermal radiation downwards anomalous rate of accumulation
-'Surface thermal radiation downwards anomalous rate of accumulation' = {
+#Time-mean surface long-wave (thermal) radiation downward flux anomaly
+'Time-mean surface long-wave (thermal) radiation downward flux anomaly' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 175 ;
 	}
-#Surface solar radiation anomalous rate of accumulation
-'Surface solar radiation anomalous rate of accumulation' = {
+#Time-mean surface short-wave (solar) radiation flux anomaly
+'Time-mean surface short-wave (solar) radiation flux anomaly' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 176 ;
 	}
-#Surface thermal radiation anomalous rate of accumulation
-'Surface thermal radiation anomalous rate of accumulation' = {
+#Time-mean surface long-wave (thermal) radiation flux anomaly
+'Time-mean surface long-wave (thermal) radiation flux anomaly' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 177 ;
 	}
-#Top solar radiation anomalous rate of accumulation
-'Top solar radiation anomalous rate of accumulation' = {
+#Time-mean top short-wave (solar) radiation flux anomaly
+'Time-mean top short-wave (solar) radiation flux anomaly' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 178 ;
 	}
-#Top thermal radiation anomalous rate of accumulation
-'Top thermal radiation anomalous rate of accumulation' = {
+#Time-mean top long-wave (thermal) radiation flux anomaly
+'Time-mean top long-wave (thermal) radiation flux anomaly' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 179 ;
 	}
-#East-West surface stress anomalous rate of accumulation
-'East-West surface stress anomalous rate of accumulation' = {
+#Time-mean east-west surface stress anomaly
+'Time-mean east-west surface stress anomaly' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 180 ;
 	}
-#North-South surface stress anomalous rate of accumulation
-'North-South surface stress anomalous rate of accumulation' = {
+#Time-mean north-south surface stress anomaly
+'Time-mean north-south surface stress anomaly' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 181 ;
 	}
-#Sunshine duration anomalous rate of accumulation
-'Sunshine duration anomalous rate of accumulation' = {
+#Time-mean sunshine duration anomaly
+'Time-mean sunshine duration anomaly' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 189 ;
 	}
-#Solar insolation anomalous rate of accumulation
-'Solar insolation anomalous rate of accumulation' = {
+#Time-mean solar insolation flux anomaly
+'Time-mean solar insolation flux anomaly' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 212 ;
