@@ -10,6 +10,12 @@ if (gribex_mode_on()) {
   transient computeLaplacianOperator=1 : hidden;
 }
 
+# ECMWF convention (IFS): geopotential and logarithm of surface pressure on
+# model levels are packed with a fixed laplacian operator instead of a fitted one
+if (centre == 98 && typeOfFirstFixedSurface == 105 && (paramId == 129 || paramId == 152)) {
+  transient fixedLaplacianOperator=0.5 : hidden;
+}
+
 # meta _numberOfValues spectral_truncation(J,K,M,numberOfValues): read_only;
 
 constant laplacianScalingFactorUnset = -2147483647;
