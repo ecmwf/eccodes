@@ -19,12 +19,12 @@ class CountFile : public Long
 {
 public:
     CountFile() :
-        Long() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        Long() {}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     int unpack_long(long* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
 
-    static constexpr AccessorType accessor_type_{"count_file"};
+    static constexpr AccessorType accessor_type_{ "count_file" };
 };
 
 }  // namespace eccodes::accessor

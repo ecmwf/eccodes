@@ -153,8 +153,8 @@ CASE("gridType=regular_ll")
             get_string(h, "gridType", type);
             EXPECT(type == "regular_ll");
 
-            long Ni                 = 0;
-            long Nj                 = 0;
+            long Ni = 0;
+            long Nj = 0;
             long numberOfDataPoints = 0;
             CHECK(codes_get_long(h, "Ni", &Ni));
             CHECK(codes_get_long(h, "Nj", &Nj));
@@ -202,7 +202,7 @@ CASE("gridType=regular_ll")
             EXPECT(test.shape == grid->shape());
             EXPECT(test.spec == grid->spec_str());
 
-            size_t len_user   = test.user.length();
+            size_t len_user = test.user.length();
             size_t len_buffer = 500;
             std::string buffer(len_buffer, '\0');
 
@@ -273,7 +273,7 @@ CASE("gridType=reduced_ll")
         get_string(h, "gridType", type);
         EXPECT(type == "reduced_ll");
 
-        long Nj                 = 3;
+        long Nj = 3;
         long numberOfDataPoints = 10;
         CHECK(codes_get_long(h, "Nj", &Nj));
         CHECK(codes_get_long(h, "numberOfDataPoints", &numberOfDataPoints));

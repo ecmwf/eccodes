@@ -117,8 +117,8 @@ int main(int argc,char** argv)
 				char name[80];
 				char value[80];
 				char *q = name;
-				char gvalue[80] = {0,};
-				char nam[80] = {0,};
+				char gvalue[80] = {0};
+				char nam[80] = {0};
 				size_t s = sizeof(gvalue);
 				int e;
 				int j;

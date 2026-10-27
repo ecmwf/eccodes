@@ -15,14 +15,14 @@
 #include "ExceptionHandler.h"
 
 #define GRIB_START_ARRAY_SIZE 5000
-#define GRIB_ARRAY_INCREMENT 1000
+#define GRIB_ARRAY_INCREMENT  1000
 
 #define SWAP(a, b) \
     temp = (a);    \
-    (a)  = (b);    \
-    (b)  = temp;
+    (a) = (b);     \
+    (b) = temp;
 
-#define GRIB_ORDER_BY_ASC 1
+#define GRIB_ORDER_BY_ASC  1
 #define GRIB_ORDER_BY_DESC -1
 
 /* Note: A fast cut-down version of strcmp which does NOT return -1 */
@@ -103,10 +103,10 @@ static int grib_fieldset_new_column(grib_fieldset* set, int id, char* key, int t
             return err;
     }
 
-    set->columns[id].name              = grib_context_strdup(c, key);
-    set->columns[id].type              = type;
+    set->columns[id].name = grib_context_strdup(c, key);
+    set->columns[id].type = type;
     set->columns[id].values_array_size = GRIB_START_ARRAY_SIZE;
-    set->columns[id].size              = 0;
+    set->columns[id].size = 0;
     return err;
 }
 
@@ -147,9 +147,9 @@ static int grib_fieldset_columns_resize(grib_fieldset* set, size_t newsize)
         return GRIB_INVALID_ARGUMENT;
 
     double* newdoubles = NULL;
-    long* newlongs     = NULL;
-    char** newstrings  = NULL;
-    int* newerrors     = NULL;
+    long* newlongs = NULL;
+    char** newstrings = NULL;
+    int* newerrors = NULL;
     const grib_context* c = set->context;
 
     if (newsize <= set->columns[0].values_array_size)
@@ -208,10 +208,10 @@ static int grib_fieldset_columns_resize(grib_fieldset* set, size_t newsize)
 
 static int grib_fieldset_column_copy_from_handle(grib_handle* h, grib_fieldset* set, int i)
 {
-    int err     = 0;
-    long lval   = 0;
+    int err = 0;
+    long lval = 0;
     double dval = 0;
-    char sval[1024] = {0,};
+    char sval[1024] = { 0 };
     size_t slen = 1024;
     if (!set || !h || set->columns[i].type == 0)
         return GRIB_INVALID_ARGUMENT;
@@ -242,8 +242,8 @@ static int grib_fieldset_column_copy_from_handle(grib_handle* h, grib_fieldset* 
 
 /* --------------- grib_fieldset functions ------------------*/
 static grib_fieldset* grib_fieldset_new_from_files_(grib_context* c, const char* filenames[],
-                                            int nfiles, const char** keys, int nkeys,
-                                            const char* where_string, const char* order_by_string, int* err)
+                                                    int nfiles, const char** keys, int nkeys,
+                                                    const char* where_string, const char* order_by_string, int* err)
 {
     int i = 0;
     int ret = GRIB_SUCCESS;
@@ -304,7 +304,7 @@ static grib_fieldset* grib_fieldset_new_from_files_(grib_context* c, const char*
 
 // C-API: Ensure all exceptions are converted to error codes
 grib_fieldset* grib_fieldset_new_from_files(grib_context* c, const char* filenames[], int nfiles,
-    const char** keys, int nkeys, const char* where_string, const char* order_by_string, int* err)
+                                            const char** keys, int nkeys, const char* where_string, const char* order_by_string, int* err)
 {
     auto result = eccodes::handleExceptions(grib_fieldset_new_from_files_, c, filenames, nfiles, keys, nkeys, where_string, order_by_string, err);
     return eccodes::updateErrorAndReturnValue(result, err);
@@ -314,8 +314,8 @@ static grib_fieldset* grib_fieldset_create_from_keys(grib_context* c, const char
 {
     grib_fieldset* set = NULL;
     size_t msize = 0, size = 0;
-    int i            = 0;
-    int type         = 0;
+    int i = 0;
+    int type = 0;
     int default_type = GRIB_TYPE_STRING;
 
     if (!c) c = grib_context_get_default();
@@ -323,26 +323,26 @@ static grib_fieldset* grib_fieldset_create_from_keys(grib_context* c, const char
     size = GRIB_START_ARRAY_SIZE;
 
     msize = sizeof(grib_fieldset);
-    set   = (grib_fieldset*)grib_context_malloc_clear(c, msize);
+    set = (grib_fieldset*)grib_context_malloc_clear(c, msize);
     if (!set) {
         grib_context_log(c, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", __func__, msize);
         return NULL;
     }
 
-    set->context           = c;
+    set->context = c;
     set->fields_array_size = size;
-    set->size              = 0;
-    set->current           = -1;
-    set->fields            = 0;
-    set->filter            = 0;
-    set->order             = 0;
-    set->columns           = 0;
-    set->where             = 0;
-    set->order_by          = 0;
+    set->size = 0;
+    set->current = -1;
+    set->fields = 0;
+    set->filter = 0;
+    set->order = 0;
+    set->columns = 0;
+    set->where = 0;
+    set->order_by = 0;
 
     set->fields = grib_fieldset_create_fields(set->context, size);
 
-    set->order  = grib_fieldset_create_int_array(c, size);
+    set->order = grib_fieldset_create_int_array(c, size);
     set->filter = grib_fieldset_create_int_array(c, size);
     for (i = 0; i < set->filter->size; i++)
         set->filter->el[i] = i;
@@ -355,17 +355,17 @@ static grib_fieldset* grib_fieldset_create_from_keys(grib_context* c, const char
     }
     for (i = 0; i < nkeys; i++) {
         char* key = grib_context_strdup(c, keys[i]);
-        char* p   = key;
+        char* p = key;
         while (*p != ':' && *p != '\0')
             p++;
         if (*p == ':') {
             type = grib_type_to_int(*(p + 1));
-            *p   = '\0';
+            *p = '\0';
         }
         else {
             type = default_type;
         }
-        //if (type==0) type = default_type;
+        // if (type==0) type = default_type;
         *err = grib_fieldset_new_column(set, i, key, type);
         grib_context_free(c, key);
     }
@@ -377,10 +377,10 @@ static grib_fieldset* grib_fieldset_create_from_keys(grib_context* c, const char
 
 static grib_fieldset* grib_fieldset_create_from_order_by(grib_context* c, grib_order_by* ob, int* err)
 {
-    const char** keys   = NULL;
-    size_t nkeys        = 0;
-    int i               = 0;
-    grib_fieldset* set  = NULL;
+    const char** keys = NULL;
+    size_t nkeys = 0;
+    int i = 0;
+    grib_fieldset* set = NULL;
     grib_order_by* next = ob;
 
     while (next) {
@@ -391,10 +391,10 @@ static grib_fieldset* grib_fieldset_create_from_order_by(grib_context* c, grib_o
     keys = (const char**)grib_context_malloc_clear(c, nkeys * sizeof(char*));
 
     next = ob;
-    i    = 0;
+    i = 0;
     while (next) {
         keys[i++] = next->key;
-        next      = next->next;
+        next = next->next;
     }
 
     set = grib_fieldset_create_from_keys(c, keys, nkeys, err);
@@ -417,7 +417,7 @@ int grib_fieldset_apply_where(grib_fieldset* set, const char* where_string)
 
 int grib_fieldset_apply_order_by_(grib_fieldset* set, const char* order_by_string)
 {
-    int err           = 0;
+    int err = 0;
     grib_order_by* ob = NULL;
 
     if (!set)
@@ -449,16 +449,16 @@ int grib_fieldset_apply_order_by(grib_fieldset* set, const char* order_by_string
 
 static int grib_fieldset_compare(grib_fieldset* set, const int* i, const int* j)
 {
-    int ret           = 0;
-    double d          = 0;
-    int idkey         = 0;
+    int ret = 0;
+    double d = 0;
+    int idkey = 0;
     grib_order_by* ob = NULL;
     int ii = 0, jj = 0;
     int* order = NULL;
 
     if (!set || !set->order_by)
         return GRIB_INVALID_ARGUMENT;
-    ob    = set->order_by;
+    ob = set->order_by;
     order = set->order->el;
 
     ii = *(set->filter->el + *(order + *i));
@@ -542,7 +542,7 @@ void grib_fieldset_delete_order_by_(grib_context* c, grib_order_by* order_by)
     while (order_by) {
         if (order_by->key)
             free(order_by->key);
-        ob       = order_by;
+        ob = order_by;
         order_by = order_by->next;
         grib_context_free(c, ob);
     }
@@ -550,7 +550,8 @@ void grib_fieldset_delete_order_by_(grib_context* c, grib_order_by* order_by)
     return;
 }
 
-void grib_fieldset_delete_order_by(grib_context* c, grib_order_by* order_by) {
+void grib_fieldset_delete_order_by(grib_context* c, grib_order_by* order_by)
+{
     auto result = eccodes::handleExceptions(grib_fieldset_delete_order_by_, c, order_by);
     eccodes::logErrorAndReturnValue(result);
 }
@@ -558,7 +559,7 @@ void grib_fieldset_delete_order_by(grib_context* c, grib_order_by* order_by) {
 static grib_order_by* grib_fieldset_new_order_by(grib_context* c, const char* obstr)
 {
     char *t1 = 0, *t2 = 0, *p = 0;
-    int id  = 0;
+    int id = 0;
     char* z = NULL;
     char* lasts = NULL;
     int mode, mode_default = GRIB_ORDER_BY_ASC;
@@ -576,19 +577,19 @@ static grib_order_by* grib_fieldset_new_order_by(grib_context* c, const char* ob
         return 0;
     }
 
-    ob        = (grib_order_by*)grib_context_malloc_clear(c, sizeof(grib_order_by));
-    sob       = ob;
-    ob->key   = 0;
+    ob = (grib_order_by*)grib_context_malloc_clear(c, sizeof(grib_order_by));
+    sob = ob;
+    ob->key = 0;
     ob->idkey = 0;
-    ob->mode  = 0;
-    ob->next  = 0;
+    ob->mode = 0;
+    ob->next = 0;
 
     t1 = strtok_r(z, ",", &lasts);
 
     while (t1) {
         grib_trim(&t1);
         t2 = grib_context_strdup(c, t1);
-        p  = t2;
+        p = t2;
         while (*p != ' ' && *p != '\0')
             p++;
         mode = mode_default;
@@ -612,12 +613,12 @@ static grib_order_by* grib_fieldset_new_order_by(grib_context* c, const char* ob
 
         if (ob->key) {
             ob->next = (grib_order_by*)grib_context_malloc_clear(c, sizeof(grib_order_by));
-            ob       = ob->next;
-            ob->key  = 0;
+            ob = ob->next;
+            ob->key = 0;
             ob->next = 0;
         }
-        ob->mode  = mode;
-        ob->key   = t2;
+        ob->mode = mode;
+        ob->key = t2;
         ob->idkey = id;
     }
 
@@ -653,14 +654,14 @@ void grib_fieldset_delete(grib_fieldset* set)
 
 static int grib_fieldset_add_(grib_fieldset* set, const char* filename)
 {
-    int ret        = GRIB_SUCCESS;
-    int err        = 0;
-    int i          = 0;
+    int ret = GRIB_SUCCESS;
+    int err = 0;
+    int i = 0;
     grib_handle* h = NULL;
     /* int nkeys; */
     grib_file* file;
-    double offset   = 0;
-    long length     = 0;
+    double offset = 0;
+    long length = 0;
     grib_context* c = NULL;
 
     if (!set || !filename)
@@ -687,17 +688,17 @@ static int grib_fieldset_add_(grib_fieldset* set, const char* filename)
                 ret = grib_fieldset_resize(set, set->columns[0].values_array_size);
                 if (ret != GRIB_SUCCESS) return ret;
             }
-            offset                       = 0;
+            offset = 0;
             grib_get_double(h, "offset", &offset);
-            set->fields[set->size]       = (grib_field*)grib_context_malloc_clear(c, sizeof(grib_field));
+            set->fields[set->size] = (grib_field*)grib_context_malloc_clear(c, sizeof(grib_field));
             set->fields[set->size]->file = file;
             file->refcount++;
             set->fields[set->size]->offset = (off_t)offset;
             grib_get_long(h, "totalLength", &length);
             set->fields[set->size]->length = length;
-            set->filter->el[set->size]     = set->size;
-            set->order->el[set->size]      = set->size;
-            set->size                      = set->columns[0].size;
+            set->filter->el[set->size] = set->size;
+            set->order->el[set->size] = set->size;
+            set->size = set->columns[0].size;
         }
         grib_handle_delete(h);
     }
@@ -711,7 +712,8 @@ static int grib_fieldset_add_(grib_fieldset* set, const char* filename)
     return ret;
 }
 
-int grib_fieldset_add(grib_fieldset* set, const char* filename) {
+int grib_fieldset_add(grib_fieldset* set, const char* filename)
+{
     auto result = eccodes::handleExceptions(grib_fieldset_add_, set, filename);
     return eccodes::getErrorCode(result);
 }
@@ -740,7 +742,7 @@ static grib_handle* grib_fieldset_next_handle_(grib_fieldset* set, int* err)
 {
     grib_handle* h;
     *err = GRIB_SUCCESS;
-    h    = grib_fieldset_retrieve(set, set->current, err);
+    h = grib_fieldset_retrieve(set, set->current, err);
     if (*err == GRIB_SUCCESS) {
         set->current++;
     }
@@ -761,9 +763,9 @@ int grib_fieldset_count(const grib_fieldset* set)
 
 grib_handle* grib_fieldset_retrieve(grib_fieldset* set, int i, int* err)
 {
-    grib_handle* h    = NULL;
+    grib_handle* h = NULL;
     grib_field* field = NULL;
-    *err              = GRIB_SUCCESS;
+    *err = GRIB_SUCCESS;
     if (!set) {
         *err = GRIB_INVALID_ARGUMENT;
         return NULL;
@@ -810,7 +812,7 @@ static grib_int_array* grib_fieldset_create_int_array(grib_context* c, size_t si
         return NULL;
     }
 
-    a->size    = size;
+    a->size = size;
     a->context = c;
     for (i = 0; i < size; i++)
         a->el[i] = i;
@@ -915,18 +917,18 @@ static void grib_trim(char** x)
 static int grib_fieldset_set_order_by(grib_fieldset* set, grib_order_by* ob)
 {
     grib_order_by* next = ob;
-    char* p             = NULL;
-    int i               = 0;
+    char* p = NULL;
+    int i = 0;
 
     while (next) {
         next->idkey = -1;
-        p           = next->key;
+        p = next->key;
         while (*p != 0 && *p != ':')
             p++;
         if (*p == ':')
             *p = 0;
         for (i = 0; i < set->columns_size; i++) {
-            if (!set->columns[i].name) {  //ECC-1562
+            if (!set->columns[i].name) {  // ECC-1562
                 grib_context_log(set->context, GRIB_LOG_ERROR, "grib_fieldset_set_order_by: Invalid type for key=%s", next->key);
                 return GRIB_INVALID_TYPE;
             }

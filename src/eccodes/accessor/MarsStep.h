@@ -19,8 +19,8 @@ class MarsStep : public Ascii
 {
 public:
     MarsStep() :
-        Ascii() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        Ascii() {}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     long get_native_type() override;
     int pack_long(const long* val, size_t* len) override;
     int pack_string(const char*, size_t* len) override;
@@ -35,7 +35,7 @@ private:
     const char* stepType_ = nullptr;
 
 public:
-    static constexpr AccessorType accessor_type_{"mars_step"};
+    static constexpr AccessorType accessor_type_{ "mars_step" };
 };
 
 }  // namespace eccodes::accessor

@@ -30,8 +30,8 @@ class BufrDataArray : public Gen
 {
 public:
     BufrDataArray() :
-        Gen() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        Gen() {}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     long get_native_type() override;
     int pack_double(const double* val, size_t* len) override;
     int pack_long(const long* val, size_t* len) override;
@@ -126,7 +126,7 @@ private:
     void push_zero_element(grib_darray*);
     grib_accessor* create_attribute_variable(const char*, grib_section*, int, char*, double, long, unsigned long);
     grib_accessor* create_accessor_from_descriptor(grib_accessor*, grib_section*, long, long, int, int, int, int);
-    grib_iarray* set_subset_list( grib_context*, long, long, long, const long*, size_t);
+    grib_iarray* set_subset_list(grib_context*, long, long, long, const long*, size_t);
     void print_bitmap_debug_info(grib_context*, bitmap_s*, grib_accessors_list*, int);
     int create_keys(long, long, long);
     void set_input_replications(grib_handle*);
@@ -144,7 +144,7 @@ private:
     friend int encode_replication(grib_context*, BufrDataArray*, int, grib_buffer*, unsigned char*, long*, int, long, grib_darray*, long*);
 
 public:
-    static constexpr AccessorType accessor_type_{"bufr_data_array"};
+    static constexpr AccessorType accessor_type_{ "bufr_data_array" };
 };
 
 }  // namespace eccodes::accessor

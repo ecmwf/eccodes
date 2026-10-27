@@ -11,7 +11,7 @@
 int grib_decode_long_array(const unsigned char* p, long* bitp, long bitsPerValue,
                            size_t n_vals, long* val)
 {
-    long i               = 0;
+    long i = 0;
     unsigned long lvalue = 0;
 
     if (bitsPerValue % 8) {
@@ -29,7 +29,7 @@ int grib_decode_long_array(const unsigned char* p, long* bitp, long bitsPerValue
     }
     else {
         int bc;
-        int l    = bitsPerValue / 8;
+        int l = bitsPerValue / 8;
         size_t o = *bitp / 8;
 
         for (i = 0; i < n_vals; i++) {
@@ -53,7 +53,7 @@ int grib_decode_double_array(const unsigned char* p, long* bitp, long bitsPerVal
                              double reference_value, double s, double d,
                              size_t n_vals, double* val)
 {
-    long i               = 0;
+    long i = 0;
     unsigned long lvalue = 0;
     double x;
 
@@ -67,13 +67,13 @@ int grib_decode_double_array(const unsigned char* p, long* bitp, long bitsPerVal
                     lvalue += 1;
                 *bitp += 1;
             }
-            x      = ((lvalue * s) + reference_value) * d;
+            x = ((lvalue * s) + reference_value) * d;
             val[i] = (double)x;
         }
     }
     else {
         int bc;
-        int l    = bitsPerValue / 8;
+        int l = bitsPerValue / 8;
         size_t o = 0;
 
         for (i = 0; i < n_vals; i++) {
@@ -85,7 +85,7 @@ int grib_decode_double_array(const unsigned char* p, long* bitp, long bitsPerVal
                 lvalue <<= 8;
                 lvalue |= p[o++];
             }
-            x      = ((lvalue * s) + reference_value) * d;
+            x = ((lvalue * s) + reference_value) * d;
             val[i] = (double)x;
         }
     }
@@ -96,15 +96,15 @@ int grib_decode_double_array(const unsigned char* p, long* bitp, long bitsPerVal
 /* code from grib_bits_fast_big_endian_simple.c */
 int grib_decode_double_array_complex(const unsigned char* p, long* bitp, long nbits, double reference_value, double s, double* d, size_t size, double* val)
 {
-    long i                   = 0;
+    long i = 0;
     long countOfLeftmostBits = 0, leftmostBits = 0;
     long startBit;
     long remainingBits = nbits;
-    long* pp           = (long*)p;
-    int inited         = 0;
+    long* pp = (long*)p;
+    int inited = 0;
     unsigned long uval = 0;
 
-    startBit      = *bitp;
+    startBit = *bitp;
     remainingBits = nbits;
     if (startBit >= max_nbits) {
         pp += startBit / max_nbits;
@@ -131,7 +131,7 @@ int grib_decode_double_array_complex(const unsigned char* p, long* bitp, long nb
                 countOfLeftmostBits = max_nbits - startBit;
                 remainingBits -= countOfLeftmostBits;
                 leftmostBits = (VALUE(*pp, startBit, countOfLeftmostBits)) << remainingBits;
-                startBit     = 0;
+                startBit = 0;
                 pp++;
             }
             else
@@ -185,8 +185,8 @@ int grib_encode_long_array(size_t n_vals, const long* val, long bits_per_value, 
         unsigned char c[sizeof(long)]; \
     } u_byteorder = { 1 }
 #define IS_BIGENDIAN() (u_byteorder.c[sizeof(long) - 1])
-#define GRIBPACK unsigned char
-#define Error(x, y) fprintf(stderr, x, y)
+#define GRIBPACK       unsigned char
+#define Error(x, y)    fprintf(stderr, x, y)
 #define restrict
 
 #include "encode_double_array.cc"
@@ -201,23 +201,23 @@ int grib_encode_double_array(size_t n_vals, const double* val, long bits_per_val
 {
     if (fabs(d - 1) > 0) /* d != 1 */
     {
-        size_t i                   = 0;
+        size_t i = 0;
         unsigned long unsigned_val = 0;
-        unsigned char* encoded     = p;
+        unsigned char* encoded = p;
         double x;
 
         if (bits_per_value % 8) {
             for (i = 0; i < n_vals; i++) {
-                x            = (((val[i] * d) - reference_value) * divisor) + 0.5;
+                x = (((val[i] * d) - reference_value) * divisor) + 0.5;
                 unsigned_val = (unsigned long)x;
                 grib_encode_unsigned_longb(encoded, unsigned_val, off, bits_per_value);
             }
         }
         else {
             for (i = 0; i < n_vals; i++) {
-                int blen     = 0;
-                blen         = bits_per_value;
-                x            = ((((val[i] * d) - reference_value) * divisor) + 0.5);
+                int blen = 0;
+                blen = bits_per_value;
+                x = ((((val[i] * d) - reference_value) * divisor) + 0.5);
                 unsigned_val = (unsigned long)x;
                 while (blen >= 8) {
                     blen -= 8;
@@ -243,13 +243,13 @@ int grib_encode_double_array(size_t n_vals, const double* val, long bits_per_val
 int grib_encode_double_array_complex(size_t n_vals, double* val, long nbits, double reference_value,
                                      double* scal, double d, double divisor, unsigned char* p, long* bitp)
 {
-    long* destination        = (long*)p;
-    double* v                = val;
+    long* destination = (long*)p;
+    double* v = val;
     long countOfLeftmostBits = 0, startBit = 0, remainingBits = 0, rightmostBits = 0;
     unsigned long uval = 0;
-    size_t i           = 0;
+    size_t i = 0;
 
-    startBit      = *bitp;
+    startBit = *bitp;
     remainingBits = nbits;
 
     if (startBit >= max_nbits) {
@@ -266,7 +266,7 @@ int grib_encode_double_array_complex(size_t n_vals, double* val, long nbits, dou
             }
 
             rightmostBits = VALUE(uval, max_nbits - remainingBits, remainingBits);
-            *destination  = ((*destination) & ~MASKVALUE(startBit, remainingBits)) + (rightmostBits << max_nbits - (remainingBits + startBit));
+            *destination = ((*destination) & ~MASKVALUE(startBit, remainingBits)) + (rightmostBits << max_nbits - (remainingBits + startBit));
             startBit += remainingBits;
             remainingBits = nbits;
 
@@ -276,18 +276,18 @@ int grib_encode_double_array_complex(size_t n_vals, double* val, long nbits, dou
     else {
         for (i = 0; i < n_vals; i++) {
             countOfLeftmostBits = startBit + remainingBits;
-            uval                = (unsigned long)(((((*v) * d * scal[i / 2]) - reference_value) * divisor) + 0.5);
+            uval = (unsigned long)(((((*v) * d * scal[i / 2]) - reference_value) * divisor) + 0.5);
             if (countOfLeftmostBits > max_nbits) {
                 countOfLeftmostBits = max_nbits - startBit;
-                startBit            = max_nbits - remainingBits;
+                startBit = max_nbits - remainingBits;
                 remainingBits -= countOfLeftmostBits;
                 *destination = (((*destination) >> countOfLeftmostBits) << countOfLeftmostBits) + (VALUE(uval, startBit, countOfLeftmostBits));
-                startBit     = 0;
+                startBit = 0;
                 destination++;
             }
 
             rightmostBits = VALUE(uval, max_nbits - remainingBits, remainingBits);
-            *destination  = ((*destination) & ~MASKVALUE(startBit, remainingBits)) + (rightmostBits << max_nbits - (remainingBits + startBit));
+            *destination = ((*destination) & ~MASKVALUE(startBit, remainingBits)) + (rightmostBits << max_nbits - (remainingBits + startBit));
             startBit += remainingBits;
             remainingBits = nbits;
 

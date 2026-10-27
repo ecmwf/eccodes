@@ -191,7 +191,7 @@ double grib_long_to_ieee64(unsigned long x)
 int grib_ieee_decode_array(grib_context* c, unsigned char* buf, size_t nvals, int bytes, double* val)
 {
     int err = 0, i = 0, j = 0;
-    unsigned char s[8] = {0,};
+    unsigned char s[8] = {0};
     float fval;
     double* pval = val;
 

@@ -31,9 +31,9 @@ int main(int argc, char** argv)
     long values[1024];
     long new_values[1024];
 
-    FILE* in             = NULL;
+    FILE* in = NULL;
     const char* filename = "../../data/satellite.grib";
-    codes_handle* h      = NULL;
+    codes_handle* h = NULL;
 
     in = fopen(filename, "rb");
     if (!in) {

@@ -21,10 +21,10 @@ long Double::get_native_type()
 int Double::unpack_string(char* v, size_t* len)
 {
     double val = 0;
-    size_t l   = 1;
+    size_t l = 1;
     char repres[1024];
-    char format[32]         = "%g";
-    grib_handle* h          = get_enclosing_handle();
+    char format[32] = "%g";
+    grib_handle* h = get_enclosing_handle();
 
     unpack_double(&val, &l);
     if ((val == GRIB_MISSING_DOUBLE) && ((flags_ & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0)) {
@@ -60,14 +60,14 @@ void Double::dump(eccodes::Dumper* dumper)
 
 int Double::compare(grib_accessor* b)
 {
-    int retval   = 0;
+    int retval = 0;
     double* aval = 0;
     double* bval = 0;
 
     size_t alen = 0;
     size_t blen = 0;
-    long count  = 0;
-    int err     = 0;
+    long count = 0;
+    int err = 0;
 
     err = value_count(&count);
     if (err)
@@ -102,7 +102,7 @@ int Double::compare(grib_accessor* b)
 
 int Double::pack_missing()
 {
-    size_t len   = 1;
+    size_t len = 1;
     double value = GRIB_MISSING_DOUBLE;
 
     if (flags_ & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING)

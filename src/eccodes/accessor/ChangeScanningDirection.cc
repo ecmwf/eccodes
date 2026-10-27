@@ -17,16 +17,16 @@ void ChangeScanningDirection::init(const long len, grib_arguments* args)
 {
     Gen::init(len, args);
     grib_handle* h = get_enclosing_handle();
-    int n          = 0;
+    int n = 0;
 
-    values_             = args->get_name(h, n++);
-    Ni_                 = args->get_name(h, n++);
-    Nj_                 = args->get_name(h, n++);
+    values_ = args->get_name(h, n++);
+    Ni_ = args->get_name(h, n++);
+    Nj_ = args->get_name(h, n++);
     i_scans_negatively_ = args->get_name(h, n++);
     j_scans_positively_ = args->get_name(h, n++);
-    first_              = args->get_name(h, n++);
-    last_               = args->get_name(h, n++);
-    axis_               = args->get_name(h, n++);
+    first_ = args->get_name(h, n++);
+    last_ = args->get_name(h, n++);
+    axis_ = args->get_name(h, n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     length_ = 0;
@@ -37,14 +37,14 @@ int ChangeScanningDirection::pack_long(const long* val, size_t* len)
     int err = 0;
     long i, j, jr, theEnd, Ni, Nj, k, kp;
     double tmp;
-    long iScansNegatively   = 0;
-    long jScansPositively   = 0;
-    double first            = 0;
-    double last             = 0;
-    size_t size             = 0;
-    double* values          = NULL;
-    const grib_context* c   = context_;
-    grib_handle* h          = get_enclosing_handle();
+    long iScansNegatively = 0;
+    long jScansPositively = 0;
+    double first = 0;
+    double last = 0;
+    size_t size = 0;
+    double* values = NULL;
+    const grib_context* c = context_;
+    grib_handle* h = get_enclosing_handle();
 
     if (*val == 0)
         return GRIB_SUCCESS;
@@ -99,10 +99,10 @@ int ChangeScanningDirection::pack_long(const long* val, size_t* len)
         for (j = 0; j < Nj; j++) {
             jr = Ni * j;
             for (i = 0; i < theEnd; i++) {
-                k          = jr + i;
-                kp         = jr + Ni - i - 1;
-                tmp        = values[k];
-                values[k]  = values[kp];
+                k = jr + i;
+                kp = jr + Ni - i - 1;
+                tmp = values[k];
+                values[k] = values[kp];
                 values[kp] = tmp;
             }
         }
@@ -116,10 +116,10 @@ int ChangeScanningDirection::pack_long(const long* val, size_t* len)
         for (i = 0; i < Ni; i++) {
             kpj = Ni * (Nj - 1);
             for (j = 0; j < theEnd; j++) {
-                k          = Ni * j + i;
-                kp         = kpj - Ni * j + i;
-                tmp        = values[k];
-                values[k]  = values[kp];
+                k = Ni * j + i;
+                kp = kpj - Ni * j + i;
+                tmp = values[k];
+                values[k] = values[kp];
                 values[kp] = tmp;
             }
         }

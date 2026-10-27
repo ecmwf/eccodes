@@ -31,12 +31,12 @@ long Sexagesimal2Decimal::get_native_type()
 
 int Sexagesimal2Decimal::unpack_string(char* val, size_t* len)
 {
-    int err        = 0;
-    char buff[512] = {0,};
+    int err = 0;
+    char buff[512] = { 0 };
     size_t length = 0;
-    size_t size   = sizeof(buff);
-    char* p       = 0;
-    char* q       = 0;
+    size_t size = sizeof(buff);
+    char* p = 0;
+    char* q = 0;
     double dd, mm = 0, ss = 0;
     int dd_sign = 1;
 
@@ -75,9 +75,9 @@ int Sexagesimal2Decimal::unpack_string(char* val, size_t* len)
             break;
         case 'N':
         case 'E':
-            *p      = 0;
+            *p = 0;
             dd_sign = 1;
-            mm      = atoi(q) / 60.0;
+            mm = atoi(q) / 60.0;
             dd += mm;
             p++;
             q = p;

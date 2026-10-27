@@ -159,15 +159,6 @@ jobs:
           deps-json: ${{ toJSON(matrix._resolved.deps) }}
           token: ${{ steps.mint.outputs.token }}
 
-      - id: git-read
-        uses: actions/create-github-app-token@v3
-        with:
-          client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
-          private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
-          owner: ${{ github.repository_owner }}
-          repositories: bindman
-          permission-contents: read
-
       - name: Check the Rust bindings
         id: build
         uses: ecmwf/ci-infrastructure/actions/run-job-script@main
@@ -176,7 +167,6 @@ jobs:
           matrix-leg: ${{ toJSON(matrix) }}
           package: eccodes-rust
           cmake-prefix-path: ${{ steps.deps.outputs.cmake-prefix-path }}
-          git-token: ${{ steps.git-read.outputs.token }}
 
       - name: Print dependency table
         if: always()
@@ -345,3 +335,15 @@ jobs:
         with:
           resolved: ${{ toJSON(matrix._resolved) }}
           own-source: ${{ steps.build.outputs.cache-hit == 'true' && 'artifact' || 'built' }}
+
+  ci-result:
+    name: collect results
+    if: always()
+    needs: [ci-approval, pre-commit, resolve, build, rust, fortran, build-hpc, fortran-hpc]
+    runs-on: ubuntu-slim
+    permissions:
+      statuses: write
+    steps:
+      - uses: ecmwf/ci-infrastructure/actions/ci-result@main
+        with:
+          needs: ${{ toJSON(needs) }}

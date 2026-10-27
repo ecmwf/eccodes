@@ -37,7 +37,7 @@ static int number_of_bits(size_t x, long* result)
 {
     const size_t* n = nbits;
     const int count = sizeof(nbits) / sizeof(nbits[0]);
-    *result         = 0;
+    *result = 0;
     while (x >= *n) {
         n++;
         (*result)++;
@@ -51,11 +51,11 @@ static int number_of_bits(size_t x, long* result)
 void SecondOrderBitsPerValue::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
-    int n               = 0;
-    values_             = c->get_name(get_enclosing_handle(), n++);
-    binaryScaleFactor_  = c->get_name(get_enclosing_handle(), n++);
+    int n = 0;
+    values_ = c->get_name(get_enclosing_handle(), n++);
+    binaryScaleFactor_ = c->get_name(get_enclosing_handle(), n++);
     decimalScaleFactor_ = c->get_name(get_enclosing_handle(), n++);
-    bitsPerValue_       = 0;
+    bitsPerValue_ = 0;
 
     length_ = 0;
 }
@@ -63,14 +63,14 @@ void SecondOrderBitsPerValue::init(const long l, grib_arguments* c)
 int SecondOrderBitsPerValue::pack_long(const long* val, size_t* len)
 {
     bitsPerValue_ = (long)*val;
-    *len          = 1;
+    *len = 1;
 
     return GRIB_SUCCESS;
 }
 
 int SecondOrderBitsPerValue::unpack_long(long* val, size_t* len)
 {
-    int ret     = GRIB_SUCCESS;
+    int ret = GRIB_SUCCESS;
     size_t size = 0;
     size_t i;
     double max, min, d, b;

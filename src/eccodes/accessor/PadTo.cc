@@ -32,7 +32,7 @@ void PadTo::init(const long len, grib_arguments* arg)
     Padding::init(len, arg);
 
     expression_ = arg->get_expression(get_enclosing_handle(), 0);
-    length_     = preferred_size(1);
+    length_ = preferred_size(1);
 }
 
 void PadTo::dump(eccodes::Dumper* dumper)

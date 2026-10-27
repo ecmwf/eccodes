@@ -42,12 +42,12 @@ static int scale_factor_missing(const char* value)
     return 0;
 }
 
-#define STAT_PROC_MAX_VAL 103 // increase this with new Code Table 4.10 entries
+#define STAT_PROC_MAX_VAL 103  // increase this with new Code Table 4.10 entries
 
 /*
  * key      = paramId or shortName
  * filename = paramId.def or shortName.def
-*/
+ */
 static int grib_check_param_concepts(const char* key, const char* filename)
 {
     int isLocal = 0;
@@ -76,19 +76,19 @@ static int grib_check_param_concepts(const char* key, const char* filename)
         int type1Missing = -1, type2Missing = -1;
         int err = 0;
         /* concept_value->name is the value of the key (e.g. 151163 or sst) */
-        if (strcmp(key, "cfVarName")==0) {
-            ECCODES_ASSERT( strlen(concept_value->name) > 0 );
-            if ( isdigit(concept_value->name[0]) || strcmp(concept_value->name, "~")==0 ) {
+        if (strcmp(key, "cfVarName") == 0) {
+            ECCODES_ASSERT(strlen(concept_value->name) > 0);
+            if (isdigit(concept_value->name[0]) || strcmp(concept_value->name, "~") == 0) {
                 fprintf(stderr, "%s %s: Invalid cfVarName in file %s\n",
                         key, concept_value->name, filename);
                 return GRIB_INVALID_KEY_VALUE;
             }
         }
         while (concept_condition) {
-            char condition_value[512] = {0, };
+            char condition_value[512] = { 0 };
             eccodes::Expression* expression = concept_condition->expression;
-            if(expression) {
-                const char* condition_name  = concept_condition->name;
+            if (expression) {
+                const char* condition_name = concept_condition->name;
                 if (verbose && !strstr(condition_name, "binop")) {
                     printf("\t%s\n", condition_name);
                 }
@@ -115,7 +115,7 @@ static int grib_check_param_concepts(const char* key, const char* filename)
                 else if (strcmp(expression->class_name(), "binop") == 0) {
                     eccodes::expression::Binop* eb = dynamic_cast<eccodes::expression::Binop*>(expression);
                     ECCODES_ASSERT(eb);
-                    //eb->print(0, 0, stdout);
+                    // eb->print(0, 0, stdout);
                     printf("\n");
                     // Not yet implemented
                 }
@@ -186,12 +186,12 @@ int main(int argc, char** argv)
     const char* concepts_filename = NULL;
 
     if (argc == 3) {
-        concepts_key      = argv[1];
+        concepts_key = argv[1];
         concepts_filename = argv[2];
     }
     else if (argc == 4) {
-        option            = argv[1];
-        concepts_key      = argv[2];
+        option = argv[1];
+        concepts_key = argv[2];
         concepts_filename = argv[3];
         verbose = STR_EQUAL(option, "-v");
     }

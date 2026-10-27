@@ -16,12 +16,12 @@ namespace eccodes::accessor
 void GdsIsPresent::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
-    int n            = 0;
-    grib_handle* h   = get_enclosing_handle();
-    gds_present_     = c->get_name(h, n++);
+    int n = 0;
+    grib_handle* h = get_enclosing_handle();
+    gds_present_ = c->get_name(h, n++);
     grid_definition_ = c->get_name(h, n++);
-    bitmap_present_  = c->get_name(h, n++);
-    values_          = c->get_name(h, n++);
+    bitmap_present_ = c->get_name(h, n++);
+    values_ = c->get_name(h, n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     flags_ |= GRIB_ACCESSOR_FLAG_HIDDEN;
@@ -30,12 +30,12 @@ void GdsIsPresent::init(const long l, grib_arguments* c)
 
 int GdsIsPresent::pack_long(const long* val, size_t* len)
 {
-    long missing    = 255;
-    int ret         = 0;
-    size_t size     = 0;
-    double* values  = NULL;
+    long missing = 255;
+    int ret = 0;
+    size_t size = 0;
+    double* values = NULL;
     grib_context* c = context_;
-    grib_handle* h  = get_enclosing_handle();
+    grib_handle* h = get_enclosing_handle();
 
     if (*val != 1)
         return GRIB_NOT_IMPLEMENTED;
@@ -71,7 +71,7 @@ int GdsIsPresent::pack_long(const long* val, size_t* len)
 
 int GdsIsPresent::unpack_long(long* val, size_t* len)
 {
-    int ret        = 0;
+    int ret = 0;
     grib_handle* h = get_enclosing_handle();
 
     if ((ret = grib_get_long_internal(h, gds_present_, val)) != GRIB_SUCCESS)

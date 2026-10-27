@@ -86,8 +86,8 @@ jobs:
       image: eccr.ecmwf.int/public-ci-images/ubuntu24.04-base:latest
     outputs:
       ref: ${{ steps.pick.outputs.ref }}
-      matrix-build-hpc: ${{ steps.r.outputs.matrix-build-hpc }}
-      matrix-fortran-hpc: ${{ steps.r.outputs.matrix-fortran-hpc }}
+      matrix-build-hpc: ${{ toJSON(fromJSON(steps.r.outputs.json)['build-hpc']) }}
+      matrix-fortran-hpc: ${{ toJSON(fromJSON(steps.r.outputs.json)['fortran-hpc']) }}
     steps:
     - name: Announce image
       uses: ecmwf/ci-infrastructure/actions/announce-image@main
@@ -109,6 +109,7 @@ jobs:
         repository: ecmwf/eccodes
         ref: ${{ steps.pick.outputs.ref }}
         token: ${{ steps.mint.outputs.token }}
+        persist-credentials: false
     - id: r
       uses: ecmwf/ci-infrastructure/actions/resolve-deps@main
       with:
@@ -139,6 +140,9 @@ jobs:
         client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
         private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
         owner: ${{ github.repository_owner }}
+        permission-contents: read
+        permission-actions: read
+        permission-checks: write
     - id: check_start
       if: ${{ github.event_name == 'workflow_dispatch' && inputs.from-jobs != '[]' }}
       uses: ecmwf/ci-infrastructure/actions/report-check-run@main
@@ -156,6 +160,7 @@ jobs:
         repository: ecmwf/eccodes
         ref: ${{ needs.resolve.outputs.ref }}
         token: ${{ steps.mint.outputs.token }}
+        persist-credentials: false
     - name: Decode matrix-leg
       id: m
       shell: bash
@@ -236,6 +241,9 @@ jobs:
         client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
         private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
         owner: ${{ github.repository_owner }}
+        permission-contents: read
+        permission-actions: read
+        permission-checks: write
     - id: check_start
       if: ${{ github.event_name == 'workflow_dispatch' && inputs.from-jobs != '[]' }}
       uses: ecmwf/ci-infrastructure/actions/report-check-run@main
@@ -253,6 +261,7 @@ jobs:
         repository: ecmwf/eccodes
         ref: ${{ needs.resolve.outputs.ref }}
         token: ${{ steps.mint.outputs.token }}
+        persist-credentials: false
     - name: Decode matrix-leg
       id: m
       shell: bash

@@ -20,7 +20,7 @@ void BufrExtractSubsets::get_accessors()
 
     const grib_handle* h = get_enclosing_handle();
     numericValuesAccessor_ = grib_find_accessor(h, numericValues_);
-    packAccessor_          = grib_find_accessor(h, pack_);
+    packAccessor_ = grib_find_accessor(h, pack_);
 }
 
 void BufrExtractSubsets::init(const long len, grib_arguments* arg)
@@ -28,13 +28,13 @@ void BufrExtractSubsets::init(const long len, grib_arguments* arg)
     Gen::init(len, arg);
     int n = 0;
 
-    length_        = 0;
+    length_ = 0;
     numericValues_ = arg->get_name(get_enclosing_handle(), n++);
-    pack_          = arg->get_name(get_enclosing_handle(), n++);
+    pack_ = arg->get_name(get_enclosing_handle(), n++);
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
 
     numericValuesAccessor_ = NULL;
-    packAccessor_          = NULL;
+    packAccessor_ = NULL;
 }
 
 long BufrExtractSubsets::get_native_type()

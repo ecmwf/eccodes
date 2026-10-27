@@ -15114,13 +15114,13 @@
 	 table2Version = 173 ;
 	 indicatorOfParameter = 145 ;
 	}
-#Surface sensible heat flux anomalous rate of accumulation
-'J m**-2' = {
+#Time-mean surface sensible heat flux anomaly
+'W m**-2' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 146 ;
 	}
-#Surface latent heat flux anomalous rate of accumulation
-'J m**-2' = {
+#Time-mean surface latent heat flux anomaly
+'W m**-2' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 147 ;
 	}
@@ -15139,42 +15139,42 @@
 	 table2Version = 173 ;
 	 indicatorOfParameter = 154 ;
 	}
-#Surface solar radiation downwards anomalous rate of accumulation
-'J m**-2' = {
+#Time-mean surface short-wave (solar) radiation downward flux anomaly
+'W m**-2' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 169 ;
 	}
-#Surface thermal radiation downwards anomalous rate of accumulation
-'J m**-2' = {
+#Time-mean surface long-wave (thermal) radiation downward flux anomaly
+'W m**-2' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 175 ;
 	}
-#Surface solar radiation anomalous rate of accumulation
-'J m**-2' = {
+#Time-mean surface short-wave (solar) radiation flux anomaly
+'W m**-2' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 176 ;
 	}
-#Surface thermal radiation anomalous rate of accumulation
-'J m**-2' = {
+#Time-mean surface long-wave (thermal) radiation flux anomaly
+'W m**-2' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 177 ;
 	}
-#Top solar radiation anomalous rate of accumulation
-'J m**-2' = {
+#Time-mean top short-wave (solar) radiation flux anomaly
+'W m**-2' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 178 ;
 	}
-#Top thermal radiation anomalous rate of accumulation
-'J m**-2' = {
+#Time-mean top long-wave (thermal) radiation flux anomaly
+'W m**-2' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 179 ;
 	}
-#East-West surface stress anomalous rate of accumulation
+#Time-mean east-west surface stress anomaly
 'N m**-2' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 180 ;
 	}
-#North-South surface stress anomalous rate of accumulation
+#Time-mean north-south surface stress anomaly
 'N m**-2' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 181 ;
@@ -15184,7 +15184,7 @@
 	 table2Version = 173 ;
 	 indicatorOfParameter = 182 ;
 	}
-#Sunshine duration anomalous rate of accumulation
+#Time-mean sunshine duration anomaly
 'dimensionless' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 189 ;
@@ -15229,8 +15229,8 @@
 	 table2Version = 173 ;
 	 indicatorOfParameter = 211 ;
 	}
-#Solar insolation anomalous rate of accumulation
-'W m**-2 s**-1' = {
+#Time-mean solar insolation flux anomaly
+'W m**-2' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 212 ;
 	}

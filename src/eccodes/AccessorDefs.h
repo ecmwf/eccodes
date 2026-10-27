@@ -17,7 +17,7 @@ namespace eccodes
 {
 
 using AccessorName = NamedType<std::string, struct NameTag>;
-//using Type = NamedType<std::string, struct TypeTag>;
+// using Type = NamedType<std::string, struct TypeTag>;
 using AccessorNameSpace = NamedType<std::string, struct NameSpaceTag>;
 
-} // namespace eccodes
+}  // namespace eccodes

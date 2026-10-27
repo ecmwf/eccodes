@@ -19,17 +19,17 @@ void G2Eps::init(const long l, grib_arguments* c)
     int n = 0;
 
     productDefinitionTemplateNumber_ = c->get_name(get_enclosing_handle(), n++);
-    type_                            = c->get_name(get_enclosing_handle(), n++);
-    stream_                          = c->get_name(get_enclosing_handle(), n++);
-    stepType_                        = c->get_name(get_enclosing_handle(), n++);
-    derivedForecast_                 = c->get_name(get_enclosing_handle(), n++);
+    type_ = c->get_name(get_enclosing_handle(), n++);
+    stream_ = c->get_name(get_enclosing_handle(), n++);
+    stepType_ = c->get_name(get_enclosing_handle(), n++);
+    derivedForecast_ = c->get_name(get_enclosing_handle(), n++);
 }
 
 int G2Eps::unpack_long(long* val, size_t* len)
 {
     long productDefinitionTemplateNumber = 0;
-    int err                              = 0;
-    grib_handle* hand                    = get_enclosing_handle();
+    int err = 0;
+    grib_handle* hand = get_enclosing_handle();
 
     err = grib_get_long(hand, productDefinitionTemplateNumber_, &productDefinitionTemplateNumber);
     if (err) return err;
@@ -46,17 +46,17 @@ int G2Eps::unpack_long(long* val, size_t* len)
 
 int G2Eps::pack_long(const long* val, size_t* len)
 {
-    grib_handle* hand                       = get_enclosing_handle();
-    long productDefinitionTemplateNumber    = -1;
+    grib_handle* hand = get_enclosing_handle();
+    long productDefinitionTemplateNumber = -1;
     long productDefinitionTemplateNumberNew = -1;
-    long type                               = -1;
-    long stream                             = -1;
-    long chemical                           = -1;
-    long aerosol                            = -1;
-    char stepType[15]                       = {0,};
-    size_t slen          = 15;
-    int eps              = *val;
-    int isInstant        = 0;
+    long type = -1;
+    long stream = -1;
+    long chemical = -1;
+    long aerosol = -1;
+    char stepType[15] = { 0 };
+    size_t slen = 15;
+    int eps = *val;
+    int isInstant = 0;
     long derivedForecast = -1;
 
     if (grib_get_long(hand, productDefinitionTemplateNumber_, &productDefinitionTemplateNumber) != GRIB_SUCCESS)
@@ -82,11 +82,11 @@ int G2Eps::pack_long(const long* val, size_t* len)
             // type=em || type=es
             if (type == 17) {
                 productDefinitionTemplateNumberNew = 2;
-                derivedForecast                    = 0;
+                derivedForecast = 0;
             }
             else if (type == 18) {
                 productDefinitionTemplateNumberNew = 2;
-                derivedForecast                    = 4;
+                derivedForecast = 4;
             }
             else {
                 // productDefinitionTemplateNumberNew = 1;
@@ -97,11 +97,11 @@ int G2Eps::pack_long(const long* val, size_t* len)
             // type=em || type=es
             if (type == 17) {
                 productDefinitionTemplateNumberNew = 12;
-                derivedForecast                    = 0;
+                derivedForecast = 0;
             }
             else if (type == 18) {
                 productDefinitionTemplateNumberNew = 12;
-                derivedForecast                    = 4;
+                derivedForecast = 4;
             }
             else {
                 // productDefinitionTemplateNumberNew = 11;

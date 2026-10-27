@@ -7,7 +7,7 @@ long cnt = 0;
 long ff = 0;
 long m = 0;
 
-void* foo[1000000] = {0,};
+void* foo[1000000] = {0};
 
 static void  default_free(const grib_context* c, void* p)   {
 

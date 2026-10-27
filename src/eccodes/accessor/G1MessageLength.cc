@@ -19,16 +19,16 @@ int grib_get_g1_message_size(grib_handle* h, grib_accessor* tl, grib_accessor* s
     if (!tl)
         return GRIB_NOT_FOUND;
     if (!s4) {
-        *sec4_len     = 0;
-        off           = tl->offset_ * 8;
+        *sec4_len = 0;
+        off = tl->offset_ * 8;
         *total_length = grib_decode_unsigned_long(h->buffer->data, &off, tl->length_ * 8);
         return GRIB_SUCCESS;
     }
 
-    off  = tl->offset_ * 8;
+    off = tl->offset_ * 8;
     tlen = grib_decode_unsigned_long(h->buffer->data, &off, tl->length_ * 8);
 
-    off  = s4->offset_ * 8;
+    off = s4->offset_ * 8;
     slen = grib_decode_unsigned_long(h->buffer->data, &off, s4->length_ * 8);
 
     /* printf("\nlarge grib tlen=%ld slen=%ld diff=%ld\n",tlen&0x7fffff,slen,tlen-slen); */
@@ -44,7 +44,7 @@ int grib_get_g1_message_size(grib_handle* h, grib_accessor* tl, grib_accessor* s
     }
 
     *total_length = tlen;
-    *sec4_len     = slen;
+    *sec4_len = slen;
 
     return GRIB_SUCCESS;
 }

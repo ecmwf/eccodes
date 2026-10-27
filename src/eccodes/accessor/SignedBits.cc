@@ -44,10 +44,10 @@ long SignedBits::compute_byte_count()
 void SignedBits::init(const long len, grib_arguments* args)
 {
     Long::init(len, args);
-    int n             = 0;
-    numberOfBits_     = args->get_name(get_enclosing_handle(), n++);
+    int n = 0;
+    numberOfBits_ = args->get_name(get_enclosing_handle(), n++);
     numberOfElements_ = args->get_name(get_enclosing_handle(), n++);
-    length_           = compute_byte_count();
+    length_ = compute_byte_count();
 }
 
 int SignedBits::unpack_long(long* val, size_t* len)

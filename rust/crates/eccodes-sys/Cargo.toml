@@ -5,14 +5,17 @@ edition      .workspace = true
 license      .workspace = true
 repository   .workspace = true
 rust-version .workspace = true
+keywords     .workspace = true
+categories   .workspace = true
 description  = "Raw FFI bindings to the ECMWF eccodes C library"
+readme       = "README.md"
 links        = "eccodes_sys"
 build        = "build.rs"
 
 [features]
 # Defaults mirror eccodes CMake defaults except `vendored`, `netcdf`,
 # and `memfs` — which require extra setup or external libs.
-default = ["product-grib", "product-bufr", "geography", "jpg", "vendored"]
+default = ["product-grib", "product-bufr", "geography", "aec", "jpg", "vendored"]
 
 # Build strategy (mutually exclusive)
 system   = ["eckit-sys/system"]

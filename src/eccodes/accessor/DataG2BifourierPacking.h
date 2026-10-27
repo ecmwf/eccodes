@@ -48,8 +48,8 @@ class DataG2BifourierPacking : public DataSimplePacking
 {
 public:
     DataG2BifourierPacking() :
-        DataSimplePacking() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        DataSimplePacking() {}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
     int value_count(long*) override;
@@ -68,12 +68,12 @@ private:
     const char* biFourierDoNotPackAxes_ = nullptr;
     const char* biFourierMakeTemplate_ = nullptr;
     const char* totalNumberOfValuesInUnpackedSubset_ = nullptr;
-    //const char* numberOfValues_ = nullptr;
+    // const char* numberOfValues_ = nullptr;
 
     bif_trunc_t* new_bif_trunc();
 
 public:
-    static constexpr AccessorType accessor_type_{"data_g2bifourier_packing"};
+    static constexpr AccessorType accessor_type_{ "data_g2bifourier_packing" };
 };
 
 }  // namespace eccodes::accessor

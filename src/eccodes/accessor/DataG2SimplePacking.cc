@@ -30,21 +30,21 @@ int DataG2SimplePacking::value_count(long* n_vals)
 int DataG2SimplePacking::pack_double(const double* cval, size_t* len)
 {
     // grib_accessor* super                = *(cclass_ ->super);
-    size_t n_vals             = *len;
-    double reference_value    = 0;
-    long binary_scale_factor  = 0;
-    long bits_per_value       = 0;
+    size_t n_vals = *len;
+    double reference_value = 0;
+    long binary_scale_factor = 0;
+    long bits_per_value = 0;
     long decimal_scale_factor = 0;
-    double decimal            = 1;
-    size_t buflen             = 0;
-    unsigned char* buf        = NULL;
-    unsigned char* encoded    = NULL;
-    double divisor            = 1;
-    long off                  = 0;
-    int ret                   = 0;
-    double units_factor       = 1.0;
-    double units_bias         = 0.0;
-    double* val               = (double*)cval;
+    double decimal = 1;
+    size_t buflen = 0;
+    unsigned char* buf = NULL;
+    unsigned char* encoded = NULL;
+    double divisor = 1;
+    long off = 0;
+    int ret = 0;
+    double units_factor = 1.0;
+    double units_bias = 0.0;
+    double* val = (double*)cval;
     int i;
     grib_context* c = context_;
 
@@ -91,7 +91,7 @@ int DataG2SimplePacking::pack_double(const double* cval, size_t* len)
     if (c->ieee_packing) {
         grib_handle* h = get_enclosing_handle();
         long precision = 0; /* Either 1(=32 bits) or 2(=64 bits) */
-        size_t lenstr  = 10;
+        size_t lenstr = 10;
         if ((ret = codes_check_grib_ieee_packing_value(c->ieee_packing)) != GRIB_SUCCESS)
             return ret;
         precision = c->ieee_packing == 32 ? 1 : 2;
@@ -130,8 +130,8 @@ int DataG2SimplePacking::pack_double(const double* cval, size_t* len)
     decimal = codes_power<double>(decimal_scale_factor, 10);
     divisor = codes_power<double>(-binary_scale_factor, 2);
 
-    buflen  = (((bits_per_value * n_vals) + 7) / 8) * sizeof(unsigned char);
-    buf     = (unsigned char*)grib_context_buffer_malloc_clear(context_, buflen);
+    buflen = (((bits_per_value * n_vals) + 7) / 8) * sizeof(unsigned char);
+    buf = (unsigned char*)grib_context_buffer_malloc_clear(context_, buflen);
     encoded = buf;
 
     grib_encode_double_array(n_vals, val, bits_per_value, reference_value, decimal, divisor, encoded, &off);

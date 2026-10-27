@@ -17,9 +17,9 @@ char buffer[SIZE];
 
 static long readcb(void* data, void* buffer, long len)
 {
-    //long l = handle->read(buffer, len);
-    // ecCodes interprets a -1 as EOF
-    //return l == 0 ? -1 : l;
+    // long l = handle->read(buffer, len);
+    //  ecCodes interprets a -1 as EOF
+    // return l == 0 ? -1 : l;
     return -1;
 }
 
@@ -41,8 +41,8 @@ int main(int argc, char** argv)
     const void* data = NULL;
     GRIB_CHECK(grib_get_message(h, &data, &len), 0);
 
-    err = wmo_read_any_from_stream( (void*)data, &readcb, buffer, &len );
-    printf("err = %d \n",err);
+    err = wmo_read_any_from_stream((void*)data, &readcb, buffer, &len);
+    printf("err = %d \n", err);
 
     return 0;
 }

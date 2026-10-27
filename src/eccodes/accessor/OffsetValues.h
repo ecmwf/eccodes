@@ -19,8 +19,8 @@ class OffsetValues : public Double
 {
 public:
     OffsetValues() :
-        Double() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        Double() {}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
@@ -30,7 +30,7 @@ private:
     const char* missingValue_ = nullptr;
 
 public:
-    static constexpr AccessorType accessor_type_{"offset_values"};
+    static constexpr AccessorType accessor_type_{ "offset_values" };
 };
 
 }  // namespace eccodes::accessor

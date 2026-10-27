@@ -14,7 +14,8 @@
 #include <algorithm>
 #include <stdexcept>
 
-namespace eccodes {
+namespace eccodes
+{
 
 void throwNoCreator(const char* type, const std::vector<const char*>& knownTypes)
 {
@@ -24,7 +25,7 @@ void throwNoCreator(const char* type, const std::vector<const char*>& knownTypes
     // Suggest the 5 most similar known types, using the Levenshtein distance
     std::vector<std::pair<size_t, const char*>> candidates;
     for (const char* known : knownTypes) {
-        candidates.push_back({levenshteinDistance(type, known), known});
+        candidates.push_back({ levenshteinDistance(type, known), known });
     }
     const size_t n = std::min<size_t>(5, candidates.size());
     std::partial_sort(candidates.begin(), candidates.begin() + n, candidates.end(),
@@ -38,4 +39,4 @@ void throwNoCreator(const char* type, const std::vector<const char*>& knownTypes
     throw std::runtime_error(std::string("No creator for type ") + type);
 }
 
-} // namespace eccodes
+}  // namespace eccodes

@@ -13,7 +13,8 @@
 eccodes::geo_nearest::Regular _grib_nearest_regular{};
 eccodes::geo_nearest::Nearest* grib_nearest_regular = &_grib_nearest_regular;
 
-namespace eccodes::geo_nearest {
+namespace eccodes::geo_nearest
+{
 
 #define NUM_NEIGHBOURS 4
 
@@ -25,15 +26,15 @@ int Regular::init(grib_handle* h, grib_arguments* args)
 
     Ni_ = args->get_name(h, cargs_++);
     Nj_ = args->get_name(h, cargs_++);
-    i_  = (size_t*)grib_context_malloc(h->context, 2 * sizeof(size_t));
-    j_  = (size_t*)grib_context_malloc(h->context, 2 * sizeof(size_t));
+    i_ = (size_t*)grib_context_malloc(h->context, 2 * sizeof(size_t));
+    j_ = (size_t*)grib_context_malloc(h->context, 2 * sizeof(size_t));
     return ret;
 }
 
 static bool is_rotated_grid(grib_handle* h)
 {
     long is_rotated = 0;
-    int err         = grib_get_long(h, "isRotatedGrid", &is_rotated);
+    int err = grib_get_long(h, "isRotatedGrid", &is_rotated);
     if (!err && is_rotated)
         return true;
     return false;
@@ -43,9 +44,9 @@ static bool is_rotated_grid(grib_handle* h)
 //  src/deprecated/grib_nearest_class_regular.cc
 //
 int Regular::find(grib_handle* h,
-                double inlat, double inlon, unsigned long flags,
-                double* outlats, double* outlons,
-                double* values, double* distances, int* indexes, size_t* len)
+                  double inlat, double inlon, unsigned long flags,
+                  double* outlats, double* outlons,
+                  double* values, double* distances, int* indexes, size_t* len)
 {
     int ret = 0, kk = 0, ii = 0, jj = 0;
     size_t nvalues = 0;
@@ -53,7 +54,7 @@ int Regular::find(grib_handle* h,
 
     grib_iterator* iter = NULL;
     double lat = 0, lon = 0;
-    const bool is_rotated  = is_rotated_grid(h);
+    const bool is_rotated = is_rotated_grid(h);
     double angleOfRotation = 0, southPoleLat = 0, southPoleLon = 0;
     grib_context* c = h->context;
 
@@ -141,11 +142,11 @@ int Regular::find(grib_handle* h,
         while (grib_iterator_next(iter, &lat, &lon, NULL)) {
             if (ilat < lats_count_ && olat != lat) {
                 lats_[ilat++] = lat;
-                olat               = lat;
+                olat = lat;
             }
             if (ilon < lons_count_ && olon != lon) {
                 lons_[ilon++] = lon;
-                olon               = lon;
+                olon = lon;
             }
         }
         grib_iterator_delete(iter);
@@ -179,8 +180,8 @@ int Regular::find(grib_handle* h,
                     if (lons_[0] + 360 - lons_[lons_count_ - 1] <=
                         lons_[1] - lons_[0]) {
                         /*it's a global field in longitude*/
-                        i_[0]         = 0;
-                        i_[1]         = lons_count_ - 1;
+                        i_[0] = 0;
+                        i_[1] = lons_count_ - 1;
                         nearest_lons_found = 1;
                     }
                     else
@@ -198,8 +199,8 @@ int Regular::find(grib_handle* h,
                 if (lons_[0] - lons_[lons_count_ - 1] - 360 <=
                     lons_[0] - lons_[1]) {
                     /*it's a global field in longitude*/
-                    i_[0]         = 0;
-                    i_[1]         = lons_count_ - 1;
+                    i_[0] = 0;
+                    i_[1] = lons_count_ - 1;
                     nearest_lons_found = 1;
                 }
                 else if (inlon > lons_[0] || inlon < lons_[lons_count_ - 1])
@@ -221,9 +222,9 @@ int Regular::find(grib_handle* h,
         kk = 0;
         for (jj = 0; jj < 2; jj++) {
             for (ii = 0; ii < 2; ii++) {
-                k_[kk]         = i_[ii] + lons_count_ * j_[jj];
+                k_[kk] = i_[ii] + lons_count_ * j_[jj];
                 distances_[kk] = geographic_distance_spherical(radiusInKm, inlon, inlat,
-                                                            lons_[i_[ii]], lats_[j_[jj]]);
+                                                               lons_[i_[ii]], lats_[j_[jj]]);
                 kk++;
             }
         }
@@ -253,8 +254,8 @@ int Regular::find(grib_handle* h,
     for (jj = 0; jj < 2; jj++) {
         for (ii = 0; ii < 2; ii++) {
             distances[kk] = distances_[kk];
-            outlats[kk]   = lats_[j_[jj]];
-            outlons[kk]   = lons_[i_[ii]];
+            outlats[kk] = lats_[j_[jj]];
+            outlons[kk] = lons_[i_[ii]];
             if (is_rotated) {
                 /* Unrotate resulting lat/lon */
                 double new_lat = 0, new_lon = 0;
@@ -275,7 +276,8 @@ int Regular::find(grib_handle* h,
                 /* Current interface uses an 'int' for 'indexes' which is 32bits! We should change this to a 64bit type */
                 grib_context_log(h->context, GRIB_LOG_ERROR, "grib_nearest_regular: Unable to compute index. Value too large");
                 return GRIB_OUT_OF_RANGE;
-            } else {
+            }
+            else {
                 indexes[kk] = (int)k_[kk];
             }
             kk++;

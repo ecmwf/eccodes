@@ -19,8 +19,8 @@ class LocalDefinition : public Unsigned
 {
 public:
     LocalDefinition() :
-        Unsigned() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        Unsigned() {}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     int pack_long(const long* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     int value_count(long*) override;
@@ -38,7 +38,7 @@ private:
     const char* derivedForecast_ = nullptr;
 
 public:
-    static constexpr AccessorType accessor_type_{"local_definition"};
+    static constexpr AccessorType accessor_type_{ "local_definition" };
 };
 
 }  // namespace eccodes::accessor

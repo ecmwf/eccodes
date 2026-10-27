@@ -18,18 +18,18 @@ void Scale::init(const long l, grib_arguments* c)
     Double::init(l, c);
     int n = 0;
 
-    value_      = c->get_name(get_enclosing_handle(), n++);
+    value_ = c->get_name(get_enclosing_handle(), n++);
     multiplier_ = c->get_name(get_enclosing_handle(), n++);
-    divisor_    = c->get_name(get_enclosing_handle(), n++);
+    divisor_ = c->get_name(get_enclosing_handle(), n++);
     truncating_ = c->get_name(get_enclosing_handle(), n++);
 }
 
 int Scale::unpack_double(double* val, size_t* len)
 {
-    int ret         = 0;
-    long value      = 0;
+    int ret = 0;
+    long value = 0;
     long multiplier = 0;
-    long divisor    = 0;
+    long divisor = 0;
 
     if (*len < 1) {
         ret = GRIB_ARRAY_TOO_SMALL;
@@ -69,8 +69,8 @@ int Scale::pack_double(const double* val, size_t* len)
 {
     int ret = 0;
 
-    long value      = 0;
-    long divisor    = 0;
+    long value = 0;
+    long divisor = 0;
     long multiplier = 0;
     long truncating = 0;
     double x;

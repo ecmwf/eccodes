@@ -17,12 +17,12 @@ void DataApplyBoustrophedonic::init(const long v, grib_arguments* args)
 {
     Gen::init(v, args);
 
-    int n            = 0;
-    values_          = args->get_name(get_enclosing_handle(), n++);
-    numberOfRows_    = args->get_name(get_enclosing_handle(), n++);
+    int n = 0;
+    values_ = args->get_name(get_enclosing_handle(), n++);
+    numberOfRows_ = args->get_name(get_enclosing_handle(), n++);
     numberOfColumns_ = args->get_name(get_enclosing_handle(), n++);
-    numberOfPoints_  = args->get_name(get_enclosing_handle(), n++);
-    pl_              = args->get_name(get_enclosing_handle(), n++);
+    numberOfPoints_ = args->get_name(get_enclosing_handle(), n++);
+    pl_ = args->get_name(get_enclosing_handle(), n++);
 
     length_ = 0;
 }
@@ -40,12 +40,12 @@ int DataApplyBoustrophedonic::value_count(long* numberOfPoints)
 template <typename T>
 int DataApplyBoustrophedonic::unpack(T* val, size_t* len)
 {
-    size_t plSize                                    = 0;
-    long* pl                                         = 0;
-    double* values                                   = 0;
-    double* pvalues                                  = 0;
-    T* pval                                          = 0;
-    size_t valuesSize                                = 0;
+    size_t plSize = 0;
+    long* pl = 0;
+    double* values = 0;
+    double* pvalues = 0;
+    T* pval = 0;
+    size_t valuesSize = 0;
     long i, j;
     long numberOfPoints, numberOfRows, numberOfColumns;
 
@@ -73,12 +73,12 @@ int DataApplyBoustrophedonic::unpack(T* val, size_t* len)
     }
 
     values = (double*)grib_context_malloc_clear(context_, sizeof(double) * numberOfPoints);
-    ret    = grib_get_double_array_internal(get_enclosing_handle(), values_, values, &valuesSize);
+    ret = grib_get_double_array_internal(get_enclosing_handle(), values_, values, &valuesSize);
     if (ret)
         return ret;
 
     pvalues = values;
-    pval    = val;
+    pval = val;
 
     ret = grib_get_long_internal(get_enclosing_handle(), numberOfRows_, &numberOfRows);
     if (ret)
@@ -90,7 +90,7 @@ int DataApplyBoustrophedonic::unpack(T* val, size_t* len)
 
     if (grib_get_size(get_enclosing_handle(), pl_, &plSize) == GRIB_SUCCESS) {
         ECCODES_ASSERT(plSize == numberOfRows);
-        pl  = (long*)grib_context_malloc_clear(context_, sizeof(long) * plSize);
+        pl = (long*)grib_context_malloc_clear(context_, sizeof(long) * plSize);
         ret = grib_get_long_array_internal(get_enclosing_handle(), pl_, pl, &plSize);
         if (ret)
             return ret;
@@ -176,7 +176,7 @@ int DataApplyBoustrophedonic::unpack_double_element_set(const size_t* index_arra
     }
 
     values = (double*)grib_context_malloc_clear(context_, size * sizeof(double));
-    err    = grib_get_double_array(get_enclosing_handle(), "codedValues", values, &size);
+    err = grib_get_double_array(get_enclosing_handle(), "codedValues", values, &size);
     if (err) {
         grib_context_free(context_, values);
         return err;
@@ -190,11 +190,11 @@ int DataApplyBoustrophedonic::unpack_double_element_set(const size_t* index_arra
 
 int DataApplyBoustrophedonic::pack_double(const double* val, size_t* len)
 {
-    size_t plSize     = 0;
-    long* pl          = 0;
-    double* values    = 0;
-    double* pvalues   = 0;
-    double* pval      = 0;
+    size_t plSize = 0;
+    long* pl = 0;
+    double* values = 0;
+    double* pvalues = 0;
+    double* pval = 0;
     size_t valuesSize = 0;
     long i, j;
     long numberOfPoints, numberOfRows, numberOfColumns;
@@ -213,7 +213,7 @@ int DataApplyBoustrophedonic::pack_double(const double* val, size_t* len)
     values = (double*)grib_context_malloc_clear(context_, sizeof(double) * numberOfPoints);
 
     pvalues = values;
-    pval    = (double*)val;
+    pval = (double*)val;
 
     ret = grib_get_long_internal(get_enclosing_handle(), numberOfRows_, &numberOfRows);
     if (ret)
@@ -225,7 +225,7 @@ int DataApplyBoustrophedonic::pack_double(const double* val, size_t* len)
 
     if (grib_get_size(get_enclosing_handle(), pl_, &plSize) == GRIB_SUCCESS) {
         ECCODES_ASSERT(plSize == numberOfRows);
-        pl  = (long*)grib_context_malloc_clear(context_, sizeof(long) * plSize);
+        pl = (long*)grib_context_malloc_clear(context_, sizeof(long) * plSize);
         ret = grib_get_long_array_internal(get_enclosing_handle(), pl_, pl, &plSize);
         if (ret)
             return ret;

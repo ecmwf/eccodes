@@ -84,17 +84,17 @@ static void test_set_from_grid_spec_reduced_gg()
     }
 
     /* Set up the grid spec as reduced Gaussian */
-    grib_util_grid_spec spec = {0,};
-    spec.grid_type                          = GRIB_UTIL_GRID_SPEC_REDUCED_GG;
-    spec.N                                  = 32;
-    spec.Nj                                 = 2 * spec.N;
-    spec.latitudeOfFirstGridPointInDegrees  = 87.863799;
+    grib_util_grid_spec spec = { 0 };
+    spec.grid_type = GRIB_UTIL_GRID_SPEC_REDUCED_GG;
+    spec.N = 32;
+    spec.Nj = 2 * spec.N;
+    spec.latitudeOfFirstGridPointInDegrees = 87.863799;
     spec.longitudeOfFirstGridPointInDegrees = 0.0;
-    spec.latitudeOfLastGridPointInDegrees   = -87.863799;
-    spec.longitudeOfLastGridPointInDegrees  = 357.1875;
-    spec.bitmapPresent                      = 0;
+    spec.latitudeOfLastGridPointInDegrees = -87.863799;
+    spec.longitudeOfLastGridPointInDegrees = 357.1875;
+    spec.bitmapPresent = 0;
 
-    grib_util_packing_spec packing_spec = {0,};
+    grib_util_packing_spec packing_spec = { 0 };
 
     err = grib_set_from_grid_spec(h, &spec, &packing_spec);
     ECCODES_ASSERT(err == 0);
@@ -132,16 +132,16 @@ static void test_set_from_grid_spec_reduced_ll()
         ECCODES_ASSERT(Ni != GRIB_MISSING_LONG);
     }
 
-    grib_util_grid_spec spec = {0,};
-    spec.grid_type                          = GRIB_UTIL_GRID_SPEC_REDUCED_LL;
-    spec.Nj                                 = 4;
-    spec.latitudeOfFirstGridPointInDegrees  = 90.0;
+    grib_util_grid_spec spec = { 0 };
+    spec.grid_type = GRIB_UTIL_GRID_SPEC_REDUCED_LL;
+    spec.Nj = 4;
+    spec.latitudeOfFirstGridPointInDegrees = 90.0;
     spec.longitudeOfFirstGridPointInDegrees = 0.0;
-    spec.latitudeOfLastGridPointInDegrees   = -90.0;
-    spec.longitudeOfLastGridPointInDegrees  = 360.0;
-    spec.bitmapPresent                      = 0;
+    spec.latitudeOfLastGridPointInDegrees = -90.0;
+    spec.longitudeOfLastGridPointInDegrees = 360.0;
+    spec.bitmapPresent = 0;
 
-    grib_util_packing_spec packing_spec = {0,};
+    grib_util_packing_spec packing_spec = { 0 };
 
     err = grib_set_from_grid_spec(h, &spec, &packing_spec);
     ECCODES_ASSERT(err == 0);
@@ -186,30 +186,32 @@ static void test_util_set_spec_reduced_gg()
     CODES_CHECK(grib_get_long_array(rgg_sample, "pl", pl, &pl_size), 0);
 
     size_t total_points = 0;
-    for (size_t i = 0; i < pl_size; i++) total_points += pl[i];
+    for (size_t i = 0; i < pl_size; i++)
+        total_points += pl[i];
 
     double* values = (double*)calloc(total_points, sizeof(double));
     values[0] = 4.4;
     values[1] = 5.5;
-    for (size_t i = 2; i < total_points; i++) values[i] = (double)i * 0.01;
+    for (size_t i = 2; i < total_points; i++)
+        values[i] = (double)i * 0.01;
 
-    grib_util_grid_spec spec = {0,};
-    spec.grid_type                          = GRIB_UTIL_GRID_SPEC_REDUCED_GG;
-    spec.N                                  = 32;
-    spec.Nj                                 = 2 * spec.N;
-    spec.latitudeOfFirstGridPointInDegrees  = 87.863799;
+    grib_util_grid_spec spec = { 0 };
+    spec.grid_type = GRIB_UTIL_GRID_SPEC_REDUCED_GG;
+    spec.N = 32;
+    spec.Nj = 2 * spec.N;
+    spec.latitudeOfFirstGridPointInDegrees = 87.863799;
     spec.longitudeOfFirstGridPointInDegrees = 0.0;
-    spec.latitudeOfLastGridPointInDegrees   = -87.863799;
-    spec.longitudeOfLastGridPointInDegrees  = 357.1875;
-    spec.bitmapPresent                      = 0;
-    spec.pl                                 = pl;
-    spec.pl_size                            = (long)pl_size;
+    spec.latitudeOfLastGridPointInDegrees = -87.863799;
+    spec.longitudeOfLastGridPointInDegrees = 357.1875;
+    spec.bitmapPresent = 0;
+    spec.pl = pl;
+    spec.pl_size = (long)pl_size;
 
-    grib_util_packing_spec packing_spec = {0,};
+    grib_util_packing_spec packing_spec = { 0 };
     packing_spec.packing_type = GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE;
     packing_spec.bitsPerValue = 16;
-    packing_spec.accuracy     = GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES;
-    packing_spec.packing      = GRIB_UTIL_PACKING_USE_PROVIDED;
+    packing_spec.accuracy = GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES;
+    packing_spec.packing = GRIB_UTIL_PACKING_USE_PROVIDED;
 
     int set_spec_flags = 0;
     grib_handle* result = grib_util_set_spec(
@@ -247,19 +249,19 @@ static void test_regular_ll_not_missing()
     grib_handle* h = grib_handle_new_from_samples(nullptr, "GRIB2");
     ECCODES_ASSERT(h);
 
-    grib_util_grid_spec spec = {0,};
-    spec.grid_type                          = GRIB_UTIL_GRID_SPEC_REGULAR_LL;
-    spec.Ni                                 = 10;
-    spec.Nj                                 = 5;
-    spec.iDirectionIncrementInDegrees       = 1.0;
-    spec.jDirectionIncrementInDegrees       = 1.0;
-    spec.latitudeOfFirstGridPointInDegrees  = 90.0;
+    grib_util_grid_spec spec = { 0 };
+    spec.grid_type = GRIB_UTIL_GRID_SPEC_REGULAR_LL;
+    spec.Ni = 10;
+    spec.Nj = 5;
+    spec.iDirectionIncrementInDegrees = 1.0;
+    spec.jDirectionIncrementInDegrees = 1.0;
+    spec.latitudeOfFirstGridPointInDegrees = 90.0;
     spec.longitudeOfFirstGridPointInDegrees = 0.0;
-    spec.latitudeOfLastGridPointInDegrees   = 86.0;
-    spec.longitudeOfLastGridPointInDegrees  = 9.0;
-    spec.bitmapPresent                      = 0;
+    spec.latitudeOfLastGridPointInDegrees = 86.0;
+    spec.longitudeOfLastGridPointInDegrees = 9.0;
+    spec.bitmapPresent = 0;
 
-    grib_util_packing_spec packing_spec = {0,};
+    grib_util_packing_spec packing_spec = { 0 };
 
     err = grib_set_from_grid_spec(h, &spec, &packing_spec);
     ECCODES_ASSERT(err == 0);

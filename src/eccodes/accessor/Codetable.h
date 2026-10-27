@@ -20,8 +20,8 @@ class Codetable : public Unsigned
 {
 public:
     Codetable() :
-        Unsigned() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        Unsigned() {}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     long get_native_type() override;
     int pack_missing() override;
     int pack_string(const char*, size_t* len) override;
@@ -45,7 +45,7 @@ private:
     grib_codetable* load_table();
 
 public:
-    static constexpr AccessorType accessor_type_{"codetable"};
+    static constexpr AccessorType accessor_type_{ "codetable" };
 };
 
 }  // namespace eccodes::accessor

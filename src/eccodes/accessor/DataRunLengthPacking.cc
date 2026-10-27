@@ -17,13 +17,13 @@ namespace eccodes::accessor
 void DataRunLengthPacking::init(const long v, grib_arguments* args)
 {
     Values::init(v, args);
-    grib_handle* gh         = get_enclosing_handle();
-    number_of_values_       = args->get_name(gh, carg_++);
-    bits_per_value_         = args->get_name(gh, carg_++);
-    max_level_value_        = args->get_name(gh, carg_++);
+    grib_handle* gh = get_enclosing_handle();
+    number_of_values_ = args->get_name(gh, carg_++);
+    bits_per_value_ = args->get_name(gh, carg_++);
+    max_level_value_ = args->get_name(gh, carg_++);
     number_of_level_values_ = args->get_name(gh, carg_++);
-    decimal_scale_factor_   = args->get_name(gh, carg_++);
-    level_values_           = args->get_name(gh, carg_++);
+    decimal_scale_factor_ = args->get_name(gh, carg_++);
+    level_values_ = args->get_name(gh, carg_++);
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
@@ -35,18 +35,18 @@ int DataRunLengthPacking::value_count(long* number_of_values)
 
 int DataRunLengthPacking::unpack_double(double* val, size_t* len)
 {
-    grib_handle* gh         = get_enclosing_handle();
-    int err                 = GRIB_SUCCESS;
+    grib_handle* gh = get_enclosing_handle();
+    int err = GRIB_SUCCESS;
     long seclen, number_of_values, bits_per_value, max_level_value, number_of_level_values, decimal_scale_factor;
-    long* level_values       = NULL;
+    long* level_values = NULL;
     size_t level_values_size = 0;
     long i = 0, number_of_compressed_values = 0, range = 0, offsetBeforeData = 0, pos = 0;
     long v, n, factor, k, j;
-    long* compressed_values   = NULL;
+    long* compressed_values = NULL;
     double level_scale_factor = 0;
-    double* levels            = NULL;
-    unsigned char* buf        = NULL;
-    double missingValue       = 9999.0;
+    double* levels = NULL;
+    unsigned char* buf = NULL;
+    double missingValue = 9999.0;
 
     if ((err = grib_get_long_internal(gh, seclen_, &seclen)) != GRIB_SUCCESS)
         return err;
@@ -63,12 +63,12 @@ int DataRunLengthPacking::unpack_double(double* val, size_t* len)
     if ((err = grib_get_double(gh, "missingValue", &missingValue)) != GRIB_SUCCESS)
         return err;
 
-    level_values      = (long*)grib_context_malloc_clear(context_, sizeof(long) * number_of_level_values);
+    level_values = (long*)grib_context_malloc_clear(context_, sizeof(long) * number_of_level_values);
     level_values_size = number_of_level_values;
     if ((err = grib_get_long_array_internal(gh, level_values_, level_values, &level_values_size)) != GRIB_SUCCESS)
         return err;
-    *len                        = number_of_values;
-    i                           = 0;
+    *len = number_of_values;
+    i = 0;
     number_of_compressed_values = ((seclen - 5) * 8) / bits_per_value;
     if (number_of_compressed_values == 0 || max_level_value == 0) {
         for (i = 0; i < number_of_values; i++) {
@@ -88,14 +88,14 @@ int DataRunLengthPacking::unpack_double(double* val, size_t* len)
         decimal_scale_factor = -(decimal_scale_factor - 128);
     }
     level_scale_factor = codes_power<double>(-decimal_scale_factor, 10.0);
-    levels             = (double*)grib_context_malloc_clear(context_, sizeof(double) * (number_of_level_values + 1));
-    levels[0]          = missingValue;
+    levels = (double*)grib_context_malloc_clear(context_, sizeof(double) * (number_of_level_values + 1));
+    levels[0] = missingValue;
     for (i = 0; i < number_of_level_values; i++) {
         levels[i + 1] = level_values[i] * level_scale_factor;
     }
     compressed_values = (long*)grib_context_malloc_clear(context_, sizeof(long) * number_of_compressed_values);
-    buf               = get_enclosing_handle()->buffer->data;
-    offsetBeforeData  = byte_offset();
+    buf = get_enclosing_handle()->buffer->data;
+    offsetBeforeData = byte_offset();
     buf += offsetBeforeData;
     pos = 0;
     grib_decode_long_array(buf, &pos, bits_per_value, number_of_compressed_values, compressed_values);
@@ -109,8 +109,8 @@ int DataRunLengthPacking::unpack_double(double* val, size_t* len)
                              accessor_type().c_str(), i, compressed_values[i], max_level_value);
             break;
         }
-        v      = compressed_values[i++];
-        n      = 1;
+        v = compressed_values[i++];
+        n = 1;
         factor = 1;
         while (i < number_of_compressed_values && compressed_values[i] > max_level_value) {
             n += factor * (compressed_values[i] - max_level_value - 1);
@@ -139,16 +139,16 @@ int DataRunLengthPacking::unpack_double(double* val, size_t* len)
 
 int DataRunLengthPacking::pack_double(const double* val, size_t* len)
 {
-    grib_handle* gh         = get_enclosing_handle();
-    int err                 = GRIB_SUCCESS;
+    grib_handle* gh = get_enclosing_handle();
+    int err = GRIB_SUCCESS;
     long number_of_values, bits_per_value, max_level_value, number_of_level_values, decimal_scale_factor;
-    long* level_values       = NULL;
+    long* level_values = NULL;
     size_t level_values_size = 0;
     long i = 0, range = 0, pos = 0, n = 0, j = 0, k = 0, l = 0, missingValueLong = 0;
     double level_scale_factor = 0;
-    unsigned char* buf        = NULL;
-    double missingValue       = 9999.0;
-    size_t n_vals             = *len;
+    unsigned char* buf = NULL;
+    double missingValue = 9999.0;
+    size_t n_vals = *len;
 
     if ((err = grib_get_long_internal(gh, number_of_values_, &number_of_values)) != GRIB_SUCCESS)
         return err;
@@ -170,11 +170,11 @@ int DataRunLengthPacking::pack_double(const double* val, size_t* len)
     }
 
     if (bits_per_value == 0) {
-        // TODO(masn): What are we meant to do with constant fields?
+        // TODO(maee): What are we meant to do with constant fields?
         return GRIB_SUCCESS;
     }
 
-    level_values      = (long*)grib_context_malloc_clear(context_, sizeof(long) * number_of_level_values);
+    level_values = (long*)grib_context_malloc_clear(context_, sizeof(long) * number_of_level_values);
     level_values_size = number_of_level_values;
     if ((err = grib_get_long_array_internal(gh, level_values_, level_values, &level_values_size)) != GRIB_SUCCESS)
         return err;
@@ -182,7 +182,7 @@ int DataRunLengthPacking::pack_double(const double* val, size_t* len)
         decimal_scale_factor = -(decimal_scale_factor - 128);
     }
     level_scale_factor = grib_power(-decimal_scale_factor, 10.0);
-    missingValueLong   = (long)(round(missingValue / level_scale_factor));
+    missingValueLong = (long)(round(missingValue / level_scale_factor));
     for (i = 0; i < number_of_level_values; i++) {
         if (missingValueLong == level_values[i]) {
             grib_context_log(context_, GRIB_LOG_ERROR, "%s: Parameters are invalid: level_values[%ld]=%ld, missingValueLong=%ld",
@@ -200,16 +200,16 @@ int DataRunLengthPacking::pack_double(const double* val, size_t* len)
     }
     buf = (unsigned char*)grib_context_malloc(context_, 2 * number_of_values);
     for (i = 0; i < number_of_values; i++) {
-        k   = (long)(round(val[i] / level_scale_factor));
+        k = (long)(round(val[i] / level_scale_factor));
         err = GRIB_ENCODING_ERROR;
         if (missingValueLong == k) {
-            k   = 0;
+            k = 0;
             err = GRIB_SUCCESS;
         }
         else {
             for (j = 0; j < max_level_value; j++) {
                 if (level_values[j] == k) {
-                    k   = j + 1;
+                    k = j + 1;
                     err = GRIB_SUCCESS;
                     break;
                 }

@@ -25,9 +25,9 @@ void Size::init(const long l, grib_arguments* c)
 int Size::unpack_long(long* val, size_t* len)
 {
     size_t size = 0;
-    int ret     = grib_get_size(get_enclosing_handle(), accessor_, &size);
-    *val        = (long)size;
-    *len        = 1;
+    int ret = grib_get_size(get_enclosing_handle(), accessor_, &size);
+    *val = (long)size;
+    *len = 1;
     return ret;
 }
 

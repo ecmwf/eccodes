@@ -39,8 +39,8 @@ static const unsigned long nbits[64] = {
 long number_of_bits(grib_handle* h, unsigned long x)
 {
     const unsigned long* n = nbits;
-    const int count        = sizeof(nbits) / sizeof(nbits[0]);
-    long i                 = 0;
+    const int count = sizeof(nbits) / sizeof(nbits[0]);
+    long i = 0;
     while (x >= *n) {
         n++;
         i++;
@@ -58,41 +58,41 @@ void DataG1SecondOrderGeneralExtendedPacking::init(const long v, grib_arguments*
     DataSimplePacking::init(v, args);
     grib_handle* handle = get_enclosing_handle();
 
-    half_byte_                       = args->get_name(handle, carg_++);
-    packingType_                     = args->get_name(handle, carg_++);
-    ieee_packing_                    = args->get_name(handle, carg_++);
-    precision_                       = args->get_name(handle, carg_++);
-    widthOfFirstOrderValues_         = args->get_name(handle, carg_++);
-    firstOrderValues_                = args->get_name(handle, carg_++);
-    N1_                              = args->get_name(handle, carg_++);
-    N2_                              = args->get_name(handle, carg_++);
-    numberOfGroups_                  = args->get_name(handle, carg_++);
-    codedNumberOfGroups_             = args->get_name(handle, carg_++);
+    half_byte_ = args->get_name(handle, carg_++);
+    packingType_ = args->get_name(handle, carg_++);
+    ieee_packing_ = args->get_name(handle, carg_++);
+    precision_ = args->get_name(handle, carg_++);
+    widthOfFirstOrderValues_ = args->get_name(handle, carg_++);
+    firstOrderValues_ = args->get_name(handle, carg_++);
+    N1_ = args->get_name(handle, carg_++);
+    N2_ = args->get_name(handle, carg_++);
+    numberOfGroups_ = args->get_name(handle, carg_++);
+    codedNumberOfGroups_ = args->get_name(handle, carg_++);
     numberOfSecondOrderPackedValues_ = args->get_name(handle, carg_++);
-    extraValues_                     = args->get_name(handle, carg_++);
-    groupWidths_                     = args->get_name(handle, carg_++);
-    widthOfWidths_                   = args->get_name(handle, carg_++);
-    groupLengths_                    = args->get_name(handle, carg_++);
-    widthOfLengths_                  = args->get_name(handle, carg_++);
-    NL_                              = args->get_name(handle, carg_++);
-    SPD_                             = args->get_name(handle, carg_++);
-    widthOfSPD_                      = args->get_name(handle, carg_++);
-    orderOfSPD_                      = args->get_name(handle, carg_++);
-    numberOfPoints_                  = args->get_name(handle, carg_++);
-    dataFlag_                        = args->get_name(handle, carg_++);
-    edition_                         = 1;
-    dirty_                           = 1;
-    dvalues_                         = NULL;
-    fvalues_                         = NULL;
+    extraValues_ = args->get_name(handle, carg_++);
+    groupWidths_ = args->get_name(handle, carg_++);
+    widthOfWidths_ = args->get_name(handle, carg_++);
+    groupLengths_ = args->get_name(handle, carg_++);
+    widthOfLengths_ = args->get_name(handle, carg_++);
+    NL_ = args->get_name(handle, carg_++);
+    SPD_ = args->get_name(handle, carg_++);
+    widthOfSPD_ = args->get_name(handle, carg_++);
+    orderOfSPD_ = args->get_name(handle, carg_++);
+    numberOfPoints_ = args->get_name(handle, carg_++);
+    dataFlag_ = args->get_name(handle, carg_++);
+    edition_ = 1;
+    dirty_ = 1;
+    dvalues_ = NULL;
+    fvalues_ = NULL;
     double_dirty_ = float_dirty_ = 1;
-    size_                        = 0;
+    size_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
 int DataG1SecondOrderGeneralExtendedPacking::value_count(long* count)
 {
     long numberOfCodedValues = 0;
-    long numberOfGroups      = 0;
+    long numberOfGroups = 0;
     size_t ngroups;
     long* groupLengths;
     long orderOfSPD = 0;
@@ -108,8 +108,8 @@ int DataG1SecondOrderGeneralExtendedPacking::value_count(long* count)
         return 0;
 
     groupLengths = (long*)grib_context_malloc_clear(context_, sizeof(long) * numberOfGroups);
-    ngroups      = numberOfGroups;
-    err          = grib_get_long_array(get_enclosing_handle(), groupLengths_, groupLengths, &ngroups);
+    ngroups = numberOfGroups;
+    err = grib_get_long_array(get_enclosing_handle(), groupLengths_, groupLengths, &ngroups);
     if (err)
         return err;
 
@@ -139,7 +139,7 @@ int DataG1SecondOrderGeneralExtendedPacking::unpack_double_element(size_t idx, d
         return GRIB_INVALID_ARGUMENT;
 
     values = (double*)grib_context_malloc_clear(context_, size * sizeof(double));
-    err    = grib_get_double_array(get_enclosing_handle(), "codedValues", values, &size);
+    err = grib_get_double_array(get_enclosing_handle(), "codedValues", values, &size);
     if (err) {
         grib_context_free(context_, values);
         return err;
@@ -165,7 +165,7 @@ int DataG1SecondOrderGeneralExtendedPacking::unpack_double_element_set(const siz
     }
 
     values = (double*)grib_context_malloc_clear(context_, size * sizeof(double));
-    err    = grib_get_double_array(get_enclosing_handle(), "codedValues", values, &size);
+    err = grib_get_double_array(get_enclosing_handle(), "codedValues", values, &size);
     if (err) {
         grib_context_free(context_, values);
         return err;
@@ -182,10 +182,10 @@ int DataG1SecondOrderGeneralExtendedPacking::unpack(double* dvalues, float* fval
     int ret = 0;
     long numberOfGroups, numberOfSecondOrderPackedValues;
     long* firstOrderValues = 0;
-    long* X                = 0;
-    long pos               = 0;
-    grib_handle* handle    = get_enclosing_handle();
-    unsigned char* buf     = handle->buffer->data;
+    long* X = 0;
+    long pos = 0;
+    grib_handle* handle = get_enclosing_handle();
+    unsigned char* buf = handle->buffer->data;
     long i, n;
     double reference_value;
     long binary_scale_factor;
@@ -193,10 +193,10 @@ int DataG1SecondOrderGeneralExtendedPacking::unpack(double* dvalues, float* fval
     long j;
     // long count = 0;
     long *groupWidths = NULL, *groupLengths = NULL;
-    long orderOfSPD     = 0;
-    long* SPD           = 0;
+    long orderOfSPD = 0;
+    long* SPD = 0;
     long numberOfValues = 0;
-    long bias           = 0;
+    long bias = 0;
     long y = 0, z = 0, w = 0;
     size_t k, ngroups;
     ECCODES_ASSERT(!(dvalues && fvalues));
@@ -242,19 +242,19 @@ int DataG1SecondOrderGeneralExtendedPacking::unpack(double* dvalues, float* fval
     if ((ret = grib_get_long_internal(handle, binary_scale_factor_, &binary_scale_factor)) != GRIB_SUCCESS)
         return ret;
 
-    ngroups     = numberOfGroups;
+    ngroups = numberOfGroups;
     groupWidths = (long*)grib_context_malloc_clear(context_, sizeof(long) * numberOfGroups);
-    ret         = grib_get_long_array(handle, groupWidths_, groupWidths, &ngroups);
+    ret = grib_get_long_array(handle, groupWidths_, groupWidths, &ngroups);
     if (ret != GRIB_SUCCESS)
         return ret;
 
     groupLengths = (long*)grib_context_malloc_clear(context_, sizeof(long) * numberOfGroups);
-    ret          = grib_get_long_array(handle, groupLengths_, groupLengths, &ngroups);
+    ret = grib_get_long_array(handle, groupLengths_, groupLengths, &ngroups);
     if (ret != GRIB_SUCCESS)
         return ret;
 
     firstOrderValues = (long*)grib_context_malloc_clear(context_, sizeof(long) * numberOfGroups);
-    ret              = grib_get_long_array(handle, firstOrderValues_, firstOrderValues, &ngroups);
+    ret = grib_get_long_array(handle, firstOrderValues_, firstOrderValues, &ngroups);
     if (ret != GRIB_SUCCESS)
         return ret;
 
@@ -273,9 +273,9 @@ int DataG1SecondOrderGeneralExtendedPacking::unpack(double* dvalues, float* fval
 
     if (orderOfSPD) {
         size_t nSPD = orderOfSPD + 1;
-        SPD         = (long*)grib_context_malloc_clear(context_, sizeof(long) * nSPD);
-        ret         = grib_get_long_array(handle, SPD_, SPD, &nSPD);
-        bias        = SPD[orderOfSPD];
+        SPD = (long*)grib_context_malloc_clear(context_, sizeof(long) * nSPD);
+        ret = grib_get_long_array(handle, SPD_, SPD, &nSPD);
+        bias = SPD[orderOfSPD];
         if (ret != GRIB_SUCCESS)
             return ret;
     }
@@ -359,7 +359,7 @@ int DataG1SecondOrderGeneralExtendedPacking::unpack(double* dvalues, float* fval
         double s = codes_power<double>(binary_scale_factor, 2);
         double d = codes_power<double>(-decimal_scale_factor, 10);
         for (i = 0; i < numberOfValues; i++) {
-            dvalues[i]  = (double)(((X[i] * s) + reference_value) * d);
+            dvalues[i] = (double)(((X[i] * s) + reference_value) * d);
             dvalues_[i] = dvalues[i];
         }
     }
@@ -378,12 +378,12 @@ int DataG1SecondOrderGeneralExtendedPacking::unpack(double* dvalues, float* fval
         float s = codes_power<float>(binary_scale_factor, 2);
         float d = codes_power<float>(-decimal_scale_factor, 10);
         for (i = 0; i < numberOfValues; i++) {
-            fvalues[i]  = (float)(((X[i] * s) + reference_value) * d);
+            fvalues[i] = (float)(((X[i] * s) + reference_value) * d);
             fvalues_[i] = fvalues[i];
         }
     }
 
-    *len  = numberOfValues;
+    *len = numberOfValues;
     size_ = numberOfValues;
 
     grib_context_free(context_, X);
@@ -427,7 +427,7 @@ static void grib_split_long_groups(grib_handle* hand, grib_context* c, long* num
      */
 
     widthsOfLengths = (long*)grib_context_malloc_clear(c, sizeof(long) * maxNumberOfGroups);
-    j               = 0;
+    j = 0;
     /* compute the widthOfLengths and the number of big groups */
     for (i = 0; i < *numberOfGroups; i++) {
         widthsOfLengths[i] = number_of_bits(hand, groupLengths[i]);
@@ -439,16 +439,16 @@ static void grib_split_long_groups(grib_handle* hand, grib_context* c, long* num
     /* variation of the size of message due to decrease of groupLengths
        of 1*/
     newWidth = *widthOfLengths - 1;
-    delta    = j * (widthOfWidths + widthOfFirstOrderValues + newWidth) - *numberOfGroups;
+    delta = j * (widthOfWidths + widthOfFirstOrderValues + newWidth) - *numberOfGroups;
 
     if (delta >= 0) {
         grib_context_free(c, widthsOfLengths);
         return;
     }
 
-    localWidthsOfLengths  = (long*)grib_context_malloc_clear(c, sizeof(long) * maxNumberOfGroups);
-    localLengths          = (long*)grib_context_malloc_clear(c, sizeof(long) * maxNumberOfGroups);
-    localWidths           = (long*)grib_context_malloc_clear(c, sizeof(long) * maxNumberOfGroups);
+    localWidthsOfLengths = (long*)grib_context_malloc_clear(c, sizeof(long) * maxNumberOfGroups);
+    localLengths = (long*)grib_context_malloc_clear(c, sizeof(long) * maxNumberOfGroups);
+    localWidths = (long*)grib_context_malloc_clear(c, sizeof(long) * maxNumberOfGroups);
     localFirstOrderValues = (long*)grib_context_malloc_clear(c, sizeof(long) * maxNumberOfGroups);
 
     while (newWidth > 0) {
@@ -456,30 +456,30 @@ static void grib_split_long_groups(grib_handle* hand, grib_context* c, long* num
         j = 0;
         for (i = 0; i < *numberOfGroups; i++) {
             if (newWidth < widthsOfLengths[i]) {
-                localLengths[j]          = groupLengths[i] / 2;
-                localWidthsOfLengths[j]  = number_of_bits(hand, localLengths[j]);
-                localWidths[j]           = groupWidths[i];
+                localLengths[j] = groupLengths[i] / 2;
+                localWidthsOfLengths[j] = number_of_bits(hand, localLengths[j]);
+                localWidths[j] = groupWidths[i];
                 localFirstOrderValues[j] = firstOrderValues[i];
                 j++;
-                localLengths[j]          = groupLengths[i] - localLengths[j - 1];
-                localWidthsOfLengths[j]  = number_of_bits(hand, localLengths[j]);
-                localWidths[j]           = groupWidths[i];
+                localLengths[j] = groupLengths[i] - localLengths[j - 1];
+                localWidthsOfLengths[j] = number_of_bits(hand, localLengths[j]);
+                localWidths[j] = groupWidths[i];
                 localFirstOrderValues[j] = firstOrderValues[i];
                 if (localWidthsOfLengths[j] > newWidth) {
                     localLengths[j]--;
                     localWidthsOfLengths[j]--;
                     j++;
-                    localLengths[j]          = 1;
-                    localWidthsOfLengths[j]  = 1;
-                    localWidths[j]           = groupWidths[i];
+                    localLengths[j] = 1;
+                    localWidthsOfLengths[j] = 1;
+                    localWidths[j] = groupWidths[i];
                     localFirstOrderValues[j] = firstOrderValues[i];
                 }
                 j++;
             }
             else {
-                localLengths[j]          = groupLengths[i];
-                localWidthsOfLengths[j]  = widthsOfLengths[i];
-                localWidths[j]           = groupWidths[i];
+                localLengths[j] = groupLengths[i];
+                localWidthsOfLengths[j] = widthsOfLengths[i];
+                localWidths[j] = groupWidths[i];
                 localFirstOrderValues[j] = firstOrderValues[i];
                 j++;
             }
@@ -488,14 +488,14 @@ static void grib_split_long_groups(grib_handle* hand, grib_context* c, long* num
         if (j > maxNumberOfGroups)
             break;
 
-        *numberOfGroups            = j;
-        *widthOfLengths            = newWidth;
-        j                          = 0;
+        *numberOfGroups = j;
+        *widthOfLengths = newWidth;
+        j = 0;
         *lengthOfSecondOrderValues = 0;
         for (i = 0; i < *numberOfGroups; i++) {
-            groupLengths[i]     = localLengths[i];
-            widthsOfLengths[i]  = localWidthsOfLengths[i];
-            groupWidths[i]      = localWidths[i];
+            groupLengths[i] = localLengths[i];
+            widthsOfLengths[i] = localWidthsOfLengths[i];
+            groupWidths[i] = localWidths[i];
             firstOrderValues[i] = localFirstOrderValues[i];
             *lengthOfSecondOrderValues += groupLengths[i] * groupWidths[i];
             if (*widthOfLengths == widthsOfLengths[i])
@@ -542,7 +542,7 @@ static int get_bits_per_value(grib_handle* h, const char* bits_per_value_str, lo
 // See ECC-441 and ECC-261
 int DataG1SecondOrderGeneralExtendedPacking::pack_double(const double* val, size_t* len)
 {
-    int ret   = 0;
+    int ret = 0;
     int grib2 = 0;
     long bits_per_value, orderOfSPD, binary_scale_factor;
     long numberOfValues;
@@ -571,16 +571,16 @@ int DataG1SecondOrderGeneralExtendedPacking::pack_double(const double* val, size
     long *groupLengths, *groupWidths, *firstOrderValues;
     /* long groupLengths[MAX_NUMBER_OF_GROUPS],groupWidths[MAX_NUMBER_OF_GROUPS],firstOrderValues[MAX_NUMBER_OF_GROUPS]; */
 
-    long startGroupLength     = 15;
+    long startGroupLength = 15;
     long incrementGroupLength = 3;
-    long minGroupLength       = 3;
+    long minGroupLength = 3;
     long widthOfSPD = 0, widthOfBias = 0;
     long* offsets;
     long widthOfFirstOrderValues;
     int computeGroupA = 1;
     long dataHeadersLength, widthsLength, lengthsLength, firstOrderValuesLength;
     long decimal_scale_factor;
-    grib_handle* handle          = get_enclosing_handle();
+    grib_handle* handle = get_enclosing_handle();
     long optimize_scaling_factor = 0;
 
     numberOfValues = *len;
@@ -608,7 +608,7 @@ int DataG1SecondOrderGeneralExtendedPacking::pack_double(const double* val, size
 
     if (optimize_scaling_factor) {
         const int compat_gribex = handle->context->gribex_mode_on && edition_ == 1;
-        const int compat_32bit  = 1;
+        const int compat_32bit = 1;
         if ((ret = grib_optimize_decimal_factor(this, reference_value_,
                                                 max, min, bits_per_value,
                                                 compat_gribex, compat_32bit,
@@ -634,8 +634,8 @@ int DataG1SecondOrderGeneralExtendedPacking::pack_double(const double* val, size
             return ret;
 
         decimal = codes_power<double>(decimal_scale_factor, 10);
-        min     = min * decimal;
-        max     = max * decimal;
+        min = min * decimal;
+        max = max * decimal;
 
         if (grib_get_nearest_smaller_value(handle, reference_value_, min, &reference_value) != GRIB_SUCCESS) {
             grib_context_log(context_, GRIB_LOG_ERROR,
@@ -670,8 +670,8 @@ int DataG1SecondOrderGeneralExtendedPacking::pack_double(const double* val, size
         X[i] = (((val[i] * decimal) - reference_value) * divisor) + 0.5;
     }
 
-    groupLengths     = (long*)grib_context_malloc_clear(context_, sizeof(long) * numberOfValues);
-    groupWidths      = (long*)grib_context_malloc_clear(context_, sizeof(long) * numberOfValues);
+    groupLengths = (long*)grib_context_malloc_clear(context_, sizeof(long) * numberOfValues);
+    groupWidths = (long*)grib_context_malloc_clear(context_, sizeof(long) * numberOfValues);
     firstOrderValues = (long*)grib_context_malloc_clear(context_, sizeof(long) * numberOfValues);
 
     /* spatial differencing */
@@ -708,7 +708,7 @@ int DataG1SecondOrderGeneralExtendedPacking::pack_double(const double* val, size
                 maxSPD = X[i];
         }
         /* widthOfSPD=(long)ceil(log((double)(maxSPD+1))/log(2.0)); */
-        widthOfSPD  = number_of_bits(handle, maxSPD);
+        widthOfSPD = number_of_bits(handle, maxSPD);
         widthOfBias = number_of_bits(handle, labs(bias)) + 1;
 
         if (widthOfSPD < widthOfBias)
@@ -716,9 +716,9 @@ int DataG1SecondOrderGeneralExtendedPacking::pack_double(const double* val, size
     }
     /* end of spatial differencing */
 
-    count                 = orderOfSPD;
-    remainingValues       = numberOfValues - count;
-    numberOfGroups        = 0;
+    count = orderOfSPD;
+    remainingValues = numberOfValues - count;
+    numberOfGroups = 0;
     incrementGroupLengthA = startGroupLength;
 
     computeGroupA = 1;
@@ -739,13 +739,13 @@ int DataG1SecondOrderGeneralExtendedPacking::pack_double(const double* val, size
             }
         }
         groupWidthA = number_of_bits(handle, maxA - minA);
-        range       = (long)codes_power<double>(groupWidthA, 2) - 1;
+        range = (long)codes_power<double>(groupWidthA, 2) - 1;
 
         offsetC = count + groupLengthA;
         if (offsetC == numberOfValues) {
             /* no more values close group A and end loop */
             groupLengths[numberOfGroups] = groupLengthA;
-            groupWidths[numberOfGroups]  = groupWidthA;
+            groupWidths[numberOfGroups] = groupWidthA;
             /* firstOrderValues[numberOfGroups]=minA; */
             /* to optimise the width of first order variable */
             firstOrderValues[numberOfGroups] = maxA - range > 0 ? maxA - range : 0;
@@ -781,7 +781,7 @@ int DataG1SecondOrderGeneralExtendedPacking::pack_double(const double* val, size
              */
             if (numberOfGroups > 0 && groupWidths[numberOfGroups - 1] > groupWidthA) {
                 prevGroupLength = groupLengths[numberOfGroups - 1] - incrementGroupLength;
-                offsetC         = count - incrementGroupLength;
+                offsetC = count - incrementGroupLength;
                 /* preceding group length cannot be less than a minimum value */
                 while (prevGroupLength >= minGroupLength) {
                     maxAC = maxA;
@@ -810,7 +810,7 @@ int DataG1SecondOrderGeneralExtendedPacking::pack_double(const double* val, size
             }
             /* close group A*/
             groupLengths[numberOfGroups] = groupLengthA;
-            groupWidths[numberOfGroups]  = groupWidthA;
+            groupWidths[numberOfGroups] = groupWidthA;
             /* firstOrderValues[numberOfGroups]=minA; */
             /* to optimise the width of first order variable */
             firstOrderValues[numberOfGroups] = maxA - range > 0 ? maxA - range : 0;
@@ -821,7 +821,7 @@ int DataG1SecondOrderGeneralExtendedPacking::pack_double(const double* val, size
                could have been changed after the A+C or A+B ok condition.
              */
             incrementGroupLengthA = startGroupLength;
-            computeGroupA         = 1;
+            computeGroupA = 1;
 
             //             if (numberOfGroups==MAX_NUMBER_OF_GROUPS) {
             //                 groupLengthA= remainingValues ;
@@ -846,7 +846,7 @@ int DataG1SecondOrderGeneralExtendedPacking::pack_double(const double* val, size
         offsetD = offsetC + groupLengthC;
         if (offsetD == numberOfValues) {
             groupLengths[numberOfGroups] = groupLengthA + groupLengthC;
-            groupWidths[numberOfGroups]  = groupWidthA;
+            groupWidths[numberOfGroups] = groupWidthA;
 
             /* range of AC is the same as A*/
             /* firstOrderValues[numberOfGroups]=minAC; */
@@ -860,9 +860,9 @@ int DataG1SecondOrderGeneralExtendedPacking::pack_double(const double* val, size
            same offset as C.
          */
         remainingValuesB = numberOfValues - offsetC;
-        groupLengthB     = startGroupLength < remainingValuesB ? startGroupLength : remainingValuesB;
-        maxB             = maxC;
-        minB             = minC;
+        groupLengthB = startGroupLength < remainingValuesB ? startGroupLength : remainingValuesB;
+        maxB = maxC;
+        minB = minC;
         for (i = groupLengthC; i < groupLengthB; i++) {
             if (maxB < X[offsetC + i])
                 maxB = X[offsetC + i];
@@ -880,7 +880,7 @@ int DataG1SecondOrderGeneralExtendedPacking::pack_double(const double* val, size
 
             /* close group A and continue loop*/
             groupLengths[numberOfGroups] = groupLengthA;
-            groupWidths[numberOfGroups]  = groupWidthA;
+            groupWidths[numberOfGroups] = groupWidthA;
             /* firstOrderValues[numberOfGroups]=minA; */
             /* to optimise the width of first order variable */
             firstOrderValues[numberOfGroups] = maxA - range > 0 ? maxA - range : 0;
@@ -905,7 +905,7 @@ int DataG1SecondOrderGeneralExtendedPacking::pack_double(const double* val, size
             //             }
 
             incrementGroupLengthA = startGroupLength;
-            computeGroupA         = 1;
+            computeGroupA = 1;
             continue;
         }
 
@@ -917,8 +917,8 @@ int DataG1SecondOrderGeneralExtendedPacking::pack_double(const double* val, size
                build group C is increased to the size of group B
              */
             incrementGroupLengthA += groupLengthB;
-            maxA          = maxAB;
-            minA          = minAB;
+            maxA = maxAB;
+            minA = minAB;
             computeGroupA = 0;
             continue;
         }
@@ -941,7 +941,7 @@ int DataG1SecondOrderGeneralExtendedPacking::pack_double(const double* val, size
             min = firstOrderValues[i];
     }
     widthOfFirstOrderValues = number_of_bits(handle, max - min);
-    firstOrderValuesMax     = (long)codes_power<double>(widthOfFirstOrderValues, 2) - 1;
+    firstOrderValuesMax = (long)codes_power<double>(widthOfFirstOrderValues, 2) - 1;
 
     if (numberOfGroups > 2) {
         /* loop through all the groups except the last in reverse order to
@@ -949,12 +949,12 @@ int DataG1SecondOrderGeneralExtendedPacking::pack_double(const double* val, size
            Focus on groups which have been shrank as left groups of an A group taking
            some of their elements.
          */
-        offsets    = (long*)grib_context_malloc_clear(context_, sizeof(long) * numberOfGroups);
+        offsets = (long*)grib_context_malloc_clear(context_, sizeof(long) * numberOfGroups);
         offsets[0] = orderOfSPD;
         for (i = 1; i < numberOfGroups; i++)
             offsets[i] = offsets[i - 1] + groupLengths[i - 1];
         for (i = numberOfGroups - 2; i >= 0; i--) {
-            offset      = offsets[i];
+            offset = offsets[i];
             groupLength = groupLengths[i];
 
             if (groupLength >= startGroupLength)
@@ -969,13 +969,13 @@ int DataG1SecondOrderGeneralExtendedPacking::pack_double(const double* val, size
                     min = X[offset + j];
             }
             groupWidth = number_of_bits(handle, max - min);
-            range      = (long)codes_power<double>(groupWidth, 2) - 1;
+            range = (long)codes_power<double>(groupWidth, 2) - 1;
 
             /* width of first order values has to be unchanged.*/
             for (j = groupWidth; j < groupWidths[i]; j++) {
                 firstOrderValue = max > range ? max - range : 0;
                 if (firstOrderValue <= firstOrderValuesMax) {
-                    groupWidths[i]      = j;
+                    groupWidths[i] = j;
                     firstOrderValues[i] = firstOrderValue;
                     break;
                 }
@@ -1014,7 +1014,7 @@ int DataG1SecondOrderGeneralExtendedPacking::pack_double(const double* val, size
         grib_context_free(context_, offsets);
     }
 
-    maxWidth  = groupWidths[0];
+    maxWidth = groupWidths[0];
     maxLength = groupLengths[0];
     for (i = 1; i < numberOfGroups; i++) {
         if (maxWidth < groupWidths[i])
@@ -1027,7 +1027,7 @@ int DataG1SecondOrderGeneralExtendedPacking::pack_double(const double* val, size
         grib_context_log(parent_->h->context, GRIB_LOG_ERROR, "Cannot compute parameters for second order packing.");
         return GRIB_ENCODING_ERROR;
     }
-    widthOfWidths  = number_of_bits(handle, maxWidth);
+    widthOfWidths = number_of_bits(handle, maxWidth);
     widthOfLengths = number_of_bits(handle, maxLength);
 
     lengthOfSecondOrderValues = 0;
@@ -1063,8 +1063,8 @@ int DataG1SecondOrderGeneralExtendedPacking::pack_double(const double* val, size
     dataHeadersLength = 25;
     if (orderOfSPD)
         dataHeadersLength += 1 + ((orderOfSPD + 1) * widthOfSPD + 7) / 8;
-    widthsLength           = (widthOfWidths * numberOfGroups + 7) / 8;
-    lengthsLength          = (widthOfLengths * numberOfGroups + 7) / 8;
+    widthsLength = (widthOfWidths * numberOfGroups + 7) / 8;
+    lengthsLength = (widthOfLengths * numberOfGroups + 7) / 8;
     firstOrderValuesLength = (widthOfFirstOrderValues * numberOfGroups + 7) / 8;
 
     NL = widthsLength + dataHeadersLength + 1;
@@ -1080,11 +1080,11 @@ int DataG1SecondOrderGeneralExtendedPacking::pack_double(const double* val, size
     grib_set_long(handle, N2_, N2);
 
     if (numberOfGroups > 65535) {
-        extraValues         = numberOfGroups / 65536;
+        extraValues = numberOfGroups / 65536;
         codedNumberOfGroups = numberOfGroups % 65536;
     }
     else {
-        extraValues         = 0;
+        extraValues = 0;
         codedNumberOfGroups = numberOfGroups;
     }
 
@@ -1092,7 +1092,7 @@ int DataG1SecondOrderGeneralExtendedPacking::pack_double(const double* val, size
     grib2 = 0;
     if ((ret = grib_set_long(handle, extraValues_, extraValues)) != GRIB_SUCCESS) {
         codedNumberOfGroups = numberOfGroups;
-        grib2               = 1;
+        grib2 = 1;
     }
 
     if ((ret = grib_set_long_internal(handle, codedNumberOfGroups_, codedNumberOfGroups)) != GRIB_SUCCESS)
@@ -1125,11 +1125,11 @@ int DataG1SecondOrderGeneralExtendedPacking::pack_double(const double* val, size
         lengthOfSecondOrderValues += groupLengths[i] * groupWidths[i];
     }
 
-    size     = (lengthOfSecondOrderValues + 7) / 8;
+    size = (lengthOfSecondOrderValues + 7) / 8;
     sizebits = lengthOfSecondOrderValues;
 
     /* padding section 4 to an even number of octets */
-    size      = ((size + offsetBeforeData - offsetSection4) % 2) ? size + 1 : size;
+    size = ((size + offsetBeforeData - offsetSection4) % 2) ? size + 1 : size;
     half_byte = 8 * size - sizebits;
     if ((ret = grib_set_long_internal(handle, half_byte_, half_byte)) != GRIB_SUCCESS)
         return ret;
@@ -1138,7 +1138,7 @@ int DataG1SecondOrderGeneralExtendedPacking::pack_double(const double* val, size
 
     pos = 0;
     if (orderOfSPD) {
-        long SPD[4] = {0,};
+        long SPD[4] = { 0 };
         size_t nSPD = orderOfSPD + 1;
         ECCODES_ASSERT(orderOfSPD <= 3);
         for (i = 0; i < orderOfSPD; i++)
@@ -1161,7 +1161,7 @@ int DataG1SecondOrderGeneralExtendedPacking::pack_double(const double* val, size
     if (ret)
         return ret;
 
-    Xp  = X + orderOfSPD;
+    Xp = X + orderOfSPD;
     pos = 0;
 #if EFDEBUG
     count = 0;

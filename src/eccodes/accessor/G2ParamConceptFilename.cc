@@ -18,7 +18,7 @@ void G2ParamConceptFilename::init(const long len, grib_arguments* arg)
     grib_handle* h = get_enclosing_handle();
 
     if (context_->debug) {
-        const int numActualArgs   = arg->get_count();
+        const int numActualArgs = arg->get_count();
         const int numExpectedArgs = 3;
         if (numActualArgs != numExpectedArgs) {
             grib_context_log(context_, GRIB_LOG_FATAL, "Accessor %s (key %s): %d arguments provided but expected %d",
@@ -26,8 +26,8 @@ void G2ParamConceptFilename::init(const long len, grib_arguments* arg)
         }
     }
 
-    basename_                = arg->get_string(h, 0);
-    MTG2Switch_              = arg->get_name(h, 1);
+    basename_ = arg->get_string(h, 0);
+    MTG2Switch_ = arg->get_name(h, 1);
     tablesVersionMTG2Switch_ = arg->get_name(h, 2);
 
     length_ = 0;
@@ -53,12 +53,14 @@ int G2ParamConceptFilename::unpack_string(char* v, size_t* len)
     err = grib_get_long_internal(h, tablesVersionMTG2Switch_, &tablesVersionMTG2Switch);
     if (err) return err;
 
-    const size_t dsize = string_length() - 1; // size for destination string "v"
-    if ( MTG2Switch == 0 ) {
+    const size_t dsize = string_length() - 1;  // size for destination string "v"
+    if (MTG2Switch == 0) {
         snprintf(v, dsize, "%s.lte%ld.def", basename_, tablesVersionMTG2Switch);
-    } else if ( MTG2Switch == 2 ) {
+    }
+    else if (MTG2Switch == 2) {
         snprintf(v, dsize, "%s.chemsplit.def", basename_);
-    } else {
+    }
+    else {
         // All other cases other than pre-MTG2 fall into default parameter files
         snprintf(v, dsize, "%s.def", basename_);
     }

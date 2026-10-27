@@ -12,14 +12,14 @@
 
 #if HAVE_LIBOPENJPEG
 
-#include "openjpeg.h"
+    #include "openjpeg.h"
 
-// The older versions did not have the opj_config.h file
-// So we use a more recent macro to detect whether it is there.
-// Also see https://github.com/uclouvain/openjpeg/issues/1514
-#if defined(OPJ_IMG_INFO)
-    #include "opj_config.h"
-#endif
+    // The older versions did not have the opj_config.h file
+    // So we use a more recent macro to detect whether it is there.
+    // Also see https://github.com/uclouvain/openjpeg/issues/1514
+    #if defined(OPJ_IMG_INFO)
+        #include "opj_config.h"
+    #endif
 
 static void openjpeg_warning(const char* msg, void* client_data)
 {
@@ -36,29 +36,29 @@ static void openjpeg_info(const char* msg, void* client_data)
     /* grib_context_log((grib_context*)client_data,GRIB_LOG_INFO,"openjpeg: %s",msg); */
 }
 
-/* Note: The old OpenJPEG versions (e.g. v1.5.2) did not have this macro.
- * From OpenJPEG v2.1.0 onwards there is the macro OPJ_VERSION_MAJOR */
-#if !defined(OPJ_VERSION_MAJOR) /* The old interface */
+    /* Note: The old OpenJPEG versions (e.g. v1.5.2) did not have this macro.
+     * From OpenJPEG v2.1.0 onwards there is the macro OPJ_VERSION_MAJOR */
+    #if !defined(OPJ_VERSION_MAJOR) /* The old interface */
 
 int grib_openjpeg_encode(grib_context* c, j2k_encode_helper* helper)
 {
-    int err            = GRIB_SUCCESS;
+    int err = GRIB_SUCCESS;
     const int numcomps = 1;
 
     int i;
 
-    const double* values   = helper->values;
-    long no_values         = helper->no_values;
+    const double* values = helper->values;
+    long no_values = helper->no_values;
     double reference_value = helper->reference_value;
-    double divisor         = helper->divisor;
-    double decimal         = helper->decimal;
+    double divisor = helper->divisor;
+    double decimal = helper->decimal;
     int* data;
 
-    opj_cparameters_t parameters = {0,}; /* compression parameters */
-    opj_event_mgr_t event_mgr = {0,}; /* event manager */
-    opj_image_t* image            = NULL;
-    opj_image_cmptparm_t cmptparm = {0,};
-    opj_cio_t* cio     = NULL;
+    opj_cparameters_t parameters = { 0 }; /* compression parameters */
+    opj_event_mgr_t event_mgr = { 0 };    /* event manager */
+    opj_image_t* image = NULL;
+    opj_image_cmptparm_t cmptparm = { 0 };
+    opj_cio_t* cio = NULL;
     opj_cinfo_t* cinfo = NULL;
 
 
@@ -67,18 +67,18 @@ int grib_openjpeg_encode(grib_context* c, j2k_encode_helper* helper)
 
     grib_context_log(c, GRIB_LOG_DEBUG, "grib_openjpeg_encode: OpenJPEG version %s", opj_version());
 
-    parameters.tcp_numlayers  = 1;
+    parameters.tcp_numlayers = 1;
     parameters.cp_disto_alloc = 1;
-    parameters.tcp_rates[0]   = helper->compression;
+    parameters.tcp_rates[0] = helper->compression;
 
     /* initialize image component */
     cmptparm.prec = helper->bits_per_value;
-    cmptparm.bpp  = helper->bits_per_value; /* Not sure about this one and the previous. What is the difference? */
+    cmptparm.bpp = helper->bits_per_value; /* Not sure about this one and the previous. What is the difference? */
     cmptparm.sgnd = 0;
-    cmptparm.dx   = 1;
-    cmptparm.dy   = 1;
-    cmptparm.w    = helper->width;
-    cmptparm.h    = helper->height;
+    cmptparm.dx = 1;
+    cmptparm.dy = 1;
+    cmptparm.w = helper->width;
+    cmptparm.h = helper->height;
 
     /* create the image */
     image = opj_image_create(numcomps, &cmptparm, CLRSPC_GRAY);
@@ -101,15 +101,15 @@ int grib_openjpeg_encode(grib_context* c, j2k_encode_helper* helper)
     data = image->comps[0].data;
     for (i = 0; i < no_values; i++) {
         unsigned long unsigned_val = (unsigned long)((((values[i] * decimal) - (reference_value)) * divisor) + 0.5);
-        data[i]                    = unsigned_val;
+        data[i] = unsigned_val;
     }
 
     /* get a J2K compressor handle */
     cinfo = opj_create_compress(CODEC_J2K);
 
     /* catch events using our callbacks and give a local context */
-    event_mgr.error_handler   = openjpeg_error;
-    event_mgr.info_handler    = openjpeg_info;
+    event_mgr.error_handler = openjpeg_error;
+    event_mgr.info_handler = openjpeg_info;
     event_mgr.warning_handler = openjpeg_warning;
     opj_set_event_mgr((opj_common_ptr)cinfo, &event_mgr, c);
 
@@ -148,12 +148,12 @@ int grib_openjpeg_decode(grib_context* c, unsigned char* buf, const size_t* bufl
     int* data;
     size_t count;
 
-    opj_dparameters_t parameters = {0,};   /* decompression parameters */
-    opj_dinfo_t* dinfo        = NULL; /* handle to a decompressor */
-    opj_event_mgr_t event_mgr = {0,}; /* event manager */
-    opj_cio_t* cio        = NULL;
-    opj_image_t* image    = NULL;
-    opj_image_comp_t comp = {0,};
+    opj_dparameters_t parameters = { 0 }; /* decompression parameters */
+    opj_dinfo_t* dinfo = NULL;            /* handle to a decompressor */
+    opj_event_mgr_t event_mgr = { 0 };    /* event manager */
+    opj_cio_t* cio = NULL;
+    opj_image_t* image = NULL;
+    opj_image_comp_t comp = { 0 };
 
     /* set decoding parameters to default values */
     opj_set_default_decoder_parameters(&parameters);
@@ -165,8 +165,8 @@ int grib_openjpeg_decode(grib_context* c, unsigned char* buf, const size_t* bufl
     dinfo = opj_create_decompress(CODEC_J2K);
 
     /* catch events using our callbacks and give a local context */
-    event_mgr.error_handler   = openjpeg_error;
-    event_mgr.info_handler    = openjpeg_info;
+    event_mgr.error_handler = openjpeg_error;
+    event_mgr.info_handler = openjpeg_info;
     event_mgr.warning_handler = openjpeg_warning;
 
     opj_set_event_mgr((opj_common_ptr)dinfo, &event_mgr, c);
@@ -220,7 +220,7 @@ cleanup:
     return err;
 }
 
-#else /* OPENJPEG VERSION 2 - macro OPJ_VERSION_MAJOR is defined */
+    #else /* OPENJPEG VERSION 2 - macro OPJ_VERSION_MAJOR is defined */
 
 /* OpenJPEG 2.1 version of grib_openjpeg_encoding.c */
 
@@ -241,7 +241,7 @@ typedef struct
 static OPJ_SIZE_T opj_memory_stream_read(void* buffer, OPJ_SIZE_T nb_bytes, void* p_user_data)
 {
     opj_memory_stream* mstream = (opj_memory_stream*)p_user_data; /* Our data */
-    OPJ_SIZE_T nb_bytes_read   = nb_bytes;                        /* Amount to move to buffer */
+    OPJ_SIZE_T nb_bytes_read = nb_bytes;                          /* Amount to move to buffer */
 
     /* Check if the current offset is outside our data buffer */
     if (mstream->offset >= mstream->dataSize)
@@ -260,7 +260,7 @@ static OPJ_SIZE_T opj_memory_stream_read(void* buffer, OPJ_SIZE_T nb_bytes, void
 static OPJ_SIZE_T opj_memory_stream_write(void* buffer, OPJ_SIZE_T nb_bytes, void* user_data)
 {
     opj_memory_stream* mstream = (opj_memory_stream*)user_data; /* our data */
-    OPJ_SIZE_T nb_bytes_write  = nb_bytes;                      /* Amount to move to buffer */
+    OPJ_SIZE_T nb_bytes_write = nb_bytes;                       /* Amount to move to buffer */
 
     /* Check if the current offset is outside our data buffer */
     if (mstream->offset >= mstream->dataSize)
@@ -288,8 +288,8 @@ static OPJ_OFF_T opj_memory_stream_skip(OPJ_OFF_T nb_bytes, void* user_data)
     /* Do not allow jumping past the end */
     if (l_nb_bytes > mstream->dataSize - mstream->offset)
         l_nb_bytes = mstream->dataSize - mstream->offset; /* Jump the max. */
-    mstream->offset += l_nb_bytes; /* Make the jump */
-    return l_nb_bytes; /* Return how far we jumped */
+    mstream->offset += l_nb_bytes;                        /* Make the jump */
+    return l_nb_bytes;                                    /* Return how far we jumped */
 }
 
 /* Sets the pointer to anywhere in the memory */
@@ -332,21 +332,21 @@ static opj_stream_t* opj_stream_create_default_memory_stream(opj_memory_stream* 
 
 int grib_openjpeg_encode(grib_context* c, j2k_encode_helper* helper)
 {
-    int err            = GRIB_SUCCESS;
+    int err = GRIB_SUCCESS;
     const int numcomps = 1;
     int i;
 
-    const double* values   = helper->values;
-    long no_values         = helper->no_values;
+    const double* values = helper->values;
+    long no_values = helper->no_values;
     double reference_value = helper->reference_value;
-    double divisor         = helper->divisor;
-    double decimal         = helper->decimal;
+    double divisor = helper->divisor;
+    double decimal = helper->decimal;
     int* data;
 
-    opj_cparameters_t parameters = {0,}; /* compression parameters */
-    opj_codec_t* codec            = NULL;
-    opj_image_t* image            = NULL;
-    opj_image_cmptparm_t cmptparm = {0,};
+    opj_cparameters_t parameters = { 0 }; /* compression parameters */
+    opj_codec_t* codec = NULL;
+    opj_image_t* image = NULL;
+    opj_image_cmptparm_t cmptparm = { 0 };
     opj_stream_t* stream = NULL;
     opj_memory_stream mstream;
 
@@ -355,7 +355,7 @@ int grib_openjpeg_encode(grib_context* c, j2k_encode_helper* helper)
 
     grib_context_log(c, GRIB_LOG_DEBUG, "grib_openjpeg_encode: OpenJPEG version %s", opj_version());
 
-    parameters.tcp_numlayers  = 1;
+    parameters.tcp_numlayers = 1;
     parameters.cp_disto_alloc = 1;
     /* parameters.numresolution =  1; */
     parameters.tcp_rates[0] = helper->compression;
@@ -372,10 +372,10 @@ int grib_openjpeg_encode(grib_context* c, j2k_encode_helper* helper)
     /* initialize image component */
     cmptparm.prec = helper->bits_per_value;
     cmptparm.sgnd = 0;
-    cmptparm.dx   = 1;
-    cmptparm.dy   = 1;
-    cmptparm.w    = helper->width;
-    cmptparm.h    = helper->height;
+    cmptparm.dx = 1;
+    cmptparm.dy = 1;
+    cmptparm.w = helper->width;
+    cmptparm.h = helper->height;
 
     /* create the image */
     image = opj_image_create(numcomps, &cmptparm, OPJ_CLRSPC_GRAY);
@@ -395,7 +395,7 @@ int grib_openjpeg_encode(grib_context* c, j2k_encode_helper* helper)
     data = image->comps[0].data;
     for (i = 0; i < no_values; i++) {
         unsigned long unsigned_val = (unsigned long)((((values[i] * decimal) - (reference_value)) * divisor) + 0.5);
-        data[i]                    = unsigned_val;
+        data[i] = unsigned_val;
     }
 
     /* get a J2K compressor handle */
@@ -413,11 +413,11 @@ int grib_openjpeg_encode(grib_context* c, j2k_encode_helper* helper)
     }
 
     /* open a byte stream for writing */
-    mstream.helper   = helper;
-    mstream.pData    = (OPJ_UINT8*)helper->jpeg_buffer;
-    mstream.offset   = 0;
+    mstream.helper = helper;
+    mstream.pData = (OPJ_UINT8*)helper->jpeg_buffer;
+    mstream.offset = 0;
     mstream.dataSize = helper->buffer_size;
-    stream           = opj_stream_create_default_memory_stream(&mstream, OPJ_STREAM_WRITE);
+    stream = opj_stream_create_default_memory_stream(&mstream, OPJ_STREAM_WRITE);
     if (stream == NULL) {
         grib_context_log(c, GRIB_LOG_ERROR, "openjpeg: failed create default memory stream");
         err = GRIB_ENCODING_ERROR;
@@ -462,12 +462,12 @@ int grib_openjpeg_decode(grib_context* c, unsigned char* buf, const size_t* bufl
     int* data;
     size_t count;
 
-    opj_dparameters_t parameters = {0,}; /* decompression parameters */
+    opj_dparameters_t parameters = { 0 }; /* decompression parameters */
     opj_stream_t* stream = NULL;
     opj_memory_stream mstream;
-    opj_image_t* image    = NULL;
-    opj_codec_t* codec    = NULL;
-    opj_image_comp_t comp = {0,};
+    opj_image_t* image = NULL;
+    opj_codec_t* codec = NULL;
+    opj_image_comp_t comp = { 0 };
 
     /* set decoding parameters to default values */
     opj_set_default_decoder_parameters(&parameters);
@@ -485,9 +485,9 @@ int grib_openjpeg_decode(grib_context* c, unsigned char* buf, const size_t* bufl
     opj_set_error_handler(codec, openjpeg_error, c);
 
     /* initialize our memory stream */
-    mstream.pData    = buf;
+    mstream.pData = buf;
     mstream.dataSize = *buflen;
-    mstream.offset   = 0;
+    mstream.offset = 0;
     /* open a byte stream from memory stream */
     stream = opj_stream_create_default_memory_stream(&mstream, OPJ_STREAM_READ);
 
@@ -547,7 +547,7 @@ cleanup:
     return err;
 }
 
-#endif /* OPENJPEG_VERSION */
+    #endif /* OPENJPEG_VERSION */
 
 #else /* No OpenJPEG */
 

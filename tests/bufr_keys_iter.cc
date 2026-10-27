@@ -12,21 +12,21 @@
 #undef NDEBUG
 #include <assert.h>
 
-#define ITER_ALL_KEYS 1
+#define ITER_ALL_KEYS  1
 #define ITER_DATA_KEYS 2
 
 int main(int argc, char* argv[])
 {
-    int err                         = 0;
-    int i                           = 0;
-    codes_handle* h                 = NULL;
+    int err = 0;
+    int i = 0;
+    codes_handle* h = NULL;
     codes_bufr_keys_iterator* kiter = NULL;
-    char* input_filename            = NULL;
-    FILE* f                         = NULL;
-    int iterator_mode               = ITER_ALL_KEYS;
+    char* input_filename = NULL;
+    FILE* f = NULL;
+    int iterator_mode = ITER_ALL_KEYS;
 
     if (argc == 1 || argc > 3)
-        return 1; // usage: prog [-a|-d] infile
+        return 1;  // usage: prog [-a|-d] infile
 
     for (i = 1; i < argc; i++) {
         if (strcmp(argv[i], "-a") == 0) {

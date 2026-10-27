@@ -61,7 +61,7 @@ static int grib_get_long_memoize(
     // Check keys which are not defined (absent)
     auto pos2 = absent_keys_map.find(key);
     if (pos2 != absent_keys_map.end()) {  // Found
-        err = pos2->second; // Return its error code
+        err = pos2->second;               // Return its error code
         return err;
     }
 
@@ -84,9 +84,9 @@ static int concept_condition_expression_true(
     std::unordered_map<std::string_view, int>& absent_keys_map)
 {
     long lval;
-    long lres      = 0;
-    int ok         = 0; // Boolean
-    int err        = 0;
+    long lres = 0;
+    int ok = 0;  // Boolean
+    int err = 0;
     const int type = c->expression->native_type(h);
 
     switch (type) {
@@ -95,7 +95,7 @@ static int concept_condition_expression_true(
             // Use memoization for the most common type (integer keys)
             ok = (grib_get_long_memoize(h, c->name, &lval, present_keys_map, absent_keys_map) == GRIB_SUCCESS) &&
                  (lval == lres);
-            //ok = (grib_get_long(h, c->name, &lval) == GRIB_SUCCESS) && (lval == lres);
+            // ok = (grib_get_long(h, c->name, &lval) == GRIB_SUCCESS) && (lval == lres);
             break;
 
         case GRIB_TYPE_DOUBLE: {
@@ -108,9 +108,9 @@ static int concept_condition_expression_true(
 
         case GRIB_TYPE_STRING: {
             const char* cval;
-            char buf[80] = {0,};
-            char tmp[80] = {0,};
-            size_t len  = sizeof(buf);
+            char buf[80] = { 0 };
+            char tmp[80] = { 0 };
+            size_t len = sizeof(buf);
             size_t size = sizeof(tmp);
 
             ok = (grib_get_string(h, c->name, buf, &len) == GRIB_SUCCESS) &&
@@ -130,11 +130,11 @@ static int concept_condition_expression_true(
 static int concept_condition_iarray_true_count(grib_handle* h, grib_concept_condition* c)
 {
     size_t size = 0;
-    int ret = 0; // count of matches
+    int ret = 0;  // count of matches
 
     int err = grib_get_size(h, c->name, &size);
     if (err || size != grib_iarray_used_size(c->iarray))
-        return 0; // no match
+        return 0;  // no match
 
     long* val = (long*)grib_context_malloc_clear(h->context, sizeof(long) * size);
     if (!val) return 0;
@@ -142,13 +142,13 @@ static int concept_condition_iarray_true_count(grib_handle* h, grib_concept_cond
     err = grib_get_long_array(h, c->name, val, &size);
     if (err) {
         grib_context_free(h->context, val);
-        return 0; // no match
+        return 0;  // no match
     }
 
-    ret = (int)size; // Assume all array entries match
+    ret = (int)size;  // Assume all array entries match
     for (size_t i = 0; i < size; i++) {
         if (val[i] != c->iarray->v[i]) {
-            ret = 0; // no match
+            ret = 0;  // no match
             break;
         }
     }
@@ -171,9 +171,9 @@ static int concept_condition_true_count(
 
 static const char* concept_evaluate(grib_accessor* a)
 {
-    int match        = 0;
+    int match = 0;
     const char* best = 0;
-    //const char* prev = 0;
+    // const char* prev = 0;
     grib_concept_value* c = action_concept_get_concept(a);
     grib_handle* h = a->get_enclosing_handle();
 
@@ -189,10 +189,10 @@ static const char* concept_evaluate(grib_accessor* a)
         int cnt = 0;
         while (e) {
             const int cc_count = concept_condition_true_count(h, e, present_keys_map, absent_keys_map);
-            if (cc_count == 0) // match failed
+            if (cc_count == 0)  // match failed
                 break;
             e = e->next;
-            cnt += cc_count; // ECC-1992
+            cnt += cc_count;  // ECC-1992
         }
 
         if (e == NULL) {
@@ -200,7 +200,7 @@ static const char* concept_evaluate(grib_accessor* a)
                 // prev  = (cnt > match) ? NULL : best;
                 // A better candidate was found. Update 'match' and 'best'
                 match = cnt;
-                best  = c->name;
+                best = c->name;
                 // printf("DEBUG: %s concept=%s current best=%s\n", __func__, a->name_, best);
             }
         }
@@ -215,9 +215,9 @@ static const char* concept_evaluate(grib_accessor* a)
 // Note: This function does not change the handle, but stores the results in the "values" array to be applied later
 static int concept_conditions_expression_apply(grib_handle* h, grib_concept_condition* e, grib_values* values, grib_sarray* sa, int* n)
 {
-    long lres   = 0;
+    long lres = 0;
     double dres = 0.0;
-    int count   = *n;
+    int count = *n;
     size_t size;
     int err = 0;
 
@@ -235,7 +235,7 @@ static int concept_conditions_expression_apply(grib_handle* h, grib_concept_cond
             values[count].double_value = dres;
             break;
         case GRIB_TYPE_STRING:
-            size                       = sizeof(sa->v[count]);
+            size = sizeof(sa->v[count]);
             values[count].string_value = e->expression->evaluate_string(h, sa->v[count], &size, &err);
             break;
         default:
@@ -265,27 +265,26 @@ static int rectify_concept_apply(grib_handle* h, const char* key, const grib_val
     int ret = GRIB_NOT_FOUND;
 
     const bool has_probability_type = concept_values_contains_key(values, count, "probabilityType");
-    const bool has_relation_type    = concept_values_contains_key(values, count, "typeOfRelationToReferenceDataset");
+    const bool has_relation_type = concept_values_contains_key(values, count, "typeOfRelationToReferenceDataset");
     if ((STR_EQUAL(key, "probabilityType") || STR_EQUAL(key, "typeOfRelationToReferenceDataset")) &&
-        has_probability_type && has_relation_type)
-    {
+        has_probability_type && has_relation_type) {
         return grib_set_long(h, "is_referenceperiod_probability", 1);
     }
 
     static const std::map<std::string_view, std::pair<std::string_view, long>> keyMap = {
-        { "typeOfStatisticalProcessing",       { "selectStepTemplateInterval", 1 }        },
-        { "typeOfWavePeriodInterval",          { "is_wave_period_range", 1 }              },
-        { "constituentType",                   { "is_chemical", 1 }                       },
-        { "aerosolType",                       { "is_aerosol", 1 }                        },
-        { "sourceSinkChemicalPhysicalProcess", { "is_chemical_srcsink", 1 }               },
-        { "randomFieldNumber",                 { "productDefinitionTemplateNumber", 143 } },
-        { "probabilityType",                   { "is_probability_fcst", 1 }               },
-        { "typeOfRelationToReferenceDataset",  { "is_referenceperiod", 1 }                }
+        { "typeOfStatisticalProcessing", { "selectStepTemplateInterval", 1 } },
+        { "typeOfWavePeriodInterval", { "is_wave_period_range", 1 } },
+        { "constituentType", { "is_chemical", 1 } },
+        { "aerosolType", { "is_aerosol", 1 } },
+        { "sourceSinkChemicalPhysicalProcess", { "is_chemical_srcsink", 1 } },
+        { "randomFieldNumber", { "productDefinitionTemplateNumber", 143 } },
+        { "probabilityType", { "is_probability_fcst", 1 } },
+        { "typeOfRelationToReferenceDataset", { "is_referenceperiod", 1 } }
     };
     const auto mapIter = keyMap.find(key);
     if (mapIter != keyMap.end()) {
         const char* key2 = mapIter->second.first.data();
-        const long val2  = mapIter->second.second;
+        const long val2 = mapIter->second.second;
         grib_context_log(h->context, GRIB_LOG_DEBUG, "Concept: Key %s not found, setting %s to %ld", key, key2, val2);
         ret = grib_set_long(h, key2, val2);
     }
@@ -300,14 +299,13 @@ static int concept_conditions_iarray_apply(grib_handle* h, grib_concept_conditio
     // ECC-1992: Special case for GRIB2
     // When typeOfStatisticalProcessing is an array, must also set numberOfTimeRanges
     if ((err == GRIB_NOT_FOUND || err == GRIB_ARRAY_TOO_SMALL) &&
-        STR_EQUAL(c->name, "typeOfStatisticalProcessing"))
-    {
+        STR_EQUAL(c->name, "typeOfStatisticalProcessing")) {
         grib_context_log(h->context, GRIB_LOG_DEBUG, "Concept: Key %s not found, setting PDTN", c->name);
         if (grib_set_long(h, "selectStepTemplateInterval", 1) == GRIB_SUCCESS) {
             // Now should have the correct PDTN
             err = grib_set_long(h, "numberOfTimeRanges", (long)size);
             if (!err) {
-                err = grib_set_long_array(h, c->name, c->iarray->v, size);  //re-apply
+                err = grib_set_long_array(h, c->name, c->iarray->v, size);  // re-apply
             }
         }
     }
@@ -375,9 +373,11 @@ static void print_user_friendly_message(grib_handle* h, const char* name, grib_c
 {
     size_t i = 0, concept_count = 0;
     long dummy = 0, editionNumber = 0;
-    char centre_s[32] = {0,};
+    char centre_s[32] = { 0 };
     size_t centre_len = sizeof(centre_s);
-    char* all_concept_vals[MAX_NUM_CONCEPT_VALUES] = {NULL,}; // sorted array containing concept values
+    char* all_concept_vals[MAX_NUM_CONCEPT_VALUES] = {
+        NULL,
+    };  // sorted array containing concept values
     const grib_concept_value* pCon = concepts;
 
     grib_context_log(h->context, GRIB_LOG_ERROR, "concept: no match for %s=%s", act->name_, name);
@@ -419,7 +419,7 @@ static void print_user_friendly_message(grib_handle* h, const char* name, grib_c
             break;
         }
         all_concept_vals[i++] = pCon->name;
-        pCon                  = pCon->next;
+        pCon = pCon->next;
     }
     concept_count = i;
     // Only print out all concepts if fewer than MAX_NUM_CONCEPT_VALUES.
@@ -431,7 +431,7 @@ static void print_user_friendly_message(grib_handle* h, const char* name, grib_c
             if (all_concept_vals[i]) {
                 bool print_it = true;
                 if (i > 0 && all_concept_vals[i - 1] && strcmp(all_concept_vals[i], all_concept_vals[i - 1]) == 0) {
-                    print_it = false; // skip duplicate entries
+                    print_it = false;  // skip duplicate entries
                 }
                 if (blacklisted(h, editionNumber, act->name_, all_concept_vals[i])) {
                     print_it = false;
@@ -449,11 +449,11 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
     int err = 0;
     int count = 0;
     grib_concept_condition* e = NULL;
-    grib_values values[1024] = {{0},}; // key/value pair array
-    grib_sarray* sa       = NULL;
+    grib_values values[1024] = { 0 };  // key/value pair array
+    grib_sarray* sa = NULL;
     grib_concept_value* c = NULL;
     grib_concept_value* concepts = action_concept_get_concept(a);
-    grib_handle* h   = a->get_enclosing_handle();
+    grib_handle* h = a->get_enclosing_handle();
     grib_action* act = a->creator_;
     const int nofail = action_concept_get_nofail(a);
 
@@ -471,7 +471,7 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
         }
         return err;
     }
-    e  = c->conditions;
+    e = c->conditions;
     sa = grib_sarray_new(10, 10);
     while (e) {
         err = concept_conditions_apply(h, e, values, sa, &count);
@@ -501,7 +501,7 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
             }
         }
     }
-    //grib_print_values("DEBUG grib_concept_apply", values, stdout, count);
+    // grib_print_values("DEBUG grib_concept_apply", values, stdout, count);
     if (err) {
         for (int i = 0; i < count; i++) {
             if (values[i].error != GRIB_SUCCESS) {
@@ -523,7 +523,7 @@ int Concept::pack_double(const double* val, size_t* len)
 
 int Concept::pack_long(const long* val, size_t* len)
 {
-    char buf[80] = {0,};
+    char buf[80] = { 0 };
     size_t s;
     snprintf(buf, sizeof(buf), "%ld", *val);
 
@@ -533,7 +533,7 @@ int Concept::pack_long(const long* val, size_t* len)
     // ECC-1806: GRIB: Change of paramId in conversion from GRIB1 to GRIB2
     if (STR_EQUAL(name_, "paramId")) {
         grib_handle* h = get_enclosing_handle();
-        long edition   = 0;
+        long edition = 0;
         if (grib_get_long(h, "edition", &edition) == GRIB_SUCCESS && edition == 2) {
             long newParamId = 0;
             if (grib_get_long(h, "paramIdForConversion", &newParamId) == GRIB_SUCCESS && newParamId > 0) {
@@ -560,7 +560,7 @@ int Concept::unpack_double(double* val, size_t* len)
     int ret = 0;
     if (flags_ & GRIB_ACCESSOR_FLAG_LONG_TYPE) {
         long lval = 0;
-        ret       = unpack_long(&lval, len);
+        ret = unpack_long(&lval, len);
         if (ret == GRIB_SUCCESS) {
             *val = lval;
         }
@@ -659,7 +659,7 @@ int Concept::unpack_string(char* val, size_t* len)
 
     //     if (context_ ->debug==1) {
     //         int err = 0;
-    //         char result[1024] = {0,};
+    //         char result[1024] = {0};
     //         err = get_concept_condition_string(get_enclosing_handle(), name_ , val, result);
     //         if (!err) fprintf(stderr, "ECCODES DEBUG concept name=%s, value=%s, conditions=%s\n", name_ , val, result);
     //     }
@@ -691,8 +691,8 @@ int Concept::compare(grib_accessor* b)
 
     size_t alen = 0;
     size_t blen = 0;
-    int err     = 0;
-    long count  = 0;
+    int err = 0;
+    long count = 0;
 
     err = value_count(&count);
     if (err) return err;

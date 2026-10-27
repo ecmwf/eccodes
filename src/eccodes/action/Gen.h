@@ -26,7 +26,7 @@ public:
     int create_accessor(grib_section*, grib_loader*) override;
     int notify_change(grib_accessor* observer, grib_accessor* observed) override;
 
-    long len_               = 0;
+    long len_ = 0;
     grib_arguments* params_ = nullptr;
 };
 

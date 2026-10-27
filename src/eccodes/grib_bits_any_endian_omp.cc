@@ -33,7 +33,7 @@ int grib_decode_long_array(const unsigned char* p, long* bitp, long bitsPerValue
     for (i = 0; i < n_vals; i++) {
         /* read at least enough bits (byte by byte) from input */
         long bitsToRead = bitsPerValue;
-        long ret        = 0;
+        long ret = 0;
         while (bitsToRead > 0) {
             ret <<= 8;
             /*   ret += p[pi];         */
@@ -76,22 +76,22 @@ int grib_decode_double_array(const unsigned char* p, long* bitp, long bitsPerVal
                              double reference_value, double s, double d,
                              size_t n_vals, double* val)
 {
-    long i               = 0;
+    long i = 0;
     unsigned long lvalue = 0;
     double x;
 
-//  Slow reference code
-//     int j=0;
-//     for(i=0;i < n_vals;i++) {
-//         lvalue=0;
-//         for(j=0; j< bitsPerValue;j++){
-//             lvalue <<= 1;
-//             if(grib_get_bit( p, *bitp)) lvalue += 1;
-//             *bitp += 1;
-//         }
-//         x=((lvalue*s)+reference_value)*d;
-//         val[i] = (double)x;
-//     }
+    //  Slow reference code
+    //     int j=0;
+    //     for(i=0;i < n_vals;i++) {
+    //         lvalue=0;
+    //         for(j=0; j< bitsPerValue;j++){
+    //             lvalue <<= 1;
+    //             if(grib_get_bit( p, *bitp)) lvalue += 1;
+    //             *bitp += 1;
+    //         }
+    //         x=((lvalue*s)+reference_value)*d;
+    //         val[i] = (double)x;
+    //     }
 
     unsigned long mask = BIT_MASK(bitsPerValue);
 
@@ -104,8 +104,8 @@ int grib_decode_double_array(const unsigned char* p, long* bitp, long bitsPerVal
     for (i = 0; i < n_vals; i++) {
         /* value read as long */
         long bitsToRead = 0;
-        lvalue          = 0;
-        bitsToRead      = bitsPerValue;
+        lvalue = 0;
+        bitsToRead = bitsPerValue;
         /* read one byte after the other to lvalue until >= bitsPerValue are read */
         while (bitsToRead > 0) {
             lvalue <<= 8;
@@ -128,7 +128,7 @@ int grib_decode_double_array(const unsigned char* p, long* bitp, long bitsPerVal
             usefulBitsInByte = 8; /* start with next full byte */
         }
         /* scaling and move value to output */
-        x      = ((lvalue * s) + reference_value) * d;
+        x = ((lvalue * s) + reference_value) * d;
         val[i] = (double)x;
     }
     return 0;
@@ -170,22 +170,22 @@ int grib_encode_long_array(size_t n_vals, const long* val, long bits_per_value, 
 
 int grib_encode_double_array(size_t n_vals, const double* val, long bits_per_value, double reference_value, double d, double divisor, unsigned char* p, long* off)
 {
-    size_t i                   = 0;
+    size_t i = 0;
     unsigned long unsigned_val = 0;
-    unsigned char* encoded     = p;
+    unsigned char* encoded = p;
     double x;
     if (bits_per_value % 8) {
         for (i = 0; i < n_vals; i++) {
-            x            = (((val[i] * d) - reference_value) * divisor) + 0.5;
+            x = (((val[i] * d) - reference_value) * divisor) + 0.5;
             unsigned_val = (unsigned long)x;
             grib_encode_unsigned_longb(encoded, unsigned_val, off, bits_per_value);
         }
     }
     else {
         for (i = 0; i < n_vals; i++) {
-            int blen     = 0;
-            blen         = bits_per_value;
-            x            = ((((val[i] * d) - reference_value) * divisor) + 0.5);
+            int blen = 0;
+            blen = bits_per_value;
+            x = ((((val[i] * d) - reference_value) * divisor) + 0.5);
             unsigned_val = (unsigned long)x;
             while (blen >= 8) {
                 blen -= 8;

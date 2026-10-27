@@ -19,8 +19,8 @@ class DataPngPacking : public Values
 {
 public:
     DataPngPacking() :
-        Values() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        Values() {}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     int pack_double(const double* val, size_t* len) override;
     int unpack_double(double* val, size_t* len) override;
     int value_count(long*) override;
@@ -41,7 +41,7 @@ private:
     const char* scanning_mode_ = nullptr;
 
 public:
-    static constexpr AccessorType accessor_type_{"data_png_packing"};
+    static constexpr AccessorType accessor_type_{ "data_png_packing" };
 };
 
 }  // namespace eccodes::accessor

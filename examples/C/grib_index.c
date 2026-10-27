@@ -26,9 +26,9 @@ static void usage(const char* prog)
 int main(int argc, char* argv[])
 {
     codes_index* index = NULL;
-    codes_handle* h    = NULL;
-    char* inputfile       = NULL;
-    char* indexfile       = NULL;
+    codes_handle* h = NULL;
+    char* inputfile = NULL;
+    char* indexfile = NULL;
     long *steps, *levels, *numbers; /* arrays */
     char** shortName = NULL;
     int i, j, k, l;

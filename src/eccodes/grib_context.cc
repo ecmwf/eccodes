@@ -16,14 +16,14 @@
 #include <stdlib.h>
 
 #ifndef ECCODES_ON_WINDOWS
- #include <unistd.h>
+    #include <unistd.h>
 #else
- #include <fcntl.h> /* Windows: for _O_BINARY */
+    #include <fcntl.h> /* Windows: for _O_BINARY */
 #endif
 
 #ifdef ENABLE_FLOATING_POINT_EXCEPTIONS
- #include <fenv.h>
- int feenableexcept(int excepts);
+    #include <fenv.h>
+int feenableexcept(int excepts);
 #endif
 
 grib_string_list grib_file_not_found;
@@ -31,11 +31,11 @@ grib_string_list grib_file_not_found;
 /* Windows always has a colon in pathnames e.g. C:\temp\file. So instead we use semi-colons as delimiter */
 /* in order to have multiple definitions/samples directories */
 #ifdef ECCODES_ON_WINDOWS
- #define ECC_PATH_DELIMITER_CHAR ';'
- #define ECC_PATH_DELIMITER_STR ";"
+    #define ECC_PATH_DELIMITER_CHAR ';'
+    #define ECC_PATH_DELIMITER_STR  ";"
 #else
- #define ECC_PATH_DELIMITER_CHAR ':'
- #define ECC_PATH_DELIMITER_STR ":"
+    #define ECC_PATH_DELIMITER_CHAR ':'
+    #define ECC_PATH_DELIMITER_STR  ":"
 #endif
 
 static eccodes::sync::Mutex mutex;
@@ -256,7 +256,7 @@ void grib_print_api_version(FILE* out)
             ECCODES_MINOR_VERSION,
             ECCODES_REVISION_VERSION);
 
-    //fprintf(out, "%s", " PRE-RELEASE");
+    // fprintf(out, "%s", " PRE-RELEASE");
 }
 
 const char* grib_get_package_name()
@@ -267,20 +267,20 @@ const char* grib_get_package_name()
 #define DEFAULT_FILE_POOL_MAX_OPENED_FILES 0
 
 static grib_context default_grib_context = {
-    0,               /* inited                     */
-    0,               /* debug                      */
-    0,               /* write_on_fail              */
-    0,               /* no_abort                   */
-    0,               /* io_buffer_size             */
-    0,               /* no_big_group_split         */
-    0,               /* no_spd                     */
-    0,               /* keep_matrix                */
-    0,               /* show_hour_stepunit         */
-    0,               /* grib_definition_files_path */
-    0,               /* grib_samples_path          */
-    0,               /* grib_concept_path          */
-    0,               /* grib_reader                */
-    0,               /* user data                  */
+    0,                /* inited                     */
+    0,                /* debug                      */
+    0,                /* write_on_fail              */
+    0,                /* no_abort                   */
+    0,                /* io_buffer_size             */
+    0,                /* no_big_group_split         */
+    0,                /* no_spd                     */
+    0,                /* keep_matrix                */
+    0,                /* show_hour_stepunit         */
+    0,                /* grib_definition_files_path */
+    0,                /* grib_samples_path          */
+    0,                /* grib_concept_path          */
+    0,                /* grib_reader                */
+    0,                /* user data                  */
     CODES_REAL_MODE8, /* real mode for fortran     */
 
 #if MANAGE_MEM
@@ -315,41 +315,41 @@ static grib_context default_grib_context = {
     &default_seek,  /* lfile seek procedure       */
     &default_feof,  /* file feof procedure        */
 
-    &default_log,   /* output_log                 */
-    &default_print, /* print                      */
-    0,              /* codetable                  */
-    0,              /* smart_table                */
-    0,              /* outfilename                */
-    0,              /* multi_support_on           */
-    0,              /* multi_support              */
-    0,              /* grib_definition_files_dir  */
-    0,              /* handle_file_count          */
-    0,              /* handle_total_count         */
-    0,              /* message_file_offset        */
-    0,              /* no_fail_on_wrong_length    */
-    0,              /* gts_header_on              */
-    0,              /* gribex_mode_on             */
-    0,              /* large_constant_fields      */
-    0,              /* concepts_index             */
-    0,              /* concepts_count             */
-    {0,},           /* concepts                   */
-    0,              /* hash_array_index           */
-    0,              /* hash_array_count           */
-    {0,},           /* hash_array                 */
-    0,              /* def_files                  */
-    0,              /* blocklist                  */
-    0,              /* ieee_packing               */
-    0,              /* bufrdc_mode                */
-    0,              /* bufr_set_to_missing_if_out_of_range */
-    0,              /* bufr_multi_element_constant_arrays */
-    0,              /* grib_data_quality_checks   */
-    0,              /* single_precision           */
-    0,              /* enable_warnings            */
-    0,              /* eckit_geo                  */
-    0,              /* log_stream                 */
-    0,              /* classes                    */
-    0,              /* lists                      */
-    0,              /* expanded_descriptors       */
+    &default_log,                      /* output_log                 */
+    &default_print,                    /* print                      */
+    0,                                 /* codetable                  */
+    0,                                 /* smart_table                */
+    0,                                 /* outfilename                */
+    0,                                 /* multi_support_on           */
+    0,                                 /* multi_support              */
+    0,                                 /* grib_definition_files_dir  */
+    0,                                 /* handle_file_count          */
+    0,                                 /* handle_total_count         */
+    0,                                 /* message_file_offset        */
+    0,                                 /* no_fail_on_wrong_length    */
+    0,                                 /* gts_header_on              */
+    0,                                 /* gribex_mode_on             */
+    0,                                 /* large_constant_fields      */
+    0,                                 /* concepts_index             */
+    0,                                 /* concepts_count             */
+    { 0 },                             /* concepts                   */
+    0,                                 /* hash_array_index           */
+    0,                                 /* hash_array_count           */
+    { 0 },                             /* hash_array                 */
+    0,                                 /* def_files                  */
+    0,                                 /* blocklist                  */
+    0,                                 /* ieee_packing               */
+    0,                                 /* bufrdc_mode                */
+    0,                                 /* bufr_set_to_missing_if_out_of_range */
+    0,                                 /* bufr_multi_element_constant_arrays */
+    0,                                 /* grib_data_quality_checks   */
+    0,                                 /* single_precision           */
+    0,                                 /* enable_warnings            */
+    0,                                 /* eckit_geo                  */
+    0,                                 /* log_stream                 */
+    0,                                 /* classes                    */
+    0,                                 /* lists                      */
+    0,                                 /* expanded_descriptors       */
     DEFAULT_FILE_POOL_MAX_OPENED_FILES /* file_pool_max_opened_files */
 };
 
@@ -361,52 +361,52 @@ static grib_context* grib_context_get_default_()
     eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
 
     if (!default_grib_context.inited) {
-        const char* write_on_fail                       = NULL;
-        const char* large_constant_fields               = NULL;
-        const char* no_abort                            = NULL;
-        const char* debug                               = NULL;
-        const char* gribex                              = NULL;
-        const char* ieee_packing                        = NULL;
-        const char* io_buffer_size                      = NULL;
-        const char* log_stream                          = NULL;
-        const char* no_big_group_split                  = NULL;
-        const char* no_spd                              = NULL;
-        const char* keep_matrix                         = NULL;
-        const char* show_hour_stepunit                  = NULL;
-        const char* bufrdc_mode                         = NULL;
+        const char* write_on_fail = NULL;
+        const char* large_constant_fields = NULL;
+        const char* no_abort = NULL;
+        const char* debug = NULL;
+        const char* gribex = NULL;
+        const char* ieee_packing = NULL;
+        const char* io_buffer_size = NULL;
+        const char* log_stream = NULL;
+        const char* no_big_group_split = NULL;
+        const char* no_spd = NULL;
+        const char* keep_matrix = NULL;
+        const char* show_hour_stepunit = NULL;
+        const char* bufrdc_mode = NULL;
         const char* bufr_set_to_missing_if_out_of_range = NULL;
-        const char* bufr_multi_element_constant_arrays  = NULL;
-        const char* grib_data_quality_checks            = NULL;
-        const char* single_precision                    = NULL;
-        const char* enable_warnings                     = NULL;
-        const char* eckit_geo                           = NULL;
-        const char* file_pool_max_opened_files          = NULL;
+        const char* bufr_multi_element_constant_arrays = NULL;
+        const char* grib_data_quality_checks = NULL;
+        const char* single_precision = NULL;
+        const char* enable_warnings = NULL;
+        const char* eckit_geo = NULL;
+        const char* file_pool_max_opened_files = NULL;
 
 #ifdef ENABLE_FLOATING_POINT_EXCEPTIONS
         feenableexcept(FE_ALL_EXCEPT & ~FE_INEXACT);
 #endif
 
-        bufrdc_mode                         = getenv("ECCODES_BUFRDC_MODE_ON");
+        bufrdc_mode = getenv("ECCODES_BUFRDC_MODE_ON");
         bufr_set_to_missing_if_out_of_range = getenv("ECCODES_BUFR_SET_TO_MISSING_IF_OUT_OF_RANGE");
-        bufr_multi_element_constant_arrays  = getenv("ECCODES_BUFR_MULTI_ELEMENT_CONSTANT_ARRAYS");
-        grib_data_quality_checks            = getenv("ECCODES_GRIB_DATA_QUALITY_CHECKS");
-        single_precision                    = getenv("ECCODES_SINGLE_PRECISION");
-        enable_warnings                     = getenv("ECCODES_ENABLE_WARNINGS");
-        file_pool_max_opened_files          = getenv("ECCODES_FILE_POOL_MAX_OPENED_FILES");
-        eckit_geo                           = getenv("ECCODES_ECKIT_GEO");
+        bufr_multi_element_constant_arrays = getenv("ECCODES_BUFR_MULTI_ELEMENT_CONSTANT_ARRAYS");
+        grib_data_quality_checks = getenv("ECCODES_GRIB_DATA_QUALITY_CHECKS");
+        single_precision = getenv("ECCODES_SINGLE_PRECISION");
+        enable_warnings = getenv("ECCODES_ENABLE_WARNINGS");
+        file_pool_max_opened_files = getenv("ECCODES_FILE_POOL_MAX_OPENED_FILES");
+        eckit_geo = getenv("ECCODES_ECKIT_GEO");
         // The following had an equivalent env. var in grib_api
-        write_on_fail                       = codes_getenv("ECCODES_GRIB_WRITE_ON_FAIL");
-        large_constant_fields               = codes_getenv("ECCODES_GRIB_LARGE_CONSTANT_FIELDS");
-        no_abort                            = codes_getenv("ECCODES_NO_ABORT");
-        debug                               = codes_getenv("ECCODES_DEBUG");
-        gribex                              = codes_getenv("ECCODES_GRIBEX_MODE_ON");
-        ieee_packing                        = codes_getenv("ECCODES_GRIB_IEEE_PACKING");
-        io_buffer_size                      = codes_getenv("ECCODES_IO_BUFFER_SIZE");
-        log_stream                          = codes_getenv("ECCODES_LOG_STREAM");
-        no_big_group_split                  = codes_getenv("ECCODES_GRIB_NO_BIG_GROUP_SPLIT");
-        no_spd                              = codes_getenv("ECCODES_GRIB_NO_SPD");
-        keep_matrix                         = codes_getenv("ECCODES_GRIB_KEEP_MATRIX");
-        show_hour_stepunit                  = codes_getenv("ECCODES_GRIB_HOURLY_STEPS_WITH_UNITS");
+        write_on_fail = codes_getenv("ECCODES_GRIB_WRITE_ON_FAIL");
+        large_constant_fields = codes_getenv("ECCODES_GRIB_LARGE_CONSTANT_FIELDS");
+        no_abort = codes_getenv("ECCODES_NO_ABORT");
+        debug = codes_getenv("ECCODES_DEBUG");
+        gribex = codes_getenv("ECCODES_GRIBEX_MODE_ON");
+        ieee_packing = codes_getenv("ECCODES_GRIB_IEEE_PACKING");
+        io_buffer_size = codes_getenv("ECCODES_IO_BUFFER_SIZE");
+        log_stream = codes_getenv("ECCODES_LOG_STREAM");
+        no_big_group_split = codes_getenv("ECCODES_GRIB_NO_BIG_GROUP_SPLIT");
+        no_spd = codes_getenv("ECCODES_GRIB_NO_SPD");
+        keep_matrix = codes_getenv("ECCODES_GRIB_KEEP_MATRIX");
+        show_hour_stepunit = codes_getenv("ECCODES_GRIB_HOURLY_STEPS_WITH_UNITS");
 
         /* On UNIX, when we read from a file we get exactly what is in the file on disk.
          * But on Windows a file can be opened in binary or text mode. In binary mode the system behaves exactly as in UNIX.
@@ -460,7 +460,7 @@ static grib_context* grib_context_get_default_()
             const char* test_defs = codes_getenv("_ECCODES_ECMWF_TEST_DEFINITION_PATH");
             const char* test_samp = codes_getenv("_ECCODES_ECMWF_TEST_SAMPLES_PATH");
             if (test_defs) {
-                char buffer[ECC_PATH_MAXLEN]= {0,};
+                char buffer[ECC_PATH_MAXLEN] = { 0 };
                 if (default_grib_context.grib_definition_files_path) {
                     strcpy(buffer, default_grib_context.grib_definition_files_path);
                     strcat(buffer, ":");
@@ -470,7 +470,7 @@ static grib_context* grib_context_get_default_()
                 default_grib_context.grib_definition_files_path = strdup(buffer);
             }
             if (test_samp) {
-                char buffer[ECC_PATH_MAXLEN]= {0,};
+                char buffer[ECC_PATH_MAXLEN] = { 0 };
                 if (default_grib_context.grib_samples_path) {
                     strcpy(buffer, default_grib_context.grib_samples_path);
                     strcat(buffer, ":");
@@ -484,7 +484,7 @@ static grib_context* grib_context_get_default_()
         {
             const char* defs_extra = getenv("ECCODES_EXTRA_DEFINITION_PATH");
             if (defs_extra) {
-                char buffer[ECC_PATH_MAXLEN]= {0,};
+                char buffer[ECC_PATH_MAXLEN] = { 0 };
                 snprintf(buffer, ECC_PATH_MAXLEN, "%s%c%s", defs_extra, ECC_PATH_DELIMITER_CHAR, default_grib_context.grib_definition_files_path);
                 free(default_grib_context.grib_definition_files_path);
                 default_grib_context.grib_definition_files_path = strdup(buffer);
@@ -494,9 +494,9 @@ static grib_context* grib_context_get_default_()
         {
             /* ECC-1088 */
             if (strstr(default_grib_context.grib_definition_files_path, ECCODES_DEFINITION_PATH) == NULL) {
-                char buffer[ECC_PATH_MAXLEN]= {0,};
+                char buffer[ECC_PATH_MAXLEN] = { 0 };
                 snprintf(buffer, ECC_PATH_MAXLEN, "%s%c%s", default_grib_context.grib_definition_files_path,
-                             ECC_PATH_DELIMITER_CHAR, ECCODES_DEFINITION_PATH);
+                         ECC_PATH_DELIMITER_CHAR, ECCODES_DEFINITION_PATH);
                 free(default_grib_context.grib_definition_files_path);
                 default_grib_context.grib_definition_files_path = strdup(buffer);
             }
@@ -507,7 +507,7 @@ static grib_context* grib_context_get_default_()
         {
             const char* samples_extra = getenv("ECCODES_EXTRA_SAMPLES_PATH");
             if (samples_extra) {
-                char buffer[ECC_PATH_MAXLEN] = {0,};
+                char buffer[ECC_PATH_MAXLEN] = { 0 };
                 snprintf(buffer, ECC_PATH_MAXLEN, "%s%c%s", samples_extra, ECC_PATH_DELIMITER_CHAR, default_grib_context.grib_samples_path);
                 default_grib_context.grib_samples_path = strdup(buffer);
             }
@@ -515,9 +515,9 @@ static grib_context* grib_context_get_default_()
 #ifdef ECCODES_SAMPLES_PATH
         {
             if (strstr(default_grib_context.grib_samples_path, ECCODES_SAMPLES_PATH) == NULL) {
-                char buffer[ECC_PATH_MAXLEN] = {0,};
+                char buffer[ECC_PATH_MAXLEN] = { 0 };
                 snprintf(buffer, ECC_PATH_MAXLEN, "%s%c%s", default_grib_context.grib_samples_path,
-                             ECC_PATH_DELIMITER_CHAR, ECCODES_SAMPLES_PATH);
+                         ECC_PATH_DELIMITER_CHAR, ECCODES_SAMPLES_PATH);
                 default_grib_context.grib_samples_path = strdup(buffer);
             }
         }
@@ -616,8 +616,8 @@ static int init_definition_files_dir(grib_context* c)
 {
     int err = 0;
     char path[ECC_PATH_MAXLEN];
-    char* p                = NULL;
-    char* lasts            = NULL;
+    char* p = NULL;
+    char* lasts = NULL;
     grib_string_list* next = NULL;
 
     if (!c) c = grib_context_get_default();
@@ -628,8 +628,8 @@ static int init_definition_files_dir(grib_context* c)
         return GRIB_NO_DEFINITIONS;
 
     /* Note: strtok_r modifies its first argument so we copy */
-    strncpy(path, c->grib_definition_files_path, ECC_PATH_MAXLEN-1);
-    path[ ECC_PATH_MAXLEN - 1 ] = '\0';
+    strncpy(path, c->grib_definition_files_path, ECC_PATH_MAXLEN - 1);
+    path[ECC_PATH_MAXLEN - 1] = '\0';
 
     eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
 
@@ -640,7 +640,7 @@ static int init_definition_files_dir(grib_context* c)
 
     if (*p != ECC_PATH_DELIMITER_CHAR) {
         /* No delimiter found so this is a single directory */
-        c->grib_definition_files_dir        = (grib_string_list*)grib_context_malloc_clear_persistent(c, sizeof(grib_string_list));
+        c->grib_definition_files_dir = (grib_string_list*)grib_context_malloc_clear_persistent(c, sizeof(grib_string_list));
         c->grib_definition_files_dir->value = codes_resolve_path(c, path);
     }
     else {
@@ -666,9 +666,9 @@ static int init_definition_files_dir(grib_context* c)
 
 char* grib_context_full_defs_path(grib_context* c, const char* basename)
 {
-    int err         = 0;
-    char full[1024] = {0,};
-    grib_string_list* dir      = NULL;
+    int err = 0;
+    char full[1024] = { 0 };
+    grib_string_list* dir = NULL;
     grib_string_list* fullpath = 0;
     if (!c) c = grib_context_get_default();
 
@@ -702,12 +702,13 @@ char* grib_context_full_defs_path(grib_context* c, const char* basename)
                 ECCODES_ASSERT(fullpath);
                 fullpath->value = grib_context_strdup(c, full);
                 {
-                  eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
-                  grib_trie_insert(c->def_files, basename, fullpath);
-                  grib_context_log(c, GRIB_LOG_DEBUG, "Found def file %s", full);
+                    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
+                    grib_trie_insert(c->def_files, basename, fullpath);
+                    grib_context_log(c, GRIB_LOG_DEBUG, "Found def file %s", full);
                 }
                 return fullpath->value;
-            } else {
+            }
+            else {
                 grib_context_log(c, GRIB_LOG_DEBUG, "Nonexistent def file %s", full);
             }
             dir = dir->next;
@@ -790,7 +791,7 @@ void grib_context_reset(grib_context* c)
         grib_string_list* next = c->grib_definition_files_dir;
         grib_string_list* cur = NULL;
         while (next) {
-            cur  = next;
+            cur = next;
             next = next->next;
             grib_context_free(c, cur->value);
             grib_context_free(c, cur);
@@ -801,7 +802,7 @@ void grib_context_reset(grib_context* c)
     if (c->multi_support_on)
         grib_multi_support_reset(c);
 
-    for (i=0; i < MAX_NUM_CONCEPTS; ++i) {
+    for (i = 0; i < MAX_NUM_CONCEPTS; ++i) {
         grib_concept_value* cv = c->concepts[i];
         if (cv) {
             grib_trie_delete_container(cv->index);
@@ -818,20 +819,20 @@ static void grib_context_delete_(grib_context* c)
 {
     if (!c) c = grib_context_get_default();
 
-    /* grib_trie_delete(c->def_files);  TODO:masn */
+    /* grib_trie_delete(c->def_files);  TODO(maee) */
 
     grib_context_reset(c);
 
     if (c != &default_grib_context)
         grib_context_free_persistent(&default_grib_context, c);
 
-    for(size_t i=0; i<MAX_NUM_HASH_ARRAY; ++i)
+    for (size_t i = 0; i < MAX_NUM_HASH_ARRAY; ++i)
         c->hash_array[i] = NULL;
     c->hash_array_count = 0;
     grib_itrie_delete(c->hash_array_index);
-    c->hash_array_index=0;
+    c->hash_array_index = 0;
     grib_trie_delete_container(c->expanded_descriptors);
-    c->expanded_descriptors=0;
+    c->expanded_descriptors = 0;
 
     c->inited = 0;
 }
@@ -1006,9 +1007,9 @@ void* grib_context_buffer_malloc_clear(const grib_context* c, size_t size)
 
 void grib_context_set_data_accessing_proc(grib_context* c, grib_data_read_proc read, grib_data_write_proc write, grib_data_tell_proc tell)
 {
-    c->read  = read;
+    c->read = read;
     c->write = write;
-    c->tell  = tell;
+    c->tell = tell;
 }
 
 /* Logging procedure */
@@ -1109,7 +1110,7 @@ void grib_context_increment_handle_total_count(grib_context* c)
 bufr_descriptors_array* grib_context_expanded_descriptors_list_get(grib_context* c, const char* key, long* u, size_t size)
 {
     bufr_descriptors_map_list* expandedUnexpandedMapList;
-    size_t i  = 0;
+    size_t i = 0;
     int found = 0;
     if (!c) c = grib_context_get_default();
 
@@ -1119,7 +1120,7 @@ bufr_descriptors_array* grib_context_expanded_descriptors_list_get(grib_context*
         return NULL;
     }
     expandedUnexpandedMapList = (bufr_descriptors_map_list*)grib_trie_get(c->expanded_descriptors, key);
-    found                     = 0;
+    found = 0;
     while (expandedUnexpandedMapList) {
         if (expandedUnexpandedMapList->unexpanded->n == size) {
             found = 1;
@@ -1141,15 +1142,15 @@ bufr_descriptors_array* grib_context_expanded_descriptors_list_get(grib_context*
 void grib_context_expanded_descriptors_list_push(grib_context* c,
                                                  const char* key, bufr_descriptors_array* expanded, bufr_descriptors_array* unexpanded)
 {
-    bufr_descriptors_map_list* descriptorsList    = NULL;
-    bufr_descriptors_map_list* next               = NULL;
+    bufr_descriptors_map_list* descriptorsList = NULL;
+    bufr_descriptors_map_list* next = NULL;
     bufr_descriptors_map_list* newdescriptorsList = NULL;
     if (!c) c = grib_context_get_default();
 
     eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
 
-    newdescriptorsList             = (bufr_descriptors_map_list*)grib_context_malloc_clear(c, sizeof(bufr_descriptors_map_list));
-    newdescriptorsList->expanded   = expanded;
+    newdescriptorsList = (bufr_descriptors_map_list*)grib_context_malloc_clear(c, sizeof(bufr_descriptors_map_list));
+    newdescriptorsList->expanded = expanded;
     newdescriptorsList->unexpanded = unexpanded;
 
     descriptorsList = (bufr_descriptors_map_list*)grib_trie_get(c->expanded_descriptors, key);
@@ -1184,7 +1185,7 @@ void codes_assertion_failed(const char* message, const char* file, int line)
         }
     }
     else {
-        char buffer[10240] = {0,};
+        char buffer[10240] = { 0 };
         snprintf(buffer, sizeof(buffer), "ecCodes assertion failed: `%s' in %s:%d", message, file, line);
         assertion(buffer);
     }

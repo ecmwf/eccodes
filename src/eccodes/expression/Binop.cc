@@ -10,7 +10,8 @@
 
 #include "Binop.h"
 
-namespace eccodes::expression {
+namespace eccodes::expression
+{
 
 // See ECC-2192: Better error message when comparing strings
 void Binop::print_error(grib_handle* h) const
@@ -67,18 +68,18 @@ int Binop::evaluate_double(grib_handle* h, double* dres) const
     double v1 = 0.0;
     double v2 = 0.0;
 
-//     {
-//         int typeLeft, typeRight;
-//         const char* nameLeft;
-//         const char* nameRight;
-//         typeLeft = grib_expression_native_type(h, left_);
-//         typeRight = grib_expression_native_type(h, right_);
-//         nameLeft = grib_expression_get_name(left_);
-//         nameRight= grib_expression_get_name(right_);
-//         printf("eval_dbl nameLeft=%s (type=%d), nameRight=%s (type=%d)\n",nameLeft,typeLeft, nameRight,typeRight);
-//         grib_expression_print(h->context, g, h);
-//         printf("\n");
-//     }
+    //     {
+    //         int typeLeft, typeRight;
+    //         const char* nameLeft;
+    //         const char* nameRight;
+    //         typeLeft = grib_expression_native_type(h, left_);
+    //         typeRight = grib_expression_native_type(h, right_);
+    //         nameLeft = grib_expression_get_name(left_);
+    //         nameRight= grib_expression_get_name(right_);
+    //         printf("eval_dbl nameLeft=%s (type=%d), nameRight=%s (type=%d)\n",nameLeft,typeLeft, nameRight,typeRight);
+    //         grib_expression_print(h->context, g, h);
+    //         printf("\n");
+    //     }
 
     int ret = left_->evaluate_double(h, &v1);
     if (ret != GRIB_SUCCESS)
@@ -96,17 +97,21 @@ int Binop::evaluate_double(grib_handle* h, double* dres) const
 void Binop::print(grib_context* c, grib_handle* f, FILE* out) const
 {
     // Cover a subset of the most commonly used functions
-    // TODO(masn): Can be done in a much better way!
+    // TODO(maee): Can be done in a much better way!
     //             e.g., the yacc parser passing in the functions name
     if (long_func_ && long_func_.target<std::equal_to<long>>()) {
         fprintf(out, "equals(");
-    } else if (long_func_ && long_func_.target<std::not_equal_to<long>>()) {
+    }
+    else if (long_func_ && long_func_.target<std::not_equal_to<long>>()) {
         fprintf(out, "not_equals(");
-    } else if (long_func_ && long_func_.target<std::less<long>>()) {
+    }
+    else if (long_func_ && long_func_.target<std::less<long>>()) {
         fprintf(out, "less_than(");
-    } else if (long_func_ && long_func_.target<std::greater<long>>()) {
+    }
+    else if (long_func_ && long_func_.target<std::greater<long>>()) {
         fprintf(out, "greater_than(");
-    } else {
+    }
+    else {
         fprintf(out, "binop(");
     }
     left_->print(c, f, out);
@@ -134,9 +139,9 @@ Binop::Binop(grib_context* c,
              BinopDoubleProc double_func,
              Expression* left, Expression* right)
 {
-    left_        = left;
-    right_       = right;
-    long_func_   = long_func;
+    left_ = left;
+    right_ = right;
+    long_func_ = long_func;
     double_func_ = double_func;
 }
 
@@ -153,14 +158,15 @@ int Binop::native_type(grib_handle* h) const
 }  // namespace eccodes::expression
 
 
-grib_expression* new_binop_expression(grib_context* c, grib_binop_long_proc long_func, grib_binop_double_proc double_func, grib_expression* left, grib_expression* right) {
+grib_expression* new_binop_expression(grib_context* c, grib_binop_long_proc long_func, grib_binop_double_proc double_func, grib_expression* left, grib_expression* right)
+{
     return new eccodes::expression::Binop(c, long_func, double_func, left, right);
 }
 
-//grib_expression* new_binop_expression(grib_context* c,
-//                                      eccodes::Expression::BinopLongProc long_func,
-//                                      eccodes::Expression::BinopDoubleProc double_func,
-//                                      grib_expression* left, grib_expression* right)
+// grib_expression* new_binop_expression(grib_context* c,
+//                                       eccodes::Expression::BinopLongProc long_func,
+//                                       eccodes::Expression::BinopDoubleProc double_func,
+//                                       grib_expression* left, grib_expression* right)
 //{
-//    return new eccodes::expression::Binop(c, long_func, double_func, left, right);
-//}
+//     return new eccodes::expression::Binop(c, long_func, double_func, left, right);
+// }

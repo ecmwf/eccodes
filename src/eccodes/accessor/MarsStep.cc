@@ -16,16 +16,16 @@ namespace eccodes::accessor
 void MarsStep::init(const long l, grib_arguments* c)
 {
     Ascii::init(l, c);
-    int n      = 0;
+    int n = 0;
     stepRange_ = c->get_name(get_enclosing_handle(), n++);
-    stepType_  = c->get_name(get_enclosing_handle(), n++);
+    stepType_ = c->get_name(get_enclosing_handle(), n++);
 }
 
 int MarsStep::pack_string(const char* val, size_t* len)
 {
     char stepType[100];
     size_t stepTypeLen = 100;
-    char buf[100]      = {0,};
+    char buf[100] = { 0 };
     int ret;
     grib_accessor* stepRangeAcc = grib_find_accessor(get_enclosing_handle(), stepRange_);
 
@@ -47,9 +47,9 @@ int MarsStep::pack_string(const char* val, size_t* len)
 
 int MarsStep::unpack_string(char* val, size_t* len)
 {
-    int ret       = 0;
-    char buf[100] = {0,};
-    char* p       = NULL;
+    int ret = 0;
+    char buf[100] = { 0 };
+    char* p = NULL;
     size_t buflen = 100;
     long step;
     grib_accessor* stepRangeAcc = grib_find_accessor(get_enclosing_handle(), stepRange_);
@@ -83,7 +83,7 @@ int MarsStep::unpack_string(char* val, size_t* len)
 
 int MarsStep::pack_long(const long* val, size_t* len)
 {
-    char buff[100] = {0,};
+    char buff[100] = { 0 };
     size_t bufflen = 100;
 
     snprintf(buff, sizeof(buff), "%ld", *val);

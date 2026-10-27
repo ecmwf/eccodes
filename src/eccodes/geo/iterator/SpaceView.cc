@@ -13,7 +13,8 @@
 eccodes::geo_iterator::SpaceView _grib_iterator_space_view{};
 eccodes::geo_iterator::Iterator* grib_iterator_space_view = &_grib_iterator_space_view;
 
-namespace eccodes::geo_iterator {
+namespace eccodes::geo_iterator
+{
 
 #define ITER "Space view Geoiterator"
 
@@ -87,7 +88,7 @@ int SpaceView::init(grib_handle* h, grib_arguments* args)
     double latOfSubSatellitePointInDegrees, lonOfSubSatellitePointInDegrees;
     double orientationInDegrees, nrInRadiusOfEarth;
     double radius = 0, xpInGridLengths = 0, ypInGridLengths = 0;
-    long nx, ny, earthIsOblate                              = 0;
+    long nx, ny, earthIsOblate = 0;
     long alternativeRowScanning, iScansNegatively;
     long Xo, Yo, jScansPositively, jPointsAreConsecutive, i;
 
@@ -100,26 +101,26 @@ int SpaceView::init(grib_handle* h, grib_arguments* args)
     double *s_x, *c_x; /* arrays storing sin and cos values */
     size_t array_size = (nv_ * sizeof(double));
 
-    const char* sradius                          = args->get_name(h, carg_++);
-    const char* sEarthIsOblate                   = args->get_name(h, carg_++);
-    const char* sMajorAxisInMetres               = args->get_name(h, carg_++);
-    const char* sMinorAxisInMetres               = args->get_name(h, carg_++);
-    const char* snx                              = args->get_name(h, carg_++);
-    const char* sny                              = args->get_name(h, carg_++);
+    const char* sradius = args->get_name(h, carg_++);
+    const char* sEarthIsOblate = args->get_name(h, carg_++);
+    const char* sMajorAxisInMetres = args->get_name(h, carg_++);
+    const char* sMinorAxisInMetres = args->get_name(h, carg_++);
+    const char* snx = args->get_name(h, carg_++);
+    const char* sny = args->get_name(h, carg_++);
     const char* sLatOfSubSatellitePointInDegrees = args->get_name(h, carg_++);
     const char* sLonOfSubSatellitePointInDegrees = args->get_name(h, carg_++);
-    const char* sDx                              = args->get_name(h, carg_++);
-    const char* sDy                              = args->get_name(h, carg_++);
-    const char* sXpInGridLengths                 = args->get_name(h, carg_++);
-    const char* sYpInGridLengths                 = args->get_name(h, carg_++);
-    const char* sOrientationInDegrees            = args->get_name(h, carg_++);
-    const char* sNrInRadiusOfEarthScaled         = args->get_name(h, carg_++);
-    const char* sXo                              = args->get_name(h, carg_++);
-    const char* sYo                              = args->get_name(h, carg_++);
+    const char* sDx = args->get_name(h, carg_++);
+    const char* sDy = args->get_name(h, carg_++);
+    const char* sXpInGridLengths = args->get_name(h, carg_++);
+    const char* sYpInGridLengths = args->get_name(h, carg_++);
+    const char* sOrientationInDegrees = args->get_name(h, carg_++);
+    const char* sNrInRadiusOfEarthScaled = args->get_name(h, carg_++);
+    const char* sXo = args->get_name(h, carg_++);
+    const char* sYo = args->get_name(h, carg_++);
 
-    const char* siScansNegatively       = args->get_name(h, carg_++);
-    const char* sjScansPositively       = args->get_name(h, carg_++);
-    const char* sjPointsAreConsecutive  = args->get_name(h, carg_++);
+    const char* siScansNegatively = args->get_name(h, carg_++);
+    const char* sjScansPositively = args->get_name(h, carg_++);
+    const char* sjPointsAreConsecutive = args->get_name(h, carg_++);
     const char* sAlternativeRowScanning = args->get_name(h, carg_++);
 
     if ((ret = grib_get_long_internal(h, snx, &nx)) != GRIB_SUCCESS)
@@ -140,7 +141,7 @@ int SpaceView::init(grib_handle* h, grib_arguments* args)
             return ret;
     }
 
-    if ( nv_ != (size_t)(nx * ny) ) {
+    if (nv_ != (size_t)(nx * ny)) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Wrong number of points (%zu!=%ldx%ld)", ITER, nv_, nx, ny);
         return GRIB_WRONG_GRID;
     }
@@ -181,7 +182,7 @@ int SpaceView::init(grib_handle* h, grib_arguments* args)
         return ret;
 
     if (earthIsOblate) {
-        r_eq  = major; /* In km */
+        r_eq = major; /* In km */
         r_pol = minor;
     }
     else {
@@ -194,7 +195,7 @@ int SpaceView::init(grib_handle* h, grib_arguments* args)
     }
 
     angular_size = 2.0 * asin(1.0 / nrInRadiusOfEarth);
-    height       = nrInRadiusOfEarth * r_eq;
+    height = nrInRadiusOfEarth * r_eq;
 
     lap = latOfSubSatellitePointInDegrees;
     lop = lonOfSubSatellitePointInDegrees;
@@ -246,7 +247,7 @@ int SpaceView::init(grib_handle* h, grib_arguments* args)
     else {
         yp = (ny - 1) - (yp - y0);
     }
-    i        = 0;
+    i = 0;
     factor_2 = (r_eq / r_pol) * (r_eq / r_pol);
     factor_1 = height * height - r_eq * r_eq;
 
@@ -263,14 +264,14 @@ int SpaceView::init(grib_handle* h, grib_arguments* args)
     }
 
     for (ix = 0; ix < nx; ix++) {
-        x       = (ix - xp) * rx;
+        x = (ix - xp) * rx;
         s_x[ix] = sin(x);
         c_x[ix] = sqrt(1.0 - s_x[ix] * s_x[ix]);
     }
 
     /*for (iy = 0; iy < ny; iy++) {*/
     for (iy = ny - 1; iy >= 0; --iy) {
-        y     = (iy - yp) * ry;
+        y = (iy - yp) * ry;
         sin_y = sin(y);
         cos_y = sqrt(1.0 - sin_y * sin_y);
 
@@ -288,12 +289,12 @@ int SpaceView::init(grib_handle* h, grib_arguments* args)
                 lats[i] = lons[i] = 0; /* TODO: error? */
             }
             else {
-                Sd      = sqrt(Sd);
-                Sn      = (height * cos_x * cos_y - Sd) / tmp1;
-                S1      = height - Sn * cos_x * cos_y;
-                S2      = Sn * sin_x * cos_y;
-                S3      = Sn * sin_y;
-                Sxy     = sqrt(S1 * S1 + S2 * S2);
+                Sd = sqrt(Sd);
+                Sn = (height * cos_x * cos_y - Sd) / tmp1;
+                S1 = height - Sn * cos_x * cos_y;
+                S2 = Sn * sin_x * cos_y;
+                S3 = Sn * sin_y;
+                Sxy = sqrt(S1 * S1 + S2 * S2);
                 lons[i] = atan(S2 / S1) * (RAD2DEG) + lop;
                 lats[i] = atan(factor_2 * S3 / Sxy) * (RAD2DEG);
                 /*fprintf(stderr, "lat=%g   lon=%g\n", lats[i], lons[i]);*/

@@ -44,7 +44,27 @@ repos:
         exclude: *expected-output
       - id: mixed-line-ending
 
+  - repo: https://github.com/pre-commit/mirrors-clang-format
+    rev: v23.1.1
+    hooks:
+      - id: clang-format
+        types_or: [c, c++]
+        exclude: |
+          (?x)^(
+          third_party/.*
+          | (.*/)?deprecated/.*
+          | fortran/grib_api_constants\.h
+          | fortran/grib_api_externals\.h
+          | fortran/grib_api_visibility\.h
+          | fortran/eccodes_visibility\.h
+          | fortran/eccodes_constants\.h
+          | src/eccodes/grib_yacc\.cc
+          | src/eccodes/grib_yacc\.h
+          | src/eccodes/grib_lex\.cc
+          )$
+
   - repo: https://github.com/ecmwf/ci-infrastructure
-    rev: 87422f40d88f590710ce07330002241cf4fc7a2e
+    rev: a8a0e018af88f16e4e3891f0eb891fcfdc856508
     hooks:
       - id: check-ci-approval
+      - id: check-ci-result

@@ -19,8 +19,8 @@ class BufrDataElement : public Gen
 {
 public:
     BufrDataElement() :
-        Gen() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        Gen() {}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     long get_native_type() override;
     int pack_missing() override;
     int is_missing() override;
@@ -62,7 +62,7 @@ private:
     char* cname_ = nullptr;
 
 public:
-    static constexpr AccessorType accessor_type_{"bufr_data_element"};
+    static constexpr AccessorType accessor_type_{ "bufr_data_element" };
 };
 
 }  // namespace eccodes::accessor

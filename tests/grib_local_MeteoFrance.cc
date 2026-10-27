@@ -840,13 +840,13 @@ static double values[] = {
 
 #define ILCHAM 3128
 #define NSTRON 10
-#define NSMAX 31
+#define NSMAX  31
 #define NMSMAX 31
 
 int main(int argc, char* argv[])
 {
     grib_handle* h = NULL;
-    size_t len     = 0;
+    size_t len = 0;
     const char* outfile;
 
     ECCODES_ASSERT(argc == 2);

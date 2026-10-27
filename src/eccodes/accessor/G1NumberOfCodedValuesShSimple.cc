@@ -16,12 +16,12 @@ namespace eccodes::accessor
 void G1NumberOfCodedValuesShSimple::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
-    int n             = 0;
-    bitsPerValue_     = c->get_name(get_enclosing_handle(), n++);
+    int n = 0;
+    bitsPerValue_ = c->get_name(get_enclosing_handle(), n++);
     offsetBeforeData_ = c->get_name(get_enclosing_handle(), n++);
-    offsetAfterData_  = c->get_name(get_enclosing_handle(), n++);
-    unusedBits_       = c->get_name(get_enclosing_handle(), n++);
-    numberOfValues_   = c->get_name(get_enclosing_handle(), n++);
+    offsetAfterData_ = c->get_name(get_enclosing_handle(), n++);
+    unusedBits_ = c->get_name(get_enclosing_handle(), n++);
+    numberOfValues_ = c->get_name(get_enclosing_handle(), n++);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     length_ = 0;
@@ -29,8 +29,8 @@ void G1NumberOfCodedValuesShSimple::init(const long l, grib_arguments* c)
 
 int G1NumberOfCodedValuesShSimple::unpack_long(long* val, size_t* len)
 {
-    int ret               = GRIB_SUCCESS;
-    long bpv              = 0;
+    int ret = GRIB_SUCCESS;
+    long bpv = 0;
     long offsetBeforeData = 0, offsetAfterData = 0, unusedBits = 0, numberOfValues;
 
     if ((ret = grib_get_long_internal(get_enclosing_handle(), bitsPerValue_, &bpv)) != GRIB_SUCCESS)

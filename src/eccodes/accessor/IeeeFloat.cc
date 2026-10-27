@@ -17,7 +17,7 @@ void IeeeFloat::init(const long len, grib_arguments* arg)
 {
     Double::init(len, arg);
     long count = 0;
-    arg_       = arg;
+    arg_ = arg;
     value_count(&count);
     length_ = 4 * count;
     ECCODES_ASSERT(length_ >= 0);
@@ -36,12 +36,12 @@ int IeeeFloat::value_count(long* len)
 
 int IeeeFloat::pack_double(const double* val, size_t* len)
 {
-    int ret            = 0;
-    unsigned long i    = 0;
+    int ret = 0;
+    unsigned long i = 0;
     unsigned long rlen = (unsigned long)*len;
-    size_t buflen      = 0;
+    size_t buflen = 0;
     unsigned char* buf = NULL;
-    long off           = 0;
+    long off = 0;
 
     if (*len < 1) {
         grib_context_log(context_, GRIB_LOG_ERROR, "Wrong size for %s, it packs at least 1 value", name_);
@@ -84,10 +84,10 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
 {
     static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
 
-    long rlen         = 0;
-    int err           = 0;
-    long i            = 0;
-    long bitp         = a->offset_ * 8;
+    long rlen = 0;
+    int err = 0;
+    long i = 0;
+    long bitp = a->offset_ * 8;
     grib_handle* hand = a->get_enclosing_handle();
 
     err = a->value_count(&rlen);

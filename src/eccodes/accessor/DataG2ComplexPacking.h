@@ -19,8 +19,8 @@ class DataG2ComplexPacking : public DataComplexPacking
 {
 public:
     DataG2ComplexPacking() :
-        DataComplexPacking() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        DataComplexPacking() {}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     int pack_double(const double* val, size_t* len) override;
     int value_count(long*) override;
     void init(const long, grib_arguments*) override;
@@ -29,7 +29,7 @@ private:
     const char* numberOfValues_ = nullptr;
 
 public:
-    static constexpr AccessorType accessor_type_{"data_g2complex_packing"};
+    static constexpr AccessorType accessor_type_{ "data_g2complex_packing" };
 };
 
 }  // namespace eccodes::accessor

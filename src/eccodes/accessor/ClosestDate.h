@@ -19,8 +19,8 @@ class ClosestDate : public Double
 {
 public:
     ClosestDate() :
-        Double() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        Double() {}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     int unpack_double(double* val, size_t* len) override;
     int unpack_long(long* val, size_t* len) override;
     void dump(eccodes::Dumper*) override;
@@ -38,7 +38,7 @@ private:
     const char* second_ = nullptr;
 
 public:
-    static constexpr AccessorType accessor_type_{"closest_date"};
+    static constexpr AccessorType accessor_type_{ "closest_date" };
 };
 
 }  // namespace eccodes::accessor

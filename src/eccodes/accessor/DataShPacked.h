@@ -19,8 +19,8 @@ class DataShPacked : public DataSimplePacking
 {
 public:
     DataShPacked() :
-        DataSimplePacking() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        DataSimplePacking() {}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     int unpack_double(double* val, size_t* len) override;
     int value_count(long*) override;
     void init(const long, grib_arguments*) override;
@@ -38,7 +38,7 @@ private:
     const char* pen_m_ = nullptr;
 
 public:
-    static constexpr AccessorType accessor_type_{"data_sh_packed"};
+    static constexpr AccessorType accessor_type_{ "data_sh_packed" };
 };
 
 }  // namespace eccodes::accessor

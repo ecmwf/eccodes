@@ -19,8 +19,8 @@ class LatLonValues : public Double
 {
 public:
     LatLonValues() :
-        Double() { }
-    const AccessorType& accessor_type() const override {{ return accessor_type_; }}
+        Double() {}
+    const AccessorType& accessor_type() const override { return accessor_type_; }
     int unpack_double(double* val, size_t* len) override;
     int value_count(long*) override;
     void init(const long, grib_arguments*) override;
@@ -29,7 +29,7 @@ private:
     const char* values_ = nullptr;
 
 public:
-    static constexpr AccessorType accessor_type_{"latlonvalues"};
+    static constexpr AccessorType accessor_type_{ "latlonvalues" };
 };
 
 }  // namespace eccodes::accessor

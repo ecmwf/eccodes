@@ -12,11 +12,14 @@
 
 #include "Gen.h"
 
-namespace eccodes::geo_nearest {
+namespace eccodes::geo_nearest
+{
 
-class PolarStereographic : public Gen {
+class PolarStereographic : public Gen
+{
 public:
-    PolarStereographic() {
+    PolarStereographic()
+    {
         class_name_ = "polar_stereographic";
     }
     Nearest* create() override { return new PolarStereographic(); }

@@ -17,9 +17,9 @@ namespace eccodes::accessor
 void CodetableTitle::init(const long len, grib_arguments* params)
 {
     Gen::init(len, params);
-    int n      = 0;
+    int n = 0;
     codetable_ = params->get_name(get_enclosing_handle(), n++);
-    length_    = 0;
+    length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 

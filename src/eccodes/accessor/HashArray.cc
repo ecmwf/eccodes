@@ -20,8 +20,8 @@ void HashArray::init(const long len, grib_arguments* args)
 {
     Gen::init(len, args);
     length_ = 0;
-    key_    = 0;
-    ha_     = NULL;
+    key_ = 0;
+    ha_ = NULL;
 }
 
 void HashArray::dump(eccodes::Dumper* dumper)
@@ -31,28 +31,28 @@ void HashArray::dump(eccodes::Dumper* dumper)
 
 int HashArray::pack_double(const double* val, size_t* len)
 {
-    char s[200] = {0,};
+    char s[200] = { 0 };
     snprintf(s, sizeof(s), "%g", *val);
     key_ = grib_context_strdup(context_, s);
-    ha_  = 0;
+    ha_ = 0;
     return GRIB_SUCCESS;
 }
 
 int HashArray::pack_long(const long* val, size_t* len)
 {
-    char s[200] = {0,};
+    char s[200] = { 0 };
     snprintf(s, sizeof(s), "%ld", *val);
     if (key_)
         grib_context_free(context_, key_);
     key_ = grib_context_strdup(context_, s);
-    ha_  = 0;
+    ha_ = 0;
     return GRIB_SUCCESS;
 }
 
 int HashArray::pack_string(const char* v, size_t* len)
 {
     key_ = grib_context_strdup(context_, v);
-    ha_  = 0;
+    ha_ = 0;
     return GRIB_SUCCESS;
 }
 
@@ -63,8 +63,8 @@ int HashArray::unpack_double(double* val, size_t* len)
 
 grib_hash_array_value* HashArray::find_hash_value(int* err)
 {
-    grib_hash_array_value* ha_ret    = 0;
-    grib_hash_array_value* ha        = NULL;
+    grib_hash_array_value* ha_ret = 0;
+    grib_hash_array_value* ha = NULL;
 
     eccodes::action::HashArray* hash_array = dynamic_cast<eccodes::action::HashArray*>(creator_);
 
@@ -108,8 +108,8 @@ grib_hash_array_value* HashArray::find_hash_value(int* err)
 int HashArray::unpack_long(long* val, size_t* len)
 {
     grib_hash_array_value* ha = 0;
-    int err                   = 0;
-    size_t i                  = 0;
+    int err = 0;
+    size_t i = 0;
 
     if (!ha_) {
         ha = find_hash_value(&err);
@@ -163,7 +163,7 @@ size_t HashArray::string_length()
 
 int HashArray::value_count(long* count)
 {
-    int err                   = 0;
+    int err = 0;
     grib_hash_array_value* ha = 0;
 
     if (!ha_) {

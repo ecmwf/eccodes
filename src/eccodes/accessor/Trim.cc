@@ -16,11 +16,11 @@ namespace eccodes::accessor
 void Trim::init(const long l, grib_arguments* arg)
 {
     Ascii::init(l, arg);
-    int n          = 0;
+    int n = 0;
     grib_handle* h = get_enclosing_handle();
 
-    input_      = arg->get_name(h, n++);
-    trim_left_  = arg->get_long(h, n++);
+    input_ = arg->get_name(h, n++);
+    trim_left_ = arg->get_long(h, n++);
     trim_right_ = arg->get_long(h, n++);
     DEBUG_ASSERT(trim_left_ == 0 || trim_left_ == 1);
     DEBUG_ASSERT(trim_right_ == 0 || trim_right_ == 1);
@@ -28,10 +28,10 @@ void Trim::init(const long l, grib_arguments* arg)
 
 int Trim::unpack_string(char* val, size_t* len)
 {
-    int err         = 0;
-    grib_handle* h  = get_enclosing_handle();
-    char input[256] = {0,};
-    size_t size  = sizeof(input) / sizeof(*input);
+    int err = 0;
+    grib_handle* h = get_enclosing_handle();
+    char input[256] = { 0 };
+    size_t size = sizeof(input) / sizeof(*input);
     char* pInput = input;
 
     err = grib_get_string(h, input_, input, &size);
@@ -46,13 +46,13 @@ int Trim::unpack_string(char* val, size_t* len)
 
 int Trim::pack_string(const char* val, size_t* len)
 {
-    char input[256] = {0,};
+    char input[256] = { 0 };
 
     size_t inputLen = 256;
-    char buf[256]   = {0,};
+    char buf[256] = { 0 };
     char* pBuf = NULL;
     int err = 0;
-    grib_handle* h                = get_enclosing_handle();
+    grib_handle* h = get_enclosing_handle();
     grib_accessor* inputAccesstor = grib_find_accessor(h, input_);
     if (!inputAccesstor) {
         grib_context_log(context_, GRIB_LOG_ERROR, "Accessor for %s not found", input_);

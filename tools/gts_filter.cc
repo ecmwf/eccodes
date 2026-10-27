@@ -35,7 +35,7 @@ const char* tool_online_doc = NULL;
 const char* tool_usage =
     "[options] rules_file "
     "file file ...";
-int fail               = 0;
+int fail = 0;
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 
 int main(int argc, char* argv[])

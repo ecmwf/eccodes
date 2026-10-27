@@ -12,11 +12,14 @@
 
 #include "Gen.h"
 
-namespace eccodes::geo_nearest {
+namespace eccodes::geo_nearest
+{
 
-class Reduced : public Gen {
+class Reduced : public Gen
+{
 public:
-    Reduced() {
+    Reduced()
+    {
         class_name_ = "reduced";
     }
     Nearest* create() override { return new Reduced(); }
@@ -32,9 +35,9 @@ private:
     int rotated_ = 0;
 
     int find_global(grib_handle*,
-                             double, double, unsigned long,
-                             double*, double*, double*,
-                             double*, int*, size_t*);
+                    double, double, unsigned long,
+                    double*, double*, double*,
+                    double*, int*, size_t*);
 };
 
 }  // namespace eccodes::geo_nearest

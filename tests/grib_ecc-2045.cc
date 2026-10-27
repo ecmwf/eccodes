@@ -8,14 +8,14 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
- #include <cstdio>
+#include <cstdio>
 #include "grib_api_internal.h"
 
 static void check_validity(const grib_handle* handle)
 {
     ECCODES_ASSERT(handle);
     long lVal = -1;
-    GRIB_CHECK( grib_get_long(handle, "isMessageValid", &lVal), 0);
+    GRIB_CHECK(grib_get_long(handle, "isMessageValid", &lVal), 0);
     ECCODES_ASSERT(lVal == 1);
 }
 
@@ -28,7 +28,7 @@ static void test1(const char* input)
 
     grib_handle* h1 = grib_handle_new_from_file(0, fin, &err);
     grib_handle* c = grib_handle_clone_headers_only(h1);
-    GRIB_CHECK( grib_set_long(c, "edition", 2), 0);
+    GRIB_CHECK(grib_set_long(c, "edition", 2), 0);
     check_validity(c);
     grib_handle* c2 = grib_handle_clone_headers_only(c);
     check_validity(c2);
@@ -50,7 +50,7 @@ static void test2(const char* input)
     ECCODES_ASSERT(h1);
     grib_handle* c = grib_handle_clone(h1);
     ECCODES_ASSERT(c);
-    GRIB_CHECK( grib_set_long(c, "edition", 2), 0);
+    GRIB_CHECK(grib_set_long(c, "edition", 2), 0);
     check_validity(c);
     grib_handle* c2 = grib_handle_clone_headers_only(c);
     check_validity(c2);

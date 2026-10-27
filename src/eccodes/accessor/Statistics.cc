@@ -19,7 +19,7 @@ void Statistics::init(const long l, grib_arguments* c)
     int n = 0;
 
     missing_value_ = c->get_name(get_enclosing_handle(), n++);
-    values_        = c->get_name(get_enclosing_handle(), n++);
+    values_ = c->get_name(get_enclosing_handle(), n++);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     flags_ |= GRIB_ACCESSOR_FLAG_HIDDEN;
@@ -28,7 +28,7 @@ void Statistics::init(const long l, grib_arguments* c)
     v_ = (double*)grib_context_malloc(context_, sizeof(double) * number_of_elements_);
 
     length_ = 0;
-    dirty_  = 1;
+    dirty_ = 1;
 }
 
 int Statistics::unpack_double(double* val, size_t* len)
@@ -37,11 +37,11 @@ int Statistics::unpack_double(double* val, size_t* len)
     double* values = NULL;
     size_t i = 0, size = 0, real_size = 0;
     double max, min, avg, sd, value, skew, kurt, m2 = 0, m3 = 0, m4 = 0;
-    double missing            = 0;
+    double missing = 0;
     long missingValuesPresent = 0;
-    size_t number_of_missing  = 0;
-    grib_context* c           = context_;
-    grib_handle* h            = get_enclosing_handle();
+    size_t number_of_missing = 0;
+    grib_context* c = context_;
+    grib_handle* h = get_enclosing_handle();
 
     if (!dirty_)
         return GRIB_SUCCESS;
@@ -119,7 +119,7 @@ int Statistics::unpack_double(double* val, size_t* len)
         avg /= (size - number_of_missing);
     }
 
-    sd   = 0;
+    sd = 0;
     skew = 0;
     kurt = 0;
     for (i = 0; i < size; i++) {
@@ -128,7 +128,7 @@ int Statistics::unpack_double(double* val, size_t* len)
             valueNotMissing = (values[i] != missing);
         }
         if (valueNotMissing) {
-            double v   = values[i] - avg;
+            double v = values[i] - avg;
             double tmp = v * v;
             m2 += tmp;
             m3 += v * tmp;
@@ -181,14 +181,14 @@ void Statistics::destroy(grib_context* c)
 
 int Statistics::compare(grib_accessor* b)
 {
-    int retval   = GRIB_SUCCESS;
+    int retval = GRIB_SUCCESS;
     double* aval = 0;
     double* bval = 0;
 
     size_t alen = 0;
     size_t blen = 0;
-    int err     = 0;
-    long count  = 0;
+    int err = 0;
+    long count = 0;
 
     err = value_count(&count);
     if (err)
@@ -207,7 +207,7 @@ int Statistics::compare(grib_accessor* b)
     bval = (double*)grib_context_malloc(b->context_, blen * sizeof(double));
 
     b->dirty_ = 1;
-    dirty_    = 1;
+    dirty_ = 1;
 
     unpack_double(aval, &alen);
     b->unpack_double(bval, &blen);
