@@ -347,7 +347,10 @@ int DataComplexPacking::pack_double(const double* val, size_t* len)
     }
 
     if (!laplacianOperatorIsSet) {
-        laplacianOperator = calculate_pfactor(context_, val, pen_j, sub_j);
+        // Some fields use a fixed laplacian operator instead of a fitted one
+        // See definitions/grib2/templates/template.5.51.def
+        if (grib_get_double(gh, "fixedLaplacianOperator", &laplacianOperator) != GRIB_SUCCESS)
+            laplacianOperator = calculate_pfactor(context_, val, pen_j, sub_j);
         if ((ret = grib_set_double_internal(gh, laplacianOperator_, laplacianOperator)) != GRIB_SUCCESS)
             return ret;
         grib_get_double_internal(gh, laplacianOperator_, &laplacianOperator);
