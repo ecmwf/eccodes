@@ -1821,6 +1821,30 @@
 	 parameterCategory = 131 ;
 	 parameterNumber = 73 ;
 	}
+#Mean wave period of at least 8 s
+'Mean wave period of at least 8 s' = {
+	 discipline = 192 ;
+	 parameterCategory = 131 ;
+	 parameterNumber = 78 ;
+	}
+#Mean wave period of at least 10 s
+'Mean wave period of at least 10 s' = {
+	 discipline = 192 ;
+	 parameterCategory = 131 ;
+	 parameterNumber = 79 ;
+	}
+#Mean wave period of at least 12 s
+'Mean wave period of at least 12 s' = {
+	 discipline = 192 ;
+	 parameterCategory = 131 ;
+	 parameterNumber = 80 ;
+	}
+#Mean wave period of at least 15 s
+'Mean wave period of at least 15 s' = {
+	 discipline = 192 ;
+	 parameterCategory = 131 ;
+	 parameterNumber = 81 ;
+	}
 #Period corresponding to maximum individual wave height
 'Period corresponding to maximum individual wave height' = {
 	 discipline = 192 ;
