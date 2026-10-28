@@ -80,8 +80,84 @@ jobs:
           client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
           app-private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
 
-  build:
+  wait-build:
     needs: [ci-approval, resolve]
+    runs-on: arc-runner-normal
+    container:
+      image: eccr.ecmwf.int/public-ci-images/ubuntu24.04-base:latest
+    steps:
+      - name: Announce image
+        uses: ecmwf/ci-infrastructure/actions/announce-image@main
+      - id: mint
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+      - uses: ecmwf/ci-infrastructure/actions/wait-for-deps@main
+        with:
+          matrix: ${{ needs.resolve.outputs.build-matrix }}
+          token: ${{ steps.mint.outputs.token }}
+
+  wait-fortran:
+    needs: [ci-approval, resolve]
+    runs-on: arc-runner-normal
+    container:
+      image: eccr.ecmwf.int/public-ci-images/ubuntu24.04-base:latest
+    steps:
+      - name: Announce image
+        uses: ecmwf/ci-infrastructure/actions/announce-image@main
+      - id: mint
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+      - uses: ecmwf/ci-infrastructure/actions/wait-for-deps@main
+        with:
+          matrix: ${{ needs.resolve.outputs.fortran-matrix }}
+          token: ${{ steps.mint.outputs.token }}
+
+  wait-build-hpc:
+    needs: [ci-approval, resolve]
+    runs-on: arc-runner-normal
+    container:
+      image: eccr.ecmwf.int/public-ci-images/ubuntu24.04-base:latest
+    steps:
+      - name: Announce image
+        uses: ecmwf/ci-infrastructure/actions/announce-image@main
+      - id: mint
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+      - uses: ecmwf/ci-infrastructure/actions/wait-for-deps@main
+        with:
+          matrix: ${{ needs.resolve.outputs.build-hpc-matrix }}
+          token: ${{ steps.mint.outputs.token }}
+
+  wait-fortran-hpc:
+    needs: [ci-approval, resolve]
+    runs-on: arc-runner-normal
+    container:
+      image: eccr.ecmwf.int/public-ci-images/ubuntu24.04-base:latest
+    steps:
+      - name: Announce image
+        uses: ecmwf/ci-infrastructure/actions/announce-image@main
+      - id: mint
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+      - uses: ecmwf/ci-infrastructure/actions/wait-for-deps@main
+        with:
+          matrix: ${{ needs.resolve.outputs.fortran-hpc-matrix }}
+          token: ${{ steps.mint.outputs.token }}
+
+  build:
+    needs: [ci-approval, resolve, wait-build]
     name: build+test (${{ matrix._resolved['job-name'] }})
     runs-on: ${{ matrix['runs-on'] }}
     container:
@@ -175,7 +251,7 @@ jobs:
           resolved: ${{ toJSON(matrix._resolved) }}
 
   fortran:
-    needs: [ci-approval, resolve]
+    needs: [ci-approval, resolve, wait-fortran]
     name: fortran (${{ matrix._resolved['job-name'] }})
     runs-on: ${{ matrix['runs-on'] }}
     container:
@@ -225,7 +301,7 @@ jobs:
           resolved: ${{ toJSON(matrix._resolved) }}
 
   build-hpc:
-    needs: [ci-approval, resolve]
+    needs: [ci-approval, resolve, wait-build-hpc]
     name: build-hpc (${{ matrix._resolved['job-name'] }})
     runs-on: ${{ matrix['runs-on'] }}
     container:
@@ -281,7 +357,7 @@ jobs:
           own-source: ${{ steps.build.outputs.cache-hit == 'true' && 'artifact' || 'built' }}
 
   fortran-hpc:
-    needs: [ci-approval, resolve]
+    needs: [ci-approval, resolve, wait-fortran-hpc]
     name: fortran-hpc (${{ matrix._resolved['job-name'] }})
     runs-on: ${{ matrix['runs-on'] }}
     container:
@@ -339,7 +415,7 @@ jobs:
   ci-result:
     name: collect results
     if: always()
-    needs: [ci-approval, pre-commit, resolve, build, rust, fortran, build-hpc, fortran-hpc]
+    needs: [ci-approval, pre-commit, resolve, wait-build, build, rust, wait-fortran, fortran, wait-build-hpc, build-hpc, wait-fortran-hpc, fortran-hpc]
     runs-on: ubuntu-slim
     permissions:
       statuses: write
