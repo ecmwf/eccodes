@@ -50,7 +50,7 @@ static bool is_big_endian()
 {
     unsigned char is_big_endian = 0;
     unsigned short endianess_test = 1;
-    return reinterpret_cast<const char*>(&endianess_test)[0] == is_big_endian;
+    return reinterpret_cast<const unsigned char*>(&endianess_test)[0] == is_big_endian;
 }
 
 static void modify_aec_flags(long* flags)
