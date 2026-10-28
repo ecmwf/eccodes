@@ -211,7 +211,7 @@ unsigned long grib_decode_unsigned_long(const unsigned char* p, long* bitp, long
     int usefulBitsInByte = 0;
     long bitsToRead = 0;
 
-    if (nbits == 0)
+    if (nbits <= 0)
         return 0;
 
     if (nbits > max_nbits) {
@@ -344,7 +344,7 @@ size_t grib_decode_size_t(const unsigned char* p, long* bitp, long nbits)
     int usefulBitsInByte = 0;
     long bitsToRead = 0;
 
-    if (nbits == 0)
+    if (nbits <= 0)
         return 0;
 
     if (nbits > max_nbits_size_t) {
