@@ -271,21 +271,6 @@ static const int mapping[] = {
     0,  /* ff */
 };
 
-/* ECC-388 */
-#ifdef DEBUG
-static const size_t NUM_MAPPINGS = sizeof(mapping) / sizeof(mapping[0]);
-
-    #define DebugCheckBounds(index, value)                                                                  \
-        do {                                                                                                \
-            if (!((index) >= 0 && (index) < NUM_MAPPINGS)) {                                                \
-                printf("ERROR: string='%s' index=%ld @ %s +%d \n", value, (long)index, __FILE__, __LINE__); \
-                abort();                                                                                    \
-            }                                                                                               \
-        } while (0)
-#else
-    #define DebugCheckBounds(index, value)
-#endif
-
 
 #define SIZE 39
 
@@ -374,8 +359,7 @@ void* grib_trie_insert(grib_trie* t, const char* key, void* data)
 
     while (*k && t) {
         last = t;
-        DebugCheckBounds((int)*k, key);
-        t = t->next[mapping[(int)*k]];
+        t = t->next[mapping[(unsigned char)*k]];
         if (t)
             k++;
     }
@@ -388,8 +372,7 @@ void* grib_trie_insert(grib_trie* t, const char* key, void* data)
         t = last;
         while (*k) {
             int j = 0;
-            DebugCheckBounds((int)*k, key);
-            j = mapping[(int)*k++];
+            j = mapping[(unsigned char)*k++];
             if (j < t->first)
                 t->first = j;
             if (j > t->last)
@@ -410,8 +393,7 @@ void* grib_trie_insert_no_replace(grib_trie* t, const char* key, void* data)
 
     while (*k && t) {
         last = t;
-        DebugCheckBounds((int)*k, key);
-        t = t->next[mapping[(int)*k]];
+        t = t->next[mapping[(unsigned char)*k]];
         if (t)
             k++;
     }
@@ -420,8 +402,7 @@ void* grib_trie_insert_no_replace(grib_trie* t, const char* key, void* data)
         t = last;
         while (*k) {
             int j = 0;
-            DebugCheckBounds((int)*k, key);
-            j = mapping[(int)*k++];
+            j = mapping[(unsigned char)*k++];
             if (j < t->first)
                 t->first = j;
             if (j > t->last)
@@ -442,8 +423,7 @@ void* grib_trie_get(grib_trie* t, const char* key)
 
     eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
     while (*k && t) {
-        DebugCheckBounds((int)*k, key);
-        t = t->next[mapping[(int)*k++]];
+        t = t->next[mapping[(unsigned char)*k++]];
     }
 
     if (*k == 0 && t != NULL && t->data != NULL) {
@@ -462,7 +442,7 @@ void grib_trie_remove(grib_trie* trie,const char* key)
   grib_context *c = trie->context;
 
   while(*k && t)
-    t = t->next[mapping[(int)*k++]];
+    t = t->next[mapping[(unsigned char)*k++]];
 
   if(*k == 0 && t != NULL)
     t->data->data = NULL;
