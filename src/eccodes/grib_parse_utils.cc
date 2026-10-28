@@ -445,7 +445,7 @@ int grib_recompose_print(grib_handle* h, const char* uname, int fail, FILE* out)
                     break;
                 case ']':
                     // ECC-1878: The '=' format specifier
-                    if (loc[mode - 1] == '=') {
+                    if (mode > 0 && loc[mode - 1] == '=') {
                         loc[mode - 1] = 0;
                         equal = 1;
                     }

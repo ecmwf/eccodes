@@ -274,7 +274,10 @@ int SmartTable::unpack_string(char* buffer, size_t* len)
         table_ = load_table();
     table = table_;
 
-    if (table && (value >= 0) && (value < table->numberOfEntries) && table->entries[value].abbreviation) {
+    if (size == 0) {
+        tmp[0] = 0;
+    }
+    else if (table && (value >= 0) && (value < table->numberOfEntries) && table->entries[value].abbreviation) {
         strcpy(tmp, table->entries[value].abbreviation);
     }
     else {
@@ -388,12 +391,16 @@ int SmartTable::unpack_long(long* val, size_t* len)
     int err = 0;
     size_t i;
 
-    if (!values_)
+    if (!values_) {
+        *len = 0;
         return 0;
+    }
 
     err = get_table_codes();
-    if (err)
+    if (err) {
+        *len = 0;
         return 0;
+    }
 
     if (*len < tableCodesSize_) {
         grib_context_log(context_, GRIB_LOG_ERROR,
@@ -404,6 +411,7 @@ int SmartTable::unpack_long(long* val, size_t* len)
 
     for (i = 0; i < tableCodesSize_; i++)
         val[i] = tableCodes_[i];
+    *len = tableCodesSize_;
 
     return err;
 }
