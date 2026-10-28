@@ -150,8 +150,8 @@ int grib_optimize_decimal_factor(grib_accessor* a, const char* reference_value,
             return GRIB_INTERNAL_ERROR;
         }
 
-        vmax = (((pmax * decimal) - *ref) * divisor) + 0.5;
-        vmin = (((pmin * decimal) - *ref) * divisor) + 0.5;
+        vmax = lround(((pmax * decimal) - *ref) * divisor);
+        vmin = lround(((pmin * decimal) - *ref) * divisor);
 
         /* This may happen if pmin*decimal-*ref is too large */
         if ((vmin != 0) || (vmax > inbint))

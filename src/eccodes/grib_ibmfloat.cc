@@ -79,7 +79,7 @@ unsigned long grib_ibm_to_long(double x)
         /* printf("grib_ibm_to_long (e++): x=%.20e e=%ld \n",x,e); */
     }
 
-    m = x + 0.5;
+    m = lround(x);
     /* printf("grib_ibm_to_long: m=0x%lX (%lu) x=%.10e \n",m,m,x ); */
     if (m > mmax) {
         e++;

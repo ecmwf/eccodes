@@ -18,7 +18,6 @@
 #include "grib_api_internal.h"
 #include "ExceptionHandler.h"
 
-#define ROUND(a) ((a) >= 0 ? (long)((a) + 0.5) : (long)((a) - 0.5))
 int grib_julian_to_datetime(double jd, long* year, long* month, long* day,
                             long* hour, long* minute, long* second)
 {
@@ -47,7 +46,7 @@ int grib_julian_to_datetime(double jd, long* year, long* month, long* day,
     dday -= *day;
 
     /* ANF-CG 02.03.2012 */
-    s = ROUND((double)(dday * 86400)); /* total in sec , no msec*/
+    s = lround(dday * 86400); /* total in sec , no msec*/
     *hour = (long)s / 3600;
     *minute = (long)((s % 3600) / 60);
     *second = (long)(s % 60);

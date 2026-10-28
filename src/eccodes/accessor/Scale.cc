@@ -99,7 +99,7 @@ int Scale::pack_double(const double* val, size_t* len)
         value = (long)x;
     }
     else {
-        value = x > 0 ? (long)(x + 0.5) : (long)(x - 0.5);
+        value = lround(x);
     }
 
     ret = grib_set_long_internal(get_enclosing_handle(), value_, value);

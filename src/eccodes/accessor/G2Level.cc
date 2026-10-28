@@ -118,7 +118,7 @@ int G2Level::unpack_long(long* val, size_t* len)
     double dval = 0;
     int ret = unpack_double(&dval, len);
     if (ret == GRIB_SUCCESS) {
-        *val = (long)(dval + 0.5);  // round up
+        *val = lround(dval);
     }
     return ret;
 }
