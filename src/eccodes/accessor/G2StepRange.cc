@@ -197,7 +197,7 @@ int G2StepRange::unpack_long(long* val, size_t* /*len*/)
     if ((ret = grib_get_long_internal(h, start_step_, &end_start_value)) != GRIB_SUCCESS)
         return ret;
     try {
-        if ((ret = grib_get_long_internal(h, "stepUnits", &step_units)) != GRIB_SUCCESS)
+        if (grib_get_long_internal(h, "stepUnits", &step_units) != GRIB_SUCCESS)
             throw std::runtime_error("Failed to get stepUnits");
         if (eccodes::Unit{ step_units } == eccodes::Unit{ eccodes::Unit::Value::MISSING }) {
             if ((ret = grib_get_long_internal(h, "stepUnits", &step_units)) != GRIB_SUCCESS)
@@ -233,7 +233,7 @@ int G2StepRange::unpack_double(double* val, size_t* /*len*/)
 
     if ((ret = grib_get_double_internal(h, start_step_, &end_start_value)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long_internal(h, "stepUnits", &step_units)) != GRIB_SUCCESS)
+    if (grib_get_long_internal(h, "stepUnits", &step_units) != GRIB_SUCCESS)
         throw std::runtime_error("Failed to get stepUnits");
 
     try {

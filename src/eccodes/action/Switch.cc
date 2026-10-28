@@ -81,7 +81,6 @@ int Switch::execute(grib_handle* h)
     int type = 0;
     int ok = 0;
     const char* cval;
-    const char* cres;
     char buf[80] = { 0 };
     char tmp[80] = { 0 };
     size_t len = sizeof(buf);
@@ -117,7 +116,7 @@ int Switch::execute(grib_handle* h)
                     case GRIB_TYPE_STRING:
                         len = sizeof(buf);
                         size = sizeof(tmp);
-                        ok = ((cres = e->evaluate_string(h, buf, &len, &err)) != NULL) &&
+                        ok = (e->evaluate_string(h, buf, &len, &err) != NULL) &&
                              (err == 0) &&
                              ((cval = value->evaluate_string(h, tmp, &size, &err)) != NULL) &&
                              (err == 0) &&

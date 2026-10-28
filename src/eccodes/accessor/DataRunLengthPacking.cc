@@ -67,7 +67,6 @@ int DataRunLengthPacking::unpack_double(double* val, size_t* len)
     if ((err = grib_get_long_array_internal(gh, level_values_, level_values, &level_values_size)) != GRIB_SUCCESS)
         return err;
     *len = number_of_values;
-    i = 0;
     number_of_compressed_values = ((seclen - 5) * 8) / bits_per_value;
     if (number_of_compressed_values == 0 || max_level_value == 0) {
         for (i = 0; i < number_of_values; i++) {
