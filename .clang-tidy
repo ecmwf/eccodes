@@ -25,7 +25,6 @@ Checks: >
   -bugprone-narrowing-conversions,
   -bugprone-not-null-terminated-result,
   -bugprone-reserved-identifier,
-  -bugprone-signed-char-misuse,
   -bugprone-suspicious-include,
   -bugprone-suspicious-string-compare,
   -bugprone-switch-missing-default-case,

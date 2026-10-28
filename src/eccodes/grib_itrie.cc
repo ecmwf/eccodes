@@ -318,7 +318,7 @@ int grib_itrie_get_id(grib_itrie* t, const char* key)
     eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
 
     while (*k && t)
-        t = t->next[mapping[(int)*k++]];
+        t = t->next[mapping[(unsigned char)*k++]];
 
     if (t != NULL && t->id != -1) {
         return t->id;
@@ -345,7 +345,7 @@ int grib_itrie_insert(grib_itrie* t, const char* key)
 
     while (*k && t) {
         last = t;
-        t = t->next[mapping[(int)*k]];
+        t = t->next[mapping[(unsigned char)*k]];
         if (t)
             k++;
     }
@@ -353,7 +353,7 @@ int grib_itrie_insert(grib_itrie* t, const char* key)
     if (*k != 0) {
         t = last;
         while (*k) {
-            int j = mapping[(int)*k++];
+            int j = mapping[(unsigned char)*k++];
             t->next[j] = grib_itrie_new(t->context, count);
             t = t->next[j];
         }

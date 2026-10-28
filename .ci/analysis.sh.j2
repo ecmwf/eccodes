@@ -29,8 +29,9 @@ echo "Warnings by flag:"
 grep -o '\[-W[^]]*\]' "$build/build.log" | sort | uniq -c | sort -rn || true
 {% if options == "clang-tidy" %}
 [ "$status" -eq 0 ]
+# Not the flex and bison output.
 run-clang-tidy-18 -p "$build" -clang-tidy-binary "$(command -v clang-tidy-18)" -quiet -j "$jobs" \
-  -header-filter="^$CI_SOURCE_DIR/src/" "^$CI_SOURCE_DIR/src/" 2>&1 | tee "$build/clang-tidy.log" || status=$?
+  -header-filter="^$CI_SOURCE_DIR/src/" "^$CI_SOURCE_DIR/src/(?!eccodes/grib_(lex|yacc)\.cc$)" 2>&1 | tee "$build/clang-tidy.log" || status=$?
 {% endif %}
 {% endif %}
 [ "$status" -eq 0 ]

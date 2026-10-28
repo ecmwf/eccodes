@@ -33,7 +33,7 @@ public:
     int compare(grib_accessor*) override;
 
 private:
-    char endCharacter_ = 0;
+    unsigned char endCharacter_ = 0;
 
 public:
     static constexpr AccessorType accessor_type_{ "group" };
