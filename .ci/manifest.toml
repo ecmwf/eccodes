@@ -78,6 +78,13 @@ options = "eckit-geo"
 container = "eccr.ecmwf.int/public-ci-images/ubuntu24.04-gcc13-gfortran13:latest"
 platform = "ubuntu-24.04"
 
+[[matrix.build.include]]
+cxx-compiler = "clang++-18"
+c-compiler = "clang-18"
+options = "eckit-geo"
+container = "eccr.ecmwf.int/public-ci-images/ubuntu24.04-clang18:latest"
+platform = "ubuntu-24.04"
+
 # ECC-2355: A static libeccodes: the linker drops unreferenced objects, which catches
 # anything that relies on static initialisers for registration.
 [[matrix.build.include]]
