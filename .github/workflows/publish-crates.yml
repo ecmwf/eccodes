@@ -1,6 +1,6 @@
 name: publish-crates
 
-# A release tag publishes the Rust crates; a manual run does what `mode` says, but publishes only from a tag.
+# A release tag dry-runs the crates as a sanity check; publishing is manual only: dispatch on any ref with mode=publish.
 # The -sys crates build their C++ from the tag of the workspace version, so a dry run fails until that tag exists.
 on:
   push:
@@ -57,8 +57,8 @@ jobs:
       - name: Publish the crates
         uses: ecmwf/ci-infrastructure/actions/run-job-script@main
         env:
-          CI_CARGO_PUBLISH: ${{ github.ref_type == 'tag' && (inputs.mode || 'publish') || 'dry-run' }}
-          CARGO_REGISTRY_TOKEN: ${{ github.ref_type == 'tag' && secrets.CARGO_REGISTRY_TOKEN || '' }}
+          CI_CARGO_PUBLISH: ${{ inputs.mode == 'publish' && 'publish' || 'dry-run' }}
+          CARGO_REGISTRY_TOKEN: ${{ inputs.mode == 'publish' && secrets.CARGO_REGISTRY_TOKEN || '' }}
         with:
           job-script: ${{ matrix.job-script }}
           matrix-leg: ${{ toJSON(matrix) }}
