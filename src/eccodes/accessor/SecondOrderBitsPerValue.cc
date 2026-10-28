@@ -82,7 +82,7 @@ int SecondOrderBitsPerValue::unpack_long(long* val, size_t* /*len*/)
         return GRIB_SUCCESS;
     }
 
-    if ((ret = grib_get_size(get_enclosing_handle(), values_, &size)) != GRIB_SUCCESS) {
+    if (grib_get_size(get_enclosing_handle(), values_, &size) != GRIB_SUCCESS) {
         *val = bitsPerValue_;
         return GRIB_SUCCESS;
     }

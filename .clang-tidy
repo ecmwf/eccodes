@@ -33,7 +33,6 @@ Checks: >
   -clang-analyzer-core.NonNullParamChecker,
   -clang-analyzer-core.NullDereference,
   -clang-analyzer-core.UndefinedBinaryOperatorResult,
-  -clang-analyzer-deadcode.DeadStores,
   -clang-analyzer-optin.performance.Padding,
   -clang-analyzer-security.insecureAPI.strcpy,
   -clang-analyzer-unix.Malloc,

@@ -172,5 +172,5 @@ char* get_external_sample_path(grib_context* c, const char* name)
     }
 
     *p = 0;
-    return g = try_sample_path(c, buffer, name);
+    return try_sample_path(c, buffer, name);
 }

@@ -60,7 +60,6 @@ int Mtg2SwitchDefault::unpack_long(long* val, size_t* /*len*/)
     if (err) {
         if (err == GRIB_NOT_FOUND) {
             marsClassExists = false;
-            err = 0;
         }
         else {
             return err;

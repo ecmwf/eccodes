@@ -127,10 +127,8 @@ static int int_min_max_array(int* data, unsigned int n, int* min, int* max)
     }
 
     for (first = 0; first < n; first++) {
-        if (data[first] != INT_MAX) {
-            mx = mn = data[first];
+        if (data[first] != INT_MAX)
             break;
-        }
     }
     if (first >= n) return 1;
 
@@ -973,7 +971,6 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
         }
         else {
             binary_scale = nbits = 0;
-            scale = 1;
         }
     }
     else {

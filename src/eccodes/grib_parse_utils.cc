@@ -298,7 +298,6 @@ int grib_accessors_list_print(grib_handle* h, grib_accessors_list* al, const cha
             }
             else {
                 int cols = 0;
-                j = 0;
                 cvals = (char**)grib_context_malloc_clear(h->context, sizeof(char*) * size);
                 al->unpack_string(cvals, &size);
                 for (j = 0; j < size; j++) {
@@ -326,7 +325,6 @@ int grib_accessors_list_print(grib_handle* h, grib_accessors_list* al, const cha
                 fprintf(out, myformat, dval[0]);
             else {
                 int cols = 0;
-                j = 0;
                 for (j = 0; j < size; j++) {
                     *newline = 1;
                     fprintf(out, myformat, dval[j]);
@@ -351,7 +349,6 @@ int grib_accessors_list_print(grib_handle* h, grib_accessors_list* al, const cha
                 fprintf(out, myformat, lval[0]);
             else {
                 int cols = 0;
-                j = 0;
                 for (j = 0; j < size; j++) {
                     *newline = 1;
                     fprintf(out, myformat, lval[j]);
