@@ -19,7 +19,6 @@ Checks: >
   -bugprone-forward-declaration-namespace,
   -bugprone-implicit-widening-of-multiplication-result,
   -bugprone-inc-dec-in-conditions,
-  -bugprone-incorrect-roundings,
   -bugprone-macro-parentheses,
   -bugprone-misplaced-widening-cast,
   -bugprone-multi-level-implicit-pointer-conversion,

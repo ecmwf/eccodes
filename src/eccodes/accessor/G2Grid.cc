@@ -150,8 +150,8 @@ static int trial(const double* val, long v[6], long* basic_angle, long* sub_divi
     if (val[5] == 0)
         return 0;
 
-    ni = (long)(0.5 + fabs((val[0] - val[2]) / val[4])) + 1;
-    nj = (long)(0.5 + fabs((val[1] - val[3]) / val[5])) + 1;
+    ni = lround(fabs((val[0] - val[2]) / val[4])) + 1;
+    nj = lround(fabs((val[1] - val[3]) / val[5])) + 1;
 
     *basic_angle = 360;
     *sub_division = lcm(ni, nj);

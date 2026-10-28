@@ -666,7 +666,7 @@ int DataG1SecondOrderGeneralExtendedPacking::pack_double(const double* val, size
 
     X = (long*)grib_context_malloc_clear(context_, sizeof(long) * numberOfValues);
     for (i = 0; i < numberOfValues; i++) {
-        X[i] = (((val[i] * decimal) - reference_value) * divisor) + 0.5;
+        X[i] = lround(((val[i] * decimal) - reference_value) * divisor);
     }
 
     groupLengths = (long*)grib_context_malloc_clear(context_, sizeof(long) * numberOfValues);
