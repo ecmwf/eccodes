@@ -23,7 +23,6 @@ Checks: >
   -bugprone-misplaced-widening-cast,
   -bugprone-multi-level-implicit-pointer-conversion,
   -bugprone-narrowing-conversions,
-  -bugprone-not-null-terminated-result,
   -bugprone-reserved-identifier,
   -bugprone-suspicious-include,
   -bugprone-suspicious-string-compare,
