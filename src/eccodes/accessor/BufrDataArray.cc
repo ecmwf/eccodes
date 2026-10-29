@@ -958,13 +958,14 @@ int decode_element(grib_context* c, BufrDataArray* self, int /*subsetIndex*/,
                      (long)*pos, (long)(*pos - self->offset_ * 8));
     if (bd->type == BUFR_DESCRIPTOR_TYPE_STRING) {
         /* string */
+        const long nbytes = bd->width / 8;
         if (self->compressedData_) {
             err = self->decode_string_array(c, data, pos, bd);
             index = grib_vsarray_used_size(self->stringValues_);
             dar = grib_darray_new(self->numberOfSubsets_, 10);
             index = self->numberOfSubsets_ * (index - 1);
             for (ii = 1; ii <= self->numberOfSubsets_; ii++) {
-                x = (index + ii) * 1000 + bd->width / 8;
+                x = (index + ii) * 1000 + nbytes;
                 grib_darray_push(dar, x);
             }
             grib_vdarray_push(self->numericValues_, dar);
@@ -979,7 +980,7 @@ int decode_element(grib_context* c, BufrDataArray* self, int /*subsetIndex*/,
             for (ii = 0; ii < stringValuesLen; ii++) {
                 index += grib_sarray_used_size(self->stringValues_->v[ii]);
             }
-            cdval = index * 1000 + bd->width / 8;
+            cdval = index * 1000 + nbytes;
             grib_darray_push(dval, cdval);
         }
     }
