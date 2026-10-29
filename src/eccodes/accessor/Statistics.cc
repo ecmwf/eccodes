@@ -222,7 +222,7 @@ int Statistics::compare(grib_accessor* b)
     return retval;
 }
 
-int Statistics::unpack_string(char*, size_t*)
+int Statistics::unpack_string(char* /*v*/, size_t* /*len*/)
 {
     return GRIB_NOT_IMPLEMENTED;
 }

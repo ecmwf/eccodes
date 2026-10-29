@@ -92,7 +92,7 @@ int IsInList::evaluate_long(grib_handle* h, long* result) const
     return err;
 }
 
-int IsInList::evaluate_double(grib_handle*, double*) const
+int IsInList::evaluate_double(grib_handle* /*h*/, double* /*result*/) const
 {
     return GRIB_NOT_IMPLEMENTED;
     // grib_expression_is_in_list* e = (grib_expression_is_in_list*)g;
@@ -130,7 +130,7 @@ const char* IsInList::evaluate_string(grib_handle* h, char* buf, size_t* size, i
     return buf;
 }
 
-void IsInList::print(grib_context*, grib_handle* f, FILE* out) const
+void IsInList::print(grib_context* /*c*/, grib_handle* f, FILE* out) const
 {
     fprintf(out, "access('%s", name_);
     if (f) {

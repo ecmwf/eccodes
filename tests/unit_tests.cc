@@ -285,7 +285,7 @@ static void test_assertion_catching()
     free(list);
 }
 
-static void my_logging_proc(const grib_context*, int, const char*)
+static void my_logging_proc(const grib_context* /*c*/, int /*level*/, const char* /*mesg*/)
 {
     logging_caught = 1;
 }
@@ -321,7 +321,7 @@ static void test_logging_file()
     grib_context_log(context, GRIB_LOG_ERROR, "test_logging_file: Can you see me now?");
 }
 
-static void my_print_proc(const grib_context*, void*, const char*)
+static void my_print_proc(const grib_context* /*c*/, void* /*descriptor*/, const char* /*mesg*/)
 {
 }
 static void test_print_proc()
@@ -1208,7 +1208,7 @@ void test_grib_is_all_bits_one()
     ECCODES_ASSERT(!grib_is_all_bits_one(0x1FFFFFFFFFFFFE, 53));
 }
 
-int main(int, char** argv)
+int main(int /*argc*/, char** argv)
 {
     printf("Doing unit tests. ecCodes version = %ld\n", grib_get_api_version());
     printf("codes_print_api_version gives: ");

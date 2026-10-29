@@ -27,7 +27,7 @@ void ChangeAlternativeRowScanning::init(const long len, grib_arguments* args)
     length_ = 0;
 }
 
-int ChangeAlternativeRowScanning::pack_long(const long* val, size_t*)
+int ChangeAlternativeRowScanning::pack_long(const long* val, size_t* /*len*/)
 {
     int err = 0;
     const grib_context* c = context_;
@@ -109,7 +109,7 @@ long ChangeAlternativeRowScanning::get_native_type()
     return GRIB_TYPE_LONG;
 }
 
-int ChangeAlternativeRowScanning::unpack_long(long* v, size_t*)
+int ChangeAlternativeRowScanning::unpack_long(long* v, size_t* /*len*/)
 {
     /* Decoding this accessor doesn't make sense so we return a dummy value */
     *v = -1;

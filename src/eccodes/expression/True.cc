@@ -13,24 +13,24 @@
 namespace eccodes::expression
 {
 
-int True::evaluate_long(grib_handle*, long* lres) const
+int True::evaluate_long(grib_handle* /*h*/, long* lres) const
 {
     *lres = 1;
     return GRIB_SUCCESS;
 }
 
-int True::evaluate_double(grib_handle*, double* dres) const
+int True::evaluate_double(grib_handle* /*h*/, double* dres) const
 {
     *dres = 1;
     return GRIB_SUCCESS;
 }
 
-void True::print(grib_context*, grib_handle*, FILE* out) const
+void True::print(grib_context* /*c*/, grib_handle* /*f*/, FILE* out) const
 {
     fprintf(out, "true()");
 }
 
-int True::native_type(grib_handle*) const
+int True::native_type(grib_handle* /*h*/) const
 {
     return GRIB_TYPE_LONG;
 }

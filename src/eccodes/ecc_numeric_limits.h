@@ -95,6 +95,6 @@ private:
     }();
 
 public:
-    static constexpr ValueType min(std::size_t) { return 0; }
+    static constexpr ValueType min(std::size_t /*nBits*/) { return 0; }
     static constexpr ValueType max(std::size_t nBits) { return max_[nBits - 1]; }
 };

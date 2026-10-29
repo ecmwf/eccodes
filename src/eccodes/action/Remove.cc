@@ -59,7 +59,7 @@ static void remove_accessor(grib_accessor* a)
     a = NULL;
 }
 
-int Remove::create_accessor(grib_section* p, grib_loader*)
+int Remove::create_accessor(grib_section* p, grib_loader* /*h*/)
 {
     grib_accessor* ga = grib_find_accessor(p->h, args_->get_name(p->h, 0));
 
@@ -73,7 +73,7 @@ int Remove::create_accessor(grib_section* p, grib_loader*)
     return GRIB_SUCCESS;
 }
 
-void Remove::dump(FILE*, int)
+void Remove::dump(FILE* /*f*/, int /*lvl*/)
 {
     grib_context_log(context_, GRIB_LOG_ERROR, "%s: dump not implemented", name_);
     // grib_action_remove* a = (grib_action_remove*)act;

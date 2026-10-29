@@ -31,7 +31,7 @@ static void openjpeg_error(const char* msg, void* client_data)
     grib_context_log((grib_context*)client_data, GRIB_LOG_ERROR, "openjpeg: %s", msg);
 }
 
-static void openjpeg_info(const char*, void*)
+static void openjpeg_info(const char* /*msg*/, void* /*client_data*/)
 {
     /* grib_context_log((grib_context*)client_data,GRIB_LOG_INFO,"openjpeg: %s",msg); */
 }
@@ -551,13 +551,13 @@ cleanup:
 
 #else /* No OpenJPEG */
 
-int grib_openjpeg_decode(grib_context* c, unsigned char*, const size_t*, double*, const size_t*)
+int grib_openjpeg_decode(grib_context* c, unsigned char* /*buf*/, const size_t* /*buflen*/, double* /*val*/, const size_t* /*n_vals*/)
 {
     grib_context_log(c, GRIB_LOG_ERROR, "grib_openjpeg_decode: OpenJPEG JPEG support not enabled.");
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
 
-int grib_openjpeg_encode(grib_context* c, j2k_encode_helper*)
+int grib_openjpeg_encode(grib_context* c, j2k_encode_helper* /*helper*/)
 {
     grib_context_log(c, GRIB_LOG_ERROR, "grib_openjpeg_encode: OpenJPEG JPEG support not enabled.");
     return GRIB_FUNCTIONALITY_NOT_ENABLED;

@@ -17,7 +17,7 @@ static void compare_doubles(const double d1, const double d2, const double epsil
     assert(fabs(d1 - d2) < epsilon);
 }
 
-int main(int, char*[])
+int main(int /*argc*/, char* /*argv*/[])
 {
     FILE* in = NULL;
     codes_handle* h = NULL;

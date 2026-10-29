@@ -29,7 +29,7 @@ void HashArray::dump(eccodes::Dumper* dumper)
     dumper->dump_string(this, NULL);
 }
 
-int HashArray::pack_double(const double* val, size_t*)
+int HashArray::pack_double(const double* val, size_t* /*len*/)
 {
     char s[200] = { 0 };
     snprintf(s, sizeof(s), "%g", *val);
@@ -38,7 +38,7 @@ int HashArray::pack_double(const double* val, size_t*)
     return GRIB_SUCCESS;
 }
 
-int HashArray::pack_long(const long* val, size_t*)
+int HashArray::pack_long(const long* val, size_t* /*len*/)
 {
     char s[200] = { 0 };
     snprintf(s, sizeof(s), "%ld", *val);
@@ -49,14 +49,14 @@ int HashArray::pack_long(const long* val, size_t*)
     return GRIB_SUCCESS;
 }
 
-int HashArray::pack_string(const char* v, size_t*)
+int HashArray::pack_string(const char* v, size_t* /*len*/)
 {
     key_ = grib_context_strdup(context_, v);
     ha_ = 0;
     return GRIB_SUCCESS;
 }
 
-int HashArray::unpack_double(double*, size_t*)
+int HashArray::unpack_double(double* /*val*/, size_t* /*len*/)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
@@ -151,7 +151,7 @@ void HashArray::destroy(grib_context* c)
     Gen::destroy(c);
 }
 
-int HashArray::unpack_string(char*, size_t*)
+int HashArray::unpack_string(char* /*val*/, size_t* /*len*/)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
@@ -177,7 +177,7 @@ int HashArray::value_count(long* count)
     return err;
 }
 
-int HashArray::compare(grib_accessor*)
+int HashArray::compare(grib_accessor* /*b*/)
 {
     return GRIB_NOT_IMPLEMENTED;
 }

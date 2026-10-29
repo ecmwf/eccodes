@@ -28,7 +28,7 @@ void NumberOfPoints::init(const long l, grib_arguments* c)
     length_ = 0;
 }
 
-int NumberOfPoints::unpack_long(long* val, size_t*)
+int NumberOfPoints::unpack_long(long* val, size_t* /*len*/)
 {
     int ret = GRIB_SUCCESS;
     long ni = 0, nj = 0, plpresent = 0;

@@ -688,7 +688,7 @@ typedef struct
     const char* name;
 } trunc_t;
 
-int main(int, char*[])
+int main(int /*argc*/, char* /*argv*/[])
 {
     grib_handle* h;
     size_t len;

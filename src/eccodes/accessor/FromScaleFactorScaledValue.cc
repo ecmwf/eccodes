@@ -27,7 +27,7 @@ void FromScaleFactorScaledValue::init(const long l, grib_arguments* c)
     // flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-int FromScaleFactorScaledValue::pack_double(const double* val, size_t*)
+int FromScaleFactorScaledValue::pack_double(const double* val, size_t* /*len*/)
 {
     // See ECC-979 and ECC-1416
     // Evaluate scaleFactor and scaledValue_ from input double '*val'

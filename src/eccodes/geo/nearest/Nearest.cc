@@ -61,7 +61,7 @@ static int compare_points(const void* a, const void* b)
 namespace eccodes::geo_nearest
 {
 
-int Nearest::init(grib_handle*, grib_arguments*)
+int Nearest::init(grib_handle* /*h*/, grib_arguments* /*args*/)
 {
     // h_ = h;
     return GRIB_SUCCESS;

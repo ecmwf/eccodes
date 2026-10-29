@@ -207,7 +207,7 @@ void BufrSimple::dump_values_attribute(grib_accessor* a, const char* prefix)
     (void)err; /* TODO */
 }
 
-void BufrSimple::dump_long(grib_accessor* a, const char*)
+void BufrSimple::dump_long(grib_accessor* a, const char* /*comment*/)
 {
     long value = 0;
     size_t size = 0, size2 = 0;
@@ -405,9 +405,9 @@ void BufrSimple::dump_long_attribute(grib_accessor* a, const char* prefix)
     (void)err; /* TODO */
 }
 
-void BufrSimple::dump_bits(grib_accessor*, const char*) {}
+void BufrSimple::dump_bits(grib_accessor* /*a*/, const char* /*comment*/) {}
 
-void BufrSimple::dump_double(grib_accessor* a, const char*)
+void BufrSimple::dump_double(grib_accessor* a, const char* /*comment*/)
 {
     double value = 0;
     size_t size = 1;
@@ -530,7 +530,7 @@ void BufrSimple::dump_string_array(grib_accessor* a, const char* comment)
 }
 
 #define MAX_STRING_SIZE 4096
-void BufrSimple::dump_string(grib_accessor* a, const char*)
+void BufrSimple::dump_string(grib_accessor* a, const char* /*comment*/)
 {
     char value[MAX_STRING_SIZE] = { 0 }; /* See ECC-710 */
     char* p = NULL;
@@ -599,9 +599,9 @@ void BufrSimple::dump_string(grib_accessor* a, const char*)
     (void)err; /* TODO */
 }
 
-void BufrSimple::dump_bytes(grib_accessor*, const char*) {}
+void BufrSimple::dump_bytes(grib_accessor* /*a*/, const char* /*comment*/) {}
 
-void BufrSimple::dump_label(grib_accessor*, const char*) {}
+void BufrSimple::dump_label(grib_accessor* /*a*/, const char* /*comment*/) {}
 
 static void _dump_long_array(grib_handle* h, FILE* f, const char* key)
 {

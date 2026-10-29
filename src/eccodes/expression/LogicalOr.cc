@@ -102,7 +102,7 @@ void LogicalOr::add_dependency(grib_accessor* observer)
     right_->add_dependency(observer);
 }
 
-int LogicalOr::native_type(grib_handle*) const
+int LogicalOr::native_type(grib_handle* /*h*/) const
 {
     return GRIB_TYPE_LONG;
 }

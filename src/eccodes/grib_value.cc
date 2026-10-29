@@ -2347,7 +2347,7 @@ int codes_copy_key(grib_handle* h1, grib_handle* h2, const char* key, int type)
     }
 }
 
-int codes_compare_key(grib_handle* h1, grib_handle* h2, const char* key, int)
+int codes_compare_key(grib_handle* h1, grib_handle* h2, const char* key, int /*compare_flags*/)
 {
     grib_accessor* a1 = grib_find_accessor(h1, key);
     if (!a1) {

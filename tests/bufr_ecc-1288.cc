@@ -18,7 +18,7 @@
 
 const char* KEY = "encryptedShipOrMobileLandStationIdentifier";
 
-int main(int, char* argv[])
+int main(int /*argc*/, char* argv[])
 {
     FILE* in = NULL;
     codes_handle* h = NULL;

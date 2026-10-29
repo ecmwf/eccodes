@@ -29,7 +29,7 @@ void NumberOfCodedValues::init(const long l, grib_arguments* c)
     length_ = 0;
 }
 
-int NumberOfCodedValues::unpack_long(long* val, size_t*)
+int NumberOfCodedValues::unpack_long(long* val, size_t* /*len*/)
 {
     int ret = GRIB_SUCCESS;
     long bpv = 0, offsetBeforeData = 0, offsetAfterData = 0, unusedBits = 0, numberOfValues;

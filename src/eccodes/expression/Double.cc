@@ -13,19 +13,19 @@
 namespace eccodes::expression
 {
 
-int Double::evaluate_long(grib_handle*, long* lres) const
+int Double::evaluate_long(grib_handle* /*h*/, long* lres) const
 {
     *lres = value_;
     return GRIB_SUCCESS;
 }
 
-int Double::evaluate_double(grib_handle*, double* dres) const
+int Double::evaluate_double(grib_handle* /*h*/, double* dres) const
 {
     *dres = value_;
     return GRIB_SUCCESS;
 }
 
-void Double::print(grib_context*, grib_handle*, FILE* out) const
+void Double::print(grib_context* /*c*/, grib_handle* /*f*/, FILE* out) const
 {
     fprintf(out, "double(%g)", value_);
 }
@@ -35,7 +35,7 @@ Double::Double(double value)
     value_ = value;
 }
 
-int Double::native_type(grib_handle*) const
+int Double::native_type(grib_handle* /*h*/) const
 {
     return GRIB_TYPE_DOUBLE;
 }

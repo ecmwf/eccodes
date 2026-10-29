@@ -10,7 +10,7 @@
 
 #include "grib_api.h"
 
-int main(int argc, char*[])
+int main(int argc, char* /*argv*/[])
 {
     grib_index* index = NULL;
     grib_handle* h = NULL;

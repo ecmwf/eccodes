@@ -282,7 +282,7 @@ bufr_descriptor* BufrElementsTable::get_descriptor(int code, int* err)
     return v;
 }
 
-int BufrElementsTable::unpack_string(char*, size_t*)
+int BufrElementsTable::unpack_string(char* /*buffer*/, size_t* /*len*/)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
@@ -298,12 +298,12 @@ long BufrElementsTable::get_native_type()
     return GRIB_TYPE_STRING;
 }
 
-int BufrElementsTable::unpack_long(long*, size_t*)
+int BufrElementsTable::unpack_long(long* /*val*/, size_t* /*len*/)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int BufrElementsTable::unpack_double(double*, size_t*)
+int BufrElementsTable::unpack_double(double* /*val*/, size_t* /*len*/)
 {
     return GRIB_NOT_IMPLEMENTED;
 }

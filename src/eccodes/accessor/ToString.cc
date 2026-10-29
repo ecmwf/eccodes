@@ -86,7 +86,7 @@ int ToString::unpack_string(char* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int ToString::unpack_long(long* v, size_t*)
+int ToString::unpack_long(long* v, size_t* /*len*/)
 {
     char val[1024] = { 0 };
     size_t l = sizeof(val);
@@ -104,7 +104,7 @@ int ToString::unpack_long(long* v, size_t*)
     return err;
 }
 
-int ToString::unpack_double(double* v, size_t*)
+int ToString::unpack_double(double* v, size_t* /*len*/)
 {
     size_t l = 1;
     long val = 0;

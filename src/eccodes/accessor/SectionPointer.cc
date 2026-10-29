@@ -46,7 +46,7 @@ long SectionPointer::get_native_type()
     return GRIB_TYPE_BYTES;
 }
 
-int SectionPointer::unpack_string(char* v, size_t*)
+int SectionPointer::unpack_string(char* v, size_t* /*len*/)
 {
     //   unsigned char* p=NULL;
     //   char* s=v;

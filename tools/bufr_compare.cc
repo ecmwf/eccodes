@@ -217,7 +217,7 @@ int main(int argc, char* argv[])
     return grib_tool(argc, argv);
 }
 
-int grib_tool_before_getopt(grib_runtime_options*)
+int grib_tool_before_getopt(grib_runtime_options* /*options*/)
 {
     return 0;
 }
@@ -353,12 +353,12 @@ int grib_tool_init(grib_runtime_options* options)
     return 0;
 }
 
-int grib_tool_new_filename_action(grib_runtime_options*, const char*)
+int grib_tool_new_filename_action(grib_runtime_options* /*options*/, const char* /*file*/)
 {
     return 0;
 }
 
-int grib_tool_new_file_action(grib_runtime_options*, grib_tools_file* file)
+int grib_tool_new_file_action(grib_runtime_options* /*options*/, grib_tools_file* file)
 {
     exit_if_input_is_directory(tool_name, file->name);
     return 0;
@@ -1344,7 +1344,7 @@ static int compare_handles(grib_handle* handle1, grib_handle* handle2, grib_runt
     return err;
 }
 
-int grib_no_handle_action(grib_runtime_options*, int)
+int grib_no_handle_action(grib_runtime_options* /*options*/, int /*err*/)
 {
     fprintf(dump_file, "\t\t\"ERROR: unreadable message\"\n");
     return 0;

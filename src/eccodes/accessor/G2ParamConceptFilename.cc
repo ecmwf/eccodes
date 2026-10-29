@@ -13,7 +13,7 @@
 namespace eccodes::accessor
 {
 
-void G2ParamConceptFilename::init(const long, grib_arguments* arg)
+void G2ParamConceptFilename::init(const long /*len*/, grib_arguments* arg)
 {
     grib_handle* h = get_enclosing_handle();
 

@@ -307,14 +307,14 @@ long BufrDataArray::next_offset()
     return offset_;
 }
 
-int BufrDataArray::pack_long(const long*, size_t*)
+int BufrDataArray::pack_long(const long* /*val*/, size_t* /*len*/)
 {
     do_decode_ = 1;
 
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int BufrDataArray::pack_double(const double*, size_t*)
+int BufrDataArray::pack_double(const double* /*val*/, size_t* /*len*/)
 {
     do_decode_ = 1;
     return process_elements(PROCESS_ENCODE, 0, 0, 0);
@@ -928,9 +928,9 @@ double BufrDataArray::decode_numeric_value(grib_context* c, unsigned char* data,
     return dval;
 }
 
-int decode_element(grib_context* c, BufrDataArray* self, int,
-                   grib_buffer*, unsigned char* data, long* pos, int i, bufr_descriptor* descriptor, long,
-                   grib_darray* dval, grib_sarray*)
+int decode_element(grib_context* c, BufrDataArray* self, int /*subsetIndex*/,
+                   grib_buffer* /*b*/, unsigned char* data, long* pos, int i, bufr_descriptor* descriptor, long /*elementIndex*/,
+                   grib_darray* dval, grib_sarray* /*sval*/)
 {
     grib_darray* dar = 0;
     grib_sarray* sar = 0;
@@ -1016,8 +1016,8 @@ int decode_element(grib_context* c, BufrDataArray* self, int,
     return err;
 }
 
-int decode_replication(grib_context* c, BufrDataArray* self, int, grib_buffer*,
-                       unsigned char* data, long* pos, int i, long, grib_darray* dval, long* numberOfRepetitions)
+int decode_replication(grib_context* c, BufrDataArray* self, int /*subsetIndex*/, grib_buffer* /*buff*/,
+                       unsigned char* data, long* pos, int i, long /*elementIndex*/, grib_darray* dval, long* numberOfRepetitions)
 {
     int ret = 0;
     int* err;
@@ -1143,9 +1143,9 @@ int BufrDataArray::encode_overridden_reference_value(grib_context* c, grib_buffe
     return err;
 }
 
-int encode_new_element(grib_context* c, BufrDataArray* self, int,
-                       grib_buffer* buff, unsigned char*, long* pos, int i, bufr_descriptor* descriptor,
-                       long, grib_darray*, grib_sarray*)
+int encode_new_element(grib_context* c, BufrDataArray* self, int /*subsetIndex*/,
+                       grib_buffer* buff, unsigned char* /*data*/, long* pos, int i, bufr_descriptor* descriptor,
+                       long /*elementIndex*/, grib_darray* /*dval*/, grib_sarray* /*sval*/)
 {
     int ii;
     char* csval = 0;
@@ -1211,8 +1211,8 @@ int encode_new_element(grib_context* c, BufrDataArray* self, int,
     return err;
 }
 
-int encode_new_replication(grib_context* c, BufrDataArray* self, int,
-                           grib_buffer* buff, unsigned char* data, long* pos, int i, long, grib_darray*, long* numberOfRepetitions)
+int encode_new_replication(grib_context* c, BufrDataArray* self, int /*subsetIndex*/,
+                           grib_buffer* buff, unsigned char* data, long* pos, int i, long /*elementIndex*/, grib_darray* /*dval*/, long* numberOfRepetitions)
 {
     int err = 0;
     unsigned long repetitions = 1;
@@ -1275,8 +1275,8 @@ int encode_new_replication(grib_context* c, BufrDataArray* self, int,
 }
 
 int encode_element(grib_context* c, BufrDataArray* self, int subsetIndex,
-                   grib_buffer* buff, unsigned char*, long* pos, int i, bufr_descriptor* descriptor,
-                   long elementIndex, grib_darray*, grib_sarray*)
+                   grib_buffer* buff, unsigned char* /*data*/, long* pos, int i, bufr_descriptor* descriptor,
+                   long elementIndex, grib_darray* /*dval*/, grib_sarray* /*sval*/)
 {
     int idx, j;
     int err = 0;
@@ -3221,7 +3221,7 @@ int BufrDataArray::process_elements(int flag, long onlySubset, long startSubset,
     return err;
 }
 
-void BufrDataArray::dump(eccodes::Dumper*)
+void BufrDataArray::dump(eccodes::Dumper* /*dumper*/)
 {
     // grib_accessor_bufr_data_array_t *self =(BufrDataArray*)a;
     // int err=process_elements(a,PROCESS_DECODE);

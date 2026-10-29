@@ -70,7 +70,7 @@ int NonAlpha::unpack_string(char* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int NonAlpha::unpack_long(long* v, size_t*)
+int NonAlpha::unpack_long(long* v, size_t* /*len*/)
 {
     char val[1024] = { 0 };
     size_t l = sizeof(val);
@@ -96,7 +96,7 @@ int NonAlpha::unpack_long(long* v, size_t*)
     return GRIB_SUCCESS;
 }
 
-int NonAlpha::unpack_double(double* v, size_t*)
+int NonAlpha::unpack_double(double* v, size_t* /*len*/)
 {
     char val[1024] = { 0 };
     size_t l = sizeof(val);

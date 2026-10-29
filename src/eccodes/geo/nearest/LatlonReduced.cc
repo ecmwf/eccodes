@@ -39,7 +39,7 @@ int LatlonReduced::init(grib_handle* h, grib_arguments* args)
 int LatlonReduced::find(grib_handle* h,
                         double inlat, double inlon, unsigned long flags,
                         double* outlats, double* outlons, double* values,
-                        double* distances, int* indexes, size_t*)
+                        double* distances, int* indexes, size_t* /*len*/)
 {
     int err = 0;
     double lat1, lat2, lon1, lon2;

@@ -72,7 +72,7 @@ static int is_rotated(grib_handle* h, int* rotated)
 int Reduced::find(grib_handle* h,
                   double inlat, double inlon, unsigned long flags,
                   double* outlats, double* outlons, double* values,
-                  double* distances, int* indexes, size_t*)
+                  double* distances, int* indexes, size_t* /*len*/)
 {
     int err = 0;
 
