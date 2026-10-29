@@ -29,7 +29,6 @@ Checks: >
   -bugprone-suspicious-string-compare,
   -bugprone-switch-missing-default-case,
   -bugprone-unsafe-functions,
-  -clang-analyzer-core.BitwiseShift,
   -clang-analyzer-core.NonNullParamChecker,
   -clang-analyzer-core.NullDereference,
   -clang-analyzer-optin.performance.Padding,
