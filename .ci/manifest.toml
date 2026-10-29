@@ -55,6 +55,7 @@ compiler-inputs = ["cxx-compiler"]
 when = { options = ["eckit-geo"] }
 
 [matrix.build.defaults]
+eckit-geo-env = 1
 job-script = "./.ci/build.sh.j2"
 build-type = "RelWithDebInfo"
 runs-on = "arc-runner-very-large"
@@ -204,6 +205,7 @@ packages = ["eccodes"]
 triggers = ["upstream-change", "rebuild-request"]
 
 [matrix.fortran.defaults]
+eckit-geo-env = 1
 job-script = "./.ci/build.sh.j2"
 build-type = "RelWithDebInfo"
 runs-on = "arc-runner-very-large"
@@ -220,6 +222,7 @@ packages = ["eccodes-fortran"]
 triggers = ["upstream-change", "rebuild-request"]
 
 [matrix.build-hpc.defaults]
+eckit-geo-env = 1
 cxx-compiler = "g++-8"
 build-type = "RelWithDebInfo"
 runs-on = "hpc-submit"
@@ -280,6 +283,7 @@ container-credentials = true
 triggers = ["upstream-change", "rebuild-request"]
 
 [matrix.fortran-hpc.defaults]
+eckit-geo-env = 1
 cxx-compiler = "g++-8"
 fortran-compiler = "gfortran-8"
 build-type = "RelWithDebInfo"

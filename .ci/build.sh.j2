@@ -8,15 +8,7 @@
 # Fetch the test data first; a download failure otherwise surfaces as dozens of
 # unrelated test failures.
 ctest --test-dir "$build" --output-on-failure -L download_data -j 6 --repeat until-pass:5
-{% if options == "eckit-geo" %}
-failed=0
-for geo in 0 1; do
-  ECCODES_ECKIT_GEO=$geo ctest --test-dir "$build" --output-on-failure -LE download_data -j "$jobs" || failed=1
-done
-[ "$failed" -eq 0 ]
-{% else %}
-ctest --test-dir "$build" --output-on-failure -LE download_data -j "$jobs"
-{% endif %}
+ECCODES_ECKIT_GEO={{ eckit_geo_env }} ctest --test-dir "$build" --output-on-failure -LE download_data -j "$jobs"
 {% endblock %}
 {% block install %}
 {% if execution == "hpc-atos" %}
