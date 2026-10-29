@@ -232,6 +232,8 @@ modules = ["load prgenv/gnu", "unload gcc", "load gcc/old", "load cmake", "load 
 c-compiler-binary = "gcc"
 cxx-compiler-binary = "g++"
 time = "01:30:00"
+# Matches the 32 cores the container legs get; at 8, ctest was most of the HPC wall time.
+ntasks = 32
 job-script = "./.ci/build.sh.j2"
 
 [[matrix.build-hpc.include]]
@@ -290,6 +292,7 @@ c-compiler-binary = "gcc"
 cxx-compiler-binary = "g++"
 fortran-compiler-binary = "gfortran"
 time = "01:30:00"
+ntasks = 32
 job-script = "./.ci/build.sh.j2"
 
 [[matrix.fortran-hpc.include]]
