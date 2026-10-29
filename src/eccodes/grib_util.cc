@@ -178,7 +178,6 @@ int grib_get_header_length(FILE* f, size_t* result)
     if (n != 4)
         return GRIB_INVALID_MESSAGE;
     sec4len = UINT4(buf[i], buf[i + 1], buf[i + 2], buf[i + 3]);
-    i += 4;
 
     *result = sec0len + sec1len + sec2len + sec3len + sec4len;
 

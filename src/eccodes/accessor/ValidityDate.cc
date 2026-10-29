@@ -54,7 +54,7 @@ int ValidityDate::unpack_long(long* val, size_t* len)
         return ret;
     if ((ret = grib_get_long_internal(hand, time_, &time)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long(hand, step_, &step)) != GRIB_SUCCESS) {
+    if (grib_get_long(hand, step_, &step) != GRIB_SUCCESS) {
         if ((ret = grib_get_long_internal(hand, "endStep", &step)) != GRIB_SUCCESS) {
             return ret; /* See ECC-817 */
         }
