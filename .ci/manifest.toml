@@ -83,6 +83,7 @@ platform = "ubuntu-24.04"
 cxx-compiler = "clang++-18"
 c-compiler = "clang-18"
 options = "eckit-geo"
+eckit-geo-env = 0
 container = "eccr.ecmwf.int/public-ci-images/ubuntu24.04-clang18:latest"
 platform = "ubuntu-24.04"
 
@@ -122,6 +123,7 @@ runs-on = "arc-runner-very-large"
 cxx-compiler = "g++-8"
 c-compiler = "gcc-8"
 options = "eckit-geo"
+eckit-geo-env = 0
 container = "eccr.ecmwf.int/public-ci-images/rocky8-gcc8-gfortran8"
 platform = "rocky-8"
 
