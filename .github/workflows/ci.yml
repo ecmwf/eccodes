@@ -409,7 +409,7 @@ jobs:
   collect-result-hpc:
     name: collect HPC results
     if: always() && needs.hpc-gate.outputs.run == 'true'
-    needs: [hpc-gate, wait-build-hpc, wait-fortran-hpc, build-hpc, fortran-hpc]
+    needs: [ci-approval, hpc-gate, wait-build-hpc, wait-fortran-hpc, build-hpc, fortran-hpc]
     runs-on: ubuntu-slim
     permissions:
       statuses: write
