@@ -20,7 +20,7 @@ void Gen::init_accessor(const long len, grib_arguments* args)
     init(len, args);
 }
 
-void Gen::init(const long len, grib_arguments* param)
+void Gen::init(const long len, grib_arguments* /*param*/)
 {
     grib_action* act = (grib_action*)(creator_);
     if (flags_ & GRIB_ACCESSOR_FLAG_TRANSIENT) {
@@ -161,7 +161,7 @@ int Gen::clear()
     return GRIB_SUCCESS;
 }
 
-int Gen::unpack_long(long* v, size_t* len)
+int Gen::unpack_long(long* v, size_t* /*len*/)
 {
     is_overridden_[UNPACK_LONG] = 0;
     int type = GRIB_TYPE_UNDEFINED;
@@ -209,14 +209,14 @@ int Gen::unpack_long(long* v, size_t* len)
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int Gen::unpack_double(double* v, size_t* len)
+int Gen::unpack_double(double* v, size_t* /*len*/)
 {
-    return unpack_helper<double>(this, v, len);
+    return unpack_helper<double>(this, v);
 }
 
-int Gen::unpack_float(float* v, size_t* len)
+int Gen::unpack_float(float* v, size_t* /*len*/)
 {
-    return unpack_helper<float>(this, v, len);
+    return unpack_helper<float>(this, v);
 }
 
 int Gen::unpack_string(char* v, size_t* len)
@@ -410,7 +410,7 @@ int Gen::pack_string_array(const char** v, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int Gen::pack_string(const char* v, size_t* len)
+int Gen::pack_string(const char* v, size_t* /*len*/)
 {
     is_overridden_[PACK_STRING] = 0;
     if (is_overridden_[PACK_DOUBLE]) {
@@ -483,7 +483,7 @@ int Gen::notify_change(grib_accessor* observed)
     return creator_->notify_change(this, observed);
 }
 
-void Gen::update_size(size_t s)
+void Gen::update_size(size_t /*s*/)
 {
     grib_context_log(context_,
                      GRIB_LOG_FATAL,
@@ -497,7 +497,7 @@ grib_accessor* Gen::next_accessor()
     return next(this, 1);
 }
 
-grib_accessor* Gen::next(grib_accessor* a, int mod)
+grib_accessor* Gen::next(grib_accessor* a, int /*mod*/)
 {
     grib_accessor* next = NULL;
     if (a->next_) {
@@ -510,14 +510,14 @@ grib_accessor* Gen::next(grib_accessor* a, int mod)
     return next;
 }
 
-int Gen::compare(grib_accessor* b)
+int Gen::compare(grib_accessor* /*b*/)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
 
 /* Redefined in all padding */
 
-size_t Gen::preferred_size(int from_handle)
+size_t Gen::preferred_size(int /*from_handle*/)
 {
     return length_;
 }
@@ -561,21 +561,21 @@ int Gen::is_missing()
     return is_missing;
 }
 
-int Gen::unpack_double_element(size_t i, double* val)
+int Gen::unpack_double_element(size_t /*i*/, double* /*val*/)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int Gen::unpack_double_element_set(const size_t* index_array,
-                                   size_t len,
-                                   double* val_array)
+int Gen::unpack_double_element_set(const size_t* /*index_array*/,
+                                   size_t /*len*/,
+                                   double* /*val_array*/)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int Gen::unpack_double_subarray(double* val,
-                                size_t start,
-                                size_t len)
+int Gen::unpack_double_subarray(double* /*val*/,
+                                size_t /*start*/,
+                                size_t /*len*/)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
@@ -587,7 +587,7 @@ grib_accessor* Gen::clone(grib_section* s, int* err)
     return make_clone(s, err);
 }
 
-grib_accessor* Gen::make_clone(grib_section* s, int* err)
+grib_accessor* Gen::make_clone(grib_section* /*s*/, int* err)
 {
     *err = GRIB_NOT_IMPLEMENTED;
     return NULL;
@@ -608,7 +608,7 @@ int Gen::pack_missing()
 {
     throw std::runtime_error("Gen::pack_missing not implemented");
 }
-int Gen::pack_float(const float*, size_t* len)
+int Gen::pack_float(const float*, size_t* /*len*/)
 {
     throw std::runtime_error("Gen::pack_float not implemented");
 }

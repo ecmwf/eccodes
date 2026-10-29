@@ -88,7 +88,6 @@ int Mercator::init_mercator(grib_handle* h,
                             double DiInMetres, double DjInMetres,
                             double earthMinorAxisInMetres, double earthMajorAxisInMetres,
                             double latFirstInRadians, double lonFirstInRadians,
-                            double latLastInRadians, double lonLastInRadians,
                             double LaDInRadians, double orientationInRadians)
 {
     int i, j, err = 0;
@@ -171,8 +170,7 @@ int Mercator::init(grib_handle* h, grib_arguments* args)
     long ni, nj, iScansNegatively, jScansPositively, jPointsAreConsecutive, alternativeRowScanning;
     double latFirstInDegrees, lonFirstInDegrees, LaDInDegrees;
     double latLastInDegrees, lonLastInDegrees, orientationInDegrees, DiInMetres, DjInMetres, radius = 0;
-    double latFirstInRadians, lonFirstInRadians, latLastInRadians, lonLastInRadians,
-        LaDInRadians, orientationInRadians;
+    double latFirstInRadians, lonFirstInRadians, LaDInRadians, orientationInRadians;
     double earthMajorAxisInMetres = 0, earthMinorAxisInMetres = 0;
 
     const char* sRadius = args->get_name(h, carg_++);
@@ -237,15 +235,12 @@ int Mercator::init(grib_handle* h, grib_arguments* args)
 
     latFirstInRadians = latFirstInDegrees * DEG2RAD;
     lonFirstInRadians = lonFirstInDegrees * DEG2RAD;
-    latLastInRadians = latLastInDegrees * DEG2RAD;
-    lonLastInRadians = lonLastInDegrees * DEG2RAD;
     LaDInRadians = LaDInDegrees * DEG2RAD;
     orientationInRadians = orientationInDegrees * DEG2RAD;
 
     err = init_mercator(h, nv_, ni, nj,
                         DiInMetres, DjInMetres, earthMinorAxisInMetres, earthMajorAxisInMetres,
                         latFirstInRadians, lonFirstInRadians,
-                        latLastInRadians, lonLastInRadians,
                         LaDInRadians, orientationInRadians);
     if (err) return err;
 

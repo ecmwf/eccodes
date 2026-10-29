@@ -311,16 +311,6 @@ static void gaussian_reduced_row(
     }
 }
 
-/* --------------------------------------------------------------------------------------------------- */
-void grib_get_reduced_row_wrapper(grib_handle* h, long pl, double lon_first, double lon_last, long* npoints, long* ilon_first, long* ilon_last)
-{
-    grib_get_reduced_row(pl, lon_first, lon_last, npoints, ilon_first, ilon_last);
-
-    /* Legacy
-     * grib_get_reduced_row1(pl, lon_first, lon_last, npoints, ilon_first, ilon_last);
-     */
-}
-
 /* This was the legacy way of counting the points within a subarea of a Gaussian grid.
    In the days of Prodgen/libemos */
 void grib_get_reduced_row_legacy(long pl, double lon_first, double lon_last, long* npoints, long* ilon_first, long* ilon_last)

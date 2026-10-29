@@ -3042,7 +3042,7 @@ grib_yyreduce:
 
   case 118: /* simple: EXPORT IDENT '(' argument_list ')'  */
 #line 640 "griby.y"
-       { (grib_yyval.act) = grib_action_create_put(grib_parser_context,(grib_yyvsp[-3].str),(grib_yyvsp[-1].explist));free((grib_yyvsp[-3].str));}
+       { (grib_yyval.act) = grib_action_create_put(grib_parser_context);free((grib_yyvsp[-3].str));}
 #line 3047 "y.tab.c"
     break;
 
@@ -3372,13 +3372,13 @@ grib_yyreduce:
 
   case 175: /* while_block: WHILE '(' expression ')' '{' instructions '}'  */
 #line 732 "griby.y"
-                                                           { (grib_yyval.act) = grib_action_create_while(grib_parser_context,(grib_yyvsp[-4].exp),(grib_yyvsp[-1].act));  }
+                                                           { (grib_yyval.act) = grib_action_create_while(grib_parser_context);  }
 #line 3377 "y.tab.c"
     break;
 
   case 176: /* trigger_block: TRIGGER '(' argument_list ')' '{' instructions '}'  */
 #line 735 "griby.y"
-                                                                  { (grib_yyval.act) = grib_action_create_trigger(grib_parser_context,(grib_yyvsp[-4].explist),(grib_yyvsp[-1].act));  }
+                                                                  { (grib_yyval.act) = grib_action_create_trigger(grib_parser_context);  }
 #line 3383 "y.tab.c"
     break;
 
@@ -3636,13 +3636,13 @@ grib_yyreduce:
 
   case 223: /* atom: INTEGER  */
 #line 819 "griby.y"
-                { (grib_yyval.exp) = new_long_expression(grib_parser_context,(grib_yyvsp[0].lval));  }
+                { (grib_yyval.exp) = new_long_expression((grib_yyvsp[0].lval));  }
 #line 3641 "y.tab.c"
     break;
 
   case 224: /* atom: FLOAT  */
 #line 820 "griby.y"
-              { (grib_yyval.exp) = new_double_expression(grib_parser_context,(grib_yyvsp[0].dval));  /* TODO: change to new_float_expression*/}
+              { (grib_yyval.exp) = new_double_expression((grib_yyvsp[0].dval));  /* TODO: change to new_float_expression*/}
 #line 3647 "y.tab.c"
     break;
 
@@ -3654,7 +3654,7 @@ grib_yyreduce:
 
   case 226: /* atom: DUMMY  */
 #line 823 "griby.y"
-                    { (grib_yyval.exp) = new_true_expression(grib_parser_context); }
+                    { (grib_yyval.exp) = new_true_expression(); }
 #line 3659 "y.tab.c"
     break;
 
@@ -3666,7 +3666,7 @@ grib_yyreduce:
 
   case 228: /* atom: '-' atom  */
 #line 825 "griby.y"
-                 { (grib_yyval.exp) = new_unop_expression(grib_parser_context,&grib_op_neg,&grib_op_neg_d,(grib_yyvsp[0].exp)); }
+                 { (grib_yyval.exp) = new_unop_expression(&grib_op_neg,&grib_op_neg_d,(grib_yyvsp[0].exp)); }
 #line 3671 "y.tab.c"
     break;
 
@@ -3684,37 +3684,37 @@ grib_yyreduce:
 
   case 231: /* power: atom '^' power  */
 #line 831 "griby.y"
-                          { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_pow,NULL,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
+                          { (grib_yyval.exp) = new_binop_expression(&grib_op_pow,NULL,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
 #line 3689 "y.tab.c"
     break;
 
   case 233: /* factor: factor '*' power  */
 #line 835 "griby.y"
-                            { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_mul,&grib_op_mul_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
+                            { (grib_yyval.exp) = new_binop_expression(&grib_op_mul,&grib_op_mul_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
 #line 3695 "y.tab.c"
     break;
 
   case 234: /* factor: factor '/' power  */
 #line 836 "griby.y"
-                                     { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_div,&grib_op_div_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
+                                     { (grib_yyval.exp) = new_binop_expression(&grib_op_div,&grib_op_div_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
 #line 3701 "y.tab.c"
     break;
 
   case 235: /* factor: factor '%' power  */
 #line 837 "griby.y"
-                                     { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_modulo,NULL,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
+                                     { (grib_yyval.exp) = new_binop_expression(&grib_op_modulo,NULL,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
 #line 3707 "y.tab.c"
     break;
 
   case 236: /* factor: factor BIT power  */
 #line 838 "griby.y"
-                                  { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_bit,NULL,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
+                                  { (grib_yyval.exp) = new_binop_expression(&grib_op_bit,NULL,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
 #line 3713 "y.tab.c"
     break;
 
   case 237: /* factor: factor BITOFF power  */
 #line 839 "griby.y"
-                                  { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_bitoff,NULL,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
+                                  { (grib_yyval.exp) = new_binop_expression(&grib_op_bitoff,NULL,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
 #line 3719 "y.tab.c"
     break;
 
@@ -3756,79 +3756,79 @@ grib_yyreduce:
 
   case 245: /* term: term '+' factor  */
 #line 849 "griby.y"
-                         { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_add,&grib_op_add_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
+                         { (grib_yyval.exp) = new_binop_expression(&grib_op_add,&grib_op_add_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
 #line 3761 "y.tab.c"
     break;
 
   case 246: /* term: term '-' factor  */
 #line 850 "griby.y"
-                                    { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_sub,&grib_op_sub_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
+                                    { (grib_yyval.exp) = new_binop_expression(&grib_op_sub,&grib_op_sub_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
 #line 3767 "y.tab.c"
     break;
 
   case 248: /* condition: condition GT term  */
 #line 854 "griby.y"
-                                { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_gt,&grib_op_gt_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
+                                { (grib_yyval.exp) = new_binop_expression(&grib_op_gt,&grib_op_gt_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
 #line 3773 "y.tab.c"
     break;
 
   case 249: /* condition: condition EQ term  */
 #line 856 "griby.y"
-                                     { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_eq,&grib_op_eq_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
+                                     { (grib_yyval.exp) = new_binop_expression(&grib_op_eq,&grib_op_eq_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
 #line 3779 "y.tab.c"
     break;
 
   case 250: /* condition: condition LT term  */
 #line 857 "griby.y"
-                                     { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_lt,&grib_op_lt_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
+                                     { (grib_yyval.exp) = new_binop_expression(&grib_op_lt,&grib_op_lt_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
 #line 3785 "y.tab.c"
     break;
 
   case 251: /* condition: condition GE term  */
 #line 858 "griby.y"
-                                     { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_ge,&grib_op_ge_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
+                                     { (grib_yyval.exp) = new_binop_expression(&grib_op_ge,&grib_op_ge_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
 #line 3791 "y.tab.c"
     break;
 
   case 252: /* condition: condition LE term  */
 #line 859 "griby.y"
-                                     { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_le,&grib_op_le_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
+                                     { (grib_yyval.exp) = new_binop_expression(&grib_op_le,&grib_op_le_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
 #line 3797 "y.tab.c"
     break;
 
   case 253: /* condition: condition NE term  */
 #line 860 "griby.y"
-                                     { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_ne,&grib_op_ne_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
+                                     { (grib_yyval.exp) = new_binop_expression(&grib_op_ne,&grib_op_ne_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
 #line 3803 "y.tab.c"
     break;
 
   case 254: /* condition: string_or_ident IS string_or_ident  */
 #line 861 "griby.y"
-                                                  { (grib_yyval.exp) = new_string_compare_expression(grib_parser_context,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp),1); }
+                                                  { (grib_yyval.exp) = new_string_compare_expression((grib_yyvsp[-2].exp),(grib_yyvsp[0].exp),1); }
 #line 3809 "y.tab.c"
     break;
 
   case 255: /* condition: string_or_ident ISNOT string_or_ident  */
 #line 862 "griby.y"
-                                                     { (grib_yyval.exp) = new_string_compare_expression(grib_parser_context,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp),0); }
+                                                     { (grib_yyval.exp) = new_string_compare_expression((grib_yyvsp[-2].exp),(grib_yyvsp[0].exp),0); }
 #line 3815 "y.tab.c"
     break;
 
   case 256: /* condition: NOT condition  */
 #line 867 "griby.y"
-                                      { (grib_yyval.exp) = new_unop_expression(grib_parser_context,&grib_op_not,NULL,(grib_yyvsp[0].exp)); }
+                                      { (grib_yyval.exp) = new_unop_expression(&grib_op_not,NULL,(grib_yyvsp[0].exp)); }
 #line 3821 "y.tab.c"
     break;
 
   case 258: /* conjunction: conjunction AND condition  */
 #line 871 "griby.y"
-                                       { (grib_yyval.exp) = new_logical_and_expression(grib_parser_context,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
+                                       { (grib_yyval.exp) = new_logical_and_expression((grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
 #line 3827 "y.tab.c"
     break;
 
   case 260: /* disjunction: disjunction OR conjunction  */
 #line 875 "griby.y"
-                                        { (grib_yyval.exp) = new_logical_or_expression(grib_parser_context,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp));}
+                                        { (grib_yyval.exp) = new_logical_or_expression((grib_yyvsp[-2].exp),(grib_yyvsp[0].exp));}
 #line 3833 "y.tab.c"
     break;
 

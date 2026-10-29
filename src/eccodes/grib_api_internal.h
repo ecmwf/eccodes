@@ -761,7 +761,7 @@ struct grib_context
 // void grib_expression_free(grib_context*, grib_expression*);
 
 grib_arguments* grib_arguments_new(grib_context*, grib_expression*, grib_arguments*);
-void grib_arguments_free(grib_context*, grib_arguments*);
+void grib_arguments_free(grib_arguments*);
 
 const char* grib_argument_next(grib_arguments**);
 

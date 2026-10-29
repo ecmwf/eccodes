@@ -34,7 +34,7 @@ private:
     const char* fcmonth_ = nullptr;
     const char* check_ = nullptr;
 
-    int unpack_long_edition1(long* val, size_t* len);
+    int unpack_long_edition1(long* val);
 
 public:
     static constexpr AccessorType accessor_type_{ "g1forecastmonth" };

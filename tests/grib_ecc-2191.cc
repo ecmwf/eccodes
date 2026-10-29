@@ -287,7 +287,7 @@ static int test_scale_values_by_with_complex_packing(void)
 }
 
 
-int main(int argc, char** argv)
+int main(int /*argc*/, char** /*argv*/)
 {
     int ret = 0;
     int failures = 0;

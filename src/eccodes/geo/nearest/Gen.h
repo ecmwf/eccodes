@@ -43,18 +43,4 @@ private:
     const char* radius_ = nullptr;
 };
 
-int grib_nearest_find_generic(
-    Nearest* nearest, grib_handle* h,
-    double inlat, double inlon, unsigned long flags,
-
-    const char* values_keyname,
-    double** out_lats,
-    int* out_lats_count,
-    double** out_lons,
-    int* out_lons_count,
-    double** out_distances,
-
-    double* outlats, double* outlons,
-    double* values, double* distances, int* indexes, size_t* len);
-
 }  // namespace eccodes::geo_nearest

@@ -24,7 +24,7 @@ int opt_dump = 0;  /* If 1 then dump handle to /dev/null */
 int opt_clone = 0; /* If 1 then clone source handle */
 int opt_write = 0; /* If 1 write handle to file */
 
-static int encode_values(grib_handle* h, char* output_file)
+static int encode_values(grib_handle* h)
 {
     double* values = NULL;
     long numberOfDataPoints = 0;
@@ -159,10 +159,10 @@ void do_encode(void* ptr)
         }
         if (opt_write) {
             snprintf(output_file, 50, "output/output_file_%zu-%zu.grib", data->number, i);
-            encode_values(h, output_file);
+            encode_values(h);
         }
         else {
-            encode_values(h, NULL);
+            encode_values(h);
         }
         if (opt_clone)
             grib_handle_delete(h);

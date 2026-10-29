@@ -251,7 +251,7 @@ int Variable::unpack_string(char* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int Variable::pack_string(const char* val, size_t* len)
+int Variable::pack_string(const char* val, size_t* /*len*/)
 {
     const grib_context* c = context_;
 

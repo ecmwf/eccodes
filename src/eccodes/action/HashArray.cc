@@ -72,7 +72,7 @@ HashArray::~HashArray()
     grib_context_free_persistent(context_, basename_);
 }
 
-void HashArray::dump(FILE* f, int lvl)
+void HashArray::dump(FILE* /*f*/, int /*lvl*/)
 {
     // for (int i = 0; i < lvl; i++)
     //     grib_context_print(act->context, f, "     ");

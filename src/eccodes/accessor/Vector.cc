@@ -26,7 +26,7 @@ void Vector::init(const long l, grib_arguments* c)
     length_ = 0;
 }
 
-int Vector::unpack_double(double* val, size_t* len)
+int Vector::unpack_double(double* val, size_t* /*len*/)
 {
     int err = 0;
     size_t size = 0;

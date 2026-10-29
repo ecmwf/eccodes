@@ -29,7 +29,6 @@ public:
 private:
     int init_sphere(const grib_handle*,
                     size_t, long, long,
-                    double,
                     double, double, double,
                     double, double,
                     double, double, double,
@@ -37,7 +36,6 @@ private:
 
     int init_oblate(const grib_handle*,
                     size_t, long, long,
-                    double,
                     double, double,
                     double, double,
                     double, double,

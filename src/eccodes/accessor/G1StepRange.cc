@@ -329,7 +329,7 @@ static int grib_g1_step_apply_units(
     return GRIB_WRONG_STEP;
 }
 
-int G1StepRange::pack_string(const char* val, size_t* len)
+int G1StepRange::pack_string(const char* val, size_t* /*len*/)
 {
     grib_handle* h = get_enclosing_handle();
     long timeRangeIndicator = 0, P1 = 0, P2 = 0;
@@ -518,7 +518,7 @@ size_t G1StepRange::string_length()
     return 255;
 }
 
-int G1StepRange::pack_long(const long* val, size_t* len)
+int G1StepRange::pack_long(const long* val, size_t* /*len*/)
 {
     char buff[256] = { 0 };
     size_t bufflen = 100;
@@ -593,7 +593,7 @@ int G1StepRange::pack_long(const long* val, size_t* len)
     return GRIB_INTERNAL_ERROR;
 }
 
-int G1StepRange::unpack_long(long* val, size_t* len)
+int G1StepRange::unpack_long(long* val, size_t* /*len*/)
 {
     char buff[100] = { 0 };
     size_t bufflen = 100;

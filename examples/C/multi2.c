@@ -52,7 +52,7 @@ static void read_data(FILE* fp, int num_msgs)
     }
 }
 
-int main(int argc, char** argv)
+int main(void)
 {
     int i;
     FILE* fp = fopen(file_path, "rb");

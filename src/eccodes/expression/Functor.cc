@@ -293,7 +293,7 @@ int Functor::evaluate_long(grib_handle* h, long* lres) const
     return GRIB_NOT_IMPLEMENTED;
 }
 
-void Functor::print(grib_context* c, grib_handle* f, FILE* out) const
+void Functor::print(grib_context* /*c*/, grib_handle* /*f*/, FILE* out) const
 {
     fprintf(out, "%s(", name_);
     // grib_expression_print(c,args_,f);
@@ -303,7 +303,7 @@ void Functor::print(grib_context* c, grib_handle* f, FILE* out) const
 void Functor::destroy(grib_context* c)
 {
     grib_context_free_persistent(c, name_);
-    grib_arguments_free(c, args_);
+    grib_arguments_free(args_);
 }
 
 void Functor::add_dependency(grib_accessor* observer)
@@ -318,7 +318,7 @@ Functor::Functor(grib_context* c, const char* name, grib_arguments* args)
     args_ = args;
 }
 
-int Functor::native_type(grib_handle* h) const
+int Functor::native_type(grib_handle* /*h*/) const
 {
     return GRIB_TYPE_LONG;
 }

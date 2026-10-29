@@ -11,7 +11,7 @@
 #include "grib_api_internal.h"
 #include "Trigger.h"
 
-grib_action* grib_action_create_trigger(grib_context* context, grib_arguments* args, grib_action* block)
+grib_action* grib_action_create_trigger(grib_context* context)
 {
     grib_context_log(context, GRIB_LOG_ERROR, "The 'trigger' statement is deprecated");
     return NULL;

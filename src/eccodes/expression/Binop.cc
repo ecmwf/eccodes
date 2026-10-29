@@ -134,8 +134,7 @@ void Binop::add_dependency(grib_accessor* observer)
     right_->add_dependency(observer);
 }
 
-Binop::Binop(grib_context* c,
-             BinopLongProc long_func,
+Binop::Binop(BinopLongProc long_func,
              BinopDoubleProc double_func,
              Expression* left, Expression* right)
 {
@@ -158,9 +157,9 @@ int Binop::native_type(grib_handle* h) const
 }  // namespace eccodes::expression
 
 
-grib_expression* new_binop_expression(grib_context* c, grib_binop_long_proc long_func, grib_binop_double_proc double_func, grib_expression* left, grib_expression* right)
+grib_expression* new_binop_expression(grib_binop_long_proc long_func, grib_binop_double_proc double_func, grib_expression* left, grib_expression* right)
 {
-    return new eccodes::expression::Binop(c, long_func, double_func, left, right);
+    return new eccodes::expression::Binop(long_func, double_func, left, right);
 }
 
 // grib_expression* new_binop_expression(grib_context* c,

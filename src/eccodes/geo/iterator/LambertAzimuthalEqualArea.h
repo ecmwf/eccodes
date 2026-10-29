@@ -39,7 +39,7 @@ private:
                     double, double, double, double,
                     double, double,
                     double, double,
-                    long, long, long);
+                    long, long);
 };
 
 }  // namespace eccodes::geo_iterator

@@ -86,7 +86,7 @@ int DataJpeg2000Packing::value_count(long* n_vals)
 #define EXTRA_BUFFER_SIZE 10240
 
 #if HAVE_JPEG
-int DataJpeg2000Packing::unpack_float(float* val, size_t* len)
+int DataJpeg2000Packing::unpack_float(float* /*val*/, size_t* /*len*/)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
@@ -430,18 +430,18 @@ static void print_error_feature_not_enabled(grib_context* c)
     grib_context_log(c, GRIB_LOG_ERROR,
                      "JPEG support not enabled. Please rebuild with -DENABLE_JPG=ON");
 }
-int DataJpeg2000Packing::unpack_float(float* val, size_t* len)
+int DataJpeg2000Packing::unpack_float(float* /*val*/, size_t* /*len*/)
 {
     print_error_feature_not_enabled(context_);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
-int DataJpeg2000Packing::unpack_double(double* val, size_t* len)
+int DataJpeg2000Packing::unpack_double(double* /*val*/, size_t* /*len*/)
 {
     print_error_feature_not_enabled(context_);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
 
-int DataJpeg2000Packing::pack_double(const double* val, size_t* len)
+int DataJpeg2000Packing::pack_double(const double* /*val*/, size_t* /*len*/)
 {
     print_error_feature_not_enabled(context_);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;

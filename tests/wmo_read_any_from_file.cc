@@ -26,8 +26,7 @@ int main(int argc, char** argv)
     in = fopen(argv[1], "rb");
     if (!in) return 1;
 
-    grib_context* c = grib_context_get_default();
-    err = grib_read_any_headers_only_from_file(c, in, buffer, &len);
+    err = grib_read_any_headers_only_from_file(in, buffer, &len);
     printf("ANY (headers only): err=%s, len=%zu\n", grib_get_error_message(err), len);
 
     rewind(in);

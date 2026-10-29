@@ -13,7 +13,7 @@
 #undef NDEBUG
 #include <assert.h>
 
-int main(int argc, char* argv[])
+int main(int argc, char* /*argv*/[])
 {
     ECCODES_ASSERT(argc == 1);
     grib_handle* h = grib_handle_new_from_samples(0, "GRIB2");

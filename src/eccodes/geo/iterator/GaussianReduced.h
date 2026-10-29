@@ -34,13 +34,11 @@ private:
     long disableUnrotate_ = 0;
 
     int iterate_reduced_gaussian_subarea_legacy(grib_handle*,
-                                                double, double,
-                                                double, double,
+                                                double, double, double,
                                                 double*, long*, size_t);
 
     int iterate_reduced_gaussian_subarea(grib_handle*,
-                                         double, double,
-                                         double, double,
+                                         double, double, double,
                                          double*, long*, size_t, size_t);
 };
 

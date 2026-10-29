@@ -362,7 +362,7 @@ void Debug::dump_string_array(grib_accessor* a, const char* comment)
     grib_context_free(c, values);
 }
 
-void Debug::dump_bytes(grib_accessor* a, const char* comment)
+void Debug::dump_bytes(grib_accessor* a, const char* /*comment*/)
 {
     int i, k, err = 0;
     size_t more = 0;

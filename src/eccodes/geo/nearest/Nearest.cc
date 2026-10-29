@@ -61,7 +61,7 @@ static int compare_points(const void* a, const void* b)
 namespace eccodes::geo_nearest
 {
 
-int Nearest::init(grib_handle* h, grib_arguments* args)
+int Nearest::init(grib_handle* /*h*/, grib_arguments* /*args*/)
 {
     // h_ = h;
     return GRIB_SUCCESS;
@@ -75,7 +75,7 @@ int Nearest::destroy()
 
 int Nearest::grib_nearest_find_generic(
     grib_handle* h,
-    double inlat, double inlon, unsigned long flags,
+    double inlat, double inlon,
 
     const char* values_keyname,
     double** out_lats,
@@ -85,7 +85,7 @@ int Nearest::grib_nearest_find_generic(
     double** out_distances,
 
     double* outlats, double* outlons,
-    double* values, double* distances, int* indexes, size_t* len)
+    double* values, double* distances, int* indexes)
 {
     int ret = 0;
     size_t i = 0, nvalues = 0, nneighbours = 0;

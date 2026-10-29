@@ -52,7 +52,7 @@ static void* process_bufr(void* arg)
     pthread_exit(NULL);
 }
 
-int main(int argc, char** argv)
+int main(void)
 {
     pthread_t threads[NUM_THREADS];
     codes_handle* handles[NUM_THREADS];

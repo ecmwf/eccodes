@@ -33,8 +33,8 @@
       "description": "The trailing -Wno-* flags are the warnings not yet fixed; each fix drops its flag",
       "inherits": "ci",
       "cacheVariables": {
-        "CMAKE_C_FLAGS": "-Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wformat=2 -Wnull-dereference -Wno-unused-parameter -Wno-conversion -Wno-sign-conversion -Wno-sign-compare -Wno-missing-field-initializers -Wno-shadow -Wno-format-nonliteral -Wno-missing-braces",
-        "CMAKE_CXX_FLAGS": "-Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wformat=2 -Wnull-dereference -Wnon-virtual-dtor -Woverloaded-virtual -Wno-unused-parameter -Wno-conversion -Wno-sign-conversion -Wno-sign-compare -Wno-missing-field-initializers -Wno-shadow -Wno-format-nonliteral -Wno-missing-braces -D_GLIBCXX_ASSERTIONS",
+        "CMAKE_C_FLAGS": "-Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wformat=2 -Wnull-dereference -Wno-conversion -Wno-sign-conversion -Wno-sign-compare -Wno-missing-field-initializers -Wno-shadow -Wno-format-nonliteral -Wno-missing-braces",
+        "CMAKE_CXX_FLAGS": "-Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wformat=2 -Wnull-dereference -Wnon-virtual-dtor -Woverloaded-virtual -Wno-conversion -Wno-sign-conversion -Wno-sign-compare -Wno-missing-field-initializers -Wno-shadow -Wno-format-nonliteral -Wno-missing-braces -D_GLIBCXX_ASSERTIONS",
         "CMAKE_COMPILE_WARNING_AS_ERROR": "ON"
       }
     },
