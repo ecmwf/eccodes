@@ -78,7 +78,7 @@ jobs:
 
   hpc-gate:
     needs: ci-approval
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     permissions:
       statuses: write
       pull-requests: read
