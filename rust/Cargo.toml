@@ -3,7 +3,7 @@ resolver = "2"
 members = ["crates/eccodes-sys", "crates/eccodes", "examples/eccodes-example"]
 
 [workspace.package]
-version      = "2.50.0"
+version      = "2.50.1"
 edition      = "2024"
 license      = "Apache-2.0"
 repository   = "https://github.com/ecmwf/eccodes"
