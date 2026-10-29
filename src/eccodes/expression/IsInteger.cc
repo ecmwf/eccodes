@@ -34,7 +34,7 @@ int IsInteger::evaluate_long(grib_handle* h, long* result) const
     if (length_ > 0)
         start[length_] = 0;
 
-    strtol(start, &p, 10);
+    (void)strtol(start, &p, 10);
 
     if (*p != 0)
         *result = 0;

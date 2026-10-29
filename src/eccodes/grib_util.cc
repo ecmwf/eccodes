@@ -965,7 +965,7 @@ static int write_out_error_data_file(const double* data_values, size_t data_valu
         lcount++;
     }
     fprintf(ferror, "%g }", data_values[data_values_count - 1]);
-    fclose(ferror);
+    if (fclose(ferror) != 0) return GRIB_IO_PROBLEM;
     return GRIB_SUCCESS;
 }
 
