@@ -237,6 +237,16 @@
           true = (element(lengthOfTimeRange,0) == 7) ;
           true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
           true = (element(typeOfStatisticalProcessing,0) == 6) ; }
+# accum - 168 hours
+'7dac' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 168) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 1) ;
+          true = (element(typeOfStatisticalProcessing,0) == 1) ; }
+# accum - 7 days
+'7dac' = {true = is_one_of(numberOfTimeRanges,1,2) ;
+          true = (element(lengthOfTimeRange,0) == 7) ;
+          true = (element(indicatorOfUnitForTimeRange,0) == 2) ;
+          true = (element(typeOfStatisticalProcessing,0) == 1) ; }
 
 ############################################
 ## Daily STATTYPES with 1 or 2 time loops ##
