@@ -119,7 +119,7 @@ int G1MessageLength::pack_long(const long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int G1MessageLength::unpack_long(long* val, size_t*)
+int G1MessageLength::unpack_long(long* val, size_t* /*len*/)
 {
     int ret = GRIB_SUCCESS;
     long total_length, sec4_length;

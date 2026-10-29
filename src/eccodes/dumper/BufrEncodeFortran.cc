@@ -292,7 +292,7 @@ static int is_hidden(grib_accessor* a)
     return ((a->flags_ & GRIB_ACCESSOR_FLAG_HIDDEN) != 0);
 }
 
-void BufrEncodeFortran::dump_long(grib_accessor* a, const char*)
+void BufrEncodeFortran::dump_long(grib_accessor* a, const char* /*comment*/)
 {
     long value = 0;
     size_t size = 0, size2 = 0;
@@ -508,11 +508,11 @@ void BufrEncodeFortran::dump_long_attribute(grib_accessor* a, const char* prefix
     (void)err; /* TODO */
 }
 
-void BufrEncodeFortran::dump_bits(grib_accessor*, const char*)
+void BufrEncodeFortran::dump_bits(grib_accessor* /*a*/, const char* /*comment*/)
 {
 }
 
-void BufrEncodeFortran::dump_double(grib_accessor* a, const char*)
+void BufrEncodeFortran::dump_double(grib_accessor* a, const char* /*comment*/)
 {
     double value = 0;
     size_t size = 1;
@@ -623,7 +623,7 @@ void BufrEncodeFortran::dump_string_array(grib_accessor* a, const char* comment)
     (void)err; /* TODO */
 }
 
-void BufrEncodeFortran::dump_string(grib_accessor* a, const char*)
+void BufrEncodeFortran::dump_string(grib_accessor* a, const char* /*comment*/)
 {
     char* value = NULL;
     char* p = NULL;
@@ -694,11 +694,11 @@ void BufrEncodeFortran::dump_string(grib_accessor* a, const char*)
     (void)err; /* TODO */
 }
 
-void BufrEncodeFortran::dump_bytes(grib_accessor*, const char*)
+void BufrEncodeFortran::dump_bytes(grib_accessor* /*a*/, const char* /*comment*/)
 {
 }
 
-void BufrEncodeFortran::dump_label(grib_accessor*, const char*)
+void BufrEncodeFortran::dump_label(grib_accessor* /*a*/, const char* /*comment*/)
 {
 }
 
@@ -846,7 +846,7 @@ void BufrEncodeFortran::header(const grib_handle* h) const
     fprintf(out_, "  endif\n");
 }
 
-void BufrEncodeFortran::footer(const grib_handle*) const
+void BufrEncodeFortran::footer(const grib_handle* /*h*/) const
 {
     fprintf(out_, "\n  ! Encode the keys back in the data section\n");
     fprintf(out_, "  call codes_set(ibufr,'pack',1)\n\n");

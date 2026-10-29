@@ -230,7 +230,7 @@ static void Test5()
     }
 }
 
-int main(int, char*[])
+int main(int /*argc*/, char* /*argv*/[])
 {
     Test0();
     Test1();

@@ -42,7 +42,7 @@ long BufrExtractSubsets::get_native_type()
     return GRIB_TYPE_LONG;
 }
 
-int BufrExtractSubsets::pack_long(const long*, size_t*)
+int BufrExtractSubsets::pack_long(const long* /*val*/, size_t* /*len*/)
 {
     size_t l = 1;
     long v[1];

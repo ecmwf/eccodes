@@ -52,7 +52,7 @@ static void rename_accessor(grib_accessor* a, char* name)
     /* grib_context_free(a->context,the_old); */
 }
 
-int Rename::create_accessor(grib_section* p, grib_loader*)
+int Rename::create_accessor(grib_section* p, grib_loader* /*h*/)
 {
     grib_accessor* ga = grib_find_accessor(p->h, the_old_);
 

@@ -126,7 +126,7 @@ void GribEncodeC::dump_bits(grib_accessor* a, const char* comment)
     fprintf(out_, "\n");
 }
 
-void GribEncodeC::dump_double(grib_accessor* a, const char*)
+void GribEncodeC::dump_double(grib_accessor* a, const char* /*comment*/)
 {
     if (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY)
         return;
@@ -166,7 +166,7 @@ void GribEncodeC::dump_string(grib_accessor* a, const char* comment)
         fprintf(out_, " /*  Error accessing %s (%s) */", a->name_, grib_get_error_message(err));
 }
 
-void GribEncodeC::dump_bytes(grib_accessor* a, const char*)
+void GribEncodeC::dump_bytes(grib_accessor* a, const char* /*comment*/)
 {
     int err = 0;
     size_t size = a->length_;
@@ -288,12 +288,12 @@ void GribEncodeC::dump_values(grib_accessor* a)
     grib_context_free(context_, buf);
 }
 
-void GribEncodeC::dump_label(grib_accessor* a, const char*)
+void GribEncodeC::dump_label(grib_accessor* a, const char* /*comment*/)
 {
     fprintf(out_, "\n    /* %s */\n\n", a->name_);
 }
 
-void GribEncodeC::dump_section(grib_accessor*, grib_block_of_accessors* block)
+void GribEncodeC::dump_section(grib_accessor* /*a*/, grib_block_of_accessors* block)
 {
     grib_dump_accessors_block(this, block);
 }
@@ -340,7 +340,7 @@ void GribEncodeC::header(const grib_handle* h) const
             (long)edition);
 }
 
-void GribEncodeC::footer(const grib_handle*) const
+void GribEncodeC::footer(const grib_handle* /*h*/) const
 {
     fprintf(out_,
             "/* Save the message */\n"

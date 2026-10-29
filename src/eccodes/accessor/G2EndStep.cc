@@ -370,7 +370,7 @@ int G2EndStep::unpack_multiple_time_ranges_double_(double* val)
 // For the old implementation of unpack_long, see
 //  src/deprecated/grib_accessor_g2end_step.unpack_long.cc
 //
-int G2EndStep::unpack_long(long* val, size_t*)
+int G2EndStep::unpack_long(long* val, size_t* /*len*/)
 {
     grib_handle* h = get_enclosing_handle();
     int ret = 0;
@@ -412,7 +412,7 @@ int G2EndStep::unpack_long(long* val, size_t*)
     return ret;
 }
 
-int G2EndStep::unpack_double(double* val, size_t*)
+int G2EndStep::unpack_double(double* val, size_t* /*len*/)
 {
     grib_handle* h = get_enclosing_handle();
     int ret = 0;
@@ -635,7 +635,7 @@ int G2EndStep::unpack_string(char* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int G2EndStep::pack_long(const long* val, size_t*)
+int G2EndStep::pack_long(const long* val, size_t* /*len*/)
 {
     grib_handle* h = get_enclosing_handle();
     int ret;
@@ -665,7 +665,7 @@ int G2EndStep::pack_long(const long* val, size_t*)
     return ret;
 }
 
-int G2EndStep::pack_string(const char* val, size_t*)
+int G2EndStep::pack_string(const char* val, size_t* /*len*/)
 {
     grib_handle* h = get_enclosing_handle();
     int ret = 0;

@@ -46,7 +46,7 @@ static eccodes::sync::Mutex mutex;
 
 static eccodes::sync::Mutex mutex_c;
 
-static void default_long_lasting_free(const grib_context*, void* p)
+static void default_long_lasting_free(const grib_context* /*c*/, void* p)
 {
     free(p);
 }
@@ -60,7 +60,7 @@ static void* default_long_lasting_malloc(const grib_context* c, size_t size)
     return ret;
 }
 
-static void default_buffer_free(const grib_context*, void* p)
+static void default_buffer_free(const grib_context* /*c*/, void* p)
 {
     free(p);
 }
@@ -83,7 +83,7 @@ static void* default_buffer_realloc(const grib_context* c, void* p, size_t size)
     return ret;
 }
 
-static void default_free(const grib_context*, void* p)
+static void default_free(const grib_context* /*c*/, void* p)
 {
     free(p);
 }
@@ -107,27 +107,27 @@ static void* default_realloc(const grib_context* c, void* p, size_t size)
 }
 #endif
 
-static size_t default_read(const grib_context*, void* ptr, size_t size, void* stream)
+static size_t default_read(const grib_context* /*c*/, void* ptr, size_t size, void* stream)
 {
     return fread(ptr, 1, size, (FILE*)stream);
 }
 
-static off_t default_tell(const grib_context*, void* stream)
+static off_t default_tell(const grib_context* /*c*/, void* stream)
 {
     return ftello((FILE*)stream);
 }
 
-static off_t default_seek(const grib_context*, off_t offset, int whence, void* stream)
+static off_t default_seek(const grib_context* /*c*/, off_t offset, int whence, void* stream)
 {
     return fseeko((FILE*)stream, offset, whence);
 }
 
-static int default_feof(const grib_context*, void* stream)
+static int default_feof(const grib_context* /*c*/, void* stream)
 {
     return feof((FILE*)stream);
 }
 
-static size_t default_write(const grib_context*, const void* ptr, size_t size, void* stream)
+static size_t default_write(const grib_context* /*c*/, const void* ptr, size_t size, void* stream)
 {
     return fwrite(ptr, 1, size, (FILE*)stream);
 }
@@ -194,7 +194,7 @@ static void default_log(const grib_context* c, int level, const char* mess)
     }
 }
 
-static void default_print(const grib_context*, void* descriptor, const char* mess)
+static void default_print(const grib_context* /*c*/, void* descriptor, const char* mess)
 {
     fprintf((FILE*)descriptor, "%s", mess);
 }

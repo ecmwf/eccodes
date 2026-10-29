@@ -46,7 +46,7 @@ static bool is_rotated_grid(grib_handle* h)
 int Regular::find(grib_handle* h,
                   double inlat, double inlon, unsigned long flags,
                   double* outlats, double* outlons,
-                  double* values, double* distances, int* indexes, size_t*)
+                  double* values, double* distances, int* indexes, size_t* /*len*/)
 {
     int ret = 0, kk = 0, ii = 0, jj = 0;
     size_t nvalues = 0;

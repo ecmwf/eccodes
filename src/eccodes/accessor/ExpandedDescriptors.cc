@@ -723,7 +723,7 @@ int ExpandedDescriptors::unpack_string_array(char** buffer, size_t* len)
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int ExpandedDescriptors::pack_long(const long*, size_t*)
+int ExpandedDescriptors::pack_long(const long* /*val*/, size_t* /*len*/)
 {
     do_expand_ = 1;
     return GRIB_NOT_IMPLEMENTED;

@@ -24,7 +24,7 @@ void NumberOfValuesDataRawPacking::init(const long v, grib_arguments* args)
     length_ = 0;
 }
 
-int NumberOfValuesDataRawPacking::unpack_long(long* val, size_t*)
+int NumberOfValuesDataRawPacking::unpack_long(long* val, size_t* /*len*/)
 {
     int err = 0;
     grib_accessor* adata = NULL;

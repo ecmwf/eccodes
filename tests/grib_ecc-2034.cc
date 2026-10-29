@@ -12,7 +12,7 @@
 #include <assert.h>
 #include "eccodes.h"
 
-int main(int, char**)
+int main(int /*argc*/, char** /*argv*/)
 {
     int err = 0;
     double d, e;

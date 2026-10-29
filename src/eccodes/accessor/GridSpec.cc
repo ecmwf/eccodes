@@ -29,7 +29,7 @@
 namespace eccodes::accessor
 {
 
-void GridSpec::init(const long, grib_arguments*)
+void GridSpec::init(const long /*len*/, grib_arguments* /*arg*/)
 {
     length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;

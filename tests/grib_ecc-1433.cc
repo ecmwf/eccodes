@@ -21,7 +21,7 @@
 typedef std::numeric_limits<double> dbl;
 typedef std::numeric_limits<float> flt;
 
-int main(int, char**)
+int main(int /*argc*/, char** /*argv*/)
 {
     size_t values_len = 10;
     std::default_random_engine re;

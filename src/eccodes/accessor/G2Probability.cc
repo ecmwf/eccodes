@@ -24,7 +24,7 @@ void G2Probability::init(const long l, grib_arguments* c)
     referencePeriod_ = c->get_long(hand, n++);
 }
 
-int G2Probability::unpack_long(long* val, size_t*)
+int G2Probability::unpack_long(long* val, size_t* /*len*/)
 {
     long productDefinitionTemplateNumber = 0;
     grib_get_long(get_enclosing_handle(), productDefinitionTemplateNumber_, &productDefinitionTemplateNumber);
@@ -36,7 +36,7 @@ int G2Probability::unpack_long(long* val, size_t*)
     return GRIB_SUCCESS;
 }
 
-int G2Probability::pack_long(const long*, size_t*)
+int G2Probability::pack_long(const long* /*val*/, size_t* /*len*/)
 {
     grib_handle* hand = get_enclosing_handle();
     long productDefinitionTemplateNumber = -1;

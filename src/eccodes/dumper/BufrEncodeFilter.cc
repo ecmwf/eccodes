@@ -204,7 +204,7 @@ void BufrEncodeFilter::dump_values_attribute(grib_accessor* a, const char* prefi
     (void)err; /* TODO */
 }
 
-void BufrEncodeFilter::dump_long(grib_accessor* a, const char*)
+void BufrEncodeFilter::dump_long(grib_accessor* a, const char* /*comment*/)
 {
     long value = 0;
     size_t size = 0, size2 = 0;
@@ -385,11 +385,11 @@ void BufrEncodeFilter::dump_long_attribute(grib_accessor* a, const char* prefix)
     (void)err; /* TODO */
 }
 
-void BufrEncodeFilter::dump_bits(grib_accessor*, const char*)
+void BufrEncodeFilter::dump_bits(grib_accessor* /*a*/, const char* /*comment*/)
 {
 }
 
-void BufrEncodeFilter::dump_double(grib_accessor* a, const char*)
+void BufrEncodeFilter::dump_double(grib_accessor* a, const char* /*comment*/)
 {
     double value = 0;
     size_t size = 1;
@@ -509,7 +509,7 @@ void BufrEncodeFilter::dump_string_array(grib_accessor* a, const char* comment)
     (void)err; /* TODO */
 }
 
-void BufrEncodeFilter::dump_string(grib_accessor* a, const char*)
+void BufrEncodeFilter::dump_string(grib_accessor* a, const char* /*comment*/)
 {
     char* value = NULL;
     char* p = NULL;
@@ -581,11 +581,11 @@ void BufrEncodeFilter::dump_string(grib_accessor* a, const char*)
     (void)err; /* TODO */
 }
 
-void BufrEncodeFilter::dump_bytes(grib_accessor*, const char*)
+void BufrEncodeFilter::dump_bytes(grib_accessor* /*a*/, const char* /*comment*/)
 {
 }
 
-void BufrEncodeFilter::dump_label(grib_accessor*, const char*)
+void BufrEncodeFilter::dump_label(grib_accessor* /*a*/, const char* /*comment*/)
 {
 }
 

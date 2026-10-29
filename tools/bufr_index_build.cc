@@ -47,7 +47,7 @@ int main(int argc, char* argv[])
     return grib_tool(argc, argv);
 }
 
-int grib_tool_before_getopt(grib_runtime_options*)
+int grib_tool_before_getopt(grib_runtime_options* /*options*/)
 {
     return 0;
 }
@@ -80,7 +80,7 @@ int grib_tool_init(grib_runtime_options* options)
     return 0;
 }
 
-int grib_tool_new_filename_action(grib_runtime_options*, const char* file)
+int grib_tool_new_filename_action(grib_runtime_options* /*options*/, const char* file)
 {
     int ret = 0;
     printf("--- %s: processing %s\n", tool_name, file);
@@ -92,17 +92,17 @@ int grib_tool_new_filename_action(grib_runtime_options*, const char* file)
     return 0;
 }
 
-int grib_tool_new_file_action(grib_runtime_options*, grib_tools_file*)
+int grib_tool_new_file_action(grib_runtime_options* /*options*/, grib_tools_file* /*file*/)
 {
     return 0;
 }
 
-int grib_tool_new_handle_action(grib_runtime_options*, grib_handle*)
+int grib_tool_new_handle_action(grib_runtime_options* /*options*/, grib_handle* /*h*/)
 {
     return 0;
 }
 
-int grib_tool_skip_handle(grib_runtime_options*, grib_handle*)
+int grib_tool_skip_handle(grib_runtime_options* /*options*/, grib_handle* /*h*/)
 {
     return 0;
 }
@@ -152,7 +152,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     return 0;
 }
 
-int grib_no_handle_action(grib_runtime_options*, int)
+int grib_no_handle_action(grib_runtime_options* /*options*/, int /*err*/)
 {
     fprintf(dump_file, "\t\t\"ERROR: unreadable message\"\n");
     return 0;
