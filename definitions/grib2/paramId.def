@@ -28096,7 +28096,7 @@
 	 typeOfRelationToReferenceDataset = 0 ;
 	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
-#Surface sensible heat flux anomalous rate of accumulation
+#Time-mean surface sensible heat flux anomaly
 '173146' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
@@ -28106,7 +28106,7 @@
 	 typeOfRelationToReferenceDataset = 0 ;
 	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
-#Surface latent heat flux anomalous rate of accumulation
+#Time-mean surface latent heat flux anomaly
 '173147' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
@@ -28116,7 +28116,7 @@
 	 typeOfRelationToReferenceDataset = 0 ;
 	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
-#Surface solar radiation downwards anomalous rate of accumulation
+#Time-mean surface short-wave (solar) radiation downward flux anomaly
 '173169' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
@@ -28126,7 +28126,7 @@
 	 typeOfRelationToReferenceDataset = 0 ;
 	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
-#Surface thermal radiation downwards anomalous rate of accumulation
+#Time-mean surface long-wave (thermal) radiation downward flux anomaly
 '173175' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
@@ -28136,7 +28136,7 @@
 	 typeOfRelationToReferenceDataset = 0 ;
 	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
-#Surface solar radiation anomalous rate of accumulation
+#Time-mean surface short-wave (solar) radiation flux anomaly
 '173176' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
@@ -28146,7 +28146,7 @@
 	 typeOfRelationToReferenceDataset = 0 ;
 	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
-#Surface thermal radiation anomalous rate of accumulation
+#Time-mean surface long-wave (thermal) radiation flux anomaly
 '173177' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
@@ -28156,7 +28156,7 @@
 	 typeOfRelationToReferenceDataset = 0 ;
 	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
-#Top solar radiation anomalous rate of accumulation
+#Time-mean top short-wave (solar) radiation flux anomaly
 '173178' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
@@ -28166,7 +28166,7 @@
 	 typeOfRelationToReferenceDataset = 0 ;
 	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
-#Top thermal radiation anomalous rate of accumulation
+#Time-mean top long-wave (thermal) radiation flux anomaly
 '173179' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
@@ -28176,7 +28176,7 @@
 	 typeOfRelationToReferenceDataset = 0 ;
 	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
-#East-West surface stress anomalous rate of accumulation
+#Time-mean east-west surface stress anomaly
 '173180' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
@@ -28186,7 +28186,7 @@
 	 typeOfRelationToReferenceDataset = 0 ;
 	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
-#North-South surface stress anomalous rate of accumulation
+#Time-mean north-south surface stress anomaly
 '173181' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
@@ -28196,7 +28196,7 @@
 	 typeOfRelationToReferenceDataset = 0 ;
 	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
-#Sunshine duration anomalous rate of accumulation
+#Time-mean sunshine duration anomaly
 '173189' = {
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
@@ -28206,7 +28206,7 @@
 	 typeOfRelationToReferenceDataset = 0 ;
 	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
-#Solar insolation anomalous rate of accumulation
+#Time-mean solar insolation flux anomaly
 '173212' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
