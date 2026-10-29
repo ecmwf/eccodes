@@ -36,13 +36,12 @@ void CountMissing::init(const long len, grib_arguments* arg)
 {
     Long::init(len, arg);
     int n = 0;
-    grib_handle* h = get_enclosing_handle();
     length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-    bitmap_ = arg->get_name(h, n++);
-    unusedBitsInBitmap_ = arg->get_name(h, n++);
-    numberOfDataPoints_ = arg->get_name(h, n++);
-    missingValueManagementUsed_ = arg->get_name(h, n++); /* Can be NULL */
+    bitmap_ = arg->get_name(n++);
+    unusedBitsInBitmap_ = arg->get_name(n++);
+    numberOfDataPoints_ = arg->get_name(n++);
+    missingValueManagementUsed_ = arg->get_name(n++); /* Can be NULL */
 }
 
 static const int used[] = { 0, 1, 3, 7, 15, 31, 63, 127, 255 };

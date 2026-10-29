@@ -18,9 +18,9 @@ void GaussianGridName::init(const long len, grib_arguments* arg)
     Gen::init(len, arg);
     int n = 0;
 
-    N_ = arg->get_name(parent_->h, n++);
-    Ni_ = arg->get_name(parent_->h, n++);
-    isOctahedral_ = arg->get_name(parent_->h, n++);
+    N_ = arg->get_name(n++);
+    Ni_ = arg->get_name(n++);
+    isOctahedral_ = arg->get_name(n++);
     length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;

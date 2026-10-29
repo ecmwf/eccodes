@@ -19,29 +19,28 @@ void G2EndStep::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
     int n = 0;
-    grib_handle* h = get_enclosing_handle();
 
-    start_step_value_ = c->get_name(h, n++);
-    step_units_ = c->get_name(h, n++);
+    start_step_value_ = c->get_name(n++);
+    step_units_ = c->get_name(n++);
 
-    year_ = c->get_name(h, n++);
-    month_ = c->get_name(h, n++);
-    day_ = c->get_name(h, n++);
-    hour_ = c->get_name(h, n++);
-    minute_ = c->get_name(h, n++);
-    second_ = c->get_name(h, n++);
+    year_ = c->get_name(n++);
+    month_ = c->get_name(n++);
+    day_ = c->get_name(n++);
+    hour_ = c->get_name(n++);
+    minute_ = c->get_name(n++);
+    second_ = c->get_name(n++);
 
-    year_of_end_of_interval_ = c->get_name(h, n++);
-    month_of_end_of_interval_ = c->get_name(h, n++);
-    day_of_end_of_interval_ = c->get_name(h, n++);
-    hour_of_end_of_interval_ = c->get_name(h, n++);
-    minute_of_end_of_interval_ = c->get_name(h, n++);
-    second_of_end_of_interval_ = c->get_name(h, n++);
+    year_of_end_of_interval_ = c->get_name(n++);
+    month_of_end_of_interval_ = c->get_name(n++);
+    day_of_end_of_interval_ = c->get_name(n++);
+    hour_of_end_of_interval_ = c->get_name(n++);
+    minute_of_end_of_interval_ = c->get_name(n++);
+    second_of_end_of_interval_ = c->get_name(n++);
 
-    time_range_unit_ = c->get_name(h, n++);
-    time_range_value_ = c->get_name(h, n++);
-    typeOfTimeIncrement_ = c->get_name(h, n++);
-    numberOfTimeRanges_ = c->get_name(h, n++);
+    time_range_unit_ = c->get_name(n++);
+    time_range_value_ = c->get_name(n++);
+    typeOfTimeIncrement_ = c->get_name(n++);
+    numberOfTimeRanges_ = c->get_name(n++);
 }
 
 void G2EndStep::dump(eccodes::Dumper* dumper)

@@ -18,7 +18,7 @@ void G1EndOfIntervalMonthly::init(const long l, grib_arguments* c)
     AbstractVector::init(l, c);
     int n = 0;
 
-    verifyingMonth_ = c->get_name(get_enclosing_handle(), n++);
+    verifyingMonth_ = c->get_name(n++);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     flags_ |= GRIB_ACCESSOR_FLAG_HIDDEN;

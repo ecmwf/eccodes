@@ -92,9 +92,9 @@ void BufrExtractDatetimeSubsets::init(const long len, grib_arguments* arg)
     int n = 0;
 
     length_ = 0;
-    doExtractSubsets_ = arg->get_name(get_enclosing_handle(), n++);
-    numberOfSubsets_ = arg->get_name(get_enclosing_handle(), n++);
-    extractSubsetList_ = arg->get_name(get_enclosing_handle(), n++);
+    doExtractSubsets_ = arg->get_name(n++);
+    numberOfSubsets_ = arg->get_name(n++);
+    extractSubsetList_ = arg->get_name(n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
 }

@@ -49,9 +49,9 @@ void Values::init(const long v, grib_arguments* params)
     Gen::init(v, params);
     carg_ = 0;
 
-    seclen_ = params->get_name(get_enclosing_handle(), carg_++);
-    offsetdata_ = params->get_name(get_enclosing_handle(), carg_++);
-    offsetsection_ = params->get_name(get_enclosing_handle(), carg_++);
+    seclen_ = params->get_name(carg_++);
+    offsetdata_ = params->get_name(carg_++);
+    offsetsection_ = params->get_name(carg_++);
     values_dirty_ = 1;
 
     length_ = init_length();

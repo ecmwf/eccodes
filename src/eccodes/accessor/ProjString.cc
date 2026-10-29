@@ -31,7 +31,7 @@ void ProjString::init(const long len, grib_arguments* arg)
     Gen::init(len, arg);
     grib_handle* h = get_enclosing_handle();
 
-    grid_type_ = arg->get_name(h, 0);
+    grid_type_ = arg->get_name(0);
     endpoint_ = arg->get_long(h, 1);
     length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;

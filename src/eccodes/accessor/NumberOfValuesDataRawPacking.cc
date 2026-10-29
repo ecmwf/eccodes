@@ -18,8 +18,8 @@ void NumberOfValuesDataRawPacking::init(const long v, grib_arguments* args)
     Gen::init(v, args);
     int n = 0;
 
-    values_ = args->get_name(get_enclosing_handle(), n++);
-    precision_ = args->get_name(get_enclosing_handle(), n++);
+    values_ = args->get_name(n++);
+    precision_ = args->get_name(n++);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     length_ = 0;
 }

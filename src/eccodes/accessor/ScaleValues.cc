@@ -17,8 +17,8 @@ void ScaleValues::init(const long l, grib_arguments* args)
 {
     Double::init(l, args);
     int n = 0;
-    values_ = args->get_name(get_enclosing_handle(), n++);
-    missingValue_ = args->get_name(get_enclosing_handle(), n++);
+    values_ = args->get_name(n++);
+    missingValue_ = args->get_name(n++);
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     length_ = 0;
 }

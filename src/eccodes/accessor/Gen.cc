@@ -36,7 +36,7 @@ void Gen::init(const long len, grib_arguments* /*param*/)
             int ret = 0;
             double d;
             char tmp[1024];
-            grib_expression* expression = act->default_value_->get_expression(get_enclosing_handle(), 0);
+            grib_expression* expression = act->default_value_->get_expression(0);
             int type = expression->native_type(get_enclosing_handle());
             switch (type) {
                     // TODO(maee): add single-precision case

@@ -17,8 +17,8 @@ void BitsPerValue::init(const long l, grib_arguments* args)
 {
     Long::init(l, args);
     int n = 0;
-    values_ = args->get_name(get_enclosing_handle(), n++);
-    bits_per_value_ = args->get_name(get_enclosing_handle(), n++);
+    values_ = args->get_name(n++);
+    bits_per_value_ = args->get_name(n++);
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     length_ = 0;
 }

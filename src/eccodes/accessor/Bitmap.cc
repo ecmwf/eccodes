@@ -51,13 +51,12 @@ void Bitmap::compute_size()
 void Bitmap::init(const long len, grib_arguments* arg)
 {
     Bytes::init(len, arg);
-    grib_handle* hand = get_enclosing_handle();
     int n = 0;
 
-    tableReference_ = arg->get_name(hand, n++);
-    missing_value_ = arg->get_name(hand, n++);
-    offsetbsec_ = arg->get_name(hand, n++);
-    sLength_ = arg->get_name(hand, n++);
+    tableReference_ = arg->get_name(n++);
+    missing_value_ = arg->get_name(n++);
+    offsetbsec_ = arg->get_name(n++);
+    sLength_ = arg->get_name(n++);
 
     compute_size();
 }

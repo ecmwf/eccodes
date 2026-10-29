@@ -34,8 +34,8 @@ void ExpandedDescriptors::init(const long len, grib_arguments* args)
     Long::init(len, args);
     int n = 0;
     grib_handle* hand = get_enclosing_handle();
-    tablesAccessorName_ = args->get_name(hand, n++);
-    expandedName_ = args->get_name(hand, n++);
+    tablesAccessorName_ = args->get_name(n++);
+    expandedName_ = args->get_name(n++);
     rank_ = args->get_long(hand, n++);
     if (rank_ != 0) {
         expandedAccessor_ = dynamic_cast<ExpandedDescriptors*>(grib_find_accessor(hand, expandedName_));
@@ -43,8 +43,8 @@ void ExpandedDescriptors::init(const long len, grib_arguments* args)
     else {
         expandedAccessor_ = 0;
     }
-    unexpandedDescriptors_ = args->get_name(hand, n++);
-    sequence_ = args->get_name(hand, n++);
+    unexpandedDescriptors_ = args->get_name(n++);
+    sequence_ = args->get_name(n++);
     do_expand_ = 1;
     expanded_ = 0;
     length_ = 0;

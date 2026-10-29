@@ -55,12 +55,12 @@ void SmartTable::init(const long /*len*/, grib_arguments* params)
     int n = 0;
     grib_handle* hand = get_enclosing_handle();
 
-    values_ = params->get_name(hand, n++);
+    values_ = params->get_name(n++);
     tablename_ = params->get_string(hand, n++);
-    masterDir_ = params->get_name(hand, n++);
-    localDir_ = params->get_name(hand, n++);
+    masterDir_ = params->get_name(n++);
+    localDir_ = params->get_name(n++);
     widthOfCode_ = params->get_long(hand, n++);
-    extraDir_ = params->get_name(hand, n++);
+    extraDir_ = params->get_name(n++);
     extraTable_ = params->get_string(hand, n++);
 
     Unsigned::length_ = 0;

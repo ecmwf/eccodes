@@ -197,13 +197,13 @@ void BufrDataArray::init(const long v, grib_arguments* params)
     iss_list_ = NULL;
     tempStrings_ = NULL;
 
-    bufrDataEncodedName_ = params->get_name(get_enclosing_handle(), n++);
-    numberOfSubsetsName_ = params->get_name(get_enclosing_handle(), n++);
-    expandedDescriptorsName_ = params->get_name(get_enclosing_handle(), n++);
-    flagsName_ = params->get_name(get_enclosing_handle(), n++);
-    elementsDescriptorsIndexName_ = params->get_name(get_enclosing_handle(), n++);
-    compressedDataName_ = params->get_name(get_enclosing_handle(), n++);
-    dataKeysName = params->get_name(get_enclosing_handle(), n++);
+    bufrDataEncodedName_ = params->get_name(n++);
+    numberOfSubsetsName_ = params->get_name(n++);
+    expandedDescriptorsName_ = params->get_name(n++);
+    flagsName_ = params->get_name(n++);
+    elementsDescriptorsIndexName_ = params->get_name(n++);
+    compressedDataName_ = params->get_name(n++);
+    dataKeysName = params->get_name(n++);
 
     dataKeysAcc = grib_find_accessor(get_enclosing_handle(), dataKeysName);
     dataKeys_ = dataKeysAcc->parent_;

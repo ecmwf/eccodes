@@ -22,8 +22,7 @@ void MessageIsValid::init(const long l, grib_arguments* arg)
 {
     Long::init(l, arg);
 
-    grib_handle* h = get_enclosing_handle();
-    product_ = arg->get_name(h, 0);
+    product_ = arg->get_name(0);
     edition_ = 0;
 
     length_ = 0;

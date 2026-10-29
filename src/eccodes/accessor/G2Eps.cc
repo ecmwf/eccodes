@@ -18,11 +18,11 @@ void G2Eps::init(const long l, grib_arguments* c)
     Unsigned::init(l, c);
     int n = 0;
 
-    productDefinitionTemplateNumber_ = c->get_name(get_enclosing_handle(), n++);
-    type_ = c->get_name(get_enclosing_handle(), n++);
-    stream_ = c->get_name(get_enclosing_handle(), n++);
-    stepType_ = c->get_name(get_enclosing_handle(), n++);
-    derivedForecast_ = c->get_name(get_enclosing_handle(), n++);
+    productDefinitionTemplateNumber_ = c->get_name(n++);
+    type_ = c->get_name(n++);
+    stream_ = c->get_name(n++);
+    stepType_ = c->get_name(n++);
+    derivedForecast_ = c->get_name(n++);
 }
 
 int G2Eps::unpack_long(long* val, size_t* /*len*/)

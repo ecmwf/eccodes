@@ -41,7 +41,7 @@ static const struct table_entry table[] = {
 eccodes::geo_iterator::Iterator* grib_iterator_factory(grib_handle* h, grib_arguments* args, unsigned long flags, int* error)
 {
     size_t i = 0, num_table_entries = 0;
-    const char* type = (char*)args->get_name(h, 0);
+    const char* type = (char*)args->get_name(0);
     *error = GRIB_NOT_IMPLEMENTED;
 
     num_table_entries = sizeof(table) / sizeof(table[0]);

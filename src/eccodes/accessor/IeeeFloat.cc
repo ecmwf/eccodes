@@ -31,7 +31,7 @@ int IeeeFloat::value_count(long* len)
         *len = 1;
         return 0;
     }
-    return grib_get_long_internal(get_enclosing_handle(), arg_->get_name(parent_->h, 0), len);
+    return grib_get_long_internal(get_enclosing_handle(), arg_->get_name(0), len);
 }
 
 int IeeeFloat::pack_double(const double* val, size_t* len)
@@ -67,7 +67,7 @@ int IeeeFloat::pack_double(const double* val, size_t* len)
     for (i = 0; i < rlen; i++) {
         grib_encode_unsigned_longb(buf, grib_ieee_to_long(val[i]), &off, 32);
     }
-    ret = grib_set_long_internal(get_enclosing_handle(), arg_->get_name(parent_->h, 0), rlen);
+    ret = grib_set_long_internal(get_enclosing_handle(), arg_->get_name(0), rlen);
 
     if (ret == GRIB_SUCCESS)
         grib_buffer_replace(this, buf, buflen, 1, 1);

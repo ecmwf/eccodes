@@ -18,7 +18,7 @@ void BufrStringValues::init(const long len, grib_arguments* args)
 {
     Ascii::init(len, args);
     int n = 0;
-    dataAccessorName_ = args->get_name(get_enclosing_handle(), n++);
+    dataAccessorName_ = args->get_name(n++);
     dataAccessor_ = NULL;
     length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
