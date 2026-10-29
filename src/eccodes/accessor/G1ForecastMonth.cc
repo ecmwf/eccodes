@@ -149,7 +149,7 @@ int G1ForecastMonth::unpack_long_edition1(long* val)
     return GRIB_SUCCESS;
 }
 
-int G1ForecastMonth::unpack_long(long* val, size_t*)
+int G1ForecastMonth::unpack_long(long* val, size_t* /*len*/)
 {
     int err = 0;
     grib_handle* hand = get_enclosing_handle();
@@ -167,7 +167,7 @@ int G1ForecastMonth::unpack_long(long* val, size_t*)
 }
 
 /* TODO(maee): Check for a valid date */
-int G1ForecastMonth::pack_long(const long* val, size_t*)
+int G1ForecastMonth::pack_long(const long* val, size_t* /*len*/)
 {
     return grib_set_long_internal(get_enclosing_handle(), fcmonth_, *val);
 }

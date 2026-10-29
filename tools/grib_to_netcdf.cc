@@ -100,7 +100,7 @@ static bool eq_integer(const char* l, const char* r)
     return false;
 }
 
-static bool eq_null(const char*, const char*)
+static bool eq_null(const char* /*l*/, const char* /*r*/)
 {
     return true;
 }
@@ -1718,7 +1718,7 @@ struct stuff_1
     request* r;
 };
 
-static void reqcb_1(const request*, int count, axis_t* names, char* vals[], void* data)
+static void reqcb_1(const request* /*r*/, int count, axis_t* names, char* vals[], void* data)
 {
     struct stuff_1* s = (struct stuff_1*)data;
     int i;
@@ -3980,7 +3980,7 @@ int main(int argc, char* argv[])
     return grib_tool(argc, argv);
 }
 
-int grib_tool_before_getopt(grib_runtime_options*)
+int grib_tool_before_getopt(grib_runtime_options* /*options*/)
 {
     return 0;
 }
@@ -4124,7 +4124,7 @@ int grib_tool_init(grib_runtime_options* options)
     return 0;
 }
 
-int grib_tool_new_filename_action(grib_runtime_options*, const char* filename)
+int grib_tool_new_filename_action(grib_runtime_options* /*options*/, const char* filename)
 {
     char buf[1024] = { 0 };
     int e = 0;
@@ -4251,17 +4251,17 @@ int grib_tool_new_filename_action(grib_runtime_options*, const char* filename)
     return e;
 }
 
-int grib_tool_new_file_action(grib_runtime_options*, grib_tools_file*)
+int grib_tool_new_file_action(grib_runtime_options* /*options*/, grib_tools_file* /*file*/)
 {
     return 0;
 }
 
-int grib_tool_new_handle_action(grib_runtime_options*, grib_handle*)
+int grib_tool_new_handle_action(grib_runtime_options* /*options*/, grib_handle* /*h*/)
 {
     return 0;
 }
 
-int grib_tool_skip_handle(grib_runtime_options*, grib_handle*)
+int grib_tool_skip_handle(grib_runtime_options* /*options*/, grib_handle* /*h*/)
 {
     return 0;
 }
@@ -4367,7 +4367,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     return 0;
 }
 
-int grib_no_handle_action(grib_runtime_options*, int)
+int grib_no_handle_action(grib_runtime_options* /*options*/, int /*err*/)
 {
     fprintf(dump_file, "\t\t\"ERROR: unreadable message\"\n");
     return 0;

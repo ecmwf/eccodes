@@ -39,7 +39,7 @@ int DecimalPrecision::unpack_long(long* val, size_t* len)
     return ret;
 }
 
-int DecimalPrecision::pack_long(const long* val, size_t*)
+int DecimalPrecision::pack_long(const long* val, size_t* /*len*/)
 {
     long bitsPerValue = 0;
     size_t size = 0;

@@ -94,7 +94,7 @@ int IsInDict::evaluate_long(grib_handle* h, long* result) const
     return err;
 }
 
-int IsInDict::evaluate_double(grib_handle*, double*) const
+int IsInDict::evaluate_double(grib_handle* /*h*/, double* /*result*/) const
 {
     return GRIB_NOT_IMPLEMENTED;
 
@@ -112,7 +112,7 @@ int IsInDict::evaluate_double(grib_handle*, double*) const
     // return err;
 }
 
-const char* IsInDict::evaluate_string(grib_handle*, char*, size_t*, int* err) const
+const char* IsInDict::evaluate_string(grib_handle* /*h*/, char* /*buf*/, size_t* /*size*/, int* err) const
 {
     *err = GRIB_NOT_IMPLEMENTED;
     return NULL;
@@ -133,7 +133,7 @@ const char* IsInDict::evaluate_string(grib_handle*, char*, size_t*, int* err) co
     // return buf;
 }
 
-void IsInDict::print(grib_context*, grib_handle* f, FILE* out) const
+void IsInDict::print(grib_context* /*c*/, grib_handle* f, FILE* out) const
 {
     fprintf(out, "access('%s", key_);
     if (f) {
@@ -150,7 +150,7 @@ IsInDict::IsInDict(grib_context* c, const char* name, const char* list)
     dictionary_ = grib_context_strdup_persistent(c, list);
 }
 
-int IsInDict::native_type(grib_handle*) const
+int IsInDict::native_type(grib_handle* /*h*/) const
 {
     return GRIB_TYPE_LONG;
 }

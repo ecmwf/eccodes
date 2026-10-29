@@ -35,7 +35,7 @@ int BitsPerValue::unpack_long(long* val, size_t* len)
     return ret;
 }
 
-int BitsPerValue::pack_long(const long* val, size_t*)
+int BitsPerValue::pack_long(const long* val, size_t* /*len*/)
 {
     double* values = NULL;
     size_t size = 0;

@@ -23,7 +23,7 @@ const char* keys[] = {
     NULL
 };
 
-int main(int, char**)
+int main(int /*argc*/, char** /*argv*/)
 {
     int err = 0;
     codes_handle* h = codes_bufr_handle_new_from_samples(NULL, "BUFR4");

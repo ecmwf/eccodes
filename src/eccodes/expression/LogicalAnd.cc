@@ -102,7 +102,7 @@ LogicalAnd::LogicalAnd(Expression* left, Expression* right)
     right_ = right;
 }
 
-int LogicalAnd::native_type(grib_handle*) const
+int LogicalAnd::native_type(grib_handle* /*h*/) const
 {
     return GRIB_TYPE_LONG;
 }

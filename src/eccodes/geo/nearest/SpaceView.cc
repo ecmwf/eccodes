@@ -31,9 +31,9 @@ int SpaceView::init(grib_handle* h, grib_arguments* args)
 }
 
 int SpaceView::find(grib_handle* h,
-                    double inlat, double inlon, unsigned long,
+                    double inlat, double inlon, unsigned long /*flags*/,
                     double* outlats, double* outlons,
-                    double* values, double* distances, int* indexes, size_t*)
+                    double* values, double* distances, int* indexes, size_t* /*len*/)
 {
     return grib_nearest_find_generic(
         h, inlat, inlon, /* inputs */

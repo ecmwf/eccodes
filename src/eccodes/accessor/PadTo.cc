@@ -13,7 +13,7 @@
 namespace eccodes::accessor
 {
 
-size_t PadTo::preferred_size(int)
+size_t PadTo::preferred_size(int /*from_handle*/)
 {
     long length = 0;
     long theEnd;
@@ -35,7 +35,7 @@ void PadTo::init(const long len, grib_arguments* arg)
     length_ = preferred_size(1);
 }
 
-void PadTo::dump(eccodes::Dumper*)
+void PadTo::dump(eccodes::Dumper* /*dumper*/)
 {
     /*dumper->dump_string(a,NULL);*/
 }

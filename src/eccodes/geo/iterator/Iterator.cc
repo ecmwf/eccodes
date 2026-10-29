@@ -35,7 +35,7 @@
 namespace eccodes::geo_iterator
 {
 
-int Iterator::init(grib_handle* h, grib_arguments*)
+int Iterator::init(grib_handle* h, grib_arguments* /*args*/)
 {
     h_ = h;
     return GRIB_SUCCESS;

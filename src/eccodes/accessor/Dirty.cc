@@ -22,7 +22,7 @@ void Dirty::init(const long l, grib_arguments* c)
     length_ = 0;
 }
 
-int Dirty::pack_long(const long* val, size_t*)
+int Dirty::pack_long(const long* val, size_t* /*len*/)
 {
     grib_accessor* x = grib_find_accessor(get_enclosing_handle(), accessor_);
 
@@ -32,7 +32,7 @@ int Dirty::pack_long(const long* val, size_t*)
     return GRIB_SUCCESS;
 }
 
-int Dirty::unpack_long(long* val, size_t*)
+int Dirty::unpack_long(long* val, size_t* /*len*/)
 {
     grib_accessor* x = grib_find_accessor(get_enclosing_handle(), accessor_);
 

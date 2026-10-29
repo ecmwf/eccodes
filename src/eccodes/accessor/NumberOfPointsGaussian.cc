@@ -109,7 +109,7 @@ static int get_number_of_data_values(grib_handle* h, size_t* numDataValues)
     return err;
 }
 
-int NumberOfPointsGaussian::unpack_long(long* val, size_t*)
+int NumberOfPointsGaussian::unpack_long(long* val, size_t* /*len*/)
 {
     int err = GRIB_SUCCESS;
     long support_legacy = 1;

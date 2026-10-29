@@ -1471,7 +1471,7 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
     return GRIB_SUCCESS;
 }
 #else
-int grib_set_from_grid_spec(grib_handle*, const grib_util_grid_spec*, const grib_util_packing_spec*)
+int grib_set_from_grid_spec(grib_handle* /*h*/, const grib_util_grid_spec* /*spec*/, const grib_util_packing_spec* /*packing_spec*/)
 {
     return GRIB_NOT_IMPLEMENTED;
 }

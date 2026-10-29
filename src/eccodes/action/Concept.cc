@@ -41,7 +41,7 @@ Concept::Concept(grib_context* context,
                  const char* name,
                  grib_concept_value* concept_value,
                  const char* basename, const char* name_space, const char* defaultkey,
-                 const char* masterDir, const char* localDir, const char*, int flags, int nofail) :
+                 const char* masterDir, const char* localDir, const char* /*ecmfDir*/, int flags, int nofail) :
     Gen(context, name, "concept", 0, nullptr, nullptr, flags, name_space, nullptr)
 {
     class_name_ = "action_class_concept";

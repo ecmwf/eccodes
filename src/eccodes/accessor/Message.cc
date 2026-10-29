@@ -33,7 +33,7 @@ void Message::update_size(size_t new_size)
     length_ = new_size;
 }
 
-void Message::resize(size_t)
+void Message::resize(size_t /*new_size*/)
 {
     grib_context_log(context_, GRIB_LOG_FATAL, "%s %s: Not supported", accessor_type().c_str(), __func__);
 

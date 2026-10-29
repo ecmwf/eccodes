@@ -54,7 +54,7 @@ int IsInteger::evaluate_double(grib_handle* h, double* result) const
     return err;
 }
 
-const char* IsInteger::evaluate_string(grib_handle* h, char* buf, size_t*, int* err) const
+const char* IsInteger::evaluate_string(grib_handle* h, char* buf, size_t* /*size*/, int* err) const
 {
     long lresult = 0;
     double dresult = 0.0;
@@ -72,7 +72,7 @@ const char* IsInteger::evaluate_string(grib_handle* h, char* buf, size_t*, int* 
     return buf;
 }
 
-void IsInteger::print(grib_context*, grib_handle*, FILE*) const
+void IsInteger::print(grib_context* /*c*/, grib_handle* /*f*/, FILE* /*out*/) const
 {
     // grib_expression_is_integer* e = (grib_expression_is_integer*)g;
     // printf("access('%s", name_);
@@ -110,7 +110,7 @@ IsInteger::IsInteger(grib_context* c, const char* name, int start, int length)
     length_ = length;
 }
 
-int IsInteger::native_type(grib_handle*) const
+int IsInteger::native_type(grib_handle* /*h*/) const
 {
     return GRIB_TYPE_LONG;
 }

@@ -14,7 +14,7 @@
 
 #define MAX_VAL_LEN 1024
 
-int main(int, char* argv[])
+int main(int /*argc*/, char* argv[])
 {
     int err = 0;
 
