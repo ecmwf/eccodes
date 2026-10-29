@@ -76,6 +76,18 @@ jobs:
           client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
           app-private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
 
+  hpc-gate:
+    needs: ci-approval
+    runs-on: ubuntu-latest
+    permissions:
+      statuses: write
+      pull-requests: read
+    outputs:
+      run: ${{ steps.gate.outputs.run }}
+    steps:
+      - id: gate
+        uses: ecmwf/ci-infrastructure/actions/hpc-gate@main
+
   wait-build:
     needs: [ci-approval, resolve]
     runs-on: ubuntu-latest
@@ -92,7 +104,8 @@ jobs:
           token: ${{ steps.mint.outputs.token }}
 
   wait-build-hpc:
-    needs: [ci-approval, resolve]
+    needs: [ci-approval, resolve, hpc-gate]
+    if: needs.hpc-gate.outputs.run == 'true'
     runs-on: ubuntu-latest
     steps:
       - id: mint
@@ -122,7 +135,8 @@ jobs:
           token: ${{ steps.mint.outputs.token }}
 
   wait-fortran-hpc:
-    needs: [ci-approval, resolve]
+    needs: [ci-approval, resolve, hpc-gate]
+    if: needs.hpc-gate.outputs.run == 'true'
     runs-on: ubuntu-latest
     steps:
       - id: mint
@@ -392,10 +406,23 @@ jobs:
           resolved: ${{ toJSON(matrix._resolved) }}
           own-source: ${{ steps.build.outputs.cache-hit == 'true' && 'artifact' || 'built' }}
 
+  collect-result-hpc:
+    name: collect HPC results
+    if: always() && needs.hpc-gate.outputs.run == 'true'
+    needs: [hpc-gate, wait-build-hpc, wait-fortran-hpc, build-hpc, fortran-hpc]
+    runs-on: ubuntu-slim
+    permissions:
+      statuses: write
+    steps:
+      - uses: ecmwf/ci-infrastructure/actions/ci-result@main
+        with:
+          needs: ${{ toJSON(needs) }}
+          context: ci-result/hpc-atos
+
   ci-result:
     name: collect results
     if: always()
-    needs: [ci-approval, pre-commit, resolve, wait-build, build, rust, wait-fortran, fortran, wait-build-hpc, build-hpc, wait-fortran-hpc, fortran-hpc]
+    needs: [ci-approval, hpc-gate, pre-commit, resolve, wait-build, build, rust, wait-fortran, fortran]
     runs-on: ubuntu-slim
     permissions:
       statuses: write
