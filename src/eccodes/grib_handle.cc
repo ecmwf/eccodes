@@ -1824,7 +1824,7 @@ static bool grib2_has_next_section(unsigned char* msgbegin, size_t msglen, unsig
 static void grib2_build_message(grib_context* context, unsigned char* sections[], size_t sections_len[], void** data, size_t* len)
 {
     int i = 0;
-    const char* theEnd = "7777";
+    const unsigned char theEnd[] = { '7', '7', '7', '7' };
     unsigned char* p = 0;
     size_t msglen = 0;
     long bitp = 64;
@@ -1849,7 +1849,7 @@ static void grib2_build_message(grib_context* context, unsigned char* sections[]
         }
     }
 
-    memcpy(p, theEnd, 4);
+    memcpy(p, theEnd, sizeof(theEnd));
 
     grib_encode_unsigned_long((unsigned char*)*data, msglen, &bitp, 64);
 
