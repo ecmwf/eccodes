@@ -213,7 +213,7 @@ int GlobalGaussian::pack_long(const long* val, size_t* /*len*/)
     }
 
     /* rounding */
-    latfirst = (long)(lats[0] * factor + 0.5);
+    latfirst = lround(lats[0] * factor);
     latlast = -latfirst;
     lonfirst = 0;
     dfactor = (double)factor;

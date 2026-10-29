@@ -66,12 +66,12 @@ long grib_get_binary_scale_fact(double max, double min, long bpval, int* error)
         zs /= 2;
     }
 
-    while ((unsigned long)(range * zs + 0.5) <= maxint) {
+    while ((unsigned long)lround(range * zs) <= maxint) {
         scale--;
         zs *= 2;
     }
 
-    while ((unsigned long)(range * zs + 0.5) > maxint) {
+    while ((unsigned long)lround(range * zs) > maxint) {
         scale++;
         zs /= 2;
     }

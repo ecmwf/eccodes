@@ -299,6 +299,8 @@ int DataCcsdsPacking::pack_double(const double* val, size_t* len)
     */
 
     // ECC-1602: Performance improvement
+    // The scaled values are non-negative, and lround would add a libm call per value.
+    // NOLINTBEGIN(bugprone-incorrect-roundings)
     switch (nbytes) {
         case 1:
             for (i = 0; i < n_vals; i++) {
@@ -315,6 +317,7 @@ int DataCcsdsPacking::pack_double(const double* val, size_t* len)
                 reinterpret_cast<uint32_t*>(encoded)[i] = static_cast<uint32_t>(((val[i] * d - reference_value) * divisor) + 0.5);
             }
             break;
+        // NOLINTEND(bugprone-incorrect-roundings)
         default:
             grib_context_log(context_, GRIB_LOG_ERROR, "%s pack_double: packing %s, bitsPerValue=%ld (max %d)",
                              accessor_type().c_str(), name_, bits_per_value, MAX_BITS_PER_VALUE);
