@@ -83,6 +83,7 @@ int Mtg2SwitchDefault::unpack_long(long* val, size_t* len)
             if (marsClassExists && (STR_EQUAL(marsClass, "a5") ||
                                     STR_EQUAL(marsClass, "cr") ||
                                     STR_EQUAL(marsClass, "mc") ||
+                                    STR_EQUAL(marsClass, "we") ||
                                     STR_EQUAL(marsClass, "gg"))) {
                 *val = 2;
             }
