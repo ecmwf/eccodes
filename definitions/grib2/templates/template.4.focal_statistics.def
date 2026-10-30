@@ -12,9 +12,9 @@ spatialVicintiyList list(numberOfSpatialVicinityValues)
 
 codetable[1] spatialVicinityProcessing ('4.104.table',masterDir,localDir)=255 ;
 
-signed[2] spatialVicinityProcessingArgument1 = 255 : dump ;
+signed[2] spatialVicinityProcessingArgument1 = missing() : can_be_missing,dump ;
 
-signed[2] spatialVicinityProcessingArgument2 = 255 : dump ;
+signed[2] spatialVicinityProcessingArgument2 = missing() : can_be_missing,dump ;
 
 codetable[1] spatialVicinityMissingData ('4.105.table',masterDir,localDir)=0 ;
 
