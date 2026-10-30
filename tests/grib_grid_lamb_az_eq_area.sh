@@ -58,7 +58,8 @@ ${tools_dir}/grib_filter -o $tempGrib $tempFilt $input
 ${tools_dir}/grib_get_data $tempGrib > $tempOut
 
 # Compare output with reference. If the diff fails, script will immediately exit with status 1
-diff $tempRef $tempOut
+lon360() { awk 'NR > 1 { $2 = sprintf("%.3f", $2 < 0 ? $2 + 360 : $2) } { print }' $1; }
+[ "$(lon360 $tempRef)" = "$(lon360 $tempOut)" ]
 
 grib_check_key_equals $tempGrib standardParallelInDegrees,centralLongitudeInDegrees '48 9'
 grib_check_key_equals $tempGrib xDirectionGridLengthInMetres,yDirectionGridLengthInMetres '5000 5000'

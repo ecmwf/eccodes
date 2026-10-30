@@ -46,7 +46,11 @@ ${tools_dir}/grib_get_data -s latitudeOfFirstGridPointInDegrees=90 $input > $tem
 status=$?
 set -e
 [ $status -ne 0 ]
-grep -q "Transformation cannot be computed at the poles" $tempOut
+if [ "${ECCODES_ECKIT_GEO:-0}" -eq 0 ]; then
+    grep -q "Transformation cannot be computed at the poles" $tempOut
+else
+    grep -q "first grid point is not projectable" $tempOut
+fi
 
 input=${data_dir}/mercator.grib2
 set +e

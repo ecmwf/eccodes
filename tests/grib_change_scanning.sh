@@ -122,6 +122,15 @@ Latitude Longitude Value
 EOF
 diff $tempRef $tempText
 
+# eckit::geo iterates the message with alternativeRowScanning: the points (and values) as the message with the rows
+# swapped (the same points, in a different order)
+if [ $HAVE_ECKIT_GEO -eq 1 ]; then
+    for l in 1 2; do
+        ECCODES_ECKIT_GEO=$l ${tools_dir}/grib_get_data -F "%.2f" $tempGribA | sed 1d | sort > $tempText
+        sed 1d $tempRef | sort | diff - $tempText
+    done
+fi
+
 # It must fail when Ni=missing (reduced grids)
 set +e
 ${tools_dir}/grib_set -s swapScanningAlternativeRows=1 $ECCODES_SAMPLES_PATH/reduced_gg_pl_96_grib2.tmpl $tempGribB 2>/dev/null

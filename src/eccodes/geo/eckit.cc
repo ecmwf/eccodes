@@ -12,6 +12,7 @@
 
 #include "eccodes/geo/eckit.h"
 
+#include <set>
 #include <string>
 
 #include "eccodes_config.h"
@@ -57,13 +58,6 @@ inline std::string get_string(const grib_handle* h, const char* name)
 }
 
 
-inline long get_number(const grib_handle* h, const char* name)
-{
-    long l = 0;
-    return grib_get_long(h, name, &l) == GRIB_SUCCESS ? l : 0;
-}
-
-
 inline EckitGeoLevel eckit_geo_level(const grib_handle* h)
 {
 #if defined(HAVE_ECKIT_GEO)
@@ -83,21 +77,28 @@ bool eckit_geo_use_for_iterator(const grib_handle* h)
 
     // EckitGeoLevel::RESTRICTED
 
-    if (get_number(h, "alternativeRowScanning") != 0) {
-        return false;
-    }
-
-    const auto gridType = get_string(h, "gridType");
-    return gridType == "healpix" ||
-           gridType == "unstructured_grid" ||
-           (gridType == "rotated_ll" && get_number(h, "numberOfDataPoints") > 1) ||
-           (gridType == "regular_ll" && get_number(h, "numberOfDataPoints") > 1);
+    // (see tests, including the differences to eccodes)
+    static const std::set<std::string> GRID_TYPES{
+        "albers",
+        "healpix",
+        "lambert_azimuthal_equal_area",
+        "lambert_lam",
+        "lambert",
+        "mercator",
+        "polar_stereographic",
+        "reduced_ll",
+        "regular_ll",
+        "rotated_ll",
+        "space_view",
+        "unstructured_grid",
+    };
+    return GRID_TYPES.count(get_string(h, "gridType")) != 0;
 }
 
 
 bool eckit_geo_use_for_projstring(const grib_handle* h)
 {
-    return eckit_geo_level(h) >= EckitGeoLevel::ENABLED;
+    return eckit_geo_level(h) > EckitGeoLevel::DISABLED;
 }
 
 
