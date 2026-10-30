@@ -254,6 +254,7 @@ platform = "hpc-atos-nvidia"
 modules = ["load prgenv/nvidia", "unload nvidia", "load nvidia/26.1", "load cmake", "load ninja"]
 c-compiler-binary = "nvc"
 cxx-compiler-binary = "nvc++"
+sccache = false
 
 [[matrix.build-hpc.include]]
 options = "eckit-geo"
