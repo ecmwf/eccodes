@@ -80,7 +80,6 @@ jobs:
     needs: ci-approval
     runs-on: ubuntu-slim
     permissions:
-      statuses: write
       pull-requests: read
     outputs:
       run: ${{ steps.gate.outputs.run }}
