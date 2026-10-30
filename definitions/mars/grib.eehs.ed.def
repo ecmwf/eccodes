@@ -1,1 +1,6 @@
-alias mars.number = perturbationNumber;
+if ( !defined(MTG2Switch) || MTG2Switch == 0 ){
+ alias mars.number = perturbationNumber;
+}
+else {
+ include "mars/mars.quantile.def"
+}
