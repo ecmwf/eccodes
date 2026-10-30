@@ -152,6 +152,23 @@ jobs:
       fallback-ref: develop
     secrets: inherit
     if: ${{ needs['label-gate'].outputs.run == 'true' && (needs['label-gate'].outputs.depth == 'all' || needs['label-gate'].outputs.depth >= 2) }}
+  gribjump:
+    name: gribjump
+    needs:
+    - ci-approval
+    - context
+    - label-gate
+    - validate
+    - fdb
+    uses: ecmwf/gribjump/.github/workflows/cross-repo-trigger.yml@develop
+    with:
+      from-repo: ${{ github.repository }}
+      from-sha: ${{ needs.context.outputs.head-sha }}
+      from-jobs: '["eccodes/build"]'
+      branch: ${{ needs.context.outputs.head-branch }}
+      fallback-ref: develop
+    secrets: inherit
+    if: ${{ needs['label-gate'].outputs.run == 'true' && (needs['label-gate'].outputs.depth == 'all' || needs['label-gate'].outputs.depth >= 3) }}
   metkit:
     name: metkit
     needs:
@@ -185,6 +202,36 @@ jobs:
       fallback-ref: develop
     secrets: inherit
     if: ${{ needs['label-gate'].outputs.run == 'true' && (needs['label-gate'].outputs.depth == 'all' || needs['label-gate'].outputs.depth >= 2) }}
+  zfdb:
+    name: zfdb
+    needs:
+    - ci-approval
+    - context
+    - label-gate
+    - validate
+    - gribjump
+    runs-on: ubuntu-slim
+    steps:
+    - id: mint
+      uses: actions/create-github-app-token@v3
+      with:
+        client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
+        private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
+        owner: ${{ github.repository_owner }}
+    - name: Dispatch zfdb (private consumer)
+      uses: ecmwf/ci-infrastructure/actions/dispatch-and-wait@main
+      with:
+        consumer-repo: ecmwf/zfdb
+        ref: develop
+        from-repo: ${{ github.repository }}
+        from-sha: ${{ needs.context.outputs.head-sha }}
+        from-jobs: '["eccodes/build"]'
+        branch: ${{ needs.context.outputs.head-branch }}
+        fallback-ref: develop
+        token: ${{ steps.mint.outputs.token }}
+        artifact-names: ''
+        wait-for-run-conclusion: 'true'
+    if: ${{ needs['label-gate'].outputs.run == 'true' && (needs['label-gate'].outputs.depth == 'all' || needs['label-gate'].outputs.depth >= 4) }}
   report-result:
     needs:
     - ci-approval
@@ -192,8 +239,10 @@ jobs:
     - label-gate
     - validate
     - fdb
+    - gribjump
     - metkit
     - mir
+    - zfdb
     if: ${{ (always() && needs.context.outputs.ci-conclusion == 'success') && needs['label-gate'].outputs.run == 'true' }}
     runs-on: ubuntu-slim
     permissions:
@@ -204,7 +253,7 @@ jobs:
         GH_TOKEN: ${{ github.token }}
       run: |
         state=success
-        for r in ${{ needs.validate.result }} ${{ needs.fdb.result }} ${{ needs.metkit.result }} ${{ needs.mir.result }}; do
+        for r in ${{ needs.validate.result }} ${{ needs.fdb.result }} ${{ needs.gribjump.result }} ${{ needs.metkit.result }} ${{ needs.mir.result }} ${{ needs.zfdb.result }}; do
           if [ "$r" = failure ] || [ "$r" = cancelled ]; then
             state=failure
           fi
