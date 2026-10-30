@@ -19,7 +19,8 @@ jobs:
     steps:
     - uses: ecmwf/ci-infrastructure/actions/post-downstream-decision@main
       with:
-        contexts: downstream/runner downstream/hpc-atos
+        contexts: downstream/runner
+        hpc-contexts: downstream/hpc-atos
     - uses: ecmwf/ci-infrastructure/actions/dispatch-downstream@main
       with:
         workflows: trigger-downstream.yml trigger-downstream-hpc-atos.yml
