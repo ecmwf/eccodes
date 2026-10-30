@@ -46,6 +46,12 @@ ${tools_dir}/grib_set -s dataset=1,generation=2,activity=1,experiment=1,model=2,
 grib_check_key_equals $temp_grib_a "dataset,generation,activity,experiment,model,realization,resolution" "1 2 1 1 2 1 1"
 grib_check_key_equals $temp_grib_a "dataset:s,activity:s,experiment:s,model:s,resolution:s" "climate-dt CMIP6 hist IFS-NEMO standard"
 
+# Check a second example where a few additional things are set in climate-dt
+${tools_dir}/grib_set -s dataset=1,generation=3,activity=1,experiment=1,model=7,realization=1,resolution=1 $destine_sample $temp_grib_a
+
+grib_check_key_equals $temp_grib_a "dataset,generation,activity,experiment,model,realization,resolution" "1 3 1 1 7 1 1"
+grib_check_key_equals $temp_grib_a "dataset:s,activity:s,experiment:s,model:s,resolution:s" "climate-dt CMIP6 hist icon-10km standard"
+
 # Check setting dataset to extremes-dt (2). This time we will check string also
 ${tools_dir}/grib_set -s dataset=2 $destine_sample $temp_grib_a
 

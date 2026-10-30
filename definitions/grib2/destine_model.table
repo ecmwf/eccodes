@@ -3,4 +3,9 @@
 2 IFS-NEMO IFS with NEMO ocean model
 3 IFS-FESOM IFS with FESOM ocean model
 4 ICON ICON-A with ICON-O ocean model
+5 ifs-nemo-10km IFS with NEMO ocean model at a nominal model resolution of 10 km
+6 ifs-fesom-10km IFS with FESOM ocean model at a nominal model resolution of 10 km
+7 icon-10km ICON-A with ICON-O ocean model at a nominal model resolution of 10 km
+8 ifs-nemo-30km IFS with NEMO ocean model at a nominal model resolution of 30 km
+9 ifs-fesom-30km IFS with FESOM ocean model at a nominal model resolution of 30 km
 65535 65535 Missing
