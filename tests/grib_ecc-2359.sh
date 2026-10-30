@@ -24,6 +24,8 @@ tempFilt=temp.$label.filt
 
 sample_grib2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
+# type cm
+
 cat >$tempFilt<<EOF
 set setLocalDefinition=1;
 set tablesVersion=37;
@@ -61,6 +63,77 @@ set clusteringStartTimeStep = 72;
 set clusteringEndTimeStep = 96;
 set representativeMember = 5;
 set climatologicalRegime = 2;
+write;
+EOF
+
+${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample_grib2
+
+result=$(${tools_dir}/grib_get -p mars.number $tempGrib)
+[ "$result" = "1" ]
+
+result=$(${tools_dir}/grib_get -p mars.domain $tempGrib)
+[ "$result" = "h" ]
+
+result=$(${tools_dir}/grib_get -p mars.step $tempGrib)
+[ "$result" = "72" ]
+
+result=$(${tools_dir}/grib_get -p mars.levelist $tempGrib)
+[ "$result" = "500" ]
+
+# Clean up
+rm -f $tempGrib $tempFilt
+
+# type cr
+
+cat >$tempFilt<<EOF
+set setLocalDefinition=1;
+set tablesVersion=37;
+set grib2LocalSectionNumber = 32;
+set marsClass = 1;
+set marsType = 45;
+set marsStream = 1035;
+set experimentVersionNumber = "0001";
+set clusteringStartTimeStep = 72;
+set clusteringEndTimeStep = 96;
+set representativeMember = 5;
+set climatologicalRegime = 2;
+set productDefinitionTemplateNumber = 3;
+set parameterCategory = 3;
+set parameterNumber = 4;
+set typeOfGeneratingProcess = 4;
+set backgroundProcess = 255;
+set generatingProcessIdentifier = 136;
+set hoursAfterDataCutoff = MISSING;
+set minutesAfterDataCutoff = MISSING;
+set indicatorOfUnitForForecastTime = 1;
+set forecastTime = 72;
+set typeOfFirstFixedSurface = 100;
+set scaleFactorOfFirstFixedSurface = 0;
+set scaledValueOfFirstFixedSurface = 50000;
+set typeOfSecondFixedSurface = 255;
+set scaleFactorOfSecondFixedSurface = MISSING;
+set scaledValueOfSecondFixedSurface = MISSING;
+set derivedForecast = 192;
+set numberOfForecastsInEnsemble = 51;
+set clusterIdentifier = 1;
+set NH = MISSING;
+set NL = 1;
+set totalNumberOfClusters = 4;
+set clusteringMethod = 1;
+set northernLatitudeOfClusterDomain = 75000000;
+set southernLatitudeOfClusterDomain = 30000000;
+set easternLongitudeOfClusterDomain = 40000000;
+set westernLongitudeOfClusterDomain = 340000000;
+set numberOfForecastsInTheCluster = 21;
+set scaleFactorOfStandardDeviation = MISSING;
+set scaledValueOfStandardDeviation = MISSING;
+set scaleFactorOfDistanceFromEnsembleMean = MISSING;
+set scaledValueOfDistanceFromEnsembleMean = MISSING;
+set ensembleForecastNumbers = {
+    0, 2, 5, 9, 12, 18, 20, 23,
+    25, 26, 27, 28, 29, 33, 35, 36,
+    37, 38, 45, 46, 50
+};
 write;
 EOF
 
