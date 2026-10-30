@@ -14982,30 +14982,6 @@
 	 scaleFactorOfLowerLimit = 0 ;
 	 probabilityType = 3 ;
 	}
-#Mean wave period of at least 8 s
-'%' = {
-	 discipline = 192 ;
-	 parameterCategory = 131 ;
-	 parameterNumber = 78 ;
-	}
-#Mean wave period of at least 10 s
-'%' = {
-	 discipline = 192 ;
-	 parameterCategory = 131 ;
-	 parameterNumber = 79 ;
-	}
-#Mean wave period of at least 12 s
-'%' = {
-	 discipline = 192 ;
-	 parameterCategory = 131 ;
-	 parameterNumber = 80 ;
-	}
-#Mean wave period of at least 15 s
-'%' = {
-	 discipline = 192 ;
-	 parameterCategory = 131 ;
-	 parameterNumber = 81 ;
-	}
 #Geopotential probability
 '%' = {
 	 discipline = 192 ;
