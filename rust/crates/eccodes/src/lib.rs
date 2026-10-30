@@ -1,4 +1,4 @@
-//! Read and write GRIB and BUFR messages, through ECMWF's eccodes library.
+//! Read and write GRIB and BUFR messages, through ECMWF's ecCodes library.
 //!
 //! ```no_run
 //! use eccodes::GribFile;
@@ -19,11 +19,10 @@
 //!
 //! # The shape of the API
 //!
-//! - A [`MessageFile`] is a file of messages: [`count`](MessageFile::count)
-//!   it, [`index`](MessageFile::index) it, or iterate it. [`GribFile`] and
-//!   [`BufrFile`] fix the product; plain `MessageFile` accepts any. Bytes
-//!   that are not a file — a socket, a pipe, a buffer — go through
-//!   [`messages_from`](MessageFile::messages_from), which takes any
+//! - A [`GribFile`] or [`BufrFile`] is a file of messages:
+//!   [`count`](MessageFile::count) it, [`index`](MessageFile::index) it, or
+//!   iterate it. Bytes that are not a file — a socket, a pipe, a buffer — go
+//!   through [`messages_from`](MessageFile::messages_from), which takes any
 //!   [`Read`](std::io::Read); either way you get [`Messages`].
 //! - A [`Message`] is one message. Keys are read and written by name, typed
 //!   by what you ask for — see [`get`](Message::get) and [`set`](Message::set).
@@ -69,10 +68,12 @@
 //!
 //! # Features
 //!
-//! - `vendored` (default) — build and link eccodes from source.
-//! - `system` — link an installed eccodes.
-//! - `raw` — expose `Message::as_raw` and re-export `eccodes_sys` as `sys`,
-//!   for handing a message to another library built on eccodes.
+//! - `vendored` (default) — build and link ecCodes from source.
+//! - `system` — link an installed ecCodes.
+//! - `raw` — expose the C `codes_handle` pointer behind a [`Message`]
+//!   (`Message::as_raw`) and re-export `eccodes-sys` as `sys`, to hand a
+//!   message to another library built on the ecCodes C API. Off by default:
+//!   the raw pointer bypasses the guarantees of the safe API.
 
 #![deny(missing_docs)]
 

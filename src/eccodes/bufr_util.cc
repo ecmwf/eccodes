@@ -922,7 +922,7 @@ static const char* codes_bufr_header_get_centre_name(long centre_code)
 }
 
 #if defined(BUFR_PROCESS_CODE_TABLE)
-// TODO(masn): Not efficient as it opens the code table every time
+// TODO(maee): Not efficient as it opens the code table every time
 static char* codes_bufr_header_get_centre_name(long edition, long centre_code)
 {
     char full_path[2014] = { 0 };

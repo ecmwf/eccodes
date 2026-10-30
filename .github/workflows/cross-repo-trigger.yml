@@ -109,6 +109,7 @@ jobs:
         repository: ecmwf/eccodes
         ref: ${{ steps.pick.outputs.ref }}
         token: ${{ steps.mint.outputs.token }}
+        persist-credentials: false
     - id: r
       uses: ecmwf/ci-infrastructure/actions/resolve-deps@main
       with:
@@ -136,6 +137,9 @@ jobs:
         client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
         private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
         owner: ${{ github.repository_owner }}
+        permission-contents: read
+        permission-actions: read
+        permission-checks: write
     - id: check_start
       if: ${{ github.event_name == 'workflow_dispatch' && inputs.from-jobs != '[]' }}
       uses: ecmwf/ci-infrastructure/actions/report-check-run@main
@@ -153,6 +157,7 @@ jobs:
         repository: ecmwf/eccodes
         ref: ${{ needs.resolve.outputs.ref }}
         token: ${{ steps.mint.outputs.token }}
+        persist-credentials: false
     - name: Decode matrix-leg
       id: m
       shell: bash
@@ -230,6 +235,9 @@ jobs:
         client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
         private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
         owner: ${{ github.repository_owner }}
+        permission-contents: read
+        permission-actions: read
+        permission-checks: write
     - id: check_start
       if: ${{ github.event_name == 'workflow_dispatch' && inputs.from-jobs != '[]' }}
       uses: ecmwf/ci-infrastructure/actions/report-check-run@main
@@ -247,6 +255,7 @@ jobs:
         repository: ecmwf/eccodes
         ref: ${{ needs.resolve.outputs.ref }}
         token: ${{ steps.mint.outputs.token }}
+        persist-credentials: false
     - name: Decode matrix-leg
       id: m
       shell: bash

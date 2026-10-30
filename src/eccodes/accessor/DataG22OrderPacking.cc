@@ -841,7 +841,7 @@ int DataG22OrderPacking::pack_double(const double* val, size_t* len)
     if ((err = grib_get_long_internal(gh, "bitmapPresent", &bitmap_present)) != GRIB_SUCCESS)
         return err;
 
-    max_bits = bits_per_value;  // TODO(masn)
+    max_bits = bits_per_value;  // TODO(maee)
 
     int packing_mode = 0;
     DEBUG_ASSERT(dataRepresentationTemplateNumber == 2 || dataRepresentationTemplateNumber == 3);

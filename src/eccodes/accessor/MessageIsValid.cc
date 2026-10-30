@@ -525,7 +525,7 @@ int MessageIsValid::check_surface_keys()
             grib_context_log(c, GRIB_LOG_ERROR, "%s: First fixed surface: Type %ld (%s) requires a level", TITLE, stype, name);
             return GRIB_INVALID_KEY_VALUE;
         }
-        // TODO(masn): generalise this. Need to check with DGOV
+        // TODO(maee): generalise this. Need to check with DGOV
         if (stype == 1 && (!sfac_missing || !sval_missing)) {
             grib_context_log(c, GRIB_LOG_ERROR,
                              "%s: First fixed surface: If type=%ld, scaleFactor/scaledValue keys must be set to missing", TITLE, stype);
@@ -586,7 +586,7 @@ int MessageIsValid::check_steps()
             return GRIB_WRONG_STEP;
         }
         // Accumulations, average etc
-        // TODO(masn): Generalise this rule. Beware of index and stdanom where start == end!
+        // TODO(maee): Generalise this rule. Beware of index and stdanom where start == end!
         if (STR_EQUAL(stepType, "accum") || STR_EQUAL(stepType, "avg") || STR_EQUAL(stepType, "min") || STR_EQUAL(stepType, "max")) {
             if (startStep == endStep && startStep != 0) {
                 grib_context_log(handle_->context, GRIB_LOG_ERROR,

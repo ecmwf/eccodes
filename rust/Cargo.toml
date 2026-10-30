@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["crates/eccodes-sys", "crates/eccodes", "examples/eccodes-example"]
+members = ["crates/eccodes-sys", "crates/eccodes", "crates/eccodes-compat", "examples/eccodes-example"]
 
 [workspace.package]
 version      = "2.50.0"
@@ -8,6 +8,8 @@ edition      = "2024"
 license      = "Apache-2.0"
 repository   = "https://github.com/ecmwf/eccodes"
 rust-version = "1.90"
+keywords     = ["ecmwf", "grib", "bufr", "meteorology", "weather"]
+categories   = ["science", "api-bindings"]
 
 [workspace.dependencies]
 bindman-utils = "0.2"

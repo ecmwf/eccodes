@@ -819,7 +819,7 @@ static void grib_context_delete_(grib_context* c)
 {
     if (!c) c = grib_context_get_default();
 
-    /* grib_trie_delete(c->def_files);  TODO:masn */
+    /* grib_trie_delete(c->def_files);  TODO(maee) */
 
     grib_context_reset(c);
 

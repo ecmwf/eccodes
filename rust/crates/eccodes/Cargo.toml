@@ -5,16 +5,23 @@ edition      .workspace = true
 license      .workspace = true
 repository   .workspace = true
 rust-version .workspace = true
+keywords     .workspace = true
+categories   .workspace = true
 description  = "Safe Rust wrapper for ECMWF's eccodes (GRIB/BUFR)"
+readme       = "README.md"
+build        = "build.rs"
 
 [features]
-default = ["vendored"]
+default = ["vendored", "aec"]
 
 # Build strategy (mutually exclusive) — pass-through to eccodes-sys.
 # `vendored` forces `threads` on: the `Send` impl on `Handle` relies on
 # libeccodes locking its global context internally.
 system   = ["eccodes-sys/system"]
 vendored = ["eccodes-sys/vendored", "threads"]
+
+# CCSDS packing via libaec — the operational packing of ECMWF GRIB2.
+aec = ["eccodes-sys/aec"]
 
 # Expose `Message::as_raw` and re-export `eccodes_sys`, for handing a message
 # to another C library built on eccodes.
@@ -37,6 +44,9 @@ log       = "0.4"
 # Dates and times in the public API: `time::Date`/`Time` are what message
 # keys decode to. Chosen over chrono/jiff for native Julian-day support.
 time      = "0.3"
+
+[build-dependencies]
+bindman-utils.workspace = true
 
 [dev-dependencies]
 # Fetches optional golden-value fixtures from the ECMWF test-data server.
