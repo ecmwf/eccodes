@@ -1,6 +1,7 @@
 # YAML file to create inputModelNameConcept.def and inputModelVersionConcept.def
 #
 # - extra_keys: to include for an entry extra grib keys, blockwise or element-wise
+# - version_prefix: to override the model name prefix in inputModelVersionConcept.def
 # - override_id: overwrites the id by the defined one
 # - skip: if a version was skipped an the id should jump, use skip
 # - null: if no version none, takes only the model name as version entry
@@ -53,6 +54,18 @@ models:
       - version: single-mse-v1.0
       - version: single-mse-v1.1
       - version: single-mse-v2.0
+
+  - name: seas5
+    start: 990
+    versions:
+      - version: cy43r1
+        version_prefix: ifs
+
+  - name: seas6
+    start: 991
+    versions:
+      - version: cy49r2
+        version_prefix: ifs
 
   - name: cosmo
     start: 1000

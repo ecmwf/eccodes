@@ -26,6 +26,12 @@
 'aifs' = {inputProcessIdentifier=503;}
 'aifs' = {inputProcessIdentifier=504;}
 
+# seas5 (ID range: 990-990)
+'seas5' = {inputProcessIdentifier=990;}
+
+# seas6 (ID range: 991-991)
+'seas6' = {inputProcessIdentifier=991;}
+
 # cosmo (ID range: 1000-1000)
 'cosmo' = {inputProcessIdentifier=1000;}
 

@@ -26,6 +26,12 @@
 'aifs-single-mse-v1.1' = {inputProcessIdentifier=503;}
 'aifs-single-mse-v2.0' = {inputProcessIdentifier=504;}
 
+# seas5 (ID range: 990-990)
+'ifs-cy43r1' = {inputProcessIdentifier=990;}
+
+# seas6 (ID range: 991-991)
+'ifs-cy49r2' = {inputProcessIdentifier=991;}
+
 # cosmo (ID range: 1000-1000)
 'cosmo' = {inputProcessIdentifier=1000;}
 
