@@ -1,3 +1,13 @@
+## probabilityType=10 [Probability of event within the quantile of the probability distribution function]
+# When using entry 10, the lower limit is used to encode the quantile q (must be an integer between 0 and Q) while
+# the upper limit is used to encode the total number of quantiles Q. This defines the probability of the parameter
+# falling within quantile q. For instance, to encode the probability of falling within the 10th percentile,
+# then q=10 and Q=100; to encode the probability of falling within the 1st tercile, then q=1 and Q=3.
+if (edition == 2 and defined(probabilityType) and probabilityType == 10){
+  meta quantileValue from_scale_factor_scaled_value(scaleFactorOfLowerLimit,scaledValueOfLowerLimit) : no_copy;
+  meta totalNumberOfQuantiles from_scale_factor_scaled_value(scaleFactorOfUpperLimit,scaledValueOfUpperLimit) : no_copy;
+}
+
 if ((stream is "eehs" or stream is "efhs" or stream is "wees" or stream is "wehs") and (type is "cd")) {
   if (edition == 1) {
     # defined in local section 19
