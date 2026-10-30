@@ -1,1 +1,7 @@
-base.def
+if (edition == 2) {
+ alias mars.number = clusterIdentifier;
+ alias mars.domain = clusteringDomain;
+} else {
+ alias mars.number = clusterNumber;
+ alias mars.domain = clusteringDomain;
+}

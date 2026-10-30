@@ -5,10 +5,10 @@ unsigned[1] clusterIdentifier : dump ;
 alias number=clusterIdentifier;
 
 # Number of cluster to which the high resolution control belongs
-unsigned[1]  NH : dump;
+unsigned[1]  NH : dump, can_be_missing;
 
 # Number of cluster to which the low resolution control belongs
-unsigned[1] NL : dump ;
+unsigned[1] NL : dump, can_be_missing ;
 
 # Total number of clusters
 unsigned[1] totalNumberOfClusters : dump ;
@@ -34,15 +34,15 @@ unsigned[1] numberOfForecastsInTheCluster : dump ;
 
 alias NC  = numberOfForecastsInTheCluster;
 # Scale factor of standard deviation in the cluster
-unsigned[1] scaleFactorOfStandardDeviation : edition_specific ;
+unsigned[1] scaleFactorOfStandardDeviation : edition_specific, can_be_missing ;
 alias scaleFactorOfStandardDeviationInTheCluster=scaleFactorOfStandardDeviation;
 
 # Scaled value of standard deviation in the cluster
-unsigned[4] scaledValueOfStandardDeviation : dump ;
+unsigned[4] scaledValueOfStandardDeviation : dump, can_be_missing ;
 alias scaledValueOfStandardDeviationInTheCluster=scaledValueOfStandardDeviation;
 
 # Scale factor of distance of the cluster from ensemble mean
-unsigned[1] scaleFactorOfDistanceFromEnsembleMean : dump ;
+unsigned[1] scaleFactorOfDistanceFromEnsembleMean : dump, can_be_missing ;
 
 # Scaled value of distance of the cluster from ensemble mean
-unsigned[4] scaledValueOfDistanceFromEnsembleMean : dump ;
+unsigned[4] scaledValueOfDistanceFromEnsembleMean : dump, can_be_missing ;
