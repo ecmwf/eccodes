@@ -22,7 +22,7 @@ concurrency:
 jobs:
   gate:
     if: github.event_name == 'workflow_run' && github.event.workflow_run.event != 'push' || contains(fromJSON('["run-hpc-ci", "hpc-ci-not-needed"]'), github.event.label.name)
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-latest
     steps:
     - uses: ecmwf/ci-infrastructure/actions/hpc-label-decision@main
       with:
