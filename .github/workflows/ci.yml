@@ -10,6 +10,8 @@ on:
     paths-ignore:
       - "deprecated/**"
   workflow_dispatch:
+  schedule:
+    - cron: "37 0 * * *"
   workflow_call:
 
 concurrency:
