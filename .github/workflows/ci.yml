@@ -31,7 +31,7 @@ permissions:
 jobs:
   ci-approval:
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-latest
     permissions:
       pull-requests: write
     steps:
@@ -39,7 +39,7 @@ jobs:
 
   pre-commit:
     needs: ci-approval
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-latest
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
     steps:
@@ -49,10 +49,8 @@ jobs:
       - uses: ecmwf/ci-infrastructure/actions/pre-commit@main
 
   resolve:
-    needs: [ci-approval, pre-commit]
-    runs-on: arc-runner-normal
-    container:
-      image: eccr.ecmwf.int/public-ci-images/ubuntu24.04-base:latest
+    needs: ci-approval
+    runs-on: ubuntu-latest
     outputs:
       build-matrix: ${{ steps.r.outputs.matrix-build }}
       build-hpc-matrix: ${{ steps.r.outputs.matrix-build-hpc }}
@@ -61,8 +59,6 @@ jobs:
       fortran-matrix: ${{ toJSON(fromJSON(steps.r.outputs.json).fortran) }}
       fortran-hpc-matrix: ${{ toJSON(fromJSON(steps.r.outputs.json)['fortran-hpc']) }}
     steps:
-      - name: Announce image
-        uses: ecmwf/ci-infrastructure/actions/announce-image@main
       - id: mint
         uses: actions/create-github-app-token@v3
         with:
@@ -80,14 +76,21 @@ jobs:
           client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
           app-private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
 
+  hpc-gate:
+    needs: ci-approval
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      run: ${{ steps.gate.outputs.run }}
+    steps:
+      - id: gate
+        uses: ecmwf/ci-infrastructure/actions/hpc-gate@main
+
   wait-build:
     needs: [ci-approval, resolve]
-    runs-on: arc-runner-normal
-    container:
-      image: eccr.ecmwf.int/public-ci-images/ubuntu24.04-base:latest
+    runs-on: ubuntu-latest
     steps:
-      - name: Announce image
-        uses: ecmwf/ci-infrastructure/actions/announce-image@main
       - id: mint
         uses: actions/create-github-app-token@v3
         with:
@@ -100,13 +103,10 @@ jobs:
           token: ${{ steps.mint.outputs.token }}
 
   wait-build-hpc:
-    needs: [ci-approval, resolve]
-    runs-on: arc-runner-normal
-    container:
-      image: eccr.ecmwf.int/public-ci-images/ubuntu24.04-base:latest
+    needs: [ci-approval, resolve, hpc-gate]
+    if: needs.hpc-gate.outputs.run == 'true'
+    runs-on: ubuntu-latest
     steps:
-      - name: Announce image
-        uses: ecmwf/ci-infrastructure/actions/announce-image@main
       - id: mint
         uses: actions/create-github-app-token@v3
         with:
@@ -118,8 +118,39 @@ jobs:
           matrix: ${{ needs.resolve.outputs.build-hpc-matrix }}
           token: ${{ steps.mint.outputs.token }}
 
+  wait-fortran:
+    needs: [ci-approval, resolve]
+    runs-on: ubuntu-latest
+    steps:
+      - id: mint
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+      - uses: ecmwf/ci-infrastructure/actions/wait-for-deps@main
+        with:
+          matrix: ${{ needs.resolve.outputs.fortran-matrix }}
+          token: ${{ steps.mint.outputs.token }}
+
+  wait-fortran-hpc:
+    needs: [ci-approval, resolve, hpc-gate]
+    if: needs.hpc-gate.outputs.run == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - id: mint
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+      - uses: ecmwf/ci-infrastructure/actions/wait-for-deps@main
+        with:
+          matrix: ${{ needs.resolve.outputs.fortran-hpc-matrix }}
+          token: ${{ steps.mint.outputs.token }}
+
   build:
-    needs: [ci-approval, resolve, wait-build]
+    needs: [ci-approval, pre-commit, resolve, wait-build]
     name: build+test (${{ matrix._resolved['job-name'] }})
     runs-on: ${{ matrix['runs-on'] }}
     container:
@@ -213,7 +244,7 @@ jobs:
           resolved: ${{ toJSON(matrix._resolved) }}
 
   fortran:
-    needs: [ci-approval, resolve]
+    needs: [ci-approval, pre-commit, resolve, wait-fortran]
     name: fortran (${{ matrix._resolved['job-name'] }})
     runs-on: ${{ matrix['runs-on'] }}
     container:
@@ -263,7 +294,7 @@ jobs:
           resolved: ${{ toJSON(matrix._resolved) }}
 
   build-hpc:
-    needs: [ci-approval, resolve, wait-build-hpc]
+    needs: [ci-approval, pre-commit, resolve, wait-build-hpc]
     name: build-hpc (${{ matrix._resolved['job-name'] }})
     runs-on: ${{ matrix['runs-on'] }}
     container:
@@ -319,7 +350,7 @@ jobs:
           own-source: ${{ steps.build.outputs.cache-hit == 'true' && 'artifact' || 'built' }}
 
   fortran-hpc:
-    needs: [ci-approval, resolve]
+    needs: [ci-approval, pre-commit, resolve, wait-fortran-hpc]
     name: fortran-hpc (${{ matrix._resolved['job-name'] }})
     runs-on: ${{ matrix['runs-on'] }}
     container:
@@ -374,11 +405,24 @@ jobs:
           resolved: ${{ toJSON(matrix._resolved) }}
           own-source: ${{ steps.build.outputs.cache-hit == 'true' && 'artifact' || 'built' }}
 
+  collect-result-hpc:
+    name: collect HPC results
+    if: always() && needs.hpc-gate.outputs.run == 'true'
+    needs: [ci-approval, hpc-gate, wait-build-hpc, wait-fortran-hpc, build-hpc, fortran-hpc]
+    runs-on: ubuntu-latest
+    permissions:
+      statuses: write
+    steps:
+      - uses: ecmwf/ci-infrastructure/actions/ci-result@main
+        with:
+          needs: ${{ toJSON(needs) }}
+          context: ci-result/hpc-atos
+
   ci-result:
     name: collect results
     if: always()
-    needs: [ci-approval, pre-commit, resolve, wait-build, build, rust, fortran, wait-build-hpc, build-hpc, fortran-hpc]
-    runs-on: ubuntu-slim
+    needs: [ci-approval, hpc-gate, pre-commit, resolve, wait-build, build, rust, wait-fortran, fortran]
+    runs-on: ubuntu-latest
     permissions:
       statuses: write
     steps:

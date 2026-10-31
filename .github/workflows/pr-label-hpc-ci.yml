@@ -1,0 +1,31 @@
+# GENERATED FILE - DO NOT EDIT.
+# Regenerate via the ci-infrastructure-generate CLI.
+# Source of truth: each repo's .ci/manifest.toml.
+name: '[PR] HPC-CI label gate'
+on:
+  pull_request_target:
+    types:
+    - labeled
+    - unlabeled
+  workflow_run:
+    workflows:
+    - CI
+    - CI (fork)
+    types:
+    - completed
+permissions:
+  statuses: write
+  actions: read
+  pull-requests: read
+concurrency:
+  group: pr-label-hpc-ci-${{ github.event.pull_request.number || github.event.workflow_run.head_sha }}
+jobs:
+  gate:
+    if: github.event_name == 'workflow_run' && github.event.workflow_run.event != 'push' || contains(fromJSON('["run-hpc-ci", "hpc-ci-not-needed"]'), github.event.label.name)
+    runs-on: ubuntu-slim
+    steps:
+    - uses: ecmwf/ci-infrastructure/actions/hpc-label-decision@main
+      with:
+        client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
+        app-private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
+        fork-ci-workflow: ci-fork.yml
