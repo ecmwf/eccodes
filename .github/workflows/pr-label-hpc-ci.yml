@@ -21,7 +21,7 @@ concurrency:
   group: pr-label-hpc-ci-${{ github.event.pull_request.number || github.event.workflow_run.head_sha }}
 jobs:
   gate:
-    if: github.event_name == 'workflow_run' && github.event.workflow_run.event != 'push' || contains(fromJSON('["run-hpc-ci", "hpc-ci-not-needed"]'), github.event.label.name)
+    if: github.event_name == 'workflow_run' && github.event.workflow_run.event != 'push' && github.event.workflow_run.event != 'schedule' || contains(fromJSON('["run-hpc-ci", "hpc-ci-not-needed"]'), github.event.label.name)
     runs-on: ubuntu-latest
     steps:
     - uses: ecmwf/ci-infrastructure/actions/hpc-label-decision@main
