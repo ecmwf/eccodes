@@ -5,6 +5,10 @@
   -DENABLE_FORTRAN={{ "ON" if "eccodes-fortran" in ci_packages else "OFF" }} \
 {% endblock %}
 {% block test %}
+# From the download-test-data job; ctest's download tests then skip the files present.
+if [ -d "$CI_SOURCE_DIR/.ci-test-data/data" ]; then
+  cp -R "$CI_SOURCE_DIR/.ci-test-data/data/." "$build/data/"
+fi
 # Fetch the test data first; a download failure otherwise surfaces as dozens of
 # unrelated test failures.
 ctest --test-dir "$build" --output-on-failure -L download_data -j 6 --repeat until-pass:5

@@ -87,6 +87,35 @@ jobs:
       - id: gate
         uses: ecmwf/ci-infrastructure/actions/hpc-gate@main
 
+  download-test-data:
+    needs: ci-approval
+    runs-on: ubuntu-latest
+    outputs:
+      key: ${{ steps.key.outputs.key }}
+    steps:
+      - uses: ecmwf/ci-infrastructure/actions/checkout-under-test@main
+        with:
+          allow-unsafe-pr-checkout: ${{ github.event_name == 'pull_request_target' }}
+      - id: key
+        run: echo "key=eccodes-test-data-${{ hashFiles('data/**/*_files.txt', 'data/**/CMakeLists.txt') }}" >> "$GITHUB_OUTPUT"
+      - id: restore
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+        with:
+          path: .ci-test-data
+          key: ${{ steps.key.outputs.key }}
+          lookup-only: true
+      # A failed download only means the legs fetch the data themselves.
+      - id: download
+        if: steps.restore.outputs.cache-hit != 'true'
+        continue-on-error: true
+        run: .ci/download-test-data.sh .ci-test-data
+      # Not from a fork's code: the cache is shared with the base branch.
+      - if: steps.download.outcome == 'success' && github.event_name != 'pull_request_target'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+        with:
+          path: .ci-test-data
+          key: ${{ steps.key.outputs.key }}
+
   wait-build:
     needs: [ci-approval, resolve]
     runs-on: ubuntu-latest
@@ -150,7 +179,7 @@ jobs:
           token: ${{ steps.mint.outputs.token }}
 
   build:
-    needs: [ci-approval, pre-commit, resolve, wait-build]
+    needs: [ci-approval, pre-commit, resolve, wait-build, download-test-data]
     name: build+test (${{ matrix._resolved['job-name'] }})
     runs-on: ${{ matrix['runs-on'] }}
     container:
@@ -170,6 +199,13 @@ jobs:
       - uses: ecmwf/ci-infrastructure/actions/checkout-under-test@main
         with:
           allow-unsafe-pr-checkout: ${{ github.event_name == 'pull_request_target' }}
+
+      - name: Restore test data
+        if: needs.download-test-data.outputs.key != ''
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+        with:
+          path: .ci-test-data
+          key: ${{ needs.download-test-data.outputs.key }}
 
       - name: Fetch resolved deps
         id: deps
@@ -244,7 +280,7 @@ jobs:
           resolved: ${{ toJSON(matrix._resolved) }}
 
   fortran:
-    needs: [ci-approval, pre-commit, resolve, wait-fortran]
+    needs: [ci-approval, pre-commit, resolve, wait-fortran, download-test-data]
     name: fortran (${{ matrix._resolved['job-name'] }})
     runs-on: ${{ matrix['runs-on'] }}
     container:
@@ -264,6 +300,13 @@ jobs:
       - uses: ecmwf/ci-infrastructure/actions/checkout-under-test@main
         with:
           allow-unsafe-pr-checkout: ${{ github.event_name == 'pull_request_target' }}
+
+      - name: Restore test data
+        if: needs.download-test-data.outputs.key != ''
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+        with:
+          path: .ci-test-data
+          key: ${{ needs.download-test-data.outputs.key }}
 
       - name: Fetch resolved deps
         id: deps
