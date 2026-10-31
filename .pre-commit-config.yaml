@@ -64,7 +64,7 @@ repos:
           )$
 
   - repo: https://github.com/ecmwf/ci-infrastructure
-    rev: fe3146daa8a21b23a902175f905272b6f093a3b4
+    rev: c1c72908637d48e2ddaad5dd45cff6fdfdb921ef
     hooks:
       - id: check-ci-approval
       - id: check-ci-result

@@ -12,7 +12,7 @@ permissions: {}
 jobs:
   list:
     if: (startsWith(github.head_ref, 'sync/') || startsWith(github.head_ref, 'sync-branch/') || startsWith(github.head_ref, 'feature/')) && github.event.pull_request.head.repo.full_name == github.repository
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-latest
     steps:
     - uses: ecmwf/ci-infrastructure/actions/sync-branch-prs@main
       with:
