@@ -12,6 +12,8 @@ fi
 # Fetch the test data first; a download failure otherwise surfaces as dozens of
 # unrelated test failures.
 ctest --test-dir "$build" --output-on-failure -L download_data -j 6 --repeat until-pass:5
+# A fresh build tree has no timings, so ctest started grib_padding (minutes) last.
+cp "$CI_SOURCE_DIR/.ci/ctest-cost-data.txt" "$build/Testing/Temporary/CTestCostData.txt"
 ECCODES_ECKIT_GEO={{ eckit_geo_env }} ctest --test-dir "$build" --output-on-failure -LE download_data -j "$jobs"
 {% endblock %}
 {% block install %}
