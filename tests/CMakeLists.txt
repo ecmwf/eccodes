@@ -394,6 +394,7 @@ if( HAVE_BUILD_TOOLS )
         grib_optimize_scaling
         grib_optimize_scaling_sh
         grib_lam_bf
+        grib_laplacian_operator
         grib_lam_gp
         grib1to2
         grib2to1
