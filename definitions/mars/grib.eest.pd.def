@@ -1,0 +1,12 @@
+if ( !defined(MTG2Switch) || MTG2Switch == 0 ){
+ alias mars.step = stepRange;
+}
+else {
+ alias mars.step = endStep;
+}
+
+meta quantileValue from_scale_factor_scaled_value(scaleFactorOfLowerLimit,scaledValueOfLowerLimit) : no_copy;
+meta totalNumberOfQuantiles from_scale_factor_scaled_value(scaleFactorOfUpperLimit,scaledValueOfUpperLimit) : no_copy;
+
+meta marsQuantile sprintf("%d:%d",quantileValue,totalNumberOfQuantiles);
+alias mars.quantile = marsQuantile;

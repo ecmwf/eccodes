@@ -28,20 +28,20 @@ static void check_for_levelist(codes_handle* h, bool should_exist)
         // printf("  name=%s  val=%s\n", name, value);
         if (strcmp(name, "levelist")) {
             mars_levelist_found = true;
-            assert( strcmp(value, "42") );
+            assert(strcmp(value, "42"));
         }
     }
-    assert( mars_levelist_found == should_exist );
+    assert(mars_levelist_found == should_exist);
     codes_keys_iterator_delete(kiter);
 }
 
 int main(int argc, char* argv[])
 {
     codes_handle* h = grib_handle_new_from_samples(0, "GRIB2");
-    size_t alen     = 1000;
+    size_t alen = 1000;
     CODES_CHECK(codes_set_string(h, "typeOfLevel", "isobaricInhPa", &alen), 0);
     CODES_CHECK(codes_set_long(h, "level", 42), 0);
-    //codes_dump_content(h, stdout, "wmo", GRIB_DUMP_FLAG_CODED | GRIB_DUMP_FLAG_OCTET | GRIB_DUMP_FLAG_VALUES | GRIB_DUMP_FLAG_READ_ONLY, 0);
+    // codes_dump_content(h, stdout, "wmo", GRIB_DUMP_FLAG_CODED | GRIB_DUMP_FLAG_OCTET | GRIB_DUMP_FLAG_VALUES | GRIB_DUMP_FLAG_READ_ONLY, 0);
     check_for_levelist(h, true);
 
     // TODO(maee): This is related to

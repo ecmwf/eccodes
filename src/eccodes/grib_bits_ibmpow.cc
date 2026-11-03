@@ -13,15 +13,15 @@ unsigned long grib_decode_unsigned_long(const unsigned char* p, long* bitp, long
 {
     int i;
     long ret = 0;
-    long o   = *bitp / 8;
-    int l    = nbits / 8;
+    long o = *bitp / 8;
+    int l = nbits / 8;
 
     if (nbits == 0)
         return 0;
 
     if (nbits > max_nbits) {
         int bits = nbits;
-        int mod  = bits % max_nbits;
+        int mod = bits % max_nbits;
 
         if (mod != 0) {
             int e = grib_decode_unsigned_long(p, bitp, mod);
@@ -62,15 +62,15 @@ unsigned long grib_decode_unsigned_long(const unsigned char* p, long* bitp, long
 
 int grib_encode_unsigned_long(unsigned char* p, unsigned long val, long* bitp, long nbits)
 {
-    long len          = nbits;
-    int s             = *bitp % 8;
-    int n             = 8 - s;
+    long len = nbits;
+    int s = *bitp % 8;
+    int n = 8 - s;
     unsigned char tmp = 0; /*for temporary results*/
 
     if (nbits > max_nbits) {
         /* TODO: Do some real code here, to support long longs */
-        int bits  = nbits;
-        int mod   = bits % max_nbits;
+        int bits = nbits;
+        int mod = bits % max_nbits;
         long zero = 0;
 
         /* printf("Warning: encoding %ld bits=%ld %ld\n",val,nbits,*bitp); */

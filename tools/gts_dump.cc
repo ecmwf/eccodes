@@ -28,16 +28,16 @@ grib_option grib_options[] = {
 };
 
 const char* tool_description = "Dump the content of a GTS file in different formats.";
-const char* tool_name        = "gts_dump";
+const char* tool_name = "gts_dump";
 const char* tool_online_doc = NULL;
-const char* tool_usage       = "[options] file file ...";
+const char* tool_usage = "[options] file file ...";
 
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 
 /**
-* Dump the content of a GTS file
-*
-*/
+ * Dump the content of a GTS file
+ *
+ */
 int main(int argc, char* argv[])
 {
     return grib_tool(argc, argv);
@@ -60,12 +60,12 @@ int grib_tool_init(grib_runtime_options* options)
     }
 
     if (grib_options_on("O")) {
-        options->dump_mode  = (char*)"wmo";
+        options->dump_mode = (char*)"wmo";
         options->dump_flags = GRIB_DUMP_FLAG_CODED | GRIB_DUMP_FLAG_OCTET | GRIB_DUMP_FLAG_VALUES | GRIB_DUMP_FLAG_READ_ONLY;
     }
 
     if (grib_options_on("D")) {
-        options->dump_mode  = (char*)"debug";
+        options->dump_mode = (char*)"debug";
         options->dump_flags = GRIB_DUMP_FLAG_VALUES | GRIB_DUMP_FLAG_READ_ONLY;
     }
 

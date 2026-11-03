@@ -10,8 +10,6 @@
 
 #include "Uint32.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::Uint32> _grib_accessor_uint32_builder{};
-
 namespace eccodes::accessor
 {
 

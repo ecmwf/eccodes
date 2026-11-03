@@ -50,4 +50,3 @@ program grib_read_message
    call codes_close_file(ofile)
 
 end program grib_read_message
-

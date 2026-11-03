@@ -16,7 +16,7 @@
  * Test that second order packing gives the same result as simple packing with optimizeScaleFactor=1
  * philippe.marguinaud@meteo.fr, 2016/02
  */
-#include "grib_gridded_values.h" // array 'values' defined here
+#include "grib_gridded_values.h"  // array 'values' defined here
 
 #define NLON 81
 #define NLAT 166

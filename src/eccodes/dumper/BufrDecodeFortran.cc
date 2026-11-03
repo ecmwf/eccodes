@@ -24,11 +24,11 @@ int BufrDecodeFortran::init()
 {
     grib_context* c = context_;
     section_offset_ = 0;
-    empty_          = 1;
-    count_          = 1;
-    isLeaf_         = 0;
-    isAttribute_    = 0;
-    keys_           = (grib_string_list*)grib_context_malloc_clear(c, sizeof(grib_string_list));
+    empty_ = 1;
+    count_ = 1;
+    isLeaf_ = 0;
+    isAttribute_ = 0;
+    keys_ = (grib_string_list*)grib_context_malloc_clear(c, sizeof(grib_string_list));
 
     return GRIB_SUCCESS;
 }
@@ -36,10 +36,10 @@ int BufrDecodeFortran::init()
 int BufrDecodeFortran::destroy()
 {
     grib_string_list* next = keys_;
-    grib_string_list* cur  = NULL;
-    grib_context* c        = context_;
+    grib_string_list* cur = NULL;
+    grib_context* c = context_;
     while (next) {
-        cur  = next;
+        cur = next;
         next = next->next;
         grib_context_free(c, cur->value);
         grib_context_free(c, cur);
@@ -49,13 +49,13 @@ int BufrDecodeFortran::destroy()
 
 void BufrDecodeFortran::dump_values(grib_accessor* a)
 {
-    double value    = 0;
-    size_t size     = 0;
-    int err         = 0;
-    int r           = 0;
-    long count      = 0;
+    double value = 0;
+    size_t size = 0;
+    int err = 0;
+    int r = 0;
+    long count = 0;
     grib_context* c = a->context_;
-    grib_handle* h  = a->get_enclosing_handle();
+    grib_handle* h = a->get_enclosing_handle();
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
         return;
@@ -110,10 +110,10 @@ void BufrDecodeFortran::dump_values(grib_accessor* a)
 
 void BufrDecodeFortran::dump_values_attribute(grib_accessor* a, const char* prefix)
 {
-    double value    = 0;
-    size_t size     = 0;
-    int err         = 0;
-    long count      = 0;
+    double value = 0;
+    size_t size = 0;
+    int err = 0;
+    long count = 0;
     grib_context* c = a->context_;
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
@@ -154,13 +154,13 @@ void BufrDecodeFortran::dump_values_attribute(grib_accessor* a, const char* pref
 
 void BufrDecodeFortran::dump_long(grib_accessor* a, const char* comment)
 {
-    long value      = 0;
-    size_t size     = 0;
-    int err         = 0;
-    int r           = 0;
-    long count      = 0;
+    long value = 0;
+    size_t size = 0;
+    int err = 0;
+    int r = 0;
+    long count = 0;
     grib_context* c = a->context_;
-    grib_handle* h  = a->get_enclosing_handle();
+    grib_handle* h = a->get_enclosing_handle();
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0)
         return;
@@ -237,10 +237,10 @@ void BufrDecodeFortran::dump_long(grib_accessor* a, const char* comment)
 
 void BufrDecodeFortran::dump_long_attribute(grib_accessor* a, const char* prefix)
 {
-    long value      = 0;
-    size_t size     = 0;
-    int err         = 0;
-    long count      = 0;
+    long value = 0;
+    size_t size = 0;
+    int err = 0;
+    long count = 0;
     grib_context* c = a->context_;
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
@@ -292,7 +292,7 @@ void BufrDecodeFortran::dump_double(grib_accessor* a, const char* comment)
     double value;
     size_t size = 1;
     int r;
-    grib_handle* h  = a->get_enclosing_handle();
+    grib_handle* h = a->get_enclosing_handle();
     grib_context* c = h->context;
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
@@ -330,12 +330,12 @@ void BufrDecodeFortran::dump_double(grib_accessor* a, const char* comment)
 
 void BufrDecodeFortran::dump_string_array(grib_accessor* a, const char* comment)
 {
-    size_t size     = 0;
+    size_t size = 0;
     grib_context* c = NULL;
-    int err         = 0;
-    long count      = 0;
-    int r           = 0;
-    grib_handle* h  = a->get_enclosing_handle();
+    int err = 0;
+    long count = 0;
+    int r = 0;
+    grib_handle* h = a->get_enclosing_handle();
 
     c = a->context_;
 
@@ -385,9 +385,9 @@ void BufrDecodeFortran::dump_string_array(grib_accessor* a, const char* comment)
 #define MAX_STRING_SIZE 4096
 void BufrDecodeFortran::dump_string(grib_accessor* a, const char* comment)
 {
-    char value[MAX_STRING_SIZE] = {0, }; /* See ECC-710 */
-    size_t size     = MAX_STRING_SIZE;
-    char* p         = NULL;
+    char value[MAX_STRING_SIZE] = { 0 }; /* See ECC-710 */
+    size_t size = MAX_STRING_SIZE;
+    char* p = NULL;
     grib_context* c = a->context_;
     int r = 0, err = 0;
     grib_handle* h = a->get_enclosing_handle();
@@ -398,8 +398,8 @@ void BufrDecodeFortran::dump_string(grib_accessor* a, const char* comment)
     empty_ = 0;
 
     err = a->unpack_string(value, &size);
-    p   = value;
-    r   = compute_bufr_key_rank(h, keys_, a->name_);
+    p = value;
+    r = compute_bufr_key_rank(h, keys_, a->name_);
     if (grib_is_missing_string(a, (unsigned char*)value, size)) {
         return;
     }
@@ -467,8 +467,8 @@ void BufrDecodeFortran::dump_section(grib_accessor* a, grib_block_of_accessors* 
         strcmp(a->name_, "GRIB") == 0 ||
         strcmp(a->name_, "META") == 0) {
         grib_handle* h = a->get_enclosing_handle();
-        depth          = 2;
-        empty_         = 1;
+        depth = 2;
+        empty_ = 1;
         depth += 2;
         _dump_long_array(h, out_, "dataPresentIndicator");
         _dump_long_array(h, out_, "delayedDescriptorReplicationFactor");
@@ -503,7 +503,7 @@ void BufrDecodeFortran::dump_attributes(grib_accessor* a, const char* prefix)
             continue;
         }
         isLeaf_ = a->attributes_[i]->attributes_[0] == NULL ? 1 : 0;
-        flags   = a->attributes_[i]->flags_;
+        flags = a->attributes_[i]->flags_;
         a->attributes_[i]->flags_ |= GRIB_ACCESSOR_FLAG_DUMP;
         switch (a->attributes_[i]->get_native_type()) {
             case GRIB_TYPE_LONG:
@@ -518,7 +518,7 @@ void BufrDecodeFortran::dump_attributes(grib_accessor* a, const char* prefix)
         a->attributes_[i]->flags_ = flags;
         i++;
     }
-    isLeaf_      = 0;
+    isLeaf_ = 0;
     isAttribute_ = 0;
 }
 

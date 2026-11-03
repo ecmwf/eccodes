@@ -54,7 +54,7 @@ static long get(grib_handle *h,const char* what)
 
 static char* sget(grib_handle *h,const char* what,char* val,size_t size)
 {
-    int e; 
+    int e;
     if((e = grib_get_string(h,what,val,&size)) != GRIB_SUCCESS)
     {
         printf("%s, field %d [%s]: cannot get %s: %s\n",file,field,param,what,grib_get_error_message(e));
@@ -79,10 +79,10 @@ static void verify(grib_handle *h,const char* full,const char* base)
     sget(h,"type",type,sizeof(type));
     sget(h,"levtype",levtype,sizeof(levtype));
 
-    if(strcmp(type,"fc") != 0) 
+    if(strcmp(type,"fc") != 0)
         number = get(h,"number");
 
-    if(strcmp(levtype,"sfc") == 0) 
+    if(strcmp(levtype,"sfc") == 0)
         strcpy(levtype,"sl");
     else
         level = get(h,"level");

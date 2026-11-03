@@ -1,0 +1,29 @@
+{# SPDX-FileCopyrightText: 2005- European Centre for Medium-Range Weather Forecasts (ECMWF)
+   SPDX-License-Identifier: Apache-2.0 #}
+{% extends "ci-infrastructure/cmake-all-lanes.sh.j2" %}
+{% block cmake_args %}
+  -DENABLE_FORTRAN={{ "ON" if "eccodes-fortran" in ci_packages else "OFF" }} \
+{% endblock %}
+{% block test %}
+# From the download-test-data job; ctest's download tests then skip the files present.
+if [ -d "$CI_SOURCE_DIR/.ci-test-data/data" ]; then
+  cp -R "$CI_SOURCE_DIR/.ci-test-data/data/." "$build/data/"
+fi
+# Fetch the test data first; a download failure otherwise surfaces as dozens of
+# unrelated test failures.
+ctest --test-dir "$build" --output-on-failure -L download_data -j 6 --repeat until-pass:5
+# A fresh build tree has no timings, so ctest started grib_padding (minutes) last.
+cp "$CI_SOURCE_DIR/.ci/ctest-cost-data.txt" "$build/Testing/Temporary/CTestCostData.txt"
+ECCODES_ECKIT_GEO={{ eckit_geo_env }} ctest --test-dir "$build" --output-on-failure -LE download_data -j "$jobs"
+{% endblock %}
+{% block install %}
+{% if execution == "hpc-atos" %}
+# ~24k small definition files: installing straight onto shared scratch is
+# metadata-bound (7 to >35 min), so stage on node-local SSD and tar from there.
+stage="${TMPDIR:-/tmp}/stage"
+DESTDIR="$stage" cmake --install "$build"
+install_root="$stage$CI_INSTALL_PREFIX"
+{% else %}
+{{ super() }}
+{% endif %}
+{% endblock %}

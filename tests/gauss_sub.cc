@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
 
     c = grib_context_get_default();
 
-    if (argc < 3) return 1;//usage: %s file1.grib file2.grib
+    if (argc < 3) return 1;  // usage: %s file1.grib file2.grib
 
     infile1 = argv[1];
     infile2 = argv[2];
@@ -95,7 +95,7 @@ int main(int argc, char* argv[])
 
         lat = lat1;
         lon = lon1;
-        v   = v1;
+        v = v1;
         while (grib_iterator_next(iter1, lat, lon, v)) {
             lat++;
             if (*lon < 0) *lon += 360;
@@ -104,7 +104,7 @@ int main(int argc, char* argv[])
         }
         lat = lat2;
         lon = lon2;
-        v   = v2;
+        v = v2;
         while (grib_iterator_next(iter2, lat, lon, v)) {
             lat++;
             if (*lon < 0) *lon += 360;
@@ -113,23 +113,23 @@ int main(int argc, char* argv[])
         }
 
         if (size1 > size2) {
-            lat   = lat2;
-            lon   = lon2;
-            v     = v2;
-            size  = size2;
-            glat  = lat1;
-            glon  = lon1;
-            gv    = v1;
+            lat = lat2;
+            lon = lon2;
+            v = v2;
+            size = size2;
+            glat = lat1;
+            glon = lon1;
+            gv = v1;
             gsize = size1;
         }
         else {
-            lat   = lat1;
-            lon   = lon1;
-            v     = v1;
-            size  = size1;
-            glat  = lat2;
-            glon  = lon2;
-            gv    = v2;
+            lat = lat1;
+            lon = lon1;
+            v = v1;
+            size = size1;
+            glat = lat2;
+            glon = lon2;
+            gv = v2;
             gsize = size2;
         }
         if (err1 > err2)

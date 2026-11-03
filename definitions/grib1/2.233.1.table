@@ -125,13 +125,13 @@
 124 uflx UFLX Momentum flux, u-component N m**-2
 125 vflx VFLX Momentum flux, v-component N m**-2
 126 wmixe WMIXE Wind mixing energy J
-127 imgd IMGD Image data 
+127 imgd IMGD Image data
 128 mofl MOFL Momentum flux Pa
 135 maxv MAXV Max wind speed (at 10m) m s**-1
 140 tland TLAND Temperature over land K
 141 qland QLAND Specific humidity over land kg kg**-1
-142 rhland RHLAND Relative humidity over land Fraction 
-143 dptland DPTLAND Dew point over land K 
+142 rhland RHLAND Relative humidity over land Fraction
+143 dptland DPTLAND Dew point over land K
 160 slfr SLFR Slope fraction -
 161 shfr SHFR Shadow fraction -
 162 rsha RSHA Shadow parameter A -

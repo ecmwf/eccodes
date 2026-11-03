@@ -13,7 +13,8 @@
 eccodes::geo_nearest::LatlonReduced _grib_nearest_latlon_reduced{};
 eccodes::geo_nearest::Nearest* grib_nearest_latlon_reduced = &_grib_nearest_latlon_reduced;
 
-namespace eccodes::geo_nearest {
+namespace eccodes::geo_nearest
+{
 
 int LatlonReduced::init(grib_handle* h, grib_arguments* args)
 {
@@ -21,11 +22,11 @@ int LatlonReduced::init(grib_handle* h, grib_arguments* args)
     if ((ret = Gen::init(h, args) != GRIB_SUCCESS))
         return ret;
 
-    Nj_       = args->get_name(h, cargs_++);
-    pl_       = args->get_name(h, cargs_++);
+    Nj_ = args->get_name(h, cargs_++);
+    pl_ = args->get_name(h, cargs_++);
     lonFirst_ = args->get_name(h, cargs_++);
-    lonLast_  = args->get_name(h, cargs_++);
-    j_        = (size_t*)grib_context_malloc(h->context, 2 * sizeof(size_t));
+    lonLast_ = args->get_name(h, cargs_++);
+    j_ = (size_t*)grib_context_malloc(h->context, 2 * sizeof(size_t));
     if (!j_)
         return GRIB_OUT_OF_MEMORY;
     k_ = (size_t*)grib_context_malloc(h->context, 4 * sizeof(size_t));
@@ -36,9 +37,9 @@ int LatlonReduced::init(grib_handle* h, grib_arguments* args)
 }
 
 int LatlonReduced::find(grib_handle* h,
-                double inlat, double inlon, unsigned long flags,
-                double* outlats, double* outlons, double* values,
-                double* distances, int* indexes, size_t* len)
+                        double inlat, double inlon, unsigned long flags,
+                        double* outlats, double* outlons, double* values,
+                        double* distances, int* indexes, size_t* len)
 {
     int err = 0;
     double lat1, lat2, lon1, lon2;
@@ -47,9 +48,8 @@ int LatlonReduced::find(grib_handle* h,
     if (grib_get_double(h, "longitudeFirstInDegrees", &lon1) == GRIB_SUCCESS &&
         grib_get_double(h, "longitudeLastInDegrees", &lon2) == GRIB_SUCCESS &&
         grib_get_double(h, "latitudeFirstInDegrees", &lat1) == GRIB_SUCCESS &&
-        grib_get_double(h, "latitudeLastInDegrees", &lat2) == GRIB_SUCCESS)
-    {
-        const double difflat = fabs(lat1-lat2);
+        grib_get_double(h, "latitudeLastInDegrees", &lat2) == GRIB_SUCCESS) {
+        const double difflat = fabs(lat1 - lat2);
         if (difflat < 180 || lon1 != 0 || lon2 < 359) {
             is_global = 0; /* subarea */
         }
@@ -57,12 +57,11 @@ int LatlonReduced::find(grib_handle* h,
 
     if (is_global) {
         err = find_global(h, inlat, inlon, flags,
-                outlats, outlons, values,
-                distances, indexes, len);
+                          outlats, outlons, values,
+                          distances, indexes, len);
     }
-    else
-    {
-        int lons_count = 0;  /*dummy*/
+    else {
+        int lons_count = 0; /*dummy*/
         err = grib_nearest_find_generic(
             h, inlat, inlon, flags,
             values_key_,
@@ -78,15 +77,15 @@ int LatlonReduced::find(grib_handle* h,
 }
 
 int LatlonReduced::find_global(grib_handle* h,
-                double inlat, double inlon, unsigned long flags,
-                double* outlats, double* outlons, double* values,
-                double* distances, int* indexes, size_t* len)
+                               double inlat, double inlon, unsigned long flags,
+                               double* outlats, double* outlons, double* values,
+                               double* distances, int* indexes, size_t* len)
 {
     int ret = 0, kk = 0, ii = 0, jj = 0;
-    int j               = 0;
-    long* pla           = NULL;
-    const long* pl      = NULL;
-    size_t nvalues      = 0;
+    int j = 0;
+    long* pla = NULL;
+    const long* pl = NULL;
+    size_t nvalues = 0;
     grib_iterator* iter = NULL;
     double lat = 0, lon = 0;
     double radiusInKm;
@@ -103,8 +102,8 @@ int LatlonReduced::find_global(grib_handle* h,
      * This is for performance: if the grid has not changed, we only do this once
      * and reuse for other messages */
     if (!h_ || (flags & GRIB_NEAREST_SAME_GRID) == 0) {
-        double olat  = 1.e10;
-        long n       = 0;
+        double olat = 1.e10;
+        long n = 0;
 
         ilat = 0;
         ilon = 0;
@@ -133,7 +132,7 @@ int LatlonReduced::find_global(grib_handle* h,
         while (grib_iterator_next(iter, &lat, &lon, NULL)) {
             if (ilat < lats_count_ && olat != lat) {
                 lats_[ilat++] = lat;
-                olat               = lat;
+                olat = lat;
             }
             lons_[ilon++] = lon;
         }
@@ -146,10 +145,10 @@ int LatlonReduced::find_global(grib_handle* h,
      * This is for performance: if the grid and the input point have not changed
      * we only do this once and reuse for other messages */
     if (!distances_ || (flags & GRIB_NEAREST_SAME_POINT) == 0 || (flags & GRIB_NEAREST_SAME_GRID) == 0) {
-        double* lons           = NULL;
-        int nlon               = 0;
-        size_t plsize          = 0;
-        long nplm1             = 0;
+        double* lons = NULL;
+        int nlon = 0;
+        size_t plsize = 0;
+        long nplm1 = 0;
         int nearest_lons_found = 0;
         double lon_first, lon_last;
         int islocal = 0;
@@ -232,8 +231,8 @@ int LatlonReduced::find_global(grib_handle* h,
             if (inlon < lons[0] || inlon > lons[nplm1]) {
                 if (lons[nplm1] - lons[0] - 360 <=
                     lons[nplm1] - lons[nplm1 - 1]) {
-                    k_[0]         = 0;
-                    k_[1]         = nplm1;
+                    k_[0] = 0;
+                    k_[1] = nplm1;
                     nearest_lons_found = 1;
                 }
                 else
@@ -244,8 +243,8 @@ int LatlonReduced::find_global(grib_handle* h,
             if (inlon > lons[0] || inlon < lons[nplm1]) {
                 if (lons[0] - lons[nplm1] - 360 <=
                     lons[0] - lons[1]) {
-                    k_[0]         = 0;
-                    k_[1]         = nplm1;
+                    k_[0] = 0;
+                    k_[1] = nplm1;
                     nearest_lons_found = 1;
                 }
                 else
@@ -272,8 +271,8 @@ int LatlonReduced::find_global(grib_handle* h,
             if (inlon < lons[0] || inlon > lons[nplm1]) {
                 if (lons[nplm1] - lons[0] - 360 <=
                     lons[nplm1] - lons[nplm1 - 1]) {
-                    k_[2]         = 0;
-                    k_[3]         = nplm1;
+                    k_[2] = 0;
+                    k_[3] = nplm1;
                     nearest_lons_found = 1;
                 }
                 else
@@ -284,8 +283,8 @@ int LatlonReduced::find_global(grib_handle* h,
             if (inlon > lons[0] || inlon < lons[nplm1]) {
                 if (lons[0] - lons[nplm1] - 360 <=
                     lons[0] - lons[1]) {
-                    k_[2]         = 0;
-                    k_[3]         = nplm1;
+                    k_[2] = 0;
+                    k_[3] = nplm1;
                     nearest_lons_found = 1;
                 }
                 else
@@ -305,7 +304,7 @@ int LatlonReduced::find_global(grib_handle* h,
         for (jj = 0; jj < 2; jj++) {
             for (ii = 0; ii < 2; ii++) {
                 distances_[kk] = geographic_distance_spherical(radiusInKm, inlon, inlat,
-                                                            lons_[k_[kk]], lats_[j_[jj]]);
+                                                               lons_[k_[kk]], lats_[j_[jj]]);
                 kk++;
             }
         }
@@ -317,8 +316,8 @@ int LatlonReduced::find_global(grib_handle* h,
     for (jj = 0; jj < 2; jj++) {
         for (ii = 0; ii < 2; ii++) {
             distances[kk] = distances_[kk];
-            outlats[kk]   = lats_[j_[jj]];
-            outlons[kk]   = lons_[k_[kk]];
+            outlats[kk] = lats_[j_[jj]];
+            outlons[kk] = lons_[k_[kk]];
             if (values) { /* ECC-499 */
                 grib_get_double_element_internal(h, values_key_, k_[kk], &(values[kk]));
             }

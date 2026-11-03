@@ -25,7 +25,7 @@ static void usage(const char* prog)
 
 int main(int argc, char* argv[])
 {
-    FILE* in  = NULL;
+    FILE* in = NULL;
     FILE* out = NULL;
 
     /* message handle. Required in all the eccodes calls acting on a message.*/
@@ -33,9 +33,9 @@ int main(int argc, char* argv[])
 
     long longVal;
     /*double doubleVal;*/
-    int err            = 0;
-    int cnt            = 0;
-    size_t size        = 0;
+    int err = 0;
+    int cnt = 0;
+    size_t size = 0;
     const char* infile = "../../data/bufr/syno_multi.bufr";
     const void* buffer = NULL;
 
@@ -44,7 +44,7 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    in  = fopen(infile, "rb");
+    in = fopen(infile, "rb");
     out = fopen(argv[1], "wb");
 
     if (!in || !out) {

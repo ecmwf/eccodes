@@ -17,15 +17,15 @@
 
 int main(int argc, char** argv)
 {
-    int err            = 0;
-    float* fvalues     = NULL; // data values as floats
-    double* dvalues    = NULL; // data values as doubles
-    size_t values_len  = 0;    // number of data points
-    size_t i           = 0;
+    int err = 0;
+    float* fvalues = NULL;   // data values as floats
+    double* dvalues = NULL;  // data values as doubles
+    size_t values_len = 0;   // number of data points
+    size_t i = 0;
 
-    double abs_error     = 0;
+    double abs_error = 0;
     const double max_abs_error = 1e-03;
-    const double tolerance     = 1e-03;
+    const double tolerance = 1e-03;
     double dmin, dmax, dval;
     float fval;
 

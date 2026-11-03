@@ -36,4 +36,3 @@ concept ijDirectionIncrementGiven {
 
 alias DiGiven=iDirectionIncrementGiven;
 alias DjGiven=jDirectionIncrementGiven;
-

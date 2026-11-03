@@ -42,15 +42,15 @@ grib_option grib_options[] = {
 const char* tool_description =
     "List content of GRIB files printing values of "
     "some keys.\n\tIt does not fail when a key is not found.";
-const char* tool_name       = "grib_ls";
+const char* tool_name = "grib_ls";
 const char* tool_online_doc = "https://confluence.ecmwf.int/display/ECC/grib_ls";
-const char* tool_usage      = "[options] grib_file grib_file ...";
+const char* tool_usage = "[options] grib_file grib_file ...";
 static const char* new_handle = "";
 
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
-static double lat      = 0;
-static double lon      = 0;
-static int mode        = 0;
+static double lat = 0;
+static double lon = 0;
+static int mode = 0;
 /* Note:
  * There are two JSON-output modes:
  *  1. With a provided lat-lon for the nearest neighbour (options->latlon==1)
@@ -58,10 +58,10 @@ static int mode        = 0;
  * The first is special and has a very different format. They need to be
  * treated differently
  */
-static int json_latlon       = 0;
-static int first_handle      = 1;
+static int json_latlon = 0;
+static int first_handle = 1;
 static grib_nearest* nearest = NULL;
-static bool json_nonempty_output = false; // ECC-2210
+static bool json_nonempty_output = false;  // ECC-2210
 
 int main(int argc, char* argv[])
 {
@@ -87,13 +87,13 @@ int grib_tool_init(grib_runtime_options* options)
 {
     char *theEnd = NULL, *end1 = NULL;
     size_t size = 4;
-    int ret     = 0;
+    int ret = 0;
     double min = 0, max = 0;
-    int i   = 0;
+    int i = 0;
     const char* p = NULL;
     if (options->latlon && grib_options_on("j")) {
         options->verbose = 0;
-        json_latlon      = 1;
+        json_latlon = 1;
     }
 
     if (options->latlon) {
@@ -134,8 +134,8 @@ int grib_tool_init(grib_runtime_options* options)
         grib_handle* hh;
         int idx = 0, land_found = 0;
         double min_overall = 0.0;
-        int idx_overall    = -1;
-        FILE* f            = fopen(options->latlon_mask, "r");
+        int idx_overall = -1;
+        FILE* f = fopen(options->latlon_mask, "r");
         if (!f) {
             fprintf(stderr, "%s: unable to open mask file %s\n", tool_name, options->latlon_mask);
             perror(options->latlon_mask);
@@ -153,12 +153,12 @@ int grib_tool_init(grib_runtime_options* options)
         nearest = NULL;
         grib_handle_delete(hh);
 
-        max                 = options->distances[0];
+        max = options->distances[0];
         for (i = 0; i < LATLON_SIZE; i++)
             if (max < options->distances[i]) {
                 max = options->distances[i];
             }
-        min         = max;
+        min = max;
         min_overall = max;
         /* See GRIB-213 */
         for (i = 0; i < LATLON_SIZE; i++) {
@@ -168,8 +168,8 @@ int grib_tool_init(grib_runtime_options* options)
             }
             if ((min >= options->distances[i]) && (options->mask_values[i] >= 0.5)) {
                 land_found = 1; /* found at least one point which is land */
-                min        = options->distances[i];
-                idx        = i;
+                min = options->distances[i];
+                idx = i;
             }
         }
         if (land_found) {
@@ -180,11 +180,11 @@ int grib_tool_init(grib_runtime_options* options)
         }
 
         if (options->latlon_idx < 0) {
-            min                 = 0;
+            min = 0;
             options->latlon_idx = 0;
             for (i = 1; i < LATLON_SIZE; i++)
                 if (min > options->distances[i]) {
-                    min                 = options->distances[i];
+                    min = options->distances[i];
                     options->latlon_idx = i;
                 }
         }
@@ -216,10 +216,10 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
 static void print_key_values(grib_runtime_options* options, grib_handle* h)
 {
     int i;
-    int ret       = 0;
+    int ret = 0;
     const char* s = "\"keys\" : {";
     double dvalue = 0;
-    long lvalue   = 0;
+    long lvalue = 0;
     char value[MAX_STRING_LEN];
     size_t len = MAX_STRING_LEN;
     for (i = 0; i < options->print_keys_count; i++) {
@@ -265,8 +265,8 @@ static void print_key_values(grib_runtime_options* options, grib_handle* h)
 int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 {
     size_t size = 4;
-    double v    = 0;
-    int err     = 0;
+    double v = 0;
+    int err = 0;
     int i;
 
     if (!options->skip) {
@@ -289,7 +289,8 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             err1 = grib_get_string(h, "gridDefinitionDescription", grid_desc, &g_len);
             if (!err1) {
                 fprintf(stderr, "%s: Nearest neighbour functionality is not supported for grid: %s\n", tool_name, grid_desc);
-            } else {
+            }
+            else {
                 fprintf(stderr, "%s: Nearest neighbour functionality is not supported for this grid type\n", tool_name);
             }
         }
@@ -306,11 +307,11 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         }
 
         if (!options->latlon_mask) {
-            min                 = options->distances[0];
+            min = options->distances[0];
             options->latlon_idx = 0;
             for (i = 1; i < LATLON_SIZE; i++) {
                 if (min > options->distances[i]) {
-                    min                 = options->distances[i];
+                    min = options->distances[i];
                     options->latlon_idx = i;
                 }
             }
@@ -318,8 +319,8 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 
         if (json_latlon) {
             int istart = 0;
-            int iend   = LATLON_SIZE;
-            const char* s       = "\n[\n";
+            int iend = LATLON_SIZE;
+            const char* s = "\n[\n";
             double missingValue = 9999;
             char value[MAX_STRING_LEN];
             size_t len = MAX_STRING_LEN;
@@ -328,7 +329,8 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             print_key_values(options, h);
             if (options->latlon_mode == 4) {
                 printf("\n, \"selected\" : %d", options->latlon_idx);
-            } else {
+            }
+            else {
                 printf("\n");
             }
             printf(", \"method\" : ");

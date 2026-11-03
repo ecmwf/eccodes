@@ -13,8 +13,8 @@
 int main(int argc, char* argv[])
 {
     grib_index* index = NULL;
-    grib_handle* h    = NULL;
-    char* infile      = NULL;
+    grib_handle* h = NULL;
+    char* infile = NULL;
     int i, j, k, l;
     long ostep, olevel, onumber;
     char oshortName[200];
@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
     int ret = 0, count = 0;
 
     if (argc != 2) return 1;
-    infile  = argv[1];
+    infile = argv[1];
     outfile = argv[2];
 
     printf("indexing...\n");

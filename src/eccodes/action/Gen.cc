@@ -24,12 +24,12 @@ Gen::Gen(grib_context* context, const char* name, const char* op, const long len
          grib_arguments* params, grib_arguments* default_value, int flags, const char* name_space, const char* set)
 {
     class_name_ = "action_class_gen";
-    next_       = NULL;
-    name_       = grib_context_strdup_persistent(context, name);
-    op_         = grib_context_strdup_persistent(context, op);
+    next_ = NULL;
+    name_ = grib_context_strdup_persistent(context, name);
+    op_ = grib_context_strdup_persistent(context, op);
     name_space_ = name_space ? grib_context_strdup_persistent(context, name_space) : nullptr;
-    context_    = context;
-    flags_      = flags;
+    context_ = context;
+    flags_ = flags;
 #ifdef CHECK_LOWERCASE_AND_STRING_TYPE
     {
         int flag_lowercase = 0, flag_stringtype = 0;
@@ -43,9 +43,9 @@ Gen::Gen(grib_context* context, const char* name, const char* op, const long len
         }
     }
 #endif
-    len_           = len;
-    params_        = params;
-    set_           = set ? grib_context_strdup_persistent(context, set) : nullptr;
+    len_ = len;
+    params_ = params;
+    set_ = set ? grib_context_strdup_persistent(context, set) : nullptr;
     default_value_ = default_value;
 }
 

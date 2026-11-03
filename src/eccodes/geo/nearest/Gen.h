@@ -12,9 +12,11 @@
 
 #include "Nearest.h"
 
-namespace eccodes::geo_nearest {
+namespace eccodes::geo_nearest
+{
 
-class Gen : public Nearest {
+class Gen : public Nearest
+{
 public:
     Gen() { class_name_ = "gen"; }
     int init(grib_handle*, grib_arguments*) override;

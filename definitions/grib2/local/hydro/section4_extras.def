@@ -16,6 +16,19 @@ if (modelName isnot "unknown") {
 }
 
 if (defined(class) && is_one_of(class,"gh","eh")){
+ if (defined(stream) && is_one_of(stream,"frcd")){
+  concept statType (unknown,"stattypeConcept.def",conceptsDir2,conceptsDir1) : read_only;
+  alias mars.stattype = statType;
+  if (stattype is "moav"){
+   meta marsForecastMonth g1forecastmonth(dataDate, forecastTime): read_only;
+   alias forecastMonth = marsForecastMonth;
+   alias mars.fcmonth = marsForecastMonth;
+   unalias mars.step;
+  }
+ }
+}
+
+if (defined(class) && is_one_of(class,"gh","eh")){
  if (defined(stream) && is_one_of(stream,"msmm")){
   concept statType (unknown,"stattypeConcept.def",conceptsDir2,conceptsDir1) : read_only;
   alias mars.stattype = statType;
@@ -34,17 +47,28 @@ if (defined(class) && is_one_of(class,"gh","eh")){
  }
 }
 
-alias mars.model = modelName;
+if (defined(stream) && !(stream is "frcd")){
+ alias mars.model = modelName;
+}
 if (defined(stream) && (stream is "rfsd")){
  alias mars.configuration = configuration;
 }
 
-concept inputModelName(unknown, "inputModelNameConcept.def", conceptsDir2, conceptsLocalDirAll): no_copy, dump;
-concept inputModelVersion(unknown, "inputModelVersionConcept.def", conceptsDir2, conceptsLocalDirAll): no_copy, dump;
 
-if ( inputModelName is "obs" ){
- meta forcingModel sprintf("%s",inputModelName);
- } else {
- meta forcingModel sprintf("%s-%s",inputOriginatingCentre,inputModelName);
+if (defined(stream) && !(stream is "frcd")){
+ concept inputModelName(unknown, "inputModelNameConcept.def", conceptsDir2, conceptsLocalDirAll): no_copy, dump;
+ concept inputModelVersion(unknown, "inputModelVersionConcept.def", conceptsDir2, conceptsLocalDirAll): no_copy, dump;
+ if ( inputModelName is "obs" ){
+  meta forcingModel sprintf("%s",inputModelName);
+  } else {
+  meta forcingModel sprintf("%s-%s",inputOriginatingCentre,inputModelName);
+ }
+ alias mars.forcing = forcingModel;
 }
-alias mars.forcing = forcingModel;
+
+if (defined(stream) && (stream is "frcd")){
+ concept inputModelName(unknown, "inputModelNameConcept.def", conceptsDir2, conceptsLocalDirAll): no_copy, dump;
+ concept inputModelVersion(unknown, "inputModelVersionConcept.def", conceptsDir2, conceptsLocalDirAll): no_copy, dump;
+ meta forcingModel sprintf("%s-%s",inputOriginatingCentre,inputModelName);
+ alias mars.model = forcingModel;
+}

@@ -10,7 +10,8 @@
 
 #include "True.h"
 
-namespace eccodes::expression {
+namespace eccodes::expression
+{
 
 int True::evaluate_long(grib_handle* h, long* lres) const
 {
@@ -36,7 +37,7 @@ int True::native_type(grib_handle* h) const
 
 }  // namespace eccodes::expression
 
-grib_expression* new_true_expression(grib_context* c) {
+grib_expression* new_true_expression(grib_context* c)
+{
     return new eccodes::expression::True();
 }
-

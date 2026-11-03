@@ -12,7 +12,8 @@
 
 #include "Regular.h"
 
-namespace eccodes::geo_iterator {
+namespace eccodes::geo_iterator
+{
 
 class Gaussian : public Regular
 {
@@ -25,4 +26,3 @@ public:
 };
 
 }  // namespace eccodes::geo_iterator
-

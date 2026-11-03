@@ -143,7 +143,7 @@ header_keys header[] = {
 int main(int argc, char* argv[])
 {
     grib_handle* h = NULL;
-    FILE* f        = NULL;
+    FILE* f = NULL;
     size_t i, j = 0;
     int err = 0;
     double* values;

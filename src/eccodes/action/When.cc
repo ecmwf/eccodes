@@ -31,11 +31,11 @@ When::When(grib_context* context, grib_expression* expression, grib_action* bloc
     char name[1024];
     const size_t nameLen = sizeof(name);
 
-    class_name_  = "action_class_when";
-    op_          = grib_context_strdup_persistent(context, "when");
-    context_     = context;
-    expression_  = expression;
-    block_true_  = block_true;
+    class_name_ = "action_class_when";
+    op_ = grib_context_strdup_persistent(context, "when");
+    context_ = context;
+    expression_ = expression;
+    block_true_ = block_true;
     block_false_ = block_false;
 
     snprintf(name, nameLen, "_when%p", (void*)expression);
@@ -132,7 +132,7 @@ void When::dump(FILE* f, int lvl)
 int When::notify_change(grib_accessor* observer, grib_accessor* observed)
 {
     grib_action* b = NULL;
-    int ret        = GRIB_SUCCESS;
+    int ret = GRIB_SUCCESS;
     long lres;
 
     /* ECC-974: observed->parent will change as a result of the execute

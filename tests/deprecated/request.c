@@ -117,8 +117,8 @@ int main(int argc,char** argv)
 				char name[80];
 				char value[80];
 				char *q = name;
-				char gvalue[80] = {0,};
-				char nam[80] = {0,};
+				char gvalue[80] = {0};
+				char nam[80] = {0};
 				size_t s = sizeof(gvalue);
 				int e;
 				int j;
@@ -163,7 +163,7 @@ int main(int argc,char** argv)
 					if(EQ(name,check[j]))
 					{
 						sprintf(nam,"mars.%s",name);
-						e = grib_get_string(g,nam,gvalue,&s); 
+						e = grib_get_string(g,nam,gvalue,&s);
 						printf("%s api=[%s] mars=[%s]\n",nam,gvalue,value);
 
 
@@ -185,7 +185,7 @@ int main(int argc,char** argv)
 					if(EQ(name,warn[j]))
 					{
 						sprintf(nam,"mars.%s",name);
-						e = grib_get_string(g,nam,gvalue,&s); 
+						e = grib_get_string(g,nam,gvalue,&s);
 						printf("%s api=[%s] mars=[%s]\n",nam,gvalue,value);
 
 

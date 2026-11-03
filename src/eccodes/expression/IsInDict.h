@@ -12,9 +12,11 @@
 
 #include "Expression.h"
 
-namespace eccodes::expression {
+namespace eccodes::expression
+{
 
-class IsInDict : public Expression {
+class IsInDict : public Expression
+{
 public:
     IsInDict(grib_context*, const char*, const char*);
 
@@ -29,7 +31,7 @@ public:
     const char* class_name() const override { return "is_in_dict"; };
 
 private:
-    const char* key_        = nullptr;
+    const char* key_ = nullptr;
     const char* dictionary_ = nullptr;
 
     grib_trie* load_dictionary(grib_context*, int* err) const;

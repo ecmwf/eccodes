@@ -23,7 +23,7 @@
 023 bw bw (reserved ICON Bw)
 024 bw bw (reserved ICON Bw)
 025 an2mo an2mo (old name: AN2MO)
-026 icrerr icrerr (ICON analysis error) 
+026 icrerr icrerr (ICON analysis error)
 027 dwd dwd (reserved ICON analysis error)
 033 analy analy (old name: ANALY)
 034 034 034 (old name: WAMIT)
@@ -68,7 +68,7 @@
 135 c2_fc c2_fc (old name: LM2MO)
 137 c3_an c3_an (old name: LM3AN)
 138 c3_fc c3_fc (old name: LM3MO)
-139 cd2 cd2 
+139 cd2 cd2
 140 ecgm_diag_fc05 ecgm_diag_fc05 (old name: keiner)
 141 i032_an i032_an (old name: I032A)
 143 i048_an i048_an (old name: I048A)

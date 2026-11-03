@@ -8,3 +8,26 @@
 'o2d'  = {typeOfFirstFixedSurface=102; typeOfSecondFixedSurface=255;gridDefinitionTemplateNumber=101;numberOfGridUsed=7;}
 'fl'   = {typeOfFirstFixedSurface=193; typeOfSecondFixedSurface=255; scaleFactorOfSecondFixedSurface=missing(); scaledValueOfSecondFixedSurface=missing();}
 'sfc'  = {typeOfFirstFixedSurface=254; typeOfSecondFixedSurface=255;}
+# sfc for ocean model parameters touched by IFS
+'sfc' = {typeOfFirstFixedSurface=1; typeOfSecondFixedSurface=9; backgroundProcess=254;}
+'sfc' = {discipline=10; typeOfFirstFixedSurface=20; typeOfSecondFixedSurface=255; backgroundProcess=254;}
+'sfc' = {typeOfFirstFixedSurface=160; typeOfSecondFixedSurface=255; backgroundProcess=254;}
+'sfc' = {typeOfFirstFixedSurface=160; scaleFactorOfFirstFixedSurface=0; backgroundProcess=254;
+         scaledValueOfFirstFixedSurface=0; typeOfSecondFixedSurface=255;}
+'sfc' = {typeOfFirstFixedSurface=160; typeOfSecondFixedSurface=160; backgroundProcess=254;}
+'sfc' = {typeOfFirstFixedSurface=160; typeOfSecondFixedSurface=9; backgroundProcess=254;}
+'sfc' = {typeOfFirstFixedSurface=160; typeOfSecondFixedSurface=20; backgroundProcess=254;
+         scaledValueOfFirstFixedSurface=0; scaleFactorOfFirstFixedSurface=0;}
+'sfc' = {typeOfFirstFixedSurface=169; typeOfSecondFixedSurface=255; backgroundProcess=254;}
+'sfc' = {typeOfFirstFixedSurface=170; typeOfSecondFixedSurface=255; backgroundProcess=254;}
+'sfc' = {typeOfFirstFixedSurface=171; typeOfSecondFixedSurface=255; backgroundProcess=254;}
+'sfc' = {typeOfFirstFixedSurface=173; typeOfSecondFixedSurface=255; backgroundProcess=254;}
+'sfc' = {typeOfFirstFixedSurface=173; typeOfSecondFixedSurface=175; backgroundProcess=254;}
+'sfc' = {typeOfFirstFixedSurface=174; typeOfSecondFixedSurface=255; backgroundProcess=254;}
+'sfc' = {typeOfFirstFixedSurface=175; typeOfSecondFixedSurface=255; backgroundProcess=254;}
+'sfc' = {typeOfFirstFixedSurface=176; typeOfSecondFixedSurface=255; backgroundProcess=254;}
+'sfc' = {typeOfFirstFixedSurface=174; typeOfSecondFixedSurface=160; backgroundProcess=254;
+         scaleFactorOfSecondFixedSurface=0; scaledValueOfSecondFixedSurface=0;}
+'sfc' = {typeOfFirstFixedSurface=174; typeOfSecondFixedSurface=176; backgroundProcess=254;}
+'sfc' = {typeOfFirstFixedSurface=175; typeOfSecondFixedSurface=176; backgroundProcess=254;}
+'sfc' = {typeOfFirstFixedSurface=188; typeOfSecondFixedSurface=189; backgroundProcess=254;}

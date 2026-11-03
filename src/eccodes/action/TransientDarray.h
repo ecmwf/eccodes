@@ -25,7 +25,7 @@ public:
     int execute(grib_handle* h) override;
 
     grib_darray* darray_ = nullptr;
-    char* name2_         = nullptr;
+    char* name2_ = nullptr;
 };
 
 }  // namespace eccodes::action

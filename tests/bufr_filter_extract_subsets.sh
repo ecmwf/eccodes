@@ -3,7 +3,7 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
+#
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
@@ -84,7 +84,7 @@ stationNumber=308 371 381 382 84
 stationNumber=308 371 381 382 84 27 270
 EOF
 
-diff ${fOut}.log.ref ${fOut}.log 
+diff ${fOut}.log.ref ${fOut}.log
 
 rm -f ${fOut}.log ${fOut}.log.ref
 rm -f $fLog $fRules ${fOut}
@@ -140,10 +140,10 @@ orbitNumber=2147483647
 casRegistryNumber=10102-44-0
 EOF
 
-diff ${f}.log.ref ${f}.log 
+diff ${f}.log.ref ${f}.log
 
 rm -f ${f}.log ${f}.log.ref
-rm -f $fLog $fOut $fRules 
+rm -f $fLog $fOut $fRules
 
 #-----------------------------------------------------------
 # Test: Simple thinning
@@ -177,7 +177,7 @@ longitude=118.16205 117.41896 116.66977 115.91467 99.56805
 height=119 231 587 187 23
 EOF
 
-diff ${f}.log.ref ${f}.log 
+diff ${f}.log.ref ${f}.log
 
 rm -f ${f}.log ${f}.log.ref $fBufrTmp1 $fLog $fRules
 #-----------------------------------------------------------
@@ -219,7 +219,7 @@ ${tools_dir}/codes_bufr_filter $fRules $fBufrTmp2 > ${f}.log
 cat > ${f}.log.ref <<EOF
 latitude=0
 EOF
-diff ${f}.log.ref ${f}.log 
+diff ${f}.log.ref ${f}.log
 
 
 # ECC-2055: Splitting subsets with bufr_filter produces incorrect header values

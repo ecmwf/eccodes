@@ -22,11 +22,11 @@
 int main(int argc, char** argv)
 {
     int err = 0, i = 0;
-    double* values       = NULL;
-    size_t values_len    = 0;
+    double* values = NULL;
+    size_t values_len = 0;
     double element_value = 0;
 
-    FILE* in       = NULL;
+    FILE* in = NULL;
     char* filename = NULL;
     grib_handle* h = NULL;
 

@@ -2,11 +2,14 @@
 
 #include <pthread.h>
 
-namespace eccodes::sync {
+namespace eccodes::sync
+{
 
-class PThreadMutex {
-  public:
-    PThreadMutex() {
+class PThreadMutex
+{
+public:
+    PThreadMutex()
+    {
         pthread_mutexattr_t attr;
         pthread_mutexattr_init(&attr);
         pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
@@ -14,20 +17,23 @@ class PThreadMutex {
         pthread_mutexattr_destroy(&attr);
     }
 
-    ~PThreadMutex() {
+    ~PThreadMutex()
+    {
         pthread_mutex_destroy(&mutex_);
     }
 
-    void lock() {
+    void lock()
+    {
         pthread_mutex_lock(&mutex_);
     }
 
-    void unlock() {
+    void unlock()
+    {
         pthread_mutex_unlock(&mutex_);
     }
 
-  private:
+private:
     pthread_mutex_t mutex_;
 };
 
-} // namespace eccodes::sync
+}  // namespace eccodes::sync

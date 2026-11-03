@@ -29,14 +29,14 @@ static int is_coord_using_Xcode(const char* X)
 
 int main(int argc, char* argv[])
 {
-    int err         = 0;
+    int err = 0;
     codes_handle* h = NULL;
-    char* filename  = NULL;
-    FILE* fin       = NULL;
-    int is_coord    = 0;
-    int is_header   = 0;
+    char* filename = NULL;
+    FILE* fin = NULL;
+    int is_coord = 0;
+    int is_header = 0;
 
-    assert (argc == 2);
+    assert(argc == 2);
     filename = argv[1];
 
     fin = fopen(filename, "rb");
@@ -50,10 +50,10 @@ int main(int argc, char* argv[])
             char* name = codes_bufr_keys_iterator_get_name(kiter);
             if (strcmp(name, "subsetNumber") == 0) continue;
             if (!codes_bufr_key_is_header(h, name, &err) && !err) {
-                char name1[256] = {0,};
-                char scode[256] = {0,};
-                char X[3] = {0,}; // the 'X' part of FXY
-                size_t slen     = 256;
+                char name1[256] = { 0 };
+                char scode[256] = { 0 };
+                char X[3] = { 0 };  // the 'X' part of FXY
+                size_t slen = 256;
                 snprintf(name1, 256, "%s->code", name);
                 int error = codes_get_string(h, name1, scode, &slen);
                 if (!error) {
@@ -69,8 +69,8 @@ int main(int argc, char* argv[])
                         return 1;
                     }
                 }
-                //printf(" name1 = %s \n",name1);
-                //assert( !codes_bufr_key_is_header(h, name1, &err) && !err );
+                // printf(" name1 = %s \n",name1);
+                // assert( !codes_bufr_key_is_header(h, name1, &err) && !err );
             }
             else {
                 // header keys cannot be coordinate descriptors

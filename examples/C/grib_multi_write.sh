@@ -18,7 +18,7 @@ ${examples_dir}/c_grib_multi_write ${data_dir}/sample.grib2 $tempGrib > /dev/nul
 ${tools_dir}/grib_get -p step $tempGrib > $tempText
 
 reference=${data_dir}/multi_step.txt
-diff $reference $tempText 
+diff $reference $tempText
 
 # -M = Turn multi-field support off
 step=`${tools_dir}/grib_get -M -p step $tempGrib`

@@ -29,4 +29,3 @@ public:
 }  // namespace eccodes::action
 
 grib_action* grib_action_create_set_missing(grib_context* context, const char* name);
-

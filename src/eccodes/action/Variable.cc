@@ -19,7 +19,7 @@ namespace eccodes::action
 {
 
 Variable::Variable(grib_context* context, const char* name, const char* op, const long len, grib_arguments* params, grib_arguments* default_value, int flags, const char* name_space) :
-Gen(context, name, op, len, params, default_value, flags, name_space, NULL)
+    Gen(context, name, op, len, params, default_value, flags, name_space, NULL)
 {
     class_name_ = "action_class_variable";
 

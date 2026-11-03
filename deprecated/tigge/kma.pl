@@ -12,16 +12,16 @@ my %DEFAULTS = (
 		);
 
 my @RULES = (
-		
-		
-		
+
+
+
 # Dew point ?
 	[
 		# condition
 		{ discipline=>0, parameterCategory=>0, parameterNumber=>7, typeOfFirstFixedSurface => 103 },
 		# action
 		{ tigge_short_name => "2d" }, ],
-		
+
 
 # Mean sea level
 	[
@@ -40,30 +40,30 @@ my @RULES = (
 
 
 # Single levels
-	[ 
+	[
 		# condition
-		{ typeOfSecondFixedSurface => 255 } , 
+		{ typeOfSecondFixedSurface => 255 } ,
 		# action
-		{ scaleFactorOfSecondFixedSurface => undef, 
+		{ scaleFactorOfSecondFixedSurface => undef,
 		scaledValueOfSecondFixedSurface => undef } ],
-	[ 
+	[
 		# condition
-		{ typeOfSecondFixedSurface => 8 } , 
+		{ typeOfSecondFixedSurface => 8 } ,
 		# action
-		{ scaleFactorOfSecondFixedSurface => undef, 
+		{ scaleFactorOfSecondFixedSurface => undef,
 		scaledValueOfSecondFixedSurface => undef } ],
-	[ 
+	[
 		# condition
-		{ typeOfFirstFixedSurface => 1 } , 
+		{ typeOfFirstFixedSurface => 1 } ,
 		# action
-		{ scaleFactorOfFirstFixedSurface => undef, 
+		{ scaleFactorOfFirstFixedSurface => undef,
 		scaledValueOfFirstFixedSurface => undef } ],
 
-	[ 
+	[
 		# condition
-		{ typeOfFirstFixedSurface => 101 } , 
+		{ typeOfFirstFixedSurface => 101 } ,
 		# action
-		{ scaleFactorOfFirstFixedSurface => undef, 
+		{ scaleFactorOfFirstFixedSurface => undef,
 		scaledValueOfFirstFixedSurface => undef } ],
 
 );
@@ -94,7 +94,7 @@ while(my $g = GRIB::API->new(\*IN))
 close(OUT) or die "$ARGV[1]: $!";
 system("./tigge_check -b bad $ARGV[1] && mv $ARGV[0] done/");
 
-# Checks if a handle matches a rule condition 
+# Checks if a handle matches a rule condition
 sub match {
 	my ($h,$cond) = @_;
 	foreach my $c ( keys %{$cond} )
@@ -103,4 +103,3 @@ sub match {
 	}
 	return 1;
 }
-

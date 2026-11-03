@@ -13,17 +13,18 @@
 #include "grib_api_internal.h"
 #include <functional>
 
-namespace eccodes {
+namespace eccodes
+{
 
 class Expression
 {
 public:
-    using PackProc        = std::function<int(grib_handle*, const double*, size_t, void*, size_t*)>;
-    using UnpackProc      = std::function<int(grib_handle*, const void*, size_t, double*, size_t*)>;
-    using BinopLongProc   = std::function<long(long, long)>;
-    using UnopLongProc    = std::function<long(long)>;
+    using PackProc = std::function<int(grib_handle*, const double*, size_t, void*, size_t*)>;
+    using UnpackProc = std::function<int(grib_handle*, const void*, size_t, double*, size_t*)>;
+    using BinopLongProc = std::function<long(long, long)>;
+    using UnopLongProc = std::function<long(long)>;
     using BinopDoubleProc = std::function<double(double, double)>;
-    using UnopDoubleProc  = std::function<double(double)>;
+    using UnopDoubleProc = std::function<double(double)>;
     using BinopStringProc = std::function<int(char*, char*)>;
 
     virtual ~Expression() {};

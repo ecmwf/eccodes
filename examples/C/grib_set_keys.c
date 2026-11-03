@@ -21,20 +21,20 @@
 
 int main(int argc, char** argv)
 {
-    int err         = 0;
-    long centre     = 80;
+    int err = 0;
+    long centre = 80;
     long long_value = 0;
     char string_value[100];
-    size_t len  = sizeof(string_value) / sizeof(char);
+    size_t len = sizeof(string_value) / sizeof(char);
     size_t size = 0;
 
-    FILE* in            = NULL;
-    const char* infile  = "../../data/regular_latlon_surface.grib1";
-    FILE* out           = NULL;
+    FILE* in = NULL;
+    const char* infile = "../../data/regular_latlon_surface.grib1";
+    FILE* out = NULL;
     const char* outfile = "out.set.grib1";
-    codes_handle* h     = NULL;
-    const void* buffer  = NULL;
-    size_t str_len      = 0; /* See the call to codes_set_string later */
+    codes_handle* h = NULL;
+    const void* buffer = NULL;
+    size_t str_len = 0; /* See the call to codes_set_string later */
 
     in = fopen(infile, "rb");
     if (!in) {

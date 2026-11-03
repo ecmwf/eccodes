@@ -16,7 +16,7 @@
 
 int main(int argc, char* argv[])
 {
-    char *filename = NULL;
+    char* filename = NULL;
     int err = 0;
     int num_messages = 0, i = 0, do_offsets = 0, do_sizes = 0, oc = 0;
     off_t* offsets = NULL;  // array of message offsets

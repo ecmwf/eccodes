@@ -15,5 +15,3 @@ consensus list(consensusCount)
 alias local.dataOrigin=dataOrigin;
 alias local.modelIdentifier=modelIdentifier;
 alias local.consensusCount=consensusCount;
-
-

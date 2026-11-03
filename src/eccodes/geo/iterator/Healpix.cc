@@ -19,7 +19,8 @@
 eccodes::geo_iterator::Healpix _grib_iterator_healpix;
 eccodes::geo_iterator::Iterator* grib_iterator_healpix = &_grib_iterator_healpix;
 
-namespace eccodes::geo_iterator {
+namespace eccodes::geo_iterator
+{
 
 #define ITER "HEALPix Geoiterator"
 constexpr double RAD2DEG = 57.29577951308232087684;  // 180 over pi
@@ -32,11 +33,11 @@ struct CodecFijNest
     inline static int nest_encode_bits(int n)
     {
         auto b = static_cast<uint64_t>(n) & __masks[0];
-        b      = (b ^ (b << 16)) & __masks[1];
-        b      = (b ^ (b << 8)) & __masks[2];
-        b      = (b ^ (b << 4)) & __masks[3];
-        b      = (b ^ (b << 2)) & __masks[4];
-        b      = (b ^ (b << 1)) & __masks[5];
+        b = (b ^ (b << 16)) & __masks[1];
+        b = (b ^ (b << 8)) & __masks[2];
+        b = (b ^ (b << 4)) & __masks[3];
+        b = (b ^ (b << 2)) & __masks[4];
+        b = (b ^ (b << 1)) & __masks[5];
         return static_cast<int>(b);
     }
 
@@ -130,8 +131,8 @@ size_t HEALPix_nj(size_t N, size_t i)
 //
 static std::vector<double> HEALPix_longitudes(size_t N, size_t i)
 {
-    const auto Nj    = HEALPix_nj(N, i);
-    const auto step  = 360. / static_cast<double>(Nj);
+    const auto Nj = HEALPix_nj(N, i);
+    const auto step = 360. / static_cast<double>(Nj);
     const auto start = i < N || 3 * N - 1 < i || static_cast<bool>((i + N) % 2) ? step / 2. : 0.;
 
     std::vector<double> longitudes(Nj);
@@ -143,27 +144,27 @@ static std::vector<double> HEALPix_longitudes(size_t N, size_t i)
 int Healpix::iterate_healpix(long N)
 {
     size_t Ny = 4 * static_cast<size_t>(N) - 1;
-    auto Nd   = static_cast<double>(N);
+    auto Nd = static_cast<double>(N);
 
     std::vector<double> latitudes(Ny);
 
     for (long r = 1; r < N; r++) {
-        auto rd                  = static_cast<double>(r);
-        latitudes[r - 1]         = 90.0 - RAD2DEG * std::acos(1.0 - rd * rd / (3.0 * Nd * Nd));
+        auto rd = static_cast<double>(r);
+        latitudes[r - 1] = 90.0 - RAD2DEG * std::acos(1.0 - rd * rd / (3.0 * Nd * Nd));
         latitudes[4 * N - 1 - r] = -latitudes[r - 1];
     }
 
     // Polar caps
     for (long r = 1; r < N; r++) {
-        auto rd                  = static_cast<double>(r);
-        latitudes[r - 1]         = 90.0 - RAD2DEG * std::acos(1.0 - rd * rd / (3.0 * Nd * Nd));
+        auto rd = static_cast<double>(r);
+        latitudes[r - 1] = 90.0 - RAD2DEG * std::acos(1.0 - rd * rd / (3.0 * Nd * Nd));
         latitudes[4 * N - 1 - r] = -latitudes[r - 1];
     }
 
     // Equatorial belt
     for (long r = N; r < 2 * N; r++) {
-        auto rd                  = static_cast<double>(r);
-        latitudes[r - 1]         = 90.0 - RAD2DEG * std::acos((4.0 * Nd - 2.0 * rd) / (3.0 * Nd));
+        auto rd = static_cast<double>(r);
+        latitudes[r - 1] = 90.0 - RAD2DEG * std::acos((4.0 * Nd - 2.0 * rd) / (3.0 * Nd));
         latitudes[4 * N - 1 - r] = -latitudes[r - 1];
     }
 
@@ -178,9 +179,9 @@ int Healpix::iterate_healpix(long N)
         }
 
         const auto Nside = static_cast<int>(N);
-        const auto k     = static_cast<int>(std::log2(Nside));
-        const int Npix   = 12 * Nside * Nside;
-        const int Ncap   = (Nside * (Nside - 1)) << 1;
+        const auto k = static_cast<int>(std::log2(Nside));
+        const int Npix = 12 * Nside * Nside;
+        const int Ncap = (Nside * (Nside - 1)) << 1;
 
         auto to_nest = [&](int f,      //!< base pixel index
                            int ring,   //!< 1-based ring number
@@ -206,8 +207,8 @@ int Healpix::iterate_healpix(long N)
             if (r < Ncap) {
                 // North polar cap
                 int Nring = (1 + int_sqrt(2 * r + 1)) >> 1;
-                int phi   = 1 + r - 2 * Nring * (Nring - 1);
-                int f     = div_03(phi - 1, Nring);
+                int phi = 1 + r - 2 * Nring * (Nring - 1);
+                int f = div_03(phi - 1, Nring);
 
                 ring_to_nest[r] = to_nest(f, Nring, Nring, phi, 0);
                 continue;
@@ -216,24 +217,24 @@ int Healpix::iterate_healpix(long N)
             if (Npix - Ncap <= r) {
                 // South polar cap
                 int Nring = (1 + int_sqrt(2 * Npix - 2 * r - 1)) >> 1;
-                int phi   = 1 + r + 2 * Nring * (Nring - 1) + 4 * Nring - Npix;
-                int ring  = 4 * Nside - Nring;  // (from South pole)
-                int f     = div_03(phi - 1, Nring) + 8;
+                int phi = 1 + r + 2 * Nring * (Nring - 1) + 4 * Nring - Npix;
+                int ring = 4 * Nside - Nring;  // (from South pole)
+                int f = div_03(phi - 1, Nring) + 8;
 
                 ring_to_nest[r] = to_nest(f, ring, Nring, phi, 0);
                 continue;
             }
 
             // Equatorial belt
-            int ip  = r - Ncap;
+            int ip = r - Ncap;
             int tmp = ip >> (k + 2);
 
-            int phi  = ip - tmp * 4 * Nside + 1;
+            int phi = ip - tmp * 4 * Nside + 1;
             int ring = tmp + Nside;
 
             int ifm = 1 + ((phi - 1 - ((1 + tmp) >> 1)) >> k);
             int ifp = 1 + ((phi - 1 - ((1 - tmp + 2 * Nside) >> 1)) >> k);
-            int f   = (ifp == ifm) ? (ifp | 4) : ((ifp < ifm) ? ifp : (ifm + 8));
+            int f = (ifp == ifm) ? (ifp | 4) : ((ifp < ifm) ? ifp : (ifm + 8));
 
             ring_to_nest[r] = to_nest(f, ring, Nside, phi, ring & 1);
         }
@@ -280,7 +281,7 @@ int Healpix::init(grib_handle* h, grib_arguments* args)
         return GRIB_WRONG_GRID;
     }
 
-    char ordering[32] = {0,};
+    char ordering[32] = { 0 };
     size_t slen = sizeof(ordering);
     if ((err = grib_get_string_internal(h, sorder, ordering, &slen)) != GRIB_SUCCESS) {
         return err;
@@ -296,9 +297,9 @@ int Healpix::init(grib_handle* h, grib_arguments* args)
     //     return GRIB_GEOCALCULUS_PROBLEM;
     // }
 
-    long longitudeOfFirstGridPoint=0;
+    long longitudeOfFirstGridPoint = 0;
     if (grib_get_long_internal(h, "longitudeOfFirstGridPoint", &longitudeOfFirstGridPoint) == GRIB_SUCCESS) {
-        if (longitudeOfFirstGridPoint != 45000000) { // GRIB2 uses microdegrees
+        if (longitudeOfFirstGridPoint != 45000000) {  // GRIB2 uses microdegrees
             grib_context_log(h->context, GRIB_LOG_ERROR, "%s: key longitudeOfFirstGridPointInDegrees should be 45", ITER);
             return GRIB_WRONG_GRID;
         }

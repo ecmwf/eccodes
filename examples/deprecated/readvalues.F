@@ -1,11 +1,11 @@
       PROGRAM READVALUES
 
 
-      
-      INTEGER   IFILE 
-      INTEGER   GRIBID 
-      INTEGER   GRIBID2 
-      INTEGER   VALUE 
+
+      INTEGER   IFILE
+      INTEGER   GRIBID
+      INTEGER   GRIBID2
+      INTEGER   VALUE
       INTEGER   NARGS
       INTEGER   IRET
       INTEGER   IFILEN
@@ -74,7 +74,7 @@
       IF(INPUT.EQ.'-i') THEN
          CALL GETARG(2,YDATAFILE)
       ELSE
-         print*,'Usage: readvalues -i inputfile' 
+         print*,'Usage: readvalues -i inputfile'
          STOP
       END IF
 
@@ -109,9 +109,9 @@ C        IRET = GRIB_CLOSE_FILE(IFILE)
 
       IRET = GRIB_GET_ERROR_STRING(IRET,MERROR)
       WRITE (*,*) "ERROR ", MERROR
-      
 
-      DO J = 1, PVSIZE 
+
+      DO J = 1, PVSIZE
         PVSS(J) = J
       ENDDO
 
@@ -119,8 +119,8 @@ C        IRET = GRIB_CLOSE_FILE(IFILE)
       IRET = GRIB_SET_REAL8_ARRAY(GRIBID,"pv",PVSS, PVSIZE)
       IRET = GRIB_GET_ERROR_STRING(IRET,MERROR)
 
-      DO J = 1, PLSIZE 
-        PL(J) = 64 
+      DO J = 1, PLSIZE
+        PL(J) = 64
       ENDDO
 
       IRET = GRIB_SET_INT_ARRAY(GRIBID,"pl",PL, PLSIZE)
@@ -131,8 +131,8 @@ C        IRET = GRIB_CLOSE_FILE(IFILE)
 
       VMAX = VALUES(1)
       VMIN = VMAX
- 
-      DO J = 1, VALUESLEN 
+
+      DO J = 1, VALUESLEN
        VALUES(J) = J + 0.5
       ENDDO
 
@@ -147,6 +147,6 @@ C        IRET = GRIB_CLOSE_FILE(IFILE)
       IRET = GRIB_WRITE_TO(GRIBID,"test.grib")
       IRET = GRIB_RELEASE(GRIBID)
       GO TO 50
-   
+
 
       END

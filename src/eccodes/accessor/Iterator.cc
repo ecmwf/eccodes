@@ -10,8 +10,6 @@
 
 #include "Iterator.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::Iterator> _grib_accessor_iterator_builder{};
-
 namespace eccodes::accessor
 {
 

@@ -21,10 +21,10 @@ namespace eccodes::action
 Modify::Modify(grib_context* context, const char* name, long flags)
 {
     class_name_ = "action_class_modify";
-    op_         = grib_context_strdup_persistent(context, "section");
-    context_    = context;
-    mflags_     = flags;
-    name_       = grib_context_strdup_persistent(context, name);
+    op_ = grib_context_strdup_persistent(context, "section");
+    context_ = context;
+    mflags_ = flags;
+    name_ = grib_context_strdup_persistent(context, name);
 }
 
 Modify::~Modify()

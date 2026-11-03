@@ -18,7 +18,7 @@
 static double compare_double_absolute(double a, double b, double tolerance)
 {
     double ret = 0;
-    double d   = fabs(a - b);
+    double d = fabs(a - b);
     if (d > tolerance) ret = d;
     return ret;
 }
@@ -81,7 +81,7 @@ int main(int argc, char** argv)
         }
 
         values = (double*)malloc(values_len * sizeof(double));
-        err    = grib_get_double_array(h, "values", values, &values_len);
+        err = grib_get_double_array(h, "values", values, &values_len);
 
         /*
          * check if decoding of the data fails when the number of bpv

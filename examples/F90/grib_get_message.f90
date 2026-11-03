@@ -36,7 +36,7 @@ program get_message
 
    call codes_get_message_size(igrib_in, byte_size)
    call grib_get_message(igrib_in, mptr, byte_size2)
-   
+
    if(byte_size == byte_size2) then
            write(*,*) "Get message test 1 passed, message SIZES are the same!"
    else
@@ -46,13 +46,13 @@ program get_message
 
    allocate (message(byte_size), stat=err)
    call codes_copy_message(igrib_in, message)
-   
+
    if(ALL(mptr == message)) then
            write(*,*) "Get message test 2 passed, message CONTENT is the same!"
    else
            write(*,*) "Get message test 2 failed, message CONTENT is NOT the same!"
-           call abort     
-   endif   
+           call abort
+   endif
 
    call codes_new_from_message(igrib_out, message)
    call grib_new_from_message_no_copy(igrib_out2, mptr)
@@ -67,23 +67,23 @@ program get_message
            write(*,*) "New from message (no copy) test 1 failed, GRIB_GET did NOT work!"
            call abort
    endif
-   
+
    centre = 75
    call codes_set(igrib_out, 'centre', centre)
    call codes_set(igrib_out2, 'centre', centre)
-   
+
    call codes_get(igrib_out, 'centre', centre)
    write (*, *) 'allocatable centre=', centre
    call codes_get(igrib_out2, 'centre', centre)
    write (*, *) 'pointer centre=', centre
-   
+
   if(centre == 75) then
            write(*,*) "New from message (no copy) test 2 passed, GRIB_SET worked!"
    else
            write(*,*) "New from message (no copy) test 2 failed, GRIB_SET did NOT work!"
            call abort
    endif
-   
+
    ! Write message to a file
    call codes_write(igrib_out, outfile1)
    call codes_write(igrib_out2, outfile2)
@@ -93,7 +93,7 @@ program get_message
    call codes_release(igrib_out2)
    call codes_close_file(infile)
    call codes_close_file(outfile1)
-   call codes_close_file(outfile2) 
+   call codes_close_file(outfile2)
    deallocate (message)
 
 end program get_message

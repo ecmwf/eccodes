@@ -7,4 +7,3 @@ unsigned[2] offsetToEndOf4DvarWindow : dump;
 unsigned[2] lengthOf4DvarWindow : dump;
 
 alias anoffset=offsetToEndOf4DvarWindow;
-

@@ -10,8 +10,6 @@
 
 #include "CheckInternalVersion.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::CheckInternalVersion> _grib_accessor_check_internal_version_builder{};
-
 namespace eccodes::accessor
 {
 
@@ -24,9 +22,9 @@ void CheckInternalVersion::init(const long l, grib_arguments* args)
 {
     Ascii::init(l, args);
     /* Check version of definition files is compatible with the engine */
-    int err                    = 0;
-    long defs_file_version     = 0;
-    grib_handle* h             = get_enclosing_handle();
+    int err = 0;
+    long defs_file_version = 0;
+    grib_handle* h = get_enclosing_handle();
     const char* s_defn_version = args->get_name(h, 0);
     ECCODES_ASSERT(s_defn_version);
 

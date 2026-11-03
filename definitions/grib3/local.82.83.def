@@ -17,5 +17,3 @@ codetable[1]    matchTimeRepres         "grib1/localConcepts/eswi/timerepres.tab
 codetable[1]    matchLandType           "grib1/localConcepts/eswi/landtype.table"          : dump,long_type;
 codetable[2]    matchAerosolBinNumber   "grib1/localConcepts/eswi/aerosolbinnumber.table"  : dump,long_type;
 unsigned[2]     meanSize                : dump;
-
-

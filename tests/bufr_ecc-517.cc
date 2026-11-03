@@ -14,11 +14,11 @@
 
 int main(int argc, char** argv)
 {
-    size_t size            = 0;
-    const void* buffer     = NULL;
-    FILE* fout             = NULL;
-    codes_handle* h        = NULL;
-    long* ivalues          = NULL;
+    size_t size = 0;
+    const void* buffer = NULL;
+    FILE* fout = NULL;
+    codes_handle* h = NULL;
+    long* ivalues = NULL;
     const char* sampleName = "BUFR3_local";
 
     assert(argc == 2);
@@ -34,14 +34,14 @@ int main(int argc, char** argv)
     ivalues = (long*)malloc(1 * sizeof(long));
     assert(ivalues);
 
-    size       = 1;
+    size = 1;
     ivalues[0] = 1;
     CODES_CHECK(codes_set_long_array(h, "inputDelayedDescriptorReplicationFactor", ivalues, size), 0);
 
     free(ivalues);
-    ivalues    = (long*)malloc(1 * sizeof(long));
+    ivalues = (long*)malloc(1 * sizeof(long));
     assert(ivalues);
-    size       = 1;
+    size = 1;
     ivalues[0] = 486;
     CODES_CHECK(codes_set_long_array(h, "inputExtendedDelayedDescriptorReplicationFactor", ivalues, size), 0);
 
@@ -89,7 +89,7 @@ int main(int argc, char** argv)
     ivalues = (long*)malloc(9 * sizeof(long));
     assert(ivalues);
 
-    size       = 4;
+    size = 4;
     ivalues[0] = 309052;
     ivalues[1] = 5001;
     ivalues[2] = 6001;

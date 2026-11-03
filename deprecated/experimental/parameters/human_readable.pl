@@ -19,15 +19,15 @@ while( <> ) {
 	}
 	elsif( $start == 0 ) {
 		next
-	}	
+	}
 
-	my ( $grib, $abbr, $title, $lev, $disc, $cat, $num,  
-	     $sfc1a, $sfc1b, $sfc1c, $sfc2a, $sfc2b, $sfc2c, 
+	my ( $grib, $abbr, $title, $lev, $disc, $cat, $num,
+	     $sfc1a, $sfc1b, $sfc1c, $sfc2a, $sfc2b, $sfc2c,
          $stat) = split(/\s+/, $_);
 
-	my @where = ( "4.2.$disc.$cat.table", 
-                  "4.5.table", "4.5.table", 
-                  "4.10.table" ); 
+	my @where = ( "4.2.$disc.$cat.table",
+                  "4.5.table", "4.5.table",
+                  "4.10.table" );
     my @what  = ( $num, $sfc1a, $sfc2a, $stat );
 
 	my $level1 = get_level_value( $sfc1a, $sfc1b, $sfc1c );
@@ -37,29 +37,29 @@ while( <> ) {
     my $count = 0;
 	foreach my $file ( @where ) {
 
-       	my $number  = $what[ $count++ ]; 
+       	my $number  = $what[ $count++ ];
         next unless( $number =~ m/\d+/ );
 
         my $file = "$path/$file";
         open( IN2, "<$file") or die "Could not open file $file";
 		my @content = <IN2>;
 		close IN2;
-		
-		my ($what)  = grep(/^\s*$number\s+\w+/, @content); 
 
-    	my ( $what ) = ( $what =~ /^\s*$number\s+\w+\s+([\w|\s|-]+)/ );  
-    	$what = "unknown" unless( $what ); 
+		my ($what)  = grep(/^\s*$number\s+\w+/, @content);
+
+    	my ( $what ) = ( $what =~ /^\s*$number\s+\w+\s+([\w|\s|-]+)/ );
+    	$what = "unknown" unless( $what );
         chomp( $what );
-	
+
 		my $test = $what;
 		my $foo  = chop( $test );
-		chop( $what ) if( $foo =~ m/\s/ ); 
-	
+		chop( $what ) if( $foo =~ m/\s/ );
+
 	    $what = $what . "($level1)" if( $count == 2 and $level1 =~ m/\d+/ );
 		$what = $what . "($level2)" if( $count == 3 and $level2 =~ m/\d+/ );
 		push @result, $what;
     }
-	
+
 	print "$grib\t$title ($abbr):\n";
 	print "\t\t" . join(", ", @result) . "\n\n";
 
@@ -84,6 +84,5 @@ sub get_level_value {
     chomp( $unit );
 
     my $value = 10**(-$value2) * $value1;
-	return "$value $unit" 
+	return "$value $unit"
 }
-

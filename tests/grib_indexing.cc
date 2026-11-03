@@ -12,8 +12,8 @@
 int main(int argc, char* argv[])
 {
     grib_index* index = NULL;
-    grib_handle* h    = NULL;
-    char* infile      = NULL;
+    grib_handle* h = NULL;
+    char* infile = NULL;
     long *steps, *levels, *numbers; /* arrays */
     char** shortNames = NULL;
     size_t i, j, k, l;

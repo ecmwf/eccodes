@@ -10,8 +10,6 @@
 
 #include "PackBufrValues.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::PackBufrValues> _grib_accessor_pack_bufr_values_builder{};
-
 namespace eccodes::accessor
 {
 
@@ -19,7 +17,7 @@ void PackBufrValues::init(const long len, grib_arguments* params)
 {
     Gen::init(len, params);
     char* key;
-    key            = (char*)params->get_name(get_enclosing_handle(), 0);
+    key = (char*)params->get_name(get_enclosing_handle(), 0);
     data_accessor_ = grib_find_accessor(get_enclosing_handle(), key);
 
     length_ = 0;

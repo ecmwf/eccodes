@@ -16,13 +16,13 @@
 
 int main(int argc, char* argv[])
 {
-    size_t str_len        = 0;
+    size_t str_len = 0;
     long number_of_values = 4, bits_per_value = 8, max_level_value = 3, number_of_level_values = 5, decimal_scale_factor = 1;
     size_t level_values_length = number_of_level_values;
-    long level_values[]        = { 101L, 102L, 103L, 104L, 105L };
-    double* values             = NULL;
-    size_t values_length       = number_of_values;
-    values                     = (double*)malloc(values_length * sizeof(double));
+    long level_values[] = { 101L, 102L, 103L, 104L, 105L };
+    double* values = NULL;
+    size_t values_length = number_of_values;
+    values = (double*)malloc(values_length * sizeof(double));
 
     assert(argc == 2);
 

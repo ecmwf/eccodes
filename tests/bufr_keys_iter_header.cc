@@ -41,19 +41,19 @@ int main(int argc, char* argv[])
         size_t vlen = MAX_VAL_LEN;
         char value[MAX_VAL_LEN];
         const char* kname = codes_bufr_keys_iterator_get_name(kiter);
-        if (strcmp(kname, "unexpandedDescriptors")==0 ||
-            strcmp(kname, "bufrHeaderCentre")==0      ||
-            strncmp(kname, "correction", 10)==0       ||
-            strcmp(kname, "rdbtimeTime")==0) {
+        if (strcmp(kname, "unexpandedDescriptors") == 0 ||
+            strcmp(kname, "bufrHeaderCentre") == 0 ||
+            strncmp(kname, "correction", 10) == 0 ||
+            strcmp(kname, "rdbtimeTime") == 0) {
             continue;
         }
         memset(value, 0, vlen);
         CODES_CHECK(codes_get_string(h, kname, value, &vlen), kname);
-        //printf("%s = %s\t", kname, value);
+        // printf("%s = %s\t", kname, value);
 
         // fast
         size_t vlen2 = 0;
-        char value2[512] = {0,};
+        char value2[512] = { 0 };
         err = codes_bufr_header_get_string(&header_array[0], kname, value2, &vlen2);
         if (err) {
             fprintf(stderr, "ERROR: Key=%s: codes_bufr_header_get_string failed\n", kname);
@@ -61,7 +61,7 @@ int main(int argc, char* argv[])
         }
         assert(!err);
         assert(vlen > 0);
-        //printf("%s\n", value2);
+        // printf("%s\n", value2);
         if (strcmp(value, value2) != 0) {
             fprintf(stderr, "ERROR: Key=%s value1=%s but value2=%s\n", kname, value, value2);
             return 1;

@@ -34,14 +34,14 @@ grib_option grib_options[] = {
 const char* tool_description =
     "List content of METAR files printing values of "
     "some keys.\n\tIt does not fail when a key is not found.";
-const char* tool_name  = "metar_ls";
+const char* tool_name = "metar_ls";
 const char* tool_online_doc = NULL;
 const char* tool_usage = "[options] file file ...";
 
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
-double lat             = 0;
-double lon             = 0;
-int mode               = 0;
+double lat = 0;
+double lon = 0;
+int mode = 0;
 
 int main(int argc, char* argv[])
 {

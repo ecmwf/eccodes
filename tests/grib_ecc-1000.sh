@@ -29,16 +29,16 @@ input_gg=${data_dir}/reduced_gaussian_model_level.grib1
 # --------------------
 ${tools_dir}/grib_get -F%.1f -l0,0 $input_ll $input_gg > $tempOut
 cat > $tempRef <<EOF
-300.8 300.1 300.9 300.9 
-198.3 198.5 199.3 199.6 
+300.8 300.1 300.9 300.9
+198.3 198.5 199.3 199.6
 EOF
 diff -w $tempRef $tempOut
 rm -f $tempOut $tempRef
 
 ${tools_dir}/grib_get -F%.1f -l0,0 $input_gg $input_ll > $tempOut
 cat > $tempRef <<EOF
-198.3 198.5 199.3 199.6 
-300.8 300.1 300.9 300.9 
+198.3 198.5 199.3 199.6
+300.8 300.1 300.9 300.9
 EOF
 diff -w $tempRef $tempOut
 

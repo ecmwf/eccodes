@@ -10,13 +10,14 @@
 
 #include "IsInDict.h"
 
-namespace eccodes::expression {
+namespace eccodes::expression
+{
 
 grib_trie* IsInDict::load_dictionary(grib_context* c, int* err) const
 {
-    char* filename  = NULL;
-    char line[1024] = {0,};
-    char key[1024] = {0,};
+    char* filename = NULL;
+    char line[1024] = { 0 };
+    char key[1024] = { 0 };
     char* list = 0;
     grib_trie* dictionary = NULL;
     FILE* f = NULL;
@@ -57,7 +58,7 @@ grib_trie* IsInDict::load_dictionary(grib_context* c, int* err) const
             i++;
         }
         key[i] = 0;
-        list   = (char*)grib_context_malloc_clear(c, strlen(line) + 1);
+        list = (char*)grib_context_malloc_clear(c, strlen(line) + 1);
         memcpy(list, line, strlen(line));
         grib_trie_insert(dictionary, key, list);
     }
@@ -77,7 +78,7 @@ const char* IsInDict::get_name() const
 int IsInDict::evaluate_long(grib_handle* h, long* result) const
 {
     int err = 0;
-    char mybuf[1024] = {0,};
+    char mybuf[1024] = { 0 };
     size_t size = 1024;
 
     grib_trie* dict = load_dictionary(h->context, &err);
@@ -99,7 +100,7 @@ int IsInDict::evaluate_double(grib_handle* h, double* result) const
 
     // grib_expression_is_in_dict* e = (grib_expression_is_in_dict*)g;
     // int err                       = 0;
-    // char mybuf[1024]              = {0,};
+    // char mybuf[1024]              = {0};
     // size_t size = 1024;
     // grib_trie* list = load_dictionary(h->context, g, &err);
     // if ((err = grib_get_string_internal(h, key_, mybuf, &size)) != GRIB_SUCCESS)
@@ -117,7 +118,7 @@ const char* IsInDict::evaluate_string(grib_handle* h, char* buf, size_t* size, i
     return NULL;
 
     // grib_expression_is_in_dict* e = (grib_expression_is_in_dict*)g;
-    // char mybuf[1024]              = {0,};
+    // char mybuf[1024]              = {0};
     // size_t sizebuf = 1024;
     // long result;
     // grib_trie* list = load_dictionary(h->context, g, err);
@@ -145,7 +146,7 @@ void IsInDict::print(grib_context* c, grib_handle* f, FILE* out) const
 
 IsInDict::IsInDict(grib_context* c, const char* name, const char* list)
 {
-    key_        = grib_context_strdup_persistent(c, name);
+    key_ = grib_context_strdup_persistent(c, name);
     dictionary_ = grib_context_strdup_persistent(c, list);
 }
 
@@ -170,6 +171,7 @@ void IsInDict::add_dependency(grib_accessor* observer)
 
 }  // namespace eccodes::expression
 
-grib_expression* new_is_in_dict_expression(grib_context* c, const char* name, const char* list) {
+grib_expression* new_is_in_dict_expression(grib_context* c, const char* name, const char* list)
+{
     return new eccodes::expression::IsInDict(c, name, list);
 }

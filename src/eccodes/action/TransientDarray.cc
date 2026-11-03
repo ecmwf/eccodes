@@ -23,8 +23,8 @@ TransientDArray::TransientDArray(grib_context* context, const char* name, grib_d
     Gen(context, name, "transient_darray", 0, NULL, NULL, flags, NULL, NULL)
 {
     class_name_ = "action_class_transient_darray";
-    darray_     = darray;
-    name2_      = grib_context_strdup_persistent(context, name);
+    darray_ = darray;
+    name2_ = grib_context_strdup_persistent(context, name);
 }
 
 TransientDArray::~TransientDArray()
@@ -35,9 +35,9 @@ TransientDArray::~TransientDArray()
 
 int TransientDArray::execute(grib_handle* h)
 {
-    size_t len       = grib_darray_used_size(darray_);
+    size_t len = grib_darray_used_size(darray_);
     grib_accessor* a = NULL;
-    grib_section* p  = h->root;
+    grib_section* p = h->root;
 
     a = grib_accessor_factory(p, this, len_, params_);
     if (!a)

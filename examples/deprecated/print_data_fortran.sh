@@ -9,5 +9,3 @@ then
   echo ERROR: wrong number of values
   exit 1;
 fi
-
-

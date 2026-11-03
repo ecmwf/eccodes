@@ -10,8 +10,6 @@
 
 #include "Padding.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::Padding> _grib_accessor_padding_builder{};
-
 namespace eccodes::accessor
 {
 

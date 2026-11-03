@@ -44,10 +44,10 @@ int main(int argc, char* argv[])
     /* name_space=NULL to get all the keys */
     /* char* name_space=0; */
 
-    FILE* f         = NULL;
+    FILE* f = NULL;
     codes_handle* h = NULL;
 
-    int err       = 0;
+    int err = 0;
     int msg_count = 0;
 
     char value[MAX_VAL_LEN];
@@ -74,7 +74,7 @@ int main(int argc, char* argv[])
 
         while (codes_keys_iterator_next(kiter)) {
             const char* name = codes_keys_iterator_get_name(kiter);
-            vlen             = MAX_VAL_LEN;
+            vlen = MAX_VAL_LEN;
             memset(value, 0, vlen);
             CODES_CHECK(codes_get_string(h, name, value, &vlen), name);
             printf("%s = %s\n", name, value);

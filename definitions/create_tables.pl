@@ -109,13 +109,12 @@ sub create_tables {
 			system("p4 edit $tableFile");
          open($out,"> $tableFile") or die "unable to open $tableFile";
         }
-		next if ($code =~ /-/) ; 
+		next if ($code =~ /-/) ;
 		$records{$code}="$code $code $meaning";
 	}
 	close $out;
 }
- 
-create_parameter_tables();
- 
-#create_tables();
 
+create_parameter_tables();
+
+#create_tables();

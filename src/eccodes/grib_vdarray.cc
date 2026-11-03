@@ -14,7 +14,7 @@
 void grib_vdarray_print(const char* title, const grib_vdarray* vdarray)
 {
     size_t i = 0;
-    char text[100] = {0,};
+    char text[100] = { 0 };
     ECCODES_ASSERT(vdarray);
     printf("%s: vdarray.size=%zu  vdarray.n=%zu\n", title, vdarray->size, vdarray->n);
     for (i = 0; i < vdarray->n; i++) {
@@ -34,10 +34,10 @@ grib_vdarray* grib_vdarray_new(size_t size, size_t incsize)
                          "%s: Unable to allocate %zu bytes", __func__, sizeof(grib_vdarray));
         return NULL;
     }
-    v->size    = size;
-    v->n       = 0;
+    v->size = size;
+    v->n = 0;
     v->incsize = incsize;
-    v->v       = (grib_darray**)grib_context_malloc_clear(c, sizeof(grib_darray*) * size);
+    v->v = (grib_darray**)grib_context_malloc_clear(c, sizeof(grib_darray*) * size);
     if (!v->v) {
         grib_context_log(c, GRIB_LOG_ERROR,
                          "%s: Unable to allocate %zu bytes", __func__, sizeof(grib_darray*) * size);
@@ -51,7 +51,7 @@ static grib_vdarray* grib_vdarray_resize(grib_vdarray* v)
     const size_t newsize = v->incsize + v->size;
     grib_context* c = grib_context_get_default();
 
-    v->v    = (grib_darray**)grib_context_realloc(c, v->v, newsize * sizeof(grib_darray*));
+    v->v = (grib_darray**)grib_context_realloc(c, v->v, newsize * sizeof(grib_darray*));
     v->size = newsize;
     if (!v->v) {
         grib_context_log(c, GRIB_LOG_ERROR,
@@ -63,7 +63,7 @@ static grib_vdarray* grib_vdarray_resize(grib_vdarray* v)
 
 grib_vdarray* grib_vdarray_push(grib_vdarray* v, grib_darray* val)
 {
-    size_t start_size    = 100;
+    size_t start_size = 100;
     size_t start_incsize = 100;
     if (!v)
         v = grib_vdarray_new(start_size, start_incsize);

@@ -33,12 +33,12 @@ static void binary_search(const double xx[], const unsigned long n, double x, un
 
 unsigned long grib_ibm_to_long(double x)
 {
-    unsigned long s    = 0;
+    unsigned long s = 0;
     unsigned long mmax = 0xffffff;
     unsigned long mmin = 0x800000;
-    unsigned long m    = 0;
-    unsigned long e    = 0;
-    double rmmax       = mmax + 0.5;
+    unsigned long m = 0;
+    unsigned long e = 0;
+    double rmmax = mmax + 0.5;
 
     /* printf("\ngrib_ibm_to_long: x=%.20e\n",x); */
     if (x < 0) {
@@ -204,7 +204,7 @@ int grib_nearest_smaller_ibm_float(double a, double* ret)
     if (a > ibm_table.vmax)
         return GRIB_INTERNAL_ERROR;
 
-    l    = grib_ibm_nearest_smaller_to_long(a);
+    l = grib_ibm_nearest_smaller_to_long(a);
     *ret = grib_long_to_ibm(l);
     return GRIB_SUCCESS;
 }

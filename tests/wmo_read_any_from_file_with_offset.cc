@@ -15,7 +15,7 @@
 #define SIZE 1024 * 1024
 char buffer[SIZE];
 
-int test_next(FILE* in, size_t* len, off_t offset_expected, off_t* offset) // , size_t* previous_end_of_message)
+int test_next(FILE* in, size_t* len, off_t offset_expected, off_t* offset)  // , size_t* previous_end_of_message)
 {
     *len = SIZE;
 
@@ -45,12 +45,12 @@ int main(int argc, char** argv)
     off_t offset = 0;
     // size_t previous_end_of_message = 0;
 
-    err = test_next(in, &len, 5, &offset); // , &previous_end_of_message);
-    err = test_next(in, &len, 14161, &offset); // , &previous_end_of_message);
-    err = test_next(in, &len, 27581, &offset); // , &previous_end_of_message);
-    err = test_next(in, &len, 27689, &offset); // , &previous_end_of_message);
-    err = test_next(in, &len, 42133, &offset); // , &previous_end_of_message);
-    err = test_next(in, &len, 43333, &offset); // , &previous_end_of_message);
+    err = test_next(in, &len, 5, &offset);      // , &previous_end_of_message);
+    err = test_next(in, &len, 14161, &offset);  // , &previous_end_of_message);
+    err = test_next(in, &len, 27581, &offset);  // , &previous_end_of_message);
+    err = test_next(in, &len, 27689, &offset);  // , &previous_end_of_message);
+    err = test_next(in, &len, 42133, &offset);  // , &previous_end_of_message);
+    err = test_next(in, &len, 43333, &offset);  // , &previous_end_of_message);
 
     return err;
 }

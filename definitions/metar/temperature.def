@@ -13,13 +13,13 @@ if ( ! temperatureAndDewpointPresent && is_integer(g,0,2)  && substr(g,2,1) is "
 		alias temperatureAndDewpointPresent=one;
     group g : dump; non_alpha na;
 }
-if (! temperatureAndDewpointPresent && ( substr(g,0,1) is "M" && is_integer(g,1,2) )  && substr(g,3,1) is "/" && 
-		 ( 
-				 length(g)==4 
-		 || 
+if (! temperatureAndDewpointPresent && ( substr(g,0,1) is "M" && is_integer(g,1,2) )  && substr(g,3,1) is "/" &&
+		 (
+				 length(g)==4
+		 ||
 				substr(g,4,2) is "//"
-		 || 
-				 ( is_integer(g,4,2) || ( substr(g,4,1) is "M" && is_integer(g,5,2) ) ) 
+		 ||
+				 ( is_integer(g,4,2) || ( substr(g,4,1) is "M" && is_integer(g,5,2) ) )
 		 )
 		 ) {
     rename(g,temperatureAndDewPoint);
@@ -31,4 +31,3 @@ if (! temperatureAndDewpointPresent && ( substr(g,0,1) is "M" && is_integer(g,1,
 		alias temperatureAndDewpointPresent=one;
     group g : dump; non_alpha na;
 }
-

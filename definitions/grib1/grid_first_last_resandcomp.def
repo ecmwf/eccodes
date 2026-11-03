@@ -32,4 +32,3 @@ alias latitudeFirstInDegrees  = latitudeOfFirstGridPointInDegrees;
 alias longitudeFirstInDegrees = longitudeOfFirstGridPointInDegrees;
 alias latitudeLastInDegrees   = latitudeOfLastGridPointInDegrees;
 alias longitudeLastInDegrees  = longitudeOfLastGridPointInDegrees;
-

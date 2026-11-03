@@ -23,7 +23,7 @@ extern char* optarg;
 extern int optind;
 
 #ifdef ECCODES_ON_WINDOWS
-#include "wingetopt.h"
+    #include "wingetopt.h"
 #endif
 
 static void usage_and_exit(const char* progname)
@@ -104,13 +104,13 @@ static void print_debug_info(grib_context* context)
 
 int main(int argc, char* argv[])
 {
-    char* path                = NULL;
-    int nfiles                = 0;
+    char* path = NULL;
+    int nfiles = 0;
     unsigned long print_flags = 0;
-    int major                 = ECCODES_MAJOR_VERSION;
-    int minor                 = ECCODES_MINOR_VERSION;
-    int revision              = ECCODES_REVISION_VERSION;
-    grib_context* context     = grib_context_get_default();
+    int major = ECCODES_MAJOR_VERSION;
+    int minor = ECCODES_MINOR_VERSION;
+    int revision = ECCODES_REVISION_VERSION;
+    grib_context* context = grib_context_get_default();
 
     while (1) {
         int c = getopt(argc, argv, "vds");
@@ -142,7 +142,7 @@ int main(int argc, char* argv[])
         printf("\n");
         printf("%s Version %d.%d.%d", grib_get_package_name(), major, minor, revision);
 
-        //printf(" PRE-RELEASE");
+        // printf(" PRE-RELEASE");
 
         printf("\n");
         printf("\n");

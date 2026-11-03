@@ -10,8 +10,6 @@
 
 #include "SectionPointer.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::SectionPointer> _grib_accessor_section_pointer_builder{};
-
 namespace eccodes::accessor
 {
 

@@ -5,6 +5,6 @@
 2 2 Short-wave radiation flux (W m-2)
 3 3 Global radiation flux (W m-2)
 4 4 Brightness temperature (K)
-# 5-191 Reserved 
-# 192-254 Reserved for local use 
-255 255 Missing 
+# 5-191 Reserved
+# 192-254 Reserved for local use
+255 255 Missing

@@ -15,15 +15,15 @@ grib_option grib_options[] = {
     { "V", 0, 0, 0, 1, 0 },
     { "p:", 0, 0, 0, 1, 0 }, /* print keys */
     { "S", 0, 0, 1, 0, 0 },  /* needed for skip */
-    { "w:", 0, 0, 0, 1, 0 },  /* 'where' clause */
+    { "w:", 0, 0, 0, 1, 0 }, /* 'where' clause */
     { "h", 0, 0, 0, 1, 0 },
 };
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 
 const char* tool_description = "Histogram of GRIB files";
-const char* tool_name        = "grib_histogram";
-const char* tool_online_doc  = NULL;
-const char* tool_usage       = "[options] grib_file grib_file ...";
+const char* tool_name = "grib_histogram";
+const char* tool_online_doc = NULL;
+const char* tool_usage = "[options] grib_file grib_file ...";
 
 int main(int argc, char* argv[])
 {

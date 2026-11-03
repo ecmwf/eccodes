@@ -8,5 +8,3 @@ unsigned[4] climateDateTo  : dump ;
 alias local.referenceDate= referenceDate  ;
 alias local.climateDateFrom= climateDateFrom  ;
 alias local.climateDateTo= climateDateTo   ;
-
-

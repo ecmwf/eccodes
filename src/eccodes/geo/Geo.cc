@@ -54,9 +54,9 @@ void grib_info::extra_set(const char* key, long value)
     auto j = static_cast<size_t>(packing.extra_settings_count++);
     ASSERT(j < extra_settings_size_);
 
-    auto& set      = packing.extra_settings[j];
-    set.name       = key;
-    set.type       = CODES_TYPE_LONG;
+    auto& set = packing.extra_settings[j];
+    set.name = key;
+    set.type = CODES_TYPE_LONG;
     set.long_value = value;
 }
 
@@ -66,9 +66,9 @@ void grib_info::extra_set(const char* key, double value)
     auto j = static_cast<size_t>(packing.extra_settings_count++);
     ASSERT(j < extra_settings_size_);
 
-    auto& set        = packing.extra_settings[j];
-    set.name         = key;
-    set.type         = CODES_TYPE_DOUBLE;
+    auto& set = packing.extra_settings[j];
+    set.name = key;
+    set.type = CODES_TYPE_DOUBLE;
     set.double_value = value;
 }
 
@@ -79,8 +79,8 @@ void grib_info::extra_set(const char* key, const char* value)
     ASSERT(j < extra_settings_size_);
 
     auto& set = packing.extra_settings[j];
-    set.name  = key;
-    set.type  = CODES_TYPE_STRING;
+    set.name = key;
+    set.type = CODES_TYPE_STRING;
 
     strings_.emplace_back(value);
     set.string_value = strings_.back().c_str();

@@ -12,9 +12,11 @@
 
 #include "Expression.h"
 
-namespace eccodes::expression {
+namespace eccodes::expression
+{
 
-class Accessor : public Expression {
+class Accessor : public Expression
+{
 public:
     Accessor(grib_context*, const char*, long, size_t);
 

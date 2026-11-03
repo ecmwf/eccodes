@@ -15,12 +15,12 @@
 #include <unistd.h>
 
 #define MAX_VAL_LEN  1024
-#define METADATA_LEN 17000 // guess! works for nearly all GRIB2
+#define METADATA_LEN 17000  // guess! works for nearly all GRIB2
 const int verbose = 1;
 
 static int print_keys(grib_handle* h)
 {
-    char value[MAX_VAL_LEN] = {0,};
+    char value[MAX_VAL_LEN] = { 0 };
     size_t vlen = sizeof(value);
     int err = grib_get_string(h, "gridSpec", value, &vlen);
     if (!err) {
@@ -30,12 +30,16 @@ static int print_keys(grib_handle* h)
         grib_keys_iterator* kiter = grib_keys_iterator_new(h, 0, "geography");
         while (grib_keys_iterator_next(kiter)) {
             const char* name = grib_keys_iterator_get_name(kiter);
-            if (strcmp(name, "pl")==0) continue; // this one is an array!
-            char value[MAX_VAL_LEN] = {0,};
+            if (strcmp(name, "pl") == 0) continue;  // this one is an array!
+            char value[MAX_VAL_LEN] = { 0 };
             size_t vlen = sizeof(value);
             int err = grib_get_string(h, name, value, &vlen);
-            if (!err) printf("%s = %s \n", name, value);
-            else      { fprintf(stderr, "Error: %s\n", grib_get_error_message(err)); return err; }
+            if (!err)
+                printf("%s = %s \n", name, value);
+            else {
+                fprintf(stderr, "Error: %s\n", grib_get_error_message(err));
+                return err;
+            }
         }
         grib_keys_iterator_delete(kiter);
     }
@@ -58,7 +62,7 @@ static int process_messages_full(const char* filename, int debug)
             long edition = 0;
             err = grib_get_long(h, "edition", &edition);
             assert(!err);
-            printf("\nMsg %d (edition=%ld)\n------------------\n", i+1, edition);
+            printf("\nMsg %d (edition=%ld)\n------------------\n", i + 1, edition);
         }
         err = print_keys(h);
         if (err) return err;
@@ -71,9 +75,9 @@ static int process_messages_full(const char* filename, int debug)
 static int process_messages_partial(const char* filename, int debug)
 {
     int num_messages = 0, i = 0;
-    off_t* offsets        = NULL;  // array of message offsets
-    size_t* sizes         = NULL;  // array of message sizes
-    grib_context* c      = grib_context_get_default();
+    off_t* offsets = NULL;  // array of message offsets
+    size_t* sizes = NULL;   // array of message sizes
+    grib_context* c = grib_context_get_default();
     const int strict_mode = 1;
     grib_handle* h = NULL;
 
@@ -91,7 +95,7 @@ static int process_messages_partial(const char* filename, int debug)
         assert(!err);
         char buf[METADATA_LEN];
         size_t num_bytes_to_read = sizeof(buf);
-        if (sizes[i] < num_bytes_to_read) { // is message size smaller than the buffer size?
+        if (sizes[i] < num_bytes_to_read) {  // is message size smaller than the buffer size?
             num_bytes_to_read = sizes[i];
         }
         if (fread(buf, 1, num_bytes_to_read, fin) != num_bytes_to_read) {
@@ -115,7 +119,7 @@ static int process_messages_partial(const char* filename, int debug)
             h = grib_handle_new_from_partial_message(c, buf, num_bytes_to_read);
         }
         if (verbose) {
-            printf("\nMsg %d (edition=%d)\n------------------\n", i+1, edition);
+            printf("\nMsg %d (edition=%d)\n------------------\n", i + 1, edition);
         }
         assert(h);
         err = print_keys(h);
@@ -133,8 +137,8 @@ static int process_messages_partial(const char* filename, int debug)
 // or  prog [-d] -p file
 int main(int argc, char* argv[])
 {
-    char* filename   = NULL;
-    int err          = 0;
+    char* filename = NULL;
+    int err = 0;
     int debug = 0, do_full = 0, do_partial = 0, oc = 0;
 
     assert(argc == 3 || argc == 4);
@@ -156,7 +160,8 @@ int main(int argc, char* argv[])
 
     if (do_full) {
         err = process_messages_full(filename, debug);
-    } else {
+    }
+    else {
         assert(do_partial);
         err = process_messages_partial(filename, debug);
         if (err == GRIB_UNSUPPORTED_EDITION) {

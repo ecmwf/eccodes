@@ -21,9 +21,9 @@
 
 int main(int argc, char** argv)
 {
-    int err           = 0;
-    float* fvalues    = NULL; /* data values as floats */
-    double* dvalues   = NULL; /* data values as doubles */
+    int err = 0;
+    float* fvalues = NULL;  /* data values as floats */
+    double* dvalues = NULL; /* data values as doubles */
     size_t values_len = 0;
     size_t i = 0, len = 0;
 
@@ -38,13 +38,13 @@ int main(int argc, char** argv)
     long numberOfPointsAlongAParallel;
     long numberOfPointsAlongAMeridian;
 
-    double daverage    = 0;
-    float  faverage    = 0;
+    double daverage = 0;
+    float faverage = 0;
     char* packingType = NULL;
 
-    FILE* in             = NULL;
+    FILE* in = NULL;
     const char* filename = "../../data/regular_latlon_surface.grib1";
-    codes_handle* h      = NULL;
+    codes_handle* h = NULL;
 
     in = fopen(filename, "rb");
     if (!in) {
@@ -131,7 +131,7 @@ int main(int argc, char** argv)
     {
         int eq = 0;
         /* now retrieve the value of the key "file" */
-        char file[256] = {0,};
+        char file[256] = { 0 };
         CODES_CHECK(codes_get_length(h, "file", &len), 0);
         assert(len == 1 + strlen(filename));
         codes_get_string(h, "file", file, &len);
@@ -141,9 +141,9 @@ int main(int argc, char** argv)
 
     {
         /* example of getting bytes */
-        const char* name        = "reservedNeedNotBePresent";
+        const char* name = "reservedNeedNotBePresent";
         unsigned char* byte_val = NULL;
-        size_t keySize          = 0;
+        size_t keySize = 0;
         CODES_CHECK(codes_get_size(h, name, &keySize), 0);
         byte_val = (unsigned char*)malloc(keySize * sizeof(unsigned char));
         GRIB_CHECK(codes_get_bytes(h, name, byte_val, &keySize), name);

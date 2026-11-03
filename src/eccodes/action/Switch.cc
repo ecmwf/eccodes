@@ -35,11 +35,11 @@ namespace eccodes::action
 Switch::Switch(grib_context* context, grib_arguments* args, grib_case* Case, grib_action* Default)
 {
     class_name_ = "action_class_switch";
-    op_         = grib_context_strdup_persistent(context, "section");
-    context_    = context;
-    args_       = args;
-    Case_       = Case;
-    Default_    = Default;
+    op_ = grib_context_strdup_persistent(context, "section");
+    context_ = context;
+    args_ = args;
+    Case_ = Case;
+    Default_ = Default;
 
     char name[1024];
     snprintf(name, sizeof(name), "_switch%p", (void*)this);
@@ -67,34 +67,34 @@ Switch::~Switch()
 
 int Switch::execute(grib_handle* h)
 {
-    const grib_case* c    = Case_;
-    grib_action* next    = Default_;
+    const grib_case* c = Case_;
+    grib_action* next = Default_;
     grib_arguments* args = args_;
     grib_arguments* values;
     grib_expression* e;      // The expression in the switch statement
     grib_expression* value;  // The value in each 'case'
-    int ret     = 0;
-    long lres   = 0;
+    int ret = 0;
+    long lres = 0;
     double dres = 0;
-    long lval   = 0;
+    long lval = 0;
     double dval = 0;
-    int type    = 0;
-    int ok      = 0;
+    int type = 0;
+    int ok = 0;
     const char* cval;
     const char* cres;
-    char buf[80] = {0,};
-    char tmp[80] = {0,};
-    size_t len  = sizeof(buf);
+    char buf[80] = { 0 };
+    char tmp[80] = { 0 };
+    size_t len = sizeof(buf);
     size_t size = sizeof(tmp);
-    int err     = 0;
+    int err = 0;
 
     ECCODES_ASSERT(args);
 
     while (c) {
-        e      = args->expression_;
+        e = args->expression_;
         values = c->values;
-        value  = values->expression_;
-        ok     = 0;
+        value = values->expression_;
+        ok = 0;
         while (e && value) {
             if (!strcmp(value->class_name(), "true"))
                 ok = 1;
@@ -115,9 +115,9 @@ int Switch::execute(grib_handle* h)
                         break;
 
                     case GRIB_TYPE_STRING:
-                        len  = sizeof(buf);
+                        len = sizeof(buf);
                         size = sizeof(tmp);
-                        ok   = ((cres = e->evaluate_string(h, buf, &len, &err)) != NULL) &&
+                        ok = ((cres = e->evaluate_string(h, buf, &len, &err)) != NULL) &&
                              (err == 0) &&
                              ((cval = value->evaluate_string(h, tmp, &size, &err)) != NULL) &&
                              (err == 0) &&

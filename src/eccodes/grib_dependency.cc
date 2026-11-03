@@ -43,8 +43,8 @@ static grib_handle* handle_of(grib_accessor* observed)
 
 void grib_dependency_add(grib_accessor* observer, grib_accessor* observed)
 {
-    grib_handle* h        = NULL;
-    grib_dependency* d    = NULL;
+    grib_handle* h = NULL;
+    grib_dependency* d = NULL;
     grib_dependency* last = NULL;
 
     /*printf("grib_dependency_add: observe %p %p observed=%s observer=%s\n",
@@ -65,26 +65,26 @@ void grib_dependency_add(grib_accessor* observer, grib_accessor* observed)
         if (d->observer == observer && d->observed == observed)
             return;
         last = d;
-        d    = d->next;
+        d = d->next;
     }
 
-//     d = h->dependencies;
-//     while(d)
-//     {
-//         last = d;
-//         d = d->next;
-//     }
+    //     d = h->dependencies;
+    //     while(d)
+    //     {
+    //         last = d;
+    //         d = d->next;
+    //     }
 
     d = (grib_dependency*)grib_context_malloc_clear(h->context, sizeof(grib_dependency));
     ECCODES_ASSERT(d);
 
     d->observed = observed;
     d->observer = observer;
-    d->next     = 0;
+    d->next = 0;
 
-    //printf("observe %p %p %s %s\n",(void*)observed,(void*)observer, observed->name,observer->name);
-//     d->next     = h->dependencies;
-//     h->dependencies = d;
+    // printf("observe %p %p %s %s\n",(void*)observed,(void*)observer, observed->name,observer->name);
+    //     d->next     = h->dependencies;
+    //     h->dependencies = d;
 
     if (last)
         last->next = d;
@@ -94,7 +94,7 @@ void grib_dependency_add(grib_accessor* observer, grib_accessor* observed)
 
 void grib_dependency_remove_observed(grib_accessor* observed)
 {
-    grib_handle* h     = handle_of(observed);
+    grib_handle* h = handle_of(observed);
     grib_dependency* d = h->dependencies;
     /* printf("%s\n",observed->name); */
 
@@ -111,14 +111,14 @@ void grib_dependency_remove_observed(grib_accessor* observed)
 
 int grib_dependency_notify_change(grib_accessor* observed)
 {
-    grib_handle* h     = handle_of(observed);
+    grib_handle* h = handle_of(observed);
     grib_dependency* d = h->dependencies;
-    int ret            = GRIB_SUCCESS;
+    int ret = GRIB_SUCCESS;
 
     /*Do a two pass mark&sweep, in case some dependencies are added while we notify*/
     while (d) {
         d->run = (d->observed == observed && d->observer != 0);
-        d      = d->next;
+        d = d->next;
     }
 
     d = h->dependencies;
@@ -138,12 +138,12 @@ int grib_dependency_notify_change(grib_accessor* observed)
 int grib_dependency_notify_change_h(grib_handle* h, grib_accessor* observed)
 {
     grib_dependency* d = h->dependencies;
-    int ret            = GRIB_SUCCESS;
+    int ret = GRIB_SUCCESS;
 
     /*Do a two pass mark&sweep, in case some dependencies are added while we notify*/
     while (d) {
         d->run = (d->observed == observed && d->observer != 0);
-        d      = d->next;
+        d = d->next;
     }
 
     d = h->dependencies;
@@ -160,7 +160,7 @@ int grib_dependency_notify_change_h(grib_handle* h, grib_accessor* observed)
 
 void grib_dependency_remove_observer(grib_accessor* observer)
 {
-    grib_handle* h     = NULL;
+    grib_handle* h = NULL;
     grib_dependency* d = NULL;
 
     if (!observer)

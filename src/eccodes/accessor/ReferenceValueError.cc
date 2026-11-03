@@ -10,8 +10,6 @@
 
 #include "ReferenceValueError.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::ReferenceValueError> _grib_accessor_reference_value_error_builder{};
-
 namespace eccodes::accessor
 {
 
@@ -21,7 +19,7 @@ void ReferenceValueError::init(const long l, grib_arguments* c)
     int n = 0;
 
     referenceValue_ = c->get_name(get_enclosing_handle(), n++);
-    floatType_      = c->get_name(get_enclosing_handle(), n++);
+    floatType_ = c->get_name(get_enclosing_handle(), n++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     length_ = 0;
@@ -29,7 +27,7 @@ void ReferenceValueError::init(const long l, grib_arguments* c)
 
 int ReferenceValueError::unpack_double(double* val, size_t* len)
 {
-    int ret               = GRIB_SUCCESS;
+    int ret = GRIB_SUCCESS;
     double referenceValue = 0;
 
     if ((ret = grib_get_double_internal(get_enclosing_handle(),

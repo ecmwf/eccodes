@@ -12,9 +12,11 @@
 
 #include "grib_api_internal.h"
 
-namespace eccodes::geo_nearest {
+namespace eccodes::geo_nearest
+{
 
-class Nearest {
+class Nearest
+{
 public:
     virtual ~Nearest() {}
     virtual int init(grib_handle*, grib_arguments*) = 0;

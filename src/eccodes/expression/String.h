@@ -12,9 +12,11 @@
 
 #include "Expression.h"
 
-namespace eccodes::expression {
+namespace eccodes::expression
+{
 
-class String : public Expression {
+class String : public Expression
+{
 public:
     String(grib_context*, const char*);
 

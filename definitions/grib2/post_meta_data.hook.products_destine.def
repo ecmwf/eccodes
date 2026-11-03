@@ -17,15 +17,21 @@ if ( defined(dataset) && dataset isnot "climate-dt" && MTG2Switch == 0 ) {
 
 # ECC-2161: We want timespan by default
 # Timespan key comes after stream.type.def in section 4 and so we need to unalias it here for climate-dt
+# ECC-2309: We want to keep timespan in the statistical processing stream in climate-dt
+# 1257 sttd Statistics of deterministic data
 if ( defined(dataset) && dataset is "climate-dt" ) {
-    unalias mars.timespan;
+    if ( defined(stream) && stream!=1257 ) {
+        unalias mars.timespan;
+    }
 }
 
 # ECC-2222: We want model in on-demand-extremes-dt
+# ECC-2304: Note that modelName/modelVersion concepts are already defined in section4_extras (as in ECMWF data).
+#           All that is needed here is to alias modelName as model to the MARS and LS namespaces
 if ( defined(dataset) && dataset is "on-demand-extremes-dt" ) {
-    concept modelName(unknown, "modelNameConcept.def", conceptsDir2, conceptsLocalDirAll): no_copy, dump;
+
     if (modelName isnot "unknown") {
-        concept modelVersion(unknown, "modelVersionConcept.[modelName].def", conceptsDir2, conceptsLocalDirAll): no_copy, dump, read_only;
+
         alias ls.model = modelName;
         alias mars.model = modelName;
 

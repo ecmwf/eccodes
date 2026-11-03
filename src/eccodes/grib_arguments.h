@@ -13,7 +13,8 @@
 #include "grib_api_internal.h"
 #include "expression/Expression.h"
 
-namespace eccodes {
+namespace eccodes
+{
 
 class Arguments
 {
@@ -31,9 +32,9 @@ public:
 
     // TODO(maee): make this private
     // private:
-    Arguments* next_        = nullptr;
+    Arguments* next_ = nullptr;
     Expression* expression_ = nullptr;
-    grib_context* context_  = nullptr;
+    grib_context* context_ = nullptr;
 };
 
 }  // namespace eccodes

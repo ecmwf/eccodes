@@ -12,9 +12,11 @@
 
 #include "Expression.h"
 
-namespace eccodes::expression {
+namespace eccodes::expression
+{
 
-class IsInList : public Expression {
+class IsInList : public Expression
+{
 public:
     IsInList(grib_context*, const char*, const char*);
 
@@ -33,7 +35,7 @@ private:
     char* name_ = nullptr;
     char* list_ = nullptr;
 
-    grib_trie* load_list(grib_context*,  int* err) const;
+    grib_trie* load_list(grib_context*, int* err) const;
     friend Expression* new_is_in_list_expression(grib_context*, const char*, const char*);
 };
 

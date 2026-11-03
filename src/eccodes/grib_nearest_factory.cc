@@ -17,6 +17,7 @@ struct table_entry
     eccodes::geo_nearest::Nearest** nearest;
 };
 
+// clang-format off
 static const struct table_entry table[] = {
     { "healpix", &grib_nearest_healpix, },
     { "lambert_azimuthal_equal_area", &grib_nearest_lambert_azimuthal_equal_area, },
@@ -28,6 +29,7 @@ static const struct table_entry table[] = {
     { "regular", &grib_nearest_regular, },
     { "space_view", &grib_nearest_space_view, },
 };
+// clang-format on
 
 eccodes::geo_nearest::Nearest* grib_nearest_factory(grib_handle* h, grib_arguments* args, int* error)
 {

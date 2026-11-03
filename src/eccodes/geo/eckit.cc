@@ -23,14 +23,17 @@
 #endif
 
 
-namespace eccodes::geo {
+namespace eccodes::geo
+{
 
 
 void eckit_main_init()
 {
 #if defined(HAVE_ECKIT_GEO)
-    struct EckitMainInit {
-        EckitMainInit() {
+    struct EckitMainInit
+    {
+        EckitMainInit()
+        {
             if (!eckit::Main::ready()) {
                 static char* argv[]{ const_cast<char*>("eccodes::geo::eckit_main_init") };
                 eckit::Main::initialise(1, argv);
@@ -80,38 +83,15 @@ bool eckit_geo_use_for_iterator(const grib_handle* h)
 
     // EckitGeoLevel::RESTRICTED
 
-    const auto gridType = get_string(h, "gridType");
-    if (gridType == "healpix" ||
-        gridType == "unstructured_grid" ||
-        (gridType == "regular_ll" && get_number(h, "numberOfDataPoints") > 1)) {
-        return true;
-    }
-
-    return false;
-}
-
-
-bool eckit_geo_use_for_gridspec(const grib_handle* h)
-{
-    const auto lvl = eckit_geo_level(h);
-    if (lvl == EckitGeoLevel::DISABLED || lvl == EckitGeoLevel::ENABLED) {
-        return lvl == ENABLED;
-    }
-
-    // EckitGeoLevel::RESTRICTED
-
-    long l = 0;
-    if ((get_number(h, "jPointsAreConsecutive") == 1) ||
-        (get_number(h, "alternativeRowScanning") == 1)) {
+    if (get_number(h, "alternativeRowScanning") != 0) {
         return false;
     }
 
     const auto gridType = get_string(h, "gridType");
-    if (gridType != "rotated_ll") {
-        return true;
-    }
-
-    return false;
+    return gridType == "healpix" ||
+           gridType == "unstructured_grid" ||
+           (gridType == "rotated_ll" && get_number(h, "numberOfDataPoints") > 1) ||
+           (gridType == "regular_ll" && get_number(h, "numberOfDataPoints") > 1);
 }
 
 

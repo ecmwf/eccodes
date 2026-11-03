@@ -7,7 +7,7 @@ concept faLevelName (defaultFaLevelName,"faLevelName.def",conceptsMasterDir,conc
 concept faModelName (defaultFaModelName,"faModelName.def",conceptsMasterDir,conceptsLocalDirAll) : no_copy;
 
 # 0 = Accumulation or time range from last event
-# 1 = Accumulation or time range from the start 
+# 1 = Accumulation or time range from the start
 transient LSTCUM = 0;
 
 # Scaling factor for levels

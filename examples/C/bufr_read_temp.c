@@ -40,8 +40,8 @@ int main(int argc, char* argv[])
     double *sigt_pres = NULL, *sigt_geo = NULL, *sigt_t = NULL;
     double* sigt_td = NULL;
     size_t sigt_len = 0, len = 0, i = 0;
-    int err            = 0;
-    int cnt            = 0;
+    int err = 0;
+    int cnt = 0;
     const char* infile = "../../data/bufr/temp_101.bufr";
     char key_name[128];
 
@@ -89,9 +89,9 @@ int main(int argc, char* argv[])
         /* allocate memory for the values to be read. Each
          * parameter must have the same number of values. */
         sigt_pres = (double*)malloc(sigt_len * sizeof(double));
-        sigt_geo  = (double*)malloc(sigt_len * sizeof(double));
-        sigt_t    = (double*)malloc(sigt_len * sizeof(double));
-        sigt_td   = (double*)malloc(sigt_len * sizeof(double));
+        sigt_geo = (double*)malloc(sigt_len * sizeof(double));
+        sigt_t = (double*)malloc(sigt_len * sizeof(double));
+        sigt_td = (double*)malloc(sigt_len * sizeof(double));
 
         /* get pressure */
         snprintf(key_name, sizeof(key_name), "/verticalSoundingSignificance=4/pressure");

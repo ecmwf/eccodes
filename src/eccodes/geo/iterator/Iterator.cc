@@ -51,8 +51,8 @@ eccodes::geo_iterator::Iterator* gribIteratorNew(const grib_handle* ch, unsigned
 {
     *error = GRIB_NOT_IMPLEMENTED;
 
-    grib_handle* h          = (grib_handle*)ch;
-    grib_accessor* a        = grib_find_accessor(h, "ITERATOR");
+    grib_handle* h = (grib_handle*)ch;
+    grib_accessor* a = grib_find_accessor(h, "ITERATOR");
     accessor::Iterator* ita = (accessor::Iterator*)a;
 
     if (!a)

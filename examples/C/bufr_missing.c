@@ -24,9 +24,9 @@ int main(int argc, char* argv[])
     codes_handle* h = NULL;
 
     double doubleVal;
-    int err            = 0;
-    int is_missing     = 0;
-    int cnt            = 0;
+    int err = 0;
+    int is_missing = 0;
+    int cnt = 0;
     const char* infile = "../../data/bufr/syno_1.bufr";
 
     in = fopen(infile, "rb");

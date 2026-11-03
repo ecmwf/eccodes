@@ -28,20 +28,20 @@ static void usage(const char* prog)
 int main(int argc, char** argv)
 {
     FILE* in = NULL;
-    int err  = 0;
+    int err = 0;
     double lat, lon, value;
-    int n          = 0;
+    int n = 0;
     size_t bmp_len = 0, values_len = 0;
-    char* filename       = NULL;
-    long bitmapPresent   = 0;
-    long* bitmap         = NULL;
-    double* values       = NULL;
-    codes_handle* h      = NULL;
+    char* filename = NULL;
+    long bitmapPresent = 0;
+    long* bitmap = NULL;
+    double* values = NULL;
+    codes_handle* h = NULL;
     codes_iterator* iter = NULL;
 
     if (argc != 2) usage(argv[0]);
     filename = argv[1];
-    in       = fopen(filename, "rb");
+    in = fopen(filename, "rb");
     if (!in) {
         fprintf(stderr, "ERROR: unable to open file %s\n", filename);
         return 1;

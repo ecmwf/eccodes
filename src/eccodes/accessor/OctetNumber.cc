@@ -10,8 +10,6 @@
 
 #include "OctetNumber.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::OctetNumber> _grib_accessor_octet_number_builder{};
-
 namespace eccodes::accessor
 {
 
@@ -19,8 +17,8 @@ void OctetNumber::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
 
-    int n  = 0;
-    left_  = c->get_name(get_enclosing_handle(), n++);
+    int n = 0;
+    left_ = c->get_name(get_enclosing_handle(), n++);
     right_ = c->get_long(get_enclosing_handle(), n++);
 
     length_ = 0;

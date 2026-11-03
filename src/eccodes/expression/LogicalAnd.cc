@@ -11,15 +11,16 @@
 #include "LogicalAnd.h"
 
 
-namespace eccodes::expression {
+namespace eccodes::expression
+{
 
 int LogicalAnd::evaluate_long(grib_handle* h, long* lres) const
 {
-    long v1    = 0;
-    long v2    = 0;
+    long v1 = 0;
+    long v2 = 0;
     double dv1 = 0;
     double dv2 = 0;
-    int ret    = 0;
+    int ret = 0;
 
     switch (left_->native_type(h)) {
         case GRIB_TYPE_LONG:
@@ -97,7 +98,7 @@ void LogicalAnd::add_dependency(grib_accessor* observer)
 
 LogicalAnd::LogicalAnd(grib_context* c, Expression* left, Expression* right)
 {
-    left_  = left;
+    left_ = left;
     right_ = right;
 }
 
@@ -106,9 +107,10 @@ int LogicalAnd::native_type(grib_handle* h) const
     return GRIB_TYPE_LONG;
 }
 
-} // namespace eccodes::expression
+}  // namespace eccodes::expression
 
 
-grib_expression* new_logical_and_expression(grib_context* c, grib_expression* left, grib_expression* right) {
+grib_expression* new_logical_and_expression(grib_context* c, grib_expression* left, grib_expression* right)
+{
     return new eccodes::expression::LogicalAnd(c, left, right);
 }

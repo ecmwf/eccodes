@@ -3,7 +3,7 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
+#
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
@@ -23,7 +23,7 @@ f=${data_dir}/bufr/syno_multi.bufr
 
 REDIRECT=/dev/null
 
-#The input ($f) and output ($fBufrTmp) are hardcoded in the f90 example!!! 
+#The input ($f) and output ($fBufrTmp) are hardcoded in the f90 example!!!
 $PYTHON $examples_src/bufr_set_keys.py 2> $REDIRECT > $REDIRECT
 
 #Compare modified to the original
@@ -43,4 +43,3 @@ set -e
 
 #Clean up
 rm -f $fBufrTmp
-

@@ -37,12 +37,12 @@ grib_option grib_options[] = {
 };
 
 const char* tool_description = "Dump the content of a GRIB file in different formats.";
-const char* tool_name        = "grib_dump";
-const char* tool_online_doc  = "https://confluence.ecmwf.int/display/ECC/grib_dump";
-const char* tool_usage       = "[options] grib_file grib_file ...";
-static int json              = 0;
-static int first_handle      = 1;
-static int dump_keys         = 0;
+const char* tool_name = "grib_dump";
+const char* tool_online_doc = "https://confluence.ecmwf.int/display/ECC/grib_dump";
+const char* tool_usage = "[options] grib_file grib_file ...";
+static int json = 0;
+static int first_handle = 1;
+static int dump_keys = 0;
 
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 
@@ -73,7 +73,7 @@ int grib_tool_init(grib_runtime_options* options)
 
     if (grib_options_on("j")) {
         options->dump_mode = (char*)"json";
-        json               = 1;
+        json = 1;
     }
 
     /* See ECC-234
@@ -87,12 +87,12 @@ int grib_tool_init(grib_runtime_options* options)
      */
 
     if (grib_options_on("O")) {
-        options->dump_mode  = (char*)"wmo";
+        options->dump_mode = (char*)"wmo";
         options->dump_flags = GRIB_DUMP_FLAG_CODED | GRIB_DUMP_FLAG_OCTET | GRIB_DUMP_FLAG_VALUES | GRIB_DUMP_FLAG_READ_ONLY;
     }
 
     if (grib_options_on("D")) {
-        options->dump_mode  = (char*)"debug";
+        options->dump_mode = (char*)"debug";
         options->dump_flags = GRIB_DUMP_FLAG_VALUES | GRIB_DUMP_FLAG_READ_ONLY;
     }
 
@@ -138,8 +138,8 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
      * Dumping of index files
      */
     if (is_index_file(options->current_infile->name)) {
-        int err              = 0;
-        grib_context* c      = grib_context_get_default();
+        int err = 0;
+        grib_context* c = grib_context_get_default();
         const char* filename = options->current_infile->name;
 
         err = grib_index_dump_file(stdout, filename, options->dump_flags);
@@ -153,8 +153,8 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
         /* Since there are no GRIB messages, we have to stop tool exiting in case there
          * are more index files */
         options->fail = 0;
-        options->skip_all = 1; /* ECC-1516 */
-        file->handle_count = 1; // Suppress error "No messages found in ..."
+        options->skip_all = 1;   /* ECC-1516 */
+        file->handle_count = 1;  // Suppress error "No messages found in ..."
     }
 
     return 0;
@@ -177,13 +177,13 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 
     /* ECC-961 */
     if (dump_keys && options->print_keys_count > 0) {
-        int errors                = 0; /* true if at least one error */
+        int errors = 0; /* true if at least one error */
         const int key_count_total = options->print_keys_count;
-        int key_count_valid       = 0; /* Some requested keys may be invalid */
-        const char** key_names    = (const char**)grib_context_malloc_clear(c, sizeof(char*) * key_count_total);
+        int key_count_valid = 0; /* Some requested keys may be invalid */
+        const char** key_names = (const char**)grib_context_malloc_clear(c, sizeof(char*) * key_count_total);
         for (i = 0; i < key_count_total; i++) {
             const char* key_name = options->print_keys[i].name;
-            err                  = grib_set_flag(h, key_name, GRIB_ACCESSOR_FLAG_DUMP);
+            err = grib_set_flag(h, key_name, GRIB_ACCESSOR_FLAG_DUMP);
             if (err) {
                 grib_context_log(c, GRIB_LOG_ERROR, "%s: %s", key_name, grib_get_error_message(err));
                 errors = 1;

@@ -23,10 +23,10 @@ namespace eccodes::action
 List::List(grib_context* context, const char* name, grib_expression* expression, grib_action* block)
 {
     class_name_ = "action_class_list";
-    context_    = context;
-    next_       = NULL;
-    name_       = grib_context_strdup_persistent(context, name);
-    op_         = grib_context_strdup_persistent(context, "section");
+    context_ = context;
+    next_ = NULL;
+    name_ = grib_context_strdup_persistent(context, name);
+    op_ = grib_context_strdup_persistent(context, "section");
     expression_ = expression;
     block_list_ = block;
 
@@ -61,11 +61,11 @@ void List::dump(FILE* f, int lvl)
 int List::create_accessor(grib_section* p, grib_loader* h)
 {
     grib_accessor* ga = NULL;
-    grib_section* gs  = NULL;
-    grib_action* la   = NULL;
+    grib_section* gs = NULL;
+    grib_action* la = NULL;
     grib_action* next = NULL;
-    int ret           = 0;
-    long val          = 0;
+    int ret = 0;
+    long val = 0;
 
     if ((ret = expression_->evaluate_long(p->h, &val)) != GRIB_SUCCESS) {
         grib_context_log(p->h->context, GRIB_LOG_DEBUG, "List %s creating %ld values: Unable to evaluate long", name_, val);
@@ -77,7 +77,7 @@ int List::create_accessor(grib_section* p, grib_loader* h)
     ga = grib_accessor_factory(p, this, 0, NULL);
     if (!ga)
         return GRIB_BUFFER_TOO_SMALL;
-    gs        = ga->sub_section_;
+    gs = ga->sub_section_;
     ga->loop_ = val;
 
     grib_push_accessor(ga, p->block);

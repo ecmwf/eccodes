@@ -1,0 +1,48 @@
+[package]
+name         = "eccodes-compat"
+version      = "0.15.1"
+edition      .workspace = true
+license      .workspace = true
+repository   .workspace = true
+rust-version .workspace = true
+keywords     .workspace = true
+categories   .workspace = true
+description  = "ScaleWeather eccodes 0.15 API as a drop-in layer over the official eccodes crate"
+readme       = "README.md"
+build        = "build.rs"
+
+[dependencies]
+eccodes = { version = "2.50", path = "../eccodes", default-features = false }
+# Featureless; only makes DEP_ECCODES_SYS_* visible to build.rs for rpaths.
+eccodes-sys = { version = "2.50", path = "../eccodes-sys", default-features = false }
+
+fallible-iterator = "0.3"
+thiserror         = "2"
+errno             = "0.3"
+num-derive        = "0.5"
+num-traits        = "0.2"
+ndarray           = { version = "0.17", optional = true, default-features = false, features = ["std"] }
+
+[build-dependencies]
+bindman-utils.workspace = true
+
+[dev-dependencies]
+anyhow    = "1"
+float-cmp = "0.10"
+
+[features]
+default = ["ndarray", "vendored", "aec"]
+
+# Pass-through of the official crate's build strategy.
+system   = ["eccodes/system"]
+vendored = ["eccodes/vendored"]
+
+# CCSDS packing via libaec — the operational packing of ECMWF GRIB2.
+aec = ["eccodes/aec"]
+
+ndarray = ["dep:ndarray"]
+
+# Upstream gates its no-link docs.rs build behind this feature and told
+# dependents to enable it. Here eccodes-sys detects docs.rs by itself and
+# skips the native build, so the flag only needs to resolve.
+docs = []

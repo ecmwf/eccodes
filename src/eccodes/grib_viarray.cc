@@ -14,7 +14,7 @@
 void grib_viarray_print(const char* title, const grib_viarray* viarray)
 {
     size_t i;
-    char text[100] = {0,};
+    char text[100] = { 0 };
     const size_t textLen = sizeof(text);
     ECCODES_ASSERT(viarray);
     printf("%s: viarray.n=%zu\n", title, viarray->n);
@@ -35,11 +35,11 @@ grib_viarray* grib_viarray_new(size_t size, size_t incsize)
                          "%s: Unable to allocate %zu bytes", __func__, sizeof(grib_viarray));
         return NULL;
     }
-    v->size    = size;
-    v->n       = 0;
+    v->size = size;
+    v->n = 0;
     v->incsize = incsize;
 
-    v->v       = (grib_iarray**)grib_context_malloc_clear(c, sizeof(grib_iarray*) * size);
+    v->v = (grib_iarray**)grib_context_malloc_clear(c, sizeof(grib_iarray*) * size);
     if (!v->v) {
         grib_context_log(c, GRIB_LOG_ERROR,
                          "%s: Unable to allocate %zu bytes", __func__, sizeof(grib_iarray*) * size);
@@ -53,7 +53,7 @@ static grib_viarray* grib_viarray_resize(grib_viarray* v)
     const size_t newsize = v->incsize + v->size;
     grib_context* c = grib_context_get_default();
 
-    v->v    = (grib_iarray**)grib_context_realloc(c, v->v, newsize * sizeof(grib_iarray*));
+    v->v = (grib_iarray**)grib_context_realloc(c, v->v, newsize * sizeof(grib_iarray*));
     v->size = newsize;
     if (!v->v) {
         grib_context_log(c, GRIB_LOG_ERROR,
@@ -65,7 +65,7 @@ static grib_viarray* grib_viarray_resize(grib_viarray* v)
 
 grib_viarray* grib_viarray_push(grib_viarray* v, grib_iarray* val)
 {
-    size_t start_size    = 100;
+    size_t start_size = 100;
     size_t start_incsize = 100;
     if (!v)
         v = grib_viarray_new(start_size, start_incsize);
@@ -89,7 +89,7 @@ void grib_viarray_delete(grib_viarray* v)
 
 void grib_viarray_delete_content(grib_viarray* v)
 {
-    size_t i=0;
+    size_t i = 0;
     if (!v || !v->v)
         return;
 

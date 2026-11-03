@@ -26,7 +26,7 @@ static void usage(const char* prog)
 int main(int argc, char* argv[])
 {
     char* filename = NULL;
-    FILE* in       = NULL;
+    FILE* in = NULL;
 
     /* message handle. Required in all the eccodes calls acting on a message.*/
     codes_handle* h = NULL;

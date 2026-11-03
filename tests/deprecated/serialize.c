@@ -6,11 +6,11 @@
 int main(int argc,char** argv)
 {
 #ifdef READ_ANY
-  char buffer[1024*1024*80]; 
-  long length = sizeof(buffer); 
+  char buffer[1024*1024*80];
+  long length = sizeof(buffer);
 #endif
 #ifdef GRIB_READ_ANY
-  char buffer[1024*1024*80]; 
+  char buffer[1024*1024*80];
   size_t length= sizeof(buffer);
   grib_context *gc=0;
 #endif
@@ -19,10 +19,10 @@ int main(int argc,char** argv)
   unsigned char* buffer=0;
   grib_context *gc=0;
 #endif
-  
+
   FILE *f;
   grib_handle  *g =  0;
-        
+
   int e;
 
   f = fopen(argc > 1 ? argv[1]: "data" ,"r");
@@ -34,7 +34,7 @@ int main(int argc,char** argv)
 
 #ifdef READ_ANY
   printf("#---- readany used ----\n");
-  while((e = readany(f,buffer,&length)) != -1) 
+  while((e = readany(f,buffer,&length)) != -1)
 #endif
 #ifdef GRIB_READ_ANY
   printf("#---- grib_read_any used ----\n");
@@ -46,7 +46,7 @@ int main(int argc,char** argv)
 #endif
   {
 
-    if(e != 0 ) 
+    if(e != 0 )
     {
       printf("grib_read_any error %d\n",e);
       exit(e);

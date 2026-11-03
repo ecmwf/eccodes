@@ -10,9 +10,11 @@
 
 #include "Expression.h"
 
-namespace eccodes::expression {
+namespace eccodes::expression
+{
 
-class LogicalOr : public Expression {
+class LogicalOr : public Expression
+{
 public:
     LogicalOr(grib_context*, Expression*, Expression*);
 
@@ -26,7 +28,7 @@ public:
     const char* class_name() const override { return "logical_or"; };
 
 private:
-    Expression* left_  = nullptr;
+    Expression* left_ = nullptr;
     Expression* right_ = nullptr;
 };
 

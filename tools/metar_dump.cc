@@ -29,9 +29,9 @@ grib_option grib_options[] = {
 };
 
 const char* tool_description = "Dump the content of a METAR file in different formats.";
-const char* tool_name        = "metar_dump";
+const char* tool_name = "metar_dump";
 const char* tool_online_doc = NULL;
-const char* tool_usage       = "[options] file file ...";
+const char* tool_usage = "[options] file file ...";
 
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 
@@ -57,17 +57,17 @@ int grib_tool_init(grib_runtime_options* options)
     }
 
     if (grib_options_on("O")) {
-        options->dump_mode  = (char*)"wmo";
+        options->dump_mode = (char*)"wmo";
         options->dump_flags = GRIB_DUMP_FLAG_CODED | GRIB_DUMP_FLAG_OCTET | GRIB_DUMP_FLAG_VALUES | GRIB_DUMP_FLAG_READ_ONLY;
     }
 
     if (grib_options_on("D")) {
-        options->dump_mode  = (char*)"debug";
+        options->dump_mode = (char*)"debug";
         options->dump_flags = GRIB_DUMP_FLAG_VALUES | GRIB_DUMP_FLAG_READ_ONLY;
     }
 
     if (grib_options_on("j")) {
-        options->dump_mode  = (char*)"json";
+        options->dump_mode = (char*)"json";
         options->dump_flags = GRIB_DUMP_FLAG_VALUES | GRIB_DUMP_FLAG_READ_ONLY;
     }
 
@@ -99,7 +99,7 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
     if (!options->current_infile->name)
         return 0;
     snprintf(tmp, 1024, "FILE: %s ", options->current_infile->name);
-    if ( !grib_options_on("j") )
+    if (!grib_options_on("j"))
         fprintf(stdout, "***** %s\n", tmp);
     return 0;
 }

@@ -19,16 +19,17 @@
 #include <unordered_map>
 #include <vector>
 
-namespace eccodes {
+namespace eccodes
+{
 
 template <class T>
 class Factory
 {
 public:
     static Factory& instance();
-    using Ptr     = T*;
-    using Type    = NamedType<std::string, struct TypeTag>;
-    using Creator = Ptr(*)();
+    using Ptr = T*;
+    using Type = NamedType<std::string, struct TypeTag>;
+    using Creator = Ptr (*)();
 
     void add(Type const& type, Creator creator);
     void remove(Type const& type);
@@ -77,7 +78,7 @@ typename Factory<T>::Ptr Factory<T>::build(Type const& type)
         candidates.reserve(creators_.size());
         for (auto const& entry : creators_) {
             size_t dist = levenshteinDistance(type.c_str(), entry.first.c_str());
-            candidates.push_back({dist, entry.first.c_str()});
+            candidates.push_back({ dist, entry.first.c_str() });
         }
         std::partial_sort(candidates.begin(),
                           candidates.begin() + std::min(maxSuggestions, candidates.size()),
@@ -121,4 +122,4 @@ public:
 template <class T, class ConcreteType>
 using Builder = Registrar<T, ConcreteType>;
 
-} // namespace eccodes
+}  // namespace eccodes

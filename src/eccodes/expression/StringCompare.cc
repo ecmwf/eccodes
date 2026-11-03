@@ -10,7 +10,8 @@
 
 #include "StringCompare.h"
 
-namespace eccodes::expression {
+namespace eccodes::expression
+{
 
 /* Note: A fast cut-down version of strcmp which does NOT return -1 */
 /* 0 means input strings are equal and 1 means not equal */
@@ -28,9 +29,9 @@ GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
 int StringCompare::evaluate_long(grib_handle* h, long* lres) const
 {
     int ret = 0;
-    char b1[1024] = {0,};
+    char b1[1024] = { 0 };
     size_t l1 = sizeof(b1);
-    char b2[1024] = {0,};
+    char b2[1024] = { 0 };
     size_t l2 = sizeof(b2);
     const char* v1 = NULL;
     const char* v2 = NULL;
@@ -48,9 +49,9 @@ int StringCompare::evaluate_long(grib_handle* h, long* lres) const
         return ret;
     }
 
-    if (eq_) // IS operator
+    if (eq_)  // IS operator
         *lres = (grib_inline_strcmp(v1, v2) == 0);
-    else // ISNOT operator
+    else  // ISNOT operator
         *lres = (grib_inline_strcmp(v1, v2) != 0);
 
     return GRIB_SUCCESS;
@@ -60,7 +61,7 @@ int StringCompare::evaluate_double(grib_handle* h, double* dres) const
 {
     long n;
     int ret = evaluate_long(h, &n);
-    *dres   = n;
+    *dres = n;
     return ret;
 }
 
@@ -89,9 +90,9 @@ void StringCompare::add_dependency(grib_accessor* observer)
 
 StringCompare::StringCompare(grib_context* c, Expression* left, Expression* right, int eq)
 {
-    left_  = left;
+    left_ = left;
     right_ = right;
-    eq_    = eq;
+    eq_ = eq;
 }
 
 int StringCompare::native_type(grib_handle* h) const
@@ -99,8 +100,9 @@ int StringCompare::native_type(grib_handle* h) const
     return GRIB_TYPE_LONG;
 }
 
-} // namespace eccodes::expression
+}  // namespace eccodes::expression
 
-grib_expression* new_string_compare_expression(grib_context* c, grib_expression* left, grib_expression* right, int eq) {
+grib_expression* new_string_compare_expression(grib_context* c, grib_expression* left, grib_expression* right, int eq)
+{
     return new eccodes::expression::StringCompare(c, left, right, eq);
 }

@@ -6,6 +6,12 @@ add_subdirectory(tigge)
 add_subdirectory(bufr)
 add_subdirectory(metar)
 add_subdirectory(gts)
+add_subdirectory(lcgcr)
+
+if( eccodes_HAVE_ECKIT_GEO AND eccodes_HAVE_GEOGRAPHY )
+    add_subdirectory(gridspec)
+endif()
+
 
 
 # Download all the binary GRIB data from website

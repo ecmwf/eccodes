@@ -57,29 +57,29 @@ int main(int argc, char** argv)
     std::default_random_engine re;
     size_t in_values_ecc_1612_workaround_len = 0;
     size_t grid_simple_values_len = 0;
-    size_t grid_ccsds_values_len  = 0;
-    std::string packing_type      = "";
-    size_t size                   = 0;
+    size_t grid_ccsds_values_len = 0;
+    std::string packing_type = "";
+    size_t size = 0;
 
     for (const size_t in_values_len : values_lens) {
         for (const Range range : ranges) {
             ECCODES_ASSERT(range.min < range.max);
             std::cout << "Testing: "
-                << "n_vals : " << std::setw(7) << in_values_len
-                << " range(" << std::scientific << std::setw(12) << range.min << ", " << std::setw(12) << range.max << ") "
-                << std::endl;
+                      << "n_vals : " << std::setw(7) << in_values_len
+                      << " range(" << std::scientific << std::setw(12) << range.min << ", " << std::setw(12) << range.max << ") "
+                      << std::endl;
             std::uniform_real_distribution<double>
-            unif(range.min, range.max);
+                unif(range.min, range.max);
 
-            codes_handle* handle       = codes_grib_handle_new_from_samples(0, "reduced_gg_pl_128_grib2");
-            double* in_values          = new double[in_values_len];
+            codes_handle* handle = codes_grib_handle_new_from_samples(0, "reduced_gg_pl_128_grib2");
+            double* in_values = new double[in_values_len];
             double* in_values_ecc_1612_workaround = new double[in_values_len];
             double* grid_simple_values = new double[in_values_len];
-            double* grid_ccsds_values  = new double[in_values_len];
+            double* grid_ccsds_values = new double[in_values_len];
 
             in_values_ecc_1612_workaround_len = in_values_len;
             grid_simple_values_len = in_values_len;
-            grid_ccsds_values_len  = in_values_len;
+            grid_ccsds_values_len = in_values_len;
 
             // Initialize with random values
             for (size_t i = 0; i < in_values_len; ++i) {
@@ -87,20 +87,20 @@ int main(int argc, char** argv)
             }
 
             // Convert original values to quantized values using grid_simple
-            { // Workaround ECC-1612. Can be removed when fixed. Use code below instead.
+            {  // Workaround ECC-1612. Can be removed when fixed. Use code below instead.
                 CODES_CHECK(codes_set_double_array(handle, "values", in_values, in_values_len), 0);
                 CODES_CHECK(codes_get_double_array(handle, "values", in_values_ecc_1612_workaround, &in_values_ecc_1612_workaround_len), 0);
                 CODES_CHECK(codes_set_double_array(handle, "values", in_values_ecc_1612_workaround, in_values_ecc_1612_workaround_len), 0);
                 CODES_CHECK(codes_get_double_array(handle, "values", grid_simple_values, &grid_simple_values_len), 0);
-                //CODES_CHECK(codes_set_double_array(handle, "values", in_values, in_values_len), 0);
-                //CODES_CHECK(codes_get_double_array(handle, "values", grid_simple_values, &grid_simple_values_len), 0);
+                // CODES_CHECK(codes_set_double_array(handle, "values", in_values, in_values_len), 0);
+                // CODES_CHECK(codes_get_double_array(handle, "values", grid_simple_values, &grid_simple_values_len), 0);
             }
 
             ECCODES_ASSERT(in_values_len == grid_simple_values_len);
 
             // Test grid_ccsds
             packing_type = "grid_ccsds";
-            size         = packing_type.size();
+            size = packing_type.size();
             CODES_CHECK(codes_set_string(handle, "packingType", packing_type.c_str(), &size), 0);
             if (codes_set_double_array(handle, "values", grid_simple_values, grid_simple_values_len) != GRIB_SUCCESS) {
                 ECCODES_ASSERT(!"CCSDS encoding failed");

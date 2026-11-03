@@ -43,9 +43,9 @@ private:
 
     static constexpr std::array<ValueType, maxNBits> max_ = []() {
         std::array<ValueType, maxNBits> max{};
-        using UnsignedValueType          = std::make_unsigned_t<ValueType>;
+        using UnsignedValueType = std::make_unsigned_t<ValueType>;
         constexpr UnsignedValueType ones = ~UnsignedValueType{ 0 };
-        max[0]                           = 0;
+        max[0] = 0;
         for (std::size_t i = 1; i < maxNBits; ++i) {
             max[i] = static_cast<ValueType>(ones >> (maxNBits - i));
         }
@@ -87,7 +87,7 @@ private:
     static constexpr std::array<ValueType, maxNBits> max_ = []() {
         std::array<ValueType, maxNBits> max{};
         constexpr ValueType ones = ~(static_cast<ValueType>(0));
-        max[0]                   = 1;
+        max[0] = 1;
         for (std::size_t i = 1; i < maxNBits; ++i) {
             max[i] = ones >> (maxNBits - i - 1);
         }

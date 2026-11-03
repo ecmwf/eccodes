@@ -650,7 +650,7 @@ static double values[] = {
 
 #define ILCHAM 3128
 #define NSTRON 10
-#define NSMAX 31
+#define NSMAX  31
 #define NMSMAX 31
 
 static void rectfromellipse(double* vr, const double* ve, int nsmax, int nmsmax)
@@ -698,32 +698,32 @@ int main(int argc, char* argv[])
     long unpackedSubsetPrecision = 0;
 
     /* Elliptic truncation with diamond subtruncation */
-    trunc[0].trunc     = 88;
-    trunc[0].subtrunc  = 99;
-    trunc[0].subnsmax  = NSTRON;
+    trunc[0].trunc = 88;
+    trunc[0].subtrunc = 99;
+    trunc[0].subnsmax = NSTRON;
     trunc[0].subnmsmax = NSTRON;
-    trunc[0].len       = ILCHAM;
-    trunc[0].values    = (double*)values;
-    trunc[0].name      = "ellipse_diamond";
+    trunc[0].len = ILCHAM;
+    trunc[0].values = (double*)values;
+    trunc[0].name = "ellipse_diamond";
 
     /* Rectangle truncation with rectangle subtruncation */
-    trunc[1].trunc     = 77;
-    trunc[1].subtrunc  = 77;
-    trunc[1].subnsmax  = NSTRON;
+    trunc[1].trunc = 77;
+    trunc[1].subtrunc = 77;
+    trunc[1].subnsmax = NSTRON;
     trunc[1].subnmsmax = NSTRON;
-    trunc[1].len       = 4 * (NSMAX + 1) * (NMSMAX + 1);
-    trunc[1].values    = (double*)malloc(sizeof(double) * trunc[1].len);
-    trunc[1].name      = "rectangle_rectangle";
+    trunc[1].len = 4 * (NSMAX + 1) * (NMSMAX + 1);
+    trunc[1].values = (double*)malloc(sizeof(double) * trunc[1].len);
+    trunc[1].name = "rectangle_rectangle";
     rectfromellipse(trunc[1].values, trunc[0].values, NSMAX, NMSMAX);
 
     /* Elliptic truncation with full subtruncation */
-    trunc[2].trunc     = 88;
-    trunc[2].subtrunc  = 88;
-    trunc[2].subnsmax  = NSMAX;
+    trunc[2].trunc = 88;
+    trunc[2].subtrunc = 88;
+    trunc[2].subnsmax = NSMAX;
     trunc[2].subnmsmax = NMSMAX;
-    trunc[2].len       = ILCHAM;
-    trunc[2].values    = (double*)values;
-    trunc[2].name      = "ellipse_full";
+    trunc[2].len = ILCHAM;
+    trunc[2].values = (double*)values;
+    trunc[2].name = "ellipse_full";
 
     for (itrunc = 0; itrunc < 3; itrunc++) {
         for (igrid = 0; igrid < 3; igrid++) {
@@ -783,9 +783,9 @@ int main(int argc, char* argv[])
                only when sizeof(double) == sizeof(long)
             */
             if (sizeof(double) == sizeof(long))
-                  unpackedSubsetPrecision = 2;
+                unpackedSubsetPrecision = 2;
             else
-                  unpackedSubsetPrecision = 1;
+                unpackedSubsetPrecision = 1;
             GRIB_CHECK(grib_set_long(h, "unpackedSubsetPrecision", unpackedSubsetPrecision), 0);
 
             len = trunc[itrunc].len;
@@ -821,9 +821,9 @@ int main(int argc, char* argv[])
                 char geometry[128];
 
                 snprintf(f, 128, "lam_bf_%s_%s.grib", grids[igrid], trunc[itrunc].name);
-                fp         = fopen(f, "rb");
-                h          = grib_handle_new_from_file(0, fp, &err);
-                vals       = (double*)malloc(sizeof(double) * trunc[itrunc].len);
+                fp = fopen(f, "rb");
+                h = grib_handle_new_from_file(0, fp, &err);
+                vals = (double*)malloc(sizeof(double) * trunc[itrunc].len);
                 values_len = trunc[itrunc].len;
                 GRIB_CHECK(grib_get_double_array(h, "values", vals, &values_len), 0);
                 for (i = 0; i < trunc[itrunc].len; i++)

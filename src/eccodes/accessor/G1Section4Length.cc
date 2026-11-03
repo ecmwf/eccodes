@@ -10,8 +10,6 @@
 
 #include "G1Section4Length.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::G1Section4Length> _grib_accessor_g1_section4_length_builder{};
-
 namespace eccodes::accessor
 {
 
@@ -37,7 +35,7 @@ int G1Section4Length::pack_long(const long* val, size_t* len)
 
 int G1Section4Length::unpack_long(long* val, size_t* len)
 {
-    int ret           = 0;
+    int ret = 0;
     long total_length = 0, sec4_length = 0;
 
     if ((ret = grib_get_g1_message_size(get_enclosing_handle(),

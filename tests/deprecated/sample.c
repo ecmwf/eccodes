@@ -46,7 +46,7 @@ main(int argc,char** argv)
 	grib_handle  *g =  0;
 	int e;
 	size_t size;
-	char ext[5] = {0,};
+	char ext[5] = {0};
 
 	f = fopen(argc > 1 ? argv[1]: "data" ,"r");
 	if(!f)

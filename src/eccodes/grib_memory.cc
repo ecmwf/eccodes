@@ -25,7 +25,7 @@ union align
     long l;
 };
 
-#define WORD sizeof(union align)
+    #define WORD sizeof(union align)
 
 static size_t page_size = 0;
 
@@ -59,7 +59,7 @@ static memblk* reserve = NULL;
    static memprocs *mprocs = NULL;
  */
 
-#define HEADER_SIZE (sizeof(memblk) - WORD)
+    #define HEADER_SIZE (sizeof(memblk) - WORD)
 
 static mempool _transient_mem = {
     10,
@@ -118,10 +118,10 @@ static void* fast_new(size_t s, mempool* pool)
         }
 
         p->next = (memblk*)pool->priv;
-        p->cnt  = 0;
+        p->cnt = 0;
         p->size = p->left = size - HEADER_SIZE;
-        m                 = p;
-        pool->priv        = (void*)p;
+        m = p;
+        pool->priv = (void*)p;
     }
 
     p = &m->buffer[m->size - m->left];
@@ -263,7 +263,7 @@ void* grib_buffer_malloc(const grib_context* c, size_t s)
         reserve = r;
     }
     r->size = s;
-    r->cnt  = 1;
+    r->cnt = 1;
 
     return &r->buffer[0];
 }
@@ -289,7 +289,7 @@ void grib_buffer_free(const grib_context* c, void* p)
 void* grib_buffer_realloc(const grib_context* c, void* p, size_t s)
 {
     memblk* r = (memblk*)(((char*)p) - HEADER_SIZE);
-    void* n   = grib_buffer_malloc(c, s);
+    void* n = grib_buffer_malloc(c, s);
     memcpy(n, p, r->size < s ? r->size : s);
     grib_buffer_free(c, p);
     return n;

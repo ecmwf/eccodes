@@ -33,12 +33,12 @@ HashArray::HashArray(grib_context* context,
     Gen(context, name, "hash_array", 0, NULL, NULL, flags, name_space, NULL)
 {
     class_name_ = "action_class_hash_array";
-    basename_   = basename ? grib_context_strdup_persistent(context, basename) : nullptr;
-    masterDir_  = masterDir ? grib_context_strdup_persistent(context, masterDir) : nullptr;
-    localDir_   = localDir ? grib_context_strdup_persistent(context, localDir) : nullptr;
-    ecmfDir_    = ecmfDir ? grib_context_strdup_persistent(context, ecmfDir) : nullptr;
+    basename_ = basename ? grib_context_strdup_persistent(context, basename) : nullptr;
+    masterDir_ = masterDir ? grib_context_strdup_persistent(context, masterDir) : nullptr;
+    localDir_ = localDir ? grib_context_strdup_persistent(context, localDir) : nullptr;
+    ecmfDir_ = ecmfDir ? grib_context_strdup_persistent(context, ecmfDir) : nullptr;
     defaultkey_ = defaultkey ? grib_context_strdup_persistent(context, defaultkey) : nullptr;
-    nofail_     = nofail;
+    nofail_ = nofail;
     hash_array_ = hash_array;
 
     if (hash_array) {
@@ -84,21 +84,21 @@ void HashArray::dump(FILE* f, int lvl)
 
 grib_hash_array_value* HashArray::get_hash_array_impl(grib_handle* h)
 {
-    char buf[4096]       = {0, };
-    char master[1024]    = {0, };
-    char local[1024]     = {0, };
-    char ecmf[1024]      = {0, };
-    char masterDir[1024] = {0, };
-    size_t lenMasterDir  = 1024;
-    char localDir[1024]  = {0, };
-    size_t lenLocalDir   = 1024;
-    char ecmfDir[1024]   = {0, };
-    size_t lenEcmfDir    = 1024;
-    char key[4096]       = {0, };
-    char* full           = 0;
+    char buf[4096] = { 0 };
+    char master[1024] = { 0 };
+    char local[1024] = { 0 };
+    char ecmf[1024] = { 0 };
+    char masterDir[1024] = { 0 };
+    size_t lenMasterDir = 1024;
+    char localDir[1024] = { 0 };
+    size_t lenLocalDir = 1024;
+    char ecmfDir[1024] = { 0 };
+    size_t lenEcmfDir = 1024;
+    char key[4096] = { 0 };
+    char* full = 0;
     int id;
 
-    grib_context* context    = context_;
+    grib_context* context = context_;
     grib_hash_array_value* c = NULL;
 
     if (hash_array_ != NULL)

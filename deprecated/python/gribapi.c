@@ -38,7 +38,7 @@ py_new_handle_from_file(PyObject *self, PyObject *args)
 		return NULL;
 	}
 
-	
+
 	/* TODO: Do an OO version */
 
 	if(h)
@@ -51,7 +51,7 @@ static PyObject *
 py_handle_delete(PyObject *self, PyObject *args)
 {
 	PyObject* h;
-	if(!PyArg_ParseTuple(args,"O",&h))	
+	if(!PyArg_ParseTuple(args,"O",&h))
 		return NULL;
 	grib_handle_delete(PyLong_AsVoidPtr(h));
 	Py_INCREF(Py_None);
@@ -62,7 +62,7 @@ static PyObject *
 py_keys_iterator_delete(PyObject *self, PyObject *args)
 {
 	PyObject* h;
-	if(!PyArg_ParseTuple(args,"O",&h))	
+	if(!PyArg_ParseTuple(args,"O",&h))
 		return NULL;
 	grib_keys_iterator_delete(PyLong_AsVoidPtr(h));
 	Py_INCREF(Py_None);
@@ -78,8 +78,8 @@ py_get_string(PyObject *self, PyObject *args)
 	size_t size;
 	char tmp[1024];
 	int err;
-	
-	if(!PyArg_ParseTuple(args,"Os",&h,&s))	
+
+	if(!PyArg_ParseTuple(args,"Os",&h,&s))
 		return NULL;
 
 	size = sizeof(tmp);
@@ -123,8 +123,8 @@ py_keys_iterator_get_string(PyObject *self, PyObject *args)
 	size_t size;
 	char tmp[1024];
 	int err;
-	
-	if(!PyArg_ParseTuple(args,"O",&h))	
+
+	if(!PyArg_ParseTuple(args,"O",&h))
 		return NULL;
 
 	size = sizeof(tmp);
@@ -144,8 +144,8 @@ static PyObject *
 py_keys_iterator_get_name(PyObject *self, PyObject *args)
 {
 	PyObject* h;
-	
-	if(!PyArg_ParseTuple(args,"O",&h))	
+
+	if(!PyArg_ParseTuple(args,"O",&h))
 		return NULL;
 
 
@@ -159,7 +159,7 @@ py_keys_iterator_new(PyObject *self, PyObject *args)
 	PyObject* h;
 	char *s;
 
-	if(!PyArg_ParseTuple(args,"Os",&h,&s))	
+	if(!PyArg_ParseTuple(args,"Os",&h,&s))
 		return NULL;
 
 	return PyLong_FromVoidPtr(grib_keys_iterator_new(PyLong_AsVoidPtr(h),GRIB_KEYS_ITERATOR_ALL_KEYS,s));
@@ -186,11 +186,10 @@ initgribapi(void)
 	PyObject* m;
 
 	/* There have been several InitModule functions over time */
-	m = Py_InitModule3("gribapi", gribapi_methods, gribapi__doc__); 
+	m = Py_InitModule3("gribapi", gribapi_methods, gribapi__doc__);
 
 	/* TODO: Create our own exception */
 	Error = PyErr_NewException("grib.apierror",NULL,NULL);
 	Py_INCREF(Error);
 	PyModule_AddObject(m, "error", Error);
 }
-

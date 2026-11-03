@@ -25,13 +25,13 @@ int main(int argc, char* argv[])
     codes_handle* h = NULL;
 
     long* descriptors = NULL;
-    double* values    = NULL;
+    double* values = NULL;
     char* typicalDate = NULL;
     long longVal;
     double doubleVal;
     size_t values_len = 0, desc_len = 0, len = 0;
     int i, err = 0;
-    int cnt            = 0;
+    int cnt = 0;
     const char* infile = "../../data/bufr/syno_multi.bufr";
 
     in = fopen(infile, "rb");

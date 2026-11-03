@@ -20,31 +20,31 @@
 
 template <typename T>
 int grib_decode_array(const unsigned char* p, long* bitp, long bitsPerValue,
-                             double reference_value, double s, double d,
-                             size_t n_vals, T* val)
+                      double reference_value, double s, double d,
+                      size_t n_vals, T* val)
 {
-    size_t i               = 0;
+    size_t i = 0;
     unsigned long lvalue = 0;
     T x;
 
 #ifdef SLOW_OLD_CODE
     /* slow reference code */
-    int j=0;
-    for(i=0; i < n_vals; i++) {
-        lvalue=0;
-        for(j=0; j< bitsPerValue;j++){
+    int j = 0;
+    for (i = 0; i < n_vals; i++) {
+        lvalue = 0;
+        for (j = 0; j < bitsPerValue; j++) {
             lvalue <<= 1;
-            if(grib_get_bit( p, *bitp)) lvalue += 1;
+            if (grib_get_bit(p, *bitp)) lvalue += 1;
             *bitp += 1;
         }
-        x=((lvalue*s)+reference_value)*d;
+        x = ((lvalue * s) + reference_value) * d;
         val[i] = x;
     }
 #endif
     if (bitsPerValue % 8 == 0) {
         /* See ECC-386 */
         int bc;
-        int l    = bitsPerValue / 8;
+        int l = bitsPerValue / 8;
         size_t o = 0;
 
         for (i = 0; i < n_vals; i++) {
@@ -56,7 +56,7 @@ int grib_decode_array(const unsigned char* p, long* bitp, long bitsPerValue,
                 lvalue <<= 8;
                 lvalue |= p[o++];
             }
-            x      = ((lvalue * s) + reference_value) * d;
+            x = ((lvalue * s) + reference_value) * d;
             val[i] = x;
             /*  *bitp += bitsPerValue * n_vals; */
         }
@@ -73,8 +73,8 @@ int grib_decode_array(const unsigned char* p, long* bitp, long bitsPerValue,
         for (i = 0; i < n_vals; i++) {
             /* value read as long */
             long bitsToRead = 0;
-            lvalue          = 0;
-            bitsToRead      = bitsPerValue;
+            lvalue = 0;
+            bitsToRead = bitsPerValue;
             /* read one byte after the other to lvalue until >= bitsPerValue are read */
             while (bitsToRead > 0) {
                 lvalue <<= 8;
@@ -97,7 +97,7 @@ int grib_decode_array(const unsigned char* p, long* bitp, long bitsPerValue,
                 usefulBitsInByte = 8; /* start with next full byte */
             }
             /* scaling and move value to output */
-            x      = ((lvalue * s) + reference_value) * d;
+            x = ((lvalue * s) + reference_value) * d;
             val[i] = x;
         }
     }

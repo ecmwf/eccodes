@@ -23,12 +23,12 @@
 
 int main(int argc, char** argv)
 {
-    int err                = 0;
+    int err = 0;
     long parameterCategory = 0, parameterNumber = 0, discipline = 0;
-    FILE* in             = NULL;
+    FILE* in = NULL;
     const char* filename = "../../data/multi.grib2";
-    codes_handle* h      = NULL;
-    int mcount           = 0;
+    codes_handle* h = NULL;
+    int mcount = 0;
 
     /* turn off support for GRIB2 multi-field messages */
     codes_grib_multi_support_off(NULL);

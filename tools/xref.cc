@@ -12,7 +12,7 @@
 
 int main(int argc, char* argv[])
 {
-    int i    = 0;
+    int i = 0;
     int fail = 0;
 
     grib_context* c = grib_context_get_default();

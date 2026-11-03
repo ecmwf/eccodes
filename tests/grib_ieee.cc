@@ -50,7 +50,7 @@ double p(double ref1,double ref2)
 static double randfrom(double minimum, double maximum)
 {
     double range = (maximum - minimum);
-    double div   = RAND_MAX / range;
+    double div = RAND_MAX / range;
     return minimum + (rand() / div);
 }
 /* Return 1 on success, 0 on failure */
@@ -60,15 +60,15 @@ static int test_doubles(ieee_to_long_proc ieee_to_long, long_to_ieee_proc long_t
     const double increment = 1;
     const double max_value = 10 * 1000 * 1000;
     const double min_value = -max_value;
-    double d               = max_value;
-    int num_errors         = 0;
-    int num_trials         = 0;
-    double max_reldiff     = -DBL_MAX;
+    double d = max_value;
+    int num_errors = 0;
+    int num_trials = 0;
+    double max_reldiff = -DBL_MAX;
 
     while (d > min_value) {
-        double start    = randfrom(0.7, 1) * d;
+        double start = randfrom(0.7, 1) * d;
         unsigned long a = ieee_to_long(start);
-        double end      = long_to_ieee(a);
+        double end = long_to_ieee(a);
         num_trials++;
         if (start != 0.0) {
             double reldiff = fabs(end - start) / start;
@@ -113,12 +113,12 @@ int main(int argc, char* argv[])
             ECCODES_ASSERT(0);
         }
         /*if(grib_ieee_to_long(grib_long_to_ieee(j)) != j)
-		{
-		    printf("j=%ld i=%lx e=%g x=%lx\n",j,j,grib_long_to_ieee(j),grib_ieee_to_long(grib_long_to_ieee(j)));
-		}
-		if ((i%1000000) == 0) {
-			printf("i = %08lx(%ld) %08lx(%ld) %g %g\n", i,i,j,j,grib_long_to_ieee(i),grib_long_to_ieee(j));
-		}*/
+        {
+            printf("j=%ld i=%lx e=%g x=%lx\n",j,j,grib_long_to_ieee(j),grib_ieee_to_long(grib_long_to_ieee(j)));
+        }
+        if ((i%1000000) == 0) {
+            printf("i = %08lx(%ld) %08lx(%ld) %g %g\n", i,i,j,j,grib_long_to_ieee(i),grib_long_to_ieee(j));
+        }*/
     }
 
 #else

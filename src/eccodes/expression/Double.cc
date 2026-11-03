@@ -10,7 +10,8 @@
 
 #include "Double.h"
 
-namespace eccodes::expression {
+namespace eccodes::expression
+{
 
 int Double::evaluate_long(grib_handle* h, long* lres) const
 {

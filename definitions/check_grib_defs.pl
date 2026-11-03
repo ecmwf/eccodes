@@ -85,7 +85,7 @@ if (-f "paramId.def") {
         my $num_duplicates = 0;
         for $key (keys %paramId_map) {
             @hashes = @{ $paramId_map{$key} };
-            
+
             #if (@hashes > 1) {
                 #print "\t$key: @{ $name_map{$key} }\n";
             #    print Data::Dumper->Dump([\$name_map{$key}], ["Map for $key"]);
@@ -208,7 +208,7 @@ sub process {
                 # The 'typeOfSecondFixedSurface' key has side effects and can change the scale values/factors!
                 # So make sure it comes BEFORE the scale keys! So if we come across this key ensure none of
                 # scale keys came before it
-                if ( $key =~ /typeOfSecondFixedSurface/ && 
+                if ( $key =~ /typeOfSecondFixedSurface/ &&
                     (exists($map2{'scaleFactorOfFirstFixedSurface'}) ||
                      exists($map2{'scaledValueOfFirstFixedSurface'}) ||
                      exists($map2{'scaleFactorOfSecondFixedSurface'}) ||
@@ -290,7 +290,7 @@ sub is_valid_table2Version {
 sub is_goodval {
     my $key = shift;
     my $val = shift;
-    
+
     if ($key eq 'discipline' || $key eq 'parameterCategory' || $key eq 'parameterNumber' ||
         $key eq 'indicatorOfParameter' || $key eq 'table2Version')
     {
@@ -331,7 +331,7 @@ sub check_paramIDs {
         if ($this =~ /^\s*'(.*)'\s*/) {
             $a_pid = $1;
             die "File: $filename, line: $lineNum: paramID \"$a_pid\" is not an integer!" if (!is_integer($a_pid));
-            
+
             if ($check_duplicate_paramIDs) {
                 if (exists $id_map{$a_pid}) {
                     print "WARNING: File: $filename, line: $lineNum: Duplicate paramID found: $a_pid\n";

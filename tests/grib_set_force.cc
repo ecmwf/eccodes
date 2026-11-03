@@ -143,20 +143,20 @@ static double codedValues[] = {
 
 int main(int argc, char** argv)
 {
-    int err             = 0;
-    size_t size         = 0;
-    const char* infile  = NULL;
+    int err = 0;
+    size_t size = 0;
+    const char* infile = NULL;
     const char* outfile = NULL;
-    FILE* in            = NULL;
-    FILE* out           = NULL;
-    grib_handle* h      = NULL;
-    const void* buffer  = NULL;
-    const char* mode    = NULL;
+    FILE* in = NULL;
+    FILE* out = NULL;
+    grib_handle* h = NULL;
+    const void* buffer = NULL;
+    const char* mode = NULL;
 
     ECCODES_ASSERT(argc == 4);
 
-    mode    = argv[1]; /*all_values or coded_values*/
-    infile  = argv[2];
+    mode = argv[1]; /*all_values or coded_values*/
+    infile = argv[2];
     outfile = argv[3];
 
     in = fopen(infile, "rb");
@@ -169,7 +169,7 @@ int main(int argc, char** argv)
         GRIB_CHECK(grib_get_long(h, "numberOfDataPoints", &numberOfDataPoints), 0);
 
         if (strcmp(mode, "all_values") == 0) {
-            double missing            = 9999;
+            double missing = 9999;
             const size_t num_all_vals = sizeof(values) / sizeof(values[0]);
 
             ECCODES_ASSERT(num_all_vals == numberOfDataPoints); /*Sanity check*/

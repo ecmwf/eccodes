@@ -26,9 +26,9 @@ public:
     int notify_change(grib_accessor* observer, grib_accessor* observed) override;
 
     grib_expression* expression_ = nullptr;
-    grib_action* block_true_     = nullptr;
-    grib_action* block_false_    = nullptr;
-    int loop_                    = 0;
+    grib_action* block_true_ = nullptr;
+    grib_action* block_false_ = nullptr;
+    int loop_ = 0;
 };
 
 }  // namespace eccodes::action

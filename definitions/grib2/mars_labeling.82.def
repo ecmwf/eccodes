@@ -23,6 +23,5 @@ if ( localDefinitionNumber == 83 ) {
   alias mars.aerosolbinnumber = matchAerosolBinNumber;
 
   concept matchAerosolPacking (unknown,"aerosolPackingConcept.def",conceptsLocalMarsDirAll,conceptsMasterMarsDir);
-  alias mars.aerosolpacking   = matchAerosolPacking; 
+  alias mars.aerosolpacking   = matchAerosolPacking;
 }
-

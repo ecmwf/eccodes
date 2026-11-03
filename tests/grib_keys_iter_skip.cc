@@ -32,11 +32,10 @@ int main(int argc, char* argv[])
         GRIB_KEYS_ITERATOR_SKIP_DUPLICATES,
         GRIB_KEYS_ITERATOR_SKIP_FUNCTION
     };
-    const unsigned long N = sizeof(flags)/sizeof(unsigned long);
+    const unsigned long N = sizeof(flags) / sizeof(unsigned long);
 
     while ((h = grib_handle_new_from_file(0, f, &err)) != NULL) {
-
-        for (unsigned long i=0; i<N; ++i) {
+        for (unsigned long i = 0; i < N; ++i) {
             size_t count = 0;
             grib_keys_iterator* kiter = grib_keys_iterator_new(h, flags[i], NULL);
             ECCODES_ASSERT(kiter);

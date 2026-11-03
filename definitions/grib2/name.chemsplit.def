@@ -899,60 +899,60 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
-	 typeOfStatisticalProcessing = 10 ;
 	 scaledValueOfLowerLimit = 1 ;
 	 scaleFactorOfLowerLimit = 0 ;
 	 probabilityType = 3 ;
+	 typeOfRelationToReferenceDataset = 1 ;
 	}
 #Probability of temperature standardized anomaly greater than 1.5 standard deviation
 'Probability of temperature standardized anomaly greater than 1.5 standard deviation' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
-	 typeOfStatisticalProcessing = 10 ;
 	 scaledValueOfLowerLimit = 15 ;
 	 scaleFactorOfLowerLimit = 1 ;
 	 probabilityType = 3 ;
+	 typeOfRelationToReferenceDataset = 1 ;
 	}
 #Probability of temperature standardized anomaly greater than 2 standard deviation
 'Probability of temperature standardized anomaly greater than 2 standard deviation' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
-	 typeOfStatisticalProcessing = 10 ;
 	 scaledValueOfLowerLimit = 2 ;
 	 scaleFactorOfLowerLimit = 0 ;
 	 probabilityType = 3 ;
+	 typeOfRelationToReferenceDataset = 1 ;
 	}
 #Probability of temperature standardized anomaly less than -1 standard deviation
 'Probability of temperature standardized anomaly less than -1 standard deviation' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
-	 typeOfStatisticalProcessing = 10 ;
 	 scaledValueOfLowerLimit = -1 ;
 	 scaleFactorOfLowerLimit = 0 ;
 	 probabilityType = 0 ;
+	 typeOfRelationToReferenceDataset = 1 ;
 	}
 #Probability of temperature standardized anomaly less than -1.5 standard deviation
 'Probability of temperature standardized anomaly less than -1.5 standard deviation' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
-	 typeOfStatisticalProcessing = 10 ;
 	 scaledValueOfLowerLimit = -15 ;
 	 scaleFactorOfLowerLimit = 1 ;
 	 probabilityType = 0 ;
+	 typeOfRelationToReferenceDataset = 1 ;
 	}
 #Probability of temperature standardized anomaly less than -2 standard deviation
 'Probability of temperature standardized anomaly less than -2 standard deviation' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
-	 typeOfStatisticalProcessing = 10 ;
 	 scaledValueOfLowerLimit = -2 ;
 	 scaleFactorOfLowerLimit = 0 ;
 	 probabilityType = 0 ;
+	 typeOfRelationToReferenceDataset = 1 ;
 	}
 #Wave induced mean sea level correction
 'Wave induced mean sea level correction' = {
@@ -5992,8 +5992,8 @@
 	 parameterCategory = 4 ;
 	 parameterNumber = 27 ;
 	}
-#Live wood fuel load 
-'Live wood fuel load ' = {
+#Live wood fuel load
+'Live wood fuel load' = {
 	 discipline = 2 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 28 ;
@@ -21831,6 +21831,34 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 18 ;
 	}
+#Time-mean potential of hydrogen
+'Time-mean potential of hydrogen' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 18 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum potential of hydrogen
+'Time-maximum potential of hydrogen' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 18 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum potential of hydrogen
+'Time-minimum potential of hydrogen' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 18 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation potential of hydrogen
+'Time-standard-deviation potential of hydrogen' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 18 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Stratospheric aerosol optical thickness
 'Stratospheric aerosol optical thickness' = {
 	 discipline = 0 ;
@@ -21839,6 +21867,42 @@
 	 typeOfFirstFixedSurface = 7 ;
 	 typeOfSecondFixedSurface = 36 ;
 	}
+#Time-mean stratospheric aerosol optical thickness
+'Time-mean stratospheric aerosol optical thickness' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 102 ;
+	 typeOfFirstFixedSurface = 7 ;
+	 typeOfSecondFixedSurface = 36 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum stratospheric aerosol optical thickness
+'Time-maximum stratospheric aerosol optical thickness' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 102 ;
+	 typeOfFirstFixedSurface = 7 ;
+	 typeOfSecondFixedSurface = 36 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum stratospheric aerosol optical thickness
+'Time-minimum stratospheric aerosol optical thickness' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 102 ;
+	 typeOfFirstFixedSurface = 7 ;
+	 typeOfSecondFixedSurface = 36 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation stratospheric aerosol optical thickness
+'Time-standard-deviation stratospheric aerosol optical thickness' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 102 ;
+	 typeOfFirstFixedSurface = 7 ;
+	 typeOfSecondFixedSurface = 36 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
 #Emission mass flux from lightning
 'Emission mass flux from lightning' = {
 	 discipline = 0 ;
@@ -21846,11 +21910,71 @@
 	 parameterNumber = 77 ;
 	 sourceSinkChemicalPhysicalProcess = 2 ;
 	}
+#Time-mean emission mass flux from lightning
+'Time-mean emission mass flux from lightning' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 sourceSinkChemicalPhysicalProcess = 2 ;
+	}
+#Time-maximum emission mass flux from lightning
+'Time-maximum emission mass flux from lightning' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 sourceSinkChemicalPhysicalProcess = 2 ;
+	}
+#Time-minimum emission mass flux from lightning
+'Time-minimum emission mass flux from lightning' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 sourceSinkChemicalPhysicalProcess = 2 ;
+	}
+#Time-standard-deviation emission mass flux from lightning
+'Time-standard-deviation emission mass flux from lightning' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 typeOfStatisticalProcessing = 6 ;
+	 sourceSinkChemicalPhysicalProcess = 2 ;
+	}
 #Loss rate due to OH
 'Loss rate due to OH' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 19 ;
+	}
+#Time-mean loss rate due to OH
+'Time-mean loss rate due to OH' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 19 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum loss rate due to OH
+'Time-maximum loss rate due to OH' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 19 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum loss rate due to OH
+'Time-minimum loss rate due to OH' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 19 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation loss rate due to OH
+'Time-standard-deviation loss rate due to OH' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 19 ;
+	 typeOfStatisticalProcessing = 6 ;
 	}
 #Photolysis rate
 'Photolysis rate' = {
@@ -21918,6 +22042,50 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 21 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Column single scatter albedo
+'Column single scatter albedo' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 103 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
+#Time-mean Column single scatter albedo
+'Time-mean Column single scatter albedo' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 103 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-maximum Column single scatter albedo
+'Time-maximum Column single scatter albedo' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 103 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-minimum Column single scatter albedo
+'Time-minimum Column single scatter albedo' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 103 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-standard-deviation Column single scatter albedo
+'Time-standard-deviation Column single scatter albedo' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 103 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Pressure tendency
@@ -22884,6 +23052,18 @@
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 34 ;
+	}
+#Wildfire radiative power density
+'Wildfire radiative power density' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 48 ;
+	}
+#Wildfire combustion rate
+'Wildfire combustion rate' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 47 ;
 	}
 #Convective inhibition
 'Convective inhibition' = {

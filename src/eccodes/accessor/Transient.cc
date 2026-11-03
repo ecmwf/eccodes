@@ -10,8 +10,6 @@
 
 #include "Transient.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::Transient> _grib_accessor_transient_builder{};
-
 namespace eccodes::accessor
 {
 

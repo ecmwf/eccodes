@@ -14,7 +14,7 @@
  * Test that packing sets the correct numberOfValues
  * philippe.marguinaud@meteo.fr, 2016/02
  */
-#include "grib_gridded_values.h" // array 'values' defined here
+#include "grib_gridded_values.h"  // array 'values' defined here
 
 #define NLON 81
 #define NLAT 166
@@ -24,7 +24,7 @@ int main(int argc, char* argv[])
     size_t len, slen;
     grib_handle* h = NULL;
     const char* packingType[] = { "grid_second_order", "grid_complex_spatial_differencing", "grid_complex" };
-    const size_t numTypes = sizeof(packingType)/sizeof(packingType[0]);
+    const size_t numTypes = sizeof(packingType) / sizeof(packingType[0]);
     const double zmiss = 9999999999.;
     long numberOfValues, numberOfDataPoints;
     int i, numberOfMissing;
@@ -63,7 +63,7 @@ int main(int argc, char* argv[])
 
         if (numberOfValues + numberOfMissing != numberOfDataPoints) {
             printf("ERROR: numberOfValues = %ld, numberOfDataPoints = %ld, numberOfMissing = %d\n",
-                        numberOfValues, numberOfDataPoints, numberOfMissing);
+                   numberOfValues, numberOfDataPoints, numberOfMissing);
             printf("ERROR: numberOfValues appears to be incorrect\n");
             return 1;
         }

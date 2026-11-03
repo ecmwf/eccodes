@@ -1370,7 +1370,7 @@
 
   end subroutine grib_new_from_message_char
 
-  
+
   !> Create a message pointing to an character array containing the coded message.
   !>
   !> The message can be accessed through its gribid and it will be available\n
@@ -1400,7 +1400,7 @@
     end if
 
   end subroutine grib_new_from_message_no_copy_char
-  
+
   !> Create a message pointing to an integer4 array containing the coded message.
   !>
   !> The message can be accessed through its gribid and it will be available\n
@@ -1430,7 +1430,7 @@
     end if
 
   end subroutine grib_new_from_message_no_copy_int4
-  
+
   !> Create a new message in memory from an integer array containing the coded message.
   !>
   !> The message can be accessed through its gribid and it will be available\n
@@ -2874,7 +2874,7 @@
     integer(kind=kindOfInt), intent(in)            :: gribid
     integer(kind=kindOfInt), optional, intent(out) :: status
     integer(kind=kindOfInt)                        :: iret
-    character(len=1), pointer, intent(out)         :: message(:) 
+    character(len=1), pointer, intent(out)         :: message(:)
     type(C_PTR)                                    :: mess_ptr
     integer(kind=kindOfSize_t), intent(out)        :: mess_len
 

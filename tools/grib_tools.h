@@ -12,25 +12,25 @@
 
 
 #ifdef __gnu_hurd__
-#define _FILE_OFFSET_BITS 64 /* 64-bit offsets off_t not the default on Hurd/i386 */
+    #define _FILE_OFFSET_BITS 64 /* 64-bit offsets off_t not the default on Hurd/i386 */
 #endif
 
 #include "grib_api_internal.h"
 #include <stdio.h>
 #ifndef ECCODES_ON_WINDOWS
-#include <unistd.h>
+    #include <unistd.h>
 #endif
 
 #ifndef S_IFMT
-#define S_IFMT 0170000 /*  type of file */
+    #define S_IFMT 0170000 /*  type of file */
 #endif
 
 #ifndef S_IFLNK
-#define S_IFLNK 0120000 /*  symbolic link */
+    #define S_IFLNK 0120000 /*  symbolic link */
 #endif
 
 #ifndef S_ISLNK
-#define S_ISLNK(mode) (((mode) & (S_IFMT)) == (S_IFLNK))
+    #define S_ISLNK(mode) (((mode) & (S_IFMT)) == (S_IFLNK))
 #endif
 
 #define MAX_KEYS       256
@@ -38,12 +38,12 @@
 #define MAX_FAILED     1024
 #define LATLON_SIZE    4 /* nearest */
 
-#define MODE_GRIB 0
-#define MODE_GTS 1
-#define MODE_BUFR 2
+#define MODE_GRIB  0
+#define MODE_GTS   1
+#define MODE_BUFR  2
 #define MODE_METAR 3
-#define MODE_TAF 5
-#define MODE_ANY 6
+#define MODE_TAF   5
+#define MODE_ANY   6
 
 /*
 #define MAX_CONSTRAINT_VALUES 500

@@ -13,9 +13,15 @@
 #include "grib_api_internal.h"
 #include <type_traits>
 
-template<typename T> const char* type_to_string(T)        { return "unknown"; }
-template<> inline    const char* type_to_string<>(double) { return "double"; }
-template<> inline    const char* type_to_string<>(float)  { return "float"; }
+template <typename T>
+const char* type_to_string(T)
+{ return "unknown"; }
+template <>
+inline const char* type_to_string<>(double)
+{ return "double"; }
+template <>
+inline const char* type_to_string<>(float)
+{ return "float"; }
 
 template <typename T>
 int grib_get_array(const grib_handle* h, const char* name, T* val, size_t* length);

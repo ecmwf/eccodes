@@ -10,8 +10,6 @@
 
 #include "Bytes.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::Bytes> _grib_accessor_bytes_builder{};
-
 namespace eccodes::accessor
 {
 
@@ -42,9 +40,9 @@ int Bytes::compare(grib_accessor* b)
 
 int Bytes::unpack_string(char* v, size_t* len)
 {
-    const unsigned char* p   = NULL;
+    const unsigned char* p = NULL;
     char* s = v;
-    const long length  = byte_count();
+    const long length = byte_count();
     const long slength = 2 * length;
 
     if (*len < (size_t)slength) {

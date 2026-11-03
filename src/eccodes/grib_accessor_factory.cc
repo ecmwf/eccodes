@@ -25,20 +25,20 @@ grib_section* grib_create_root_section(const grib_context* context, grib_handle*
         if (h->context->grib_reader == NULL) {
             if ((fpath = grib_context_full_defs_path(h->context, "boot.def")) == NULL) {
                 grib_context_log(h->context, GRIB_LOG_FATAL,
-                    "Unable to find boot.def. Context path=%s\n"
-                    "\nPossible causes:\n"
-                    "- The software is not correctly installed\n"
-                    "- The environment variable ECCODES_DEFINITION_PATH is defined but incorrect\n",
-                    context->grib_definition_files_path);
+                                 "Unable to find boot.def. Context path=%s\n"
+                                 "\nPossible causes:\n"
+                                 "- The software is not correctly installed\n"
+                                 "- The environment variable ECCODES_DEFINITION_PATH is defined but incorrect\n",
+                                 context->grib_definition_files_path);
             }
             grib_parse_file(h->context, fpath);
         }
     }
 
-    s->h        = h;
+    s->h = h;
     s->aclength = NULL;
-    s->owner    = NULL;
-    s->block    = (grib_block_of_accessors*)
+    s->owner = NULL;
+    s->block = (grib_block_of_accessors*)
         grib_context_malloc_clear(context, sizeof(grib_block_of_accessors));
     grib_context_log(context, GRIB_LOG_DEBUG, "Creating root section");
     return s;
@@ -47,35 +47,34 @@ grib_section* grib_create_root_section(const grib_context* context, grib_handle*
 grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
                                      const long len, grib_arguments* params)
 {
-    size_t size      = 0;
+    size_t size = 0;
     grib_accessor* a = nullptr;
 
     a = eccodes::AccessorFactory::instance().build(eccodes::AccessorType(creator->op_));
 
-    a->name_       = creator->name_;
+    a->name_ = creator->name_;
     a->name_space_ = creator->name_space_;
 
-    a->all_names_[0]       = creator->name_;
+    a->all_names_[0] = creator->name_;
     a->all_name_spaces_[0] = creator->name_space_;
 
-    a->creator_  = creator;
-    a->context_  = p->h->context;
-    a->h_        = NULL;
-    a->next_     = NULL;
+    a->creator_ = creator;
+    a->context_ = p->h->context;
+    a->h_ = NULL;
+    a->next_ = NULL;
     a->previous_ = NULL;
-    a->parent_   = p;
-    a->length_   = 0;
-    a->offset_   = 0;
-    a->flags_    = creator->flags_;
-    a->set_      = creator->set_;
+    a->parent_ = p;
+    a->length_ = 0;
+    a->offset_ = 0;
+    a->flags_ = creator->flags_;
+    a->set_ = creator->set_;
 
     if (p->block->last) {
         a->offset_ = p->block->last->get_next_position_offset();
 
-        //printf("offset: p->block->last %s %s %ld %ld\n",
-        //        p->block->last->cclass->name,
-        //        p->block->last->name,(long)p->block->last->offset,(long)p->block->last->length);
-
+        // printf("offset: p->block->last %s %s %ld %ld\n",
+        //         p->block->last->cclass->name,
+        //         p->block->last->name,(long)p->block->last->offset,(long)p->block->last->length);
     }
     else {
         if (p->owner) {
@@ -129,8 +128,8 @@ grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
 
 static void link_same_attributes(grib_accessor* a, grib_accessor* b)
 {
-    int i                     = 0;
-    int idx                   = 0;
+    int i = 0;
+    int idx = 0;
     grib_accessor* bAttribute = NULL;
     if (a == NULL || b == NULL)
         return;
@@ -151,11 +150,11 @@ void grib_push_accessor(grib_accessor* a, grib_block_of_accessors* l)
         l->first = l->last = a;
     else {
         l->last->next_ = a;
-        a->previous_   = l->last;
+        a->previous_ = l->last;
     }
     l->last = a;
 
-    DEBUG_ASSERT( a->all_names_[0] );
+    DEBUG_ASSERT(a->all_names_[0]);
     if (*(a->all_names_[0]) != '_') {
         a->same_ = hand->accessor_store.exchange(a->all_names_[0], a);
         link_same_attributes(a, a->same_);
@@ -172,8 +171,8 @@ void grib_section_post_init(grib_section* s)
     grib_accessor* a = s ? s->block->first : NULL;
 
     while (a) {
-        //grib_accessor_class* c = a->cclass;
-        //c->post_init(a);
+        // grib_accessor_class* c = a->cclass;
+        // c->post_init(a);
         a->post_init();
 
         if (a->sub_section_)
@@ -184,10 +183,10 @@ void grib_section_post_init(grib_section* s)
 
 int grib_section_adjust_sizes(grib_section* s, int update, int depth)
 {
-    int err          = 0;
+    int err = 0;
     grib_accessor* a = s ? s->block->first : NULL;
-    size_t length    = update ? 0 : (s ? s->padding : 0);
-    size_t offset    = (s && s->owner) ? s->owner->offset_ : 0;
+    size_t length = update ? 0 : (s ? s->padding : 0);
+    size_t offset = (s && s->owner) ? s->owner->offset_ : 0;
     int force_update = update > 1;
 
     while (a) {
@@ -216,8 +215,8 @@ int grib_section_adjust_sizes(grib_section* s, int update, int depth)
     if (s) {
         if (s->aclength) {
             size_t len = 1;
-            long plen  = 0;
-            int lret   = s->aclength->unpack_long(&plen, &len);
+            long plen = 0;
+            int lret = s->aclength->unpack_long(&plen, &len);
             ECCODES_ASSERT(lret == GRIB_SUCCESS);
             /* This happens when there is some padding */
             if ((plen != length) || force_update) {
@@ -233,7 +232,7 @@ int grib_section_adjust_sizes(grib_section* s, int update, int depth)
                         if (length >= plen) {
                             if (s->owner) {
                                 grib_context_log(s->h->context, GRIB_LOG_ERROR, "Invalid size %ld found for %s, assuming %ld",
-                                             (long)plen, s->owner->name_, (long)length);
+                                                 (long)plen, s->owner->name_, (long)length);
                             }
                             plen = length;
                         }
@@ -258,37 +257,37 @@ int grib_get_block_length(grib_section* s, size_t* l)
     *l = s->length;
     return GRIB_SUCCESS;
 
-// TODO(masn): Because grib_pack_long takes a SIGNED value, we may have problems
-//     if(s->aclength) {
-//         size_t  len = 1;
-//         long plen = 0;
-//         int ret = s->aclength->unpack_long(&plen, &len);
-//         if(ret == GRIB_SUCCESS && plen != 0)
-//         {
-//             *l = plen;
-//             return GRIB_SUCCESS;
-//         }
-//     }
-//     // empty block
-//     if(s->block->first == NULL) {
-//         *l = 0;
-//         return GRIB_SUCCESS;
-//     }
-//     // no accessor for block length
-//     if(s->owner) *l = s->block->last->get_next_position_offset() - s->owner->offset;
-//     else         *l = s->block->last->get_next_position_offset();
+    // TODO(maee): Because grib_pack_long takes a SIGNED value, we may have problems
+    //     if(s->aclength) {
+    //         size_t  len = 1;
+    //         long plen = 0;
+    //         int ret = s->aclength->unpack_long(&plen, &len);
+    //         if(ret == GRIB_SUCCESS && plen != 0)
+    //         {
+    //             *l = plen;
+    //             return GRIB_SUCCESS;
+    //         }
+    //     }
+    //     // empty block
+    //     if(s->block->first == NULL) {
+    //         *l = 0;
+    //         return GRIB_SUCCESS;
+    //     }
+    //     // no accessor for block length
+    //     if(s->owner) *l = s->block->last->get_next_position_offset() - s->owner->offset;
+    //     else         *l = s->block->last->get_next_position_offset();
 
-//     if(s->aclength) {
-//         size_t  len = 1;
-//         long plen = *l;
-//         int ret = s->aclength->pack_long(&plen, &len);
-//         if(ret != GRIB_SUCCESS)
-//             ;
-//         if(s->h->context->debug)
-//             printf("SECTION updating length %ld %s\n",plen,s->owner->name);
-//     }
-//     // if(s->aclength) ECCODES_ASSERT(*l == plen);
-//     return GRIB_SUCCESS;
+    //     if(s->aclength) {
+    //         size_t  len = 1;
+    //         long plen = *l;
+    //         int ret = s->aclength->pack_long(&plen, &len);
+    //         if(ret != GRIB_SUCCESS)
+    //             ;
+    //         if(s->h->context->debug)
+    //             printf("SECTION updating length %ld %s\n",plen,s->owner->name);
+    //     }
+    //     // if(s->aclength) ECCODES_ASSERT(*l == plen);
+    //     return GRIB_SUCCESS;
 }
 
 grib_accessor* find_paddings(grib_section* s)

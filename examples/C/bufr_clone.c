@@ -20,21 +20,21 @@
 
 int main(int argc, char* argv[])
 {
-    FILE* in  = NULL;
+    FILE* in = NULL;
     FILE* out = NULL;
 
     /* message handle. Required in all the ecCodes calls acting on a message.*/
     codes_handle* source_handle = NULL;
 
     const void* buffer = NULL;
-    size_t size        = 0;
+    size_t size = 0;
     int i, err = 0;
 
     if (argc != 3) {
         return 1;
     }
 
-    in  = fopen(argv[1], "rb");
+    in = fopen(argv[1], "rb");
     out = fopen(argv[2], "wb");
 
     /* open input and output */

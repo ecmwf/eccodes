@@ -5,7 +5,12 @@ alias mars.time = dataTime;
 # dateOfAnalysis and timeOfAnalysis still exist in this stream but is not used in MARS
 
 unalias mars.step;
-alias mars.step = stepRange;
+if ( !defined(MTG2Switch) || MTG2Switch == 0 ){
+ alias mars.step = stepRange;
+}
+else {
+ alias mars.step = endStep;
+}
 if (defined(perturbationNumber)) {
  alias mars.number = perturbationNumber;
 }

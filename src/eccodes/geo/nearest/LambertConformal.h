@@ -12,11 +12,14 @@
 
 #include "Gen.h"
 
-namespace eccodes::geo_nearest {
+namespace eccodes::geo_nearest
+{
 
-class LambertConformal : public Gen {
+class LambertConformal : public Gen
+{
 public:
-    LambertConformal() {
+    LambertConformal()
+    {
         class_name_ = "lambert_conformal";
     }
     Nearest* create() override { return new LambertConformal(); };

@@ -18,14 +18,22 @@ namespace eccodes::geo_iterator
 {
 
 
+static bool unrotate(grib_handle* h)
+{
+    // iteratorDisableUnrotate: iterate in the rotated frame for eg. nearest neighbour search on rotated grids (ECC-600)
+    long disable = 0;
+    return grib_get_long(h, "iteratorDisableUnrotate", &disable) != GRIB_SUCCESS || disable == 0;
+}
+
+
 GeoIterator::GeoIterator(grib_handle* h, unsigned long flags) :
-    spec_(new eccodes::geo::GribToSpec(h)),
+    spec_(new eccodes::geo::GribToSpec(h, unrotate(h))),
     grid_(eckit::geo::GridFactory::build(*spec_)),
     iter_(grid_->begin())
 {
-    h_          = h;
+    h_ = h;
     class_name_ = "geo_iterator";
-    flags_      = flags;
+    flags_ = flags;
     ECCODES_ASSERT(h_ != nullptr);
 }
 

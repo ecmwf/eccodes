@@ -10,8 +10,6 @@
 
 #include "Uint64LittleEndian.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::Uint64LittleEndian> _grib_accessor_uint64_little_endian_builder{};
-
 namespace eccodes::accessor
 {
 
@@ -32,7 +30,7 @@ int Uint64LittleEndian::unpack_long(long* val, size_t* len)
     }
 
     value = result;
-    tmp   = value;
+    tmp = value;
 
     /* Result does not fit in long */
     if (tmp != result) {

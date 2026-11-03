@@ -20,7 +20,7 @@ class Action
 public:
     virtual ~Action() {}
     virtual void dump(FILE*, int) {};
-    virtual void xref(FILE* , const char* ) {};
+    virtual void xref(FILE*, const char*) {};
     virtual void destroy(grib_context*, grib_action*) {};
     virtual int create_accessor(grib_section*, grib_loader*)
     {
@@ -43,17 +43,17 @@ public:
         return 0;
     }
 
-    char* name_                    = nullptr; /**  name of the definition statement */
-    char* name_space_              = nullptr; /**  namespace of the definition statement */
-    char* set_                     = nullptr;
-    unsigned long flags_           = 0;
-    char* op_                      = nullptr; /**  operator of the definition statement */
-    grib_context* context_         = nullptr; /**  Context */
-    grib_action* next_             = nullptr; /**  next action in the list */
+    char* name_ = nullptr;       /**  name of the definition statement */
+    char* name_space_ = nullptr; /**  namespace of the definition statement */
+    char* set_ = nullptr;
+    unsigned long flags_ = 0;
+    char* op_ = nullptr;                      /**  operator of the definition statement */
+    grib_context* context_ = nullptr;         /**  Context */
+    grib_action* next_ = nullptr;             /**  next action in the list */
     grib_arguments* default_value_ = nullptr; /** default expression as in .def file */
-    char* defaultkey_              = nullptr; /** name of the key used as default if not found */
-    char* debug_info_              = nullptr; /** purely for debugging and tracing */
-    const char* class_name_        = nullptr;
+    char* defaultkey_ = nullptr;              /** name of the key used as default if not found */
+    char* debug_info_ = nullptr;              /** purely for debugging and tracing */
+    const char* class_name_ = nullptr;
 };
 
 }  // namespace eccodes

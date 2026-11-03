@@ -15,7 +15,8 @@
 eccodes::dumper::GribEncodeC _grib_dumper_grib_encode_c;
 eccodes::Dumper* grib_dumper_grib_encode_c = &_grib_dumper_grib_encode_c;
 
-namespace eccodes::dumper {
+namespace eccodes::dumper
+{
 
 int GribEncodeC::init()
 {
@@ -99,7 +100,7 @@ void GribEncodeC::dump_bits(grib_accessor* a, const char* comment)
     size_t size = 1;
     int err = a->unpack_long(&value, &size);
     int i;
-    char buf[1024] = {0,};
+    char buf[1024] = { 0 };
 
     buf[0] = 0;
 
@@ -136,7 +137,7 @@ void GribEncodeC::dump_double(grib_accessor* a, const char* comment)
     size_t size = 1;
     int err = a->unpack_double(&value, &size);
 
-    //if(comment) fprintf(out_,"/* %s */\n",comment);
+    // if(comment) fprintf(out_,"/* %s */\n",comment);
     fprintf(out_, "    GRIB_CHECK(grib_set_double(h,\"%s\",%g),%d);\n", a->name_, value, 0);
 
     if (err)
@@ -150,7 +151,7 @@ void GribEncodeC::dump_string(grib_accessor* a, const char* comment)
     if (a->length_ == 0)
         return;
 
-    char value[1024] = {0,};
+    char value[1024] = { 0 };
     size_t size = sizeof(value);
     int err = a->unpack_string(value, &size);
 
@@ -167,8 +168,8 @@ void GribEncodeC::dump_string(grib_accessor* a, const char* comment)
 
 void GribEncodeC::dump_bytes(grib_accessor* a, const char* comment)
 {
-    int err                         = 0;
-    size_t size                     = a->length_;
+    int err = 0;
+    size_t size = a->length_;
     unsigned char* buf;
 
     if (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY)
@@ -218,10 +219,10 @@ void GribEncodeC::dump_values(grib_accessor* a)
 {
     int k, err = 0;
     double* buf = NULL;
-    int type    = 0;
+    int type = 0;
     char stype[10];
     size_t size = 0;
-    long count  = 0;
+    long count = 0;
 
     stype[0] = '\0';
 
@@ -299,9 +300,9 @@ void GribEncodeC::dump_section(grib_accessor* a, grib_block_of_accessors* block)
 
 void GribEncodeC::header(const grib_handle* h) const
 {
-    long edition                    = 0;
-    int ret                         = 0;
-    ret                             = grib_get_long(h, "editionNumber", &edition);
+    long edition = 0;
+    int ret = 0;
+    ret = grib_get_long(h, "editionNumber", &edition);
     if (ret != GRIB_SUCCESS) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to get edition number.");
         ECCODES_ASSERT(0);
@@ -341,7 +342,6 @@ void GribEncodeC::header(const grib_handle* h) const
 
 void GribEncodeC::footer(const grib_handle* h) const
 {
-
     fprintf(out_,
             "/* Save the message */\n"
             "\n"
@@ -368,4 +368,4 @@ void GribEncodeC::footer(const grib_handle* h) const
             "}\n");
 }
 
-} // namespace eccodes::dumper
+}  // namespace eccodes::dumper

@@ -33,7 +33,7 @@ void usage(const char* prog)
 
 int main(int argc, char** argv)
 {
-    int err        = 0, i;
+    int err = 0, i;
     double* values = NULL;
     size_t values_len = 0;
 

@@ -1,0 +1,7 @@
+if ( !defined(MTG2Switch) || MTG2Switch == 0 ){
+ # See GRIB-653
+ alias mars.step = stepRange;
+}
+else {
+ alias mars.step = endStep;
+}

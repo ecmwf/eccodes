@@ -67,7 +67,7 @@ my %allExamples=read_examples();
 #----------------------------------------
 
 unless ( -d  $htmlDir ) {
-    mkdir $htmlDir	
+    mkdir $htmlDir
 }
 
 #---------------------------------------------------
@@ -163,13 +163,13 @@ sub read_examples {
 	my %res=();
 	my $fIn="examples.par";
 	open(IN,"<$fIn") or die "$fIn: $!";
-	
-    my $line;	
+
+    my $line;
     my $actType;
     while (defined ($line = <IN>)) {
 		chomp($line);
 		if ($line =~ /.*#/) {next;}
-		
+
         #print $line."\n";
 
         $line =~ s/\"//g;
@@ -194,7 +194,7 @@ sub read_examples {
                 push(@{$res{$actType}},$b);
             }
         }
-	}	
+	}
 
     close IN;
 
@@ -312,11 +312,11 @@ sub getSourceCode {
 sub getDescription {
 
     my ($name) = @_;
-    my $res;  
+    my $res;
 
     foreach my $lang (@langKeys) {
-            
-        if(hasExample($name,$lang) == 1 ) { 
+
+        if(hasExample($name,$lang) == 1 ) {
 
             my $f=examplePath($name,$lang);
 
@@ -328,7 +328,7 @@ sub getDescription {
                 if($comment ne "*") {
                     $line =~ s/\Q${comment}/\*/g;
                 }
-         
+
                 #First row
                 if($found==0) {
                     if($line =~ /\*\s*Description:/) {
@@ -353,7 +353,7 @@ sub getDescription {
             }
 
         }
-        
+
         #print $f."\n";
         #print "descr: ".$res."\n";
     }

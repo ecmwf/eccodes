@@ -25,16 +25,16 @@ int main(int argc, char** argv)
 {
     int err = 0, i = 0, NUM_MISSING = 10;
 
-    FILE* in            = NULL;
-    const char* infile  = "../../data/regular_latlon_surface.grib1";
-    FILE* out           = NULL;
+    FILE* in = NULL;
+    const char* infile = "../../data/regular_latlon_surface.grib1";
+    FILE* out = NULL;
     const char* outfile = "out.set_bitmap_c.grib";
-    codes_handle* h     = NULL;
-    const void* buffer  = NULL;
+    codes_handle* h = NULL;
+    const void* buffer = NULL;
     size_t values_len = 0, size = 0;
     long num_of_data_points = 0, num_of_coded_values = 0, num_of_missing = 0;
     double* values;
-    const double missing  = 1.0e36;
+    const double missing = 1.0e36;
 
     in = fopen(infile, "rb");
     if (!in) {

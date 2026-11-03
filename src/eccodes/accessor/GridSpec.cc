@@ -26,8 +26,6 @@
 #endif
 
 
-eccodes::AccessorBuilder<eccodes::accessor::GridSpec> _grib_accessor_grid_spec_builder{};
-
 namespace eccodes::accessor
 {
 
@@ -49,11 +47,6 @@ int GridSpec::pack_string(const char* v, size_t* len)
 
     auto* h = get_enclosing_handle();
     ECCODES_ASSERT(h);
-
-    if (!eccodes::geo::eckit_geo_use_for_gridspec(h)) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "GridSpec::pack_string not available");
-        return GRIB_NOT_IMPLEMENTED;
-    }
 
     ECCODES_ASSERT(len != nullptr && 0 < *len);
     ECCODES_ASSERT(v && v[*len] == '\0');
@@ -92,10 +85,6 @@ int GridSpec::unpack_string(char* v, size_t* len)
 
     auto* h = get_enclosing_handle();
     ECCODES_ASSERT(h);
-
-    if (!eccodes::geo::eckit_geo_use_for_gridspec(h)) {
-        return GRIB_MISSING_KEY;
-    }
 
     ECCODES_ASSERT(0 < *len);
     ECCODES_ASSERT(v);

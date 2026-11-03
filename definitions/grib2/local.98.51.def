@@ -10,4 +10,4 @@ signed[1] scaleFactorOfCurvBearing = 0 : dump;
 signed[4] scaledValueOfCurvBearing = 0 : dump;
 meta curvBearing from_scale_factor_scaled_value(scaleFactorOfCurvBearing,scaledValueOfCurvBearing);
 
-codetable[1] curvConfiguration "grib2/tables/local/ecmf/1/curv.config.table" : dump; 
+codetable[1] curvConfiguration "grib2/tables/local/ecmf/1/curv.config.table" : dump;

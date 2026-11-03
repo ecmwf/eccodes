@@ -17,7 +17,8 @@
 #include <type_traits>
 #include <cstdint>
 
-template <typename T> int grib_ieee_decode_array(grib_context* c, unsigned char* buf, size_t nvals, int bytes, T* val);
+template <typename T>
+int grib_ieee_decode_array(grib_context* c, unsigned char* buf, size_t nvals, int bytes, T* val);
 
 /**
 .. _init_ieee_table:
@@ -50,7 +51,8 @@ The vmin and vmax boundaries are defined as:
 */
 
 template <typename ValueType>
-struct IeeeTable {
+struct IeeeTable
+{
 private:
     static_assert(std::is_floating_point<ValueType>::value, "ValueType must be a floating point type");
     static constexpr int TABLESIZE = 255;

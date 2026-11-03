@@ -1,9 +1,9 @@
 # RDB stands for REPORT DATA BASE
 # See https://confluence.ecmwf.int/pages/viewpage.action?pageId=24316441
-unsigned[1]   rdbType : dump; 
+unsigned[1]   rdbType : dump;
 unsigned[1]   oldSubtype: dump;
 
-byte[13]      keyData : hidden; 
+byte[13]      keyData : hidden;
 
 meta localYear   bits(keyData,0,12) : dump,long_type,no_copy;
 meta localMonth  bits(keyData,12,4) : dump,long_type,no_copy;
@@ -27,8 +27,8 @@ alias mars.date = localDate;
 alias mars.time = localTime;
 
 # isSatellite and other stuff moved to section 3
-ascii[8] keyMore : hidden; 
-byte[9]  keySat : hidden; 
+ascii[8] keyMore : hidden;
+byte[9]  keySat : hidden;
 
 # 16 bytes
 unsigned[2] messageLength;

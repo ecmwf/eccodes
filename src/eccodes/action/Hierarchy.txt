@@ -27,4 +27,3 @@ Action Class Hierarchy
    |-action_class_set_sarray
    |-action_class_when
    |-action_class_write
-

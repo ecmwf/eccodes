@@ -285,4 +285,3 @@ IDENT     {IDENT1}|{IDENT2}|{IDENT3}|{IDENT4}|{IDENT5}
 .       return *yytext;
 
 %%
-

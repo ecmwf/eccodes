@@ -29,4 +29,3 @@ public:
 }  // namespace eccodes::action
 
 grib_action* grib_action_create_close(grib_context* context, const char* filename);
-

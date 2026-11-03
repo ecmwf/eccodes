@@ -28,4 +28,3 @@ ksec1expver[4]	experimentVersionNumber	= "0000"            : dump;
 #unsigned[1]	numberOfForecastsInEnsemble                 : dump;
 pad reservedNeedNotBePresent(2);
 codetable[1]	marsModel	"mars/eswi/model.table"	    : dump,lowercase,string_type;
-

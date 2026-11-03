@@ -1,37 +1,37 @@
 /*!  \page grib_filter grib_filter
-\section DESCRIPTION 
+\section DESCRIPTION
  Apply the rules defined in rules_file to each GRIB message
 	in the GRIB files provided as arguments.
 	If you specify '-' (a single dash) for the rules_file, the rules will be read from standard input.
 
-\section USAGE 
- grib_filter 
+\section USAGE
+ grib_filter
  [options] rules_file grib_file grib_file ...
 
-\section OPTIONS 
+\section OPTIONS
 -f  \n Force. Force the execution not to fail on error.
- \n \n -o output_file \n 
+ \n \n -o output_file \n
 		Output is written to output_file.
 		If an output file is required and -o is not used, the output is written to filter.out
  \n \n -M  \n Multi-field support off. Turn off support for multiple fields in single grib message.
  \n \n -V  \n Version.
- \n \n -g  \n Copy GTS header. 
+ \n \n -g  \n Copy GTS header.
  \n \n -G  \n GRIBEX compatibility mode.
  \n \n -T T | B | M | A \n Message type. T->GTS, B->BUFR, M->METAR (Experimental),A->Any (Experimental).
 			The input file is interpreted according to the message type.
  \n \n -7  \n Does not fail when the message has wrong length
  \n \n -v  \n Verbose.
- \n \n 
+ \n \n
 \section grib_filter_examples grib_filter examples
 -# The grib_filter processes sequentially all grib messages contained in the input files and applies the rules to each one of them. \n
- Input messages can be written to the output by using the "write" statement. The write statement can be parameterised so that output 
+ Input messages can be written to the output by using the "write" statement. The write statement can be parameterised so that output
  is sent to multiple files depending on key values used in the output file name. \n
  If we write a rules_file containing the only statement:\n \n
 \verbatim
 write "../data/split/[centre]_[date]_[dataType]_[levelType].grib[editionNumber]";
 \endverbatim\n
-Applying this rules_file to the "../data/tigge_pf_ecmwf.grib2" grib file we obtain several files in the ../data/split directory containing 
- fields split according to their key values\n 
+Applying this rules_file to the "../data/tigge_pf_ecmwf.grib2" grib file we obtain several files in the ../data/split directory containing
+ fields split according to their key values\n
 \verbatim
 >grib_filter rules_file ../data/tigge_pf_ecmwf.grib2
 >ls ../data/split
@@ -47,7 +47,7 @@ ecmf_20070122_pf_sfc.grib2
  - :d for double
  - :s for string
  .
-The following statement works in a slightly different way from the previous example, 
+The following statement works in a slightly different way from the previous example,
  including in the output file name the integer values for centre and dataType.\n
 \verbatim
 write "../data/split/[centre:i]_[date]_[dataType:i]_[levelType].grib[editionNumber]";
@@ -101,7 +101,7 @@ if ( level == 850 && indicatorOfParameter == 11 ) {
     print;
 }
 \endverbatim\n
--# Here is an example of an IF statement comparing a key with a string. 
+-# Here is an example of an IF statement comparing a key with a string.
 Note you have to use the "is" keyword for strings and not "==", and to negate you add the "!" before the whole condition:\n \n
 \verbatim
 # Select Geopotential Height messages which are not on a Reduced Gaussian Grid

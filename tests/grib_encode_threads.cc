@@ -13,7 +13,7 @@
 
 #include "grib_api_internal.h"
 
-#define NUM_THREADS 8
+#define NUM_THREADS         8
 #define FILES_PER_ITERATION 10
 
 char* INPUT_FILE = NULL;
@@ -43,7 +43,7 @@ int main(int argc, char** argv)
 #elif GRIB_OMP_THREADS
     long i;
     INPUT_FILE = argv[1];
-#pragma omp parallel for schedule(static) num_threads(NUM_THREADS)
+    #pragma omp parallel for schedule(static) num_threads(NUM_THREADS)
     for (i = 0; i < NUM_THREADS; i++) {
         do_stuff((void*)i);
     }
@@ -64,10 +64,10 @@ void* runner(void* ptr)
 static int encode_file(const char* input_file, const char* output_file)
 {
     grib_handle* source_handle = NULL;
-    const void* buffer         = NULL;
-    int err                    = 0;
+    const void* buffer = NULL;
+    int err = 0;
 
-    FILE* in  = fopen(input_file, "rb");
+    FILE* in = fopen(input_file, "rb");
     FILE* out = fopen(output_file, "wb");
     ECCODES_ASSERT(in);
     ECCODES_ASSERT(out);
@@ -85,8 +85,8 @@ static int encode_file(const char* input_file, const char* output_file)
         GRIB_CHECK(grib_get_size(clone_handle, "values", &values_len), 0);
         values = (double*)malloc(values_len * sizeof(double));
 
-        d     = 10e-10;
-        e     = d;
+        d = 10e-10;
+        e = d;
         count = 1;
         for (i = 0; i < values_len; i++) {
             if (count > 1000) {

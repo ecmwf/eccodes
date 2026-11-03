@@ -22,16 +22,15 @@ fi
 cd ${examples_dir}
 
 if [ -z "${GRIB_API_INCLUDE}" ]
-then 
+then
   GRIB_API_INCLUDE=`pwd`/src
 fi
 
 if [ -z "${GRIB_API_LIB}" ]
-then 
+then
   GRIB_API_LIB=`pwd`/src
 fi
 
 #${tools_dir}/codes_info
 
 set -u
-

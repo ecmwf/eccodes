@@ -10,7 +10,7 @@
 
 
 #ifdef _GET_IBM_COUNTER
-#include <libhpc.h>
+    #include <libhpc.h>
 #endif
 
 
@@ -26,7 +26,7 @@ static void encode_double_array_common(int numBits, long packStart, long datasiz
     /* code from gribw routine flist2bitstream */
 
     cbits = 8;
-    c     = 0;
+    c = 0;
     for (i = packStart; i < datasize; i++) {
         /* note float -> unsigned int .. truncate */
         ival = (unsigned int)((data[i] - zref) * factor + 0.5);
@@ -43,8 +43,8 @@ static void encode_double_array_common(int numBits, long packStart, long datasiz
             else {
                 jbits -= cbits;
                 lGrib[z++] = (c << cbits) + ((ival >> jbits) & mask[cbits]);
-                cbits      = 8;
-                c          = 0;
+                cbits = 8;
+                c = 0;
             }
         }
         /* now jbits < cbits */
@@ -76,15 +76,15 @@ static void encode_double_array_byte(int numBits, long packStart, long datasize,
         hpmStart(2, "pack 8 bit base");
 #endif
 #if defined(CRAY)
-#pragma _CRI ivdep
+    #pragma _CRI ivdep
 #elif defined(SX)
-#pragma vdir nodep
+    #pragma vdir nodep
 #elif defined(__uxp__)
-#pragma loop novrec
+    #pragma loop novrec
 #endif
         for (i = 0; i < datasize; i++) {
-            tmp      = ((data[i] - zref) * factor + 0.5);
-            ival     = (unsigned long)tmp;
+            tmp = ((data[i] - zref) * factor + 0.5);
+            ival = (unsigned long)tmp;
             lGrib[z] = ival;
             z++;
         }
@@ -97,16 +97,16 @@ static void encode_double_array_byte(int numBits, long packStart, long datasize,
         hpmStart(3, "pack 16 bit base");
 #endif
 #if defined(CRAY)
-#pragma _CRI ivdep
+    #pragma _CRI ivdep
 #elif defined(SX)
-#pragma vdir nodep
+    #pragma vdir nodep
 #elif defined(__uxp__)
-#pragma loop novrec
+    #pragma loop novrec
 #endif
         for (i = 0; i < datasize; i++) {
-            tmp          = ((data[i] - zref) * factor + 0.5);
-            ival         = (unsigned long)tmp;
-            lGrib[z]     = ival >> 8;
+            tmp = ((data[i] - zref) * factor + 0.5);
+            ival = (unsigned long)tmp;
+            lGrib[z] = ival >> 8;
             lGrib[z + 1] = ival;
             z += 2;
         }
@@ -119,16 +119,16 @@ static void encode_double_array_byte(int numBits, long packStart, long datasize,
         hpmStart(4, "pack 24 bit base");
 #endif
 #if defined(CRAY)
-#pragma _CRI ivdep
+    #pragma _CRI ivdep
 #elif defined(SX)
-#pragma vdir nodep
+    #pragma vdir nodep
 #elif defined(__uxp__)
-#pragma loop novrec
+    #pragma loop novrec
 #endif
         for (i = 0; i < datasize; i++) {
-            tmp          = ((data[i] - zref) * factor + 0.5);
-            ival         = (unsigned long)tmp;
-            lGrib[z]     = ival >> 16;
+            tmp = ((data[i] - zref) * factor + 0.5);
+            ival = (unsigned long)tmp;
+            lGrib[z] = ival >> 16;
             lGrib[z + 1] = ival >> 8;
             lGrib[z + 2] = ival;
             z += 3;
@@ -142,16 +142,16 @@ static void encode_double_array_byte(int numBits, long packStart, long datasize,
         hpmStart(5, "pack 32 bit base");
 #endif
 #if defined(CRAY)
-#pragma _CRI ivdep
+    #pragma _CRI ivdep
 #elif defined(SX)
-#pragma vdir nodep
+    #pragma vdir nodep
 #elif defined(__uxp__)
-#pragma loop novrec
+    #pragma loop novrec
 #endif
         for (i = 0; i < datasize; i++) {
-            tmp          = ((data[i] - zref) * factor + 0.5);
-            ival         = (unsigned long)tmp;
-            lGrib[z]     = ival >> 24;
+            tmp = ((data[i] - zref) * factor + 0.5);
+            ival = (unsigned long)tmp;
+            lGrib[z] = ival >> 24;
             lGrib[z + 1] = ival >> 16;
             lGrib[z + 2] = ival >> 8;
             lGrib[z + 3] = ival;
@@ -189,7 +189,7 @@ static void encode_double_array_unrolled(int numBits, long packStart, long datas
 
     {
         long residual = datasize % __UNROLL_DEPTH_2;
-        long ofs      = datasize - residual;
+        long ofs = datasize - residual;
         double dval[__UNROLL_DEPTH_2];
         unsigned long ival;
 
@@ -240,8 +240,8 @@ static void encode_double_array_unrolled(int numBits, long packStart, long datas
                 }
                 else {
                     for (j = 0; j < __UNROLL_DEPTH_2; j++) {
-                        ival         = (unsigned long)dval[j];
-                        lGrib[z]     = ival >> 8;
+                        ival = (unsigned long)dval[j];
+                        lGrib[z] = ival >> 8;
                         lGrib[z + 1] = ival;
                         z += 2;
                     }
@@ -259,8 +259,8 @@ static void encode_double_array_unrolled(int numBits, long packStart, long datas
             }
             else {
                 for (j = 0; j < residual; j++) {
-                    ival         = (unsigned long)dval[j];
-                    lGrib[z]     = ival >> 8;
+                    ival = (unsigned long)dval[j];
+                    lGrib[z] = ival >> 8;
                     lGrib[z + 1] = ival;
                     z += 2;
                 }
@@ -278,8 +278,8 @@ static void encode_double_array_unrolled(int numBits, long packStart, long datas
                     dval[j] = ((data[i + j] - zref) * factor + 0.5);
                 }
                 for (j = 0; j < __UNROLL_DEPTH_2; j++) {
-                    ival         = (unsigned long)dval[j];
-                    lGrib[z]     = ival >> 16;
+                    ival = (unsigned long)dval[j];
+                    lGrib[z] = ival >> 16;
                     lGrib[z + 1] = ival >> 8;
                     lGrib[z + 2] = ival;
                     z += 3;
@@ -289,8 +289,8 @@ static void encode_double_array_unrolled(int numBits, long packStart, long datas
                 dval[j] = ((data[ofs + j] - zref) * factor + 0.5);
             }
             for (j = 0; j < residual; j++) {
-                ival         = (unsigned long)dval[j];
-                lGrib[z]     = ival >> 16;
+                ival = (unsigned long)dval[j];
+                lGrib[z] = ival >> 16;
                 lGrib[z + 1] = ival >> 8;
                 lGrib[z + 2] = ival;
                 z += 3;
@@ -317,8 +317,8 @@ static void encode_double_array_unrolled(int numBits, long packStart, long datas
                 }
                 else {
                     for (j = 0; j < __UNROLL_DEPTH_2; j++) {
-                        ival         = (unsigned long)dval[j];
-                        lGrib[z]     = ival >> 24;
+                        ival = (unsigned long)dval[j];
+                        lGrib[z] = ival >> 24;
                         lGrib[z + 1] = ival >> 16;
                         lGrib[z + 2] = ival >> 8;
                         lGrib[z + 3] = ival;
@@ -338,8 +338,8 @@ static void encode_double_array_unrolled(int numBits, long packStart, long datas
             }
             else {
                 for (j = 0; j < residual; j++) {
-                    ival         = (unsigned long)dval[j];
-                    lGrib[z]     = ival >> 24;
+                    ival = (unsigned long)dval[j];
+                    lGrib[z] = ival >> 24;
                     lGrib[z + 1] = ival >> 16;
                     lGrib[z + 2] = ival >> 8;
                     lGrib[z + 3] = ival;

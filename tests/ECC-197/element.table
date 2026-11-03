@@ -18,7 +18,7 @@
 003009|amountOfForcedVentilationAtTimeOfReading|double|Amount of forced ventilation at time of reading|m s-1|1|0|9|m s-1|1|3
 010038|maximumHeightOfDeckCargoAboveSummerLoadLine|long|Maximum height of deck cargo above summer load line|m|0|0|6|m|0|2
 010039|departureOfReferenceLevelFromActualSeaLevel|long|Departure of reference level from actual sea level|m|0|-32|6|m|0|3
-011007|relativeWindDirection|long|Relative wind direction|deg|0|0|9|deg|0|3  
+011007|relativeWindDirection|long|Relative wind direction|deg|0|0|9|deg|0|3
 011008|relativeWindSpeed|double|Relative wind speed|m s-1|1|0|12|m s-1|1|4
 041001|pCO2|double|pCO2|Pa|3|0|18|Pa|3|6
 041002|fluorescence|double|Fluorescence|kg l-1|12|0|16|kg l-1|12|5

@@ -13,8 +13,8 @@
 grib_rule_entry* grib_new_rule_entry(grib_context* c, const char* name, grib_expression* expression)
 {
     grib_rule_entry* e = (grib_rule_entry*)grib_context_malloc_clear_persistent(c, sizeof(grib_rule_entry));
-    e->name            = grib_context_strdup_persistent(c, name);
-    e->value           = expression;
+    e->name = grib_context_strdup_persistent(c, name);
+    e->value = expression;
     return e;
 }
 
@@ -22,6 +22,6 @@ grib_rule* grib_new_rule(grib_context* c, grib_expression* condition, grib_rule_
 {
     grib_rule* r = (grib_rule*)grib_context_malloc_clear_persistent(c, sizeof(grib_rule));
     r->condition = condition;
-    r->entries   = entries;
+    r->entries = entries;
     return r;
 }

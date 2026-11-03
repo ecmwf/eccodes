@@ -14,10 +14,10 @@ int main(int argc, char** argv)
 {
     ECCODES_ASSERT(argc == 2);
 
-    int err              = 0;
-    size_t nvalues       = 0;
+    int err = 0;
+    size_t nvalues = 0;
     const char* filename = argv[1];
-    grib_context* c      = grib_context_get_default();
+    grib_context* c = grib_context_get_default();
 
     FILE* fin = fopen(filename, "rb");
     ECCODES_ASSERT(fin);
@@ -37,12 +37,12 @@ int main(int argc, char** argv)
     GRIB_CHECK(a->unpack_double(all_values, &len), 0);
 
     size_t start = nvalues / 10;
-    len   = nvalues / 5;
+    len = nvalues / 5;
     printf("nvalues=%zu, start=%zu, len=%zu\n", nvalues, start, len);
     GRIB_CHECK(a->unpack_double_subarray(sub_values, start, len), 0);
     for (size_t i = 0; i < len; ++i) {
-        //printf("sub[%zu]=%.10e\n", start + i, sub_values[i]);
-        ECCODES_ASSERT(all_values[start+i] == sub_values[i]);
+        // printf("sub[%zu]=%.10e\n", start + i, sub_values[i]);
+        ECCODES_ASSERT(all_values[start + i] == sub_values[i]);
     }
 
     grib_context_free(c, all_values);

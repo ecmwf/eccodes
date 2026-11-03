@@ -68,7 +68,7 @@ echo "\\endverbatim\\n "
 
 #echo "\\verbatim "
 
-#./bufr_ls -w typicalTime!="120000" ../data/bufr/syno_*.bufr 
+#./bufr_ls -w typicalTime!="120000" ../data/bufr/syno_*.bufr
 
 #echo "\\endverbatim\\n "
 
@@ -79,4 +79,3 @@ echo "> bufr_ls -w count=2 ../data/bufr/syno_multi.bufr"
 #./bufr_ls -w count=2  ../data/bufr/syno_multi.bufr
 
 echo "\\endverbatim\\n "
-

@@ -24,7 +24,7 @@ int main(int argc, char* argv[])
     size_t i = 0, size = 0;
     size_t len = 0;
     int err = 0, cnt = 0;
-    char** strArray    = NULL; /* array of strings */
+    char** strArray = NULL; /* array of strings */
     const char* infile = "../../data/bufr/pgps_110.bufr";
 
     FILE* in = fopen(infile, "rb");

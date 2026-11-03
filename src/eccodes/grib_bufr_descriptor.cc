@@ -33,19 +33,19 @@ bufr_descriptor* grib_bufr_descriptor_clone(bufr_descriptor* d)
     cd = (bufr_descriptor*)grib_context_malloc_clear(d->context, sizeof(bufr_descriptor));
 
     cd->context = d->context;
-    cd->code    = d->code;
-    cd->F       = d->F;
-    cd->X       = d->X;
-    cd->Y       = d->Y;
+    cd->code = d->code;
+    cd->F = d->F;
+    cd->X = d->X;
+    cd->Y = d->Y;
     /* cd->name=grib_context_strdup(d->context,d->name); See ECC-489 */
     strcpy(cd->shortName, d->shortName);
     strcpy(cd->units, d->units);
-    cd->scale     = d->scale;
-    cd->factor    = d->factor;
-    cd->width     = d->width;
+    cd->scale = d->scale;
+    cd->factor = d->factor;
+    cd->width = d->width;
     cd->reference = d->reference;
-    cd->type      = d->type;
-    cd->nokey     = d->nokey;
+    cd->type = d->type;
+    cd->nokey = d->nokey;
 
     return cd;
 }

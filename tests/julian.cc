@@ -11,8 +11,8 @@
 #include "grib_api_internal.h"
 #include "eccodes.h"
 
-#define EPSILON 1e-12
-#define DBL_EQUAL(a, b) (fabs((a) - (b)) <= (EPSILON)*fabs((a)))
+#define EPSILON         1e-12
+#define DBL_EQUAL(a, b) (fabs((a) - (b)) <= (EPSILON) * fabs((a)))
 
 static bool Check(
     const long year1, const long month1, const long day1, const long hour1, const long min1, const long sec1,
@@ -47,7 +47,7 @@ static void TestDateTime(const long year, const long month, const long day, cons
 
     /* Now test the conversion from long -> long */
     jdlong1 = (long)(jd + 0.5); /* round up */
-    date    = grib_julian_to_date(jdlong1);
+    date = grib_julian_to_date(jdlong1);
     jdlong2 = grib_date_to_julian(date);
     if (jdlong1 != jdlong2) {
         fprintf(stderr, "Failed julian<->date\nInput: year=%ld mon=%ld day=%ld time=%ld:%ld:%ld\n",
@@ -63,12 +63,12 @@ static void Test0()
 
     printf("Test0...\n");
     /* Test a specific date */
-    year  = 1801;
+    year = 1801;
     month = 1;
-    day   = 30;
-    hour  = 18;
-    min   = 26;
-    sec   = 24;
+    day = 30;
+    hour = 18;
+    min = 26;
+    sec = 24;
 
     codes_datetime_to_julian(year, month, day, hour, min, sec, &jd);
     ECCODES_ASSERT(DBL_EQUAL(jd, 2378891.268333));
@@ -91,12 +91,12 @@ static void Test1()
 
     /* Test a specific date */
     printf("Test1...\n");
-    year  = 1957;
+    year = 1957;
     month = 10;
-    day   = 4;
-    hour  = 19;
-    min   = 26;
-    sec   = 24;
+    day = 4;
+    hour = 19;
+    min = 26;
+    sec = 24;
 
     grib_datetime_to_julian(year, month, day, hour, min, sec, &jd);
     ECCODES_ASSERT(DBL_EQUAL(jd, 2436116.31));
@@ -149,7 +149,7 @@ static void Test2()
             ECCODES_ASSERT(0);
         }
 
-        jdl  = (long)(jd + 0.5);
+        jdl = (long)(jd + 0.5);
         date = codes_julian_to_date(jdl);
         printf("+ %ld -> %ld\n", date, jdl);
         jdl = codes_date_to_julian(date);
@@ -219,7 +219,7 @@ static void Test5()
     // Also see function is_date_valid()
 
     double jd = 0.0;
-    long year=2017, month=2, day=29, hour=0, min=0, sec=0; // Feb 2017 had 28 days
+    long year = 2017, month = 2, day = 29, hour = 0, min = 0, sec = 0;  // Feb 2017 had 28 days
     long year1, month1, day1, hour1, min1, sec1;
 
     codes_datetime_to_julian(year, month, day, hour, min, sec, &jd);

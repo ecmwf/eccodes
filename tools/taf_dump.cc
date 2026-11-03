@@ -30,9 +30,9 @@ grib_option grib_options[] = {
 };
 
 const char* tool_description = "Dump the content of a TAF file in different formats.";
-const char* tool_name        = "taf_dump";
+const char* tool_name = "taf_dump";
 const char* tool_online_doc = NULL;
-const char* tool_usage       = "[options] file file ...";
+const char* tool_usage = "[options] file file ...";
 
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 
@@ -59,22 +59,22 @@ int grib_tool_init(grib_runtime_options* options)
     }
 
     if (grib_options_on("O")) {
-        options->dump_mode  = "wmo";
+        options->dump_mode = "wmo";
         options->dump_flags = GRIB_DUMP_FLAG_CODED | GRIB_DUMP_FLAG_OCTET | GRIB_DUMP_FLAG_VALUES | GRIB_DUMP_FLAG_READ_ONLY;
     }
 
     if (grib_options_on("D")) {
-        options->dump_mode  = "debug";
+        options->dump_mode = "debug";
         options->dump_flags = GRIB_DUMP_FLAG_VALUES | GRIB_DUMP_FLAG_READ_ONLY;
     }
 
     if (grib_options_on("J")) {
-        options->dump_mode  = "json";
+        options->dump_mode = "json";
         options->dump_flags = GRIB_DUMP_FLAG_VALUES | GRIB_DUMP_FLAG_READ_ONLY;
     }
 
     if (grib_options_on("X")) {
-        options->dump_mode  = "xml";
+        options->dump_mode = "xml";
         options->dump_flags = GRIB_DUMP_FLAG_VALUES | GRIB_DUMP_FLAG_READ_ONLY;
     }
 

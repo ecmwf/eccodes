@@ -10,18 +10,16 @@
 
 #include "LibraryVersion.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::LibraryVersion> _grib_accessor_library_version_builder{};
-
 namespace eccodes::accessor
 {
 
 int LibraryVersion::unpack_string(char* val, size_t* len)
 {
-    char result[30] = {0,};
+    char result[30] = { 0 };
     size_t size = 0;
 
-    int major    = ECCODES_MAJOR_VERSION;
-    int minor    = ECCODES_MINOR_VERSION;
+    int major = ECCODES_MAJOR_VERSION;
+    int minor = ECCODES_MINOR_VERSION;
     int revision = ECCODES_REVISION_VERSION;
 
     snprintf(result, sizeof(result), "%d.%d.%d", major, minor, revision);

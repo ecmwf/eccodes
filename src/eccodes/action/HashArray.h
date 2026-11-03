@@ -32,13 +32,12 @@ public:
     grib_hash_array_value* get_hash_array(grib_handle* h);
 
     grib_hash_array_value* hash_array_ = nullptr;
-    char* basename_                    = nullptr;
-    char* masterDir_                   = nullptr;
-    char* localDir_                    = nullptr;
-    char* ecmfDir_                     = nullptr;
-    char* full_path_                   = nullptr;
-    int nofail_                        = 0;
-
+    char* basename_ = nullptr;
+    char* masterDir_ = nullptr;
+    char* localDir_ = nullptr;
+    char* ecmfDir_ = nullptr;
+    char* full_path_ = nullptr;
+    int nofail_ = 0;
 };
 
 }  // namespace eccodes::action

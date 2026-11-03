@@ -2,4 +2,3 @@
 
 codetable[2] suiteName "grib3/tigge_suiteName.table" : dump;
 alias tiggeSuiteID = suiteName;
-

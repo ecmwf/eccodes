@@ -1,5 +1,5 @@
 NAME	codes_info
-	
+
 DESCRIPTION
 
 	Print information about the version of ecCodes, the definitions and samples paths. If the environment variables ECCODES_DEFINITION_PATH and/or ECCODES_SAMPLES_PATH are defined, then their values will be printed
@@ -11,4 +11,3 @@ OPTIONS
 	-v  Print only the version of ecCodes.
 	-d  Print only the definitions path.
 	-s  Print only the samples path.
-

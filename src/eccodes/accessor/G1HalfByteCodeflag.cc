@@ -10,8 +10,6 @@
 
 #include "G1HalfByteCodeflag.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::G1HalfByteCodeflag> _grib_accessor_g1_half_byte_codeflag_builder{};
-
 namespace eccodes::accessor
 {
 

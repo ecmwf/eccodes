@@ -12,7 +12,7 @@
 
 #ifdef ECCODES_ON_WINDOWS
 
-#include "string.h"
+    #include "string.h"
 
 char* optarg;   /* global argument pointer */
 int optind = 0; /* global argv index */
@@ -51,7 +51,7 @@ int getopt(int argc, char* argv[], const char* optstring)
         optind++;
     }
 
-    c  = *next++;
+    c = *next++;
     cp = strrchr(optstring, c);
 
     if (cp == 0 || c == ':')
@@ -61,7 +61,7 @@ int getopt(int argc, char* argv[], const char* optstring)
     if (*cp == ':') {
         if (*next != '\0') {
             optarg = next;
-            next   = 0;
+            next = 0;
         }
         else if (optind < argc) {
             optarg = argv[optind];

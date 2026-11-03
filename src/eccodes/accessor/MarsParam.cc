@@ -10,18 +10,16 @@
 
 #include "MarsParam.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::MarsParam> _grib_accessor_mars_param_builder{};
-
 namespace eccodes::accessor
 {
 
 void MarsParam::init(const long l, grib_arguments* c)
 {
     Ascii::init(l, c);
-    int n    = 0;
+    int n = 0;
     paramId_ = c->get_name(get_enclosing_handle(), n++);
-    table_   = c->get_name(get_enclosing_handle(), n++);
-    param_   = c->get_name(get_enclosing_handle(), n++);
+    table_ = c->get_name(get_enclosing_handle(), n++);
+    param_ = c->get_name(get_enclosing_handle(), n++);
 }
 
 // For an implementation of pack_string, see
@@ -34,7 +32,7 @@ int MarsParam::unpack_string(char* val, size_t* len)
 {
     long param = 0;
     long table = 0;
-    int ret    = 0;
+    int ret = 0;
 
     if (table_ != NULL && (ret = grib_get_long_internal(get_enclosing_handle(), table_, &table)) != GRIB_SUCCESS)
         return ret;

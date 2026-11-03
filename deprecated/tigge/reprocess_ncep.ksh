@@ -14,7 +14,7 @@ RULES=/path/to/install/p4/grib_api/main/tigge/ncep.rules
 cycle=2007051300
 
 # This should match the value of productionStatusOfProcessedData in $RULES (prod=4, test=5)
-prod=prod 
+prod=prod
 
 # Where the tar files are
 datadir=`pwd`/data
@@ -35,8 +35,8 @@ if [[ ! -f done.$cycle.step0 ]]
 then
 	rm -f  done.$cycle.step[1-9]
 	rm -fr tmp.data.$cycle
-	mkdir  tmp.data.$cycle 
-	for n in a c 
+	mkdir  tmp.data.$cycle
+	for n in a c
 	do
 		cd tmp.data.$cycle
 		tar xf $datadir/$cycle.pgrb2$n.tar
@@ -52,7 +52,7 @@ fi
 
 # Split in TP, TCC and "other"
 # TCC will be discarded
-# TP split into individual files 
+# TP split into individual files
 
 echo $(date +'%F %X') Sort fields
 
@@ -92,7 +92,7 @@ then
 
 	touch done.$cycle.step1
 
-	rm -f tmp.$cycle.filter tmp.all.$cycle 
+	rm -f tmp.$cycle.filter tmp.all.$cycle
 	rm -f tmp.data.$cycle.discarded_tcc tmp.data.$cycle.discarded_tp
 fi
 
@@ -108,7 +108,7 @@ then
 
 	set $(ls -1 tmp.data.$cycle.tp.* | awk -F. '
 		BEGIN { s= 0; e = 0; }
-		{ 
+		{
 			if($5>s) { s=$5;}
 			if($6>e) { e=$6;}
 		}
@@ -175,7 +175,7 @@ then
 	# -z means return 'zero' to the shell even if some fields are not TIGGE complient
 	tigge_check -z -g tmp.data.$cycle.good tmp.data.$cycle.precip_accumulated.tigge tmp.data.$cycle.other.tigge > /dev/null
 
-	rm -f tmp.data.$cycle.precip_accumulated.tigge tmp.data.$cycle.other.tigge 
+	rm -f tmp.data.$cycle.precip_accumulated.tigge tmp.data.$cycle.other.tigge
 
 	touch done.$cycle.step4
 fi
@@ -199,8 +199,8 @@ then
 	tigge_split -p $workdir/tmp.data.$cycle.good > $output/z_tigge_c_kwbc_${cycle}0000_glob_$prod.manifest
 
 	cd $workdir
-	rm -f tmp.data.$cycle.good 
-	rm -f tmp.data.$cycle.* 
+	rm -f tmp.data.$cycle.good
+	rm -f tmp.data.$cycle.*
 	touch done.$cycle.step5
 fi
 

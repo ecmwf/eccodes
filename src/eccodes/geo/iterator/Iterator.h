@@ -14,27 +14,28 @@
 
 // GRIB geoiterator, class supporting geographic iteration of values on a GRIB message
 
-namespace eccodes::geo_iterator {
+namespace eccodes::geo_iterator
+{
 
 class Iterator
 {
 public:
     virtual ~Iterator() {}
-    virtual int init(grib_handle*, grib_arguments*)       = 0;
-    virtual int next(double*, double*, double*) const     = 0;
+    virtual int init(grib_handle*, grib_arguments*) = 0;
+    virtual int next(double*, double*, double*) const = 0;
     virtual int previous(double*, double*, double*) const = 0;
-    virtual int reset()                                   = 0;
-    virtual int destroy()                                 = 0;
-    virtual bool has_next() const                         = 0;
-    virtual Iterator* create() const                      = 0;
+    virtual int reset() = 0;
+    virtual int destroy() = 0;
+    virtual bool has_next() const = 0;
+    virtual Iterator* create() const = 0;
 
     unsigned long flags_ = 0;
 
 protected:
     grib_handle* h_ = nullptr;
-    double* data_ = nullptr;   // data values
-    mutable long e_ = 0;       // current element
-    size_t nv_ = 0;            // number of values
+    double* data_ = nullptr;  // data values
+    mutable long e_ = 0;      // current element
+    size_t nv_ = 0;           // number of values
     const char* class_name_ = nullptr;
 };
 

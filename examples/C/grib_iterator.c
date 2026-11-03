@@ -28,12 +28,12 @@ static void usage(const char* prog)
 int main(int argc, char** argv)
 {
     FILE* in = NULL;
-    int err  = 0;
+    int err = 0;
     double lat, lon, value;
     double missingValue = 1.0e36; /* a value out of range */
-    int n               = 0;
-    long bitmapPresent  = 0;
-    char* filename      = NULL;
+    int n = 0;
+    long bitmapPresent = 0;
+    char* filename = NULL;
 
     /* message handle. Required in all the ecCodes calls acting on a message.*/
     codes_handle* h = NULL;

@@ -29,27 +29,27 @@ static int check_descriptor_type(const char* atype)
 
 int main(int argc, char** argv)
 {
-    char* filename  = NULL;
-    FILE* fp        = NULL;
-    char line[1024] = {0,};
+    char* filename = NULL;
+    FILE* fp = NULL;
+    char line[1024] = { 0 };
     char** list = NULL;
     size_t i = 0, line_number = 0;
-    long lValue     = 0;
-    char* str_code  = NULL; /* descriptor */
-    char* str_key   = NULL;
-    char* str_type  = NULL;
+    long lValue = 0;
+    char* str_code = NULL; /* descriptor */
+    char* str_key = NULL;
+    char* str_type = NULL;
     char* str_scale = NULL;
-    char* str_ref   = NULL;
+    char* str_ref = NULL;
     char* str_width = NULL;
     char* str_units = NULL;
     bufr_descriptor v;
     const size_t maxlen_keyName = sizeof(v.shortName);
-    const size_t maxlen_units   = sizeof(v.units);
+    const size_t maxlen_units = sizeof(v.units);
 
     ECCODES_ASSERT(argc == 2);
 
     filename = argv[1];
-    fp       = fopen(filename, "r");
+    fp = fopen(filename, "r");
     ECCODES_ASSERT(fp);
 
     while (fgets(line, sizeof(line) - 1, fp)) {
@@ -78,7 +78,7 @@ int main(int argc, char** argv)
                     line_number, str_code, NUM_DESCRIPTOR_DIGITS);
             return 1;
         }
-        str_key  = list[1];
+        str_key = list[1];
         str_type = list[2];
         if (check_descriptor_type(str_type) != GRIB_SUCCESS) {
             fprintf(stderr, "Error on line %zu: descriptor key type '%s' (column 3) is not valid.\n",
@@ -101,7 +101,7 @@ int main(int argc, char** argv)
             return 1;
         }
         str_scale = list[5];
-        str_ref   = list[6];
+        str_ref = list[6];
         str_width = list[7];
         if (string_to_long(str_scale, &lValue, 1) != GRIB_SUCCESS) {
             fprintf(stderr, "Error on line %zu: descriptor scale '%s' (column 6) is not numeric.\n",

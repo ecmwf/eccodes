@@ -31,7 +31,7 @@ namespace eccodes::geo
 {
 
 
-using Grid       = ::eckit::geo::Grid;
+using Grid = ::eckit::geo::Grid;
 using Projection = ::eckit::geo::Projection;
 
 
@@ -47,11 +47,11 @@ struct grib_info
 {
     grib_info();
     grib_info(const grib_info&) = delete;
-    grib_info(grib_info&&)      = delete;
+    grib_info(grib_info&&) = delete;
 
     ~grib_info() = default;
 
-    void operator=(grib_info&&)      = delete;
+    void operator=(grib_info&&) = delete;
     void operator=(const grib_info&) = delete;
 
     void extra_set(const char* key, long);

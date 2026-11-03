@@ -27,7 +27,7 @@ static void usage(const char* prog)
 
 int main(int argc, char** argv)
 {
-    int err        = 0, i;
+    int err = 0, i;
     double* values = NULL;
     double max, min, average;
     size_t values_len = 0;
@@ -75,7 +75,7 @@ int main(int argc, char** argv)
     {
         /* example of accessing specific elements from data values  */
         double vals_arr[3] = { 0, 0, 0 };
-        const int NUM      = 3;
+        const int NUM = 3;
         int index_arr[3];
         index_arr[0] = 0;              /* first element */
         index_arr[1] = values_len / 2; /* middle element */

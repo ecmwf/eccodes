@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
 
   f1 = fopen(file1,"r");
   if(!f1) {perror(file1); exit(1);}
-  
+
   f2 = fopen(file2,"r");
   if(!f2) {perror(file2);exit(1);}
 
@@ -57,7 +57,7 @@ int main(int argc, char *argv[]) {
     }
     size1=sizeof(buff1);
     size2=sizeof(buff2);
-    count++; 
+    count++;
   }
 
 /* old cmp
@@ -81,7 +81,7 @@ int main(int argc, char *argv[]) {
 
   fclose(f1);
   fclose(f2);
-  
+
   if (!ret1 && ret2==GRIB_END_OF_FILE) {
     printf("%s bigger than %s\n",file1,file2);
     return 1;
@@ -102,4 +102,3 @@ int main(int argc, char *argv[]) {
 
   return err;
 }
-

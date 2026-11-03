@@ -27,18 +27,21 @@ LibEccodes::LibEccodes() :
     Library("eccodes") {}
 
 
-const LibEccodes& LibEccodes::instance() {
+const LibEccodes& LibEccodes::instance()
+{
     static LibEccodes lib;
     return lib;
 }
 
 
-std::string LibEccodes::version() const {
+std::string LibEccodes::version() const
+{
     return ECCODES_VERSION_STR;
 }
 
 
-std::string LibEccodes::gitsha1(unsigned int count) const {
+std::string LibEccodes::gitsha1(unsigned int count) const
+{
     std::string sha1(codes_get_git_sha1());
     if (sha1.empty()) {
         return "not available";

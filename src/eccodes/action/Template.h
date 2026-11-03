@@ -26,7 +26,7 @@ public:
     grib_action* reparse(grib_accessor* acc, int* doit) override;
 
     int nofail_ = 0;
-    char* arg_  = nullptr;
+    char* arg_ = nullptr;
 };
 
 }  // namespace eccodes::action

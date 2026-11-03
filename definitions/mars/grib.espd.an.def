@@ -10,4 +10,3 @@ if (class is "em") { alias mars.origin = centre; }
 meta marsGrid sprintf("%g/%g",iDirectionIncrementInDegrees,jDirectionIncrementInDegrees) : dump;
 alias mars.grid = marsGrid;
 alias mars.number=perturbationNumber;
-

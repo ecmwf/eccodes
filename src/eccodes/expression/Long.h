@@ -12,9 +12,11 @@
 
 #include "Expression.h"
 
-namespace eccodes::expression {
+namespace eccodes::expression
+{
 
-class Long : public Expression {
+class Long : public Expression
+{
 public:
     Long(long value) : value_(value) {}
 

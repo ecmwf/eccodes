@@ -26,7 +26,7 @@ static void usage(const char* prog)
     printf("       E.g., %s -s GRIB2.tmpl sample.grib2\n", prog);
     printf("       E.g., %s -d grib2/boot.def grib2_boot.txt\n", prog);
 
-    char v[32] = {0,};
+    char v[32] = { 0 };
     snprintf(v, sizeof(v), "%d.%d.%d", ECCODES_MAJOR_VERSION, ECCODES_MINOR_VERSION, ECCODES_REVISION_VERSION);
     printf("\nTo access all the definitions/samples for ecCodes version %s:\n", v);
     printf("\tgit clone --depth=1 git@github.com:ecmwf/eccodes -b %s eccodes_v%s\n", v, v);
@@ -38,23 +38,23 @@ static void usage(const char* prog)
 #define SIZE (1024 * 1024)
 int main(int argc, char* argv[])
 {
-    char* resource_path        = NULL;
-    const char* resource_name  = NULL;
+    char* resource_path = NULL;
+    const char* resource_name = NULL;
     ResourceType resource_type = UNKNOWN;
-    char* full_path            = NULL;
-    const char* out_file       = NULL;
-    const char* option         = NULL;
-    grib_context* c            = grib_context_get_default();
-    FILE* fin                  = NULL;
-    FILE* fout                 = NULL;
-    char buffer[SIZE]          = {0,};
+    char* full_path = NULL;
+    const char* out_file = NULL;
+    const char* option = NULL;
+    grib_context* c = grib_context_get_default();
+    FILE* fin = NULL;
+    FILE* fout = NULL;
+    char buffer[SIZE] = { 0 };
     size_t bytes = 0;
 
     if (argc != 4) usage(argv[0]);
 
-    option        = argv[1];
+    option = argv[1];
     resource_path = argv[2];
-    out_file      = argv[3];
+    out_file = argv[3];
 
     if (strcmp(option, "-s") == 0) {
         resource_type = SAMPLE;
@@ -116,8 +116,9 @@ int main(int argc, char* argv[])
 
     if (read_count == 0) {
         fprintf(stderr, "Error: Number of bytes read == 0. Please check the path refers to a regular %s file.\n",
-                        (resource_type == SAMPLE) ? "sample" : "definition");
-    } else {
+                (resource_type == SAMPLE) ? "sample" : "definition");
+    }
+    else {
         printf("Resource exported to file '%s'.\n", out_file);
     }
 

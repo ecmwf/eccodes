@@ -22,14 +22,14 @@ namespace eccodes::action
 Set::Set(grib_context* context,
          const char* name, grib_expression* expression, int nofail)
 {
-    char buf[1024] = {0,};
+    char buf[1024] = { 0 };
 
     class_name_ = "action_class_set";
-    op_         = grib_context_strdup_persistent(context, "section");
-    context_    = context;
+    op_ = grib_context_strdup_persistent(context, "section");
+    context_ = context;
     expression_ = expression;
-    name2_      = grib_context_strdup_persistent(context, name);
-    nofail_     = nofail;
+    name2_ = grib_context_strdup_persistent(context, name);
+    nofail_ = nofail;
 
     snprintf(buf, 1024, "set%p", (void*)expression);
 
@@ -48,7 +48,7 @@ Set::~Set()
 int Set::execute(grib_handle* h)
 {
     int ret = 0;
-    ret     = grib_set_expression(h, name2_, expression_);
+    ret = grib_set_expression(h, name2_, expression_);
     if (nofail_)
         return 0;
     if (ret != GRIB_SUCCESS) {

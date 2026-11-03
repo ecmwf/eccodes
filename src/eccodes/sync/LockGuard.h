@@ -1,18 +1,23 @@
 #pragma once
 
-namespace eccodes::sync {
+namespace eccodes::sync
+{
 
 template <typename MutexType>
-class LockGuard {
-  public:
-    explicit LockGuard(MutexType& m) : mutex_{m} {
+class LockGuard
+{
+public:
+    explicit LockGuard(MutexType& m) : mutex_{ m }
+    {
         mutex_.lock();
     }
-    ~LockGuard() {
+    ~LockGuard()
+    {
         mutex_.unlock();
     }
-  private:
+
+private:
     MutexType& mutex_;
 };
 
-} // namespace eccodes::sync
+}  // namespace eccodes::sync

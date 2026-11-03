@@ -26,12 +26,12 @@ static void usage(const char* prog)
 int main(int argc, char* argv[])
 {
     char* filename = NULL;
-    FILE* in       = NULL;
+    FILE* in = NULL;
 
     /* message handle. Required in all the ecCodes calls acting on a message.*/
     codes_handle* h = NULL;
 
-    double* values    = NULL;
+    double* values = NULL;
     size_t values_len = 0;
     int i, err = 0;
     int cnt = 0;

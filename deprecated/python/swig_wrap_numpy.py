@@ -148,7 +148,7 @@ class intp(_object):
     __swig_getmethods__ = {}
     __getattr__ = lambda self, name: _swig_getattr(self, intp, name)
     __repr__ = _swig_repr
-    def __init__(self): 
+    def __init__(self):
         this = _gribapi_swig.new_intp()
         try: self.this.append(this)
         except: self.this = this
@@ -172,7 +172,7 @@ class sizetp(_object):
     __swig_getmethods__ = {}
     __getattr__ = lambda self, name: _swig_getattr(self, sizetp, name)
     __repr__ = _swig_repr
-    def __init__(self): 
+    def __init__(self):
         this = _gribapi_swig.new_sizetp()
         try: self.this.append(this)
         except: self.this = this
@@ -196,7 +196,7 @@ class longp(_object):
     __swig_getmethods__ = {}
     __getattr__ = lambda self, name: _swig_getattr(self, longp, name)
     __repr__ = _swig_repr
-    def __init__(self): 
+    def __init__(self):
         this = _gribapi_swig.new_longp()
         try: self.this.append(this)
         except: self.this = this
@@ -220,7 +220,7 @@ class doublep(_object):
     __swig_getmethods__ = {}
     __getattr__ = lambda self, name: _swig_getattr(self, doublep, name)
     __repr__ = _swig_repr
-    def __init__(self): 
+    def __init__(self):
         this = _gribapi_swig.new_doublep()
         try: self.this.append(this)
         except: self.this = this
@@ -678,5 +678,3 @@ grib_c_set_definitions_path = _gribapi_swig.grib_c_set_definitions_path
 def grib_c_set_samples_path(*args):
   return _gribapi_swig.grib_c_set_samples_path(*args)
 grib_c_set_samples_path = _gribapi_swig.grib_c_set_samples_path
-
-

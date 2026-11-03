@@ -249,4 +249,3 @@ else:
             os.makedirs(folder, exist_ok=True)
             shutil.copy(NAME_OUTPUT, folder)
             shutil.copy(VERSION_OUTPUT, folder)
-

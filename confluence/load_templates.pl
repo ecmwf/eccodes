@@ -41,7 +41,7 @@ my $parentPage="";
 #----------------------------------------
 
 unless ( -d  $htmlDir ) {
-    mkdir $htmlDir  
+    mkdir $htmlDir
 }
 
 #---------------------------------------------------
@@ -62,7 +62,7 @@ Here are all the available values for this key:</p><br />";
 
 
 my $header="Teplate name</th><th>Unexpanded descriptors</th>";
-      
+
 print OUT "<table><tbody>"."\n";
 print OUT "<tr><th>Template name</th><th>Unexpanded descriptors</th></tr>\n";
 
@@ -75,12 +75,12 @@ foreach my $name (sort {$a cmp $b} keys %res) {
     print  "$name--> $res{$name}\n";
 }
 
-print OUT "</tbody></table>"."\n";   
+print OUT "</tbody></table>"."\n";
 
 close(OUT);
 
 #Upload to confluence
-confUtils::loadToConf($fOut,$pageTitle,$parentPage); 
+confUtils::loadToConf($fOut,$pageTitle,$parentPage);
 
 
 #==========================================================
@@ -96,22 +96,22 @@ sub read_templates {
     #my %res=();
     my $fIn=$inFile;
     open(IN,"<$fIn") or die "$fIn: $!";
-    
-    my $line;   
+
+    my $line;
     my $actType;
-    
+
     while (defined ($line = <IN>)) {
         chomp($line);
         if ($line =~ /.*#/) {next;}
-        
+
         #print $line."\n";
-    
+
         $line =~ s/\s+//g;
-    
+
         #print $line."\n";
         my @desc;
         my ($a,$b)=($line =~ /\"(\S+)\"=\{unexpandedDescriptors=(\S+);\}/);
-        
+
         unless ($a) {next;}
 
         $res{$a}=$b;
@@ -123,8 +123,6 @@ sub read_templates {
 
         #print "    ".$res{$a}."\n";
     }
-    
+
     close(IN);
 }
-      
-

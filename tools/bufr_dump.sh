@@ -1,5 +1,5 @@
 #!/bin/sh
-set -e 
+set -e
 
 echo "-# To dump BUFR messages into a flat JSON format.\\n"
 echo "\\verbatim"

@@ -1,9 +1,9 @@
 NAME    grib_count
 
 DESCRIPTION
-        Print the total number of GRIB messages in the given files. 
+        Print the total number of GRIB messages in the given files.
 
-USAGE 
+USAGE
         grib_count [options] grib_file grib_file ...
 
 OPTIONS

@@ -32,9 +32,9 @@ int Serialize::destroy()
 
 void Serialize::dump_long(grib_accessor* a, const char* comment)
 {
-    long value  = 0;
+    long value = 0;
     size_t size = 1;
-    int err     = a->unpack_long(&value, &size);
+    int err = a->unpack_long(&value, &size);
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_HIDDEN) != 0)
         return;
@@ -67,7 +67,7 @@ void Serialize::dump_bits(grib_accessor* a, const char* comment)
 {
     long value;
     size_t size = 1;
-    int err     = a->unpack_long(&value, &size);
+    int err = a->unpack_long(&value, &size);
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_HIDDEN) != 0)
         return;
@@ -101,7 +101,7 @@ void Serialize::dump_double(grib_accessor* a, const char* comment)
 {
     double value;
     size_t size = 1;
-    int err     = a->unpack_double(&value, &size);
+    int err = a->unpack_double(&value, &size);
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_HIDDEN) != 0)
         return;
@@ -127,9 +127,9 @@ void Serialize::dump_double(grib_accessor* a, const char* comment)
 
 void Serialize::dump_string(grib_accessor* a, const char* comment)
 {
-    char value[1024] = {0, };
+    char value[1024] = { 0 };
     size_t size = sizeof(value);
-    int err     = a->unpack_string(value, &size);
+    int err = a->unpack_string(value, &size);
     int i;
 
     char* p = value;
@@ -164,8 +164,8 @@ void Serialize::dump_string(grib_accessor* a, const char* comment)
 void Serialize::dump_bytes(grib_accessor* a, const char* comment)
 {
     int i, k, err = 0;
-    size_t more        = 0;
-    size_t size        = a->length_;
+    size_t more = 0;
+    size_t size = a->length_;
     unsigned char* buf = (unsigned char*)grib_context_malloc(context_, size);
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_HIDDEN) != 0)
@@ -230,18 +230,18 @@ void Serialize::dump_bytes(grib_accessor* a, const char* comment)
 void Serialize::dump_values(grib_accessor* a)
 {
     int k, err = 0;
-    double* buf          = NULL;
-    size_t last          = 0;
-    int columns          = 4;
-    char* values_format  = NULL;
+    double* buf = NULL;
+    size_t last = 0;
+    int columns = 4;
+    char* values_format = NULL;
     char* default_format = (char*)"%.16e";
-    char* columns_str    = NULL;
-    size_t len           = 0;
-    char* pc             = NULL;
-    char* pcf            = NULL;
-    size_t size          = 0;
-    long count           = 0;
-    values_format        = default_format;
+    char* columns_str = NULL;
+    size_t len = 0;
+    char* pc = NULL;
+    char* pcf = NULL;
+    size_t size = 0;
+    long count = 0;
+    values_format = default_format;
 
     if ((a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY))
         return;
@@ -259,25 +259,25 @@ void Serialize::dump_values(grib_accessor* a)
             values_format[last] = '\0';
     }
 
-    pc  = values_format;
+    pc = values_format;
     pcf = values_format;
     while (*pc != '\0' && *pc != '%')
         pc++;
     if (strlen(pc) > 1) {
         values_format = pc;
-        len           = pc - pcf;
+        len = pc - pcf;
     }
     else {
         values_format = default_format;
-        len           = 0;
+        len = 0;
     }
 
     if (len > 0) {
         columns_str = (char*)malloc((len + 1) * sizeof(char));
         ECCODES_ASSERT(columns_str);
-        columns_str      = (char*)memcpy(columns_str, pcf, len);
+        columns_str = (char*)memcpy(columns_str, pcf, len);
         columns_str[len] = '\0';
-        columns          = atoi(columns_str);
+        columns = atoi(columns_str);
         free(columns_str);
     }
 

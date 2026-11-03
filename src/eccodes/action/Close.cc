@@ -20,11 +20,11 @@ namespace eccodes::action
 Close::Close(grib_context* context, const char* filename)
 {
     class_name_ = "action_class_close";
-    op_         = grib_context_strdup_persistent(context, "section");
-    context_    = context;
-    filename_   = grib_context_strdup_persistent(context, filename);
+    op_ = grib_context_strdup_persistent(context, "section");
+    context_ = context;
+    filename_ = grib_context_strdup_persistent(context, filename);
 
-    char buf[1024] = {0,};
+    char buf[1024] = { 0 };
     snprintf(buf, sizeof(buf), "close_%p", (void*)filename_);
 
     name_ = grib_context_strdup_persistent(context, buf);
@@ -39,7 +39,7 @@ Close::~Close()
 
 int Close::execute(grib_handle* h)
 {
-    char filename[2048] = {0, };
+    char filename[2048] = { 0 };
     size_t len = sizeof(filename);
 
     int err = grib_get_string(h, filename_, filename, &len);

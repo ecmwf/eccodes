@@ -23,20 +23,20 @@
 
 int main(int argc, char** argv)
 {
-    int err       = 0;
-    long step     = 0;
+    int err = 0;
+    long step = 0;
     int nfiles = 0, i = 0, j = 0;
     codes_fieldset* set = NULL;
     const int max_numfiles = 100;
-    codes_handle* h           = NULL;
-    char param[20]            = {0,};
-    size_t len     = 20;
-    double lats[4] = {0,};
-    double lons[4] = {0,};
-    double values[4] = {0,};
-    double distances[4] = {0,};
-    int indexes[4] = {0,};
-    const char* order_by  = "param,step";
+    codes_handle* h = NULL;
+    char param[20] = { 0 };
+    size_t len = 20;
+    double lats[4] = { 0 };
+    double lons[4] = { 0 };
+    double values[4] = { 0 };
+    double distances[4] = { 0 };
+    int indexes[4] = { 0 };
+    const char* order_by = "param,step";
     double* pValues = values; /* Default: decode the values */
 
     size_t size = 4;
@@ -46,7 +46,7 @@ int main(int argc, char** argv)
     const char** filenames = NULL;
     codes_nearest* nearest = NULL;
 
-    if (argc < 2) return 1; // Usage: prog [-n] grib_file grib_file ...
+    if (argc < 2) return 1;  // Usage: prog [-n] grib_file grib_file ...
 
     filenames = (const char**)malloc(sizeof(char*) * max_numfiles);
 
@@ -72,7 +72,7 @@ int main(int argc, char** argv)
     printf("%d fields in the fieldset\n", codes_fieldset_count(set));
     printf("n,step,param\n");
 
-    mode  = CODES_NEAREST_SAME_GRID | CODES_NEAREST_SAME_POINT;
+    mode = CODES_NEAREST_SAME_GRID | CODES_NEAREST_SAME_POINT;
     count = 1;
 
     while ((h = codes_fieldset_next_handle(set, &err)) != NULL) {

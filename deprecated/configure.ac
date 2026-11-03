@@ -72,8 +72,8 @@ AC_PROG_LN_S
 AC_PROG_MAKE_SET
 AC_PROG_YACC
 AC_PROG_LEX
-AC_PROG_F77(pgf90 pgf77 xlf gfortran f77 g77 f90 ifort) 
-AC_PROG_FC(pgf90 xlf90 gfortran f90 ifort) 
+AC_PROG_F77(pgf90 pgf77 xlf gfortran f77 g77 f90 ifort)
+AC_PROG_FC(pgf90 xlf90 gfortran f90 ifort)
 
 dnl check availability of pthreads
 AC_ARG_ENABLE([pthread],
@@ -160,17 +160,17 @@ then
 else
    vectorise=0
 fi
-AC_DEFINE_UNQUOTED(VECTOR,$vectorise,vectorised code) 
+AC_DEFINE_UNQUOTED(VECTOR,$vectorise,vectorised code)
 
 dnl enable memory management
 AC_ARG_ENABLE([memory-management],
   [AS_HELP_STRING([--enable-memory-management],[enable memory [by default disabled]])],
 AC_DEFINE_UNQUOTED(MANAGE_MEM,1,memory management) ,
-AC_DEFINE_UNQUOTED(MANAGE_MEM,0,memory management) 
+AC_DEFINE_UNQUOTED(MANAGE_MEM,0,memory management)
 	 )
 
 dnl enable development configuration
-DEVEL_RULES='' 
+DEVEL_RULES=''
 AC_ARG_ENABLE([development],
   [AS_HELP_STRING([--enable-development],[enable development configuration [by default disabled]])],
     [GRIB_DEVEL=${enableval}] , [GRIB_DEVEL=no]
@@ -195,7 +195,7 @@ if test x"$ac_cv_func_fseeko" != xyes ; then
 	CREATE_H='./create_h.sh 1'
 else
 	CREATE_H='./create_h.sh 0'
-fi 
+fi
 
 AC_SYS_LARGEFILE
 
@@ -252,9 +252,9 @@ if test $without_fortran -ne 1 && test "x$ac_cv_prog_f90_debug_in_module" != xye
 		&& test "x$enable_shared" = xyes && test "x$FCFLAGS" = "x-g"
 then
 	without_fortran=1
-	AC_MSG_WARN([ 
+	AC_MSG_WARN([
 
-  Your Fortran compiler ($FC) does not support linking to dynamic library modules when debug is enabled. This is a known 
+  Your Fortran compiler ($FC) does not support linking to dynamic library modules when debug is enabled. This is a known
 problem with Portland compilers versions 7 and 8, for example. Possible workarounds are:
 
   - Use a Portland compiler version 10 or higher or a different compiler.
@@ -365,13 +365,13 @@ then
 	then
       AC_MSG_NOTICE([
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  CONFIGURATION ERROR: netcdf test not passed.                                                               
+  CONFIGURATION ERROR: netcdf test not passed.
   Please check that the path to the netcdf library given in --with-netcdf=PATH_TO_NETCDF
   is correct. Otherwise build without netcdf.
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	  ])
 	  test 0 -eq 1
-	  exit 
+	  exit
     fi
     AC_SUBST(NETCDF_LDFLAGS)
     AC_DEFINE(HAVE_NETCDF,1,NETCDF enabled)
@@ -438,13 +438,13 @@ then
       AC_MSG_NOTICE([
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  CONFIGURATION ERROR: jpeg library (jasper or openjpeg) required.                                                               
-  jpeg library installation is not working or missing.                                 
+  CONFIGURATION ERROR: jpeg library (jasper or openjpeg) required.
+  jpeg library installation is not working or missing.
 
-  To fix this problem you have the following options.                                  
+  To fix this problem you have the following options.
   1) Install without jpeg support enabled (--disable-jpeg), but you will not be able to
      decode grib2 data encoded in jpeg.
-  2) Check if you have a jpeg library installed in a path different from your system path. 
+  2) Check if you have a jpeg library installed in a path different from your system path.
      In this case you can provide your jpeg library installation path to the configure
      through the options:
         --with-jasper="jasper_lib_path"
@@ -454,7 +454,7 @@ then
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	  ])
 	  [ 0 -eq 1 ]
-	  exit 
+	  exit
     fi
   JPEG_TEST="jpeg.sh"
   AC_SUBST(JPEG_TEST)

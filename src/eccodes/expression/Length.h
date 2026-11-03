@@ -12,9 +12,11 @@
 
 #include "Expression.h"
 
-namespace eccodes::expression {
+namespace eccodes::expression
+{
 
-class Length : public Expression {
+class Length : public Expression
+{
 public:
     Length(grib_context* c, const char*);
 
@@ -30,7 +32,7 @@ public:
     const char* class_name() const override { return "length"; };
 
 private:
-    char* name_   = nullptr;
+    char* name_ = nullptr;
 };
 
 }  // namespace eccodes::expression

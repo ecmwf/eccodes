@@ -150,7 +150,7 @@ grib_file* grib_file_open(const char* filename, const char* mode, int* err)
 {
     grib_file *file = 0, *prev = 0;
     int same_mode = 0;
-    int is_new    = 0;
+    int is_new = 0;
 
     if (!file_pool.context)
         file_pool.context = grib_context_get_default();
@@ -169,7 +169,7 @@ grib_file* grib_file_open(const char* filename, const char* mode, int* err)
         }
         if (!file) {
             is_new = 1;
-            file   = grib_file_new(file_pool.context, filename, err);
+            file = grib_file_new(file_pool.context, filename, err);
             if (prev)
                 prev->next = file;
             file_pool.current = file;
@@ -228,13 +228,12 @@ grib_file* grib_file_open(const char* filename, const char* mode, int* err)
 
 grib_file* grib_file_pool_create_clone(grib_context* c, short clone_id, grib_file* pool_file)
 {
-    if(pool_file)
-    {
-        grib_file* newfile          = (grib_file*)grib_context_malloc_clear(c, sizeof(grib_file));
-        newfile->id                 = clone_id;
-        newfile->name               = strdup(pool_file->name);
-        newfile->handle             = pool_file->handle;
-        newfile->pool_file          = pool_file;
+    if (pool_file) {
+        grib_file* newfile = (grib_file*)grib_context_malloc_clear(c, sizeof(grib_file));
+        newfile->id = clone_id;
+        newfile->name = strdup(pool_file->name);
+        newfile->handle = pool_file->handle;
+        newfile->pool_file = pool_file;
         newfile->pool_file_refcount = 0;
         {
             eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
@@ -249,11 +248,9 @@ grib_file* grib_file_pool_create_clone(grib_context* c, short clone_id, grib_fil
 void grib_file_pool_delete_clone(grib_file* cloned_file)
 {
     grib_file* pool_file = cloned_file->pool_file;
-    if(pool_file)
-    {
+    if (pool_file) {
         eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
-        if(pool_file->pool_file_refcount > 0)
-        {
+        if (pool_file->pool_file_refcount > 0) {
             --pool_file->pool_file_refcount;
 
             if (pool_file->pool_file_refcount == 0)
@@ -270,12 +267,12 @@ void grib_file_pool_delete_file(grib_file* file)
 
     eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
     if (file == file_pool.first) {
-        file_pool.first   = file->next;
+        file_pool.first = file->next;
         file_pool.current = file->next;
         file_pool.size--;
     }
     else {
-        prev              = file_pool.first;
+        prev = file_pool.first;
         file_pool.current = file_pool.first;
         while (prev) {
             if (prev->next == file)
@@ -398,19 +395,19 @@ static grib_file* grib_file_new(grib_context* c, const char* name, int* err)
     }
 
     file->name = strdup(name);
-    file->id   = next_id;
+    file->id = next_id;
     {
         eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
         next_id++;
     }
-    file->mode               = 0;
-    file->handle             = 0;
-    file->refcount           = 0;
-    file->context            = c;
-    file->next               = 0;
-    file->pool_file          = 0;
+    file->mode = 0;
+    file->handle = 0;
+    file->refcount = 0;
+    file->context = c;
+    file->next = 0;
+    file->pool_file = 0;
     file->pool_file_refcount = 0;
-    file->buffer             = 0;
+    file->buffer = 0;
     return file;
 }
 
@@ -422,15 +419,18 @@ void grib_file_delete(grib_file* file)
     /* GRIB-803: cannot call fclose yet! Causes crash */
     /* TODO: Set handle to NULL in filepool too */
 
-    //if (file->handle) {
-    //    if (fclose(file->handle) != 0) {
-    //        perror(file->name);
-    //    }
-    //}
+    // if (file->handle) {
+    //     if (fclose(file->handle) != 0) {
+    //         perror(file->name);
+    //     }
+    // }
 
-    free(file->name); file->name = 0;
-    free(file->mode); file->mode = 0;
-    free(file->buffer); file->buffer = 0;
+    free(file->name);
+    file->name = 0;
+    free(file->mode);
+    file->mode = 0;
+    free(file->buffer);
+    file->buffer = 0;
     grib_context_free(file->context, file);
     /* file = NULL; */
 }

@@ -11,16 +11,16 @@
 #include "grib_api_internal.h"
 
 #ifndef ECCODES_ON_WINDOWS
-#include <unistd.h>
+    #include <unistd.h>
 #endif
 
 int main(int argc, char* argv[])
 {
     off_t offsetin = 0, offsetout = 0;
-    off_t size     = 100000000;
+    off_t size = 100000000;
     size_t rsizein = 10, rsizeout = 0;
     double doff = 0;
-    FILE* f     = 0;
+    FILE* f = 0;
     char str[10];
     int i;
 
@@ -49,7 +49,7 @@ int main(int argc, char* argv[])
             exit(1);
         }
         offsetout = ftello(f);
-        doff      = (double)offsetout;
+        doff = (double)offsetout;
         printf("%20.0f \n", doff);
         if (offsetout != offsetin + rsizeout) {
             printf("offset error: offsetout=%jd offsetin=%jd\n", offsetout, offsetin + rsizeout);

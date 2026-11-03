@@ -21,11 +21,11 @@ public:
     SetSArray(grib_context* context, const char* name, grib_sarray* sarray);
     ~SetSArray() override;
 
-    //void dump(FILE*, int) override;
+    // void dump(FILE*, int) override;
     int execute(grib_handle* h) override;
 
     grib_sarray* sarray_ = nullptr;
-    char* name2_         = nullptr;
+    char* name2_ = nullptr;
 };
 
 }  // namespace eccodes::action

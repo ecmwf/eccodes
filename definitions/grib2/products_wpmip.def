@@ -25,28 +25,34 @@ concept wpmipModel(unknown) {
     'CMA-Fengshun-v1_sic' = { subCentre = 38; backgroundProcess = 25; generatingProcessIdentifier = 2; }
     'CPTEC-GM-v1_oic' = { subCentre = 46; backgroundProcess = 6; generatingProcessIdentifier = 1; }
     'CPTEC-GM-v1_sic' = { subCentre = 46; backgroundProcess = 6; generatingProcessIdentifier = 2; }
+    'CPTEC-GM-v2_oic' = { subCentre = 46; backgroundProcess = 6; generatingProcessIdentifier = 3; }
     'CSIR-GM-v1_oic' = { subCentre = 137; backgroundProcess = 7; generatingProcessIdentifier = 1; }
     'CSIR-GM-v1_sic' = { subCentre = 137; backgroundProcess = 7; generatingProcessIdentifier = 2; }
     'DWD-ICON-v1_oic' = { subCentre = 78; backgroundProcess = 3; generatingProcessIdentifier = 1; }
     'DWD-ICON-v1_sic' = { subCentre = 78; backgroundProcess = 3; generatingProcessIdentifier = 2; }
     'DWD-AICON-v1_oic' = { subCentre = 78; backgroundProcess = 4; generatingProcessIdentifier = 1; }
     'DWD-AICON-v1_sic' = { subCentre = 78; backgroundProcess = 4; generatingProcessIdentifier = 2; }
+    'DWD-AICON-v2_oic' = { subCentre = 78; backgroundProcess = 4; generatingProcessIdentifier = 3; }
     'ECCC-GDPS-v1_oic' = { subCentre = 53; backgroundProcess = 8; generatingProcessIdentifier = 1; }
     'ECCC-GDPS-v1_sic' = { subCentre = 53; backgroundProcess = 8; generatingProcessIdentifier = 2; }
+    'ECCC-GDPS-v2_oic' = { subCentre = 53; backgroundProcess = 8; generatingProcessIdentifier = 3; }
     'ECCC-GDPS_nudge-v1_oic' = { subCentre = 53; backgroundProcess = 9; generatingProcessIdentifier = 1; }
     'ECCC-GDPS_nudge-v1_sic' = { subCentre = 53; backgroundProcess = 9; generatingProcessIdentifier = 2; }
-    'ECCC-GDPS_nudge-v1_oic' = { subCentre = 53; backgroundProcess = 10; generatingProcessIdentifier = 1; }
-    'ECCC-GDPS_nudge-v1_sic' = { subCentre = 53; backgroundProcess = 10; generatingProcessIdentifier = 2; }
+    'ECCC-GDPS_nudge-v2_oic' = { subCentre = 53; backgroundProcess = 9; generatingProcessIdentifier = 3; }
+    'ECCC-GEML-v1_oic' = { subCentre = 53; backgroundProcess = 10; generatingProcessIdentifier = 1; }
+    'ECCC-GEML-v1_sic' = { subCentre = 53; backgroundProcess = 10; generatingProcessIdentifier = 2; }
+    'ECCC-GEML-v2_oic' = { subCentre = 53; backgroundProcess = 10; generatingProcessIdentifier = 3; }
     'ECMWF-IFS-v1_49r1' = { subCentre = 98; backgroundProcess = 255; generatingProcessIdentifier = 1; }
     'ECMWF-AIFS-v1_oic' = { subCentre = 98; backgroundProcess = 1; generatingProcessIdentifier = 1; }
     'ECMWF-AIFS-v1_sic' = { subCentre = 98; backgroundProcess = 1; generatingProcessIdentifier = 2; }
     'ECMWF-IFS_nudge_AIFS-v1_49r1' = { subCentre = 98; backgroundProcess = 2; generatingProcessIdentifier = 1; }
+    'ECMWF-IFS_nudge_AIFS-v2_49r1' = { subCentre = 98; backgroundProcess = 2; generatingProcessIdentifier = 2; }
     'GFDL-SHiELD-v1_oic' = { subCentre = 138; backgroundProcess = 11; generatingProcessIdentifier = 1; }
     'GFDL-SHiELD-v1_sic' = { subCentre = 138; backgroundProcess = 11; generatingProcessIdentifier = 2; }
     'GFDL-AI_SHiELD-v1_oic' = { subCentre = 138; backgroundProcess = 26; generatingProcessIdentifier = 1; }
     'GFDL-AI_SHiELD-v1_sic' = { subCentre = 138; backgroundProcess = 26; generatingProcessIdentifier = 2; }
-    'IMD-IMDGFS-v1_oic' = { subCentre = 28; backgroundProcess = 12; generatingProcessIdentifier = 1; }
-    'IMD-IMDGFS-v1_sic' = { subCentre = 28; backgroundProcess = 12; generatingProcessIdentifier = 2; }
+    'IMD-GFS-v1_oic' = { subCentre = 28; backgroundProcess = 12; generatingProcessIdentifier = 1; }
+    'IMD-GFS-v1_sic' = { subCentre = 28; backgroundProcess = 12; generatingProcessIdentifier = 2; }
     'IMD-NCUM-v1_oic' = { subCentre = 28; backgroundProcess = 13; generatingProcessIdentifier = 1; }
     'IMD-NCUM-v1_sic' = { subCentre = 28; backgroundProcess = 13; generatingProcessIdentifier = 2; }
     'JMA-GSM-v1_oic' = { subCentre = 34; backgroundProcess = 15; generatingProcessIdentifier = 1; }
@@ -57,6 +63,9 @@ concept wpmipModel(unknown) {
     'KIAPS_KMA-KIM-v2_sic' = { subCentre = 40; backgroundProcess = 24; generatingProcessIdentifier = 4; }
     'UKMO-UM-v1_oic' = { subCentre = 74; backgroundProcess = 17; generatingProcessIdentifier = 1; }
     'UKMO-UM-v1_sic' = { subCentre = 74; backgroundProcess = 17; generatingProcessIdentifier = 2; }
+    'UKMO-UM-v2_oic' = { subCentre = 74; backgroundProcess = 17; generatingProcessIdentifier = 3; }
+    'UKMO-FASTNET-v1_oic' = { subCentre = 74; backgroundProcess = 27; generatingProcessIdentifier = 1; }
+    'UKMO-UM_nudge-v1_oic' = { subCentre = 74; backgroundProcess = 28; generatingProcessIdentifier = 1; }
     'METNO-AIWP-v1_oic' = { subCentre = 88; backgroundProcess = 18; generatingProcessIdentifier = 1; }
     'METNO-AIWP-v1_sic' = { subCentre = 88; backgroundProcess = 18; generatingProcessIdentifier = 2; }
     'NOAA-GFS-v1_oic' = { subCentre = 9; backgroundProcess = 19; generatingProcessIdentifier = 1; }
@@ -67,6 +76,7 @@ concept wpmipModel(unknown) {
     'NRL-NOGAPS-v1_sic' = { subCentre = 139; backgroundProcess = 21; generatingProcessIdentifier = 2; }
     'RAS-SL_AV-v1_oic' = { subCentre = 4; backgroundProcess = 22; generatingProcessIdentifier = 1; }
     'RAS-SL_AV-v1_sic' = { subCentre = 4; backgroundProcess = 22; generatingProcessIdentifier = 2; }
+    'RAS-SL_AV-v2_oic' = { subCentre = 4; backgroundProcess = 22; generatingProcessIdentifier = 3; }
     'SAWS-GM-v1_oic' = { subCentre = 149; backgroundProcess = 23; generatingProcessIdentifier = 1; }
     'SAWS-GM-v1_sic' = { subCentre = 149; backgroundProcess = 23; generatingProcessIdentifier = 2; }
 }

@@ -15,11 +15,11 @@
 #include "grib_api_internal.h"
 
 #if OMP_PACKING
-#include "omp.h"
+    #include "omp.h"
 #endif
 
-#define mask1(i) (1UL << i)
-#define test(n, i) !!((n)&mask1(i))
+#define mask1(i)   (1UL << i)
+#define test(n, i) !!((n) & mask1(i))
 
 long GRIB_MASK = -1; /* Mask of sword bits */
 
@@ -48,13 +48,13 @@ static const unsigned long dmasks[] = {
     0x00,
 };
 
-extern const int max_nbits        = sizeof(unsigned long) * 8;
+extern const int max_nbits = sizeof(unsigned long) * 8;
 static const int max_nbits_size_t = sizeof(size_t) * 8;
 
 unsigned long grib_decode_unsigned_byte_long(const unsigned char* p, long o, int l)
 {
-    long accum      = 0;
-    int i           = 0;
+    long accum = 0;
+    int i = 0;
     unsigned char b = p[o++];
 
     ECCODES_ASSERT(l <= max_nbits);
@@ -72,10 +72,10 @@ unsigned long grib_decode_unsigned_byte_long(const unsigned char* p, long o, int
 
 long grib_decode_signed_long(const unsigned char* p, long o, int l)
 {
-    long accum      = 0;
-    int i           = 0;
+    long accum = 0;
+    int i = 0;
     unsigned char b = p[o++];
-    int sign        = grib_get_bit(&b, 0);
+    int sign = grib_get_bit(&b, 0);
 
     ECCODES_ASSERT(l <= max_nbits);
 
@@ -97,9 +97,9 @@ long grib_decode_signed_long(const unsigned char* p, long o, int l)
 int grib_encode_signed_long(unsigned char* p, long val, long o, int l)
 {
     unsigned short accum = 0;
-    int i                = 0;
-    int off              = o;
-    int sign             = (val < 0);
+    int i = 0;
+    int off = o;
+    int sign = (val < 0);
 
     ECCODES_ASSERT(l <= max_nbits);
 
@@ -107,7 +107,7 @@ int grib_encode_signed_long(unsigned char* p, long val, long o, int l)
         val *= -1;
 
     for (i = 0; i < l; i++) {
-        accum  = val >> (l * 8 - (8 * (i + 1)));
+        accum = val >> (l * 8 - (8 * (i + 1)));
         p[o++] = accum;
     }
 
@@ -187,11 +187,11 @@ int grib_encode_signed_longb(unsigned char* p, long val, long* bitp, long nb)
 }
 
 #if GRIB_IBMPOWER67_OPT
-#include "grib_bits_ibmpow.cc"
+    #include "grib_bits_ibmpow.cc"
 #else
-#if FAST_BIG_ENDIAN
-#include "grib_bits_fast_big_endian.cc"
-#else
-#include "grib_bits_any_endian.cc"
-#endif
+    #if FAST_BIG_ENDIAN
+        #include "grib_bits_fast_big_endian.cc"
+    #else
+        #include "grib_bits_any_endian.cc"
+    #endif
 #endif

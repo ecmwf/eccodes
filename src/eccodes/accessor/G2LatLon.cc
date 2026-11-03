@@ -10,8 +10,6 @@
 
 #include "G2LatLon.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::G2LatLon> _grib_accessor_g2latlon_builder{};
-
 namespace eccodes::accessor
 {
 
@@ -20,7 +18,7 @@ void G2LatLon::init(const long l, grib_arguments* c)
     Double::init(l, c);
     int n = 0;
 
-    grid_  = c->get_name(get_enclosing_handle(), n++);
+    grid_ = c->get_name(get_enclosing_handle(), n++);
     index_ = c->get_long(get_enclosing_handle(), n++);
     given_ = c->get_name(get_enclosing_handle(), n++);
 }
@@ -59,8 +57,8 @@ int G2LatLon::pack_double(const double* val, size_t* len)
 {
     int ret = 0;
     double grid[6];
-    size_t size       = 6;
-    double new_val    = *val;
+    size_t size = 6;
+    double new_val = *val;
     grib_handle* hand = get_enclosing_handle();
 
     if (*len < 1) {
@@ -96,7 +94,7 @@ int G2LatLon::pack_double(const double* val, size_t* len)
 int G2LatLon::pack_missing()
 {
     double missing = GRIB_MISSING_DOUBLE;
-    size_t size    = 1;
+    size_t size = 1;
 
     if (!given_)
         return GRIB_NOT_IMPLEMENTED;

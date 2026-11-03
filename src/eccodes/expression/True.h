@@ -12,9 +12,11 @@
 
 #include "Expression.h"
 
-namespace eccodes::expression {
+namespace eccodes::expression
+{
 
-class True : public Expression {
+class True : public Expression
+{
 public:
     True() = default;
 

@@ -24,11 +24,11 @@ bufr_descriptors_array* grib_bufr_descriptors_array_new(size_t size, size_t incs
         grib_context_log(c, GRIB_LOG_ERROR, "%s: Unable to allocate %zu bytes", __func__, sizeof(bufr_descriptors_array));
         return NULL;
     }
-    v->context             = c;
-    v->size                = size;
-    v->n                   = 0;
-    v->incsize             = incsize;
-    v->v                   = (bufr_descriptor**)grib_context_malloc(c, sizeof(bufr_descriptor*) * size);
+    v->context = c;
+    v->size = size;
+    v->n = 0;
+    v->incsize = incsize;
+    v->v = (bufr_descriptor**)grib_context_malloc(c, sizeof(bufr_descriptor*) * size);
     v->number_of_pop_front = 0;
     if (!v->v) {
         grib_context_log(c, GRIB_LOG_ERROR,
@@ -81,8 +81,8 @@ static bufr_descriptors_array* grib_bufr_descriptors_array_resize_to(bufr_descri
     v->v -= v->number_of_pop_front;
     grib_context_free(c, v->v);
 
-    v->v                   = newv;
-    v->size                = newsize;
+    v->v = newv;
+    v->size = newsize;
     v->number_of_pop_front = 0;
 
     return v;
@@ -97,9 +97,9 @@ static bufr_descriptors_array* grib_bufr_descriptors_array_resize(bufr_descripto
 bufr_descriptors_array* grib_bufr_descriptors_array_push(bufr_descriptors_array* v, bufr_descriptor* val)
 {
     if (!v) {
-        size_t start_size    = DYN_ARRAY_SIZE_INIT;
+        size_t start_size = DYN_ARRAY_SIZE_INIT;
         size_t start_incsize = DYN_ARRAY_SIZE_INCR;
-        v                    = grib_bufr_descriptors_array_new(start_size, start_incsize);
+        v = grib_bufr_descriptors_array_new(start_size, start_incsize);
     }
 
     if (v->n >= v->size - v->number_of_pop_front)
@@ -116,9 +116,9 @@ bufr_descriptors_array* grib_bufr_descriptors_array_append(bufr_descriptors_arra
     bufr_descriptor* vv = 0;
 
     if (!v) {
-        size_t start_size    = DYN_ARRAY_SIZE_INIT;
+        size_t start_size = DYN_ARRAY_SIZE_INIT;
         size_t start_incsize = DYN_ARRAY_SIZE_INCR;
-        v                    = grib_bufr_descriptors_array_new(start_size, start_incsize);
+        v = grib_bufr_descriptors_array_new(start_size, start_incsize);
     }
 
     for (i = 0; i < ar->n; i++) {

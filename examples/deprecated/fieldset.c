@@ -38,8 +38,8 @@ int main(int argc, char** argv) {
   char* keys[]={"step","date","param","levelType"};
   grib_fieldset* set;
   grib_handle* h;
-  char param[20]={0,};
-  char date[10]={0,};
+  char param[20]={0};
+  char date[10]={0};
   size_t datelen=10;
   size_t len=20;
   char* order_by=0;

@@ -33,8 +33,8 @@ public:
 
 private:
     long section_offset_ = 0;
-    long begin_          = 0;
-    long theEnd_         = 0;
+    long begin_ = 0;
+    long theEnd_ = 0;
 
     void set_begin_end(grib_accessor* a);
     void default_long_value(grib_accessor* a, long actualValue);

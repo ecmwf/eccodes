@@ -27,6 +27,11 @@
 # 79 Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval for atmospheric chemical constituents with source or sink
 'chemical_srcsink_ensemble_statistically_processed'      = {productDefinitionTemplateNumber=79;}
 
+# 224 Analysis or forecast at a horizontal level or in a horizontal layer at a point in time for aerosol with source or sink
+'aerosol_srcsink_deterministic_instantaneous'           = {productDefinitionTemplateNumber=224;}
+# 225 Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time for aerosol with source or sink
+'aerosol_srcsink_ensemble_instantaneous'                = {productDefinitionTemplateNumber=225;}
+
 # 48 Analysis or forecast at a horizontal level or in a horizontal layer at a point in time for optical properties of aerosol
 'aerosol_optical_deterministic_instantaneous' = {productDefinitionTemplateNumber=48;}
 # 49 Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time for optical properties of aerosol

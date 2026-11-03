@@ -18,7 +18,8 @@ namespace eccodes::config
 {
 
 
-class LibEccodes : public eckit::system::Library {
+class LibEccodes : public eckit::system::Library
+{
 public:
     static const LibEccodes& instance();
 

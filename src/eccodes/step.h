@@ -15,33 +15,54 @@
 
 #include "step_unit.h"
 
-namespace eccodes {
-class Step {
+namespace eccodes
+{
+class Step
+{
 public:
     // Constructors
     Step() : internal_value_(0), internal_unit_(Unit::Value::SECOND) {}
 
-    Step(double value, const Unit& unit) : internal_unit_{unit}, unit_{internal_unit_} {init_double(value, unit);}
-    Step(double value, Unit::Value unit) {init_double(value, Unit{unit});}
-    Step(double value, long unit) {init_double(value, Unit{unit});}
-    Step(double value, const std::string& unit) {init_double(value, Unit{unit});}
+    Step(double value, const Unit& unit) : internal_unit_{ unit }, unit_{ internal_unit_ } { init_double(value, unit); }
+    Step(double value, Unit::Value unit) { init_double(value, Unit{ unit }); }
+    Step(double value, long unit) { init_double(value, Unit{ unit }); }
+    Step(double value, const std::string& unit) { init_double(value, Unit{ unit }); }
 
-    Step(long value, const Unit& unit) { init_long(value, unit);}
-    Step(long value, Unit::Value unit) {init_long(value, Unit{unit});}
-    Step(long value, long unit) {init_long(value, Unit{unit});}
-    Step(long value, const std::string& unit) {init_long(value, Unit{unit});}
+    Step(long value, const Unit& unit) { init_long(value, unit); }
+    Step(long value, Unit::Value unit) { init_long(value, Unit{ unit }); }
+    Step(long value, long unit) { init_long(value, Unit{ unit }); }
+    Step(long value, const std::string& unit) { init_long(value, Unit{ unit }); }
 
     // Getters
-    template <typename T> T value() const;
-    template <typename T> T value(const Unit& unit) const;
-    template <typename T> T value(const std::string& format, bool show_hours) const;
+    template <typename T>
+    T value() const;
+    template <typename T>
+    T value(const Unit& unit) const;
+    template <typename T>
+    T value(const std::string& format, bool show_hours) const;
     Unit unit() const { return unit_; }
 
     // Setters
-    Step& set_unit(const std::string& unit_name) {unit_ = Unit{unit_name}; return *this;}
-    Step& set_unit(long unit_code) {unit_ = Unit{unit_code}; return *this;}
-    Step& set_unit(const Unit& new_unit) {unit_ = new_unit; return *this;}
-    Step& set_unit(const Unit::Value new_unit) {unit_ = new_unit; return *this;}
+    Step& set_unit(const std::string& unit_name)
+    {
+        unit_ = Unit{ unit_name };
+        return *this;
+    }
+    Step& set_unit(long unit_code)
+    {
+        unit_ = Unit{ unit_code };
+        return *this;
+    }
+    Step& set_unit(const Unit& new_unit)
+    {
+        unit_ = new_unit;
+        return *this;
+    }
+    Step& set_unit(const Unit::Value new_unit)
+    {
+        unit_ = new_unit;
+        return *this;
+    }
 
     // Operators
     bool operator==(const Step& other) const;
@@ -50,7 +71,8 @@ public:
     Step operator-(const Step& step) const;
     bool operator>(const Step& step) const;
     bool operator<(const Step& step) const;
-    Step copy() const {
+    Step copy() const
+    {
         Step ret{};
         ret.internal_value_ = internal_value_;
         ret.internal_unit_ = internal_unit_;
@@ -66,7 +88,8 @@ public:
 private:
     void init_long(long value, const Unit& unit);
     void init_double(double value, const Unit& unit);
-    Step& recalculateValue() {
+    Step& recalculateValue()
+    {
         if (internal_value_ == 0) {
             internal_unit_ = unit_;
             return *this;
@@ -91,7 +114,9 @@ std::vector<Step> parse_range(const std::string& range_str, const Unit& force_un
 std::pair<Step, Step> find_common_units(const Step& startStep, const Step& endStep);
 
 
-template <typename T> T Step::value() const {
+template <typename T>
+T Step::value() const
+{
     if (internal_value_ == 0) {
         return 0;
     }
@@ -103,7 +128,9 @@ template <typename T> T Step::value() const {
     return value;
 }
 
-template <typename T> T Step::value(const Unit& unit) const {
+template <typename T>
+T Step::value(const Unit& unit) const
+{
     if (internal_value_ == 0) {
         return 0;
     }
@@ -115,4 +142,4 @@ template <typename T> T Step::value(const Unit& unit) const {
     return value;
 }
 
-} // namespace eccodes
+}  // namespace eccodes

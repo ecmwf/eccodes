@@ -26,10 +26,10 @@
 
 
 #ifdef __cplusplus
-#include "AccessorStore.h"
+    #include "AccessorStore.h"
 extern "C" {
 #else
-#include <stdint.h>
+    #include <stdint.h>
 #endif
 
 #ifndef GRIB_INLINE
@@ -138,7 +138,7 @@ extern int pthread_mutexattr_settype(pthread_mutexattr_t* attr, int type);
     #define ftello ftell
 #endif
 
-#define ECCODES_ASSERT(a)                                                 \
+#define ECCODES_ASSERT(a)                                         \
     do {                                                          \
         if (!(a)) codes_assertion_failed(#a, __FILE__, __LINE__); \
     } while (0)
@@ -203,7 +203,8 @@ extern const int max_nbits;
 
 // typedef struct grib_expression grib_expression;
 
-namespace eccodes {
+namespace eccodes
+{
 class Expression;
 class Arguments;
 class Action;
@@ -212,7 +213,7 @@ class AccessorsList;
 }  // namespace eccodes
 
 using grib_expression = eccodes::Expression;
-using grib_arguments  = eccodes::Arguments;
+using grib_arguments = eccodes::Arguments;
 using grib_action = eccodes::Action;
 using grib_accessor = eccodes::Accessor;
 using grib_accessors_list = eccodes::AccessorsList;
@@ -227,7 +228,8 @@ typedef struct grib_smart_table grib_smart_table;
 
 class grib_accessor_class;
 
-namespace eccodes::geo_iterator {
+namespace eccodes::geo_iterator
+{
 class Iterator;
 }
 
@@ -366,7 +368,8 @@ struct grib_section
     size_t padding;
 };
 
-namespace eccodes::geo_nearest {
+namespace eccodes::geo_nearest
+{
 class Nearest;
 }
 
@@ -551,9 +554,10 @@ struct grib_handle
     eccodes::AccessorStore accessor_store;
 #else
     /* Layout-compatible C view of eccodes::AccessorStore (POD layout). */
-    struct {
+    struct
+    {
         uint64_t hash;
-        void*    value;
+        void* value;
     } accessor_store_slots_[1024];
     size_t accessor_store_size_;
 #endif

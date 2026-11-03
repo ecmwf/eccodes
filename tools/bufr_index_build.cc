@@ -13,10 +13,10 @@
 const char* tool_description =
     "Build an index file for a set of input BUFR files.\n"
     "\tWarning: THIS TOOL IS STILL EXPERIMENTAL";
-const char* tool_name       = "bufr_index_build";
+const char* tool_name = "bufr_index_build";
 const char* tool_online_doc = NULL;
-const char* tool_usage      = "[options] file file ... ";
-grib_index* idx        = NULL;
+const char* tool_usage = "[options] file file ... ";
+grib_index* idx = NULL;
 const char* keys;
 const char* default_keys = "mars";
 
@@ -54,7 +54,7 @@ int grib_tool_before_getopt(grib_runtime_options* options)
 
 int grib_tool_init(grib_runtime_options* options)
 {
-    int ret         = 0;
+    int ret = 0;
     grib_context* c = grib_context_get_default();
 
     if (grib_options_on("N"))
@@ -126,19 +126,19 @@ int grib_tool_finalise_action(grib_runtime_options* options)
             printf(", ");
         printf("%s", the_keys->name);
         the_keys = the_keys->next;
-        first    = false;
+        first = false;
     }
     printf("\n");
     the_keys = idx->keys;
     while (the_keys) {
         printf("--- %s = { ", the_keys->name);
         values = the_keys->values;
-        first  = true;
+        first = true;
         while (values) {
             if (!first)
                 printf(", ");
             printf("%s", values->value);
-            first  = false;
+            first = false;
             values = values->next;
         }
         printf(" }\n");

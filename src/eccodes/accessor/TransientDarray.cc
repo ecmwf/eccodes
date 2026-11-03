@@ -10,16 +10,14 @@
 
 #include "TransientDarray.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::TransientDarray> _grib_accessor_transient_darray_builder{};
-
 namespace eccodes::accessor
 {
 
 void TransientDarray::init(const long length, grib_arguments* args)
 {
     Gen::init(length, args);
-    arr_    = NULL;
-    type_   = GRIB_TYPE_DOUBLE;
+    arr_ = NULL;
+    type_ = GRIB_TYPE_DOUBLE;
     length_ = 0;
 }
 

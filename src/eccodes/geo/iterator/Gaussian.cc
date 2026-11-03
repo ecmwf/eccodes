@@ -13,7 +13,8 @@
 eccodes::geo_iterator::Gaussian _grib_iterator_gaussian{};
 eccodes::geo_iterator::Iterator* grib_iterator_gaussian = &_grib_iterator_gaussian;
 
-namespace eccodes::geo_iterator {
+namespace eccodes::geo_iterator
+{
 
 static void binary_search_gaussian_latitudes(const double xx[], const unsigned long n, double x, long* j);
 
@@ -27,15 +28,15 @@ int Gaussian::init(grib_handle* h, grib_arguments* args)
     double laf; /* latitude of first point in degrees */
     double lal; /* latitude of last point in degrees */
     long trunc; /* number of parallels between a pole and the equator */
-    long lai              = 0;
+    long lai = 0;
     long jScansPositively = 0;
-    int size              = 0;
+    int size = 0;
     double start;
     long istart = 0;
 
-    const char* latofirst          = args->get_name(h, carg_++);
-    const char* latoflast          = args->get_name(h, carg_++);
-    const char* numtrunc           = args->get_name(h, carg_++);
+    const char* latofirst = args->get_name(h, carg_++);
+    const char* latoflast = args->get_name(h, carg_++);
+    const char* numtrunc = args->get_name(h, carg_++);
     const char* s_jScansPositively = args->get_name(h, carg_++);
 
     if ((ret = grib_get_double_internal(h, latofirst, &laf)))
@@ -97,7 +98,7 @@ int Gaussian::init(grib_handle* h, grib_arguments* args)
 /* Note: the argument 'n' is NOT the size of the 'xx' array but its LAST index i.e. size of xx - 1 */
 static void binary_search_gaussian_latitudes(const double array[], const unsigned long n, double x, long* j)
 {
-    unsigned long low  = 0;
+    unsigned long low = 0;
     unsigned long high = n;
     unsigned long mid;
     const int descending = (array[n] < array[0]);

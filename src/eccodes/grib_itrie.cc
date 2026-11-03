@@ -287,9 +287,9 @@ struct grib_itrie
 grib_itrie* grib_itrie_new(grib_context* c, int* count)
 {
     grib_itrie* t = (grib_itrie*)grib_context_malloc_clear(c, sizeof(grib_itrie));
-    t->context    = c;
-    t->id         = -1;
-    t->count      = count;
+    t->context = c;
+    t->id = -1;
+    t->count = count;
     return t;
 }
 
@@ -308,7 +308,7 @@ void grib_itrie_delete(grib_itrie* t)
 
 int grib_itrie_get_id(grib_itrie* t, const char* key)
 {
-    const char* k    = key;
+    const char* k = key;
     grib_itrie* last = t;
     if (!t) {
         ECCODES_ASSERT(!"grib_itrie_get_id: grib_trie==NULL");
@@ -330,7 +330,7 @@ int grib_itrie_get_id(grib_itrie* t, const char* key)
 
 int grib_itrie_insert(grib_itrie* t, const char* key)
 {
-    const char* k    = key;
+    const char* k = key;
     grib_itrie* last = t;
     int* count;
 
@@ -345,7 +345,7 @@ int grib_itrie_insert(grib_itrie* t, const char* key)
 
     while (*k && t) {
         last = t;
-        t    = t->next[mapping[(int)*k]];
+        t = t->next[mapping[(int)*k]];
         if (t)
             k++;
     }
@@ -353,9 +353,9 @@ int grib_itrie_insert(grib_itrie* t, const char* key)
     if (*k != 0) {
         t = last;
         while (*k) {
-            int j      = mapping[(int)*k++];
+            int j = mapping[(int)*k++];
             t->next[j] = grib_itrie_new(t->context, count);
-            t          = t->next[j];
+            t = t->next[j];
         }
     }
     if (*(t->count) < MAX_NUM_CONCEPTS) {

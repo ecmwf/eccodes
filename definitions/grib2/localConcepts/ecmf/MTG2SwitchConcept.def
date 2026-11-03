@@ -79,6 +79,10 @@
 0 = {tablesVersion=35; productionStatusOfProcessedData=0; marsClass=51;}
 # tv36
 0 = {tablesVersion=36; productionStatusOfProcessedData=0; marsClass=51;}
+# AIFS-SINGLE / AIFS-SINGLE-MSE v3.0
+0 = {true = is_one_of(backgroundProcess,1,3); generatingProcessIdentifier=6;}
+# AIFS-ENS / AIFS-ENS-CRPS v3.0
+0 = {true = is_one_of(backgroundProcess,2,4); generatingProcessIdentifier=3;}
 # 50r1 as input data for ecPoint
 0 = {tablesVersion=35; productionStatusOfProcessedData=0; inputProcessIdentifier=16; inputOriginatingCentre=98; typeOfGeneratingProcess=13; typeOfPostProcessing=206;}
 # ERA5 as input data for ecPoint

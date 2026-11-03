@@ -12,9 +12,11 @@
 
 #include "Expression.h"
 
-namespace eccodes::expression {
+namespace eccodes::expression
+{
 
-class StringCompare : public Expression {
+class StringCompare : public Expression
+{
 public:
     StringCompare(grib_context*, Expression*, Expression*, int);
 
@@ -28,7 +30,7 @@ public:
     const char* class_name() const override { return "string_compare"; };
 
 private:
-    Expression* left_  = nullptr;
+    Expression* left_ = nullptr;
     Expression* right_ = nullptr;
     int eq_ = 0;
 };

@@ -1,95 +1,466 @@
-name: ci
+name: CI
 
 on:
-  # Trigger the workflow on push to master or develop, except tag creation
   push:
-    branches:
-      - "master"
-      - "develop"
-    tags-ignore:
-      - "**"
-
-  # Trigger the workflow on pull request
-  pull_request:
+    branches: [develop, master]
     paths-ignore:
-    - "tests/**"
-    - "data/**"
-    - "deprecated/**"
+      - "deprecated/**"
+  pull_request:
+    types: [opened, reopened, synchronize]
+    paths-ignore:
+      - "deprecated/**"
+  workflow_dispatch:
+  schedule:
+    - cron: "37 0 * * *"
+  workflow_call:
 
-  # Trigger the workflow manually
-  workflow_dispatch: ~
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: true
 
-  # Trigger after public PR approved for CI
-  pull_request_target:
-    types: [labeled]
+env:
+  ARTIFACT_POLL_INTERVAL: ${{ vars.ARTIFACT_POLL_INTERVAL || '60' }}
+  ARTIFACT_WAIT_TIMEOUT: ${{ vars.ARTIFACT_WAIT_TIMEOUT || '1800' }}
+  ARTIFACT_S3_ENDPOINT: ${{ secrets.ARTIFACT_S3_ENDPOINT }}
+  ARTIFACT_S3_BUCKET: ${{ secrets.ARTIFACT_S3_BUCKET }}
+  SCCACHE_BUCKET: ${{ secrets.SCCACHE_BUCKET }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+permissions:
+  contents: read
 
 jobs:
-  # Run CI including downstream packages on self-hosted runners
-  downstream-ci:
-    name: downstream-ci
-    if: ${{ !github.event.pull_request.head.repo.fork && github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci' }}
-    uses: ecmwf/downstream-ci/.github/workflows/downstream-ci.yml@main
-    with:
-      eccodes: ecmwf/eccodes@${{ github.event.pull_request.head.sha || github.sha }}
-      codecov_upload: true
-    secrets: inherit
-
-  # Run CI of private downstream packages on self-hosted runners
-  private-downstream-ci:
-    name: private-downstream-ci
-    needs: [downstream-ci]
-    if: ${{ (success() || failure()) && (!github.event.pull_request.head.repo.fork && github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci') }}
+  ci-approval:
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
     steps:
-      - name: Dispatch private downstream CI
-        uses: ecmwf/dispatch-private-downstream-ci@v1
+      - uses: ecmwf/ci-infrastructure/actions/require-ci-approval@main
+
+  pre-commit:
+    needs: ci-approval
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+    steps:
+      - uses: ecmwf/ci-infrastructure/actions/checkout-under-test@main
         with:
-          token: ${{ secrets.GH_REPO_READ_TOKEN }}
-          owner: ecmwf
-          repository: private-downstream-ci
-          event_type: downstream-ci
-          payload: '{"eccodes": "ecmwf/eccodes@${{ github.event.pull_request.head.sha || github.sha }}"}'
+          allow-unsafe-pr-checkout: ${{ github.event_name == 'pull_request_target' }}
+      - uses: ecmwf/ci-infrastructure/actions/pre-commit@main
 
-  # Build downstream packages on HPC
-  downstream-ci-hpc:
-    name: downstream-ci-hpc
-    if: ${{ !github.event.pull_request.head.repo.fork && github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci' }}
-    uses: ecmwf/downstream-ci/.github/workflows/downstream-ci-hpc.yml@main
-    with:
-      eccodes: ecmwf/eccodes@${{ github.event.pull_request.head.sha || github.sha }}
-    secrets: inherit
+  resolve:
+    name: resolve + wait-build
+    needs: ci-approval
+    runs-on: ubuntu-latest
+    outputs:
+      build-matrix: ${{ steps.r.outputs.matrix-build }}
+      build-hpc-matrix: ${{ steps.r.outputs.matrix-build-hpc }}
+      rust-matrix: ${{ toJSON(fromJSON(steps.r.outputs.json).rust) }}
+      # resolve-deps declares matrix-<kind> outputs only for some kinds; json holds them all.
+      fortran-matrix: ${{ toJSON(fromJSON(steps.r.outputs.json).fortran) }}
+      fortran-hpc-matrix: ${{ toJSON(fromJSON(steps.r.outputs.json)['fortran-hpc']) }}
+    steps:
+      - id: mint
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+      - uses: ecmwf/ci-infrastructure/actions/checkout-under-test@main
+        with:
+          allow-unsafe-pr-checkout: ${{ github.event_name == 'pull_request_target' }}
+      - id: r
+        uses: ecmwf/ci-infrastructure/actions/resolve-deps@main
+        with:
+          matrix: build,build-hpc,fortran,fortran-hpc,rust
+          token: ${{ steps.mint.outputs.token }}
+          client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
+          app-private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
+      - uses: ecmwf/ci-infrastructure/actions/wait-for-deps@main
+        with:
+          matrix: ${{ steps.r.outputs.matrix-build }}
+          token: ${{ steps.mint.outputs.token }}
 
-  # Run CI of private downstream packages on HPC
-  private-downstream-ci-hpc:
-    name: private-downstream-ci-hpc
-    needs: [downstream-ci-hpc]
-    if: ${{ (success() || failure()) && (!github.event.pull_request.head.repo.fork && github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci') }}
+  hpc-gate:
+    needs: ci-approval
     runs-on: ubuntu-latest
     permissions:
-      pull-requests: write
+      pull-requests: read
+    outputs:
+      run: ${{ steps.gate.outputs.run }}
     steps:
-      - name: Dispatch private downstream CI
-        uses: ecmwf/dispatch-private-downstream-ci@v1
-        with:
-          token: ${{ secrets.GH_REPO_READ_TOKEN }}
-          owner: ecmwf
-          repository: private-downstream-ci
-          event_type: downstream-ci-hpc
-          payload: '{"eccodes": "ecmwf/eccodes@${{ github.event.pull_request.head.sha || github.sha }}","skip_matrix_jobs": "nvidia-22.11"}'
+      - id: gate
+        uses: ecmwf/ci-infrastructure/actions/hpc-gate@main
 
-  notify:
+  download-test-data:
+    needs: ci-approval
     runs-on: ubuntu-latest
-    needs:
-      - downstream-ci
-      - private-downstream-ci
-      - downstream-ci-hpc
-      - private-downstream-ci-hpc
-    if: ${{ always() && !github.event.pull_request.head.repo.fork && github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci' }}
+    outputs:
+      key: ${{ steps.key.outputs.key }}
     steps:
-      - name: Trigger Teams notification
-        uses: ecmwf/notify-teams@v1
+      - uses: ecmwf/ci-infrastructure/actions/checkout-under-test@main
         with:
-          incoming_webhook: ${{ secrets.MS_TEAMS_INCOMING_WEBHOOK }}
-          needs_context: ${{ toJSON(needs) }}
+          allow-unsafe-pr-checkout: ${{ github.event_name == 'pull_request_target' }}
+      - id: key
+        run: echo "key=eccodes-test-data-${{ hashFiles('data/**/*_files.txt', 'data/**/CMakeLists.txt') }}" >> "$GITHUB_OUTPUT"
+      - id: restore
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+        with:
+          path: .ci-test-data
+          key: ${{ steps.key.outputs.key }}
+          lookup-only: true
+      # A failed download only means the legs fetch the data themselves.
+      - id: download
+        if: steps.restore.outputs.cache-hit != 'true'
+        continue-on-error: true
+        run: .ci/download-test-data.sh .ci-test-data
+      # Not from a fork's code: the cache is shared with the base branch.
+      - if: steps.download.outcome == 'success' && github.event_name != 'pull_request_target'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+        with:
+          path: .ci-test-data
+          key: ${{ steps.key.outputs.key }}
+
+  wait-build-hpc:
+    needs: [ci-approval, resolve, hpc-gate]
+    if: needs.hpc-gate.outputs.run == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - id: mint
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+      - uses: ecmwf/ci-infrastructure/actions/wait-for-deps@main
+        with:
+          matrix: ${{ needs.resolve.outputs.build-hpc-matrix }}
+          token: ${{ steps.mint.outputs.token }}
+
+  wait-fortran:
+    needs: [ci-approval, resolve]
+    runs-on: ubuntu-latest
+    steps:
+      - id: mint
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+      - uses: ecmwf/ci-infrastructure/actions/wait-for-deps@main
+        with:
+          matrix: ${{ needs.resolve.outputs.fortran-matrix }}
+          token: ${{ steps.mint.outputs.token }}
+
+  wait-fortran-hpc:
+    needs: [ci-approval, resolve, hpc-gate]
+    if: needs.hpc-gate.outputs.run == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - id: mint
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+      - uses: ecmwf/ci-infrastructure/actions/wait-for-deps@main
+        with:
+          matrix: ${{ needs.resolve.outputs.fortran-hpc-matrix }}
+          token: ${{ steps.mint.outputs.token }}
+
+  build:
+    needs: [ci-approval, pre-commit, resolve, download-test-data]
+    name: build+test (${{ matrix._resolved['job-name'] }})
+    runs-on: ${{ matrix['runs-on'] }}
+    container:
+      image: ${{ matrix.container || '' }}
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.resolve.outputs.build-matrix) }}
+    steps:
+      - name: Announce image
+        uses: ecmwf/ci-infrastructure/actions/announce-image@main
+      - id: mint
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+      - uses: ecmwf/ci-infrastructure/actions/checkout-under-test@main
+        with:
+          allow-unsafe-pr-checkout: ${{ github.event_name == 'pull_request_target' }}
+
+      - name: Restore test data
+        if: needs.download-test-data.outputs.key != ''
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+        with:
+          path: .ci-test-data
+          key: ${{ needs.download-test-data.outputs.key }}
+
+      - name: Fetch resolved deps
+        id: deps
+        uses: ecmwf/ci-infrastructure/actions/fetch-deps@main
+        with:
+          deps-json: ${{ toJSON(matrix._resolved.deps) }}
+          token: ${{ steps.mint.outputs.token }}
+
+      - name: Build eccodes
+        id: build
+        uses: ecmwf/ci-infrastructure/actions/run-job-script@main
+        with:
+          job-script: ${{ matrix.job-script }}
+          matrix-leg: ${{ toJSON(matrix) }}
+          package: eccodes
+          cmake-prefix-path: ${{ steps.deps.outputs.cmake-prefix-path }}
+
+      - name: Publish eccodes
+        uses: ecmwf/ci-infrastructure/actions/publish-artifact@main
+        with:
+          install-path: ${{ steps.build.outputs.install-path }}
+          artifact-name: ${{ matrix._resolved.own-artifact-name }}
+
+      - name: Print dependency table
+        if: always()
+        uses: ecmwf/ci-infrastructure/actions/print-dep-table@main
+        with:
+          resolved: ${{ toJSON(matrix._resolved) }}
+
+  rust:
+    needs: [ci-approval, resolve, build]
+    name: rust (${{ matrix._resolved['job-name'] }})
+    runs-on: ${{ matrix['runs-on'] }}
+    container:
+      image: ${{ matrix.container || '' }}
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.resolve.outputs.rust-matrix) }}
+    steps:
+      - name: Announce image
+        uses: ecmwf/ci-infrastructure/actions/announce-image@main
+      - id: mint
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+      - uses: ecmwf/ci-infrastructure/actions/checkout-under-test@main
+        with:
+          allow-unsafe-pr-checkout: ${{ github.event_name == 'pull_request_target' }}
+
+      - name: Fetch resolved deps
+        id: deps
+        uses: ecmwf/ci-infrastructure/actions/fetch-deps@main
+        with:
+          deps-json: ${{ toJSON(matrix._resolved.deps) }}
+          token: ${{ steps.mint.outputs.token }}
+
+      - name: Check the Rust bindings
+        id: build
+        uses: ecmwf/ci-infrastructure/actions/run-job-script@main
+        with:
+          job-script: ${{ matrix.job-script }}
+          matrix-leg: ${{ toJSON(matrix) }}
+          package: eccodes-rust
+          cmake-prefix-path: ${{ steps.deps.outputs.cmake-prefix-path }}
+
+      - name: Print dependency table
+        if: always()
+        uses: ecmwf/ci-infrastructure/actions/print-dep-table@main
+        with:
+          resolved: ${{ toJSON(matrix._resolved) }}
+
+  fortran:
+    needs: [ci-approval, pre-commit, resolve, wait-fortran, download-test-data]
+    name: fortran (${{ matrix._resolved['job-name'] }})
+    runs-on: ${{ matrix['runs-on'] }}
+    container:
+      image: ${{ matrix.container || '' }}
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.resolve.outputs.fortran-matrix) }}
+    steps:
+      - name: Announce image
+        uses: ecmwf/ci-infrastructure/actions/announce-image@main
+      - id: mint
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+      - uses: ecmwf/ci-infrastructure/actions/checkout-under-test@main
+        with:
+          allow-unsafe-pr-checkout: ${{ github.event_name == 'pull_request_target' }}
+
+      - name: Restore test data
+        if: needs.download-test-data.outputs.key != ''
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+        with:
+          path: .ci-test-data
+          key: ${{ needs.download-test-data.outputs.key }}
+
+      - name: Fetch resolved deps
+        id: deps
+        uses: ecmwf/ci-infrastructure/actions/fetch-deps@main
+        with:
+          deps-json: ${{ toJSON(matrix._resolved.deps) }}
+          token: ${{ steps.mint.outputs.token }}
+
+      - name: Build eccodes-fortran
+        id: build
+        uses: ecmwf/ci-infrastructure/actions/run-job-script@main
+        with:
+          job-script: ${{ matrix.job-script }}
+          matrix-leg: ${{ toJSON(matrix) }}
+          package: eccodes-fortran
+          cmake-prefix-path: ${{ steps.deps.outputs.cmake-prefix-path }}
+
+      - name: Publish eccodes-fortran
+        uses: ecmwf/ci-infrastructure/actions/publish-artifact@main
+        with:
+          install-path: ${{ steps.build.outputs.install-path }}
+          artifact-name: ${{ matrix._resolved.own-artifact-name }}
+
+      - name: Print dependency table
+        if: always()
+        uses: ecmwf/ci-infrastructure/actions/print-dep-table@main
+        with:
+          resolved: ${{ toJSON(matrix._resolved) }}
+
+  build-hpc:
+    needs: [ci-approval, pre-commit, resolve, wait-build-hpc]
+    name: build-hpc (${{ matrix._resolved['job-name'] }})
+    runs-on: ${{ matrix['runs-on'] }}
+    container:
+      image: ${{ matrix.container }}
+      credentials:
+        username: ${{ secrets.ECCR_PULL_ROBOT_NAME }}
+        password: ${{ secrets.ECCR_PULL_ROBOT_TOKEN }}
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.resolve.outputs.build-hpc-matrix) }}
+    steps:
+      - name: Announce image
+        uses: ecmwf/ci-infrastructure/actions/announce-image@main
+      - id: mint
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+      - uses: ecmwf/ci-infrastructure/actions/checkout-under-test@main
+        with:
+          allow-unsafe-pr-checkout: ${{ github.event_name == 'pull_request_target' }}
+
+      - name: Fetch resolved deps
+        id: deps
+        uses: ecmwf/ci-infrastructure/actions/fetch-deps@main
+        with:
+          deps-json: ${{ toJSON(matrix._resolved.deps) }}
+          token: ${{ steps.mint.outputs.token }}
+          # Stage the dep prefixes for shipment without installing anything
+          # here: they are consumed on the compute node, not in this container.
+          stage-only: 'true'
+
+      - name: Build eccodes on HPC
+        id: build
+        uses: ecmwf/ci-infrastructure/actions/build-on-hpc@main
+        with:
+          site: ${{ matrix.site }}
+          job-script: ${{ matrix.job-script }}
+          # The render context for the .j2 recipe: the toolchain this leg declares.
+          matrix-leg: ${{ toJSON(matrix) }}
+          artifact-name: ${{ matrix._resolved.own-artifact-name }}
+          cmake-prefix-path: ${{ steps.deps.outputs.cmake-prefix-path }}
+          work-dir: ${{ vars.HPC_CI_WORK_DIR }}
+          remote-work-dir: ${{ vars.HPC_CI_REMOTE_WORK_DIR }}
+          troika-user: ${{ secrets.HPC_CI_SSH_USER }}
+
+      - name: Print dependency table
+        if: always()
+        uses: ecmwf/ci-infrastructure/actions/print-dep-table@main
+        with:
+          resolved: ${{ toJSON(matrix._resolved) }}
+          own-source: ${{ steps.build.outputs.cache-hit == 'true' && 'artifact' || 'built' }}
+
+  fortran-hpc:
+    needs: [ci-approval, pre-commit, resolve, wait-fortran-hpc]
+    name: fortran-hpc (${{ matrix._resolved['job-name'] }})
+    runs-on: ${{ matrix['runs-on'] }}
+    container:
+      image: ${{ matrix.container }}
+      credentials:
+        username: ${{ secrets.ECCR_PULL_ROBOT_NAME }}
+        password: ${{ secrets.ECCR_PULL_ROBOT_TOKEN }}
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.resolve.outputs.fortran-hpc-matrix) }}
+    steps:
+      - name: Announce image
+        uses: ecmwf/ci-infrastructure/actions/announce-image@main
+      - id: mint
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+      - uses: ecmwf/ci-infrastructure/actions/checkout-under-test@main
+        with:
+          allow-unsafe-pr-checkout: ${{ github.event_name == 'pull_request_target' }}
+
+      - name: Fetch resolved deps
+        id: deps
+        uses: ecmwf/ci-infrastructure/actions/fetch-deps@main
+        with:
+          deps-json: ${{ toJSON(matrix._resolved.deps) }}
+          token: ${{ steps.mint.outputs.token }}
+          # Stage the dep prefixes for shipment without installing anything
+          # here: they are consumed on the compute node, not in this container.
+          stage-only: 'true'
+
+      - name: Build eccodes-fortran on HPC
+        id: build
+        uses: ecmwf/ci-infrastructure/actions/build-on-hpc@main
+        with:
+          site: ${{ matrix.site }}
+          job-script: ${{ matrix.job-script }}
+          # The render context for the .j2 recipe: the toolchain this leg declares.
+          matrix-leg: ${{ toJSON(matrix) }}
+          artifact-name: ${{ matrix._resolved.own-artifact-name }}
+          cmake-prefix-path: ${{ steps.deps.outputs.cmake-prefix-path }}
+          work-dir: ${{ vars.HPC_CI_WORK_DIR }}
+          remote-work-dir: ${{ vars.HPC_CI_REMOTE_WORK_DIR }}
+          troika-user: ${{ secrets.HPC_CI_SSH_USER }}
+
+      - name: Print dependency table
+        if: always()
+        uses: ecmwf/ci-infrastructure/actions/print-dep-table@main
+        with:
+          resolved: ${{ toJSON(matrix._resolved) }}
+          own-source: ${{ steps.build.outputs.cache-hit == 'true' && 'artifact' || 'built' }}
+
+  collect-result-hpc:
+    name: collect HPC results
+    if: always() && needs.hpc-gate.outputs.run == 'true'
+    needs: [ci-approval, hpc-gate, wait-build-hpc, wait-fortran-hpc, build-hpc, fortran-hpc]
+    runs-on: ubuntu-latest
+    permissions:
+      statuses: write
+    steps:
+      - uses: ecmwf/ci-infrastructure/actions/ci-result@main
+        with:
+          needs: ${{ toJSON(needs) }}
+          context: ci-result/hpc-atos
+
+  ci-result:
+    name: collect results
+    if: always()
+    needs: [ci-approval, hpc-gate, pre-commit, resolve, build, rust, wait-fortran, fortran]
+    runs-on: ubuntu-latest
+    permissions:
+      statuses: write
+    steps:
+      - uses: ecmwf/ci-infrastructure/actions/ci-result@main
+        with:
+          needs: ${{ toJSON(needs) }}

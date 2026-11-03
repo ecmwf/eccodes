@@ -10,8 +10,6 @@
 
 #include "Size.h"
 
-eccodes::AccessorBuilder<eccodes::accessor::Size> _grib_accessor_size_builder{};
-
 namespace eccodes::accessor
 {
 
@@ -27,9 +25,9 @@ void Size::init(const long l, grib_arguments* c)
 int Size::unpack_long(long* val, size_t* len)
 {
     size_t size = 0;
-    int ret     = grib_get_size(get_enclosing_handle(), accessor_, &size);
-    *val        = (long)size;
-    *len        = 1;
+    int ret = grib_get_size(get_enclosing_handle(), accessor_, &size);
+    *val = (long)size;
+    *len = 1;
     return ret;
 }
 
