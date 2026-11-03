@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Query chemical concepts from ecCodes definitions.
+"""Query parameter concepts from ecCodes definitions.
 
-This tool scans definitions under grib1 and grib2, parses chemId/chemShortName/chemName/chemFormula
+This tool scans definitions under grib1 and grib2, parses paramId/shortName/name/units
 concept files, and joins records using identical matching conditions.
 """
 
@@ -26,16 +26,17 @@ try:
 except ImportError:
     pcre_regex = None
 
-CONCEPTS = {"chemId", "chemShortName", "chemName", "chemFormula"}
+CONCEPTS = {"paramId", "shortName", "name", "units"}
 DEFINITION_FILE_RE = re.compile(r'"([^"\\]+\.(?:def|table|tmpl|list|txt))"')
 DEFAULT_DEFINITION_PATH_RE = re.compile(r"definition files path is used:\s*(\S+)", re.IGNORECASE)
 VALID_COLUMNS = (
     "edition",
+    "is_mtg2_switch",
     "scope",
-    "chemId",
-    "chemShortName",
-    "chemName",
-    "chemFormula",
+    "paramId",
+    "shortName",
+    "name",
+    "units",
     "encoding",
     "sources",
 )
@@ -43,7 +44,7 @@ VALID_COLUMNS = (
 ENTRY_RE = re.compile(r"^'((?:\\'|[^'])*)'\s*=\s*\{\s*$")
 ATTR_RE = re.compile(r"^([A-Za-z0-9_]+)\s*=\s*(.*?)\s*;\s*$")
 
-# Build set of concept filenames to match: chemId.def, chemShortName.def, etc., with variants
+# Build set of concept filenames to match: paramId.def, shortName.def, etc., with variants
 CONCEPT_FILENAMES = set()
 for concept in CONCEPTS:
     CONCEPT_FILENAMES.add(f"{concept}.def")
@@ -392,7 +393,7 @@ def discover_local_concept_centres(hint_roots: Iterable[Path], edition: str) -> 
 
 def local_concept_seed_paths(hint_roots: Iterable[Path]) -> List[str]:
     seeds: List[str] = []
-    concepts = ("chemId", "chemShortName", "chemName", "chemFormula")
+    concepts = ("paramId", "shortName", "name", "units")
 
     for centre in discover_local_concept_centres(hint_roots, "grib1"):
         for concept in concepts:
@@ -408,27 +409,27 @@ def local_concept_seed_paths(hint_roots: Iterable[Path]) -> List[str]:
 
 
 def materialize_memfs_definitions(exporter: str, hint_roots: Iterable[Path]) -> Path | None:
-    temp_root = Path(tempfile.mkdtemp(prefix="codes_chems_memfs_"))
+    temp_root = Path(tempfile.mkdtemp(prefix="grib_parameters_memfs_"))
     definitions_root = temp_root / "definitions"
 
     # Start from concept files used by this tool, then follow includes/references.
     queue: List[str] = [
-        "grib1/chemId.def",
-        "grib1/chemShortName.def",
-        "grib1/chemName.def",
-        "grib1/chemFormula.def",
-        "grib2/chemId.def",
-        "grib2/chemShortName.def",
-        "grib2/chemName.def",
-        "grib2/chemFormula.def",
-        "grib2/chemId.lte33.def",
-        "grib2/chemShortName.lte33.def",
-        "grib2/chemName.lte33.def",
-        "grib2/chemFormula.lte33.def",
-        "grib2/chemId.chemsplit.def",
-        "grib2/chemShortName.chemsplit.def",
-        "grib2/chemName.chemsplit.def",
-        "grib2/chemFormula.chemsplit.def",
+        "grib1/paramId.def",
+        "grib1/shortName.def",
+        "grib1/name.def",
+        "grib1/units.def",
+        "grib2/paramId.def",
+        "grib2/shortName.def",
+        "grib2/name.def",
+        "grib2/units.def",
+        "grib2/paramId.lte33.def",
+        "grib2/shortName.lte33.def",
+        "grib2/name.lte33.def",
+        "grib2/units.lte33.def",
+        "grib2/paramId.chemsplit.def",
+        "grib2/shortName.chemsplit.def",
+        "grib2/name.chemsplit.def",
+        "grib2/units.chemsplit.def",
     ]
     queue.extend(local_concept_seed_paths(hint_roots))
     queue = uniq(queue)
@@ -492,15 +493,15 @@ def build_field_matcher(
 
 def build_matchers(args: argparse.Namespace) -> Dict[str, FieldMatcher]:
     return {
-        "chemName": build_field_matcher(args.chemName, args.chemName_regex, "--chemName", args.regex_case_sensitive),
-        "chemShortName": build_field_matcher(
-            args.chemShortName,
-            args.chemShortName_regex,
-            "--chemShortName",
+        "name": build_field_matcher(args.name, args.name_regex, "--name", args.regex_case_sensitive),
+        "shortName": build_field_matcher(
+            args.shortName,
+            args.shortName_regex,
+            "--shortName",
             args.regex_case_sensitive,
         ),
-        "chemId": build_field_matcher(args.chemId, args.chemId_regex, "--chemId", args.regex_case_sensitive),
-        "chemFormula": build_field_matcher(args.chemFormula, args.chemFormula_regex, "--chemFormula", args.regex_case_sensitive),
+        "paramId": build_field_matcher(args.paramId, args.paramId_regex, "--paramId", args.regex_case_sensitive),
+        "units": build_field_matcher(args.units, args.units_regex, "--units", args.regex_case_sensitive),
     }
 
 
@@ -533,7 +534,7 @@ def default_sort_key(rec: Record) -> Tuple[int, int, str, int]:
         rec.edition,
         rec.switch if rec.switch is not None else -1,
         rec.scope,
-        parse_numeric_or_min(first_value_for(rec, "chemId")),
+        parse_numeric_or_min(first_value_for(rec, "paramId")),
     )
 
 
@@ -542,16 +543,18 @@ def order_by_key(rec: Record, order_by: str | None) -> Any:
         return None
     if order_by == "edition":
         return rec.edition
+    if order_by == "is_mtg2_switch":
+        return rec.switch if rec.switch is not None else -1
     if order_by == "scope":
         return rec.scope
-    if order_by == "chemId":
-        return parse_numeric_or_min(first_value_for(rec, "chemId"))
-    if order_by == "chemShortName":
-        return first_value_for(rec, "chemShortName")
-    if order_by == "chemName":
-        return first_value_for(rec, "chemName")
-    if order_by == "chemFormula":
-        return first_value_for(rec, "chemFormula")
+    if order_by == "paramId":
+        return parse_numeric_or_min(first_value_for(rec, "paramId"))
+    if order_by == "shortName":
+        return first_value_for(rec, "shortName")
+    if order_by == "name":
+        return first_value_for(rec, "name")
+    if order_by == "units":
+        return first_value_for(rec, "units")
     return None
 
 
@@ -690,10 +693,10 @@ def parse_order_by_arg(order_by_text: str | None) -> List[str] | None:
     if not fields:
         raise ValueError("--order-by must contain at least one field")
 
-    valid_fields = {"edition", "scope", "chemId", "chemShortName", "chemName", "chemFormula"}
+    valid_fields = {"edition", "is_mtg2_switch", "scope", "paramId", "shortName", "name", "units"}
     invalid = [f for f in fields if f not in valid_fields]
     if invalid:
-        raise ValueError("--order-by must contain only: edition, scope, chemId, chemShortName, chemName, chemFormula")
+        raise ValueError("--order-by must contain only: edition, is_mtg2_switch, scope, paramId, shortName, name, units")
 
     return fields
 
@@ -762,13 +765,20 @@ def filter_records(
         if scope_filter is not None and rec.scope not in scope_filter:
             continue
 
-        if not matches_any(values_for(rec, "chemName"), matchers["chemName"]):
+        if args.is_mtg2_switch is not None:
+            if rec.switch is None or rec.switch != args.is_mtg2_switch:
+                continue
+
+        if args.edition is not None and rec.edition != args.edition:
             continue
-        if not matches_any(values_for(rec, "chemShortName"), matchers["chemShortName"]):
+
+        if not matches_any(values_for(rec, "name"), matchers["name"]):
             continue
-        if not matches_any(values_for(rec, "chemId"), matchers["chemId"]):
+        if not matches_any(values_for(rec, "shortName"), matchers["shortName"]):
             continue
-        if not matches_any(values_for(rec, "chemFormula"), matchers["chemFormula"]):
+        if not matches_any(values_for(rec, "paramId"), matchers["paramId"]):
+            continue
+        if not matches_any(values_for(rec, "units"), matchers["units"]):
             continue
 
         if args.attr_strict and (attr_filter is not None or attrkey_filter is not None):
@@ -827,10 +837,10 @@ def dedupe_display_records(records: List[Record], keep_attrs: bool, order: str, 
             rec.edition,
             rec.switch,
             rec.scope,
-            format_values(values_for(rec, "chemId")),
-            format_values(values_for(rec, "chemShortName")),
-            format_values(values_for(rec, "chemName")),
-            format_values(values_for(rec, "chemFormula")),
+            format_values(values_for(rec, "paramId")),
+            format_values(values_for(rec, "shortName")),
+            format_values(values_for(rec, "name")),
+            format_values(values_for(rec, "units")),
         )
         grouped[key].append(rec)
 
@@ -848,10 +858,10 @@ def dedupe_display_records(records: List[Record], keep_attrs: bool, order: str, 
                 scope=first.scope,
                 attrs={},
                 values={
-                    "chemId": merge_values(values_for(r, "chemId") for r in group),
-                    "chemShortName": merge_values(values_for(r, "chemShortName") for r in group),
-                    "chemName": merge_values(values_for(r, "chemName") for r in group),
-                    "chemFormula": merge_values(values_for(r, "chemFormula") for r in group),
+                    "paramId": merge_values(values_for(r, "paramId") for r in group),
+                    "shortName": merge_values(values_for(r, "shortName") for r in group),
+                    "name": merge_values(values_for(r, "name") for r in group),
+                    "units": merge_values(values_for(r, "units") for r in group),
                 },
                 sources=merge_values(r.sources for r in group),
             )
@@ -874,13 +884,22 @@ def print_records_line(
         return
 
     for rec in records:
-        print(
-            f"edition={rec.edition} scope={rec.scope} "
-            f"chemId={format_values(values_for(rec, 'chemId'))} "
-            f"chemShortName={format_values(values_for(rec, 'chemShortName'))} "
-            f"chemName={format_values(values_for(rec, 'chemName'))} "
-            f"chemFormula={format_values(values_for(rec, 'chemFormula'))}"
-        )
+        if rec.switch is None:
+            print(
+                f"edition={rec.edition} scope={rec.scope} "
+                f"paramId={format_values(values_for(rec, 'paramId'))} "
+                f"shortName={format_values(values_for(rec, 'shortName'))} "
+                f"name={format_values(values_for(rec, 'name'))} "
+                f"units={format_values(values_for(rec, 'units'))}"
+            )
+        else:
+            print(
+                f"edition={rec.edition} is_mtg2_switch={rec.switch} scope={rec.scope} "
+                f"paramId={format_values(values_for(rec, 'paramId'))} "
+                f"shortName={format_values(values_for(rec, 'shortName'))} "
+                f"name={format_values(values_for(rec, 'name'))} "
+                f"units={format_values(values_for(rec, 'units'))}"
+            )
         if show_encoding and rec.attrs:
             encoding_str = ", ".join(f"{k}={v}" for k, v in sorted(rec.attrs.items()))
             print(f"  encoding: {encoding_str}")
@@ -899,16 +918,18 @@ def truncate(text: str, width: int) -> str:
 def table_value(rec: Record, key: str) -> str:
     if key == "edition":
         return str(rec.edition)
+    if key == "is_mtg2_switch":
+        return "-" if rec.switch is None else str(rec.switch)
     if key == "scope":
         return rec.scope
-    if key == "chemId":
-        return format_values(values_for(rec, "chemId"))
-    if key == "chemShortName":
-        return format_values(values_for(rec, "chemShortName"))
-    if key == "chemName":
-        return format_values(values_for(rec, "chemName"))
-    if key == "chemFormula":
-        return format_values(values_for(rec, "chemFormula"))
+    if key == "paramId":
+        return format_values(values_for(rec, "paramId"))
+    if key == "shortName":
+        return format_values(values_for(rec, "shortName"))
+    if key == "name":
+        return format_values(values_for(rec, "name"))
+    if key == "units":
+        return format_values(values_for(rec, "units"))
     if key == "encoding":
         return ", ".join(f"{k}={v}" for k, v in sorted(rec.attrs.items())) if rec.attrs else "-"
     if key == "sources":
@@ -917,14 +938,17 @@ def table_value(rec: Record, key: str) -> str:
 
 
 def default_table_columns(records: List[Record], show_encoding: bool, show_sources: bool) -> List[Tuple[str, str]]:
+    include_switch = any(rec.switch is not None for rec in records)
     columns: List[Tuple[str, str]] = [
         ("edition", "edition"),
         ("scope", "scope"),
-        ("chemId", "chemId"),
-        ("chemShortName", "chemShortName"),
-        ("chemName", "chemName"),
-        ("chemFormula", "chemFormula"),
+        ("paramId", "paramId"),
+        ("shortName", "shortName"),
+        ("name", "name"),
+        ("units", "units"),
     ]
+    if include_switch:
+        columns.insert(1, ("is_mtg2_switch", "is_mtg2_switch"))
     if show_encoding:
         columns.append(("encoding", "encoding"))
     if show_sources:
@@ -957,11 +981,12 @@ def print_records_table(
     if truncate_cells:
         max_width_by_col = {
             "edition": 7,
+            "is_mtg2_switch": 14,
             "scope": 28,
-            "chemId": 12,
-            "chemShortName": 16,
-            "chemName": 48,
-            "chemFormula": 20,
+            "paramId": 12,
+            "shortName": 16,
+            "name": 48,
+            "units": 20,
             "encoding": 60,
             "sources": 60,
         }
@@ -971,7 +996,7 @@ def print_records_table(
         terminal_width = shutil.get_terminal_size((140, 24)).columns
         total_width = sum(widths) + (3 * (len(widths) - 1))
         if total_width > terminal_width:
-            for shrink_key in ("chemName", "scope", "encoding", "sources"):
+            for shrink_key in ("name", "scope", "encoding", "sources"):
                 if total_width <= terminal_width:
                     break
                 for i, (key, _) in enumerate(columns):
@@ -996,7 +1021,7 @@ def print_records_table(
 
 def make_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="codes_chems",
+        prog="grib_parameters",
         description="Query parameter definitions in ecCodes concept files.",
         allow_abbrev=False,
     )
@@ -1022,21 +1047,21 @@ def make_parser() -> argparse.ArgumentParser:
         "--columns",
         help=(
             "Comma-separated list of output columns to show. "
-            "Valid columns: edition,scope,chemId,chemShortName,chemName,chemFormula,encoding,sources"
+            "Valid columns: edition,is_mtg2_switch,scope,paramId,shortName,name,units,encoding,sources"
         ),
     )
     parser.add_argument(
         "--scope",
         help="Comma-separated list of exact scopes to include, e.g. 'grib2,grib2/localConcepts/ecmf'",
     )
-    parser.add_argument("--chemName", help="Wildcard pattern for chemName, e.g. '*precipitation*'")
-    parser.add_argument("--chemName-regex", help="PCRE2-style regex for chemName")
-    parser.add_argument("--chemShortName", help="Wildcard pattern for chemShortName, e.g. '10m*'")
-    parser.add_argument("--chemShortName-regex", help="PCRE2-style regex for chemShortName")
-    parser.add_argument("--chemId", help="Wildcard pattern for chemId")
-    parser.add_argument("--chemId-regex", help="PCRE2-style regex for chemId")
-    parser.add_argument("--chemFormula", help="Wildcard pattern for chemFormula")
-    parser.add_argument("--chemFormula-regex", help="PCRE2-style regex for chemFormula")
+    parser.add_argument("--name", help="Wildcard pattern for name, e.g. '*precipitation*'")
+    parser.add_argument("--name-regex", help="PCRE2-style regex for name")
+    parser.add_argument("--shortName", help="Wildcard pattern for shortName, e.g. '10m*'")
+    parser.add_argument("--shortName-regex", help="PCRE2-style regex for shortName")
+    parser.add_argument("--paramId", help="Wildcard pattern for paramId")
+    parser.add_argument("--paramId-regex", help="PCRE2-style regex for paramId")
+    parser.add_argument("--units", help="Wildcard pattern for units")
+    parser.add_argument("--units-regex", help="PCRE2-style regex for units")
     parser.add_argument(
         "--attr",
         help="Filter by attribute key/value pairs as key=value,key=value. Non-strict mode matches entries containing at least these pairs",
@@ -1064,6 +1089,18 @@ def make_parser() -> argparse.ArgumentParser:
         help="Make regex searches case-sensitive. By default regex searches are case-insensitive",
     )
     parser.add_argument(
+        "--is_mtg2_switch",
+        type=int,
+        choices=[0, 1, 2],
+        help="Restrict GRIB2 to lte33=0, def=1, chemsplit=2",
+    )
+    parser.add_argument(
+        "--edition",
+        type=int,
+        choices=[1, 2],
+        help="Restrict to GRIB edition 1 or 2",
+    )
+    parser.add_argument(
         "--show-encoding",
         action="store_true",
         help="Show the GRIB encoding constraints (same key/value conditions)",
@@ -1088,7 +1125,7 @@ def make_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--order-by",
         default=None,
-        help="Primary sort field(s), comma-separated, combined with --order. Default sort is edition,scope,chemId",
+        help="Primary sort field(s), comma-separated, combined with --order. Default sort is edition,is_mtg2_switch,scope,paramId",
     )
     parser.add_argument(
         "--no-truncate",

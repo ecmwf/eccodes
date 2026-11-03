@@ -10,13 +10,13 @@
 
 . ./include.ctest.sh
 
-label="codes_chems_test"
+label="grib_chems_test"
 tempA=temp.$label.A.out
 tempB=temp.$label.B.out
 tempErr=temp.$label.err
 
 # Help output should advertise chemFormula options
-${tools_dir}/codes_chems --help > $tempA
+${tools_dir}/grib_chems --help > $tempA
 grep -q -- "--chemFormula CHEMFORMULA" $tempA
 grep -q -- "--chemFormula-regex CHEMFORMULA_REGEX" $tempA
 grep -q -- "--nattrkey NATTRKEY" $tempA
@@ -28,29 +28,29 @@ grep -q -- "--order-by FIELD" $tempA
 # Trailing slash in ECCODES_DEFINITION_PATH should be accepted
 saved_def_path=$ECCODES_DEFINITION_PATH
 export ECCODES_DEFINITION_PATH="${saved_def_path}/"
-${tools_dir}/codes_chems --chemFormula O3 > $tempA
+${tools_dir}/grib_chems --chemFormula O3 > $tempA
 [ -s $tempA ]
 export ECCODES_DEFINITION_PATH=$saved_def_path
 
 # chemFormula filter
-${tools_dir}/codes_chems --chemFormula O3 > $tempA
+${tools_dir}/grib_chems --chemFormula O3 > $tempA
 [ -s $tempA ]
 grep -q "chemFormula=O3" $tempA
 grep -q "chemShortName=O3" $tempA
 
 # Selected columns in table output should include chemFormula
-${tools_dir}/codes_chems --columns edition,scope,chemId,chemShortName,chemName,chemFormula --chemFormula O3 --format table > $tempA
+${tools_dir}/grib_chems --columns edition,scope,chemId,chemShortName,chemName,chemFormula --chemFormula O3 --format table > $tempA
 grep -q "chemFormula" $tempA
 grep -q "O3" $tempA
 
 # show-sources should print concept source files
-${tools_dir}/codes_chems --chemFormula O3 --show-sources > $tempA
+${tools_dir}/grib_chems --chemFormula O3 --show-sources > $tempA
 [ -s $tempA ]
 grep -q "sources:" $tempA
 grep -q "chemFormula.def" $tempA
 
 # chemId regex filter
-${tools_dir}/codes_chems --chemId-regex '^16[56]$' > $tempA
+${tools_dir}/grib_chems --chemId-regex '^16[56]$' > $tempA
 [ -s $tempA ]
 grep -q "chemId=166" $tempA
 if grep -E -v "chemId=16[56]( |$)" $tempA >/dev/null; then
@@ -59,19 +59,19 @@ if grep -E -v "chemId=16[56]( |$)" $tempA >/dev/null; then
 fi
 
 # Descending numeric ordering with --order desc
-${tools_dir}/codes_chems --chemId-regex '^[0-9]{1,3}$' --scope grib2 --columns chemId --format table --order desc > $tempA
+${tools_dir}/grib_chems --chemId-regex '^[0-9]{1,3}$' --scope grib2 --columns chemId --format table --order desc > $tempA
 [ -s $tempA ]
 awk 'NR>2 {gsub(/ /,""); if ($1!="") print $1}' $tempA | \
 awk 'NR==1{p=$1;next} {if ($1+0 > p+0) exit 1; p=$1} END{exit 0}'
 
 # Field-specific ordering: chemShortName descending
-${tools_dir}/codes_chems --chemId-regex '^[0-9]{1,3}$' --scope grib2 --columns chemShortName --format table --order-by chemShortName --order desc > $tempA
+${tools_dir}/grib_chems --chemId-regex '^[0-9]{1,3}$' --scope grib2 --columns chemShortName --format table --order-by chemShortName --order desc > $tempA
 [ -s $tempA ]
 awk 'NR>2 {gsub(/ /,""); if ($1!="") print $1}' $tempA | \
 awk 'NR==1{p=$1;next} {if ($1 > p) exit 1; p=$1} END{exit 0}'
 
 # Multi-field ordering: scope then chemId ascending
-${tools_dir}/codes_chems --chemId-regex '^[0-9]{1,3}$' --columns scope,chemId --format table --order-by scope,chemId --order asc > $tempA
+${tools_dir}/grib_chems --chemId-regex '^[0-9]{1,3}$' --columns scope,chemId --format table --order-by scope,chemId --order asc > $tempA
 [ -s $tempA ]
 awk -F'\|' '
 function trim(s){gsub(/^ +| +$/, "", s); return s}
@@ -89,7 +89,7 @@ END {exit 0}
 
 # Invalid chemFormula regex must fail
 set +e
-${tools_dir}/codes_chems --chemFormula-regex '[' > $tempB 2> $tempErr
+${tools_dir}/grib_chems --chemFormula-regex '[' > $tempB 2> $tempErr
 status=$?
 set -e
 [ $status -ne 0 ]
@@ -97,7 +97,7 @@ grep -q "Invalid pattern for" $tempErr
 
 # Unknown scope must fail with explicit message
 set +e
-${tools_dir}/codes_chems --scope xyz > $tempB 2> $tempErr
+${tools_dir}/grib_chems --scope xyz > $tempB 2> $tempErr
 status=$?
 set -e
 [ $status -ne 0 ]
@@ -105,13 +105,13 @@ grep -q -- "Scope 'xyz' is not defined" $tempErr
 grep -q -- "Available scopes:" $tempErr
 
 # attrkey filter: include only records that have a key (any value)
-${tools_dir}/codes_chems --show-encoding --attrkey constituentType > $tempA
+${tools_dir}/grib_chems --show-encoding --attrkey constituentType > $tempA
 [ -s $tempA ]
 grep -q "constituentType" $tempA
 
 # attr-strict + attrkey only: should be accepted (may legitimately return no matches)
 set +e
-${tools_dir}/codes_chems --attr-strict --attrkey constituentType > $tempA 2> $tempErr
+${tools_dir}/grib_chems --attr-strict --attrkey constituentType > $tempA 2> $tempErr
 status=$?
 set -e
 [ $status -ne 2 ]
@@ -122,7 +122,7 @@ fi
 
 # attr-strict with neither --attr nor --attrkey must fail
 set +e
-${tools_dir}/codes_chems --attr-strict > $tempA 2> $tempErr
+${tools_dir}/grib_chems --attr-strict > $tempA 2> $tempErr
 status=$?
 set -e
 [ $status -ne 0 ]
@@ -130,7 +130,7 @@ grep -q -- "--attr-strict requires --attr and/or --attrkey" $tempErr
 
 # attrkey must fail when given a key containing '='
 set +e
-${tools_dir}/codes_chems --attrkey constituentType=0 > $tempA 2> $tempErr
+${tools_dir}/grib_chems --attrkey constituentType=0 > $tempA 2> $tempErr
 status=$?
 set -e
 [ $status -ne 0 ]
@@ -138,14 +138,14 @@ grep -q -- "Keys must not contain '='" $tempErr
 
 # Invalid nattrkey containing '=' must fail
 set +e
-${tools_dir}/codes_chems --nattrkey constituentType=0 > $tempB 2> $tempErr
+${tools_dir}/grib_chems --nattrkey constituentType=0 > $tempB 2> $tempErr
 status=$?
 set -e
 [ $status -ne 0 ]
 grep -q -- "Keys must not contain '='" $tempErr
 
 # nattrkey filter: exclude records containing a selective key
-${tools_dir}/codes_chems --show-encoding --nattrkey typeOfSizeInterval > $tempA
+${tools_dir}/grib_chems --show-encoding --nattrkey typeOfSizeInterval > $tempA
 [ -s $tempA ]
 if grep -q "typeOfSizeInterval" $tempA; then
     echo "Unexpected excluded key in --nattrkey filtered output"
@@ -154,7 +154,7 @@ fi
 
 # nattr filter: exclude records containing a specific key/value pair
 set +e
-${tools_dir}/codes_chems --chemFormula O3 --show-encoding --nattr constituentType=0 > $tempA 2> $tempErr
+${tools_dir}/grib_chems --chemFormula O3 --show-encoding --nattr constituentType=0 > $tempA 2> $tempErr
 status=$?
 set -e
 [ $status -eq 1 ]

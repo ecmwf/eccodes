@@ -1,10 +1,10 @@
-/*!  \page codes_parameters codes_parameters
+/*!  \page grib_parameters grib_parameters
 \section DESCRIPTION
  Query parameter definitions in ecCodes concept files (grib1/grib2)
  and print matching entries with parameter metadata and optional encoding constraints.
 
 \section USAGE
- codes_parameters
+ grib_parameters
  [options]
 
 \section OPTIONS
@@ -55,19 +55,19 @@
  \n \n --no-truncate \n
         With --format table, do not truncate columns to terminal width.
  \n \n
-\section codes_parameters_examples codes_parameters examples
+\section grib_parameters_examples grib_parameters examples
 -# List all entries for paramId 130:\n
 \verbatim
-codes_parameters --paramId 130
+grib_parameters --paramId 130
 \endverbatim
 
 -# Show encoding constraints for exact WMO temperature triplet in GRIB2:\n
 \verbatim
-codes_parameters --edition 2 --attr discipline=0,parameterCategory=0,parameterNumber=0 --attr-strict --show-encoding
+grib_parameters --edition 2 --attr discipline=0,parameterCategory=0,parameterNumber=0 --attr-strict --show-encoding
 \endverbatim
 
 -# Show only selected columns in table format:\n
 \verbatim
-codes_parameters --name '*temperature*' --columns edition,scope,paramId,shortName,encoding --format table
+grib_parameters --name '*temperature*' --columns edition,scope,paramId,shortName,encoding --format table
 \endverbatim
 */

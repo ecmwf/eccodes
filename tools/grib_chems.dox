@@ -1,4 +1,4 @@
-/*!  \page codes_chems codes_chems
+/*!  \page grib_chems grib_chems
 \section DESCRIPTION
  Query chemical constituent definitions in ecCodes concept files and print matching entries.
  The tool scans chemical concepts from:
@@ -8,7 +8,7 @@
  - chemFormula.def
 
 \section USAGE
- codes_chems
+ grib_chems
  [options]
 
 \section OPTIONS
@@ -38,14 +38,14 @@
  \n \n --scope list \n
         Comma-separated list of exact scopes to include.
 
-\section codes_chems_examples codes_chems examples
+\section grib_chems_examples grib_chems examples
 -# Show entries for a formula:
 \verbatim
-codes_chems --chemFormula O3
+grib_chems --chemFormula O3
 \endverbatim
 
 -# Filter by chemId regex:
 \verbatim
-codes_chems --chemId-regex '^1[0-9]+$'
+grib_chems --chemId-regex '^1[0-9]+$'
 \endverbatim
 */

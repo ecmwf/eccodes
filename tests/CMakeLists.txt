@@ -103,8 +103,8 @@ if( HAVE_BUILD_TOOLS )
     # and are generally quick
     list(APPEND tests_basic
         codes_info
-        codes_chems
-        codes_parameters
+        grib_chems
+        grib_parameters
         codes_deprecated
         unit_tests
         julian
