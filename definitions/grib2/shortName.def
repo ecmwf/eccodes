@@ -26765,7 +26765,7 @@
 	 parameterNumber = 3 ;
 	}
 #Vapour pressure
-'vp' = {
+'vapp' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 4 ;
