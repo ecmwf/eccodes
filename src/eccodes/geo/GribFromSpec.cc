@@ -22,6 +22,7 @@
 #include "eckit/geo/PointLonLat.h"
 #include "eckit/geo/PointXY.h"
 #include "eckit/geo/Projection.h"
+#include "eckit/geo/Range.h"
 #include "eckit/spec/Spec.h"
 #include "eckit/geo/area/BoundingBox.h"
 #include "eckit/geo/figure/Earth.h"
@@ -299,7 +300,10 @@ void set_grid_type_regular_ll(grib_info& info, const Grid& grid, const BasicAngl
     info.grid.Ni = static_cast<long>(g.nx());
     info.grid.Nj = static_cast<long>(g.ny());
 
-    BoundingBox bbox(std::get<PointLonLat>(g.first_point()), std::get<PointLonLat>(g.last_point()));
+    // first/last grid points are in the unrotated frame, as encoded
+    const auto& x = g.x().values();
+    const auto& y = g.y().values();
+    BoundingBox bbox(PointLonLat{ x.front(), y.front() }, PointLonLat{ x.back(), y.back() });
     bbox.fillGrib(info);
 
     if (rotated) {
@@ -334,7 +338,10 @@ void set_grid_type_regular_gg(grib_info& info, const Grid& grid)
     info.grid.Ni = static_cast<long>(g.nx());
     info.grid.Nj = static_cast<long>(g.ny());
 
-    BoundingBox bbox(std::get<PointLonLat>(g.first_point()), std::get<PointLonLat>(g.last_point()));
+    // first/last grid points are in the unrotated frame, as encoded
+    const auto& x = g.x().values();
+    const auto& y = g.y().values();
+    BoundingBox bbox(PointLonLat{ x.front(), y.front() }, PointLonLat{ x.back(), y.back() });
     bbox.fillGrib(info);
 
     if (rotated) {
@@ -390,7 +397,7 @@ void set_grid_type_reduced_gg(grib_info& info, const Grid& grid)
 
     if (rotated) {
         // first/last grid points are in the unrotated frame, as encoded
-        const auto first = std::get<PointLonLat>(g.first_point());
+        const PointLonLat first{ g.longitudes(0).front(), g.latitudes().front() };
         auto west = first.lon();
         auto east = g.longitudes(0).back();
         for (size_t j = 1; j < g.ny(); ++j) {
