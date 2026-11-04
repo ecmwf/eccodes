@@ -16986,12 +16986,6 @@
 	 parameterCategory = 171 ;
 	 parameterNumber = 154 ;
 	}
-#Height anomaly
-'m' = {
-	 discipline = 192 ;
-	 parameterCategory = 171 ;
-	 parameterNumber = 156 ;
-	}
 #Relative humidity anomaly
 '%' = {
 	 discipline = 192 ;
@@ -17351,12 +17345,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 171 ;
 	 parameterNumber = 227 ;
-	}
-#Total precipitation anomaly
-'m' = {
-	 discipline = 192 ;
-	 parameterCategory = 171 ;
-	 parameterNumber = 228 ;
 	}
 #Instantaneous surface heat flux anomaly
 'J m**-2' = {
