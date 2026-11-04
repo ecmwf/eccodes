@@ -595,7 +595,10 @@ int DataG2BifourierPacking::pack_double(const double* val, size_t* len)
     }
 
     if (!bt->laplacianOperatorIsSet) {
-        bt->laplacianOperator = laplam(bt, val);
+        // Some fields use a fixed laplacian operator instead of a fitted one
+        // See definitions/grib2/templates/template.5.53.def
+        if (grib_get_double(gh, "fixedLaplacianOperator", &bt->laplacianOperator) != GRIB_SUCCESS)
+            bt->laplacianOperator = laplam(bt, val);
 
         if ((ret = grib_set_double_internal(gh, laplacianOperator_, bt->laplacianOperator)) != GRIB_SUCCESS)
             goto cleanup;

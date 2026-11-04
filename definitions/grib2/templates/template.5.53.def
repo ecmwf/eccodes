@@ -7,6 +7,12 @@ include "grib2/templates/template.5.packing.def"
 
 transient computeLaplacianOperator=1 : hidden;
 
+# ECC-2366: ECMWF convention (IFS): geopotential and logarithm of surface pressure on
+# model levels are packed with a fixed laplacian operator instead of a fitted one
+if (centre == 98 && typeOfFirstFixedSurface == 105 && (paramId == 129 || paramId == 152)) {
+  transient fixedLaplacianOperator=0.5 : hidden;
+}
+
 codetable[1] biFourierSubTruncationType ('5.25.table',masterDir,localDir) : dump;
 codetable[1] biFourierPackingModeForAxes ('5.26.table',masterDir,localDir) = 0 : dump;
 
