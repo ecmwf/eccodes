@@ -94,14 +94,14 @@ int GeoIterator::next(double* lat, double* lon, double* val) const
 {
     try {
         if (iter_) {
-            if (iter_->index() >= nv_) return 0;
+            if (iter_.index() >= nv_) return 0;
             const auto p = *iter_;
             const auto& q(std::get<eckit::geo::PointLonLat>(p));
 
             *lat = q.lat();
             *lon = q.lon();
             if (val != nullptr && data_ != nullptr) {
-                if (const size_t i = iter_->index(); i < nv_) {
+                if (const size_t i = iter_.index(); i < nv_) {
                     *val = data_[i];
                 }
             }
@@ -123,14 +123,14 @@ int GeoIterator::next(double* lat, double* lon, double* val) const
 int GeoIterator::previous(double* lat, double* lon, double* val) const
 {
     try {
-        if (iter_->index() > 0 && --iter_) {
+        if (iter_.index() > 0 && --iter_) {
             const auto p = *iter_;
             const auto& q(std::get<eckit::geo::PointLonLat>(p));
 
             *lat = q.lat();
             *lon = q.lon();
             if (val != nullptr && data_ != nullptr) {
-                if (const size_t i = iter_->index(); i < nv_) {
+                if (const size_t i = iter_.index(); i < nv_) {
                     *val = data_[i];
                 }
             }
