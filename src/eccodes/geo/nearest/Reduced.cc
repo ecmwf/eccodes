@@ -24,8 +24,8 @@ int Reduced::init(grib_handle* h, grib_arguments* args)
     if ((ret = Gen::init(h, args) != GRIB_SUCCESS))
         return ret;
 
-    Nj_ = args->get_name(h, cargs_++);
-    pl_ = args->get_name(h, cargs_++);
+    Nj_ = args->get_name(cargs_++);
+    pl_ = args->get_name(cargs_++);
     j_ = (size_t*)grib_context_malloc(h->context, 2 * sizeof(size_t));
     legacy_ = -1;
     rotated_ = -1;
@@ -72,7 +72,7 @@ static int is_rotated(grib_handle* h, int* rotated)
 int Reduced::find(grib_handle* h,
                   double inlat, double inlon, unsigned long flags,
                   double* outlats, double* outlons, double* values,
-                  double* distances, int* indexes, size_t* len)
+                  double* distances, int* indexes, size_t* /*len*/)
 {
     int err = 0;
 
@@ -85,7 +85,7 @@ int Reduced::find(grib_handle* h,
         err = find_global(h,
                           inlat, inlon, flags,
                           outlats, outlons, values,
-                          distances, indexes, len);
+                          distances, indexes);
     }
     else {
         /* ECC-762, ECC-1432: Use brute force generic algorithm
@@ -94,7 +94,7 @@ int Reduced::find(grib_handle* h,
         int lons_count = 0; /*dummy*/
 
         err = grib_nearest_find_generic(
-            h, inlat, inlon, flags,
+            h, inlat, inlon,
             values_key_,
             &(lats_),
             &(lats_count_),
@@ -102,7 +102,7 @@ int Reduced::find(grib_handle* h,
             &(lons_count),
             &(distances_),
             outlats, outlons,
-            values, distances, indexes, len);
+            values, distances, indexes);
     }
     return err;
 }
@@ -111,7 +111,7 @@ int Reduced::find(grib_handle* h,
 int Reduced::find_global(grib_handle* h,
                          double inlat, double inlon, unsigned long flags,
                          double* outlats, double* outlons, double* values,
-                         double* distances, int* indexes, size_t* len)
+                         double* distances, int* indexes)
 {
     int err = 0, kk = 0, ii = 0;
     size_t jj = 0;

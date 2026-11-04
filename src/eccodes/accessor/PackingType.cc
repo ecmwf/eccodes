@@ -17,8 +17,8 @@ void PackingType::init(const long l, grib_arguments* args)
 {
     Gen::init(l, args);
     int n = 0;
-    values_ = args->get_name(get_enclosing_handle(), n++);
-    packing_type_ = args->get_name(get_enclosing_handle(), n++);
+    values_ = args->get_name(n++);
+    packing_type_ = args->get_name(n++);
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     length_ = 0;
 }

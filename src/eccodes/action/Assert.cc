@@ -37,7 +37,7 @@ Assert::~Assert()
     grib_context_free_persistent(context_, op_);
 }
 
-int Assert::create_accessor(grib_section* p, grib_loader* h)
+int Assert::create_accessor(grib_section* p, grib_loader* /*h*/)
 {
     grib_accessor* as = grib_accessor_factory(p, this, 0, NULL);
     if (!as)
@@ -82,7 +82,7 @@ int Assert::execute(grib_handle* h)
     }
 }
 
-int Assert::notify_change(grib_accessor* observer, grib_accessor* observed)
+int Assert::notify_change(grib_accessor* /*observer*/, grib_accessor* observed)
 {
     int ret = GRIB_SUCCESS;
     long lres;

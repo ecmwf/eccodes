@@ -17,12 +17,11 @@ void JulianDay::init(const long l, grib_arguments* c)
 {
     Double::init(l, c);
     int n = 0;
-    grib_handle* h = get_enclosing_handle();
 
-    date_ = c->get_name(h, n++);
-    hour_ = c->get_name(h, n++);
-    minute_ = c->get_name(h, n++);
-    second_ = c->get_name(h, n++);
+    date_ = c->get_name(n++);
+    hour_ = c->get_name(n++);
+    minute_ = c->get_name(n++);
+    second_ = c->get_name(n++);
 
     length_ = 0;
 }
@@ -38,7 +37,7 @@ int JulianDay::pack_long(const long* val, size_t* len)
     return pack_double(&v, len);
 }
 
-int JulianDay::pack_double(const double* val, size_t* len)
+int JulianDay::pack_double(const double* val, size_t* /*len*/)
 {
     int ret = GRIB_SUCCESS;
     long hour = 0, minute = 0, second = 0;
@@ -76,7 +75,7 @@ int JulianDay::unpack_long(long* val, size_t* len)
     return ret;
 }
 
-int JulianDay::unpack_double(double* val, size_t* len)
+int JulianDay::unpack_double(double* val, size_t* /*len*/)
 {
     int ret = 0;
     long date, hour, minute, second;

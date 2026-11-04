@@ -16,26 +16,25 @@ namespace eccodes::accessor
 void LocalDefinition::init(const long l, grib_arguments* c)
 {
     Unsigned::init(l, c);
-    grib_handle* hand = get_enclosing_handle();
     int n = 0;
 
-    grib2LocalSectionNumber_ = c->get_name(hand, n++);
-    productDefinitionTemplateNumber_ = c->get_name(hand, n++);
-    productDefinitionTemplateNumberInternal_ = c->get_name(hand, n++);
-    type_ = c->get_name(hand, n++);
-    stream_ = c->get_name(hand, n++);
-    the_class_ = c->get_name(hand, n++);
-    eps_ = c->get_name(hand, n++);
-    stepType_ = c->get_name(hand, n++);
-    derivedForecast_ = c->get_name(hand, n++);
+    grib2LocalSectionNumber_ = c->get_name(n++);
+    productDefinitionTemplateNumber_ = c->get_name(n++);
+    productDefinitionTemplateNumberInternal_ = c->get_name(n++);
+    type_ = c->get_name(n++);
+    stream_ = c->get_name(n++);
+    the_class_ = c->get_name(n++);
+    eps_ = c->get_name(n++);
+    stepType_ = c->get_name(n++);
+    derivedForecast_ = c->get_name(n++);
 }
 
-int LocalDefinition::unpack_long(long* val, size_t* len)
+int LocalDefinition::unpack_long(long* val, size_t* /*len*/)
 {
     return grib_get_long(get_enclosing_handle(), grib2LocalSectionNumber_, val);
 }
 
-int LocalDefinition::pack_long(const long* val, size_t* len)
+int LocalDefinition::pack_long(const long* val, size_t* /*len*/)
 {
     grib_handle* hand = get_enclosing_handle();
     long productDefinitionTemplateNumber = -1;

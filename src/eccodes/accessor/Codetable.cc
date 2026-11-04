@@ -159,8 +159,8 @@ void Codetable::init(const long len, grib_arguments* params)
     if (tablename_ == NULL) {
         grib_context_log(context_, GRIB_LOG_FATAL, "%s: codetable table is invalid", name_);
     }
-    masterDir_ = params->get_name(hand, n++); /* can be NULL */
-    localDir_ = params->get_name(hand, n++);  /* can be NULL */
+    masterDir_ = params->get_name(n++); /* can be NULL */
+    localDir_ = params->get_name(n++);  /* can be NULL */
 
     /*if (flags_ & GRIB_ACCESSOR_FLAG_STRING_TYPE)
     printf("-------- %s type string (%ld)\n",a->name,flags_ );*/
@@ -184,7 +184,7 @@ void Codetable::init(const long len, grib_arguments* params)
             int ret = 0;
             double d;
             char tmp[1024];
-            grib_expression* expression = act->default_value_->get_expression(hand, 0);
+            grib_expression* expression = act->default_value_->get_expression(0);
             int type = expression->native_type(hand);
             switch (type) {
                 case GRIB_TYPE_DOUBLE:
@@ -654,7 +654,7 @@ int Codetable::pack_string(const char* buffer, size_t* len)
             int ret = 0;
             double d = 0;
             char tmp[1024] = { 0 };
-            grib_expression* expression = act->default_value_->get_expression(get_enclosing_handle(), 0);
+            grib_expression* expression = act->default_value_->get_expression(0);
             int type = expression->native_type(get_enclosing_handle());
             switch (type) {
                 case GRIB_TYPE_DOUBLE:

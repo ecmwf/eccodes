@@ -217,7 +217,9 @@ grib_file* grib_file_open(const char* filename, const char* mode, int* err)
                 grib_context_log(file->context, GRIB_LOG_FATAL, "Unable to allocate io_buffer\n");
             }
 #endif
-            setvbuf(file->handle, file->buffer, _IOFBF, file_pool.context->io_buffer_size);
+            if (setvbuf(file->handle, file->buffer, _IOFBF, file_pool.context->io_buffer_size) != 0) {
+                grib_context_log(file->context, GRIB_LOG_WARNING, "Unable to set io_buffer for %s", file->name);
+            }
         }
 
         file_pool.number_of_opened_files++;
@@ -439,10 +441,10 @@ void grib_file_pool_print(const char* title, FILE* out)
 {
     int i = 0;
     grib_file* file = file_pool.first;
-    printf("%s: size=%zu, num_opened_files=%d\n", title, file_pool.size, file_pool.number_of_opened_files);
+    fprintf(out, "%s: size=%zu, num_opened_files=%d\n", title, file_pool.size, file_pool.number_of_opened_files);
     while (file) {
-        printf("%s:\tfile_pool entry %d = %s\n", title, i++, file->name);
+        fprintf(out, "%s:\tfile_pool entry %d = %s\n", title, i++, file->name);
         file = file->next;
     }
-    printf("\n");
+    fprintf(out, "\n");
 }

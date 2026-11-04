@@ -17,7 +17,7 @@
 
 #include "eccodes.h"
 
-int main(int argc, char* argv[])
+int main(void)
 {
     codes_handle* h = NULL;
 

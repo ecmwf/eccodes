@@ -35,7 +35,7 @@ eccodes::geo_nearest::Nearest* grib_nearest_factory(grib_handle* h, grib_argumen
 {
     size_t i = 0, num_table_entries = 0;
     *error = GRIB_NOT_IMPLEMENTED;
-    char* type = (char*)args->get_name(h, 0);
+    char* type = (char*)args->get_name(0);
 
     num_table_entries = sizeof(table) / sizeof(table[0]);
     for (i = 0; i < num_table_entries; i++) {

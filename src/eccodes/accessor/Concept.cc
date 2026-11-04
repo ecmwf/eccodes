@@ -516,12 +516,12 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
     return err;
 }
 
-int Concept::pack_double(const double* val, size_t* len)
+int Concept::pack_double(const double* /*val*/, size_t* /*len*/)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int Concept::pack_long(const long* val, size_t* len)
+int Concept::pack_long(const long* val, size_t* /*len*/)
 {
     char buf[80] = { 0 };
     size_t s;
@@ -667,7 +667,7 @@ int Concept::unpack_string(char* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int Concept::pack_string(const char* val, size_t* len)
+int Concept::pack_string(const char* val, size_t* /*len*/)
 {
     return grib_concept_apply(this, val);
 }

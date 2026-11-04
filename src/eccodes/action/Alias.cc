@@ -62,7 +62,7 @@ static int same(const char* a, const char* b)
     return 0;
 }
 
-int Alias::create_accessor(grib_section* p, grib_loader* h)
+int Alias::create_accessor(grib_section* p, grib_loader* /*h*/)
 {
     int i, j;
     grib_accessor* x = NULL;

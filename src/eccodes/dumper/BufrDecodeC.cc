@@ -176,7 +176,7 @@ void BufrDecodeC::dump_values_attribute(grib_accessor* a, const char* prefix)
     (void)err; /* TODO */
 }
 
-void BufrDecodeC::dump_long(grib_accessor* a, const char* comment)
+void BufrDecodeC::dump_long(grib_accessor* a, const char* /*comment*/)
 {
     long value = 0;
     size_t size = 0;
@@ -320,11 +320,11 @@ void BufrDecodeC::dump_long_attribute(grib_accessor* a, const char* prefix)
     (void)err; /* TODO */
 }
 
-void BufrDecodeC::dump_bits(grib_accessor* a, const char* comment)
+void BufrDecodeC::dump_bits(grib_accessor* /*a*/, const char* /*comment*/)
 {
 }
 
-void BufrDecodeC::dump_double(grib_accessor* a, const char* comment)
+void BufrDecodeC::dump_double(grib_accessor* a, const char* /*comment*/)
 {
     double value = 0;
     size_t size = 1;
@@ -438,7 +438,7 @@ void BufrDecodeC::dump_string_array(grib_accessor* a, const char* comment)
 }
 
 #define MAX_STRING_SIZE 4096
-void BufrDecodeC::dump_string(grib_accessor* a, const char* comment)
+void BufrDecodeC::dump_string(grib_accessor* a, const char* /*comment*/)
 {
     char value[MAX_STRING_SIZE] = { 0 }; /* See ECC-710 */
     size_t size = MAX_STRING_SIZE;
@@ -495,11 +495,11 @@ void BufrDecodeC::dump_string(grib_accessor* a, const char* comment)
     (void)err; /* TODO */
 }
 
-void BufrDecodeC::dump_bytes(grib_accessor* a, const char* comment)
+void BufrDecodeC::dump_bytes(grib_accessor* /*a*/, const char* /*comment*/)
 {
 }
 
-void BufrDecodeC::dump_label(grib_accessor* a, const char* comment)
+void BufrDecodeC::dump_label(grib_accessor* /*a*/, const char* /*comment*/)
 {
 }
 
@@ -623,7 +623,7 @@ void BufrDecodeC::header(const grib_handle* h) const
     fprintf(out_, "  CODES_CHECK(codes_set_long(h, \"unpack\", 1),0);\n\n");
 }
 
-void BufrDecodeC::footer(const grib_handle* h) const
+void BufrDecodeC::footer(const grib_handle* /*h*/) const
 {
     /*fprintf(out_,"  fout = fopen(\"outfile.bufr\", \"w\");");*/
     /*fprintf(out_,"  if (fclose(fout)) {\n");

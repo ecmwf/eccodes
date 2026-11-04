@@ -23,11 +23,11 @@ public:
     ~Arguments();
 
     void print(grib_handle* f) const;
-    const char* get_name(grib_handle* h, int n) const;
+    const char* get_name(int n) const;
     const char* get_string(grib_handle* h, int n) const;
     long get_long(grib_handle* h, int n) const;
     double get_double(grib_handle* h, int n) const;
-    grib_expression* get_expression(grib_handle* h, int n) const;
+    grib_expression* get_expression(int n) const;
     int get_count() const;
 
     // TODO(maee): make this private
@@ -40,4 +40,4 @@ public:
 }  // namespace eccodes
 
 eccodes::Arguments* grib_arguments_new(grib_context* c, grib_expression* g, eccodes::Arguments* n);
-void grib_arguments_free(grib_context* c, grib_arguments* g);
+void grib_arguments_free(grib_arguments* g);

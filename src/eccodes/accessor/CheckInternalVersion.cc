@@ -25,7 +25,7 @@ void CheckInternalVersion::init(const long l, grib_arguments* args)
     int err = 0;
     long defs_file_version = 0;
     grib_handle* h = get_enclosing_handle();
-    const char* s_defn_version = args->get_name(h, 0);
+    const char* s_defn_version = args->get_name(0);
     ECCODES_ASSERT(s_defn_version);
 
     err = grib_get_long_internal(h, s_defn_version, &defs_file_version);

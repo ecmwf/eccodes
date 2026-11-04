@@ -19,7 +19,7 @@ void Trim::init(const long l, grib_arguments* arg)
     int n = 0;
     grib_handle* h = get_enclosing_handle();
 
-    input_ = arg->get_name(h, n++);
+    input_ = arg->get_name(n++);
     trim_left_ = arg->get_long(h, n++);
     trim_right_ = arg->get_long(h, n++);
     DEBUG_ASSERT(trim_left_ == 0 || trim_left_ == 1);

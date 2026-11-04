@@ -17,13 +17,12 @@ namespace eccodes::accessor
 void OptimalStepUnits::init(const long l, grib_arguments* c)
 {
     Gen::init(l, c);
-    grib_handle* hand = get_enclosing_handle();
     int n = 0;
 
-    forecast_time_value_ = c->get_name(hand, n++);
-    forecast_time_unit_ = c->get_name(hand, n++);
-    time_range_value_ = c->get_name(hand, n++);
-    time_range_unit_ = c->get_name(hand, n++);
+    forecast_time_value_ = c->get_name(n++);
+    forecast_time_unit_ = c->get_name(n++);
+    time_range_value_ = c->get_name(n++);
+    time_range_unit_ = c->get_name(n++);
     length_ = 0;
     overwriteStepUnits_ = eccodes::Unit{ eccodes::Unit::Value::MISSING }.value<long>();
 }
@@ -68,7 +67,7 @@ int OptimalStepUnits::pack_expression(grib_expression* e)
     return ret;
 }
 
-int OptimalStepUnits::pack_long(const long* val, size_t* len)
+int OptimalStepUnits::pack_long(const long* val, size_t* /*len*/)
 {
     grib_handle* h = get_enclosing_handle();
 
@@ -139,7 +138,7 @@ int OptimalStepUnits::pack_long(const long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int OptimalStepUnits::unpack_long(long* val, size_t* len)
+int OptimalStepUnits::unpack_long(long* val, size_t* /*len*/)
 {
     grib_handle* h = get_enclosing_handle();
 

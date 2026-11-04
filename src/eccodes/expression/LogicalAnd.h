@@ -18,7 +18,7 @@ namespace eccodes::expression
 class LogicalAnd : public Expression
 {
 public:
-    LogicalAnd(grib_context*, Expression*, Expression*);
+    LogicalAnd(Expression*, Expression*);
 
     void destroy(grib_context*) override;
     void print(grib_context*, grib_handle*, FILE*) const override;
@@ -36,4 +36,4 @@ private:
 
 }  // namespace eccodes::expression
 
-grib_expression* new_logical_and_expression(grib_context*, grib_expression*, grib_expression*);
+grib_expression* new_logical_and_expression(grib_expression*, grib_expression*);

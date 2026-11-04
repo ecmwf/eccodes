@@ -29,8 +29,8 @@ void BufrExtractSubsets::init(const long len, grib_arguments* arg)
     int n = 0;
 
     length_ = 0;
-    numericValues_ = arg->get_name(get_enclosing_handle(), n++);
-    pack_ = arg->get_name(get_enclosing_handle(), n++);
+    numericValues_ = arg->get_name(n++);
+    pack_ = arg->get_name(n++);
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
 
     numericValuesAccessor_ = NULL;
@@ -42,7 +42,7 @@ long BufrExtractSubsets::get_native_type()
     return GRIB_TYPE_LONG;
 }
 
-int BufrExtractSubsets::pack_long(const long* val, size_t* len)
+int BufrExtractSubsets::pack_long(const long* /*val*/, size_t* /*len*/)
 {
     size_t l = 1;
     long v[1];

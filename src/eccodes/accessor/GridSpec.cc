@@ -29,7 +29,7 @@
 namespace eccodes::accessor
 {
 
-void GridSpec::init(const long len, grib_arguments* arg)
+void GridSpec::init(const long /*len*/, grib_arguments* /*arg*/)
 {
     length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
@@ -41,7 +41,7 @@ long GridSpec::get_native_type()
 }
 
 
-int GridSpec::pack_string(const char* v, size_t* len)
+int GridSpec::pack_string([[maybe_unused]] const char* v, [[maybe_unused]] size_t* len)
 {
 #if defined(HAVE_GEOGRAPHY) && defined(HAVE_ECKIT_GEO)
 
@@ -79,7 +79,7 @@ int GridSpec::pack_string(const char* v, size_t* len)
 #endif
 }
 
-int GridSpec::unpack_string(char* v, size_t* len)
+int GridSpec::unpack_string([[maybe_unused]] char* v, [[maybe_unused]] size_t* len)
 {
 #if defined(HAVE_GEOGRAPHY) && defined(HAVE_ECKIT_GEO)
 

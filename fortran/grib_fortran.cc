@@ -812,7 +812,7 @@ int grib_f_read_any_headers_only_from_file_(int* fid, char* buffer, size_t* nbyt
 
     if (f) {
         c=grib_context_get_default( );
-        err=grib_read_any_headers_only_from_file(c,f,buffer,nbytes);
+        err=grib_read_any_headers_only_from_file(f,buffer,nbytes);
         return err;
     } else {
         return GRIB_INVALID_FILE;
