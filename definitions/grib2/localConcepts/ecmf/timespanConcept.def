@@ -1,8 +1,12 @@
 ## Statistical window concept for ECMWF
 # either instantaneous data or processing is specified by mars stream
 ###############
+## streams   ##
+# 1035 | enfo #
+# 1040 | efhs #
 # 1043 | mnth #
 # 1092 | swmm #
+# 1121 | eehs #
 # 1122 | eefo #
 # 1221 | msmm #
 # 1224 | mmsa #
@@ -25,6 +29,9 @@
 'none'  = {stream=1269; numberOfTimeRanges=1; true=is_one_of(indicatorOfUnitForTimeRange,1,2,3);}
 # special rules for weekly extended-range (sub-seasonal) products, types
 ################
+## types      ##
+# 30 | ep      #
+# 32 | cd      #
 # 47 | taem    #
 # 48 | taes    #
 # 80 | fcmean  #
@@ -32,22 +39,22 @@
 # 82 | fcmin   #
 # 83 | fcstdev #
 ################
-#'none'  = {marsStream=1122; numberOfTimeRanges=1; true=is_one_of(marsType,47,48,80,81,82,83);}
-'none'  = {marsStream=1122; numberOfTimeRanges=1; true=is_one_of(type,'fcmean','fcmax','fcmin','fcstdev','taem','taes');}
-'none'  = {marsStream=1271; numberOfTimeRanges=1; true=is_one_of(type,'fc','em','es','pb','pd','efi','efic','sot');}
-## accumulations
-# 24 hourly time unit
+'none'  = {marsStream=1122; numberOfTimeRanges=1; true=is_one_of(type,'fcmean','fcmax','fcmin','fcstdev','taem','taes');
+           true=is_one_of(indicatorOfUnitForTimeRange,1,2,3); true=is_one_of(indicatorOfUnitForTimeRange,0,1,2,3,6);}
+'none'  = {marsStream=1271; numberOfTimeRanges=1; true=is_one_of(type,'fc','em','es','pb','pd','efi','efic','sot');
+           true=is_one_of(indicatorOfUnitForTimeRange,1,2,3); true=is_one_of(indicatorOfUnitForTimeRange,0,1,2,3,6);}
+##################
+## accumulations #
+##################
+# 24 hourly time unit - enfo / ep
 '24h'  = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange=24; class=1; stream=1035; type=30;}
-# special rule for accumulations in streams efhs / eehs, type cd
 ###########
 # ecPoint #
 ###########
 '6h'  = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange=6; numberOfTimeRanges=1; true=is_one_of(type,'pfc','gwt','gbf');}
 '12h'  = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange=12; numberOfTimeRanges=1; true=is_one_of(type,'pfc','gwt','gbf');}
 '24h'  = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange=24; numberOfTimeRanges=1; true=is_one_of(type,'pfc','gwt','gbf');}
-###########
-# 32 | cd #
-###########
+# special rule for accumulations in streams efhs - 1040 / eehs - 1121, type cd - 32
 '24h'  = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange=24;  class=1; stream=1040; type=32;}
 '72h'  = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange=72;  class=1; stream=1040; type=32;}
 '120h' = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange=120; class=1; stream=1040; type=32;}
@@ -55,5 +62,5 @@
 '168h' = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange=168; class=1; stream=1121; type=32;}
 '240h' = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange=240; class=1; stream=1040; type=32;}
 '360h' = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange=360; class=1; stream=1040; type=32;}
-## 7 days rolling accumulation
+## 7 days rolling accumulation - type cd
 '168h' = {typeOfStatisticalProcessing=1; indicatorOfUnitForTimeRange=1; lengthOfTimeRange=168; marsType=32;}
