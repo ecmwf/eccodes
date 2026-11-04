@@ -16,7 +16,7 @@ namespace eccodes::accessor
 void Size::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
-    accessor_ = c->get_name(get_enclosing_handle(), 0);
+    accessor_ = c->get_name(0);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     length_ = 0;

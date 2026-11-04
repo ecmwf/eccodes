@@ -31,4 +31,4 @@ public:
 
 }  // namespace eccodes::expression
 
-grib_expression* new_true_expression(grib_context*);
+grib_expression* new_true_expression();

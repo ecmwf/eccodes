@@ -19,8 +19,8 @@ void SectionPointer::init(const long len, grib_arguments* arg)
     grib_handle* hand = get_enclosing_handle();
 
     int n = 0;
-    sectionOffset_ = arg->get_name(hand, n++);
-    sectionLength_ = arg->get_name(hand, n++);
+    sectionOffset_ = arg->get_name(n++);
+    sectionLength_ = arg->get_name(n++);
     sectionNumber_ = arg->get_long(hand, n++);
 
     ECCODES_ASSERT(sectionNumber_ < MAX_NUM_SECTIONS);
@@ -46,7 +46,7 @@ long SectionPointer::get_native_type()
     return GRIB_TYPE_BYTES;
 }
 
-int SectionPointer::unpack_string(char* v, size_t* len)
+int SectionPointer::unpack_string(char* v, size_t* /*len*/)
 {
     //   unsigned char* p=NULL;
     //   char* s=v;

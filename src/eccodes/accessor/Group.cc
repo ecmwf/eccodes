@@ -92,7 +92,7 @@ int Group::unpack_string(char* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int Group::unpack_long(long* v, size_t* len)
+int Group::unpack_long(long* v, size_t* /*len*/)
 {
     char val[1024] = { 0 };
     size_t l = sizeof(val);
@@ -119,7 +119,7 @@ int Group::unpack_long(long* v, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int Group::unpack_double(double* v, size_t* len)
+int Group::unpack_double(double* v, size_t* /*len*/)
 {
     char val[1024];
     size_t l = sizeof(val);
@@ -135,7 +135,7 @@ int Group::unpack_double(double* v, size_t* len)
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int Group::compare(grib_accessor* b)
+int Group::compare(grib_accessor* /*b*/)
 {
     grib_context_log(context_, GRIB_LOG_ERROR, "%s:%s not implemented", __func__, name_);
     return GRIB_NOT_IMPLEMENTED;

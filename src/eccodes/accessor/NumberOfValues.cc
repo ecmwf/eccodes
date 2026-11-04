@@ -17,20 +17,19 @@ void NumberOfValues::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
     int n = 0;
-    grib_handle* hand = get_enclosing_handle();
 
-    values_ = c->get_name(hand, n++);
-    bitsPerValue_ = c->get_name(hand, n++);
-    numberOfPoints_ = c->get_name(hand, n++);
-    bitmapPresent_ = c->get_name(hand, n++);
-    bitmap_ = c->get_name(hand, n++);
-    numberOfCodedValues_ = c->get_name(hand, n++);
+    values_ = c->get_name(n++);
+    bitsPerValue_ = c->get_name(n++);
+    numberOfPoints_ = c->get_name(n++);
+    bitmapPresent_ = c->get_name(n++);
+    bitmap_ = c->get_name(n++);
+    numberOfCodedValues_ = c->get_name(n++);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 
     length_ = 0;
 }
 
-int NumberOfValues::unpack_long(long* val, size_t* len)
+int NumberOfValues::unpack_long(long* val, size_t* /*len*/)
 {
     int ret = GRIB_SUCCESS;
     long npoints = 0, bitmap_present = 0;

@@ -16,15 +16,14 @@ namespace eccodes::accessor
 void JulianDate::init(const long l, grib_arguments* c)
 {
     Double::init(l, c);
-    grib_handle* h = get_enclosing_handle();
     const int arg_count = c->get_count();
     ECCODES_ASSERT(arg_count == 2 || arg_count == 6);
 
     int n = 0;
-    year_ = c->get_name(h, n++);
-    month_ = c->get_name(h, n++);
+    year_ = c->get_name(n++);
+    month_ = c->get_name(n++);
 
-    day_ = c->get_name(h, n++);
+    day_ = c->get_name(n++);
     if (day_ == NULL) {
         hour_ = 0;
         minute_ = 0;
@@ -37,9 +36,9 @@ void JulianDate::init(const long l, grib_arguments* c)
     else {
         ymd_ = 0;
         hms_ = 0;
-        hour_ = c->get_name(h, n++);
-        minute_ = c->get_name(h, n++);
-        second_ = c->get_name(h, n++);
+        hour_ = c->get_name(n++);
+        minute_ = c->get_name(n++);
+        second_ = c->get_name(n++);
     }
     sep_[0] = ' ';
     sep_[1] = 0;
@@ -55,7 +54,7 @@ void JulianDate::dump(eccodes::Dumper* dumper)
     dumper->dump_string(this, NULL);
 }
 
-int JulianDate::unpack_double(double* val, size_t* len)
+int JulianDate::unpack_double(double* val, size_t* /*len*/)
 {
     int ret = 0;
     long hour, minute, second;
@@ -101,7 +100,7 @@ int JulianDate::unpack_double(double* val, size_t* len)
     return ret;
 }
 
-int JulianDate::pack_double(const double* val, size_t* len)
+int JulianDate::pack_double(const double* val, size_t* /*len*/)
 {
     int ret = 0;
     long hour = 0;
@@ -208,7 +207,7 @@ int JulianDate::unpack_string(char* val, size_t* len)
     return ret;
 }
 
-int JulianDate::pack_string(const char* val, size_t* len)
+int JulianDate::pack_string(const char* val, size_t* /*len*/)
 {
     int ret = 0;
     long hour, minute, second;
@@ -271,12 +270,12 @@ int JulianDate::pack_string(const char* val, size_t* len)
     return ret;
 }
 
-int JulianDate::unpack_long(long* val, size_t* len)
+int JulianDate::unpack_long(long* /*val*/, size_t* /*len*/)
 {
     grib_context_log(context_, GRIB_LOG_ERROR, " Cannot unpack %s as long", name_);
     return GRIB_NOT_IMPLEMENTED;
 }
-int JulianDate::pack_long(const long* v, size_t* len)
+int JulianDate::pack_long(const long* /*v*/, size_t* /*len*/)
 {
     grib_context_log(context_, GRIB_LOG_ERROR, " Cannot pack %s as long", name_);
     return GRIB_NOT_IMPLEMENTED;

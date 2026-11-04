@@ -36,7 +36,7 @@ static sample_t samples[] = {
 
 #define NUMBER(a) sizeof(a) / sizeof(a[0])
 
-int main(int argc, char** argv)
+int main(int /*argc*/, char** /*argv*/)
 {
     grib_handle* h = NULL;
     size_t i = 0;

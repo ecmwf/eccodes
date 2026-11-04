@@ -50,10 +50,10 @@ private:
     const char* typeOfTimeIncrement_ = nullptr;
     const char* numberOfTimeRanges_ = nullptr;
 
-    int unpack_one_time_range_long_(long* val, size_t* len);
-    int unpack_one_time_range_double_(double* val, size_t* len);
-    int unpack_multiple_time_ranges_long_(long* val, size_t* len);
-    int unpack_multiple_time_ranges_double_(double* val, size_t* len);
+    int unpack_one_time_range_long_(long* val);
+    int unpack_one_time_range_double_(double* val);
+    int unpack_multiple_time_ranges_long_(long* val);
+    int unpack_multiple_time_ranges_double_(double* val);
     int pack_long_(const long end_step_value, const long end_step_unit);
 
 public:

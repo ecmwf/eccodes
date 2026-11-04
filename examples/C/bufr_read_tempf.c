@@ -55,7 +55,7 @@ static void realloc_and_fill(double** arr, size_t newsize, double fillValue)
         *arr[i] = fillValue;
 }
 
-int main(int argc, char* argv[])
+int main(void)
 {
     FILE* in = NULL;
 

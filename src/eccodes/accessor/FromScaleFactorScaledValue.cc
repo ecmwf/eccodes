@@ -18,16 +18,15 @@ void FromScaleFactorScaledValue::init(const long l, grib_arguments* c)
 {
     Double::init(l, c);
     int n = 0;
-    grib_handle* hand = get_enclosing_handle();
 
-    scaleFactor_ = c->get_name(hand, n++);
-    scaledValue_ = c->get_name(hand, n++);  // Can be scalar or array
+    scaleFactor_ = c->get_name(n++);
+    scaledValue_ = c->get_name(n++);  // Can be scalar or array
 
     // ECC-979: Allow user to encode
     // flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-int FromScaleFactorScaledValue::pack_double(const double* val, size_t* len)
+int FromScaleFactorScaledValue::pack_double(const double* val, size_t* /*len*/)
 {
     // See ECC-979 and ECC-1416
     // Evaluate scaleFactor and scaledValue_ from input double '*val'

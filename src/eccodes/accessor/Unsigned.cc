@@ -151,7 +151,7 @@ int Unsigned::pack_long_unsigned_helper(const long* val, size_t* len, int check)
     for (i = 0; i < *len; i++)
         grib_encode_unsigned_long(buf, val[i], &off, nbytes_ * 8);
 
-    ret = grib_set_long_internal(get_enclosing_handle(), arg_->get_name(parent_->h, 0), *len);
+    ret = grib_set_long_internal(get_enclosing_handle(), arg_->get_name(0), *len);
 
     if (ret == GRIB_SUCCESS)
         grib_buffer_replace(this, buf, buflen, 1, 1);
@@ -222,7 +222,7 @@ int Unsigned::value_count(long* len)
         *len = 1;
         return 0;
     }
-    return grib_get_long_internal(get_enclosing_handle(), arg_->get_name(parent_->h, 0), len);
+    return grib_get_long_internal(get_enclosing_handle(), arg_->get_name(0), len);
 }
 
 long Unsigned::byte_offset()

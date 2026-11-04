@@ -18,7 +18,7 @@ grib_action* grib_action_create_noop(grib_context* context, const char* fname)
 namespace eccodes::action
 {
 
-Noop::Noop(grib_context* context, const char* fname)
+Noop::Noop(grib_context* context, const char* /*fname*/)
 {
     char buf[1024] = { 0 };
 
@@ -37,7 +37,7 @@ Noop::~Noop()
     grib_context_free_persistent(context_, op_);
 }
 
-int Noop::execute(grib_handle* h)
+int Noop::execute(grib_handle* /*h*/)
 {
     return 0;
 }

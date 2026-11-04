@@ -30,7 +30,7 @@ Remove::Remove(grib_context* context, grib_arguments* args)
 
 Remove::~Remove()
 {
-    grib_arguments_free(context_, args_);
+    grib_arguments_free(args_);
     grib_context_free_persistent(context_, name_);
     grib_context_free_persistent(context_, op_);
 }
@@ -59,21 +59,21 @@ static void remove_accessor(grib_accessor* a)
     a = NULL;
 }
 
-int Remove::create_accessor(grib_section* p, grib_loader* h)
+int Remove::create_accessor(grib_section* p, grib_loader* /*h*/)
 {
-    grib_accessor* ga = grib_find_accessor(p->h, args_->get_name(p->h, 0));
+    grib_accessor* ga = grib_find_accessor(p->h, args_->get_name(0));
 
     if (ga) {
         remove_accessor(ga);
     }
     else {
         grib_context_log(context_, GRIB_LOG_DEBUG,
-                         "Action_class_remove: create_accessor: No accessor named %s to remove", args_->get_name(p->h, 0));
+                         "Action_class_remove: create_accessor: No accessor named %s to remove", args_->get_name(0));
     }
     return GRIB_SUCCESS;
 }
 
-void Remove::dump(FILE* f, int lvl)
+void Remove::dump(FILE* /*f*/, int /*lvl*/)
 {
     grib_context_log(context_, GRIB_LOG_ERROR, "%s: dump not implemented", name_);
     // grib_action_remove* a = (grib_action_remove*)act;

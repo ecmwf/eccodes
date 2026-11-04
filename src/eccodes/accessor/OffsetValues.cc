@@ -17,8 +17,8 @@ void OffsetValues::init(const long l, grib_arguments* args)
 {
     Double::init(l, args);
     int n = 0;
-    values_ = args->get_name(get_enclosing_handle(), n++);
-    missingValue_ = args->get_name(get_enclosing_handle(), n++);
+    values_ = args->get_name(n++);
+    missingValue_ = args->get_name(n++);
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     length_ = 0;
 }
@@ -32,7 +32,7 @@ int OffsetValues::unpack_double(double* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int OffsetValues::pack_double(const double* val, size_t* len)
+int OffsetValues::pack_double(const double* val, size_t* /*len*/)
 {
     double* values = NULL;
     size_t size = 0;

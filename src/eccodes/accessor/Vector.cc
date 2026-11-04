@@ -19,14 +19,14 @@ void Vector::init(const long l, grib_arguments* c)
     AbstractVector::init(l, c);
     int n = 0;
 
-    vector_ = c->get_name(get_enclosing_handle(), n++);
+    vector_ = c->get_name(n++);
     index_ = c->get_long(get_enclosing_handle(), n++);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     length_ = 0;
 }
 
-int Vector::unpack_double(double* val, size_t* len)
+int Vector::unpack_double(double* val, size_t* /*len*/)
 {
     int err = 0;
     size_t size = 0;

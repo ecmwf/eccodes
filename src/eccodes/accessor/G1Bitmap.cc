@@ -16,7 +16,7 @@ namespace eccodes::accessor
 void G1Bitmap::init(const long len, grib_arguments* arg)
 {
     Bitmap::init(len, arg);
-    unusedBits_ = arg->get_name(get_enclosing_handle(), 4);
+    unusedBits_ = arg->get_name(4);
 }
 
 int G1Bitmap::pack_double(const double* val, size_t* len)

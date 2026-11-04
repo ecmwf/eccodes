@@ -18,7 +18,7 @@
 #include "eccodes.h"
 #include <assert.h>
 
-int main(int argc, char* argv[])
+int main(void)
 {
     char key[200] = { 0 };
     FILE* in = NULL;

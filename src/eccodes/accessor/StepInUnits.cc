@@ -18,14 +18,13 @@ namespace eccodes::accessor
 void StepInUnits::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
-    grib_handle* hand = get_enclosing_handle();
     int n = 0;
 
-    forecast_time_value_ = c->get_name(hand, n++);
-    forecast_time_unit_ = c->get_name(hand, n++);
-    step_units_ = c->get_name(hand, n++);
-    time_range_unit_ = c->get_name(hand, n++);
-    time_range_value_ = c->get_name(hand, n++);
+    forecast_time_value_ = c->get_name(n++);
+    forecast_time_unit_ = c->get_name(n++);
+    step_units_ = c->get_name(n++);
+    time_range_unit_ = c->get_name(n++);
+    time_range_value_ = c->get_name(n++);
 }
 
 void StepInUnits::dump(eccodes::Dumper* dumper)
@@ -33,7 +32,7 @@ void StepInUnits::dump(eccodes::Dumper* dumper)
     dumper->dump_double(this, NULL);
 }
 
-int StepInUnits::unpack_long(long* val, size_t* len)
+int StepInUnits::unpack_long(long* val, size_t* /*len*/)
 {
     int err = 0;
     long forecast_time_value, forecast_time_unit, step_units;
@@ -63,7 +62,7 @@ int StepInUnits::unpack_long(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int StepInUnits::unpack_double(double* val, size_t* len)
+int StepInUnits::unpack_double(double* val, size_t* /*len*/)
 {
     int err = 0;
     long forecast_time_value, forecast_time_unit, step_units;
@@ -141,7 +140,7 @@ int StepInUnits::pack_long_new_(const long start_step_value, const long start_st
     return GRIB_SUCCESS;
 }
 
-int StepInUnits::pack_long(const long* val, size_t* len)
+int StepInUnits::pack_long(const long* val, size_t* /*len*/)
 {
     grib_handle* h = get_enclosing_handle();
     int ret = GRIB_SUCCESS;
@@ -173,7 +172,7 @@ int StepInUnits::pack_long(const long* val, size_t* len)
     return ret;
 }
 
-int StepInUnits::pack_string(const char* val, size_t* len)
+int StepInUnits::pack_string(const char* val, size_t* /*len*/)
 {
     grib_handle* h = get_enclosing_handle();
     // long force_step_units = eccodes::Unit(eccodes::Unit::Value::MISSING).value<long>();

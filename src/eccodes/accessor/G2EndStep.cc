@@ -19,29 +19,28 @@ void G2EndStep::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
     int n = 0;
-    grib_handle* h = get_enclosing_handle();
 
-    start_step_value_ = c->get_name(h, n++);
-    step_units_ = c->get_name(h, n++);
+    start_step_value_ = c->get_name(n++);
+    step_units_ = c->get_name(n++);
 
-    year_ = c->get_name(h, n++);
-    month_ = c->get_name(h, n++);
-    day_ = c->get_name(h, n++);
-    hour_ = c->get_name(h, n++);
-    minute_ = c->get_name(h, n++);
-    second_ = c->get_name(h, n++);
+    year_ = c->get_name(n++);
+    month_ = c->get_name(n++);
+    day_ = c->get_name(n++);
+    hour_ = c->get_name(n++);
+    minute_ = c->get_name(n++);
+    second_ = c->get_name(n++);
 
-    year_of_end_of_interval_ = c->get_name(h, n++);
-    month_of_end_of_interval_ = c->get_name(h, n++);
-    day_of_end_of_interval_ = c->get_name(h, n++);
-    hour_of_end_of_interval_ = c->get_name(h, n++);
-    minute_of_end_of_interval_ = c->get_name(h, n++);
-    second_of_end_of_interval_ = c->get_name(h, n++);
+    year_of_end_of_interval_ = c->get_name(n++);
+    month_of_end_of_interval_ = c->get_name(n++);
+    day_of_end_of_interval_ = c->get_name(n++);
+    hour_of_end_of_interval_ = c->get_name(n++);
+    minute_of_end_of_interval_ = c->get_name(n++);
+    second_of_end_of_interval_ = c->get_name(n++);
 
-    time_range_unit_ = c->get_name(h, n++);
-    time_range_value_ = c->get_name(h, n++);
-    typeOfTimeIncrement_ = c->get_name(h, n++);
-    numberOfTimeRanges_ = c->get_name(h, n++);
+    time_range_unit_ = c->get_name(n++);
+    time_range_value_ = c->get_name(n++);
+    typeOfTimeIncrement_ = c->get_name(n++);
+    numberOfTimeRanges_ = c->get_name(n++);
 }
 
 void G2EndStep::dump(eccodes::Dumper* dumper)
@@ -69,7 +68,6 @@ static bool is_special_expver(const grib_handle* h)
 }
 
 static int convert_time_range_long_(
-    grib_handle* h,
     long stepUnits,                   /* step_units */
     long indicatorOfUnitForTimeRange, /* time_range_unit */
     long* lengthOfTimeRange           /* time_range_value */
@@ -89,7 +87,7 @@ static int convert_time_range_long_(
     return GRIB_SUCCESS;
 }
 
-int G2EndStep::unpack_one_time_range_long_(long* val, size_t* len)
+int G2EndStep::unpack_one_time_range_long_(long* val)
 {
     int err = 0;
     long start_step_value;
@@ -117,7 +115,7 @@ int G2EndStep::unpack_one_time_range_long_(long* val, size_t* len)
     if ((err = grib_get_long_internal(h, "typeOfTimeIncrementSwitch", &typeOfTimeIncrementSwitch)))
         return err;
 
-    err = convert_time_range_long_(h, step_units, time_range_unit, &time_range_value);
+    err = convert_time_range_long_(step_units, time_range_unit, &time_range_value);
     if (err != GRIB_SUCCESS)
         return err;
 
@@ -144,7 +142,7 @@ int G2EndStep::unpack_one_time_range_long_(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int G2EndStep::unpack_one_time_range_double_(double* val, size_t* len)
+int G2EndStep::unpack_one_time_range_double_(double* val)
 {
     int err = 0;
     double start_step_value;
@@ -203,7 +201,7 @@ int G2EndStep::unpack_one_time_range_double_(double* val, size_t* len)
 }
 
 #define MAX_NUM_TIME_RANGES 16 /* maximum number of time range specifications */
-int G2EndStep::unpack_multiple_time_ranges_long_(long* val, size_t* len)
+int G2EndStep::unpack_multiple_time_ranges_long_(long* val)
 {
     int err = 0;
     grib_handle* h = get_enclosing_handle();
@@ -248,7 +246,7 @@ int G2EndStep::unpack_multiple_time_ranges_long_(long* val, size_t* len)
                 long the_coded_unit = arr_coded_unit[i];
                 long the_coded_time_range = arr_coded_time_range[i];
 
-                err = convert_time_range_long_(h, step_units, the_coded_unit, &the_coded_time_range);
+                err = convert_time_range_long_(step_units, the_coded_unit, &the_coded_time_range);
                 if (err != GRIB_SUCCESS)
                     return err;
 
@@ -266,7 +264,7 @@ int G2EndStep::unpack_multiple_time_ranges_long_(long* val, size_t* len)
             long the_coded_unit = arr_coded_unit[i];
             long the_coded_time_range = arr_coded_time_range[i];
 
-            err = convert_time_range_long_(h, step_units, the_coded_unit, &the_coded_time_range);
+            err = convert_time_range_long_(step_units, the_coded_unit, &the_coded_time_range);
             if (err != GRIB_SUCCESS)
                 return err;
 
@@ -283,7 +281,7 @@ int G2EndStep::unpack_multiple_time_ranges_long_(long* val, size_t* len)
     return GRIB_DECODING_ERROR;
 }
 
-int G2EndStep::unpack_multiple_time_ranges_double_(double* val, size_t* len)
+int G2EndStep::unpack_multiple_time_ranges_double_(double* val)
 {
     int err = 0;
     grib_handle* h = get_enclosing_handle();
@@ -371,7 +369,7 @@ int G2EndStep::unpack_multiple_time_ranges_double_(double* val, size_t* len)
 // For the old implementation of unpack_long, see
 //  src/deprecated/grib_accessor_g2end_step.unpack_long.cc
 //
-int G2EndStep::unpack_long(long* val, size_t* len)
+int G2EndStep::unpack_long(long* val, size_t* /*len*/)
 {
     grib_handle* h = get_enclosing_handle();
     int ret = 0;
@@ -399,10 +397,10 @@ int G2EndStep::unpack_long(long* val, size_t* len)
 
     try {
         if (numberOfTimeRanges == 1) {
-            ret = unpack_one_time_range_long_(val, len);
+            ret = unpack_one_time_range_long_(val);
         }
         else {
-            ret = unpack_multiple_time_ranges_long_(val, len);
+            ret = unpack_multiple_time_ranges_long_(val);
         }
     }
     catch (std::exception& e) {
@@ -413,7 +411,7 @@ int G2EndStep::unpack_long(long* val, size_t* len)
     return ret;
 }
 
-int G2EndStep::unpack_double(double* val, size_t* len)
+int G2EndStep::unpack_double(double* val, size_t* /*len*/)
 {
     grib_handle* h = get_enclosing_handle();
     int ret = 0;
@@ -441,10 +439,10 @@ int G2EndStep::unpack_double(double* val, size_t* len)
 
     try {
         if (numberOfTimeRanges == 1) {
-            ret = unpack_one_time_range_double_(val, len);
+            ret = unpack_one_time_range_double_(val);
         }
         else {
-            ret = unpack_multiple_time_ranges_double_(val, len);
+            ret = unpack_multiple_time_ranges_double_(val);
         }
     }
     catch (std::exception& e) {
@@ -636,7 +634,7 @@ int G2EndStep::unpack_string(char* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int G2EndStep::pack_long(const long* val, size_t* len)
+int G2EndStep::pack_long(const long* val, size_t* /*len*/)
 {
     grib_handle* h = get_enclosing_handle();
     int ret;
@@ -666,7 +664,7 @@ int G2EndStep::pack_long(const long* val, size_t* len)
     return ret;
 }
 
-int G2EndStep::pack_string(const char* val, size_t* len)
+int G2EndStep::pack_string(const char* val, size_t* /*len*/)
 {
     grib_handle* h = get_enclosing_handle();
     int ret = 0;

@@ -18,7 +18,7 @@ void ToString::init(const long len, grib_arguments* arg)
     Gen::init(len, arg);
     grib_handle* hand = get_enclosing_handle();
 
-    key_ = arg->get_name(hand, 0);
+    key_ = arg->get_name(0);
     start_ = arg->get_long(hand, 1);
     str_length_ = arg->get_long(hand, 2);
 
@@ -86,7 +86,7 @@ int ToString::unpack_string(char* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int ToString::unpack_long(long* v, size_t* len)
+int ToString::unpack_long(long* v, size_t* /*len*/)
 {
     char val[1024] = { 0 };
     size_t l = sizeof(val);
@@ -104,7 +104,7 @@ int ToString::unpack_long(long* v, size_t* len)
     return err;
 }
 
-int ToString::unpack_double(double* v, size_t* len)
+int ToString::unpack_double(double* v, size_t* /*len*/)
 {
     size_t l = 1;
     long val = 0;

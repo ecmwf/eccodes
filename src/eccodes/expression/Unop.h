@@ -18,7 +18,7 @@ namespace eccodes::expression
 class Unop : public Expression
 {
 public:
-    Unop(grib_context*, UnopLongProc, UnopDoubleProc, Expression*);
+    Unop(UnopLongProc, UnopDoubleProc, Expression*);
 
     void destroy(grib_context*) override;
     void print(grib_context*, grib_handle*, FILE*) const override;
@@ -38,4 +38,4 @@ private:
 
 }  // namespace eccodes::expression
 
-grib_expression* new_unop_expression(grib_context*, grib_unop_long_proc, grib_unop_double_proc, grib_expression*);
+grib_expression* new_unop_expression(grib_unop_long_proc, grib_unop_double_proc, grib_expression*);

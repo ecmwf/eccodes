@@ -126,7 +126,6 @@ static void xy2lonlat(double radius, double n, double f, double rho0_bare, doubl
 
 int LambertConformal::init_sphere(const grib_handle* h,
                                   size_t nv, long nx, long ny,
-                                  double LoVInDegrees,
                                   double Dx, double Dy, double radius,
                                   double latFirstInRadians, double lonFirstInRadians,
                                   double LoVInRadians, double Latin1InRadians, double Latin2InRadians,
@@ -216,7 +215,6 @@ int LambertConformal::init_sphere(const grib_handle* h,
 // Oblate spheroid
 int LambertConformal::init_oblate(const grib_handle* h,
                                   size_t nv, long nx, long ny,
-                                  double LoVInDegrees,
                                   double Dx, double Dy,
                                   double earthMinorAxisInMetres, double earthMajorAxisInMetres,
                                   double latFirstInRadians, double lonFirstInRadians,
@@ -360,22 +358,22 @@ int LambertConformal::init(grib_handle* h, grib_arguments* args)
         LaDInRadians;
     double earthMajorAxisInMetres = 0, earthMinorAxisInMetres = 0;
 
-    const char* sradius = args->get_name(h, carg_++);
-    const char* snx = args->get_name(h, carg_++);
-    const char* sny = args->get_name(h, carg_++);
-    const char* sLoVInDegrees = args->get_name(h, carg_++);
-    const char* sLaDInDegrees = args->get_name(h, carg_++);
-    const char* sLatin1InDegrees = args->get_name(h, carg_++);
-    const char* sLatin2InDegrees = args->get_name(h, carg_++);
-    const char* slatFirstInDegrees = args->get_name(h, carg_++);
-    const char* slonFirstInDegrees = args->get_name(h, carg_++);
+    const char* sradius = args->get_name(carg_++);
+    const char* snx = args->get_name(carg_++);
+    const char* sny = args->get_name(carg_++);
+    const char* sLoVInDegrees = args->get_name(carg_++);
+    const char* sLaDInDegrees = args->get_name(carg_++);
+    const char* sLatin1InDegrees = args->get_name(carg_++);
+    const char* sLatin2InDegrees = args->get_name(carg_++);
+    const char* slatFirstInDegrees = args->get_name(carg_++);
+    const char* slonFirstInDegrees = args->get_name(carg_++);
     // Dx and Dy are in Metres
-    const char* sDx = args->get_name(h, carg_++);
-    const char* sDy = args->get_name(h, carg_++);
-    const char* siScansNegatively = args->get_name(h, carg_++);
-    const char* sjScansPositively = args->get_name(h, carg_++);
-    const char* sjPointsAreConsecutive = args->get_name(h, carg_++);
-    const char* salternativeRowScanning = args->get_name(h, carg_++);
+    const char* sDx = args->get_name(carg_++);
+    const char* sDy = args->get_name(carg_++);
+    const char* siScansNegatively = args->get_name(carg_++);
+    const char* sjScansPositively = args->get_name(carg_++);
+    const char* sjPointsAreConsecutive = args->get_name(carg_++);
+    const char* salternativeRowScanning = args->get_name(carg_++);
 
     if ((err = grib_get_long_internal(h, snx, &nx)) != GRIB_SUCCESS) return err;
     if ((err = grib_get_long_internal(h, sny, &ny)) != GRIB_SUCCESS) return err;
@@ -439,7 +437,6 @@ int LambertConformal::init(grib_handle* h, grib_arguments* args)
 
     if (is_oblate) {
         err = init_oblate(h, nv_, nx, ny,
-                          LoVInDegrees,
                           Dx, Dy, earthMinorAxisInMetres, earthMajorAxisInMetres,
                           latFirstInRadians, lonFirstInRadians,
                           LoVInRadians, Latin1InRadians, Latin2InRadians,
@@ -447,7 +444,6 @@ int LambertConformal::init(grib_handle* h, grib_arguments* args)
     }
     else {
         err = init_sphere(h, nv_, nx, ny,
-                          LoVInDegrees,
                           Dx, Dy, radius,
                           latFirstInRadians, lonFirstInRadians,
                           LoVInRadians, Latin1InRadians, Latin2InRadians, LaDInRadians);

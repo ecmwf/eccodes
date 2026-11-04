@@ -56,7 +56,7 @@ int Functor::evaluate_long(grib_handle* h, long* lres) const
     }
 
     if (STR_EQUAL(name_, "defined")) {
-        const char* keyName = args_ ? args_->get_name(h, 0) : nullptr;
+        const char* keyName = args_ ? args_->get_name(0) : nullptr;
         if (keyName) {
             const grib_accessor* a = grib_find_accessor(h, keyName);
             *lres = a != NULL ? 1 : 0;
@@ -72,7 +72,7 @@ int Functor::evaluate_long(grib_handle* h, long* lres) const
     }
 
     if (STR_EQUAL(name_, "missing")) {
-        const char* keyName = args_ ? args_->get_name(h, 0) : nullptr;
+        const char* keyName = args_ ? args_->get_name(0) : nullptr;
         if (keyName) {
             long val = 0;
             int err = 0;
@@ -100,8 +100,8 @@ int Functor::evaluate_long(grib_handle* h, long* lres) const
 
     if (STR_EQUAL(name_, "max") || STR_EQUAL(name_, "min")) {
         // For now, only two arguments are supported
-        const grib_expression* exp1 = args_ ? args_->get_expression(h, 0) : nullptr;
-        const grib_expression* exp2 = args_ ? args_->get_expression(h, 1) : nullptr;
+        const grib_expression* exp1 = args_ ? args_->get_expression(0) : nullptr;
+        const grib_expression* exp2 = args_ ? args_->get_expression(1) : nullptr;
         if (exp1 && exp2) {
             long lval1 = 0, lval2 = 0;
             int ret = exp1->evaluate_long(h, &lval1);
@@ -116,7 +116,7 @@ int Functor::evaluate_long(grib_handle* h, long* lres) const
     }
 
     if (STR_EQUAL(name_, "abs")) {
-        const grib_expression* exp = args_ ? args_->get_expression(h, 0) : nullptr;
+        const grib_expression* exp = args_ ? args_->get_expression(0) : nullptr;
         if (exp) {
             long lval = 0;
             int ret = exp->evaluate_long(h, &lval);
@@ -128,7 +128,7 @@ int Functor::evaluate_long(grib_handle* h, long* lres) const
 
     if (STR_EQUAL(name_, "size")) {
         *lres = 0;
-        const char* keyName = args_ ? args_->get_name(h, 0) : nullptr;
+        const char* keyName = args_ ? args_->get_name(0) : nullptr;
         if (keyName) {
             size_t size = 0;
             int err = grib_get_size(h, keyName, &size);
@@ -145,7 +145,7 @@ int Functor::evaluate_long(grib_handle* h, long* lres) const
         if (n != 2) {
             return GRIB_INVALID_ARGUMENT;
         }
-        const char* keyName = args_->get_name(h, 0);
+        const char* keyName = args_->get_name(0);
         if (keyName) {
             long index = args_->get_long(h, 1);
             size_t size = 0;
@@ -200,7 +200,7 @@ int Functor::evaluate_long(grib_handle* h, long* lres) const
         // 1. Cannot distinguish between environment variable NOT SET
         //    and SET but equal to 0
         // 2. Cannot deal with string values
-        const char* p = args_ ? args_->get_name(h, 0) : nullptr;
+        const char* p = args_ ? args_->get_name(0) : nullptr;
         if (p) {
             const char* env = getenv(p);
             if (env) {
@@ -219,7 +219,7 @@ int Functor::evaluate_long(grib_handle* h, long* lres) const
         *lres = 0;
         const int n = args_ ? args_->get_count() : 0;
         if (n != 3) return GRIB_INVALID_ARGUMENT;
-        const char* keyName = args_ ? args_->get_name(h, 0) : nullptr;
+        const char* keyName = args_ ? args_->get_name(0) : nullptr;
         if (!keyName) return GRIB_INVALID_ARGUMENT;
         int type = 0;
         int err = grib_get_native_type(h, keyName, &type);
@@ -247,7 +247,7 @@ int Functor::evaluate_long(grib_handle* h, long* lres) const
 
     if (STR_EQUAL(name_, "is_one_of")) {
         *lres = 0;
-        const char* keyName = args_->get_name(h, 0);
+        const char* keyName = args_->get_name(0);
         if (!keyName) return GRIB_INVALID_ARGUMENT;
         int type = 0;
         int err = grib_get_native_type(h, keyName, &type);
@@ -293,7 +293,7 @@ int Functor::evaluate_long(grib_handle* h, long* lres) const
     return GRIB_NOT_IMPLEMENTED;
 }
 
-void Functor::print(grib_context* c, grib_handle* f, FILE* out) const
+void Functor::print(grib_context* /*c*/, grib_handle* /*f*/, FILE* out) const
 {
     fprintf(out, "%s(", name_);
     // grib_expression_print(c,args_,f);
@@ -303,7 +303,7 @@ void Functor::print(grib_context* c, grib_handle* f, FILE* out) const
 void Functor::destroy(grib_context* c)
 {
     grib_context_free_persistent(c, name_);
-    grib_arguments_free(c, args_);
+    grib_arguments_free(args_);
 }
 
 void Functor::add_dependency(grib_accessor* observer)
@@ -318,7 +318,7 @@ Functor::Functor(grib_context* c, const char* name, grib_arguments* args)
     args_ = args;
 }
 
-int Functor::native_type(grib_handle* h) const
+int Functor::native_type(grib_handle* /*h*/) const
 {
     return GRIB_TYPE_LONG;
 }

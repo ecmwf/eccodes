@@ -18,7 +18,7 @@ void ToDouble::init(const long len, grib_arguments* arg)
     Gen::init(len, arg);
     grib_handle* hand = get_enclosing_handle();
 
-    key_ = arg->get_name(hand, 0);
+    key_ = arg->get_name(0);
     start_ = arg->get_long(hand, 1);
     str_length_ = arg->get_long(hand, 2);
     scale_ = arg->get_long(hand, 3);
@@ -90,7 +90,7 @@ int ToDouble::unpack_string(char* val, size_t* len)
     return err;
 }
 
-int ToDouble::unpack_long(long* v, size_t* len)
+int ToDouble::unpack_long(long* v, size_t* /*len*/)
 {
     char val[1024] = { 0 };
     size_t l = sizeof(val);
@@ -108,7 +108,7 @@ int ToDouble::unpack_long(long* v, size_t* len)
     return err;
 }
 
-int ToDouble::unpack_double(double* v, size_t* len)
+int ToDouble::unpack_double(double* v, size_t* /*len*/)
 {
     char val[1024] = { 0 };
     size_t l = sizeof(val);

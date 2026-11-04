@@ -25,7 +25,7 @@ void Getenv::init(const long l, grib_arguments* args)
     value_ = 0;
 }
 
-int Getenv::pack_string(const char* val, size_t* len)
+int Getenv::pack_string(const char* /*val*/, size_t* /*len*/)
 {
     return GRIB_NOT_IMPLEMENTED;
 }

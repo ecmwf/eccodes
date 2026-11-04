@@ -43,7 +43,7 @@ static int copy_values(grib_handle* h, grib_accessor* ga)
     return GRIB_NOT_FOUND;
 }
 
-int grib_lookup_long_from_handle(grib_context* gc, grib_loader* loader, const char* name, long* value)
+int grib_lookup_long_from_handle(grib_context* /*gc*/, grib_loader* loader, const char* name, long* value)
 {
     grib_handle* h = (grib_handle*)loader->data;
     grib_accessor* b = grib_find_accessor(h, name);
@@ -102,7 +102,7 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
     if (default_value) {
         grib_context_log(h->context, GRIB_LOG_DEBUG, "Copying:  setting %s to default value",
                          ga->name_);
-        ga->pack_expression(default_value->get_expression(h, 0));
+        ga->pack_expression(default_value->get_expression(0));
     }
 
     if ((ga->flags_ & GRIB_ACCESSOR_FLAG_NO_COPY) ||

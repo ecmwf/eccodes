@@ -21,7 +21,7 @@ void LongVector::init(const long l, grib_arguments* c)
     AbstractLongVector* v = NULL;
     int n = 0;
 
-    vector_ = c->get_name(get_enclosing_handle(), n++);
+    vector_ = c->get_name(n++);
     va = (grib_accessor*)grib_find_accessor(get_enclosing_handle(), vector_);
     v = (AbstractLongVector*)va;
 
@@ -33,7 +33,7 @@ void LongVector::init(const long l, grib_arguments* c)
     length_ = 0;
 }
 
-int LongVector::unpack_long(long* val, size_t* len)
+int LongVector::unpack_long(long* val, size_t* /*len*/)
 {
     size_t size = 0;
     int err = 0;

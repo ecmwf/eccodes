@@ -17,13 +17,12 @@ namespace eccodes::accessor
 void DataRunLengthPacking::init(const long v, grib_arguments* args)
 {
     Values::init(v, args);
-    grib_handle* gh = get_enclosing_handle();
-    number_of_values_ = args->get_name(gh, carg_++);
-    bits_per_value_ = args->get_name(gh, carg_++);
-    max_level_value_ = args->get_name(gh, carg_++);
-    number_of_level_values_ = args->get_name(gh, carg_++);
-    decimal_scale_factor_ = args->get_name(gh, carg_++);
-    level_values_ = args->get_name(gh, carg_++);
+    number_of_values_ = args->get_name(carg_++);
+    bits_per_value_ = args->get_name(carg_++);
+    max_level_value_ = args->get_name(carg_++);
+    number_of_level_values_ = args->get_name(carg_++);
+    decimal_scale_factor_ = args->get_name(carg_++);
+    level_values_ = args->get_name(carg_++);
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
 

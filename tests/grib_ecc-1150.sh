@@ -40,7 +40,7 @@ ${tools_dir}/grib_set -s \
    productDefinitionTemplateNumber=5,scaleFactorOfLowerLimit=missing,scaledValueOfLowerLimit=missing \
    $in $tempGrib
 
-grib_check_key_equals $tempGrib lowerLimit,upperLimit 'MISSING 0'
+grib_check_key_equals $tempGrib lowerLimit,upperLimit 'MISSING MISSING'
 
 cat > $tempFilt <<EOF
  print "lower=[lowerLimit], upper=[upperLimit]";
@@ -48,7 +48,7 @@ cat > $tempFilt <<EOF
  transient ulim_missing = missing(upperLimit);
 
  assert( llim_missing == 1 );
- assert( ulim_missing == 0 );
+ assert( ulim_missing == 1 );
 EOF
 ${tools_dir}/grib_filter $tempFilt $tempGrib
 
@@ -59,14 +59,14 @@ ${tools_dir}/grib_set -s \
    productDefinitionTemplateNumber=5,scaleFactorOfUpperLimit=missing,scaledValueOfUpperLimit=missing \
    $in $tempGrib
 
-grib_check_key_equals $tempGrib lowerLimit,upperLimit '0 MISSING'
+grib_check_key_equals $tempGrib lowerLimit,upperLimit 'MISSING MISSING'
 
 cat > $tempFilt <<EOF
  print "lower=[lowerLimit], upper=[upperLimit]";
  transient llim_missing = missing(lowerLimit);
  transient ulim_missing = missing(upperLimit);
 
- assert( llim_missing == 0 );
+ assert( llim_missing == 1 );
  assert( ulim_missing == 1 );
 EOF
 ${tools_dir}/grib_filter $tempFilt $tempGrib

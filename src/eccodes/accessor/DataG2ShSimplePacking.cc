@@ -17,8 +17,8 @@ void DataG2ShSimplePacking::init(const long v, grib_arguments* args)
 {
     DataShSimplePacking::init(v, args);
 
-    numberOfValues_ = args->get_name(get_enclosing_handle(), 2);
-    numberOfDataPoints_ = args->get_name(get_enclosing_handle(), 3);
+    numberOfValues_ = args->get_name(2);
+    numberOfDataPoints_ = args->get_name(3);
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
 

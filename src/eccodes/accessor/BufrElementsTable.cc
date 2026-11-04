@@ -39,8 +39,8 @@ void BufrElementsTable::init(const long len, grib_arguments* params)
     int n = 0;
 
     dictionary_ = params->get_string(get_enclosing_handle(), n++);
-    masterDir_ = params->get_name(get_enclosing_handle(), n++);
-    localDir_ = params->get_name(get_enclosing_handle(), n++);
+    masterDir_ = params->get_name(n++);
+    localDir_ = params->get_name(n++);
 
     length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
@@ -282,7 +282,7 @@ bufr_descriptor* BufrElementsTable::get_descriptor(int code, int* err)
     return v;
 }
 
-int BufrElementsTable::unpack_string(char* buffer, size_t* len)
+int BufrElementsTable::unpack_string(char* /*buffer*/, size_t* /*len*/)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
@@ -298,12 +298,12 @@ long BufrElementsTable::get_native_type()
     return GRIB_TYPE_STRING;
 }
 
-int BufrElementsTable::unpack_long(long* val, size_t* len)
+int BufrElementsTable::unpack_long(long* /*val*/, size_t* /*len*/)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int BufrElementsTable::unpack_double(double* val, size_t* len)
+int BufrElementsTable::unpack_double(double* /*val*/, size_t* /*len*/)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
