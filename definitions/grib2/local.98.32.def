@@ -1,4 +1,4 @@
-# Local definition 45: 
+# Local definition 45:
 
 unsigned[2] clusteringStartTimeStep  : dump;
 unsigned[2] clusteringEndTimeStep  : dump;
