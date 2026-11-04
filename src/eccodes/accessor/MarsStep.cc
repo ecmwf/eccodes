@@ -17,8 +17,8 @@ void MarsStep::init(const long l, grib_arguments* c)
 {
     Ascii::init(l, c);
     int n = 0;
-    stepRange_ = c->get_name(get_enclosing_handle(), n++);
-    stepType_ = c->get_name(get_enclosing_handle(), n++);
+    stepRange_ = c->get_name(n++);
+    stepType_ = c->get_name(n++);
 }
 
 int MarsStep::pack_string(const char* val, size_t* len)
@@ -81,7 +81,7 @@ int MarsStep::unpack_string(char* val, size_t* len)
     return ret;
 }
 
-int MarsStep::pack_long(const long* val, size_t* len)
+int MarsStep::pack_long(const long* val, size_t* /*len*/)
 {
     char buff[100] = { 0 };
     size_t bufflen = 100;

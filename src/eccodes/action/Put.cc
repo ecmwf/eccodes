@@ -11,7 +11,7 @@
 #include "grib_api_internal.h"
 #include "Put.h"
 
-grib_action* grib_action_create_put(grib_context* context, const char* name, grib_arguments* args)
+grib_action* grib_action_create_put(grib_context* context)
 {
     grib_context_log(context, GRIB_LOG_ERROR, "The 'export' statement is deprecated");
     return NULL;

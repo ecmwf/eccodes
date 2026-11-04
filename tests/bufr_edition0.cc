@@ -26,7 +26,7 @@ const unsigned char bufrEdition0[] = {
     0x8d, 0x1a, 0xac, 0x6a, 0x55, 0x2a, 0x46, 0x8d, 0x1a, 0x30, 0x37, 0x37, 0x37, 0x37
 };
 
-int main(int argc, char* argv[])
+int main(int /*argc*/, char* argv[])
 {
     size_t totalLength = 194;
     codes_handle* h = codes_handle_new_from_message(0, bufrEdition0, totalLength);

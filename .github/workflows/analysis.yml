@@ -1,0 +1,109 @@
+name: Analysis
+
+# Valgrind, sanitizers and coverage: the [matrix.analysis] lanes of
+# .ci/manifest.toml. Too slow for every PR and not yet clean, so by hand only.
+# The quick lint lanes run in ci.yml.
+on:
+  workflow_dispatch:
+
+env:
+  ARTIFACT_POLL_INTERVAL: ${{ vars.ARTIFACT_POLL_INTERVAL || '60' }}
+  ARTIFACT_S3_ENDPOINT: ${{ secrets.ARTIFACT_S3_ENDPOINT }}
+  ARTIFACT_S3_BUCKET: ${{ secrets.ARTIFACT_S3_BUCKET }}
+  SCCACHE_BUCKET: ${{ secrets.SCCACHE_BUCKET }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+permissions:
+  contents: read
+
+jobs:
+  resolve:
+    runs-on: arc-runner-normal
+    container:
+      image: eccr.ecmwf.int/public-ci-images/ubuntu24.04-base:latest
+    outputs:
+      analysis-matrix: ${{ toJSON(fromJSON(steps.r.outputs.json).analysis) }}
+    steps:
+      - name: Announce image
+        uses: ecmwf/ci-infrastructure/actions/announce-image@main
+      - id: mint
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+      - uses: actions/checkout@v6
+      - id: r
+        uses: ecmwf/ci-infrastructure/actions/resolve-deps@main
+        with:
+          matrix: analysis
+          token: ${{ steps.mint.outputs.token }}
+          client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
+          app-private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
+
+  analysis:
+    needs: resolve
+    name: analysis (${{ matrix._resolved['job-name'] }})
+    runs-on: ${{ matrix['runs-on'] }}
+    container:
+      image: ${{ matrix.container || '' }}
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.resolve.outputs.analysis-matrix) }}
+    steps:
+      - name: Announce image
+        uses: ecmwf/ci-infrastructure/actions/announce-image@main
+      - id: mint
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+      - uses: actions/checkout@v6
+
+      - name: Fetch resolved deps
+        id: deps
+        uses: ecmwf/ci-infrastructure/actions/fetch-deps@main
+        with:
+          deps-json: ${{ toJSON(matrix._resolved.deps) }}
+          token: ${{ steps.mint.outputs.token }}
+
+      # Until the tools are in an image.
+      - name: Install ${{ matrix.apt-packages }}
+        if: matrix.apt-packages
+        env:
+          PACKAGES: ${{ matrix.apt-packages }}
+        run: |
+          sudo=$([ "$(id -u)" -eq 0 ] || echo sudo)
+          $sudo apt-get update
+          # shellcheck disable=SC2086
+          $sudo apt-get install -y --no-install-recommends $PACKAGES
+
+      - name: Run ${{ matrix.options }}
+        id: build
+        uses: ecmwf/ci-infrastructure/actions/run-job-script@main
+        with:
+          job-script: ${{ matrix.job-script }}
+          matrix-leg: ${{ toJSON(matrix) }}
+          package: eccodes-analysis
+          cmake-prefix-path: ${{ steps.deps.outputs.cmake-prefix-path }}
+
+      - name: Upload reports
+        if: always() && steps.build.outputs.build-dir
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: analysis-${{ matrix.options }}-${{ matrix['cxx-compiler'] }}
+          path: |
+            ${{ steps.build.outputs.build-dir }}/build.log
+            ${{ steps.build.outputs.build-dir }}/clang-tidy.log
+            ${{ steps.build.outputs.build-dir }}/cppcheck.txt
+            ${{ steps.build.outputs.build-dir }}/coverage/
+            ${{ steps.build.outputs.build-dir }}/Testing/Temporary/LastTest*.log
+          if-no-files-found: ignore
+
+      - name: Print dependency table
+        if: always()
+        uses: ecmwf/ci-infrastructure/actions/print-dep-table@main
+        with:
+          resolved: ${{ toJSON(matrix._resolved) }}

@@ -24,17 +24,16 @@ void DataCcsdsPacking::init(const long v, grib_arguments* args)
 {
     Values::init(v, args);
 
-    grib_handle* h = get_enclosing_handle();
-    number_of_values_ = args->get_name(h, carg_++);
-    reference_value_ = args->get_name(h, carg_++);
-    binary_scale_factor_ = args->get_name(h, carg_++);
-    decimal_scale_factor_ = args->get_name(h, carg_++);
-    optimize_scaling_factor_ = args->get_name(h, carg_++);
-    bits_per_value_ = args->get_name(h, carg_++);
-    number_of_data_points_ = args->get_name(h, carg_++);
-    ccsds_flags_ = args->get_name(h, carg_++);
-    ccsds_block_size_ = args->get_name(h, carg_++);
-    ccsds_rsi_ = args->get_name(h, carg_++);
+    number_of_values_ = args->get_name(carg_++);
+    reference_value_ = args->get_name(carg_++);
+    binary_scale_factor_ = args->get_name(carg_++);
+    decimal_scale_factor_ = args->get_name(carg_++);
+    optimize_scaling_factor_ = args->get_name(carg_++);
+    bits_per_value_ = args->get_name(carg_++);
+    number_of_data_points_ = args->get_name(carg_++);
+    ccsds_flags_ = args->get_name(carg_++);
+    ccsds_block_size_ = args->get_name(carg_++);
+    ccsds_rsi_ = args->get_name(carg_++);
 
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
@@ -632,32 +631,32 @@ static void print_error_feature_not_enabled(grib_context* c)
                      "CCSDS support not enabled. "
                      "Please rebuild with -DENABLE_AEC=ON (Adaptive Entropy Coding library)");
 }
-int DataCcsdsPacking::pack_double(const double* val, size_t* len)
+int DataCcsdsPacking::pack_double(const double* /*val*/, size_t* /*len*/)
 {
     print_error_feature_not_enabled(context_);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
-int DataCcsdsPacking::unpack_double(double* val, size_t* len)
+int DataCcsdsPacking::unpack_double(double* /*val*/, size_t* /*len*/)
 {
     print_error_feature_not_enabled(context_);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
-int DataCcsdsPacking::unpack_float(float* val, size_t* len)
+int DataCcsdsPacking::unpack_float(float* /*val*/, size_t* /*len*/)
 {
     print_error_feature_not_enabled(context_);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
-int DataCcsdsPacking::unpack_double_element(size_t idx, double* val)
+int DataCcsdsPacking::unpack_double_element(size_t /*idx*/, double* /*val*/)
 {
     print_error_feature_not_enabled(context_);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
-int DataCcsdsPacking::unpack_double_element_set(const size_t* index_array, size_t len, double* val_array)
+int DataCcsdsPacking::unpack_double_element_set(const size_t* /*index_array*/, size_t /*len*/, double* /*val_array*/)
 {
     print_error_feature_not_enabled(context_);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
-int DataCcsdsPacking::pack_bytes(const unsigned char* val, size_t* len)
+int DataCcsdsPacking::pack_bytes(const unsigned char* /*val*/, size_t* /*len*/)
 {
     print_error_feature_not_enabled(context_);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;

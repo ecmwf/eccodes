@@ -36,8 +36,8 @@ private:
     const char* lon_last_ = nullptr;
     const char* support_legacy_ = nullptr;
 
-    int unpack_long_new(long* val, size_t* len);
-    int unpack_long_with_legacy_support(long* val, size_t* len);
+    int unpack_long_new(long* val);
+    int unpack_long_with_legacy_support(long* val);
 
 public:
     static constexpr AccessorType accessor_type_{ "number_of_points_gaussian" };

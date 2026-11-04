@@ -17,12 +17,12 @@ void Sum::init(const long l, grib_arguments* c)
 {
     Double::init(l, c);
     int n = 0;
-    values_ = c->get_name(get_enclosing_handle(), n++);
+    values_ = c->get_name(n++);
     length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-int Sum::unpack_long(long* val, size_t* len)
+int Sum::unpack_long(long* val, size_t* /*len*/)
 {
     int ret = 0;
     size_t size = 0;
@@ -54,7 +54,7 @@ int Sum::unpack_long(long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int Sum::unpack_double(double* val, size_t* len)
+int Sum::unpack_double(double* val, size_t* /*len*/)
 {
     int ret = 0;
     size_t size = 0;

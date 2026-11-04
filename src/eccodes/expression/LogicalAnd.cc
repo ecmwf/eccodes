@@ -96,13 +96,13 @@ void LogicalAnd::add_dependency(grib_accessor* observer)
     right_->add_dependency(observer);
 }
 
-LogicalAnd::LogicalAnd(grib_context* c, Expression* left, Expression* right)
+LogicalAnd::LogicalAnd(Expression* left, Expression* right)
 {
     left_ = left;
     right_ = right;
 }
 
-int LogicalAnd::native_type(grib_handle* h) const
+int LogicalAnd::native_type(grib_handle* /*h*/) const
 {
     return GRIB_TYPE_LONG;
 }
@@ -110,7 +110,7 @@ int LogicalAnd::native_type(grib_handle* h) const
 }  // namespace eccodes::expression
 
 
-grib_expression* new_logical_and_expression(grib_context* c, grib_expression* left, grib_expression* right)
+grib_expression* new_logical_and_expression(grib_expression* left, grib_expression* right)
 {
-    return new eccodes::expression::LogicalAnd(c, left, right);
+    return new eccodes::expression::LogicalAnd(left, right);
 }

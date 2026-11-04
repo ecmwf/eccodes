@@ -22,16 +22,15 @@ void DataJpeg2000Packing::init(const long v, grib_arguments* args)
 {
     DataSimplePacking::init(v, args);
     const char* user_lib = NULL;
-    grib_handle* hand = get_enclosing_handle();
 
     jpeg_lib_ = 0;
-    type_of_compression_used_ = args->get_name(hand, carg_++);
-    target_compression_ratio_ = args->get_name(hand, carg_++);
-    ni_ = args->get_name(hand, carg_++);
-    nj_ = args->get_name(hand, carg_++);
-    list_defining_points_ = args->get_name(hand, carg_++);
-    number_of_data_points_ = args->get_name(hand, carg_++);
-    scanning_mode_ = args->get_name(hand, carg_++);
+    type_of_compression_used_ = args->get_name(carg_++);
+    target_compression_ratio_ = args->get_name(carg_++);
+    ni_ = args->get_name(carg_++);
+    nj_ = args->get_name(carg_++);
+    list_defining_points_ = args->get_name(carg_++);
+    number_of_data_points_ = args->get_name(carg_++);
+    scanning_mode_ = args->get_name(carg_++);
     edition_ = 2;
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 
@@ -86,7 +85,7 @@ int DataJpeg2000Packing::value_count(long* n_vals)
 #define EXTRA_BUFFER_SIZE 10240
 
 #if HAVE_JPEG
-int DataJpeg2000Packing::unpack_float(float* val, size_t* len)
+int DataJpeg2000Packing::unpack_float(float* /*val*/, size_t* /*len*/)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
@@ -430,18 +429,18 @@ static void print_error_feature_not_enabled(grib_context* c)
     grib_context_log(c, GRIB_LOG_ERROR,
                      "JPEG support not enabled. Please rebuild with -DENABLE_JPG=ON");
 }
-int DataJpeg2000Packing::unpack_float(float* val, size_t* len)
+int DataJpeg2000Packing::unpack_float(float* /*val*/, size_t* /*len*/)
 {
     print_error_feature_not_enabled(context_);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
-int DataJpeg2000Packing::unpack_double(double* val, size_t* len)
+int DataJpeg2000Packing::unpack_double(double* /*val*/, size_t* /*len*/)
 {
     print_error_feature_not_enabled(context_);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
 
-int DataJpeg2000Packing::pack_double(const double* val, size_t* len)
+int DataJpeg2000Packing::pack_double(const double* /*val*/, size_t* /*len*/)
 {
     print_error_feature_not_enabled(context_);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;

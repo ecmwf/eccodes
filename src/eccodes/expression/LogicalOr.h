@@ -16,7 +16,7 @@ namespace eccodes::expression
 class LogicalOr : public Expression
 {
 public:
-    LogicalOr(grib_context*, Expression*, Expression*);
+    LogicalOr(Expression*, Expression*);
 
     void destroy(grib_context*) override;
     void print(grib_context*, grib_handle*, FILE*) const override;
@@ -34,4 +34,4 @@ private:
 
 }  // namespace eccodes::expression
 
-grib_expression* new_logical_or_expression(grib_context*, grib_expression*, grib_expression*);
+grib_expression* new_logical_or_expression(grib_expression*, grib_expression*);

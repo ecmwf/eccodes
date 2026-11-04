@@ -25,13 +25,13 @@ concurrency:
   cancel-in-progress: true
 jobs:
   ci-approval:
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-latest
     permissions:
       pull-requests: write
     steps:
     - uses: ecmwf/ci-infrastructure/actions/require-ci-approval@main
   context:
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-latest
     permissions:
       actions: read
       pull-requests: read
@@ -42,6 +42,7 @@ jobs:
       ci-url: ${{ steps.ctx.outputs.ci-url }}
       ci-summary: ${{ steps.ctx.outputs.ci-summary }}
       pull-request: ${{ steps.ctx.outputs.pull-request }}
+      hpc-only: ${{ steps.ctx.outputs.hpc-only }}
     steps:
     - name: Resolve the commit under test
       id: ctx
@@ -52,7 +53,7 @@ jobs:
     needs:
     - ci-approval
   label-gate:
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-latest
     permissions:
       pull-requests: read
     outputs:
@@ -66,6 +67,7 @@ jobs:
         sha: ${{ needs.context.outputs.head-sha }}
         pull-request: ${{ needs.context.outputs.pull-request }}
         level: ${{ inputs.level }}
+        require-label: run-hpc-ci
     needs:
     - ci-approval
     - context
@@ -97,7 +99,7 @@ jobs:
     - label-gate
   report-start:
     if: ${{ (needs.context.outputs.ci-conclusion == 'success') && needs['label-gate'].outputs.run == 'true' }}
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-latest
     permissions:
       statuses: write
     steps:
@@ -117,7 +119,7 @@ jobs:
     - label-gate
   report-ci-failure:
     if: ${{ (needs.context.outputs.ci-conclusion != 'success' && needs.context.outputs.ci-conclusion != '') && needs['label-gate'].outputs.run == 'true' }}
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-latest
     permissions:
       statuses: write
     steps:
@@ -152,6 +154,23 @@ jobs:
       fallback-ref: develop
     secrets: inherit
     if: ${{ needs['label-gate'].outputs.run == 'true' && (needs['label-gate'].outputs.depth == 'all' || needs['label-gate'].outputs.depth >= 2) }}
+  gribjump:
+    name: gribjump
+    needs:
+    - ci-approval
+    - context
+    - label-gate
+    - validate
+    - fdb
+    uses: ecmwf/gribjump/.github/workflows/cross-repo-trigger-hpc-atos.yml@develop
+    with:
+      from-repo: ${{ github.repository }}
+      from-sha: ${{ needs.context.outputs.head-sha }}
+      from-jobs: '["eccodes/build-hpc"]'
+      branch: ${{ needs.context.outputs.head-branch }}
+      fallback-ref: develop
+    secrets: inherit
+    if: ${{ needs['label-gate'].outputs.run == 'true' && (needs['label-gate'].outputs.depth == 'all' || needs['label-gate'].outputs.depth >= 3) }}
   metkit:
     name: metkit
     needs:
@@ -192,10 +211,11 @@ jobs:
     - label-gate
     - validate
     - fdb
+    - gribjump
     - metkit
     - mir
     if: ${{ (always() && needs.context.outputs.ci-conclusion == 'success') && needs['label-gate'].outputs.run == 'true' }}
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-latest
     permissions:
       statuses: write
     steps:
@@ -204,7 +224,7 @@ jobs:
         GH_TOKEN: ${{ github.token }}
       run: |
         state=success
-        for r in ${{ needs.validate.result }} ${{ needs.fdb.result }} ${{ needs.metkit.result }} ${{ needs.mir.result }}; do
+        for r in ${{ needs.validate.result }} ${{ needs.fdb.result }} ${{ needs.gribjump.result }} ${{ needs.metkit.result }} ${{ needs.mir.result }}; do
           if [ "$r" = failure ] || [ "$r" = cancelled ]; then
             state=failure
           fi

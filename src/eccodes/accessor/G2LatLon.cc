@@ -18,9 +18,9 @@ void G2LatLon::init(const long l, grib_arguments* c)
     Double::init(l, c);
     int n = 0;
 
-    grid_ = c->get_name(get_enclosing_handle(), n++);
+    grid_ = c->get_name(n++);
     index_ = c->get_long(get_enclosing_handle(), n++);
-    given_ = c->get_name(get_enclosing_handle(), n++);
+    given_ = c->get_name(n++);
 }
 
 int G2LatLon::unpack_double(double* val, size_t* len)

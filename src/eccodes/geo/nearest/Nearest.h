@@ -25,14 +25,14 @@ public:
     virtual Nearest* create() = 0;
 
 protected:
-    int grib_nearest_find_generic(grib_handle*, double, double, unsigned long,
+    int grib_nearest_find_generic(grib_handle*, double, double,
                                   const char*,
                                   double**,
                                   int*,
                                   double**,
                                   int*,
                                   double**,
-                                  double*, double*, double*, double*, int*, size_t*);
+                                  double*, double*, double*, double*, int*);
 
     grib_handle* h_ = nullptr;
     double* values_ = nullptr;

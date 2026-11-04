@@ -18,7 +18,7 @@ namespace eccodes::expression
 class Double : public Expression
 {
 public:
-    Double(grib_context*, double);
+    Double(double);
 
     void print(grib_context*, grib_handle*, FILE*) const override;
     void add_dependency(grib_accessor*) override {}
@@ -34,4 +34,4 @@ private:
 
 }  // namespace eccodes::expression
 
-grib_expression* new_double_expression(grib_context*, double);
+grib_expression* new_double_expression(double);

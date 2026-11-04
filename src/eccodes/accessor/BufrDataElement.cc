@@ -232,7 +232,7 @@ int BufrDataElement::unpack_string(char* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int BufrDataElement::pack_string(const char* val, size_t* len)
+int BufrDataElement::pack_string(const char* val, size_t* /*len*/)
 {
     int ret = GRIB_SUCCESS, idx = 0;
     char* s = NULL;

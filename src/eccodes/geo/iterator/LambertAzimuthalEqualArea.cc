@@ -98,7 +98,7 @@ int LambertAzimuthalEqualArea::init_oblate(grib_handle* h,
                                            double Dx, double Dy, double earthMinorAxisInMetres, double earthMajorAxisInMetres,
                                            double latFirstInRadians, double lonFirstInRadians,
                                            double centralLongitudeInRadians, double standardParallelInRadians,
-                                           long iScansNegatively, long jScansPositively, long jPointsAreConsecutive)
+                                           long iScansNegatively, long jScansPositively)
 {
     double *lats, *lons;
     long i, j;
@@ -346,19 +346,19 @@ int LambertAzimuthalEqualArea::init(grib_handle* h, grib_arguments* args)
     long jScansPositively, jPointsAreConsecutive;
     double earthMajorAxisInMetres = 0, earthMinorAxisInMetres = 0;
 
-    const char* sradius = args->get_name(h, carg_++);
-    const char* snx = args->get_name(h, carg_++);
-    const char* sny = args->get_name(h, carg_++);
-    const char* slatFirstInDegrees = args->get_name(h, carg_++);
-    const char* slonFirstInDegrees = args->get_name(h, carg_++);
-    const char* sstandardParallel = args->get_name(h, carg_++);
-    const char* scentralLongitude = args->get_name(h, carg_++);
-    const char* sDx = args->get_name(h, carg_++);
-    const char* sDy = args->get_name(h, carg_++);
-    const char* siScansNegatively = args->get_name(h, carg_++);
-    const char* sjScansPositively = args->get_name(h, carg_++);
-    const char* sjPointsAreConsecutive = args->get_name(h, carg_++);
-    const char* salternativeRowScanning = args->get_name(h, carg_++);
+    const char* sradius = args->get_name(carg_++);
+    const char* snx = args->get_name(carg_++);
+    const char* sny = args->get_name(carg_++);
+    const char* slatFirstInDegrees = args->get_name(carg_++);
+    const char* slonFirstInDegrees = args->get_name(carg_++);
+    const char* sstandardParallel = args->get_name(carg_++);
+    const char* scentralLongitude = args->get_name(carg_++);
+    const char* sDx = args->get_name(carg_++);
+    const char* sDy = args->get_name(carg_++);
+    const char* siScansNegatively = args->get_name(carg_++);
+    const char* sjScansPositively = args->get_name(carg_++);
+    const char* sjPointsAreConsecutive = args->get_name(carg_++);
+    const char* salternativeRowScanning = args->get_name(carg_++);
     const double d2r = acos(0.0) / 90.0;
 
     is_oblate = grib_is_earth_oblate(h);
@@ -410,7 +410,7 @@ int LambertAzimuthalEqualArea::init(grib_handle* h, grib_arguments* args)
                           Dx, Dy, earthMinorAxisInMetres, earthMajorAxisInMetres,
                           latFirstInRadians, lonFirstInRadians,
                           centralLongitudeInRadians, standardParallelInRadians,
-                          iScansNegatively, jScansPositively, jPointsAreConsecutive);
+                          iScansNegatively, jScansPositively);
     }
     else {
         err = init_sphere(h, nv_, nx, ny,

@@ -18,7 +18,7 @@ void MultDouble::init(const long l, grib_arguments* c)
     Double::init(l, c);
     int n = 0;
 
-    val_ = c->get_name(get_enclosing_handle(), n++);
+    val_ = c->get_name(n++);
     multiplier_ = c->get_double(get_enclosing_handle(), n++);
 }
 

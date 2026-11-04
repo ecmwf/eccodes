@@ -55,6 +55,7 @@ compiler-inputs = ["cxx-compiler"]
 when = { options = ["eckit-geo"] }
 
 [matrix.build.defaults]
+eckit-geo-env = 1
 job-script = "./.ci/build.sh.j2"
 build-type = "RelWithDebInfo"
 runs-on = "arc-runner-very-large"
@@ -82,6 +83,7 @@ platform = "ubuntu-24.04"
 cxx-compiler = "clang++-18"
 c-compiler = "clang-18"
 options = "eckit-geo"
+eckit-geo-env = 0
 container = "eccr.ecmwf.int/public-ci-images/ubuntu24.04-clang18:latest"
 platform = "ubuntu-24.04"
 
@@ -121,6 +123,7 @@ runs-on = "arc-runner-very-large"
 cxx-compiler = "g++-8"
 c-compiler = "gcc-8"
 options = "eckit-geo"
+eckit-geo-env = 0
 container = "eccr.ecmwf.int/public-ci-images/rocky8-gcc8-gfortran8"
 platform = "rocky-8"
 
@@ -204,6 +207,7 @@ packages = ["eccodes"]
 triggers = ["upstream-change", "rebuild-request"]
 
 [matrix.fortran.defaults]
+eckit-geo-env = 1
 job-script = "./.ci/build.sh.j2"
 build-type = "RelWithDebInfo"
 runs-on = "arc-runner-very-large"
@@ -220,6 +224,7 @@ packages = ["eccodes-fortran"]
 triggers = ["upstream-change", "rebuild-request"]
 
 [matrix.build-hpc.defaults]
+eckit-geo-env = 1
 cxx-compiler = "g++-8"
 build-type = "RelWithDebInfo"
 runs-on = "hpc-submit"
@@ -254,6 +259,7 @@ platform = "hpc-atos-nvidia"
 modules = ["load prgenv/nvidia", "unload nvidia", "load nvidia/26.1", "load cmake", "load ninja"]
 c-compiler-binary = "nvc"
 cxx-compiler-binary = "nvc++"
+sccache = false
 
 [[matrix.build-hpc.include]]
 options = "eckit-geo"
@@ -278,6 +284,7 @@ container-credentials = true
 triggers = ["upstream-change", "rebuild-request"]
 
 [matrix.fortran-hpc.defaults]
+eckit-geo-env = 1
 cxx-compiler = "g++-8"
 fortran-compiler = "gfortran-8"
 build-type = "RelWithDebInfo"
@@ -299,6 +306,92 @@ packages = ["eccodes-fortran"]
 execution = "hpc-atos"
 container-credentials = true
 triggers = ["upstream-change", "rebuild-request"]
+
+# Debug eccodes for the lint and analysis lanes. Upstreams publish no Debug
+# artifacts, so the deps resolve by deps-build-type instead of the leg's build-type.
+[packages.eccodes-analysis]
+compiler-inputs = ["cxx-compiler"]
+
+[[packages.eccodes-analysis.deps]]
+repo = "ecmwf/ecbuild"
+package = "ecbuild"
+ref = "develop"
+compiler-inputs = []
+build-type-input = "deps-build-type"
+
+[[packages.eccodes-analysis.deps]]
+repo = "ecmwf/stack-dependencies"
+package = ["libaec", "netcdf"]
+ref = "master"
+compiler-inputs = ["cxx-compiler"]
+build-type-input = "deps-build-type"
+
+# Strict warnings, clang-tidy and cppcheck: quick enough for every PR, run by
+# ci.yml. Findings not yet fixed are switched off in CMakePresets.json,
+# .clang-tidy and .ci/analysis.sh.j2. No triggers, so never downstream.
+[matrix.lint]
+packages = ["eccodes-analysis"]
+publishes = false
+
+[matrix.lint.defaults]
+job-script = "./.ci/analysis.sh.j2"
+build-type = "Debug"
+deps-build-type = "RelWithDebInfo"
+runs-on = "arc-runner-very-large"
+cxx-compiler = "g++-13"
+c-compiler = "gcc-13"
+container = "eccr.ecmwf.int/public-ci-images/ubuntu24.04-gcc13-gfortran13:latest"
+platform = "ubuntu-24.04"
+tests = false
+
+[[matrix.lint.include]]
+options = "strict"
+
+[[matrix.lint.include]]
+options = "strict"
+cxx-compiler = "clang++-18"
+c-compiler = "clang-18"
+container = "eccr.ecmwf.int/public-ci-images/ubuntu24.04-clang18:latest"
+
+[[matrix.lint.include]]
+options = "clang-tidy"
+cxx-compiler = "clang++-18"
+c-compiler = "clang-18"
+container = "eccr.ecmwf.int/public-ci-images/ubuntu24.04-clang18:latest"
+
+[[matrix.lint.include]]
+options = "cppcheck"
+apt-packages = "cppcheck"
+
+# Valgrind, sanitizers and coverage: each takes 15-50 min, so run only by hand
+# from analysis.yml.
+[matrix.analysis]
+packages = ["eccodes-analysis"]
+publishes = false
+
+[matrix.analysis.defaults]
+job-script = "./.ci/analysis.sh.j2"
+build-type = "Debug"
+deps-build-type = "RelWithDebInfo"
+runs-on = "arc-runner-very-large"
+cxx-compiler = "g++-13"
+c-compiler = "gcc-13"
+container = "eccr.ecmwf.int/public-ci-images/ubuntu24.04-gcc13-gfortran13:latest"
+platform = "ubuntu-24.04"
+
+[[matrix.analysis.include]]
+options = "valgrind"
+apt-packages = "valgrind"
+
+[[matrix.analysis.include]]
+options = "asan-ubsan"
+
+[[matrix.analysis.include]]
+options = "tsan"
+
+[[matrix.analysis.include]]
+options = "coverage"
+apt-packages = "gcovr"
 
 [packages.eccodes-rust]
 compiler-inputs = ["cxx-compiler", "rust-compiler"]

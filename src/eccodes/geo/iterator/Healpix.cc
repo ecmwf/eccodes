@@ -269,8 +269,8 @@ int Healpix::init(grib_handle* h, grib_arguments* args)
     if ((err = Gen::init(h, args)) != GRIB_SUCCESS)
         return err;
 
-    const char* snside = args->get_name(h, carg_++);
-    const char* sorder = args->get_name(h, carg_++);
+    const char* snside = args->get_name(carg_++);
+    const char* sorder = args->get_name(carg_++);
 
     long N = 0;
     if ((err = grib_get_long_internal(h, snside, &N)) != GRIB_SUCCESS) {

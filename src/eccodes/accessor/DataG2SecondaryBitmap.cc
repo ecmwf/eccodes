@@ -16,7 +16,7 @@ namespace eccodes::accessor
 void DataG2SecondaryBitmap::init(const long v, grib_arguments* args)
 {
     DataSecondaryBitmap::init(v, args);
-    number_of_values_ = args->get_name(get_enclosing_handle(), 4);
+    number_of_values_ = args->get_name(4);
 }
 
 int DataG2SecondaryBitmap::value_count(long* len)

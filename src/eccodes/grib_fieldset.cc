@@ -282,7 +282,7 @@ static grib_fieldset* grib_fieldset_new_from_files_(grib_context* c, const char*
     }
 
     if (where_string) {
-        ret = grib_fieldset_apply_where(set, where_string);
+        ret = grib_fieldset_apply_where();
         if (ret != GRIB_SUCCESS) {
             *err = ret;
             return NULL;
@@ -404,7 +404,7 @@ static grib_fieldset* grib_fieldset_create_from_order_by(grib_context* c, grib_o
 }
 
 // Experimental: Needs more work
-int grib_fieldset_apply_where(grib_fieldset* set, const char* where_string)
+int grib_fieldset_apply_where()
 {
     // grib_math* m = NULL;
     // m = grib_math_new(set->context, where_string, &err);

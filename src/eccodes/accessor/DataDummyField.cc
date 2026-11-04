@@ -16,9 +16,9 @@ namespace eccodes::accessor
 void DataDummyField::init(const long v, grib_arguments* args)
 {
     DataG1SimplePacking::init(v, args);
-    missing_value_ = args->get_name(get_enclosing_handle(), carg_++);
-    numberOfPoints_ = args->get_name(get_enclosing_handle(), carg_++);
-    bitmap_ = args->get_name(get_enclosing_handle(), carg_++);
+    missing_value_ = args->get_name(carg_++);
+    numberOfPoints_ = args->get_name(carg_++);
+    bitmap_ = args->get_name(carg_++);
 }
 
 int DataDummyField::unpack_double(double* val, size_t* len)
@@ -52,7 +52,7 @@ int DataDummyField::unpack_double(double* val, size_t* len)
     return err;
 }
 
-int DataDummyField::pack_double(const double* val, size_t* len)
+int DataDummyField::pack_double(const double* /*val*/, size_t* len)
 {
     size_t n_vals = *len;
     int err = 0;

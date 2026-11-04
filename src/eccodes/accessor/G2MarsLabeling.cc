@@ -20,18 +20,18 @@ void G2MarsLabeling::init(const long l, grib_arguments* c)
     grib_handle* hand = get_enclosing_handle();
 
     index_ = c->get_long(hand, n++);
-    the_class_ = c->get_name(hand, n++);
-    type_ = c->get_name(hand, n++);
-    stream_ = c->get_name(hand, n++);
-    expver_ = c->get_name(hand, n++);
-    typeOfProcessedData_ = c->get_name(hand, n++);
-    productDefinitionTemplateNumber_ = c->get_name(hand, n++);
-    stepType_ = c->get_name(hand, n++);
-    derivedForecast_ = c->get_name(hand, n++);
-    typeOfGeneratingProcess_ = c->get_name(hand, n++);
+    the_class_ = c->get_name(n++);
+    type_ = c->get_name(n++);
+    stream_ = c->get_name(n++);
+    expver_ = c->get_name(n++);
+    typeOfProcessedData_ = c->get_name(n++);
+    productDefinitionTemplateNumber_ = c->get_name(n++);
+    stepType_ = c->get_name(n++);
+    derivedForecast_ = c->get_name(n++);
+    typeOfGeneratingProcess_ = c->get_name(n++);
 }
 
-int G2MarsLabeling::unpack_long(long* val, size_t* len)
+int G2MarsLabeling::unpack_long(long* val, size_t* /*len*/)
 {
     char* key = NULL;
 
@@ -343,7 +343,7 @@ int G2MarsLabeling::pack_string(const char* val, size_t* len)
     return extra_set(lval);
 }
 
-int G2MarsLabeling::pack_long(const long* val, size_t* len)
+int G2MarsLabeling::pack_long(const long* val, size_t* /*len*/)
 {
     char* key = NULL;
     int ret = 0;

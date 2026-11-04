@@ -17,9 +17,9 @@ void MarsParam::init(const long l, grib_arguments* c)
 {
     Ascii::init(l, c);
     int n = 0;
-    paramId_ = c->get_name(get_enclosing_handle(), n++);
-    table_ = c->get_name(get_enclosing_handle(), n++);
-    param_ = c->get_name(get_enclosing_handle(), n++);
+    paramId_ = c->get_name(n++);
+    table_ = c->get_name(n++);
+    param_ = c->get_name(n++);
 }
 
 // For an implementation of pack_string, see

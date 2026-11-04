@@ -17,17 +17,17 @@ void UnpackBufrValues::init(const long len, grib_arguments* params)
 {
     Gen::init(len, params);
     char* key;
-    key = (char*)params->get_name(get_enclosing_handle(), 0);
+    key = (char*)params->get_name(0);
     data_accessor_ = dynamic_cast<BufrDataArray*>(grib_find_accessor(get_enclosing_handle(), key));
 
     length_ = 0;
 }
 
-void UnpackBufrValues::dump(eccodes::Dumper* dumper)
+void UnpackBufrValues::dump(eccodes::Dumper* /*dumper*/)
 {
 }
 
-int UnpackBufrValues::unpack_string_array(char** buffer, size_t* len)
+int UnpackBufrValues::unpack_string_array(char** /*buffer*/, size_t* /*len*/)
 {
     grib_accessor* data = (grib_accessor*)data_accessor_;
     return data->unpack_double(0, 0);
@@ -42,13 +42,13 @@ int UnpackBufrValues::unpack_string(char* buffer, size_t* len)
     return data->unpack_double(0, 0);
 }
 
-int UnpackBufrValues::unpack_long(long* val, size_t* len)
+int UnpackBufrValues::unpack_long(long* /*val*/, size_t* /*len*/)
 {
     grib_accessor* data = (grib_accessor*)data_accessor_;
     return data->unpack_double(0, 0);
 }
 
-int UnpackBufrValues::unpack_double(double* val, size_t* len)
+int UnpackBufrValues::unpack_double(double* /*val*/, size_t* /*len*/)
 {
     grib_accessor* data = (grib_accessor*)data_accessor_;
 
@@ -79,7 +79,7 @@ long UnpackBufrValues::get_native_type()
 //     return "unknown proc flag";
 // }
 
-int UnpackBufrValues::pack_long(const long* val, size_t* len)
+int UnpackBufrValues::pack_long(const long* val, size_t* /*len*/)
 {
     int unpackMode = CODES_BUFR_UNPACK_STRUCTURE;
 
@@ -105,7 +105,7 @@ int UnpackBufrValues::pack_long(const long* val, size_t* len)
     return err;
 }
 
-int UnpackBufrValues::pack_double(const double* val, size_t* len)
+int UnpackBufrValues::pack_double(const double* /*val*/, size_t* /*len*/)
 {
     return data_accessor_->unpack_double(0, 0);
 }

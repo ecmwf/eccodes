@@ -18,8 +18,8 @@ void Statistics::init(const long l, grib_arguments* c)
     AbstractVector::init(l, c);
     int n = 0;
 
-    missing_value_ = c->get_name(get_enclosing_handle(), n++);
-    values_ = c->get_name(get_enclosing_handle(), n++);
+    missing_value_ = c->get_name(n++);
+    values_ = c->get_name(n++);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     flags_ |= GRIB_ACCESSOR_FLAG_HIDDEN;
@@ -222,7 +222,7 @@ int Statistics::compare(grib_accessor* b)
     return retval;
 }
 
-int Statistics::unpack_string(char* v, size_t* len)
+int Statistics::unpack_string(char* /*v*/, size_t* /*len*/)
 {
     return GRIB_NOT_IMPLEMENTED;
 }

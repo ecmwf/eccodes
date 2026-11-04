@@ -19,7 +19,7 @@ void SmartTableColumn::init(const long len, grib_arguments* params)
     Gen::init(len, params);
     int n = 0;
 
-    smartTable_ = params->get_name(get_enclosing_handle(), n++);
+    smartTable_ = params->get_name(n++);
     index_ = params->get_long(get_enclosing_handle(), n++);
 
     length_ = 0;
@@ -57,7 +57,7 @@ int SmartTableColumn::unpack_string_array(char** buffer, size_t* len)
         return GRIB_NOT_FOUND;
     }
 
-    err = grib_get_size_acc(get_enclosing_handle(), (grib_accessor*)tableAccessor, &size);
+    err = grib_get_size_acc((grib_accessor*)tableAccessor, &size);
     if (err)
         return err;
     if (*len < size) {
@@ -113,7 +113,7 @@ int SmartTableColumn::unpack_long(long* val, size_t* len)
         return GRIB_NOT_FOUND;
     }
 
-    err = grib_get_size_acc(get_enclosing_handle(), (grib_accessor*)tableAccessor, &size);
+    err = grib_get_size_acc((grib_accessor*)tableAccessor, &size);
     if (err)
         return err;
     if (*len < size) {

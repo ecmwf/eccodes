@@ -81,7 +81,7 @@ When::~When()
     grib_context_free_persistent(context_, op_);
 }
 
-int When::create_accessor(grib_section* p, grib_loader* h)
+int When::create_accessor(grib_section* p, grib_loader* /*h*/)
 {
     grib_accessor* as = grib_accessor_factory(p, this, 0, 0);
     if (!as)
@@ -129,7 +129,7 @@ void When::dump(FILE* f, int lvl)
     #define SET_LOOP(v)
 #endif
 
-int When::notify_change(grib_accessor* observer, grib_accessor* observed)
+int When::notify_change(grib_accessor* /*observer*/, grib_accessor* observed)
 {
     grib_action* b = NULL;
     int ret = GRIB_SUCCESS;

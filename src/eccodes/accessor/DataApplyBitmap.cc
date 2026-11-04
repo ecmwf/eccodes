@@ -17,14 +17,13 @@ void DataApplyBitmap::init(const long v, grib_arguments* args)
 {
     Gen::init(v, args);
     int n = 0;
-    grib_handle* hand = get_enclosing_handle();
 
-    coded_values_ = args->get_name(hand, n++);
-    bitmap_ = args->get_name(hand, n++);
-    missing_value_ = args->get_name(hand, n++);
-    binary_scale_factor_ = args->get_name(hand, n++);
-    number_of_data_points_ = args->get_name(hand, n++);  // can be NULL
-    number_of_values_ = args->get_name(hand, n++);       // can be NULL
+    coded_values_ = args->get_name(n++);
+    bitmap_ = args->get_name(n++);
+    missing_value_ = args->get_name(n++);
+    binary_scale_factor_ = args->get_name(n++);
+    number_of_data_points_ = args->get_name(n++);  // can be NULL
+    number_of_values_ = args->get_name(n++);       // can be NULL
 
     length_ = 0;
 }

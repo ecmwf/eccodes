@@ -19,18 +19,17 @@ void NumberOfPointsGaussian::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
     int n = 0;
-    grib_handle* h = get_enclosing_handle();
 
-    ni_ = c->get_name(h, n++);
-    nj_ = c->get_name(h, n++);
-    plpresent_ = c->get_name(h, n++);
-    pl_ = c->get_name(h, n++);
-    order_ = c->get_name(h, n++);
-    lat_first_ = c->get_name(h, n++);
-    lon_first_ = c->get_name(h, n++);
-    lat_last_ = c->get_name(h, n++);
-    lon_last_ = c->get_name(h, n++);
-    support_legacy_ = c->get_name(h, n++);
+    ni_ = c->get_name(n++);
+    nj_ = c->get_name(n++);
+    plpresent_ = c->get_name(n++);
+    pl_ = c->get_name(n++);
+    order_ = c->get_name(n++);
+    lat_first_ = c->get_name(n++);
+    lon_first_ = c->get_name(n++);
+    lat_last_ = c->get_name(n++);
+    lon_last_ = c->get_name(n++);
+    support_legacy_ = c->get_name(n++);
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     length_ = 0;
@@ -109,7 +108,7 @@ static int get_number_of_data_values(grib_handle* h, size_t* numDataValues)
     return err;
 }
 
-int NumberOfPointsGaussian::unpack_long(long* val, size_t* len)
+int NumberOfPointsGaussian::unpack_long(long* val, size_t* /*len*/)
 {
     int err = GRIB_SUCCESS;
     long support_legacy = 1;
@@ -119,13 +118,13 @@ int NumberOfPointsGaussian::unpack_long(long* val, size_t* len)
         return err;
 
     if (support_legacy == 1)
-        return unpack_long_with_legacy_support(val, len);
+        return unpack_long_with_legacy_support(val);
     else
-        return unpack_long_new(val, len);
+        return unpack_long_new(val);
 }
 
 /* New algorithm */
-int NumberOfPointsGaussian::unpack_long_new(long* val, size_t* len)
+int NumberOfPointsGaussian::unpack_long_new(long* val)
 {
     int err = GRIB_SUCCESS;
     int is_global = 0;
@@ -208,7 +207,7 @@ int NumberOfPointsGaussian::unpack_long_new(long* val, size_t* len)
                     grib_context_log(h->context, GRIB_LOG_ERROR, "Invalid pl array: entry at index=%ld is zero", j);
                     return GRIB_GEOCALCULUS_PROBLEM;
                 }
-                grib_get_reduced_row_wrapper(h, pl[j], lon_first, lon_last, &row_count, &ilon_first, &ilon_last);
+                grib_get_reduced_row(pl[j], lon_first, lon_last, &row_count, &ilon_first, &ilon_last);
                 // lon_first_row = ((ilon_first)*360.0) / pl[j];
                 // lon_last_row  = ((ilon_last)*360.0) / pl[j];
                 *val += row_count;
@@ -231,7 +230,7 @@ int NumberOfPointsGaussian::unpack_long_new(long* val, size_t* len)
 }
 
 /* With Legacy support */
-int NumberOfPointsGaussian::unpack_long_with_legacy_support(long* val, size_t* len)
+int NumberOfPointsGaussian::unpack_long_with_legacy_support(long* val)
 {
     int err = GRIB_SUCCESS;
     int is_global = 0;
@@ -327,7 +326,7 @@ int NumberOfPointsGaussian::unpack_long_with_legacy_support(long* val, size_t* l
                     grib_context_log(h->context, GRIB_LOG_ERROR, "Invalid pl array: entry at index=%ld is zero", j);
                     return GRIB_GEOCALCULUS_PROBLEM;
                 }
-                grib_get_reduced_row_wrapper(h, pl[j], lon_first, lon_last, &row_count, &ilon_first, &ilon_last);
+                grib_get_reduced_row(pl[j], lon_first, lon_last, &row_count, &ilon_first, &ilon_last);
 
                 //                 if ( row_count != pl[j] ) {
                 //                     printf("oops...... rc=%ld but pl[%d]=%ld\n", row_count, j,pl[j]);

@@ -5,18 +5,16 @@
   -DENABLE_FORTRAN={{ "ON" if "eccodes-fortran" in ci_packages else "OFF" }} \
 {% endblock %}
 {% block test %}
+# From the download-test-data job; ctest's download tests then skip the files present.
+if [ -d "$CI_SOURCE_DIR/.ci-test-data/data" ]; then
+  cp -R "$CI_SOURCE_DIR/.ci-test-data/data/." "$build/data/"
+fi
 # Fetch the test data first; a download failure otherwise surfaces as dozens of
 # unrelated test failures.
 ctest --test-dir "$build" --output-on-failure -L download_data -j 6 --repeat until-pass:5
-{% if options == "eckit-geo" %}
-failed=0
-for geo in 0 1; do
-  ECCODES_ECKIT_GEO=$geo ctest --test-dir "$build" --output-on-failure -LE download_data -j "$jobs" || failed=1
-done
-[ "$failed" -eq 0 ]
-{% else %}
-ctest --test-dir "$build" --output-on-failure -LE download_data -j "$jobs"
-{% endif %}
+# A fresh build tree has no timings, so ctest started grib_padding (minutes) last.
+cp "$CI_SOURCE_DIR/.ci/ctest-cost-data.txt" "$build/Testing/Temporary/CTestCostData.txt"
+ECCODES_ECKIT_GEO={{ eckit_geo_env }} ctest --test-dir "$build" --output-on-failure -LE download_data -j "$jobs"
 {% endblock %}
 {% block install %}
 {% if execution == "hpc-atos" %}

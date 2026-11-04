@@ -17,7 +17,7 @@ void G2BitmapPresent::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
     int n = 0;
-    bitmapIndicator_ = c->get_name(get_enclosing_handle(), n++);
+    bitmapIndicator_ = c->get_name(n++);
 
     length_ = 0;
 }
@@ -45,7 +45,7 @@ int G2BitmapPresent::unpack_long(long* val, size_t* len)
     return ret;
 }
 
-int G2BitmapPresent::pack_long(const long* val, size_t* len)
+int G2BitmapPresent::pack_long(const long* val, size_t* /*len*/)
 {
     long bitmapIndicator = 0;
 

@@ -18,7 +18,7 @@ namespace eccodes::expression
 class StringCompare : public Expression
 {
 public:
-    StringCompare(grib_context*, Expression*, Expression*, int);
+    StringCompare(Expression*, Expression*, int);
 
     void destroy(grib_context*) override;
     void print(grib_context*, grib_handle*, FILE*) const override;
@@ -37,4 +37,4 @@ private:
 
 }  // namespace eccodes::expression
 
-grib_expression* new_string_compare_expression(grib_context*, grib_expression*, grib_expression*, int);
+grib_expression* new_string_compare_expression(grib_expression*, grib_expression*, int);

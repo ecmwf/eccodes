@@ -163,7 +163,7 @@ int grib_options_on(const char* id)
     return 0;
 }
 
-int grib_get_runtime_options(int argc, char** argv, grib_runtime_options* options)
+int grib_get_runtime_options(int argc, char** argv, grib_runtime_options* /*options*/)
 {
     int i = 0, c = 0;
     char* optstr = (char*)calloc(1, 2 * grib_options_count * sizeof(char));

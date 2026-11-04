@@ -17,7 +17,7 @@ void G2Bitmap::init(const long len, grib_arguments* arg)
 {
     Bitmap::init(len, arg);
 
-    numberOfValues_ = arg->get_name(get_enclosing_handle(), 4);
+    numberOfValues_ = arg->get_name(4);
 }
 
 // For speed use a local static function

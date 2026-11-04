@@ -35,7 +35,7 @@
 namespace eccodes::geo_iterator
 {
 
-int Iterator::init(grib_handle* h, grib_arguments* args)
+int Iterator::init(grib_handle* h, grib_arguments* /*args*/)
 {
     h_ = h;
     return GRIB_SUCCESS;
@@ -130,13 +130,6 @@ int grib_iterator_previous(grib_iterator* i, double* lat, double* lon, double* v
 {
     auto result = eccodes::handleExceptions(grib_iterator_previous_, i, lat, lon, value);
     return eccodes::getErrorCode(result);
-}
-
-int grib_iterator_destroy(grib_context* c, grib_iterator* i)
-{
-    int ret = i->iterator->destroy();
-    delete i;
-    return ret;
 }
 
 #if defined(HAVE_GEOGRAPHY)

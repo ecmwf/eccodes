@@ -34,7 +34,7 @@ private:
     int find_global(grib_handle*,
                     double, double, unsigned long,
                     double*, double*, double*,
-                    double*, int*, size_t*);
+                    double*, int*);
 };
 
 }  // namespace eccodes::geo_nearest

@@ -18,21 +18,20 @@ namespace eccodes::accessor
 void DataG2BifourierPacking::init(const long v, grib_arguments* args)
 {
     DataSimplePacking::init(v, args);
-    grib_handle* gh = get_enclosing_handle();
 
-    ieee_floats_ = args->get_name(gh, carg_++);
-    laplacianOperatorIsSet_ = args->get_name(gh, carg_++);
-    laplacianOperator_ = args->get_name(gh, carg_++);
-    biFourierTruncationType_ = args->get_name(gh, carg_++);
-    sub_i_ = args->get_name(gh, carg_++);
-    sub_j_ = args->get_name(gh, carg_++);
-    bif_i_ = args->get_name(gh, carg_++);
-    bif_j_ = args->get_name(gh, carg_++);
-    biFourierSubTruncationType_ = args->get_name(gh, carg_++);
-    biFourierDoNotPackAxes_ = args->get_name(gh, carg_++);
-    biFourierMakeTemplate_ = args->get_name(gh, carg_++);
-    totalNumberOfValuesInUnpackedSubset_ = args->get_name(gh, carg_++);
-    /*numberOfValues             = args->get_name(gh, carg_++);*/
+    ieee_floats_ = args->get_name(carg_++);
+    laplacianOperatorIsSet_ = args->get_name(carg_++);
+    laplacianOperator_ = args->get_name(carg_++);
+    biFourierTruncationType_ = args->get_name(carg_++);
+    sub_i_ = args->get_name(carg_++);
+    sub_j_ = args->get_name(carg_++);
+    bif_i_ = args->get_name(carg_++);
+    bif_j_ = args->get_name(carg_++);
+    biFourierSubTruncationType_ = args->get_name(carg_++);
+    biFourierDoNotPackAxes_ = args->get_name(carg_++);
+    biFourierMakeTemplate_ = args->get_name(carg_++);
+    totalNumberOfValuesInUnpackedSubset_ = args->get_name(carg_++);
+    /*numberOfValues             = args->get_name(carg_++);*/
 
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
     dirty_ = 1;

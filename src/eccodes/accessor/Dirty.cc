@@ -16,13 +16,13 @@ namespace eccodes::accessor
 void Dirty::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
-    accessor_ = c->get_name(get_enclosing_handle(), 0);
+    accessor_ = c->get_name(0);
     flags_ |= GRIB_ACCESSOR_FLAG_FUNCTION;
     flags_ |= GRIB_ACCESSOR_FLAG_HIDDEN;
     length_ = 0;
 }
 
-int Dirty::pack_long(const long* val, size_t* len)
+int Dirty::pack_long(const long* val, size_t* /*len*/)
 {
     grib_accessor* x = grib_find_accessor(get_enclosing_handle(), accessor_);
 
@@ -32,7 +32,7 @@ int Dirty::pack_long(const long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int Dirty::unpack_long(long* val, size_t* len)
+int Dirty::unpack_long(long* val, size_t* /*len*/)
 {
     grib_accessor* x = grib_find_accessor(get_enclosing_handle(), accessor_);
 

@@ -52,9 +52,9 @@ void SecondOrderBitsPerValue::init(const long l, grib_arguments* c)
 {
     Long::init(l, c);
     int n = 0;
-    values_ = c->get_name(get_enclosing_handle(), n++);
-    binaryScaleFactor_ = c->get_name(get_enclosing_handle(), n++);
-    decimalScaleFactor_ = c->get_name(get_enclosing_handle(), n++);
+    values_ = c->get_name(n++);
+    binaryScaleFactor_ = c->get_name(n++);
+    decimalScaleFactor_ = c->get_name(n++);
     bitsPerValue_ = 0;
 
     length_ = 0;
@@ -68,7 +68,7 @@ int SecondOrderBitsPerValue::pack_long(const long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int SecondOrderBitsPerValue::unpack_long(long* val, size_t* len)
+int SecondOrderBitsPerValue::unpack_long(long* val, size_t* /*len*/)
 {
     int ret = GRIB_SUCCESS;
     size_t size = 0;

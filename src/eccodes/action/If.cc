@@ -210,7 +210,7 @@ void If::dump(FILE* f, int lvl)
     printf("}\n");
 }
 
-grib_action* If::reparse(grib_accessor* acc, int* doit)
+grib_action* If::reparse(grib_accessor* acc, int* /*doit*/)
 {
     int ret = 0;
     long lres = 0;
