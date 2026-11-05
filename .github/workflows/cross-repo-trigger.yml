@@ -33,6 +33,11 @@ on:
         required: false
         type: string
         default: main
+      pin:
+        description: owner/repo@sha the dispatching consumer was pinned to; only with rebuild-request
+        required: false
+        default: ''
+        type: string
   workflow_dispatch:
     inputs:
       dispatch-id:
@@ -67,6 +72,11 @@ on:
         required: false
         type: string
         default: main
+      pin:
+        description: owner/repo@sha the dispatching consumer was pinned to; only with rebuild-request
+        required: false
+        default: ''
+        type: string
 concurrency:
   group: cross-repo-trigger-runner-eccodes-${{ github.ref }}
   cancel-in-progress: false
@@ -114,7 +124,7 @@ jobs:
       uses: ecmwf/ci-infrastructure/actions/resolve-deps@main
       with:
         current-branch: ${{ steps.pick.outputs.ref }}
-        pin: ${{ !inputs.rebuild-request && format('{0}@{1}', inputs.from-repo, inputs.from-sha) || '' }}
+        pin: ${{ !inputs.rebuild-request && format('{0}@{1}', inputs.from-repo, inputs.from-sha) || inputs.pin }}
         matrix: build,fortran
         token: ${{ steps.mint.outputs.token }}
         client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
