@@ -9,6 +9,7 @@
  */
 
 #include "GlobalGaussian.h"
+#include <utility>
 
 namespace eccodes::accessor
 {
@@ -87,6 +88,15 @@ int GlobalGaussian::unpack_long(long* val, size_t* /*len*/)
     dlatlast = ((double)latlast) / factor;
     dlonfirst = ((double)lonfirst) / factor;
     dlonlast = ((double)lonlast) / factor;
+
+    // GitHub #654: the check below expects the first grid point in the north-west corner
+    {
+        long iScansNegatively = 0, jScansPositively = 0;
+        if (grib_get_long(h, "jScansPositively", &jScansPositively) == GRIB_SUCCESS && jScansPositively)
+            std::swap(dlatfirst, dlatlast);
+        if (grib_get_long(h, "iScansNegatively", &iScansNegatively) == GRIB_SUCCESS && iScansNegatively)
+            std::swap(dlonfirst, dlonlast);
+    }
 
     if (N == 0) {
         grib_context_log(c, GRIB_LOG_ERROR, "Key %s (unpack_long): N cannot be 0!", name_);

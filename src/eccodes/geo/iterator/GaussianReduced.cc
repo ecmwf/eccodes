@@ -9,7 +9,10 @@
  */
 
 #include "GaussianReduced.h"
+#include <algorithm>
 #include <cmath>
+#include <utility>
+#include <vector>
 
 eccodes::geo_iterator::GaussianReduced _grib_iterator_gaussian_reduced{};
 eccodes::geo_iterator::Iterator* grib_iterator_gaussian_reduced = &_grib_iterator_gaussian_reduced;
@@ -224,6 +227,38 @@ int GaussianReduced::iterate_reduced_gaussian_subarea(grib_handle* h,
     return err;
 }
 
+// The algorithms below produce the points row by row from north to south, and from west to east
+// within each row (scanning mode 0). Reorder the first 'count' points so that they follow the
+// scanning mode of the message: rows from south to north if jScansPositively, and points from
+// east to west within each row if iScansNegatively. Each row has its own latitude.
+static void reorder_for_scanning_mode(double* lats, double* lons, size_t count,
+                                      long iScansNegatively, long jScansPositively)
+{
+    std::vector<std::pair<size_t, size_t>> rows;  // [begin, end) of each row
+    for (size_t begin = 0; begin < count;) {
+        size_t end = begin + 1;
+        while (end < count && lats[end] == lats[begin])
+            end++;
+        rows.emplace_back(begin, end);
+        begin = end;
+    }
+    if (jScansPositively)
+        std::reverse(rows.begin(), rows.end());
+
+    std::vector<double> new_lats, new_lons;
+    new_lats.reserve(count);
+    new_lons.reserve(count);
+    for (const auto& row : rows) {
+        const size_t first = new_lons.size();
+        new_lats.insert(new_lats.end(), lats + row.first, lats + row.second);
+        new_lons.insert(new_lons.end(), lons + row.first, lons + row.second);
+        if (iScansNegatively)
+            std::reverse(new_lons.begin() + first, new_lons.end());
+    }
+    std::copy(new_lats.begin(), new_lats.end(), lats);
+    std::copy(new_lons.begin(), new_lons.end(), lons);
+}
+
 int GaussianReduced::init(grib_handle* h, grib_arguments* args)
 {
     int ret = GRIB_SUCCESS;
@@ -241,6 +276,7 @@ int GaussianReduced::init(grib_handle* h, grib_arguments* args)
     long nj = 0, order = 0, i;
     long row_count = 0;
     long angleSubdivisions = 0;
+    long iScansNegatively = 0, jScansPositively = 0;
     const grib_context* c = h->context;
     const char* slat_first = args->get_name(carg_++);
     const char* slon_first = args->get_name(carg_++);
@@ -318,6 +354,19 @@ int GaussianReduced::init(grib_handle* h, grib_arguments* args)
     while (lon_first < 0)
         lon_first += 360;
 
+    // GitHub #654: honour the scanning mode. Compute the points in scanning mode 0, with the
+    // first and last grid points and the pl array in that order, then reorder them below.
+    if (grib_get_long(h, "iScansNegatively", &iScansNegatively) != GRIB_SUCCESS)
+        iScansNegatively = 0;
+    if (grib_get_long(h, "jScansPositively", &jScansPositively) != GRIB_SUCCESS)
+        jScansPositively = 0;
+    if (jScansPositively) {
+        std::swap(lat_first, lat_last);
+        std::reverse(pl, pl + plsize);
+    }
+    if (iScansNegatively)
+        std::swap(lon_first, lon_last);
+
     /* Find the maximum element of "pl" array, do not assume it's 4*N! */
     /* This could be an Octahedral Gaussian Grid */
     max_pl = pl[0];
@@ -360,6 +409,8 @@ int GaussianReduced::init(grib_handle* h, grib_arguments* args)
     }
 
 finalise:
+    if (ret == GRIB_SUCCESS && (iScansNegatively || jScansPositively) && e_ > 0)
+        reorder_for_scanning_mode(lats_, lons_, e_, iScansNegatively, jScansPositively);
     e_ = -1;
     grib_context_free(h->context, lats);
     grib_context_free(h->context, pl);
