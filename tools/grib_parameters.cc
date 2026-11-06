@@ -9,6 +9,7 @@
  */
 
 #include "grib_api_internal.h"
+#include "expression/Functor.h"
 
 #include <algorithm>
 #include <cerrno>
@@ -155,16 +156,6 @@ static bool is_dir(const std::string& path)
     return path_is_directory(path.c_str());
 }
 
-static bool is_file(const std::string& path)
-{
-    return path_is_regular_file(path.c_str());
-}
-
-static bool is_executable_file(const std::string& path)
-{
-    return is_file(path) && access(path.c_str(), X_OK) == 0;
-}
-
 static std::string dirname_of(const std::string& path)
 {
     size_t p = path.find_last_of('/');
@@ -179,17 +170,6 @@ static std::string path_join(const std::string& a, const std::string& b)
     if (b.empty()) return a;
     if (a[a.size() - 1] == '/') return a + b;
     return a + "/" + b;
-}
-
-static std::string shell_quote(const std::string& s)
-{
-    std::string q = "'";
-    for (size_t i = 0; i < s.size(); ++i) {
-        if (s[i] == '\'') q += "'\\''";
-        else q += s[i];
-    }
-    q += "'";
-    return q;
 }
 
 static std::string to_lower(std::string s)
@@ -288,26 +268,6 @@ static int infer_switch(const std::string& filename)
     return -2;
 }
 
-static std::string unquote_value(std::string value)
-{
-    value = trim(value);
-    if (value.size() >= 2 && value[0] == '\'' && value[value.size() - 1] == '\'') {
-        std::string inner = value.substr(1, value.size() - 2);
-        std::string out;
-        for (size_t i = 0; i < inner.size(); ++i) {
-            if (inner[i] == '\\' && i + 1 < inner.size() && inner[i + 1] == '\'') {
-                out += '\'';
-                i++;
-            }
-            else {
-                out += inner[i];
-            }
-        }
-        return out;
-    }
-    return value;
-}
-
 static std::string key_from_record(int edition, int sw, const std::string& scope, const std::map<std::string, std::string>& attrs)
 {
     std::ostringstream oss;
@@ -343,6 +303,56 @@ static int add_record_value(
     return 0;
 }
 
+// Text form of a concept condition value, e.g. 128, -2, missing(), [102,2]
+static std::string condition_value_text(const grib_concept_condition* cond)
+{
+    char buf[64];
+    if (cond->iarray) {
+        std::string out = "[";
+        for (size_t i = 0; i < cond->iarray->n; ++i) {
+            if (i) out += ",";
+            snprintf(buf, sizeof(buf), "%ld", cond->iarray->v[i]);
+            out += buf;
+        }
+        return out + "]";
+    }
+
+    const eccodes::Expression* e = cond->expression;
+    if (!e) return "";
+    const std::string cls = e->class_name();
+    if (cls == "string") {
+        int err = 0;
+        const char* s = e->evaluate_string(NULL, NULL, NULL, &err);
+        return (err == 0 && s) ? s : "";
+    }
+    if (cls == "functor") {
+        const eccodes::expression::Functor* f = dynamic_cast<const eccodes::expression::Functor*>(e);
+        return f ? std::string(const_cast<eccodes::expression::Functor*>(f)->name()) + "()" : "";
+    }
+    if (cls == "accessor") {
+        return e->get_name();
+    }
+    // Constants (negative numbers are a unary minus applied to a constant)
+    if (cls == "long" || cls == "double" || cls == "unop") {
+        if (e->native_type(NULL) == GRIB_TYPE_DOUBLE) {
+            double d = 0;
+            if (e->evaluate_double(NULL, &d) == GRIB_SUCCESS) {
+                snprintf(buf, sizeof(buf), "%g", d);
+                return buf;
+            }
+        }
+        else {
+            long l = 0;
+            if (e->evaluate_long(NULL, &l) == GRIB_SUCCESS) {
+                snprintf(buf, sizeof(buf), "%ld", l);
+                return buf;
+            }
+        }
+    }
+    return std::string("<") + cls + ">";
+}
+
+// Parse a concept file with the ecCodes parser itself (works for files on disk and in MEMFS)
 static int parse_def_file(
     const std::string& file_path,
     const std::string& concept,
@@ -352,51 +362,30 @@ static int parse_def_file(
     const std::string& source,
     std::map<std::string, Record>& records)
 {
-    FILE* f = fopen(file_path.c_str(), "rb");
-    if (!f) return errno;
+    grib_context* ctx = grib_context_get_default();
+    grib_concept_value* list = grib_parse_concept_file(ctx, file_path.c_str());
+    if (!list) return GRIB_INVALID_FILE;
 
-    std::regex entry_re("^'((\\\\'|[^'])*)'\\s*=\\s*\\{\\s*$");
-    std::regex attr_re("^([A-Za-z0-9_]+)\\s*=\\s*(.*?)\\s*;\\s*$");
+    // Entries in file order
+    std::vector<grib_concept_value*> entries;
+    for (grib_concept_value* v = list; v; v = v->next) entries.push_back(v);
 
-    bool in_entry = false;
-    std::string current_value;
-    std::map<std::string, std::string> current_attrs;
-
-    char line[8192];
-    while (fgets(line, sizeof(line), f)) {
-        std::string s = trim(line);
-        if (s.empty() || s[0] == '#') continue;
-
-        if (!in_entry) {
-            std::smatch m;
-            if (std::regex_match(s, m, entry_re)) {
-                current_value = m[1].str();
-                size_t pos = 0;
-                while ((pos = current_value.find("\\\\'", pos)) != std::string::npos) {
-                    current_value.replace(pos, 2, "'");
-                    pos += 1;
-                }
-                current_attrs.clear();
-                in_entry = true;
-            }
-            continue;
+    std::map<std::string, std::string> attrs;
+    for (size_t i = 0; i < entries.size(); ++i) {
+        attrs.clear();
+        for (grib_concept_condition* cond = entries[i]->conditions; cond; cond = cond->next) {
+            attrs[cond->name] = condition_value_text(cond);
         }
-
-        if (!s.empty() && s[0] == '}') {
-            add_record_value(records, edition, sw, scope, current_attrs, concept, current_value, source);
-            in_entry = false;
-            current_value.clear();
-            current_attrs.clear();
-            continue;
-        }
-
-        std::smatch ma;
-        if (std::regex_match(s, ma, attr_re)) {
-            current_attrs[ma[1].str()] = unquote_value(ma[2].str());
-        }
+        add_record_value(records, edition, sw, scope, attrs, concept, entries[i]->name, source);
     }
 
-    fclose(f);
+    for (size_t i = 0; i < entries.size(); ++i) {
+        for (grib_concept_condition* cond = entries[i]->conditions; cond; cond = cond->next) {
+            if (cond->iarray) grib_iarray_delete(cond->iarray);
+            cond->iarray = NULL;
+        }
+        grib_concept_value_delete(ctx, entries[i]);
+    }
     return 0;
 }
 
@@ -410,34 +399,101 @@ static void scan_dir_recursive(const std::string& root, std::vector<std::string>
         const char* name = ent->d_name;
         if (strcmp(name, ".") == 0 || strcmp(name, "..") == 0) continue;
         std::string path = path_join(root, name);
-        struct stat st;
-        if (lstat(path.c_str(), &st) != 0) continue;
-        if (S_ISDIR(st.st_mode)) {
+        // Use d_type where available: an lstat per entry is very slow on network filesystems
+        bool is_dir_entry = false, is_reg_entry = false;
+#ifdef _DIRENT_HAVE_D_TYPE
+        if (ent->d_type != DT_UNKNOWN) {
+            is_dir_entry = (ent->d_type == DT_DIR);
+            is_reg_entry = (ent->d_type == DT_REG);
+        }
+        else
+#endif
+        {
+            struct stat st;
+            if (lstat(path.c_str(), &st) != 0) continue;
+            is_dir_entry = S_ISDIR(st.st_mode);
+            is_reg_entry = S_ISREG(st.st_mode);
+        }
+        if (is_dir_entry) {
             scan_dir_recursive(path, out_files);
         }
-        else if (S_ISREG(st.st_mode)) {
+        else if (is_reg_entry) {
             out_files.push_back(path);
         }
     }
     closedir(d);
 }
 
-static int scan_definitions(const std::string& definitions_root, std::map<std::string, Record>& records)
+// Concept files which can exist in MEMFS. MEMFS cannot be listed, so the candidates
+// are enumerated and tested for existence.
+static std::vector<std::string> memfs_candidate_files()
 {
-    std::vector<std::string> files;
-    scan_dir_recursive(definitions_root, files);
+    static const char* grib1_local_concepts[] = {
+        "ammc", "cerise", "cnmc", "destine", "destinegen1", "ecmf", "edzw", "efkl",
+        "egrr", "eidb", "ekmi", "enmi", "era", "era6", "eswi", "fire", "hydro",
+        "hydro_legacy", "kwbc", "lcgcr", "lfpw", "lfpw1", "lowm", "nextgems", "rjtd",
+        "s2s", "sbsj", "tigge", "uerra", "wpmip"
+    };
+    static const char* grib2_local_concepts[] = {
+        "cerise", "cnmc", "destine", "destinegen1", "ecmf", "edzw", "efkl",
+        "egrr", "ekmi", "era", "era6", "eswi", "fire", "hydro", "hydro_legacy",
+        "kwbc", "lcgcr", "lfpw", "lfpw1", "nextgems", "s2s", "tigge", "uerra", "wpmip"
+    };
+    static const char* grib2_suffixes[] = {".def", ".lte33.def", ".chemsplit.def"};
 
+    std::vector<std::string> dirs1(1, "grib1"), dirs2(1, "grib2");
+    for (size_t i = 0; i < sizeof(grib1_local_concepts) / sizeof(grib1_local_concepts[0]); ++i)
+        dirs1.push_back(std::string("grib1/localConcepts/") + grib1_local_concepts[i]);
+    for (size_t i = 0; i < sizeof(grib2_local_concepts) / sizeof(grib2_local_concepts[0]); ++i)
+        dirs2.push_back(std::string("grib2/localConcepts/") + grib2_local_concepts[i]);
+
+    std::vector<std::string> out;
+    for (size_t d = 0; d < dirs1.size(); ++d)
+        for (std::set<std::string>::const_iterator c = kConcepts.begin(); c != kConcepts.end(); ++c)
+            out.push_back(dirs1[d] + "/" + *c + ".def");
+    for (size_t d = 0; d < dirs2.size(); ++d)
+        for (std::set<std::string>::const_iterator c = kConcepts.begin(); c != kConcepts.end(); ++c)
+            for (size_t s = 0; s < sizeof(grib2_suffixes) / sizeof(grib2_suffixes[0]); ++s)
+                out.push_back(dirs2[d] + "/" + *c + grib2_suffixes[s]);
+    return out;
+}
+
+// Scan one definitions root (a directory or a MEMFS root). As in ecCodes, a definition file
+// is taken from the first root which contains it: files already taken from a previous root
+// ('claimed') are skipped.
+static int scan_definitions(const std::string& definitions_root, std::map<std::string, Record>& records,
+                            std::set<std::string>& claimed, bool debug)
+{
+    const bool is_memfs_root = starts_with(definitions_root, "/MEMFS");
     std::string root_prefix = definitions_root;
     while (root_prefix.size() > 1 && root_prefix[root_prefix.size() - 1] == '/') {
         root_prefix.erase(root_prefix.size() - 1);
     }
 
-    for (size_t i = 0; i < files.size(); ++i) {
-        std::string file_path = files[i];
-        std::string rel = file_path;
-        if (starts_with(rel, root_prefix + "/")) rel = rel.substr(root_prefix.size() + 1);
+    // Paths relative to the root
+    std::vector<std::string> rel_files;
+    if (is_memfs_root) {
+        std::vector<std::string> candidates = memfs_candidate_files();
+        for (size_t i = 0; i < candidates.size(); ++i) {
+            if (codes_access(path_join(root_prefix, candidates[i]).c_str(), F_OK) == 0) {
+                rel_files.push_back(candidates[i]);
+            }
+        }
+    }
+    else {
+        // Concept files only live below grib1/ and grib2/, so do not walk the rest of the tree
+        std::vector<std::string> files;
+        scan_dir_recursive(path_join(definitions_root, "grib1"), files);
+        scan_dir_recursive(path_join(definitions_root, "grib2"), files);
+        for (size_t i = 0; i < files.size(); ++i) {
+            if (starts_with(files[i], root_prefix + "/")) rel_files.push_back(files[i].substr(root_prefix.size() + 1));
+        }
+    }
 
-        if (!(starts_with(rel, "grib1/") || starts_with(rel, "grib2/"))) continue;
+    for (size_t i = 0; i < rel_files.size(); ++i) {
+        const std::string& rel = rel_files[i];
+        std::string file_path = path_join(root_prefix, rel);
+
         std::string filename = rel.substr(rel.find_last_of('/') + 1);
 
         bool concept_file = false;
@@ -457,6 +513,14 @@ static int scan_definitions(const std::string& definitions_root, std::map<std::s
         if (edition == 1) sw = -1;
         if (edition == 2 && sw == -2) continue;
 
+        // MEMFS cannot be listed, so a concept file found on disk but missing from the
+        // MEMFS candidate list would be silently ignored in a MEMFS build (tested in ctest)
+        if (debug && !is_memfs_root) {
+            static const std::vector<std::string> memfs_list = memfs_candidate_files();
+            if (std::find(memfs_list.begin(), memfs_list.end(), rel) == memfs_list.end())
+                fprintf(stderr, "DEBUG: concept file not in MEMFS candidate list: %s\n", rel.c_str());
+        }
+
         std::string scope;
         size_t slash = rel.find('/');
         size_t last_slash = rel.find_last_of('/');
@@ -467,21 +531,11 @@ static int scan_definitions(const std::string& definitions_root, std::map<std::s
             scope = rel.substr(0, last_slash);
         }
 
+        if (!claimed.insert(rel).second) continue;
         parse_def_file(file_path, concept, edition, sw, scope, rel, records);
     }
 
     return 0;
-}
-
-static std::string read_cmd_output(const std::string& cmd)
-{
-    std::string out;
-    FILE* p = popen(cmd.c_str(), "r");
-    if (!p) return out;
-    char buf[4096];
-    while (fgets(buf, sizeof(buf), p)) out += buf;
-    pclose(p);
-    return out;
 }
 
 static std::string resolve_path_like_shell(const std::string& p)
@@ -491,150 +545,6 @@ static std::string resolve_path_like_shell(const std::string& p)
     char cwd[PATH_MAX];
     if (!getcwd(cwd, sizeof(cwd))) return p;
     return path_join(cwd, p);
-}
-
-static std::string find_in_path(const std::string& exe)
-{
-    const char* env_path = getenv("PATH");
-    if (!env_path) return "";
-    std::vector<std::string> dirs = split(env_path, ':');
-    for (size_t i = 0; i < dirs.size(); ++i) {
-        std::string p = path_join(dirs[i], exe);
-        if (is_executable_file(p)) return p;
-    }
-    return "";
-}
-
-static std::string locate_codes_export_resource(const std::string& argv0)
-{
-    const char* env = getenv("ECCODES_EXPORT_RESOURCE");
-    if (env && is_executable_file(env)) return env;
-
-    char exe_real[PATH_MAX] = {0};
-    if (realpath(argv0.c_str(), exe_real)) {
-        std::string bin_dir = dirname_of(exe_real);
-        std::string sibling = path_join(bin_dir, "codes_export_resource");
-        if (is_executable_file(sibling)) return sibling;
-    }
-
-    std::string from_path = find_in_path("codes_export_resource");
-    if (!from_path.empty()) return from_path;
-
-    return "";
-}
-
-static std::string mk_temp_dir()
-{
-    char tmpl[] = "/tmp/grib_parameters_memfs_XXXXXX";
-    char* p = mkdtemp(tmpl);
-    if (!p) return "";
-    return p;
-}
-
-static bool run_export(const std::string& exporter, const std::string& resource, const std::string& out_file)
-{
-    std::string out_dir = dirname_of(out_file);
-    std::string cmd_mkdir = "mkdir -p " + shell_quote(out_dir);
-    if (system(cmd_mkdir.c_str()) != 0) return false;
-
-    std::string cmd = shell_quote(exporter) + " -d " + shell_quote(resource) + " " + shell_quote(out_file) + " >/dev/null 2>/dev/null";
-    return system(cmd.c_str()) == 0;
-}
-
-static std::vector<std::string> find_referenced_paths_in_file(const std::string& file_path)
-{
-    std::vector<std::string> refs;
-    FILE* f = fopen(file_path.c_str(), "rb");
-    if (!f) return refs;
-
-    std::regex re("\"([^\"\\\\]+\\.(def|table|tmpl|list|txt))\"");
-    char line[8192];
-    while (fgets(line, sizeof(line), f)) {
-        std::string s = line;
-        std::smatch m;
-        while (std::regex_search(s, m, re)) {
-            refs.push_back(m[1].str());
-            s = m.suffix().str();
-        }
-    }
-    fclose(f);
-    uniq(refs);
-    return refs;
-}
-
-static std::string materialize_memfs(const std::string& exporter)
-{
-    std::string temp_root = mk_temp_dir();
-    if (temp_root.empty()) return "";
-
-    std::string defs_root = path_join(temp_root, "definitions");
-    std::vector<std::string> queue;
-
-    // Main concept files
-    const char* main_seeds[] = {
-        "grib1/paramId.def", "grib1/shortName.def", "grib1/name.def", "grib1/units.def",
-        "grib2/paramId.def", "grib2/shortName.def", "grib2/name.def", "grib2/units.def",
-        "grib2/paramId.lte33.def", "grib2/shortName.lte33.def", "grib2/name.lte33.def", "grib2/units.lte33.def",
-        "grib2/paramId.chemsplit.def", "grib2/shortName.chemsplit.def", "grib2/name.chemsplit.def", "grib2/units.chemsplit.def"
-    };
-    for (size_t i = 0; i < sizeof(main_seeds) / sizeof(main_seeds[0]); ++i) {
-        queue.push_back(main_seeds[i]);
-    }
-
-    // localConcepts for grib1
-    const char* grib1_local_concepts[] = {
-        "ammc", "cerise", "cnmc", "destine", "destinegen1", "ecmf", "edzw", "efkl",
-        "egrr", "eidb", "ekmi", "enmi", "era", "era6", "eswi", "fire", "hydro",
-        "hydro_legacy", "kwbc", "lcgcr", "lfpw", "lfpw1", "lowm", "nextgems", "rjtd",
-        "s2s", "sbsj", "tigge", "uerra", "wpmip"
-    };
-    const char* concepts[] = {"paramId", "shortName", "name", "units"};
-    for (size_t i = 0; i < sizeof(grib1_local_concepts) / sizeof(grib1_local_concepts[0]); ++i) {
-        for (size_t j = 0; j < sizeof(concepts) / sizeof(concepts[0]); ++j) {
-            std::string path = std::string("grib1/localConcepts/") + grib1_local_concepts[i] + "/" + concepts[j] + ".def";
-            queue.push_back(path);
-        }
-    }
-
-    // localConcepts for grib2
-    const char* grib2_local_concepts[] = {
-        "cerise", "cnmc", "destine", "destinegen1", "ecmf", "edzw", "efkl",
-        "egrr", "ekmi", "era", "era6", "eswi", "fire", "hydro", "hydro_legacy",
-        "kwbc", "lcgcr", "lfpw", "lfpw1", "nextgems", "s2s", "tigge", "uerra", "wpmip"
-    };
-    for (size_t i = 0; i < sizeof(grib2_local_concepts) / sizeof(grib2_local_concepts[0]); ++i) {
-        for (size_t j = 0; j < sizeof(concepts) / sizeof(concepts[0]); ++j) {
-            std::string path = std::string("grib2/localConcepts/") + grib2_local_concepts[i] + "/" + concepts[j] + ".def";
-            queue.push_back(path);
-            // Also add lte33 and chemsplit variants for grib2
-            path = std::string("grib2/localConcepts/") + grib2_local_concepts[i] + "/" + concepts[j] + ".lte33.def";
-            queue.push_back(path);
-            path = std::string("grib2/localConcepts/") + grib2_local_concepts[i] + "/" + concepts[j] + ".chemsplit.def";
-            queue.push_back(path);
-        }
-    }
-
-    std::set<std::string> seen;
-    bool exported_any = false;
-
-    while (!queue.empty()) {
-        std::string res = queue.front();
-        queue.erase(queue.begin());
-        if (seen.count(res)) continue;
-        seen.insert(res);
-
-        std::string out_file = path_join(defs_root, res);
-        if (!run_export(exporter, res, out_file)) continue;
-
-        exported_any = true;
-        std::vector<std::string> refs = find_referenced_paths_in_file(out_file);
-        for (size_t i = 0; i < refs.size(); ++i) {
-            if (!seen.count(refs[i])) queue.push_back(refs[i]);
-        }
-    }
-
-    if (!exported_any) return "";
-    return defs_root;
 }
 
 static std::vector<std::string> script_default_roots(const std::string& argv0)
@@ -668,30 +578,20 @@ static std::vector<std::string> script_default_roots(const std::string& argv0)
     return candidates;
 }
 
-static std::vector<std::string> explicit_roots_from_args_env(const Options& opt)
+// Definitions roots in priority order: --definitions-root if given, otherwise the
+// definitions path of the ecCodes library itself, i.e. ECCODES_EXTRA_DEFINITION_PATH,
+// then ECCODES_DEFINITION_PATH or the built-in default (which may be MEMFS).
+static std::vector<std::string> definitions_roots(const Options& opt, grib_context* ctx, bool& from_option)
 {
-    std::vector<std::string> roots;
     const char sep = path_delimiter_char();
-    if (!opt.definitions_root.empty()) {
+    from_option = !opt.definitions_root.empty();
+    std::vector<std::string> roots;
+    if (from_option) {
         roots = split(opt.definitions_root, sep);
-        uniq(roots);
-        return roots;
     }
-
-    const char* e = getenv("ECCODES_EXTRA_DEFINITION_PATH");
-    if (e) {
-        std::vector<std::string> v = split(e, sep);
-        roots.insert(roots.end(), v.begin(), v.end());
-    }
-    e = getenv("ECCODES_EXTRA_DEFINITIONS");
-    if (e) {
-        std::vector<std::string> v = split(e, sep);
-        roots.insert(roots.end(), v.begin(), v.end());
-    }
-    e = getenv("ECCODES_DEFINITION_PATH");
-    if (e) {
-        std::vector<std::string> v = split(e, sep);
-        roots.insert(roots.end(), v.begin(), v.end());
+    else {
+        const char* p = grib_definition_path(ctx);
+        if (p) roots = split(p, sep);
     }
     uniq(roots);
     return roots;
@@ -865,19 +765,16 @@ static std::string usage_text(const char* prog)
       << "  -h, --help            show this help message and exit\n"
       << "  --definitions-root DEFINITIONS_ROOT\n"
       << "                        Definitions root directory. Accepts multiple paths\n"
-      << "                        separated by path separator. If omitted, resolution\n"
-      << "                        order is: --definitions-root;\n"
-      << "                        ECCODES_EXTRA_DEFINITION_PATH (plus aliases\n"
-      << "                        ECCODES_EXTRA_DEFINITIONS);\n"
-      << "                        ECCODES_DEFINITION_PATH;\n"
-      << "                        then defaults <prefix>/share/eccodes/definitions,\n"
-      << "                        <prefix>/definitions, <prefix>/share/definitions,\n"
-      << "                        <prefix>/../share/eccodes/definitions, ./definitions.\n"
-      << "                        If none exist and no explicit roots were provided,\n"
-      << "                        MEMFS is tried automatically.\n"
+      << "                        separated by path separator. If omitted, the same\n"
+      << "                        path as ecCodes is used: ECCODES_EXTRA_DEFINITION_PATH,\n"
+      << "                        then ECCODES_DEFINITION_PATH or the built-in default\n"
+      << "                        (which may be MEMFS). As in ecCodes, a definition\n"
+      << "                        file present in several roots is taken from the first\n"
+      << "                        root that has it\n"
       << "  --debug-path-resolution\n"
       << "                        Print resolved definitions path candidates and\n"
-      << "                        selected roots to stderr\n"
+      << "                        selected roots to stderr. Also reports concept files\n"
+      << "                        read from disk which a MEMFS build would not find\n"
       << "  --columns COLUMNS     Comma-separated list of output columns to show. Valid\n"
       << "                        columns: edition,is_mtg2_switch,scope,paramId,shortName,\n"
       << "                        name,units,encoding,sources\n"
@@ -1258,91 +1155,75 @@ int main(int argc, char** argv)
         }
     }
 
-    std::vector<std::string> explicit_roots = explicit_roots_from_args_env(opt);
-    std::vector<std::string> candidates;
-    if (!explicit_roots.empty()) candidates = explicit_roots;
-    else candidates = script_default_roots(argv[0]);
+    grib_context* ctx = grib_context_get_default();
+    const char* def_path = grib_definition_path(ctx);
+    bool roots_from_option = false;
+    std::vector<std::string> candidates = definitions_roots(opt, ctx, roots_from_option);
 
-    std::vector<std::string> filesystem_roots;
-    std::vector<std::string> memfs_roots;
-
+    // Usable roots in priority order (MEMFS or existing directories), without duplicates
+    std::vector<std::string> roots;
+    std::set<std::string> seen_real_roots;
     for (size_t i = 0; i < candidates.size(); ++i) {
         const std::string& r = candidates[i];
-        if (starts_with(r, "/MEMFS")) {
-            memfs_roots.push_back(r);
-            continue;
+        std::string canonical = "/MEMFS"; // all MEMFS roots share one tree
+        if (!starts_with(r, "/MEMFS")) {
+            if (!is_dir(r)) {
+                if (roots_from_option) warningf("Ignoring non-directory definitions root: %s", r.c_str());
+                continue;
+            }
+            char real[PATH_MAX] = {0};
+            canonical = realpath(r.c_str(), real) ? std::string(real) : r;
         }
-        if (is_dir(r)) {
-            filesystem_roots.push_back(r);
-        }
-        else if (std::find(explicit_roots.begin(), explicit_roots.end(), r) != explicit_roots.end()) {
-            warningf("Ignoring non-directory definitions root: %s", r.c_str());
-        }
+        if (!seen_real_roots.insert(canonical).second) continue;
+        roots.push_back(r);
     }
 
-    grib_context* ctx = grib_context_get_default();
-    const char* def_path = ctx->grib_definition_files_path;
-    std::string detected_default = def_path ? def_path : "";
-
-    if (explicit_roots.empty() && starts_with(detected_default, "/MEMFS")) {
-        memfs_roots.insert(memfs_roots.begin(), detected_default);
-        uniq(memfs_roots);
-        filesystem_roots.clear();
-    }
-
+    // Fallback, e.g. for a relocated installation where the built-in path does not exist
+    bool used_fallback = false;
     bool auto_memfs = false;
-    if (explicit_roots.empty() && filesystem_roots.empty() && memfs_roots.empty()) {
-        memfs_roots.push_back("/MEMFS/definitions");
-        auto_memfs = true;
+    if (roots.empty() && !roots_from_option) {
+        std::vector<std::string> fallback = script_default_roots(argv[0]);
+        for (size_t i = 0; i < fallback.size(); ++i) {
+            if (is_dir(fallback[i])) {
+                roots.push_back(fallback[i]);
+                used_fallback = true;
+                break;
+            }
+        }
+        if (roots.empty()) {
+            roots.push_back("/MEMFS/definitions");
+            auto_memfs = true;
+        }
     }
 
     if (opt.debug_path_resolution) {
-        fprintf(stderr, "DEBUG: explicit roots:\n");
-        if (explicit_roots.empty()) fprintf(stderr, "DEBUG:   <none>\n");
-        for (size_t i = 0; i < explicit_roots.size(); ++i) fprintf(stderr, "DEBUG:   %s\n", explicit_roots[i].c_str());
-
-        fprintf(stderr, "DEBUG: candidate roots:\n");
+        fprintf(stderr, "DEBUG: ecCodes definitions path: %s\n", def_path ? def_path : "<unavailable>");
+        fprintf(stderr, "DEBUG: candidate roots (from %s):\n", roots_from_option ? "--definitions-root" : "ecCodes definitions path");
+        if (candidates.empty()) fprintf(stderr, "DEBUG:   <none>\n");
         for (size_t i = 0; i < candidates.size(); ++i) fprintf(stderr, "DEBUG:   %s\n", candidates[i].c_str());
 
-        fprintf(stderr, "DEBUG: filesystem roots:\n");
-        if (filesystem_roots.empty()) fprintf(stderr, "DEBUG:   <none>\n");
-        for (size_t i = 0; i < filesystem_roots.size(); ++i) fprintf(stderr, "DEBUG:   %s\n", filesystem_roots[i].c_str());
-
-        fprintf(stderr, "DEBUG: memfs roots:\n");
-        if (memfs_roots.empty()) fprintf(stderr, "DEBUG:   <none>\n");
-        for (size_t i = 0; i < memfs_roots.size(); ++i) fprintf(stderr, "DEBUG:   %s\n", memfs_roots[i].c_str());
-
-        fprintf(stderr, "DEBUG: codes_info default definitions path: %s\n", detected_default.empty() ? "<unavailable>" : detected_default.c_str());
+        fprintf(stderr, "DEBUG: selected roots (first match wins):\n");
+        if (roots.empty()) fprintf(stderr, "DEBUG:   <none>\n");
+        for (size_t i = 0; i < roots.size(); ++i) fprintf(stderr, "DEBUG:   %s\n", roots[i].c_str());
+        if (used_fallback) fprintf(stderr, "DEBUG: no usable root on the ecCodes path, using fallback next to the executable\n");
         if (auto_memfs) fprintf(stderr, "DEBUG: auto memfs fallback enabled\n");
     }
 
     std::map<std::string, Record> records_by_key;
+    std::set<std::string> claimed_files;
     bool used_filesystem_backend = false;
     bool used_memfs_backend = false;
 
-    for (size_t i = 0; i < filesystem_roots.size(); ++i) {
-        used_filesystem_backend = true;
-        scan_definitions(filesystem_roots[i], records_by_key);
-    }
+    for (size_t i = 0; i < roots.size(); ++i) {
+        if (!starts_with(roots[i], "/MEMFS")) {
+            used_filesystem_backend = true;
+            scan_definitions(roots[i], records_by_key, claimed_files, opt.debug_path_resolution);
+            continue;
+        }
 
-    if (!memfs_roots.empty()) {
-        std::string exporter = locate_codes_export_resource(argv[0]);
-        if (opt.debug_path_resolution) {
-            fprintf(stderr, "DEBUG: codes_export_resource=%s\n", exporter.empty() ? "<not found>" : exporter.c_str());
-        }
-        if (exporter.empty()) {
-            warningf("MEMFS path requested but codes_export_resource was not found. Skipping MEMFS definitions.");
-        }
-        else {
-            std::string memfs_root = materialize_memfs(exporter);
-            if (memfs_root.empty()) {
-                warningf("Failed to materialize definitions from MEMFS.");
-            }
-            else {
-                used_memfs_backend = true;
-                scan_definitions(memfs_root, records_by_key);
-            }
-        }
+        // Read in-process: codes_access/codes_fopen serve /MEMFS paths from memory
+        used_memfs_backend = true;
+        scan_definitions(roots[i], records_by_key, claimed_files, opt.debug_path_resolution);
     }
 
     std::string effective_backend = "none";
@@ -1615,7 +1496,7 @@ int main(int argc, char** argv)
         int c = cmp_records(a, b);
         return (opt.order == "desc") ? (c > 0) : (c < 0);
     };
-    std::sort(filtered.begin(), filtered.end(), record_before);
+    std::stable_sort(filtered.begin(), filtered.end(), record_before);
 
     bool keep_attrs = opt.show_encoding || !attr_filter.empty() || (!selected_columns.empty() && std::find(selected_columns.begin(), selected_columns.end(), "encoding") != selected_columns.end());
     if (!keep_attrs) {
@@ -1654,7 +1535,7 @@ int main(int argc, char** argv)
         }
         filtered.swap(deduped);
 
-        std::sort(filtered.begin(), filtered.end(), record_before);
+        std::stable_sort(filtered.begin(), filtered.end(), record_before);
     }
 
     if (filtered.empty()) {

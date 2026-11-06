@@ -245,5 +245,52 @@ if grep -q "typeOfStatisticalProcessing=0" $tempA; then
     exit 1
 fi
 
+# Single-line concept entries must be parsed, e.g. in grib1/localConcepts/kwbc/paramId.def:
+#   '260056' = { table2Version=128; indicatorOfParameter =141; }
+${tools_dir}/grib_parameters --scope grib1/localConcepts/kwbc --show-encoding > $tempA
+[ -s $tempA ]
+grep -q "scope=grib1/localConcepts/kwbc paramId=260056 shortName=sd " $tempA
+grep -q "scope=grib1/localConcepts/kwbc paramId=3096 shortName=vice " $tempA
+grep -q "encoding: indicatorOfParameter=141, table2Version=128" $tempA
+
+# MEMFS cannot be listed, so the tool has a fixed list of the concept files it looks
+# for in MEMFS. Every concept file in the definitions must be on that list. Checked in
+# all builds, as a file missing from the list would only show up in a MEMFS build
+${tools_dir}/grib_parameters --debug-path-resolution > $tempA 2> $tempErr
+grep -Eq "effective backend: (filesystem|mixed)" $tempErr
+if grep "not in MEMFS candidate list" $tempErr; then
+    echo "Add the localConcepts directories above to memfs_candidate_files() in tools/grib_parameters.cc"
+    exit 1
+fi
+# ... and the check must detect a new centre
+tempDir=temp.$label.dir
+rm -rf $tempDir
+mkdir -p $tempDir/grib2/localConcepts/zzzz
+cp $def_dir/grib2/paramId.def $tempDir/grib2/localConcepts/zzzz/paramId.def
+${tools_dir}/grib_parameters --definitions-root $tempDir --debug-path-resolution > $tempA 2> $tempErr
+grep -q "not in MEMFS candidate list: grib2/localConcepts/zzzz/paramId.def" $tempErr
+rm -rf $tempDir
+
+# MEMFS: definitions embedded in the library must give the same records as
+# the definitions on the filesystem
+if [ $HAVE_MEMFS -eq 1 ]; then
+    ${tools_dir}/grib_parameters --show-encoding > $tempA
+    saved_def_path=$ECCODES_DEFINITION_PATH
+    unset ECCODES_DEFINITION_PATH
+    ${tools_dir}/grib_parameters --paramId 167 --debug-path-resolution > $tempB 2> $tempErr
+    grep -q "effective backend: memfs" $tempErr
+    ${tools_dir}/grib_parameters --show-encoding > $tempB
+    export ECCODES_DEFINITION_PATH=$saved_def_path
+    [ -s $tempB ]
+    cmp $tempA $tempB
+    grep -q "scope=grib1/localConcepts/kwbc paramId=260056 shortName=sd " $tempB
+    # Trailing slash in a MEMFS ECCODES_DEFINITION_PATH should be accepted
+    export ECCODES_DEFINITION_PATH=/MEMFS/definitions/
+    ${tools_dir}/grib_parameters --paramId 167 --debug-path-resolution > $tempB 2> $tempErr
+    [ -s $tempB ]
+    grep -q "effective backend: memfs" $tempErr
+    export ECCODES_DEFINITION_PATH=$saved_def_path
+fi
+
 # Clean up
 rm -f $tempA $tempB $tempErr
