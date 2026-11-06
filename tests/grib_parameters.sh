@@ -129,19 +129,19 @@ fi
 ${tools_dir}/grib_parameters --paramId-regex '^[0-9]{1,3}$' --scope grib2 --columns paramId --is_mtg2_switch 1 --format table > $tempA
 [ -s $tempA ]
 awk 'NR>2 {gsub(/ /,""); if ($1!="") print $1}' $tempA | \
-awk 'NR==1{p=$1;next} {if ($1+0 < p+0) exit 1; p=$1} END{exit 0}'
+awk 'NR==1{p=$1;next} {if ($1+0 < p+0) exit 1; p=$1}'
 
 # Descending numeric ordering with --order desc
 ${tools_dir}/grib_parameters --paramId-regex '^[0-9]{1,3}$' --scope grib2 --columns paramId --is_mtg2_switch 1 --format table --order desc > $tempA
 [ -s $tempA ]
 awk 'NR>2 {gsub(/ /,""); if ($1!="") print $1}' $tempA | \
-awk 'NR==1{p=$1;next} {if ($1+0 > p+0) exit 1; p=$1} END{exit 0}'
+awk 'NR==1{p=$1;next} {if ($1+0 > p+0) exit 1; p=$1}'
 
 # Field-specific ordering: shortName descending
 ${tools_dir}/grib_parameters --paramId-regex '^[0-9]{1,3}$' --scope grib2 --columns shortName --is_mtg2_switch 1 --format table --order-by shortName --order desc > $tempA
 [ -s $tempA ]
 awk 'NR>2 {gsub(/ /,""); if ($1!="") print $1}' $tempA | \
-awk 'NR==1{p=$1;next} {if ($1 > p) exit 1; p=$1} END{exit 0}'
+awk 'NR==1{p=$1;next} {if ($1 > p) exit 1; p=$1}'
 
 # Multi-field ordering: scope then paramId ascending
 ${tools_dir}/grib_parameters --paramId-regex '^[0-9]{1,3}$' --columns scope,paramId --format table --order-by scope,paramId --order asc > $tempA
@@ -157,7 +157,6 @@ NR>2 {
     }
     pscope=scope; pid=id; seen=1;
 }
-END {exit 0}
 ' $tempA
 
 # Invalid scope argument must fail

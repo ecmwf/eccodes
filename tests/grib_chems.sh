@@ -62,13 +62,13 @@ fi
 ${tools_dir}/grib_chems --chemId-regex '^[0-9]{1,3}$' --scope grib2 --columns chemId --format table --order desc > $tempA
 [ -s $tempA ]
 awk 'NR>2 {gsub(/ /,""); if ($1!="") print $1}' $tempA | \
-awk 'NR==1{p=$1;next} {if ($1+0 > p+0) exit 1; p=$1} END{exit 0}'
+awk 'NR==1{p=$1;next} {if ($1+0 > p+0) exit 1; p=$1}'
 
 # Field-specific ordering: chemShortName descending
 ${tools_dir}/grib_chems --chemId-regex '^[0-9]{1,3}$' --scope grib2 --columns chemShortName --format table --order-by chemShortName --order desc > $tempA
 [ -s $tempA ]
 awk 'NR>2 {gsub(/ /,""); if ($1!="") print $1}' $tempA | \
-awk 'NR==1{p=$1;next} {if ($1 > p) exit 1; p=$1} END{exit 0}'
+awk 'NR==1{p=$1;next} {if ($1 > p) exit 1; p=$1}'
 
 # Multi-field ordering: scope then chemId ascending
 ${tools_dir}/grib_chems --chemId-regex '^[0-9]{1,3}$' --columns scope,chemId --format table --order-by scope,chemId --order asc > $tempA
@@ -84,7 +84,6 @@ NR>2 {
     }
     pscope=scope; pid=id; seen=1;
 }
-END {exit 0}
 ' $tempA
 
 # Invalid chemFormula regex must fail
