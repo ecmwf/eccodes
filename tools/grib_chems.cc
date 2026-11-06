@@ -340,7 +340,58 @@ static std::string condition_value_text(const grib_concept_condition* cond)
     return std::string("<") + cls + ">";
 }
 
-// Parse a concept file with the ecCodes parser itself (works for files on disk and in MEMFS)
+// Whether a concept file has any content besides white space and '#' comments.
+// Returns 1 if it has, 0 if not, -1 if it cannot be read. Uses codes_fopen, so works for MEMFS.
+static int concept_file_has_content(const std::string& file_path)
+{
+    FILE* f = codes_fopen(file_path.c_str(), "r");
+    if (!f) return -1;
+    int c = 0, result = 0;
+    bool in_comment = false;
+    while ((c = fgetc(f)) != EOF) {
+        if (in_comment) {
+            if (c == '\n') in_comment = false;
+        }
+        else if (c == '#') {
+            in_comment = true;
+        }
+        else if (!isspace(c)) {
+            result = 1;
+            break;
+        }
+    }
+    if (ferror(f)) result = -1;
+    fclose(f);
+    return result;
+}
+
+static void free_concept_list(grib_context* ctx, grib_concept_value* list)
+{
+    while (list) {
+        grib_concept_value* next = list->next;
+        for (grib_concept_condition* cond = list->conditions; cond; cond = cond->next) {
+            if (cond->iarray) grib_iarray_delete(cond->iarray);
+            cond->iarray = NULL;
+        }
+        grib_concept_value_delete(ctx, list);
+        list = next;
+    }
+}
+
+// grib_parse_concept_file returns the result of the previous parse again when a file holds
+// other definitions than concepts (e.g. "transient x = 1;"). To detect that, the last result
+// is kept alive until a new one replaces it: a new result cannot reuse its address, and the
+// parser never refers to freed memory. Freed by release_previous_concept_list() at the end.
+static grib_concept_value* previous_concept_list = NULL;
+
+static void release_previous_concept_list()
+{
+    free_concept_list(grib_context_get_default(), previous_concept_list);
+    previous_concept_list = NULL;
+}
+
+// Parse a concept file with the ecCodes parser itself (works for files on disk and in MEMFS).
+// A file without entries is valid; a file which cannot be read or parsed is an error.
 static int parse_def_file(
     const std::string& file_path,
     const std::string& concept,
@@ -352,7 +403,15 @@ static int parse_def_file(
 {
     grib_context* ctx = grib_context_get_default();
     grib_concept_value* list = grib_parse_concept_file(ctx, file_path.c_str());
-    if (!list) return GRIB_INVALID_FILE;
+    if (list && list == previous_concept_list) list = NULL; // stale result, see above
+    if (list) release_previous_concept_list(); // the parser no longer refers to it
+    if (!list) {
+        // NULL is returned both for a file without entries and on failure: tell them apart
+        const int content = concept_file_has_content(file_path);
+        if (content == 0) return GRIB_SUCCESS;
+        errorf("%s concept file %s", content < 0 ? "Cannot read" : "Cannot parse", file_path.c_str());
+        return content < 0 ? GRIB_IO_PROBLEM : GRIB_INVALID_FILE;
+    }
 
     // Entries in file order
     std::vector<grib_concept_value*> entries;
@@ -367,13 +426,7 @@ static int parse_def_file(
         add_record_value(records, edition, sw, scope, attrs, concept, entries[i]->name, source);
     }
 
-    for (size_t i = 0; i < entries.size(); ++i) {
-        for (grib_concept_condition* cond = entries[i]->conditions; cond; cond = cond->next) {
-            if (cond->iarray) grib_iarray_delete(cond->iarray);
-            cond->iarray = NULL;
-        }
-        grib_concept_value_delete(ctx, entries[i]);
-    }
+    previous_concept_list = list;
     return 0;
 }
 
@@ -501,6 +554,7 @@ static std::vector<std::string> memfs_candidate_files()
 static int scan_definitions(const std::string& definitions_root, std::map<std::string, Record>& records,
                             std::set<std::string>& claimed, bool debug)
 {
+    int err = GRIB_SUCCESS; // all files are scanned, so that every failure is reported
     const bool is_memfs_root = starts_with(definitions_root, "/MEMFS");
     std::string root_prefix = definitions_root;
     while (root_prefix.size() > 1 && root_prefix[root_prefix.size() - 1] == '/') {
@@ -569,10 +623,11 @@ static int scan_definitions(const std::string& definitions_root, std::map<std::s
         }
 
         if (!claimed.insert(rel).second) continue;
-        parse_def_file(file_path, concept, edition, sw, scope, rel, records);
+        const int perr = parse_def_file(file_path, concept, edition, sw, scope, rel, records);
+        if (perr != GRIB_SUCCESS) err = perr;
     }
 
-    return 0;
+    return err;
 }
 
 // Definitions roots in priority order: --definitions-root if given, otherwise the
@@ -1167,17 +1222,26 @@ int main(int argc, char** argv)
     std::set<std::string> claimed_files;
     bool used_filesystem_backend = false;
     bool used_memfs_backend = false;
+    bool scan_failed = false;
 
     for (size_t i = 0; i < roots.size(); ++i) {
         if (!starts_with(roots[i], "/MEMFS")) {
             used_filesystem_backend = true;
-            scan_definitions(roots[i], records_by_key, claimed_files, opt.debug_path_resolution);
+            if (scan_definitions(roots[i], records_by_key, claimed_files, opt.debug_path_resolution) != GRIB_SUCCESS)
+                scan_failed = true;
             continue;
         }
 
         // Read in-process: codes_access/codes_fopen serve /MEMFS paths from memory
         used_memfs_backend = true;
-        scan_definitions(roots[i], records_by_key, claimed_files, opt.debug_path_resolution);
+        if (scan_definitions(roots[i], records_by_key, claimed_files, opt.debug_path_resolution) != GRIB_SUCCESS)
+            scan_failed = true;
+    }
+    release_previous_concept_list();
+    // ecCodes fails on a broken concept file as well: no partial results
+    if (scan_failed) {
+        errorf("Some concept files could not be read or parsed, see above");
+        return 2;
     }
 
     std::string effective_backend = "none";

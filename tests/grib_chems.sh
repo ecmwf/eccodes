@@ -174,6 +174,37 @@ if [ $ECCODES_ON_WINDOWS -eq 0 ]; then
     rm -rf $linkDir
 fi
 
+# Concept files which cannot be parsed are errors (no partial results), as in ecCodes;
+# files without entries are valid
+badDir=temp.$label.bad
+rm -rf $badDir
+mkdir -p $badDir/malformed/grib2 $badDir/empty/grib2 $badDir/first/grib2 $badDir/other/grib2
+printf "'x' = {\n discipline = \n" > $badDir/malformed/grib2/chemName.def
+set +e
+${tools_dir}/grib_chems --definitions-root $badDir/malformed:$def_dir --chemFormula O3 > $tempA 2> $tempErr
+status=$?
+set -e
+[ $status -eq 2 ]
+grep -q "Cannot parse concept file .*malformed/grib2/chemName.def" $tempErr
+if grep -q "edition=" $tempA; then
+    echo "Unexpected partial result with a malformed concept file"
+    exit 1
+fi
+# Only white space and comments: valid, no entries
+printf "# no entries\n\n" > $badDir/empty/grib2/chemName.def
+${tools_dir}/grib_chems --definitions-root $badDir/empty:$def_dir --chemFormula O3 > $tempA
+grep -q "chemName=- " $tempA
+# Other definitions than concepts, read after a valid concept file: an error, not a stale result
+cp $def_dir/grib2/chemFormula.def $badDir/first/grib2/chemFormula.def
+printf "transient dummy = 1;\n" > $badDir/other/grib2/chemName.def
+set +e
+${tools_dir}/grib_chems --definitions-root $badDir/first:$badDir/other:$def_dir --chemFormula O3 > $tempA 2> $tempErr
+status=$?
+set -e
+[ $status -eq 2 ]
+grep -q "Cannot parse concept file .*other/grib2/chemName.def" $tempErr
+rm -rf $badDir
+
 # MEMFS cannot be listed, so the tool has a fixed list of the concept files it looks
 # for in MEMFS. Every concept file in the definitions must be on that list. Checked in
 # all builds, as a file missing from the list would only show up in a MEMFS build
