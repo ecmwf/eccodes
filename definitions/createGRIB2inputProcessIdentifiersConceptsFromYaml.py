@@ -80,6 +80,7 @@ SCHEMA = {
                                     "additionalProperties": False,
                                     "properties": {
                                         "version": {"type": ["string", "null"]},
+                                        "version_prefix": {"type": "string"},
                                         "skip": {"type": "boolean"},
                                         "override_id": {"type": "integer"},
                                         "extra_keys": {
@@ -143,11 +144,13 @@ for model in data["models"]:
     for v in versions:
         if isinstance(v, dict):
             version = v.get("version") or model_name
+            version_prefix = v.get("version_prefix", model_name)
             version_extra = v.get("extra_keys", {})
             skip = v.get("skip", False)
             override_id = v.get("override_id")
         else:
             version = v if v else model_name
+            version_prefix = model_name
             version_extra = {}
             skip = False
             override_id = None
@@ -169,7 +172,7 @@ for model in data["models"]:
                 )
 
             used_ids[id_val] = f"{model_name} {version}"
-            entries.append((model_name, version, id_val, combined_extra))
+            entries.append((model_name, version, id_val, combined_extra, version_prefix))
 
         if override_id is None:
             current_id += 1
@@ -209,7 +212,7 @@ for block in blocks:
     name_lines.append(header)
     version_lines.append(header)
 
-    for model_name, version, id_val, extra in block["entries"]:
+    for model_name, version, id_val, extra, version_prefix in block["entries"]:
         extra_str = "".join(f"{k}={v};" for k, v in extra.items())
 
         name_lines.append(
@@ -222,7 +225,7 @@ for block in blocks:
             )
         else:
             version_lines.append(
-                f"'{model_name}-{version}' = {{inputProcessIdentifier={id_val};{extra_str}}}\n"
+                f"'{version_prefix}-{version}' = {{inputProcessIdentifier={id_val};{extra_str}}}\n"
             )
 
 # =========================================================
