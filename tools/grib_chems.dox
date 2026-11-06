@@ -89,7 +89,8 @@
         Sort fields in priority order.
         Valid fields: edition,scope,chemId,chemShortName,chemName,chemFormula
  \n \n --no-truncate \n
-        With --format table, do not truncate cells to the terminal width.
+        With --format table, show cells in full. By default long cells are cut to a
+        fixed maximum width per column (e.g. chemName 48, encoding 60 characters).
  \n \n
 \section grib_chems_examples grib_chems examples
 -# Show entries for a formula:

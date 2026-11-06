@@ -28,9 +28,10 @@
 #include <sys/stat.h>
 #include <vector>
 
-static const std::set<std::string> kConcepts = {"chemId", "chemShortName", "chemName", "chemFormula"};
+static const std::set<std::string> kConcepts = { "chemId", "chemShortName", "chemName", "chemFormula" };
 
-struct Options {
+struct Options
+{
     std::string definitions_root;
     bool debug_path_resolution = false;
     std::string columns;
@@ -57,7 +58,8 @@ struct Options {
     bool no_truncate = false;
 };
 
-struct FieldMatcher {
+struct FieldMatcher
+{
     std::string wildcard;
     bool has_wildcard = false;
     std::string regex_text;
@@ -65,9 +67,10 @@ struct FieldMatcher {
     std::regex regex;
 };
 
-struct Record {
+struct Record
+{
     int edition = 0;
-    int sw = -1; // -1 means N/A for edition 1
+    int sw = -1;  // -1 means N/A for edition 1
     std::string scope;
     std::map<std::string, std::string> attrs;
     std::map<std::string, std::vector<std::string> > values;
@@ -97,9 +100,11 @@ static void warningf(const char* fmt, ...)
 static std::string trim(const std::string& s)
 {
     size_t b = 0;
-    while (b < s.size() && isspace(static_cast<unsigned char>(s[b]))) b++;
+    while (b < s.size() && isspace(static_cast<unsigned char>(s[b])))
+        b++;
     size_t e = s.size();
-    while (e > b && isspace(static_cast<unsigned char>(s[e - 1]))) e--;
+    while (e > b && isspace(static_cast<unsigned char>(s[e - 1])))
+        e--;
     return s.substr(b, e - b);
 }
 
@@ -206,7 +211,8 @@ static bool wildcard_match_icase(const std::string& text, const std::string& pat
             return false;
         }
     }
-    while (pi < p.size() && p[pi] == '*') pi++;
+    while (pi < p.size() && p[pi] == '*')
+        pi++;
     return pi == p.size();
 }
 
@@ -403,8 +409,8 @@ static int parse_def_file(
 {
     grib_context* ctx = grib_context_get_default();
     grib_concept_value* list = grib_parse_concept_file(ctx, file_path.c_str());
-    if (list && list == previous_concept_list) list = NULL; // stale result, see above
-    if (list) release_previous_concept_list(); // the parser no longer refers to it
+    if (list && list == previous_concept_list) list = NULL;  // stale result, see above
+    if (list) release_previous_concept_list();               // the parser no longer refers to it
     if (!list) {
         // NULL is returned both for a file without entries and on failure: tell them apart
         const int content = concept_file_has_content(file_path);
@@ -415,7 +421,8 @@ static int parse_def_file(
 
     // Entries in file order
     std::vector<grib_concept_value*> entries;
-    for (grib_concept_value* v = list; v; v = v->next) entries.push_back(v);
+    for (grib_concept_value* v = list; v; v = v->next)
+        entries.push_back(v);
 
     std::map<std::string, std::string> attrs;
     for (size_t i = 0; i < entries.size(); ++i) {
@@ -440,7 +447,7 @@ static void scan_dir_recursive_impl(const std::string& root, std::vector<std::st
     struct stat dst;
     if (stat(root.c_str(), &dst) != 0) return;
     const std::pair<dev_t, ino_t> id(dst.st_dev, dst.st_ino);
-    if (std::find(ancestors.begin(), ancestors.end(), id) != ancestors.end()) return; // link cycle
+    if (std::find(ancestors.begin(), ancestors.end(), id) != ancestors.end()) return;  // link cycle
 
     DIR* d = opendir(root.c_str());
     if (!d) return;
@@ -454,7 +461,7 @@ static void scan_dir_recursive_impl(const std::string& root, std::vector<std::st
         // Use d_type where available: a stat per entry is very slow on network filesystems.
         // Symbolic links and unknown types need a stat, which follows links.
         bool is_dir_entry = false, is_reg_entry = false;
-#ifdef _DIRENT_HAVE_D_TYPE
+    #ifdef _DIRENT_HAVE_D_TYPE
         if (ent->d_type == DT_DIR) {
             is_dir_entry = true;
         }
@@ -462,10 +469,10 @@ static void scan_dir_recursive_impl(const std::string& root, std::vector<std::st
             is_reg_entry = true;
         }
         else
-#endif
+    #endif
         {
             struct stat st;
-            if (stat(path.c_str(), &st) != 0) continue; // e.g. a dangling link
+            if (stat(path.c_str(), &st) != 0) continue;  // e.g. a dangling link
             is_dir_entry = S_ISDIR(st.st_mode);
             is_reg_entry = S_ISREG(st.st_mode);
         }
@@ -529,7 +536,7 @@ static std::vector<std::string> memfs_candidate_files()
         "egrr", "ekmi", "era", "era6", "eswi", "fire", "hydro", "hydro_legacy",
         "kwbc", "lcgcr", "lfpw", "lfpw1", "nextgems", "s2s", "tigge", "uerra", "wpmip"
     };
-    static const char* grib2_suffixes[] = {".def", ".lte33.def", ".chemsplit.def"};
+    static const char* grib2_suffixes[] = { ".def", ".lte33.def", ".chemsplit.def" };
 
     std::vector<std::string> dirs1(1, "grib1"), dirs2(1, "grib2");
     for (size_t i = 0; i < sizeof(grib1_local_concepts) / sizeof(grib1_local_concepts[0]); ++i)
@@ -554,7 +561,7 @@ static std::vector<std::string> memfs_candidate_files()
 static int scan_definitions(const std::string& definitions_root, std::map<std::string, Record>& records,
                             std::set<std::string>& claimed, bool debug)
 {
-    int err = GRIB_SUCCESS; // all files are scanned, so that every failure is reported
+    int err = GRIB_SUCCESS;  // all files are scanned, so that every failure is reported
     const bool is_memfs_root = starts_with(definitions_root, "/MEMFS");
     std::string root_prefix = definitions_root;
     while (root_prefix.size() > 1 && root_prefix[root_prefix.size() - 1] == '/') {
@@ -637,7 +644,8 @@ static std::string normalize_memfs_path(const std::string& p)
         if (p[i] == '/' && !out.empty() && out[out.size() - 1] == '/') continue;
         out += p[i];
     }
-    while (out.size() > 1 && out[out.size() - 1] == '/') out.erase(out.size() - 1);
+    while (out.size() > 1 && out[out.size() - 1] == '/')
+        out.erase(out.size() - 1);
     return out;
 }
 
@@ -802,16 +810,16 @@ static std::string short_usage_text(const char* prog)
     std::ostringstream o;
     o << "usage: " << prog << " [-h] [--definitions-root DEFINITIONS_ROOT]\n"
       << "                        [--debug-path-resolution] [--columns COLUMNS]\n"
-    << "                        [--scope SCOPE]\n"
+      << "                        [--scope SCOPE]\n"
       << "                        [--chemName CHEMNAME] [--chemName-regex CHEMNAME_REGEX]\n"
       << "                        [--chemShortName CHEMSHORTNAME]\n"
       << "                        [--chemShortName-regex CHEMSHORTNAME_REGEX]\n"
       << "                        [--chemId CHEMID] [--chemId-regex CHEMID_REGEX]\n"
-            << "                        [--chemFormula CHEMFORMULA] [--chemFormula-regex CHEMFORMULA_REGEX]\n"
-    << "                        [--attr ATTR] [--attr-strict] [--attrkey ATTRKEY] [--nattrkey NATTRKEY]\n"
+      << "                        [--chemFormula CHEMFORMULA] [--chemFormula-regex CHEMFORMULA_REGEX]\n"
+      << "                        [--attr ATTR] [--attr-strict] [--attrkey ATTRKEY] [--nattrkey NATTRKEY]\n"
       << "                        [--nattr NATTR] [--regex-case-sensitive]\n"
       << "                        [--show-encoding] [--show-sources]\n"
-    << "                        [--format {line,table}] [--order {asc,desc}] [--order-by FIELD] [--no-truncate]\n";
+      << "                        [--format {line,table}] [--order {asc,desc}] [--order-by FIELD] [--no-truncate]\n";
     return o.str();
 }
 
@@ -820,16 +828,16 @@ static std::string usage_text(const char* prog)
     std::ostringstream o;
     o << "usage: " << prog << " [-h] [--definitions-root DEFINITIONS_ROOT]\n"
       << "                        [--debug-path-resolution] [--columns COLUMNS]\n"
-    << "                        [--scope SCOPE]\n"
+      << "                        [--scope SCOPE]\n"
       << "                        [--chemName CHEMNAME] [--chemName-regex CHEMNAME_REGEX]\n"
       << "                        [--chemShortName CHEMSHORTNAME]\n"
       << "                        [--chemShortName-regex CHEMSHORTNAME_REGEX]\n"
       << "                        [--chemId CHEMID] [--chemId-regex CHEMID_REGEX]\n"
-            << "                        [--chemFormula CHEMFORMULA] [--chemFormula-regex CHEMFORMULA_REGEX]\n"
-    << "                        [--attr ATTR] [--attr-strict] [--attrkey ATTRKEY] [--nattrkey NATTRKEY]\n"
+      << "                        [--chemFormula CHEMFORMULA] [--chemFormula-regex CHEMFORMULA_REGEX]\n"
+      << "                        [--attr ATTR] [--attr-strict] [--attrkey ATTRKEY] [--nattrkey NATTRKEY]\n"
       << "                        [--nattr NATTR] [--regex-case-sensitive]\n"
       << "                        [--show-encoding] [--show-sources]\n"
-    << "                        [--format {line,table}] [--order {asc,desc}] [--order-by FIELD] [--no-truncate]\n"
+      << "                        [--format {line,table}] [--order {asc,desc}] [--order-by FIELD] [--no-truncate]\n"
       << "\n"
       << "Query chemical constituent definitions in ecCodes concept files.\n"
       << "\n"
@@ -852,10 +860,10 @@ static std::string usage_text(const char* prog)
       << "                        selected roots to stderr. Also reports concept files\n"
       << "                        read from disk which a MEMFS build would not find\n"
       << "  --columns COLUMNS     Comma-separated list of output columns to show. Valid\n"
-    << "                        columns: edition,scope,chemId,chemShortName,\n"
-    << "                        chemName,chemFormula,encoding,sources\n"
-    << "  --scope SCOPE         Comma-separated list of exact scopes to include,\n"
-    << "                        e.g. 'grib2,grib2/localConcepts/ecmf'\n"
+      << "                        columns: edition,scope,chemId,chemShortName,\n"
+      << "                        chemName,chemFormula,encoding,sources\n"
+      << "  --scope SCOPE         Comma-separated list of exact scopes to include,\n"
+      << "                        e.g. 'grib2,grib2/localConcepts/ecmf'\n"
       << "  --chemName CHEMNAME   Wildcard pattern for chemName, e.g. '*oxide*'\n"
       << "  --chemName-regex CHEMNAME_REGEX\n"
       << "                        PCRE2-style regex for chemName\n"
@@ -866,14 +874,14 @@ static std::string usage_text(const char* prog)
       << "  --chemId CHEMID       Wildcard pattern for chemId\n"
       << "  --chemId-regex CHEMID_REGEX\n"
       << "                        PCRE2-style regex for chemId\n"
-    << "  --chemFormula CHEMFORMULA\n"
-    << "                        Wildcard pattern for chemFormula\n"
-    << "  --chemFormula-regex CHEMFORMULA_REGEX\n"
-    << "                        PCRE2-style regex for chemFormula\n"
+      << "  --chemFormula CHEMFORMULA\n"
+      << "                        Wildcard pattern for chemFormula\n"
+      << "  --chemFormula-regex CHEMFORMULA_REGEX\n"
+      << "                        PCRE2-style regex for chemFormula\n"
       << "  --attr ATTR           Filter by attribute key/value pairs as\n"
       << "                        key=value,key=value. Non-strict mode matches entries\n"
       << "                        containing at least these pairs\n"
-    << "  --attr-strict         With --attr and/or --attrkey, require an exact\n"
+      << "  --attr-strict         With --attr and/or --attrkey, require an exact\n"
       << "                        match (same keys and values)\n"
       << "  --attrkey ATTRKEY     Filter by attribute key presence (comma-separated).\n"
       << "                        Keeps only entries that have all specified keys\n"
@@ -890,24 +898,25 @@ static std::string usage_text(const char* prog)
       << "                        result\n"
       << "  --format {line,table}\n"
       << "                        Output format: line (default) or table\n"
-    << "  --order {asc,desc}    Sort order for results by edition/scope/chemId\n"
-    << "                        ascending (default) or descending\n"
-            << "  --order-by FIELD      Primary sort fields (comma-separated, in priority\n"
-            << "                        order). Valid: edition,scope,chemId,\n"
-            << "                        chemShortName,chemName,chemFormula\n"
-      << "  --no-truncate         With --format table, do not truncate cells to\n"
-      << "                        terminal width\n";
+      << "  --order {asc,desc}    Sort order for results by edition/scope/chemId\n"
+      << "                        ascending (default) or descending\n"
+      << "  --order-by FIELD      Primary sort fields (comma-separated, in priority\n"
+      << "                        order). Valid: edition,scope,chemId,\n"
+      << "                        chemShortName,chemName,chemFormula\n"
+      << "  --no-truncate         With --format table, show cells in full. By default\n"
+      << "                        long cells are cut to a fixed maximum width per\n"
+      << "                        column (e.g. chemName 48, encoding 60 characters)\n";
     return o.str();
 }
 
 static int parse_args(int argc, char** argv, Options& opt, std::string& err)
 {
-    if (argc == 1) return 0; // no arguments - show short usage in main
+    if (argc == 1) return 0;  // no arguments - show short usage in main
 
     for (int i = 1; i < argc; ++i) {
         std::string a = argv[i];
         if (a == "-h" || a == "--help") {
-            return 1; // explicit help request
+            return 1;  // explicit help request
         }
 
         std::string key = a;
@@ -1239,11 +1248,13 @@ int main(int argc, char** argv)
         fprintf(stderr, "DEBUG: ecCodes definitions path: %s\n", def_path ? def_path : "<unavailable>");
         fprintf(stderr, "DEBUG: candidate roots (from %s):\n", roots_from_option ? "--definitions-root" : "ecCodes definitions path");
         if (candidates.empty()) fprintf(stderr, "DEBUG:   <none>\n");
-        for (size_t i = 0; i < candidates.size(); ++i) fprintf(stderr, "DEBUG:   %s\n", candidates[i].c_str());
+        for (size_t i = 0; i < candidates.size(); ++i)
+            fprintf(stderr, "DEBUG:   %s\n", candidates[i].c_str());
 
         fprintf(stderr, "DEBUG: selected roots (first match wins):\n");
         if (roots.empty()) fprintf(stderr, "DEBUG:   <none>\n");
-        for (size_t i = 0; i < roots.size(); ++i) fprintf(stderr, "DEBUG:   %s\n", roots[i].c_str());
+        for (size_t i = 0; i < roots.size(); ++i)
+            fprintf(stderr, "DEBUG:   %s\n", roots[i].c_str());
     }
 
     std::map<std::string, Record> records_by_key;
@@ -1273,9 +1284,12 @@ int main(int argc, char** argv)
     }
 
     std::string effective_backend = "none";
-    if (used_memfs_backend && used_filesystem_backend) effective_backend = "mixed";
-    else if (used_memfs_backend) effective_backend = "memfs";
-    else if (used_filesystem_backend) effective_backend = "filesystem";
+    if (used_memfs_backend && used_filesystem_backend)
+        effective_backend = "mixed";
+    else if (used_memfs_backend)
+        effective_backend = "memfs";
+    else if (used_filesystem_backend)
+        effective_backend = "filesystem";
 
     if (opt.debug_path_resolution) {
         fprintf(stderr, "DEBUG: effective backend: %s\n", effective_backend.c_str());
@@ -1350,10 +1364,12 @@ int main(int argc, char** argv)
             errorf("--scope must contain at least one non-empty scope");
             return 2;
         }
-        for (size_t i = 0; i < scope_items.size(); ++i) scope_filter.insert(scope_items[i]);
+        for (size_t i = 0; i < scope_items.size(); ++i)
+            scope_filter.insert(scope_items[i]);
 
         std::set<std::string> known_scopes;
-        for (size_t i = 0; i < records.size(); ++i) known_scopes.insert(records[i].scope);
+        for (size_t i = 0; i < records.size(); ++i)
+            known_scopes.insert(records[i].scope);
 
         auto scopes_preview = [&](const std::set<std::string>& scopes) -> std::string {
             std::string out;
@@ -1522,12 +1538,18 @@ int main(int argc, char** argv)
         int c = 0;
         for (size_t i = 0; i < opt.order_by_fields.size(); ++i) {
             const std::string& field = opt.order_by_fields[i];
-            if (field == "edition") c = cmp_ll(a.edition, b.edition);
-            else if (field == "scope") c = cmp_str(a.scope, b.scope);
-            else if (field == "chemId") c = cmp_ll(parse_id(first_value(a, "chemId")), parse_id(first_value(b, "chemId")));
-            else if (field == "chemShortName") c = cmp_str(first_value(a, "chemShortName"), first_value(b, "chemShortName"));
-            else if (field == "chemName") c = cmp_str(first_value(a, "chemName"), first_value(b, "chemName"));
-            else if (field == "chemFormula") c = cmp_str(first_value(a, "chemFormula"), first_value(b, "chemFormula"));
+            if (field == "edition")
+                c = cmp_ll(a.edition, b.edition);
+            else if (field == "scope")
+                c = cmp_str(a.scope, b.scope);
+            else if (field == "chemId")
+                c = cmp_ll(parse_id(first_value(a, "chemId")), parse_id(first_value(b, "chemId")));
+            else if (field == "chemShortName")
+                c = cmp_str(first_value(a, "chemShortName"), first_value(b, "chemShortName"));
+            else if (field == "chemName")
+                c = cmp_str(first_value(a, "chemName"), first_value(b, "chemName"));
+            else if (field == "chemFormula")
+                c = cmp_str(first_value(a, "chemFormula"), first_value(b, "chemFormula"));
             if (c) return c;
         }
         return cmp_default(a, b);
@@ -1645,7 +1667,8 @@ int main(int argc, char** argv)
     }
 
     std::vector<size_t> widths(cols.size(), 0);
-    for (size_t c = 0; c < cols.size(); ++c) widths[c] = cols[c].size();
+    for (size_t c = 0; c < cols.size(); ++c)
+        widths[c] = cols[c].size();
     for (size_t r = 0; r < rows.size(); ++r) {
         for (size_t c = 0; c < cols.size(); ++c) {
             widths[c] = std::max(widths[c], rows[r][c].size());

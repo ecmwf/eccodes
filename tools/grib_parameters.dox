@@ -108,7 +108,8 @@
         Sort fields in priority order.
         Valid fields: edition,is_mtg2_switch,is_legacy,scope,paramId,shortName,name,units
  \n \n --no-truncate \n
-        With --format table, do not truncate cells to the terminal width.
+        With --format table, show cells in full. By default long cells are cut to a
+        fixed maximum width per column (e.g. name 48, encoding 60 characters).
  \n \n
 \section grib_parameters_examples grib_parameters examples
 -# List all entries for paramId 130:\n
