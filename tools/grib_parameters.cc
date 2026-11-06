@@ -15,17 +15,16 @@
 #include <cerrno>
 #include <climits>
 #include <cstdarg>
+#include <cstdint>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <dirent.h>
 #include <map>
 #include <regex>
 #include <set>
 #include <sstream>
 #include <string>
 #include <sys/stat.h>
-#include <unistd.h>
 #include <vector>
 
 static const std::set<std::string> kConcepts = {"paramId", "shortName", "name", "units"};
@@ -154,14 +153,6 @@ static void uniq(std::vector<std::string>& vals)
 static bool is_dir(const std::string& path)
 {
     return path_is_directory(path.c_str());
-}
-
-static std::string dirname_of(const std::string& path)
-{
-    size_t p = path.find_last_of('/');
-    if (p == std::string::npos) return ".";
-    if (p == 0) return "/";
-    return path.substr(0, p);
 }
 
 static std::string path_join(const std::string& a, const std::string& b)
@@ -389,6 +380,8 @@ static int parse_def_file(
     return 0;
 }
 
+// All regular files below root
+#ifndef ECCODES_ON_WINDOWS
 static void scan_dir_recursive(const std::string& root, std::vector<std::string>& out_files)
 {
     DIR* d = opendir(root.c_str());
@@ -423,6 +416,26 @@ static void scan_dir_recursive(const std::string& root, std::vector<std::string>
     }
     closedir(d);
 }
+#else
+// Windows: no dirent.h, use _findfirst/_findnext from io.h
+static void scan_dir_recursive(const std::string& root, std::vector<std::string>& out_files)
+{
+    struct _finddata_t fd;
+    intptr_t h = _findfirst(path_join(root, "*").c_str(), &fd);
+    if (h == -1) return;
+    do {
+        if (strcmp(fd.name, ".") == 0 || strcmp(fd.name, "..") == 0) continue;
+        std::string path = path_join(root, fd.name);
+        if (fd.attrib & _A_SUBDIR) {
+            scan_dir_recursive(path, out_files);
+        }
+        else {
+            out_files.push_back(path);
+        }
+    } while (_findnext(h, &fd) == 0);
+    _findclose(h);
+}
+#endif
 
 // Concept files which can exist in MEMFS. MEMFS cannot be listed, so the candidates
 // are enumerated and tested for existence.
@@ -536,46 +549,6 @@ static int scan_definitions(const std::string& definitions_root, std::map<std::s
     }
 
     return 0;
-}
-
-static std::string resolve_path_like_shell(const std::string& p)
-{
-    if (p.empty()) return p;
-    if (p[0] == '/') return p;
-    char cwd[PATH_MAX];
-    if (!getcwd(cwd, sizeof(cwd))) return p;
-    return path_join(cwd, p);
-}
-
-static std::vector<std::string> script_default_roots(const std::string& argv0)
-{
-    char exe_real[PATH_MAX] = {0};
-    std::string exe = argv0;
-    if (!realpath(argv0.c_str(), exe_real)) {
-        ssize_t n = readlink("/proc/self/exe", exe_real, sizeof(exe_real) - 1);
-        if (n > 0) {
-            exe_real[n] = 0;
-            exe = exe_real;
-        }
-        else {
-            exe = resolve_path_like_shell(argv0);
-        }
-    }
-    else {
-        exe = exe_real;
-    }
-
-    std::string script_dir = dirname_of(exe);
-    std::string prefix = dirname_of(script_dir);
-
-    std::vector<std::string> candidates;
-    candidates.push_back(path_join(path_join(prefix, "share"), "eccodes/definitions"));
-    candidates.push_back(path_join(prefix, "definitions"));
-    candidates.push_back(path_join(path_join(prefix, "share"), "definitions"));
-    candidates.push_back(path_join(path_join(dirname_of(prefix), "share"), "eccodes/definitions"));
-    candidates.push_back("definitions");
-    uniq(candidates);
-    return candidates;
 }
 
 // Definitions roots in priority order: --definitions-root if given, otherwise the
@@ -1171,29 +1144,12 @@ int main(int argc, char** argv)
                 if (roots_from_option) warningf("Ignoring non-directory definitions root: %s", r.c_str());
                 continue;
             }
-            char real[PATH_MAX] = {0};
-            canonical = realpath(r.c_str(), real) ? std::string(real) : r;
+            char* real = codes_resolve_path(ctx, r.c_str());
+            canonical = real ? std::string(real) : r;
+            grib_context_free(ctx, real);
         }
         if (!seen_real_roots.insert(canonical).second) continue;
         roots.push_back(r);
-    }
-
-    // Fallback, e.g. for a relocated installation where the built-in path does not exist
-    bool used_fallback = false;
-    bool auto_memfs = false;
-    if (roots.empty() && !roots_from_option) {
-        std::vector<std::string> fallback = script_default_roots(argv[0]);
-        for (size_t i = 0; i < fallback.size(); ++i) {
-            if (is_dir(fallback[i])) {
-                roots.push_back(fallback[i]);
-                used_fallback = true;
-                break;
-            }
-        }
-        if (roots.empty()) {
-            roots.push_back("/MEMFS/definitions");
-            auto_memfs = true;
-        }
     }
 
     if (opt.debug_path_resolution) {
@@ -1205,8 +1161,6 @@ int main(int argc, char** argv)
         fprintf(stderr, "DEBUG: selected roots (first match wins):\n");
         if (roots.empty()) fprintf(stderr, "DEBUG:   <none>\n");
         for (size_t i = 0; i < roots.size(); ++i) fprintf(stderr, "DEBUG:   %s\n", roots[i].c_str());
-        if (used_fallback) fprintf(stderr, "DEBUG: no usable root on the ecCodes path, using fallback next to the executable\n");
-        if (auto_memfs) fprintf(stderr, "DEBUG: auto memfs fallback enabled\n");
     }
 
     std::map<std::string, Record> records_by_key;
@@ -1236,7 +1190,7 @@ int main(int argc, char** argv)
     }
 
     if (records_by_key.empty()) {
-        errorf("No valid definitions roots were found. Provide --definitions-root, set ECCODES_DEFINITION_PATH/ECCODES_EXTRA_DEFINITION_PATH, or ensure MEMFS export is available.");
+        errorf("No valid definitions roots were found. Provide --definitions-root or set ECCODES_DEFINITION_PATH/ECCODES_EXTRA_DEFINITION_PATH.");
         return 2;
     }
 
