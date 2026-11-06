@@ -14,6 +14,7 @@ label="grib_parameters_test"
 tempA=temp.$label.A.out
 tempB=temp.$label.B.out
 tempErr=temp.$label.err
+tempGrib=temp.$label.grib2
 
 # Help output should advertise the scope option
 ${tools_dir}/grib_parameters --help > $tempA
@@ -22,6 +23,7 @@ grep -q -- "--nattrkey NATTRKEY" $tempA
 grep -q -- "--nattr NATTR" $tempA
 grep -q -- "--attrkey ATTRKEY" $tempA
 grep -q -- "--order {asc,desc}" $tempA
+grep -q -- "--is_legacy {0,1}" $tempA
 grep -q -- "--order-by FIELD" $tempA
 
 # Trailing slash in ECCODES_DEFINITION_PATH should be accepted
@@ -253,6 +255,45 @@ grep -q "scope=grib1/localConcepts/kwbc paramId=260056 shortName=sd " $tempA
 grep -q "scope=grib1/localConcepts/kwbc paramId=3096 shortName=vice " $tempA
 grep -q "encoding: indicatorOfParameter=141, table2Version=128" $tempA
 
+# Legacy concepts (*.legacy.def): ecCodes reads them from grib2 and grib2/localConcepts/ecmf as the
+# last fallback, for every MTG2 switch value. This encoding is only in ecmf/paramId.legacy.def
+${tools_dir}/grib_parameters --attr discipline=192,parameterCategory=131,parameterNumber=60 > $tempA
+[ -s $tempA ]
+[ $(grep -c "is_legacy=1 scope=grib2/localConcepts/ecmf paramId=131060 shortName=tpg1 " $tempA) -eq 3 ]
+grep -q "is_mtg2_switch=0 is_legacy=1" $tempA
+grep -q "is_mtg2_switch=1 is_legacy=1" $tempA
+grep -q "is_mtg2_switch=2 is_legacy=1" $tempA
+# ... and agrees with the library
+${tools_dir}/grib_set -s discipline=192,parameterCategory=131,parameterNumber=60 $ECCODES_SAMPLES_PATH/GRIB2.tmpl $tempGrib
+[ "$(${tools_dir}/grib_get -p paramId $tempGrib)" = "131060" ]
+rm -f $tempGrib
+
+# --is_legacy filter
+${tools_dir}/grib_parameters --paramId 131060 --is_legacy 0 > $tempA
+[ -s $tempA ]
+if grep -q "is_legacy=1" $tempA; then
+    echo "Unexpected legacy entry with --is_legacy 0"
+    exit 1
+fi
+${tools_dir}/grib_parameters --paramId 131060 --is_legacy 1 > $tempA
+[ -s $tempA ]
+if grep -v -q "is_legacy=1" $tempA; then
+    echo "Unexpected non-legacy entry with --is_legacy 1"
+    exit 1
+fi
+# Legacy files not read by ecCodes (e.g. grib2/localConcepts/era) must not be read either
+${tools_dir}/grib_parameters --is_legacy 1 --show-sources > $tempA
+if grep -q "localConcepts/era/" $tempA; then
+    echo "Unexpected legacy file outside grib2 and grib2/localConcepts/ecmf"
+    exit 1
+fi
+set +e
+${tools_dir}/grib_parameters --is_legacy 2 > $tempB 2> $tempErr
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q -- "--is_legacy must be one of 0,1" $tempErr
+
 # MEMFS cannot be listed, so the tool has a fixed list of the concept files it looks
 # for in MEMFS. Every concept file in the definitions must be on that list. Checked in
 # all builds, as a file missing from the list would only show up in a MEMFS build
@@ -293,4 +334,4 @@ if [ $HAVE_MEMFS -eq 1 ]; then
 fi
 
 # Clean up
-rm -f $tempA $tempB $tempErr
+rm -f $tempA $tempB $tempErr $tempGrib

@@ -9,8 +9,15 @@
  variants used by the MTG2 switch: *.lte33.def (is_mtg2_switch=0), *.def (is_mtg2_switch=1)
  and *.chemsplit.def (is_mtg2_switch=2).
  \n
+ It also reads the legacy concept files *.legacy.def in grib2/ and grib2/localConcepts/ecmf/,
+ which ecCodes uses as the last fallback, after the files selected by the MTG2 switch.
+ They apply to every MTG2 switch value, so each legacy entry is listed for
+ is_mtg2_switch 0, 1 and 2, marked with is_legacy=1. For the same paramId, legacy entries
+ are listed after the others. Legacy files in other directories are not used by ecCodes
+ and are not read.
+ \n
  Entries of the different concept files are joined into one record when edition,
- MTG2 switch, scope and encoding are identical. If several paramIds in the same scope
+ MTG2 switch, legacy flag, scope and encoding are identical. If several paramIds in the same scope
  have the same encoding, they are shown as a list, e.g. paramId=[500417, 500582].
  A value which is not defined for an encoding is shown as '-'.
  \n
@@ -41,7 +48,7 @@
         read from disk which a MEMFS build would not find.
  \n \n --columns col1,col2,... \n
         Output only selected columns.
-        Valid columns: edition,is_mtg2_switch,scope,paramId,shortName,name,units,encoding,sources
+        Valid columns: edition,is_mtg2_switch,is_legacy,scope,paramId,shortName,name,units,encoding,sources
  \n \n --scope scope1,scope2,... \n
         Comma-separated list of exact scopes to include,
         e.g. grib2,grib2/localConcepts/ecmf. An unknown scope is reported together
@@ -78,6 +85,9 @@
         Exclude records whose encoding contains any of the listed key/value pairs.
  \n \n --is_mtg2_switch 0|1|2 \n
         Restrict GRIB2 records to lte33=0, def=1, chemsplit=2.
+ \n \n --is_legacy 0|1 \n
+        Restrict GRIB2 records to entries from *.legacy.def files (1) or from all
+        other concept files (0).
  \n \n --edition 1|2 \n
         Restrict to GRIB edition 1 or 2.
  \n \n --show-encoding \n
@@ -88,10 +98,10 @@
         Output format. Default is line.
  \n \n --order asc|desc \n
         Sort order. Default is asc. Without --order-by, records are sorted by
-        edition, MTG2 switch, scope and paramId.
+        edition, MTG2 switch, scope, paramId and is_legacy.
  \n \n --order-by field1,field2,... \n
         Sort fields in priority order.
-        Valid fields: edition,is_mtg2_switch,scope,paramId,shortName,name,units
+        Valid fields: edition,is_mtg2_switch,is_legacy,scope,paramId,shortName,name,units
  \n \n --no-truncate \n
         With --format table, do not truncate cells to the terminal width.
  \n \n
@@ -119,6 +129,11 @@ grib_parameters --scope grib2/localConcepts/ecmf --is_mtg2_switch 1
 -# GRIB2 parameters with a statistical process, sorted by shortName:\n
 \verbatim
 grib_parameters --edition 2 --attrkey typeOfStatisticalProcessing --order-by shortName
+\endverbatim
+
+-# Legacy entries of ECMWF local concepts, as a table:\n
+\verbatim
+grib_parameters --is_legacy 1 --scope grib2/localConcepts/ecmf --is_mtg2_switch 1 --format table
 \endverbatim
 
 -# List all entries, then only encodings shared by several paramIds:\n

@@ -45,6 +45,8 @@ struct Options {
     bool regex_case_sensitive = false;
     bool has_is_mtg2_switch = false;
     int is_mtg2_switch = 0;
+    bool has_is_legacy = false;
+    int is_legacy = 0;
     bool has_edition = false;
     int edition = 0;
     std::string attr;
@@ -71,6 +73,7 @@ struct FieldMatcher {
 struct Record {
     int edition = 0;
     int sw = -1; // -1 means N/A for edition 1
+    bool legacy = false; // from a *.legacy.def file: last fallback in ecCodes
     std::string scope;
     std::map<std::string, std::string> attrs;
     std::map<std::string, std::vector<std::string> > values;
@@ -259,10 +262,31 @@ static int infer_switch(const std::string& filename)
     return -2;
 }
 
-static std::string key_from_record(int edition, int sw, const std::string& scope, const std::map<std::string, std::string>& attrs)
+// Directories whose *.legacy.def files ecCodes reads (grib2/parameters.def: conceptsMasterDir and
+// conceptsLocalDirECMF). They are the last fallback, after the files selected by the MTG2 switch,
+// and apply to every MTG2 switch value.
+static const char* kLegacyDirs[] = {"grib2", "grib2/localConcepts/ecmf"};
+static const int kLegacySwitches[] = {0, 1, 2};
+
+static bool is_legacy_concept_file(const std::string& rel)
+{
+    size_t slash = rel.find_last_of('/');
+    if (slash == std::string::npos) return false;
+    const std::string dir = rel.substr(0, slash);
+    const std::string filename = rel.substr(slash + 1);
+    bool dir_ok = false;
+    for (size_t i = 0; i < sizeof(kLegacyDirs) / sizeof(kLegacyDirs[0]); ++i)
+        if (dir == kLegacyDirs[i]) dir_ok = true;
+    if (!dir_ok) return false;
+    for (std::set<std::string>::const_iterator c = kConcepts.begin(); c != kConcepts.end(); ++c)
+        if (filename == *c + ".legacy.def") return true;
+    return false;
+}
+
+static std::string key_from_record(int edition, int sw, bool legacy, const std::string& scope, const std::map<std::string, std::string>& attrs)
 {
     std::ostringstream oss;
-    oss << edition << "|" << sw << "|" << scope << "|";
+    oss << edition << "|" << sw << "|" << legacy << "|" << scope << "|";
     for (std::map<std::string, std::string>::const_iterator it = attrs.begin(); it != attrs.end(); ++it) {
         oss << it->first << "=" << it->second << ";";
     }
@@ -273,17 +297,19 @@ static int add_record_value(
     std::map<std::string, Record>& records,
     int edition,
     int sw,
+    bool legacy,
     const std::string& scope,
     const std::map<std::string, std::string>& attrs,
     const std::string& concept,
     const std::string& value,
     const std::string& source)
 {
-    std::string key = key_from_record(edition, sw, scope, attrs);
+    std::string key = key_from_record(edition, sw, legacy, scope, attrs);
     if (!records.count(key)) {
         Record rec;
         rec.edition = edition;
         rec.sw = sw;
+        rec.legacy = legacy;
         rec.scope = scope;
         rec.attrs = attrs;
         records[key] = rec;
@@ -348,7 +374,8 @@ static int parse_def_file(
     const std::string& file_path,
     const std::string& concept,
     int edition,
-    int sw,
+    const std::vector<int>& switches,
+    bool legacy,
     const std::string& scope,
     const std::string& source,
     std::map<std::string, Record>& records)
@@ -367,7 +394,8 @@ static int parse_def_file(
         for (grib_concept_condition* cond = entries[i]->conditions; cond; cond = cond->next) {
             attrs[cond->name] = condition_value_text(cond);
         }
-        add_record_value(records, edition, sw, scope, attrs, concept, entries[i]->name, source);
+        for (size_t s = 0; s < switches.size(); ++s)
+            add_record_value(records, edition, switches[s], legacy, scope, attrs, concept, entries[i]->name, source);
     }
 
     for (size_t i = 0; i < entries.size(); ++i) {
@@ -468,6 +496,9 @@ static std::vector<std::string> memfs_candidate_files()
         for (std::set<std::string>::const_iterator c = kConcepts.begin(); c != kConcepts.end(); ++c)
             for (size_t s = 0; s < sizeof(grib2_suffixes) / sizeof(grib2_suffixes[0]); ++s)
                 out.push_back(dirs2[d] + "/" + *c + grib2_suffixes[s]);
+    for (size_t d = 0; d < sizeof(kLegacyDirs) / sizeof(kLegacyDirs[0]); ++d)
+        for (std::set<std::string>::const_iterator c = kConcepts.begin(); c != kConcepts.end(); ++c)
+            out.push_back(std::string(kLegacyDirs[d]) + "/" + *c + ".legacy.def");
     return out;
 }
 
@@ -509,11 +540,11 @@ static int scan_definitions(const std::string& definitions_root, std::map<std::s
 
         std::string filename = rel.substr(rel.find_last_of('/') + 1);
 
-        bool concept_file = false;
-        for (std::set<std::string>::const_iterator c = kConcepts.begin(); c != kConcepts.end(); ++c) {
+        const bool legacy = is_legacy_concept_file(rel);
+        bool concept_file = legacy;
+        for (std::set<std::string>::const_iterator c = kConcepts.begin(); c != kConcepts.end() && !concept_file; ++c) {
             if (filename == *c + ".def" || filename == *c + ".lte33.def" || filename == *c + ".chemsplit.def") {
                 concept_file = true;
-                break;
             }
         }
         if (!concept_file) continue;
@@ -524,7 +555,9 @@ static int scan_definitions(const std::string& definitions_root, std::map<std::s
         int edition = starts_with(rel, "grib1/") ? 1 : 2;
         int sw = infer_switch(filename);
         if (edition == 1) sw = -1;
-        if (edition == 2 && sw == -2) continue;
+        if (edition == 2 && sw == -2 && !legacy) continue;
+        std::vector<int> switches(1, sw);
+        if (legacy) switches.assign(kLegacySwitches, kLegacySwitches + sizeof(kLegacySwitches) / sizeof(kLegacySwitches[0]));
 
         // MEMFS cannot be listed, so a concept file found on disk but missing from the
         // MEMFS candidate list would be silently ignored in a MEMFS build (tested in ctest)
@@ -545,7 +578,7 @@ static int scan_definitions(const std::string& definitions_root, std::map<std::s
         }
 
         if (!claimed.insert(rel).second) continue;
-        parse_def_file(file_path, concept, edition, sw, scope, rel, records);
+        parse_def_file(file_path, concept, edition, switches, legacy, scope, rel, records);
     }
 
     return 0;
@@ -709,7 +742,7 @@ static std::string short_usage_text(const char* prog)
       << "                        [--units UNITS] [--units-regex UNITS_REGEX]\n"
     << "                        [--attr ATTR] [--attr-strict] [--attrkey ATTRKEY] [--nattrkey NATTRKEY]\n"
       << "                        [--nattr NATTR] [--regex-case-sensitive]\n"
-      << "                        [--is_mtg2_switch {0,1,2}] [--edition {1,2}]\n"
+      << "                        [--is_mtg2_switch {0,1,2}] [--is_legacy {0,1}] [--edition {1,2}]\n"
       << "                        [--show-encoding] [--show-sources]\n"
     << "                        [--format {line,table}] [--order {asc,desc}] [--order-by FIELD] [--no-truncate]\n";
     return o.str();
@@ -728,7 +761,7 @@ static std::string usage_text(const char* prog)
       << "                        [--units UNITS] [--units-regex UNITS_REGEX]\n"
     << "                        [--attr ATTR] [--attr-strict] [--attrkey ATTRKEY] [--nattrkey NATTRKEY]\n"
       << "                        [--nattr NATTR] [--regex-case-sensitive]\n"
-      << "                        [--is_mtg2_switch {0,1,2}] [--edition {1,2}]\n"
+      << "                        [--is_mtg2_switch {0,1,2}] [--is_legacy {0,1}] [--edition {1,2}]\n"
       << "                        [--show-encoding] [--show-sources]\n"
     << "                        [--format {line,table}] [--order {asc,desc}] [--order-by FIELD] [--no-truncate]\n"
       << "\n"
@@ -749,7 +782,7 @@ static std::string usage_text(const char* prog)
       << "                        selected roots to stderr. Also reports concept files\n"
       << "                        read from disk which a MEMFS build would not find\n"
       << "  --columns COLUMNS     Comma-separated list of output columns to show. Valid\n"
-      << "                        columns: edition,is_mtg2_switch,scope,paramId,shortName,\n"
+      << "                        columns: edition,is_mtg2_switch,is_legacy,scope,paramId,shortName,\n"
       << "                        name,units,encoding,sources\n"
     << "  --scope SCOPE         Comma-separated list of exact scopes to include,\n"
     << "                        e.g. 'grib2,grib2/localConcepts/ecmf'\n"
@@ -784,6 +817,10 @@ static std::string usage_text(const char* prog)
       << "                        searches are case-insensitive\n"
       << "  --is_mtg2_switch {0,1,2}\n"
       << "                        Restrict GRIB2 to lte33=0, def=1, chemsplit=2\n"
+      << "  --is_legacy {0,1}     Restrict GRIB2 to entries from *.legacy.def files (1)\n"
+      << "                        or from all other files (0). ecCodes uses legacy\n"
+      << "                        entries only as the last fallback, for every MTG2\n"
+      << "                        switch value\n"
       << "  --edition {1,2}       Restrict to GRIB edition 1 or 2\n"
       << "  --show-encoding       Show the GRIB encoding constraints (same key/value\n"
       << "                        conditions)\n"
@@ -794,7 +831,7 @@ static std::string usage_text(const char* prog)
     << "  --order {asc,desc}    Sort order for results by edition/switch/scope/paramId\n"
     << "                        ascending (default) or descending\n"
             << "  --order-by FIELD      Primary sort fields (comma-separated, in priority\n"
-            << "                        order). Valid: edition,is_mtg2_switch,scope,\n"
+            << "                        order). Valid: edition,is_mtg2_switch,is_legacy,scope,\n"
             << "                        paramId,shortName,name,units\n"
       << "  --no-truncate         With --format table, do not truncate cells to\n"
       << "                        terminal width\n";
@@ -907,6 +944,15 @@ static int parse_args(int argc, char** argv, Options& opt, std::string& err)
                 return -1;
             }
         }
+        else if (key == "--is_legacy") {
+            if (!need_value("--is_legacy")) return -1;
+            if (val != "0" && val != "1") {
+                err = "--is_legacy must be one of 0,1";
+                return -1;
+            }
+            opt.has_is_legacy = true;
+            opt.is_legacy = atoi(val.c_str());
+        }
         else if (key == "--edition") {
             if (!need_value("--edition")) return -1;
             opt.has_edition = true;
@@ -941,7 +987,7 @@ static int parse_args(int argc, char** argv, Options& opt, std::string& err)
         else if (key == "--order-by") {
             if (!need_value("--order-by")) return -1;
             static const std::set<std::string> valid_order_by = {
-                "edition", "is_mtg2_switch", "scope", "paramId", "shortName", "name", "units"
+                "edition", "is_mtg2_switch", "is_legacy", "scope", "paramId", "shortName", "name", "units"
             };
             std::vector<std::string> fields = split(val, ',');
             if (fields.empty()) {
@@ -950,7 +996,7 @@ static int parse_args(int argc, char** argv, Options& opt, std::string& err)
             }
             for (size_t j = 0; j < fields.size(); ++j) {
                 if (!valid_order_by.count(fields[j])) {
-                    err = "--order-by must contain only: edition, is_mtg2_switch, scope, paramId, shortName, name, units";
+                    err = "--order-by must contain only: edition, is_mtg2_switch, is_legacy, scope, paramId, shortName, name, units";
                     return -1;
                 }
             }
@@ -1016,6 +1062,7 @@ static std::string table_value(const Record& rec, const std::string& key)
 {
     if (key == "edition") return std::to_string(rec.edition);
     if (key == "is_mtg2_switch") return rec.sw < 0 ? "-" : std::to_string(rec.sw);
+    if (key == "is_legacy") return rec.edition == 1 ? "-" : (rec.legacy ? "1" : "0");
     if (key == "scope") return rec.scope;
     if (key == "paramId") {
         std::map<std::string, std::vector<std::string> >::const_iterator it = rec.values.find("paramId");
@@ -1077,7 +1124,7 @@ int main(int argc, char** argv)
     if (!opt.columns.empty()) {
         selected_columns = split(opt.columns, ',');
         static const std::set<std::string> valid_columns = {
-            "edition", "is_mtg2_switch", "scope", "paramId", "shortName", "name", "units", "encoding", "sources"
+            "edition", "is_mtg2_switch", "is_legacy", "scope", "paramId", "shortName", "name", "units", "encoding", "sources"
         };
         if (selected_columns.empty()) {
             errorf("--columns must contain at least one column name");
@@ -1300,6 +1347,9 @@ int main(int argc, char** argv)
         if (opt.has_is_mtg2_switch) {
             if (rec.sw < 0 || rec.sw != opt.is_mtg2_switch) continue;
         }
+        if (opt.has_is_legacy) {
+            if (rec.edition == 1 || (rec.legacy ? 1 : 0) != opt.is_legacy) continue;
+        }
         if (opt.has_edition && rec.edition != opt.edition) continue;
 
         std::vector<std::string> empty;
@@ -1427,7 +1477,9 @@ int main(int argc, char** argv)
         if (c) return c;
         c = cmp_str(a.scope, b.scope);
         if (c) return c;
-        return cmp_ll(parse_id(first_value(a, "paramId")), parse_id(first_value(b, "paramId")));
+        c = cmp_ll(parse_id(first_value(a, "paramId")), parse_id(first_value(b, "paramId")));
+        if (c) return c;
+        return cmp_ll(a.legacy, b.legacy); // as in ecCodes, legacy entries come last
     };
 
     auto cmp_records = [&](const Record& a, const Record& b) -> int {
@@ -1436,6 +1488,7 @@ int main(int argc, char** argv)
             const std::string& field = opt.order_by_fields[i];
             if (field == "edition") c = cmp_ll(a.edition, b.edition);
             else if (field == "is_mtg2_switch") c = cmp_ll(a.sw, b.sw);
+            else if (field == "is_legacy") c = cmp_ll(a.legacy, b.legacy);
             else if (field == "scope") c = cmp_str(a.scope, b.scope);
             else if (field == "paramId") c = cmp_ll(parse_id(first_value(a, "paramId")), parse_id(first_value(b, "paramId")));
             else if (field == "shortName") c = cmp_str(first_value(a, "shortName"), first_value(b, "shortName"));
@@ -1457,7 +1510,7 @@ int main(int argc, char** argv)
         std::map<std::string, std::vector<Record> > groups;
         for (size_t i = 0; i < filtered.size(); ++i) {
             const Record& r = filtered[i];
-            std::string key = std::to_string(r.edition) + "|" + std::to_string(r.sw) + "|" + r.scope + "|";
+            std::string key = std::to_string(r.edition) + "|" + std::to_string(r.sw) + "|" + std::to_string(r.legacy) + "|" + r.scope + "|";
             key += table_value(r, "paramId") + "|" + table_value(r, "shortName") + "|" + table_value(r, "name") + "|" + table_value(r, "units");
             groups[key].push_back(r);
         }
@@ -1516,6 +1569,7 @@ int main(int argc, char** argv)
             std::string line;
             line += "edition=" + std::to_string(r.edition) + " ";
             if (r.sw >= 0) line += "is_mtg2_switch=" + std::to_string(r.sw) + " ";
+            if (r.legacy) line += "is_legacy=1 ";
             line += "scope=" + r.scope + " ";
             line += "paramId=" + table_value(r, "paramId") + " ";
             line += "shortName=" + table_value(r, "shortName") + " ";
@@ -1539,15 +1593,14 @@ int main(int argc, char** argv)
         cols = selected_columns;
     }
     else {
-        bool include_switch = false;
+        bool include_switch = false, include_legacy = false;
         for (size_t i = 0; i < filtered.size(); ++i) {
-            if (filtered[i].sw >= 0) {
-                include_switch = true;
-                break;
-            }
+            if (filtered[i].sw >= 0) include_switch = true;
+            if (filtered[i].legacy) include_legacy = true;
         }
         cols.push_back("edition");
         if (include_switch) cols.push_back("is_mtg2_switch");
+        if (include_legacy) cols.push_back("is_legacy");
         cols.push_back("scope");
         cols.push_back("paramId");
         cols.push_back("shortName");
@@ -1578,6 +1631,7 @@ int main(int argc, char** argv)
         std::map<std::string, size_t> maxw;
         maxw["edition"] = 7;
         maxw["is_mtg2_switch"] = 14;
+        maxw["is_legacy"] = 9;
         maxw["scope"] = 28;
         maxw["paramId"] = 12;
         maxw["shortName"] = 16;
