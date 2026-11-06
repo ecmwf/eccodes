@@ -205,6 +205,20 @@ set -e
 grep -q "Cannot parse concept file .*other/grib2/chemName.def" $tempErr
 rm -rf $badDir
 
+# --attr/--nattr split only at commas outside array brackets
+set +e
+${tools_dir}/grib_chems --attr 'constituentType=[1,2' > $tempA 2> $tempErr
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q -- "Unbalanced brackets in --attr" $tempErr
+set +e
+${tools_dir}/grib_chems --nattr 'constituentType=1]' > $tempA 2> $tempErr
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q -- "Unbalanced brackets in --nattr" $tempErr
+
 # MEMFS cannot be listed, so the tool has a fixed list of the concept files it looks
 # for in MEMFS. Every concept file in the definitions must be on that list. Checked in
 # all builds, as a file missing from the list would only show up in a MEMFS build

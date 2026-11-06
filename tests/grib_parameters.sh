@@ -345,6 +345,23 @@ set -e
 grep -q "Cannot parse concept file .*other/grib2/name.lte33.def" $tempErr
 rm -rf $badDir
 
+# Array values in --attr/--nattr: commas inside brackets do not separate pairs
+${tools_dir}/grib_parameters --edition 2 --attr 'typeOfStatisticalProcessing=[102,2]' > $tempA
+grep -q "paramId=132044 " $tempA
+${tools_dir}/grib_parameters --edition 2 --paramId 132044 --attr 'discipline=0, typeOfStatisticalProcessing=[102, 2]' > $tempB
+grep -q "paramId=132044 " $tempB
+set +e
+${tools_dir}/grib_parameters --edition 2 --paramId 132044 --nattr 'typeOfStatisticalProcessing=[102,2]' > $tempB
+status=$?
+set -e
+[ $status -eq 1 ]
+set +e
+${tools_dir}/grib_parameters --attr 'typeOfStatisticalProcessing=[102,2' > $tempB 2> $tempErr
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q -- "Unbalanced brackets in --attr" $tempErr
+
 # MEMFS cannot be listed, so the tool has a fixed list of the concept files it looks
 # for in MEMFS. Every concept file in the definitions must be on that list. Checked in
 # all builds, as a file missing from the list would only show up in a MEMFS build

@@ -649,14 +649,47 @@ static std::vector<std::string> definitions_roots(const Options& opt, grib_conte
     return roots;
 }
 
-static int parse_attr_filter(const std::string& text, std::map<std::string, std::string>& out, std::string& err)
+// Split a key=value list at commas outside array brackets, so that values such as [102,2]
+// stay whole. Pieces are trimmed and empty pieces dropped. Fails on unbalanced brackets.
+static bool split_outside_brackets(const std::string& s, std::vector<std::string>& out)
+{
+    out.clear();
+    int depth = 0;
+    std::string part;
+    for (size_t i = 0; i < s.size(); ++i) {
+        const char c = s[i];
+        if (c == '[') depth++;
+        if (c == ']' && --depth < 0) return false;
+        if (c == ',' && depth == 0) {
+            part = trim(part);
+            if (!part.empty()) out.push_back(part);
+            part.clear();
+        }
+        else {
+            part += c;
+        }
+    }
+    if (depth != 0) return false;
+    part = trim(part);
+    if (!part.empty()) out.push_back(part);
+    return true;
+}
+
+// Parse a key=value,key=value list for option opt_name (--attr, --nattr). Array values are
+// written without spaces, as --show-encoding prints them: [102, 2] is the same as [102,2].
+static int parse_key_value_filter(const std::string& opt_name, const std::string& text,
+                                  std::map<std::string, std::string>& out, std::string& err)
 {
     out.clear();
     if (text.empty()) return 0;
 
-    std::vector<std::string> pairs = split(text, ',');
+    std::vector<std::string> pairs;
+    if (!split_outside_brackets(text, pairs)) {
+        err = "Unbalanced brackets in " + opt_name + " '" + text + "'";
+        return -1;
+    }
     if (pairs.empty()) {
-        err = "--attr must contain at least one key=value pair";
+        err = opt_name + " must contain at least one key=value pair";
         return -1;
     }
 
@@ -664,22 +697,28 @@ static int parse_attr_filter(const std::string& text, std::map<std::string, std:
         std::string p = pairs[i];
         size_t eq = p.find('=');
         if (eq == std::string::npos) {
-            err = "Invalid --attr pair '" + p + "'. Expected key=value";
+            err = "Invalid " + opt_name + " pair '" + p + "'. Expected key=value";
             return -1;
         }
         std::string k = trim(p.substr(0, eq));
         std::string v = trim(p.substr(eq + 1));
         if (k.empty()) {
-            err = "Invalid --attr pair '" + p + "'. Key cannot be empty";
+            err = "Invalid " + opt_name + " pair '" + p + "'. Key cannot be empty";
             return -1;
         }
+        if (!v.empty() && v[0] == '[') v.erase(std::remove_if(v.begin(), v.end(), ::isspace), v.end());
         if (out.count(k)) {
-            err = "Duplicate key '" + k + "' in --attr";
+            err = "Duplicate key '" + k + "' in " + opt_name;
             return -1;
         }
         out[k] = v;
     }
     return 0;
+}
+
+static int parse_attr_filter(const std::string& text, std::map<std::string, std::string>& out, std::string& err)
+{
+    return parse_key_value_filter("--attr", text, out, err);
 }
 
 static int parse_attrkey_filter(const std::string& text, std::set<std::string>& out, std::string& err)
@@ -744,35 +783,7 @@ static int parse_nattrkey_filter(const std::string& text, std::set<std::string>&
 
 static int parse_nattr_filter(const std::string& text, std::map<std::string, std::string>& out, std::string& err)
 {
-    out.clear();
-    if (text.empty()) return 0;
-
-    std::vector<std::string> pairs = split(text, ',');
-    if (pairs.empty()) {
-        err = "--nattr must contain at least one key=value pair";
-        return -1;
-    }
-
-    for (size_t i = 0; i < pairs.size(); ++i) {
-        std::string p = pairs[i];
-        size_t eq = p.find('=');
-        if (eq == std::string::npos) {
-            err = "Invalid --nattr pair '" + p + "'. Expected key=value";
-            return -1;
-        }
-        std::string k = trim(p.substr(0, eq));
-        std::string v = trim(p.substr(eq + 1));
-        if (k.empty()) {
-            err = "Invalid --nattr pair '" + p + "'. Key cannot be empty";
-            return -1;
-        }
-        if (out.count(k)) {
-            err = "Duplicate key '" + k + "' in --nattr";
-            return -1;
-        }
-        out[k] = v;
-    }
-    return 0;
+    return parse_key_value_filter("--nattr", text, out, err);
 }
 
 static std::string short_usage_text(const char* prog)

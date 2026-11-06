@@ -73,7 +73,8 @@
         Make regex filters case-sensitive. By default they are case-insensitive.
  \n \n --attr key=value,key=value,... \n
         Filter by encoding. A record matches when its encoding contains at least
-        the listed key/value pairs.
+        the listed key/value pairs. Array values are written as --show-encoding
+        prints them, e.g. typeOfStatisticalProcessing=[102,2].
  \n \n --attr-strict \n
         With --attr and/or --attrkey, require an exact match: the encoding must have
         exactly the listed keys, with the values given in --attr.
