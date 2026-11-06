@@ -99,10 +99,9 @@ set -e
 grep -q "'healpix' specified but input is GRIB edition 1" $tempText
 
 
-# ECC-2318: a degenerate grid (a single point in a direction) is rejected
+# ECC-2318: a degenerate grid (a single point in a direction)
 # -----------------------------------------------------------------------
-# Such a grid has a zero increment, which a gridSpec cannot describe ('grid' would hold a 0),
-# so it is an error in both directions rather than a spec that does not describe the grid.
+# Such a grid has no increment in that direction: 'grid' holds a 0 (decoding and encoding).
 # The sample is a regular_ll grid, area = [60,0,0,30], increments = 2/2 degrees
 sample=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 

@@ -13,6 +13,7 @@
 #pragma once
 
 #include <map>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -53,8 +54,11 @@ public:
     bool get(const std::string& name, std::vector<double>& value) const override;
     bool get(const std::string& name, std::vector<std::string>& value) const override;
 
+    const Spec& spec(const std::string& name) const override;
+
 private:
     mutable cache_type cache_;
+    std::unique_ptr<const eckit::spec::Custom> spec_;
     codes_handle* handle_;
     const bool rotated_;
 
