@@ -272,6 +272,19 @@ if [ $ECCODES_ON_WINDOWS -eq 0 ] && [ "$(id -u)" != "0" ]; then
     rm -rf $permDir
 fi
 
+# A root written with trailing slashes is the same root: same relative paths, scopes and
+# precedence as without them
+${tools_dir}/grib_chems --definitions-root "$def_dir" --chemFormula O3 --show-sources > $tempA
+${tools_dir}/grib_chems --definitions-root "$def_dir//" --chemFormula O3 --show-sources > $tempB
+cmp $tempA $tempB
+slashDir=temp.$label.slash
+rm -rf $slashDir
+mkdir -p $slashDir/grib2
+sed "s/^'Ozone' = {/'Ozone SLASH' = {/" $def_dir/grib2/chemName.def > $slashDir/grib2/chemName.def
+${tools_dir}/grib_chems --definitions-root "$slashDir//${psep}$def_dir" --chemFormula O3 > $tempA
+grep -q "chemName=Ozone SLASH" $tempA
+rm -rf $slashDir
+
 # MEMFS cannot be listed, so the tool has a fixed list of the concept files it looks
 # for in MEMFS. Every concept file in the definitions must be on that list. Checked in
 # all builds, as a file missing from the list would only show up in a MEMFS build

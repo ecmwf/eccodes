@@ -652,10 +652,13 @@ static int scan_definitions(const std::string& definitions_root, std::map<std::s
     else {
         // Concept files only live below grib1/ and grib2/, so do not walk the rest of the tree
         std::vector<std::string> files;
-        if (scan_dir_recursive(path_join(definitions_root, "grib1"), files) != GRIB_SUCCESS) err = GRIB_IO_PROBLEM;
-        if (scan_dir_recursive(path_join(definitions_root, "grib2"), files) != GRIB_SUCCESS) err = GRIB_IO_PROBLEM;
+        // Walk the normalized root_prefix, so that the paths found start with exactly that prefix
+        // (a root written as "defs//" would otherwise give relative paths like "/grib1/...")
+        const std::string prefix = (root_prefix == "/") ? root_prefix : root_prefix + "/";
+        if (scan_dir_recursive(path_join(root_prefix, "grib1"), files) != GRIB_SUCCESS) err = GRIB_IO_PROBLEM;
+        if (scan_dir_recursive(path_join(root_prefix, "grib2"), files) != GRIB_SUCCESS) err = GRIB_IO_PROBLEM;
         for (size_t i = 0; i < files.size(); ++i) {
-            if (starts_with(files[i], root_prefix + "/")) rel_files.push_back(files[i].substr(root_prefix.size() + 1));
+            if (starts_with(files[i], prefix)) rel_files.push_back(files[i].substr(prefix.size()));
         }
     }
 

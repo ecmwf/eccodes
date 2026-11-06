@@ -429,6 +429,19 @@ fi
 ${tools_dir}/grib_parameters --units 'm*' > $tempA
 grep -q "units=m\*\*2 s\*\*-1$" $tempA
 
+# A root written with trailing slashes is the same root: same relative paths, scopes and
+# precedence as without them
+${tools_dir}/grib_parameters --definitions-root "$def_dir" --paramId 167 --scope grib2 --is_mtg2_switch 0 --show-sources > $tempA
+${tools_dir}/grib_parameters --definitions-root "$def_dir//" --paramId 167 --scope grib2 --is_mtg2_switch 0 --show-sources > $tempB
+cmp $tempA $tempB
+slashDir=temp.$label.slash
+rm -rf $slashDir
+mkdir -p $slashDir/grib2
+sed "s/^'2 metre temperature' = {/'2 metre temperature SLASH' = {/" $def_dir/grib2/name.lte33.def > $slashDir/grib2/name.lte33.def
+${tools_dir}/grib_parameters --definitions-root "$slashDir//${psep}$def_dir" --paramId 167 --scope grib2 --is_mtg2_switch 0 > $tempA
+grep -q "name=2 metre temperature SLASH" $tempA
+rm -rf $slashDir
+
 # MEMFS cannot be listed, so the tool has a fixed list of the concept files it looks
 # for in MEMFS. Every concept file in the definitions must be on that list. Checked in
 # all builds, as a file missing from the list would only show up in a MEMFS build
