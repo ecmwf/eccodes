@@ -261,6 +261,9 @@ if [ $HAVE_MEMFS -eq 1 ]; then
     export ECCODES_DEFINITION_PATH=$saved_def_path
     [ -s $tempB ]
     cmp $tempA $tempB
+    # Distinct MEMFS roots are kept: a wrong first root must not hide the second
+    ${tools_dir}/grib_chems --chemFormula O3 --definitions-root /MEMFS/wrong:/MEMFS/definitions > $tempB
+    [ -s $tempB ]
     # Trailing slash in a MEMFS ECCODES_DEFINITION_PATH should be accepted
     export ECCODES_DEFINITION_PATH=/MEMFS/definitions/
     ${tools_dir}/grib_chems --chemFormula O3 --debug-path-resolution > $tempB 2> $tempErr

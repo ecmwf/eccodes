@@ -415,6 +415,9 @@ if [ $HAVE_MEMFS -eq 1 ]; then
     [ -s $tempB ]
     cmp $tempA $tempB
     grep -q "scope=grib1/localConcepts/kwbc paramId=260056 shortName=sd " $tempB
+    # Distinct MEMFS roots are kept: a wrong first root must not hide the second
+    ${tools_dir}/grib_parameters --paramId 167 --definitions-root /MEMFS/wrong:/MEMFS/definitions > $tempB
+    [ -s $tempB ]
     # Trailing slash in a MEMFS ECCODES_DEFINITION_PATH should be accepted
     export ECCODES_DEFINITION_PATH=/MEMFS/definitions/
     ${tools_dir}/grib_parameters --paramId 167 --debug-path-resolution > $tempB 2> $tempErr

@@ -667,6 +667,17 @@ static int scan_definitions(const std::string& definitions_root, std::map<std::s
     return err;
 }
 
+static std::string normalize_memfs_path(const std::string& p)
+{
+    std::string out;
+    for (size_t i = 0; i < p.size(); ++i) {
+        if (p[i] == '/' && !out.empty() && out[out.size() - 1] == '/') continue;
+        out += p[i];
+    }
+    while (out.size() > 1 && out[out.size() - 1] == '/') out.erase(out.size() - 1);
+    return out;
+}
+
 // Definitions roots in priority order: --definitions-root if given, otherwise the
 // definitions path of the ecCodes library itself, i.e. ECCODES_EXTRA_DEFINITION_PATH,
 // then ECCODES_DEFINITION_PATH or the built-in default (which may be MEMFS).
@@ -1283,7 +1294,9 @@ int main(int argc, char** argv)
     std::set<std::string> seen_real_roots;
     for (size_t i = 0; i < candidates.size(); ++i) {
         const std::string& r = candidates[i];
-        std::string canonical = "/MEMFS"; // all MEMFS roots share one tree
+        // MEMFS paths cannot be resolved: compare them without repeated or trailing slashes,
+        // so that /MEMFS/definitions/ and /MEMFS/definitions are one root but other prefixes stay
+        std::string canonical = normalize_memfs_path(r);
         if (!starts_with(r, "/MEMFS")) {
             if (!is_dir(r)) {
                 if (roots_from_option) warningf("Ignoring non-directory definitions root: %s", r.c_str());
