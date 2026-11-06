@@ -362,6 +362,28 @@ set -e
 [ $status -ne 0 ]
 grep -q -- "Unbalanced brackets in --attr" $tempErr
 
+# No usable definitions root: an error, no guessed tree and no results
+set +e
+${tools_dir}/grib_parameters --paramId 167 --definitions-root temp.$label.nonexistent > $tempA 2> $tempErr
+status=$?
+set -e
+[ $status -eq 2 ]
+grep -q "No valid definitions roots were found" $tempErr
+if grep -q "edition=" $tempA; then
+    echo "Unexpected results without a usable definitions root"
+    exit 1
+fi
+
+# Malformed values of --edition and --is_mtg2_switch are usage errors, not a real mode
+for bad in "--edition 2junk" "--edition 3" "--is_mtg2_switch garbage" "--is_mtg2_switch 1x"; do
+    set +e
+    ${tools_dir}/grib_parameters --paramId 167 $bad > $tempA 2> $tempErr
+    status=$?
+    set -e
+    [ $status -eq 2 ]
+    grep -q "must be" $tempErr
+done
+
 # MEMFS cannot be listed, so the tool has a fixed list of the concept files it looks
 # for in MEMFS. Every concept file in the definitions must be on that list. Checked in
 # all builds, as a file missing from the list would only show up in a MEMFS build

@@ -1033,12 +1033,13 @@ static int parse_args(int argc, char** argv, Options& opt, std::string& err)
         }
         else if (key == "--is_mtg2_switch") {
             if (!need_value("--is_mtg2_switch")) return -1;
-            opt.has_is_mtg2_switch = true;
-            opt.is_mtg2_switch = atoi(val.c_str());
-            if (opt.is_mtg2_switch < 0 || opt.is_mtg2_switch > 2) {
+            // Check the whole value: atoi would turn "garbage" into 0
+            if (val != "0" && val != "1" && val != "2") {
                 err = "--is_mtg2_switch must be one of 0,1,2";
                 return -1;
             }
+            opt.has_is_mtg2_switch = true;
+            opt.is_mtg2_switch = atoi(val.c_str());
         }
         else if (key == "--is_legacy") {
             if (!need_value("--is_legacy")) return -1;
@@ -1051,12 +1052,13 @@ static int parse_args(int argc, char** argv, Options& opt, std::string& err)
         }
         else if (key == "--edition") {
             if (!need_value("--edition")) return -1;
-            opt.has_edition = true;
-            opt.edition = atoi(val.c_str());
-            if (opt.edition != 1 && opt.edition != 2) {
+            // Check the whole value: atoi would turn "2junk" into 2
+            if (val != "1" && val != "2") {
                 err = "--edition must be 1 or 2";
                 return -1;
             }
+            opt.has_edition = true;
+            opt.edition = atoi(val.c_str());
         }
         else if (key == "--show-encoding") {
             opt.show_encoding = true;
