@@ -91,16 +91,12 @@ env:
 jobs:
   resolve:
     if: contains(fromJSON(inputs.from-jobs), 'ecbuild/build-hpc') || contains(fromJSON(inputs.from-jobs), 'stack-deps/build-hpc') || contains(fromJSON(inputs.from-jobs), 'eckit/build-hpc') || inputs.rebuild-request
-    runs-on: arc-runner-normal
-    container:
-      image: eccr.ecmwf.int/public-ci-images/ubuntu24.04-base:latest
+    runs-on: ubuntu-latest
     outputs:
       ref: ${{ steps.pick.outputs.ref }}
       matrix-build-hpc: ${{ toJSON(fromJSON(steps.r.outputs.json)['build-hpc']) }}
       matrix-fortran-hpc: ${{ toJSON(fromJSON(steps.r.outputs.json)['fortran-hpc']) }}
     steps:
-    - name: Announce image
-      uses: ecmwf/ci-infrastructure/actions/announce-image@main
     - id: mint
       uses: actions/create-github-app-token@v3
       with:
