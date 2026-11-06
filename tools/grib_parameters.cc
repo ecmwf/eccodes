@@ -784,7 +784,7 @@ static std::string usage_text(const char* prog)
       << "  --name-regex NAME_REGEX\n"
       << "                        PCRE2-style regex for name\n"
       << "  --shortName SHORTNAME\n"
-      << "                        Wildcard pattern for shortName, e.g. '10m*'\n"
+      << "                        Wildcard pattern for shortName, e.g. '10*'\n"
       << "  --shortName-regex SHORTNAME_REGEX\n"
       << "                        PCRE2-style regex for shortName\n"
       << "  --paramId PARAMID     Wildcard pattern for paramId\n"
