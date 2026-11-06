@@ -10,6 +10,13 @@
 
 . ./include.ctest.sh
 
+# Separator for several definitions roots, as used by ecCodes on this platform
+if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
+    psep=';'
+else
+    psep=':'
+fi
+
 label="grib_parameters_test"
 tempA=temp.$label.A.out
 tempB=temp.$label.B.out
@@ -305,10 +312,10 @@ if [ $ECCODES_ON_WINDOWS -eq 0 ]; then
     ln -s ../../../real/centre $linkDir/defs/grib2/localConcepts/zzzz
     ln -s .. $linkDir/defs/grib2/localConcepts/loop
     # The linked override wins over the file in the second root
-    ${tools_dir}/grib_parameters --definitions-root $linkDir/defs:$def_dir --paramId 167 --scope grib2 --is_mtg2_switch 0 > $tempA
+    ${tools_dir}/grib_parameters --definitions-root "$linkDir/defs${psep}$def_dir" --paramId 167 --scope grib2 --is_mtg2_switch 0 > $tempA
     grep -q "name=2 metre temperature LINKED" $tempA
     # The linked directory is scanned
-    ${tools_dir}/grib_parameters --definitions-root $linkDir/defs:$def_dir --paramId 167 --scope grib2/localConcepts/zzzz > $tempA
+    ${tools_dir}/grib_parameters --definitions-root "$linkDir/defs${psep}$def_dir" --paramId 167 --scope grib2/localConcepts/zzzz > $tempA
     [ -s $tempA ]
     rm -rf $linkDir
 fi
@@ -320,7 +327,7 @@ rm -rf $badDir
 mkdir -p $badDir/malformed/grib2 $badDir/empty/grib2 $badDir/first/grib2 $badDir/other/grib2
 printf "'x' = {\n discipline = \n" > $badDir/malformed/grib2/name.lte33.def
 set +e
-${tools_dir}/grib_parameters --definitions-root $badDir/malformed:$def_dir --paramId 167 --scope grib2 --is_mtg2_switch 0 > $tempA 2> $tempErr
+${tools_dir}/grib_parameters --definitions-root "$badDir/malformed${psep}$def_dir" --paramId 167 --scope grib2 --is_mtg2_switch 0 > $tempA 2> $tempErr
 status=$?
 set -e
 [ $status -eq 2 ]
@@ -331,13 +338,13 @@ if grep -q "edition=" $tempA; then
 fi
 # Only white space and comments: valid, no entries
 printf "# no entries\n\n" > $badDir/empty/grib2/name.lte33.def
-${tools_dir}/grib_parameters --definitions-root $badDir/empty:$def_dir --paramId 167 --scope grib2 --is_mtg2_switch 0 > $tempA
+${tools_dir}/grib_parameters --definitions-root "$badDir/empty${psep}$def_dir" --paramId 167 --scope grib2 --is_mtg2_switch 0 > $tempA
 grep -q "name=- " $tempA
 # Other definitions than concepts, read after a valid concept file: an error, not a stale result
 cp $def_dir/grib2/units.lte33.def $badDir/first/grib2/units.lte33.def
 printf "transient dummy = 1;\n" > $badDir/other/grib2/name.lte33.def
 set +e
-${tools_dir}/grib_parameters --definitions-root $badDir/first:$badDir/other:$def_dir --paramId 167 --scope grib2 --is_mtg2_switch 0 > $tempA 2> $tempErr
+${tools_dir}/grib_parameters --definitions-root "$badDir/first${psep}$badDir/other${psep}$def_dir" --paramId 167 --scope grib2 --is_mtg2_switch 0 > $tempA 2> $tempErr
 status=$?
 set -e
 [ $status -eq 2 ]
@@ -405,7 +412,7 @@ if [ $ECCODES_ON_WINDOWS -eq 0 ] && [ "$(id -u)" != "0" ]; then
     cp $def_dir/grib2/name.lte33.def $permDir/grib2/name.lte33.def
     chmod 311 $permDir/grib2
     set +e
-    ${tools_dir}/grib_parameters --definitions-root $permDir:$def_dir --paramId 167 > $tempA 2> $tempErr
+    ${tools_dir}/grib_parameters --definitions-root "$permDir${psep}$def_dir" --paramId 167 > $tempA 2> $tempErr
     status=$?
     set -e
     chmod 755 $permDir/grib2
@@ -450,7 +457,7 @@ if [ $HAVE_MEMFS -eq 1 ]; then
     cmp $tempA $tempB
     grep -q "scope=grib1/localConcepts/kwbc paramId=260056 shortName=sd " $tempB
     # Distinct MEMFS roots are kept: a wrong first root must not hide the second
-    ${tools_dir}/grib_parameters --paramId 167 --definitions-root /MEMFS/wrong:/MEMFS/definitions > $tempB
+    ${tools_dir}/grib_parameters --paramId 167 --definitions-root "/MEMFS/wrong${psep}/MEMFS/definitions" > $tempB
     [ -s $tempB ]
     # Trailing slash in a MEMFS ECCODES_DEFINITION_PATH should be accepted
     export ECCODES_DEFINITION_PATH=/MEMFS/definitions/

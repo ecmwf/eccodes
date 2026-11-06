@@ -10,6 +10,13 @@
 
 . ./include.ctest.sh
 
+# Separator for several definitions roots, as used by ecCodes on this platform
+if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
+    psep=';'
+else
+    psep=':'
+fi
+
 label="grib_chems_test"
 tempA=temp.$label.A.out
 tempB=temp.$label.B.out
@@ -168,7 +175,7 @@ if [ $ECCODES_ON_WINDOWS -eq 0 ]; then
     sed "s/^'Ozone' = {/'Ozone LINKED' = {/" $def_dir/grib2/chemName.def > $linkDir/real/grib2/chemName.def
     ln -s ../real/grib2 $linkDir/defs/grib2
     ln -s .. $linkDir/real/grib2/loop
-    ${tools_dir}/grib_chems --definitions-root $linkDir/defs:$def_dir --chemFormula O3 > $tempA
+    ${tools_dir}/grib_chems --definitions-root "$linkDir/defs${psep}$def_dir" --chemFormula O3 > $tempA
     grep -q "chemName=Ozone LINKED" $tempA
     rm -rf $linkDir
 fi
@@ -180,7 +187,7 @@ rm -rf $badDir
 mkdir -p $badDir/malformed/grib2 $badDir/empty/grib2 $badDir/first/grib2 $badDir/other/grib2
 printf "'x' = {\n discipline = \n" > $badDir/malformed/grib2/chemName.def
 set +e
-${tools_dir}/grib_chems --definitions-root $badDir/malformed:$def_dir --chemFormula O3 > $tempA 2> $tempErr
+${tools_dir}/grib_chems --definitions-root "$badDir/malformed${psep}$def_dir" --chemFormula O3 > $tempA 2> $tempErr
 status=$?
 set -e
 [ $status -eq 2 ]
@@ -191,13 +198,13 @@ if grep -q "edition=" $tempA; then
 fi
 # Only white space and comments: valid, no entries
 printf "# no entries\n\n" > $badDir/empty/grib2/chemName.def
-${tools_dir}/grib_chems --definitions-root $badDir/empty:$def_dir --chemFormula O3 > $tempA
+${tools_dir}/grib_chems --definitions-root "$badDir/empty${psep}$def_dir" --chemFormula O3 > $tempA
 grep -q "chemName=- " $tempA
 # Other definitions than concepts, read after a valid concept file: an error, not a stale result
 cp $def_dir/grib2/chemFormula.def $badDir/first/grib2/chemFormula.def
 printf "transient dummy = 1;\n" > $badDir/other/grib2/chemName.def
 set +e
-${tools_dir}/grib_chems --definitions-root $badDir/first:$badDir/other:$def_dir --chemFormula O3 > $tempA 2> $tempErr
+${tools_dir}/grib_chems --definitions-root "$badDir/first${psep}$badDir/other${psep}$def_dir" --chemFormula O3 > $tempA 2> $tempErr
 status=$?
 set -e
 [ $status -eq 2 ]
@@ -252,7 +259,7 @@ if [ $ECCODES_ON_WINDOWS -eq 0 ] && [ "$(id -u)" != "0" ]; then
     cp $def_dir/grib2/chemName.def $permDir/grib2/chemName.def
     chmod 311 $permDir/grib2
     set +e
-    ${tools_dir}/grib_chems --definitions-root $permDir:$def_dir --chemFormula O3 > $tempA 2> $tempErr
+    ${tools_dir}/grib_chems --definitions-root "$permDir${psep}$def_dir" --chemFormula O3 > $tempA 2> $tempErr
     status=$?
     set -e
     chmod 755 $permDir/grib2
@@ -296,7 +303,7 @@ if [ $HAVE_MEMFS -eq 1 ]; then
     [ -s $tempB ]
     cmp $tempA $tempB
     # Distinct MEMFS roots are kept: a wrong first root must not hide the second
-    ${tools_dir}/grib_chems --chemFormula O3 --definitions-root /MEMFS/wrong:/MEMFS/definitions > $tempB
+    ${tools_dir}/grib_chems --chemFormula O3 --definitions-root "/MEMFS/wrong${psep}/MEMFS/definitions" > $tempB
     [ -s $tempB ]
     # Trailing slash in a MEMFS ECCODES_DEFINITION_PATH should be accepted
     export ECCODES_DEFINITION_PATH=/MEMFS/definitions/
