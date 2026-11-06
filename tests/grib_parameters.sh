@@ -396,6 +396,28 @@ ECCODES_EXTRA_DEFINITION_PATH=$def_dir ${tools_dir}/grib_parameters --definition
 cmp $tempA $tempB
 rm -rf $onlyDir
 
+# A definitions directory which exists but cannot be listed is an error: ecCodes could still
+# open overrides in it by name. A missing grib1/ or grib2/ is fine.
+if [ $ECCODES_ON_WINDOWS -eq 0 ] && [ "$(id -u)" != "0" ]; then
+    permDir=temp.$label.perm
+    rm -rf $permDir
+    mkdir -p $permDir/grib2
+    cp $def_dir/grib2/name.lte33.def $permDir/grib2/name.lte33.def
+    chmod 311 $permDir/grib2
+    set +e
+    ${tools_dir}/grib_parameters --definitions-root $permDir:$def_dir --paramId 167 > $tempA 2> $tempErr
+    status=$?
+    set -e
+    chmod 755 $permDir/grib2
+    [ $status -eq 2 ]
+    grep -q "Cannot list definitions directory .*perm/grib2" $tempErr
+    if grep -q "edition=" $tempA; then
+        echo "Unexpected results with an unlistable definitions directory"
+        exit 1
+    fi
+    rm -rf $permDir
+fi
+
 # MEMFS cannot be listed, so the tool has a fixed list of the concept files it looks
 # for in MEMFS. Every concept file in the definitions must be on that list. Checked in
 # all builds, as a file missing from the list would only show up in a MEMFS build

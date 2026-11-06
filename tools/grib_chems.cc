@@ -440,21 +440,40 @@ static int parse_def_file(
 // All regular files below root. As ecCodes opens files by path, symbolic links to files and
 // directories are followed. Directories already on the current path (same device and inode)
 // are not entered again, which protects against link cycles.
+// A missing root is fine (e.g. no grib1/ in a definitions tree), but a directory which exists
+// and cannot be listed is an error: it may hold overrides which ecCodes would open by name.
+// Errors are reported and the walk continues, so that every failure is listed.
 #ifndef ECCODES_ON_WINDOWS
-static void scan_dir_recursive_impl(const std::string& root, std::vector<std::string>& out_files,
-                                    std::vector<std::pair<dev_t, ino_t> >& ancestors)
+static int scan_dir_recursive_impl(const std::string& root, std::vector<std::string>& out_files,
+                                   std::vector<std::pair<dev_t, ino_t> >& ancestors)
 {
     struct stat dst;
-    if (stat(root.c_str(), &dst) != 0) return;
+    if (stat(root.c_str(), &dst) != 0) {
+        if (errno == ENOENT) return GRIB_SUCCESS;  // optional directory, or removed meanwhile
+        errorf("Cannot access definitions directory %s: %s", root.c_str(), strerror(errno));
+        return GRIB_IO_PROBLEM;
+    }
     const std::pair<dev_t, ino_t> id(dst.st_dev, dst.st_ino);
-    if (std::find(ancestors.begin(), ancestors.end(), id) != ancestors.end()) return;  // link cycle
+    if (std::find(ancestors.begin(), ancestors.end(), id) != ancestors.end()) return GRIB_SUCCESS;  // link cycle
 
     DIR* d = opendir(root.c_str());
-    if (!d) return;
+    if (!d) {
+        errorf("Cannot list definitions directory %s: %s", root.c_str(), strerror(errno));
+        return GRIB_IO_PROBLEM;
+    }
     ancestors.push_back(id);
 
+    int err = GRIB_SUCCESS;
     struct dirent* ent = NULL;
-    while ((ent = readdir(d)) != NULL) {
+    while (true) {
+        errno = 0;
+        if ((ent = readdir(d)) == NULL) {
+            if (errno != 0) {
+                errorf("Cannot list definitions directory %s: %s", root.c_str(), strerror(errno));
+                err = GRIB_IO_PROBLEM;
+            }
+            break;
+        }
         const char* name = ent->d_name;
         if (strcmp(name, ".") == 0 || strcmp(name, "..") == 0) continue;
         std::string path = path_join(root, name);
@@ -472,12 +491,17 @@ static void scan_dir_recursive_impl(const std::string& root, std::vector<std::st
     #endif
         {
             struct stat st;
-            if (stat(path.c_str(), &st) != 0) continue;  // e.g. a dangling link
+            if (stat(path.c_str(), &st) != 0) {
+                if (errno == ENOENT) continue;  // a dangling link
+                errorf("Cannot access definitions entry %s: %s", path.c_str(), strerror(errno));
+                err = GRIB_IO_PROBLEM;
+                continue;
+            }
             is_dir_entry = S_ISDIR(st.st_mode);
             is_reg_entry = S_ISREG(st.st_mode);
         }
         if (is_dir_entry) {
-            scan_dir_recursive_impl(path, out_files, ancestors);
+            if (scan_dir_recursive_impl(path, out_files, ancestors) != GRIB_SUCCESS) err = GRIB_IO_PROBLEM;
         }
         else if (is_reg_entry) {
             out_files.push_back(path);
@@ -485,39 +509,50 @@ static void scan_dir_recursive_impl(const std::string& root, std::vector<std::st
     }
     closedir(d);
     ancestors.pop_back();
+    return err;
 }
 
-static void scan_dir_recursive(const std::string& root, std::vector<std::string>& out_files)
+static int scan_dir_recursive(const std::string& root, std::vector<std::string>& out_files)
 {
     std::vector<std::pair<dev_t, ino_t> > ancestors;
-    scan_dir_recursive_impl(root, out_files, ancestors);
+    return scan_dir_recursive_impl(root, out_files, ancestors);
 }
 #else
 // Windows: no dirent.h, use _findfirst/_findnext from io.h. Directory links (symbolic links,
 // junctions) are reported as directories and followed; there are no inodes to detect cycles,
 // so the depth is limited instead (definitions are only a few levels deep).
-static void scan_dir_recursive_impl(const std::string& root, std::vector<std::string>& out_files, int depth)
+static int scan_dir_recursive_impl(const std::string& root, std::vector<std::string>& out_files, int depth)
 {
-    if (depth > 32) return;
+    if (depth > 32) return GRIB_SUCCESS;
     struct _finddata_t fd;
     intptr_t h = _findfirst(path_join(root, "*").c_str(), &fd);
-    if (h == -1) return;
+    if (h == -1) {
+        if (errno == ENOENT) return GRIB_SUCCESS;  // optional directory
+        errorf("Cannot list definitions directory %s: %s", root.c_str(), strerror(errno));
+        return GRIB_IO_PROBLEM;
+    }
+    int err = GRIB_SUCCESS;
     do {
         if (strcmp(fd.name, ".") == 0 || strcmp(fd.name, "..") == 0) continue;
         std::string path = path_join(root, fd.name);
         if (fd.attrib & _A_SUBDIR) {
-            scan_dir_recursive_impl(path, out_files, depth + 1);
+            if (scan_dir_recursive_impl(path, out_files, depth + 1) != GRIB_SUCCESS) err = GRIB_IO_PROBLEM;
         }
         else {
             out_files.push_back(path);
         }
     } while (_findnext(h, &fd) == 0);
+    if (errno != ENOENT) {  // _findnext ends with ENOENT when there are no more entries
+        errorf("Cannot list definitions directory %s: %s", root.c_str(), strerror(errno));
+        err = GRIB_IO_PROBLEM;
+    }
     _findclose(h);
+    return err;
 }
 
-static void scan_dir_recursive(const std::string& root, std::vector<std::string>& out_files)
+static int scan_dir_recursive(const std::string& root, std::vector<std::string>& out_files)
 {
-    scan_dir_recursive_impl(root, out_files, 0);
+    return scan_dir_recursive_impl(root, out_files, 0);
 }
 #endif
 
@@ -581,8 +616,8 @@ static int scan_definitions(const std::string& definitions_root, std::map<std::s
     else {
         // Concept files only live below grib1/ and grib2/, so do not walk the rest of the tree
         std::vector<std::string> files;
-        scan_dir_recursive(path_join(definitions_root, "grib1"), files);
-        scan_dir_recursive(path_join(definitions_root, "grib2"), files);
+        if (scan_dir_recursive(path_join(definitions_root, "grib1"), files) != GRIB_SUCCESS) err = GRIB_IO_PROBLEM;
+        if (scan_dir_recursive(path_join(definitions_root, "grib2"), files) != GRIB_SUCCESS) err = GRIB_IO_PROBLEM;
         for (size_t i = 0; i < files.size(); ++i) {
             if (starts_with(files[i], root_prefix + "/")) rel_files.push_back(files[i].substr(root_prefix.size() + 1));
         }
@@ -1279,7 +1314,7 @@ int main(int argc, char** argv)
     release_previous_concept_list();
     // ecCodes fails on a broken concept file as well: no partial results
     if (scan_failed) {
-        errorf("Some concept files could not be read or parsed, see above");
+        errorf("Some definition directories or concept files could not be read, see above");
         return 2;
     }
 
