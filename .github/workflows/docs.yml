@@ -1,0 +1,102 @@
+# SPDX-FileCopyrightText: 2005- European Centre for Medium-Range Weather Forecasts (ECMWF)
+# SPDX-License-Identifier: Apache-2.0
+
+# Builds the Sphinx docs and publishes them to sites.ecmwf.int:
+# - PRs get a preview under dev-section/eccodes/pull-requests (same-repo PRs only, forks have no secrets).
+# - Pushes to develop/master/tags publish under dev-section/eccodes with latest/stable softlinks.
+name: Publish Documentation to sites.ecmwf.int
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+  push:
+    branches:
+      - 'develop'
+      - 'master'
+    tags:
+      - '**'
+
+concurrency:
+  group: docs-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    if: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed') }}
+    runs-on: ubuntu-latest
+    outputs:
+      artifact-id: ${{ steps.upload-doc.outputs.artifact-id }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install python dependencies
+        run: |
+          python -m pip install -r docs/requirements.txt
+      - name: Prepare Doxygen
+        uses: ecmwf/reusable-workflows/setup-doxygen@main
+        with:
+          version: 1.14.0
+      - name: Build doc
+        run: |
+          cd docs
+          make -j html
+      - name: Archive documentation
+        id: upload-doc
+        uses: actions/upload-artifact@v4
+        with:
+          name: documentation
+          path: docs/_build/html
+
+  preview-publish:
+    if: ${{ github.event_name == 'pull_request' && github.event.action != 'closed' && github.event.pull_request.head.repo.full_name == github.repository }}
+    needs: build
+    permissions:
+      contents: read
+      pull-requests: write
+    uses: ecmwf/reusable-workflows/.github/workflows/pr-preview-publish.yml@main
+    with:
+      artifact-id: ${{ needs.build.outputs.artifact-id }}
+      space: docs
+      name: dev-section
+      path: eccodes/pull-requests
+      link-tag: PREVIEW-PUBLISH-ECCODES-DOCS
+      link-text: 📖 Documentation preview 📖
+    secrets:
+      sites-token: ${{ secrets.ECMWF_SITES_DOCS_DEV_SECTION_TOKEN }}
+
+  preview-unpublish:
+    if: ${{ github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.head.repo.full_name == github.repository }}
+    uses: ecmwf/reusable-workflows/.github/workflows/pr-preview-unpublish.yml@main
+    with:
+      space: docs
+      name: dev-section
+      path: eccodes/pull-requests
+    secrets:
+      sites-token: ${{ secrets.ECMWF_SITES_DOCS_DEV_SECTION_TOKEN }}
+
+  publish:
+    if: >-
+      ${{ github.event_name == 'push' && (
+        github.ref_name == 'develop' ||
+        github.ref_name == 'master'  ||
+        github.ref_type == 'tag'
+      ) }}
+    needs: build
+    uses: ecmwf/reusable-workflows/.github/workflows/docs-publish.yml@main
+    with:
+      artifact-id: ${{ needs.build.outputs.artifact-id }}
+      space: docs
+      name: dev-section
+      path: eccodes
+      id: ${{ github.ref_name }}
+      softlink: ${{ github.ref_name == 'master'   && 'stable'
+                 || github.ref_name == 'develop' && 'latest' }}
+    secrets:
+      sites-token: ${{ secrets.ECMWF_SITES_DOCS_DEV_SECTION_TOKEN }}
