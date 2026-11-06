@@ -230,6 +230,19 @@ if grep -q "edition=" $tempA; then
     exit 1
 fi
 
+# --definitions-root uses only the given directories: the built-in definitions are not
+# added and ECCODES_EXTRA_DEFINITION_PATH is ignored (e.g. to query an older definitions set)
+onlyDir=temp.$label.only
+rm -rf $onlyDir
+mkdir -p $onlyDir/grib2
+cp $def_dir/grib2/chemId.def $onlyDir/grib2/chemId.def
+${tools_dir}/grib_chems --definitions-root $onlyDir --chemId 236 > $tempA
+grep -q "chemId=236 chemShortName=- chemName=- chemFormula=-" $tempA
+[ $(grep -c "^edition=" $tempA) -eq 1 ]
+ECCODES_EXTRA_DEFINITION_PATH=$def_dir ${tools_dir}/grib_chems --definitions-root $onlyDir --chemId 236 > $tempB
+cmp $tempA $tempB
+rm -rf $onlyDir
+
 # MEMFS cannot be listed, so the tool has a fixed list of the concept files it looks
 # for in MEMFS. Every concept file in the definitions must be on that list. Checked in
 # all builds, as a file missing from the list would only show up in a MEMFS build

@@ -383,6 +383,19 @@ for bad in "--edition 2junk" "--edition 3" "--is_mtg2_switch garbage" "--is_mtg2
     grep -q "must be" $tempErr
 done
 
+# --definitions-root uses only the given directories: the built-in definitions are not
+# added and ECCODES_EXTRA_DEFINITION_PATH is ignored (e.g. to query an older definitions set)
+onlyDir=temp.$label.only
+rm -rf $onlyDir
+mkdir -p $onlyDir/grib2
+cp $def_dir/grib2/paramId.def $onlyDir/grib2/paramId.def
+${tools_dir}/grib_parameters --definitions-root $onlyDir --paramId 167 --scope grib2 --is_mtg2_switch 1 > $tempA
+grep -q "paramId=167 shortName=- name=- units=-" $tempA
+[ $(grep -c "^edition=" $tempA) -eq 1 ]
+ECCODES_EXTRA_DEFINITION_PATH=$def_dir ${tools_dir}/grib_parameters --definitions-root $onlyDir --paramId 167 --scope grib2 --is_mtg2_switch 1 > $tempB
+cmp $tempA $tempB
+rm -rf $onlyDir
+
 # MEMFS cannot be listed, so the tool has a fixed list of the concept files it looks
 # for in MEMFS. Every concept file in the definitions must be on that list. Checked in
 # all builds, as a file missing from the list would only show up in a MEMFS build

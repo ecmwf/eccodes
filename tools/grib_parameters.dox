@@ -38,10 +38,14 @@
 -h, --help  \n
         Show this help text and exit.
  \n \n --definitions-root path \n
-        Definitions root directory, used instead of the ecCodes definitions path.
+        Use only these definitions directories, instead of the ecCodes definitions path.
         Multiple paths can be supplied using the platform path separator
         (':' on Unix, ';' on Windows). A definition file present in several roots
         is taken from the first root that has it.
+        Unlike ECCODES_DEFINITION_PATH, the built-in definitions are not appended and
+        ECCODES_EXTRA_DEFINITION_PATH is ignored: only the given directories are read.
+        This allows querying another definitions set on its own, e.g. the definitions
+        directory of an older ecCodes version, to find out since when a parameter exists.
  \n \n --debug-path-resolution \n
         Print the ecCodes definitions path, the candidate and selected roots and the
         backend used (filesystem, memfs or mixed) to stderr. Also reports concept files
@@ -141,6 +145,15 @@ grib_parameters --is_legacy 1 --scope grib2/localConcepts/ecmf --is_mtg2_switch 
 \verbatim
 grib_parameters --format line
 grib_parameters --format line | grep 'paramId=\['
+\endverbatim
+
+-# Since which ecCodes version does paramId 263006 exist? Query the definitions of
+   each version on their own (here from clones of the tagged versions):\n
+\verbatim
+for v in 2.38.0 2.39.0 2.40.0; do
+    printf '%s: ' $v
+    grib_parameters --definitions-root /path/to/eccodes-$v/definitions --paramId 263006 > /dev/null && echo yes || echo no
+done
 \endverbatim
 
 -# Check which definitions are read:\n
