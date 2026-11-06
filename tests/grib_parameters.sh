@@ -294,6 +294,26 @@ set -e
 [ $status -ne 0 ]
 grep -q -- "--is_legacy must be one of 0,1" $tempErr
 
+# Symbolic links to concept files and directories are followed, as ecCodes opens files by
+# path; link cycles are skipped
+if [ $ECCODES_ON_WINDOWS -eq 0 ]; then
+    linkDir=temp.$label.links
+    rm -rf $linkDir
+    mkdir -p $linkDir/real/centre $linkDir/defs/grib2/localConcepts
+    sed "s/^'2 metre temperature' = {/'2 metre temperature LINKED' = {/" $def_dir/grib2/name.lte33.def > $linkDir/real/name.lte33.def
+    ln -s ../../real/name.lte33.def $linkDir/defs/grib2/name.lte33.def
+    cp $def_dir/grib2/paramId.def $linkDir/real/centre/paramId.def
+    ln -s ../../../real/centre $linkDir/defs/grib2/localConcepts/zzzz
+    ln -s .. $linkDir/defs/grib2/localConcepts/loop
+    # The linked override wins over the file in the second root
+    ${tools_dir}/grib_parameters --definitions-root $linkDir/defs:$def_dir --paramId 167 --scope grib2 --is_mtg2_switch 0 > $tempA
+    grep -q "name=2 metre temperature LINKED" $tempA
+    # The linked directory is scanned
+    ${tools_dir}/grib_parameters --definitions-root $linkDir/defs:$def_dir --paramId 167 --scope grib2/localConcepts/zzzz > $tempA
+    [ -s $tempA ]
+    rm -rf $linkDir
+fi
+
 # MEMFS cannot be listed, so the tool has a fixed list of the concept files it looks
 # for in MEMFS. Every concept file in the definitions must be on that list. Checked in
 # all builds, as a file missing from the list would only show up in a MEMFS build

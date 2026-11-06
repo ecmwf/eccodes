@@ -160,6 +160,20 @@ set -e
 [ $status -eq 1 ]
 grep -q "No matching parameters found." $tempA
 
+# Symbolic links to concept files and directories are followed, as ecCodes opens files by
+# path; link cycles are skipped
+if [ $ECCODES_ON_WINDOWS -eq 0 ]; then
+    linkDir=temp.$label.links
+    rm -rf $linkDir
+    mkdir -p $linkDir/real/grib2 $linkDir/defs
+    sed "s/^'Ozone' = {/'Ozone LINKED' = {/" $def_dir/grib2/chemName.def > $linkDir/real/grib2/chemName.def
+    ln -s ../real/grib2 $linkDir/defs/grib2
+    ln -s .. $linkDir/real/grib2/loop
+    ${tools_dir}/grib_chems --definitions-root $linkDir/defs:$def_dir --chemFormula O3 > $tempA
+    grep -q "chemName=Ozone LINKED" $tempA
+    rm -rf $linkDir
+fi
+
 # MEMFS cannot be listed, so the tool has a fixed list of the concept files it looks
 # for in MEMFS. Every concept file in the definitions must be on that list. Checked in
 # all builds, as a file missing from the list would only show up in a MEMFS build

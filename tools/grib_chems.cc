@@ -24,6 +24,7 @@
 #include <set>
 #include <sstream>
 #include <string>
+#include <utility>
 #include <sys/stat.h>
 #include <vector>
 
@@ -376,46 +377,68 @@ static int parse_def_file(
     return 0;
 }
 
-// All regular files below root
+// All regular files below root. As ecCodes opens files by path, symbolic links to files and
+// directories are followed. Directories already on the current path (same device and inode)
+// are not entered again, which protects against link cycles.
 #ifndef ECCODES_ON_WINDOWS
-static void scan_dir_recursive(const std::string& root, std::vector<std::string>& out_files)
+static void scan_dir_recursive_impl(const std::string& root, std::vector<std::string>& out_files,
+                                    std::vector<std::pair<dev_t, ino_t> >& ancestors)
 {
+    struct stat dst;
+    if (stat(root.c_str(), &dst) != 0) return;
+    const std::pair<dev_t, ino_t> id(dst.st_dev, dst.st_ino);
+    if (std::find(ancestors.begin(), ancestors.end(), id) != ancestors.end()) return; // link cycle
+
     DIR* d = opendir(root.c_str());
     if (!d) return;
+    ancestors.push_back(id);
 
     struct dirent* ent = NULL;
     while ((ent = readdir(d)) != NULL) {
         const char* name = ent->d_name;
         if (strcmp(name, ".") == 0 || strcmp(name, "..") == 0) continue;
         std::string path = path_join(root, name);
-        // Use d_type where available: an lstat per entry is very slow on network filesystems
+        // Use d_type where available: a stat per entry is very slow on network filesystems.
+        // Symbolic links and unknown types need a stat, which follows links.
         bool is_dir_entry = false, is_reg_entry = false;
 #ifdef _DIRENT_HAVE_D_TYPE
-        if (ent->d_type != DT_UNKNOWN) {
-            is_dir_entry = (ent->d_type == DT_DIR);
-            is_reg_entry = (ent->d_type == DT_REG);
+        if (ent->d_type == DT_DIR) {
+            is_dir_entry = true;
+        }
+        else if (ent->d_type == DT_REG) {
+            is_reg_entry = true;
         }
         else
 #endif
         {
             struct stat st;
-            if (lstat(path.c_str(), &st) != 0) continue;
+            if (stat(path.c_str(), &st) != 0) continue; // e.g. a dangling link
             is_dir_entry = S_ISDIR(st.st_mode);
             is_reg_entry = S_ISREG(st.st_mode);
         }
         if (is_dir_entry) {
-            scan_dir_recursive(path, out_files);
+            scan_dir_recursive_impl(path, out_files, ancestors);
         }
         else if (is_reg_entry) {
             out_files.push_back(path);
         }
     }
     closedir(d);
+    ancestors.pop_back();
 }
-#else
-// Windows: no dirent.h, use _findfirst/_findnext from io.h
+
 static void scan_dir_recursive(const std::string& root, std::vector<std::string>& out_files)
 {
+    std::vector<std::pair<dev_t, ino_t> > ancestors;
+    scan_dir_recursive_impl(root, out_files, ancestors);
+}
+#else
+// Windows: no dirent.h, use _findfirst/_findnext from io.h. Directory links (symbolic links,
+// junctions) are reported as directories and followed; there are no inodes to detect cycles,
+// so the depth is limited instead (definitions are only a few levels deep).
+static void scan_dir_recursive_impl(const std::string& root, std::vector<std::string>& out_files, int depth)
+{
+    if (depth > 32) return;
     struct _finddata_t fd;
     intptr_t h = _findfirst(path_join(root, "*").c_str(), &fd);
     if (h == -1) return;
@@ -423,13 +446,18 @@ static void scan_dir_recursive(const std::string& root, std::vector<std::string>
         if (strcmp(fd.name, ".") == 0 || strcmp(fd.name, "..") == 0) continue;
         std::string path = path_join(root, fd.name);
         if (fd.attrib & _A_SUBDIR) {
-            scan_dir_recursive(path, out_files);
+            scan_dir_recursive_impl(path, out_files, depth + 1);
         }
         else {
             out_files.push_back(path);
         }
     } while (_findnext(h, &fd) == 0);
     _findclose(h);
+}
+
+static void scan_dir_recursive(const std::string& root, std::vector<std::string>& out_files)
+{
+    scan_dir_recursive_impl(root, out_files, 0);
 }
 #endif
 
