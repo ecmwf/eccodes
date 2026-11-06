@@ -202,7 +202,8 @@ static bool wildcard_match_icase(const std::string& text, const std::string& pat
 
     size_t ti = 0, pi = 0, star = std::string::npos, match = 0;
     while (ti < t.size()) {
-        if (pi < p.size() && (p[pi] == '?' || p[pi] == t[ti])) {
+        // '*' in the pattern is always a wildcard, also where the text has a literal '*'
+        if (pi < p.size() && p[pi] != '*' && (p[pi] == '?' || p[pi] == t[ti])) {
             pi++;
             ti++;
         }

@@ -425,6 +425,10 @@ if [ $ECCODES_ON_WINDOWS -eq 0 ] && [ "$(id -u)" != "0" ]; then
     rm -rf $permDir
 fi
 
+# '*' in a wildcard pattern is a wildcard also where the value has a literal '*'
+${tools_dir}/grib_parameters --units 'm*' > $tempA
+grep -q "units=m\*\*2 s\*\*-1$" $tempA
+
 # MEMFS cannot be listed, so the tool has a fixed list of the concept files it looks
 # for in MEMFS. Every concept file in the definitions must be on that list. Checked in
 # all builds, as a file missing from the list would only show up in a MEMFS build
