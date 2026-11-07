@@ -4045,6 +4045,16 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 40 ;
 	}
+#Total Precipitation anomaly
+'Total Precipitation anomaly' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
+	}
 #2 metre specific humidity
 '2 metre specific humidity' = {
 	 discipline = 0 ;
@@ -7969,6 +7979,24 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 1 ;
+	}
+#Geopotential height significance
+'Geopotential height significance' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 5 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
+	}
+#Total Precipitation significance
+'Total Precipitation significance' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Time-mean temperature tendency due to short-wave radiation
 'Time-mean temperature tendency due to short-wave radiation' = {
@@ -16293,12 +16321,6 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 16 ;
 	}
-#Vapor pressure
-'Vapor pressure' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 4 ;
-	}
 #Large scale precipitation (non-convective)
 'Large scale precipitation (non-convective)' = {
 	 discipline = 0 ;
@@ -21142,6 +21164,12 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 3 ;
 	}
+#Vapour pressure
+'Vapour pressure' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 4 ;
+	}
 #Saturation deficit
 'Saturation deficit' = {
 	 discipline = 0 ;
@@ -22047,6 +22075,26 @@
 	 parameterNumber = 40 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
+#Height anomaly
+'Height anomaly' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 5 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
+	}
+#Total precipitation anomaly
+'Total precipitation anomaly' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 193 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
+	}
 #Surface runoff
 'Surface runoff' = {
 	 discipline = 2 ;
@@ -22345,6 +22393,18 @@
 	 parameterNumber = 52 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
+	}
+#Total precipitation significance
+'Total precipitation significance' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 193 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #U-component surface stokes drift
 'U-component surface stokes drift' = {

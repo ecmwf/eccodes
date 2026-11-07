@@ -4786,6 +4786,16 @@
 	 typeOfRelationToReferenceDataset = 0 ;
 	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
+#Total Precipitation anomaly
+'kg m**-2' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
+	}
 #Mean surface runoff rate anomaly
 'kg m**-2 s**-1' = {
 	 discipline = 2 ;
@@ -8853,6 +8863,14 @@
 	 typeOfRelationToReferenceDataset = 2 ;
 	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
+#Geopotential height significance
+'gpm' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 5 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
+	}
 #10 metre U wind component significance
 'm s**-1' = {
 	 discipline = 0 ;
@@ -9599,6 +9617,16 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 11 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
+	}
+#Total Precipitation significance
+'kg m**-2' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
 	 typeOfRelationToReferenceDataset = 2 ;
 	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
@@ -18334,12 +18362,6 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 16 ;
 	}
-#Vapor pressure
-'Pa' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 4 ;
-	}
 #Large scale precipitation (non-convective)
 'kg m**-2' = {
 	 discipline = 0 ;
@@ -26742,6 +26764,12 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 3 ;
 	}
+#Vapour pressure
+'Pa' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 4 ;
+	}
 #Saturation deficit
 'Pa' = {
 	 discipline = 0 ;
@@ -28014,6 +28042,14 @@
 	 typeOfRelationToReferenceDataset = 0 ;
 	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
+#Height anomaly
+'m' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 5 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
+	}
 #10 metre U wind component anomaly
 'm s**-1' = {
 	 discipline = 0 ;
@@ -28102,6 +28138,18 @@
 	 typeOfFirstFixedSurface = 103 ;
 	 scaledValueOfFirstFixedSurface = 10 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
+	}
+#Total precipitation anomaly
+'m' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 193 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 1 ;
 	 typeOfRelationToReferenceDataset = 0 ;
 	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
@@ -28568,6 +28616,18 @@
 	 typeOfFirstFixedSurface = 103 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
+	}
+#Total precipitation significance
+'%' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 193 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 1 ;
 	 typeOfRelationToReferenceDataset = 2 ;
 	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
