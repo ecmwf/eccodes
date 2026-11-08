@@ -395,6 +395,7 @@ const char* get_key(const std::string& name, codes_handle* h)
         /// FIXME: Find something that does no clash
         { "reduced", "numberOfParallelsBetweenAPoleAndTheEquator", is("isOctahedral", 0L) },
         { "regular", "N", is("gridType", "regular_gg") },
+        { "ni", "ni_fix_for_regular_gaussian_grids", _or(is("gridType", "regular_gg"), is("gridType", "rotated_gg")) },
         { "octahedral", "numberOfParallelsBetweenAPoleAndTheEquator", is("isOctahedral", 1L) },
 
         /// TODO: is that a good idea?
@@ -565,6 +566,60 @@ ProcessingT<double>* longitudeOfLastGridPointInDegrees_fix_for_global_reduced_gr
 }
 
 
+// GRIB latitudes are encoded to the angular precision, and grids are cropped exactly: a latitude that close to a
+// Gaussian latitude is that latitude (so its row is kept), and to the first or last Gaussian latitude the pole
+double gaussian_latitude_snapped(long N, double lat, double eps)
+{
+    const auto& lats = eckit::geo::util::gaussian_latitudes(N, false);
+    const auto nearest = std::min_element(lats.begin(), lats.end(), [lat](double a, double b) {
+        return std::abs(a - lat) < std::abs(b - lat);
+    });
+
+    if (nearest == lats.end() || !eckit::types::is_approximately_equal(lat, *nearest, eps)) {
+        return lat;
+    }
+
+    if (nearest == lats.begin()) {
+        return eckit::geo::NORTH_POLE.lat();
+    }
+
+    if (nearest == lats.end() - 1) {
+        return eckit::geo::SOUTH_POLE.lat();
+    }
+
+    return *nearest;
+}
+
+
+// Regular Gaussian grids of other than 4N longitudes (globally), by the increment (to the angular precision)
+ProcessingT<long>* ni_fix_for_regular_gaussian_grids()
+{
+    return new ProcessingT<long>([](codes_handle* h, long& ni) {
+        double eps = 0.;
+        ASSERT(std::unique_ptr<ProcessingT<double>>(angular_precision())->eval(h, eps));
+
+        long N = 0;
+        long given = 0;
+        double inc = 0.;
+        if (codes_get_long(h, "N", &N) != CODES_SUCCESS || N <= 0 ||
+            codes_get_long(h, "iDirectionIncrementGiven", &given) != CODES_SUCCESS || given == 0 ||
+            codes_get_double(h, "iDirectionIncrementInDegrees", &inc) != CODES_SUCCESS || !(inc > 0.)) {
+            return false;
+        }
+
+        // 4N if within the precision (e.g. 0.141 is 360/2560, not 360/2553)
+        const auto n = std::lround(360. / inc);
+        if (eckit::types::is_approximately_equal(360. / static_cast<double>(4 * N), inc, eps) || n <= 0 ||
+            !eckit::types::is_approximately_equal(360. / static_cast<double>(n), inc, eps)) {
+            return false;
+        }
+
+        ni = n;
+        return true;
+    });
+}
+
+
 ProcessingT<double>* latitudeOfFirstGridPointInDegrees_fix_for_gaussian_grids()
 {
     return new ProcessingT<double>([](codes_handle* h, double& lat) {
@@ -575,17 +630,9 @@ ProcessingT<double>* latitudeOfFirstGridPointInDegrees_fix_for_gaussian_grids()
         CHECK_CALL(codes_get_long(h, "N", &N));
         ASSERT(N > 0);
 
-        double& Lat1 = lat;
-        CHECK_CALL(codes_get_double(h, "latitudeOfFirstGridPointInDegrees", &Lat1));
+        CHECK_CALL(codes_get_double(h, "latitudeOfFirstGridPointInDegrees", &lat));
 
-        double Lat2 = 0.;
-        CHECK_CALL(codes_get_double(h, "latitudeOfLastGridPointInDegrees", &Lat2));
-
-        const auto snap = eckit::geo::util::gaussian_latitudes(N, Lat1 < Lat2).front();
-        if (eckit::types::is_approximately_equal(Lat1, snap, eps)) {
-            lat = snap < 0. ? eckit::geo::SOUTH_POLE.lat() : eckit::geo::NORTH_POLE.lat();
-        }
-
+        lat = gaussian_latitude_snapped(N, lat, eps);
         return true;
     });
 }
@@ -601,17 +648,9 @@ ProcessingT<double>* latitudeOfLastGridPointInDegrees_fix_for_gaussian_grids()
         CHECK_CALL(codes_get_long(h, "N", &N));
         ASSERT(N > 0);
 
-        double Lat1 = 0.;
-        CHECK_CALL(codes_get_double(h, "latitudeOfFirstGridPointInDegrees", &Lat1));
+        CHECK_CALL(codes_get_double(h, "latitudeOfLastGridPointInDegrees", &lat));
 
-        double& Lat2 = lat;
-        CHECK_CALL(codes_get_double(h, "latitudeOfLastGridPointInDegrees", &Lat2));
-
-        const auto snap = eckit::geo::util::gaussian_latitudes(N, Lat1 < Lat2).back();
-        if (eckit::types::is_approximately_equal(Lat2, snap, eps)) {
-            lat = snap < 0. ? eckit::geo::SOUTH_POLE.lat() : eckit::geo::NORTH_POLE.lat();
-        }
-
+        lat = gaussian_latitude_snapped(N, lat, eps);
         return true;
     });
 }
@@ -1280,6 +1319,15 @@ bool GribToSpec::get(const std::string& name, long& value) const
     // FIXME: make sure that 'value' is not set if CODES_MISSING_LONG
     int err = codes_get_long(handle_, key.c_str(), &value);
     if (err == CODES_NOT_FOUND || codes_is_missing(handle_, key.c_str(), &err) != 0) {
+        static const ProcessingList<long> process{
+            { "ni_fix_for_regular_gaussian_grids", ni_fix_for_regular_gaussian_grids() },
+        };
+
+        if (get_value(key, handle_, value, process)) {
+            cache_set(cache_, name, value);
+            return true;
+        }
+
         return false;
     }
 
