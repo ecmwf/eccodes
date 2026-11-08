@@ -855,8 +855,6 @@ void cache_set(GribToSpec::cache_type& cache, const std::string& name, const T& 
 }
 
 
-
-
 using Custom = eckit::spec::Custom;
 
 
@@ -970,7 +968,7 @@ Custom* make_projected_spec(codes_handle* h, const Projected& p)
 
     auto* spec = new Custom{ { "x", std::vector<double>{ 0., (nx - 1.) * dx, dx } },
                              { "y", std::vector<double>{ 0., (ny - 1.) * dy, dy } },
-                             { "false", std::vector<double>{ millimetres(-first.X()), millimetres(-first.Y()) } } };
+                             { "false_xy", std::vector<double>{ millimetres(-first.X()), millimetres(-first.Y()) } } };
     spec->set("projection", projection.release());
 
     if (const auto order = scanning_order(h, dx, dy); !order.empty()) {
@@ -1032,7 +1030,7 @@ Custom* make_space_view_spec(codes_handle* h)
     // the false easting/northing places the first grid point at (0, 0), to millimetres
     auto* spec = new Custom{ { "x", std::vector<double>{ 0., (nx - 1.) * dx, dx } },
                              { "y", std::vector<double>{ 0., (ny - 1.) * dy, dy } },
-                             { "false", std::vector<double>{ millimetres(xp * dx), millimetres(yp * dy) } } };
+                             { "false_xy", std::vector<double>{ millimetres(xp * dx), millimetres(yp * dy) } } };
     spec->set("projection", projection.release());
 
     if (const auto order = scanning_order(h, dx, dy); !order.empty()) {
@@ -1561,7 +1559,6 @@ const Spec& GribToSpec::spec(const std::string& name) const
 {
     return spec_ ? spec_->spec(name) : Spec::spec(name);
 }
-
 
 
 void GribToSpec::json(eckit::JSON& j) const
