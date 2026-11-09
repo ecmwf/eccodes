@@ -688,6 +688,10 @@ static int scan_definitions(const std::string& definitions_root, std::map<std::s
         }
     }
 
+    // Directory listing order depends on the filesystem, and MEMFS has its own order: sort, so that
+    // the files are parsed and the sources listed in the same order everywhere
+    std::sort(rel_files.begin(), rel_files.end());
+
     for (size_t i = 0; i < rel_files.size(); ++i) {
         const std::string& rel = rel_files[i];
         std::string file_path = path_join(root_prefix, rel);

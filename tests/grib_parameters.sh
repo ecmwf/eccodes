@@ -512,7 +512,8 @@ grep -q '"parameterCategory": 7,' $tempA
 # Quotes in names are escaped, sources are an array
 ${tools_dir}/grib_parameters --name '*"first guess - analysis"*' --columns name,sources --format json > $tempA
 grep -q '"name": "RMS of difference \\"first guess - analysis\\" of kinetic energy"' $tempA
-grep -q '"sources": \["grib2/localConcepts/edzw/[^]]*"grib2/localConcepts/edzw/name.def"' $tempA
+# Sources in path order, independent of the directory listing order and the same with MEMFS
+grep -q '"sources": \["grib2/localConcepts/edzw/name.def", "grib2/localConcepts/edzw/paramId.def", "grib2/localConcepts/edzw/shortName.def", "grib2/localConcepts/edzw/units.def"\]' $tempA
 # No results: stdout stays valid JSON, message on stderr, exit status 1
 set +e
 ${tools_dir}/grib_parameters --paramId 123456789 --format json > $tempA 2> $tempErr

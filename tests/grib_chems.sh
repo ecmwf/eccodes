@@ -338,6 +338,9 @@ EOF
 diff $tempB $tempA
 ${tools_dir}/grib_chems --chemFormula O3 --columns chemId,encoding --format json > $tempA
 grep -q '{"chemId": 236, "encoding": {' $tempA
+# Sources in path order, independent of the directory listing order and the same with MEMFS
+${tools_dir}/grib_chems --chemFormula O3 --columns sources --format json > $tempA
+grep -q '"sources": \["grib2/chemFormula.def", "grib2/chemId.def", "grib2/chemName.def", "grib2/chemShortName.def"\]' $tempA
 # No results: stdout stays valid JSON, message on stderr, exit status 1
 set +e
 ${tools_dir}/grib_chems --chemId 123456789 --format json > $tempA 2> $tempErr
