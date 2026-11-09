@@ -26,6 +26,11 @@
  ECCODES_DEFINITION_PATH or the built-in default, which may be MEMFS. As in ecCodes,
  a definition file present in several directories is taken from the first one that
  has it. The output therefore shows what the installed ecCodes actually uses.
+ \n
+ Parsing the concept files takes most of the run time. With --edition, --is_mtg2_switch,
+ --is_legacy or --scope, only the files which can match are parsed, so these options
+ make a query much faster. A concept file which cannot be parsed is then only reported
+ if it is one of them, as in ecCodes, which only reads the files it needs.
 
 \section USAGE
  grib_parameters
@@ -49,7 +54,8 @@
  \n \n --debug-path-resolution \n
         Print the ecCodes definitions path, the candidate and selected roots and the
         backend used (filesystem, memfs or mixed) to stderr. Also reports concept files
-        read from disk which a MEMFS build would not find.
+        read from disk which a MEMFS build would not find, and how many concept files
+        were parsed and skipped by the filters.
  \n \n --columns col1,col2,... \n
         Output only selected columns.
         Valid columns: edition,is_mtg2_switch,is_legacy,scope,paramId,shortName,name,units,encoding,sources

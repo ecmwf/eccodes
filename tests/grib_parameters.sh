@@ -522,5 +522,38 @@ set -e
 [ "$(cat $tempA)" = "[]" ]
 grep -q "No matching parameters found." $tempErr
 
+# Only the concept files which can match --edition, --is_mtg2_switch, --is_legacy and --scope are parsed
+${tools_dir}/grib_parameters --paramId 167 --edition 2 --scope grib2 --is_mtg2_switch 1 --debug-path-resolution > $tempA 2> $tempErr
+grep -q "paramId=167 shortName=2t " $tempA
+grep -q "DEBUG: concept files parsed: [1-9][0-9]*, skipped by filters: [1-9][0-9]*$" $tempErr
+if grep -q "reading all concept files" $tempErr; then
+    echo "Unexpected full read for a query with results"
+    exit 1
+fi
+${tools_dir}/grib_parameters --paramId 167 --debug-path-resolution > $tempA 2> $tempErr
+grep -q "skipped by filters: 0$" $tempErr
+# The checks which need all definitions read them all: same messages as without the filters
+set +e
+${tools_dir}/grib_parameters --scope grib2/localConcepts/ecmff --edition 2 --debug-path-resolution > $tempA 2> $tempErr
+status=$?
+set -e
+[ $status -eq 2 ]
+grep -q "reading all concept files" $tempErr
+grep -q "Scope 'grib2/localConcepts/ecmff' is not defined. Did you mean 'grib2/localConcepts/ecmf'?" $tempErr
+# A GRIB2 key with --edition 1: not misspelled, just no results
+set +e
+${tools_dir}/grib_parameters --edition 1 --attr discipline=0 > $tempA 2> $tempErr
+status=$?
+set -e
+[ $status -eq 1 ]
+grep -q "No matching parameters found." $tempA
+# No files at all match: no results, not a missing definitions root
+set +e
+${tools_dir}/grib_parameters --edition 1 --is_mtg2_switch 1 > $tempA 2> $tempErr
+status=$?
+set -e
+[ $status -eq 1 ]
+grep -q "No matching parameters found." $tempA
+
 # Clean up
 rm -f $tempA $tempB $tempErr $tempGrib

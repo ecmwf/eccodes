@@ -626,11 +626,37 @@ static std::vector<std::string> memfs_candidate_files()
     return out;
 }
 
+// The concept files a query needs. Edition, MTG2 switch, legacy flag and scope are the same
+// for all entries of a file and part of the record key, so a file excluded by these filters
+// cannot contribute to any result and need not be parsed (parsing dominates the run time).
+struct FileFilter
+{
+    bool has_edition = false;
+    int edition = 0;
+    bool has_is_mtg2_switch = false;
+    int is_mtg2_switch = 0;
+    bool has_is_legacy = false;
+    int is_legacy = 0;
+    std::set<std::string> scopes;  // empty: all
+
+    bool active() const { return has_edition || has_is_mtg2_switch || has_is_legacy || !scopes.empty(); }
+
+    // Same conditions as the record filter in main()
+    bool wants(int ed, const std::vector<int>& switches, bool legacy, const std::string& scope) const
+    {
+        if (has_edition && ed != edition) return false;
+        if (has_is_mtg2_switch && std::find(switches.begin(), switches.end(), is_mtg2_switch) == switches.end()) return false;
+        if (has_is_legacy && (ed == 1 || (legacy ? 1 : 0) != is_legacy)) return false;
+        if (!scopes.empty() && !scopes.count(scope)) return false;
+        return true;
+    }
+};
+
 // Scan one definitions root (a directory or a MEMFS root). As in ecCodes, a definition file
 // is taken from the first root which contains it: files already taken from a previous root
-// ('claimed') are skipped.
+// ('claimed') are skipped. With a filter, only the files it wants are parsed.
 static int scan_definitions(const std::string& definitions_root, std::map<std::string, Record>& records,
-                            std::set<std::string>& claimed, bool debug)
+                            std::set<std::string>& claimed, const FileFilter* filter, size_t& n_skipped, bool debug)
 {
     int err = GRIB_SUCCESS;  // all files are scanned, so that every failure is reported
     const bool is_memfs_root = starts_with(definitions_root, "/MEMFS");
@@ -705,7 +731,11 @@ static int scan_definitions(const std::string& definitions_root, std::map<std::s
             scope = rel.substr(0, last_slash);
         }
 
-        if (!claimed.insert(rel).second) continue;
+        if (!claimed.insert(rel).second) continue;  // also when not wanted: a later root must not supply it
+        if (filter && !filter->wants(edition, switches, legacy, scope)) {
+            n_skipped++;
+            continue;
+        }
         const int perr = parse_def_file(file_path, concept, edition, switches, legacy, scope, rel, records);
         if (perr != GRIB_SUCCESS) err = perr;
     }
@@ -936,7 +966,8 @@ static std::string usage_text(const char* prog)
       << "  --debug-path-resolution\n"
       << "                        Print resolved definitions path candidates and\n"
       << "                        selected roots to stderr. Also reports concept files\n"
-      << "                        read from disk which a MEMFS build would not find\n"
+      << "                        read from disk which a MEMFS build would not find,\n"
+      << "                        and how many concept files were parsed and skipped\n"
       << "  --columns COLUMNS     Comma-separated list of output columns to show. Valid\n"
       << "                        columns: edition,is_mtg2_switch,is_legacy,scope,paramId,shortName,\n"
       << "                        name,units,encoding,sources\n"
@@ -1520,24 +1551,68 @@ int main(int argc, char** argv)
             fprintf(stderr, "DEBUG:   %s\n", roots[i].c_str());
     }
 
+    FileFilter file_filter;
+    file_filter.has_edition = opt.has_edition;
+    file_filter.edition = opt.edition;
+    file_filter.has_is_mtg2_switch = opt.has_is_mtg2_switch;
+    file_filter.is_mtg2_switch = opt.is_mtg2_switch;
+    file_filter.has_is_legacy = opt.has_is_legacy;
+    file_filter.is_legacy = opt.is_legacy;
+    if (!opt.scope.empty()) {
+        std::vector<std::string> scope_items = split(opt.scope, ',');
+        file_filter.scopes.insert(scope_items.begin(), scope_items.end());
+    }
+
     std::map<std::string, Record> records_by_key;
-    std::set<std::string> claimed_files;
     bool used_filesystem_backend = false;
     bool used_memfs_backend = false;
     bool scan_failed = false;
 
-    for (size_t i = 0; i < roots.size(); ++i) {
-        if (!starts_with(roots[i], "/MEMFS")) {
-            used_filesystem_backend = true;
-            if (scan_definitions(roots[i], records_by_key, claimed_files, opt.debug_path_resolution) != GRIB_SUCCESS)
+    // Both kinds of root are read in-process: codes_access/codes_fopen serve /MEMFS paths from memory
+    auto scan_all_roots = [&](const FileFilter* filter, bool debug) {
+        std::set<std::string> claimed_files;
+        size_t n_skipped = 0;
+        for (size_t i = 0; i < roots.size(); ++i) {
+            if (starts_with(roots[i], "/MEMFS"))
+                used_memfs_backend = true;
+            else
+                used_filesystem_backend = true;
+            if (scan_definitions(roots[i], records_by_key, claimed_files, filter, n_skipped, debug) != GRIB_SUCCESS)
                 scan_failed = true;
-            continue;
         }
+        if (opt.debug_path_resolution) {
+            fprintf(stderr, "DEBUG: concept files parsed: %zu, skipped by filters: %zu\n",
+                    claimed_files.size() - n_skipped, n_skipped);
+        }
+    };
 
-        // Read in-process: codes_access/codes_fopen serve /MEMFS paths from memory
-        used_memfs_backend = true;
-        if (scan_definitions(roots[i], records_by_key, claimed_files, opt.debug_path_resolution) != GRIB_SUCCESS)
-            scan_failed = true;
+    // Whether the checks below which look at all definitions (any results at all, known --attr
+    // keys and known scopes, with suggestions) could fail only because files were skipped
+    auto needs_all_files = [&]() -> bool {
+        if (records_by_key.empty()) return true;
+        std::set<std::string> known_keys, known_scopes;
+        for (std::map<std::string, Record>::const_iterator it = records_by_key.begin(); it != records_by_key.end(); ++it) {
+            known_scopes.insert(it->second.scope);
+            for (std::map<std::string, std::string>::const_iterator a = it->second.attrs.begin(); a != it->second.attrs.end(); ++a)
+                known_keys.insert(a->first);
+        }
+        for (std::map<std::string, std::string>::const_iterator a = attr_filter.begin(); a != attr_filter.end(); ++a)
+            if (!known_keys.count(a->first)) return true;
+        for (std::set<std::string>::const_iterator s = file_filter.scopes.begin(); s != file_filter.scopes.end(); ++s)
+            if (!known_scopes.count(*s)) return true;
+        return false;
+    };
+
+    if (file_filter.active()) {
+        scan_all_roots(&file_filter, opt.debug_path_resolution);
+        if (!scan_failed && needs_all_files()) {
+            if (opt.debug_path_resolution) fprintf(stderr, "DEBUG: reading all concept files to check the query\n");
+            records_by_key.clear();
+            scan_all_roots(NULL, false);
+        }
+    }
+    else {
+        scan_all_roots(NULL, opt.debug_path_resolution);
     }
     release_previous_concept_list();
     // ecCodes fails on a broken concept file as well: no partial results
