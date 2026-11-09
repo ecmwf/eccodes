@@ -476,11 +476,15 @@ if [ $HAVE_MEMFS -eq 1 ]; then
     # Distinct MEMFS roots are kept: a wrong first root must not hide the second
     ${tools_dir}/grib_parameters --paramId 167 --definitions-root "/MEMFS/wrong${psep}/MEMFS/definitions" > $tempB
     [ -s $tempB ]
-    # Trailing slash in a MEMFS ECCODES_DEFINITION_PATH should be accepted
+    # The definitions are looked up by ecCodes: MEMFS paths are not normalised, so with a
+    # trailing slash ecCodes finds no definitions, and neither does the tool
     export ECCODES_DEFINITION_PATH=/MEMFS/definitions/
-    ${tools_dir}/grib_parameters --paramId 167 --debug-path-resolution > $tempB 2> $tempErr
-    [ -s $tempB ]
-    grep -q "effective backend: memfs" $tempErr
+    set +e
+    ${tools_dir}/grib_parameters --paramId 167 > $tempB 2> $tempErr
+    status=$?
+    set -e
+    [ $status -eq 2 ]
+    grep -q "No valid definitions roots were found" $tempErr
     export ECCODES_DEFINITION_PATH=$saved_def_path
 fi
 

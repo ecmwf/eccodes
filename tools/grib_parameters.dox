@@ -23,9 +23,10 @@
  \n
  Which definitions are read: without --definitions-root, the tool uses the same
  definitions path as ecCodes, i.e. ECCODES_EXTRA_DEFINITION_PATH, then
- ECCODES_DEFINITION_PATH or the built-in default, which may be MEMFS. As in ecCodes,
- a definition file present in several directories is taken from the first one that
- has it. The output therefore shows what the installed ecCodes actually uses.
+ ECCODES_DEFINITION_PATH or the built-in default, which may be MEMFS. Each concept
+ file is looked up by ecCodes itself, so a file present in several directories is
+ taken from the first one that has it, exactly as in ecCodes. The output therefore
+ shows what the installed ecCodes actually uses.
  \n
  Parsing the concept files takes most of the run time. With --edition, --is_mtg2_switch,
  --is_legacy or --scope, only the files which can match are parsed, so these options
@@ -52,7 +53,7 @@
         This allows querying another definitions set on its own, e.g. the definitions
         directory of an older ecCodes version, to find out since when a parameter exists.
  \n \n --debug-path-resolution \n
-        Print the ecCodes definitions path, the candidate and selected roots and the
+        Print the ecCodes definitions path, its directories and the
         backend used (filesystem, memfs or mixed) to stderr. Also reports concept files
         read from disk which a MEMFS build would not find, and how many concept files
         were parsed and skipped by the filters.

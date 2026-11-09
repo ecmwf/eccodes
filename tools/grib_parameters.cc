@@ -137,15 +137,6 @@ static std::vector<std::string> split(const std::string& s, char delim)
     return out;
 }
 
-static char path_delimiter_char()
-{
-#ifdef ECCODES_ON_WINDOWS
-    return ';';
-#else
-    return ':';
-#endif
-}
-
 static void uniq(std::vector<std::string>& vals)
 {
     std::set<std::string> seen;
@@ -652,130 +643,132 @@ struct FileFilter
     }
 };
 
-// Scan one definitions root (a directory or a MEMFS root). As in ecCodes, a definition file
-// is taken from the first root which contains it: files already taken from a previous root
-// ('claimed') are skipped. With a filter, only the files it wants are parsed.
-static int scan_definitions(const std::string& definitions_root, std::map<std::string, Record>& records,
-                            std::set<std::string>& claimed, const FileFilter* filter, size_t& n_skipped, bool debug)
+// Classification of a concept file by its path relative to a definitions directory
+struct ConceptFile
 {
-    int err = GRIB_SUCCESS;  // all files are scanned, so that every failure is reported
-    const bool is_memfs_root = starts_with(definitions_root, "/MEMFS");
-    std::string root_prefix = definitions_root;
-    while (root_prefix.size() > 1 && root_prefix[root_prefix.size() - 1] == '/') {
-        root_prefix.erase(root_prefix.size() - 1);
-    }
+    std::string concept;
+    int edition = 0;
+    std::vector<int> switches;  // the MTG2 switch values it applies to; -1 for edition 1
+    bool legacy = false;
+    std::string scope;
+};
 
-    // Paths relative to the root
-    std::vector<std::string> rel_files;
-    if (is_memfs_root) {
-        std::vector<std::string> candidates = memfs_candidate_files();
-        for (size_t i = 0; i < candidates.size(); ++i) {
-            if (codes_access(path_join(root_prefix, candidates[i]).c_str(), F_OK) == 0) {
-                rel_files.push_back(candidates[i]);
-            }
+// False if rel is not a concept file the tool reads
+static bool classify_concept_file(const std::string& rel, ConceptFile& cf)
+{
+    const std::string filename = rel.substr(rel.find_last_of('/') + 1);
+    cf.legacy = is_legacy_concept_file(rel);
+    bool concept_file = cf.legacy;
+    for (std::set<std::string>::const_iterator c = kConcepts.begin(); c != kConcepts.end() && !concept_file; ++c) {
+        if (filename == *c + ".def" || filename == *c + ".lte33.def" || filename == *c + ".chemsplit.def") {
+            concept_file = true;
         }
+    }
+    if (!concept_file) return false;
+
+    cf.concept = get_concept_from_filename(filename);
+    if (cf.concept.empty()) return false;
+
+    cf.edition = starts_with(rel, "grib1/") ? 1 : 2;
+    int sw = infer_switch(filename);
+    if (cf.edition == 1) sw = -1;
+    if (cf.edition == 2 && sw == -2 && !cf.legacy) return false;
+    cf.switches.assign(1, sw);
+    if (cf.legacy) cf.switches.assign(kLegacySwitches, kLegacySwitches + sizeof(kLegacySwitches) / sizeof(kLegacySwitches[0]));
+
+    const size_t slash = rel.find('/');
+    const size_t last_slash = rel.find_last_of('/');
+    if (slash == std::string::npos || last_slash == std::string::npos || last_slash <= slash) {
+        cf.scope = starts_with(rel, "grib1/") ? "grib1" : "grib2";
     }
     else {
-        // Concept files only live below grib1/ and grib2/, so do not walk the rest of the tree
-        std::vector<std::string> files;
-        // Walk the normalized root_prefix, so that the paths found start with exactly that prefix
-        // (a root written as "defs//" would otherwise give relative paths like "/grib1/...")
-        const std::string prefix = (root_prefix == "/") ? root_prefix : root_prefix + "/";
-        if (scan_dir_recursive(path_join(root_prefix, "grib1"), files) != GRIB_SUCCESS) err = GRIB_IO_PROBLEM;
-        if (scan_dir_recursive(path_join(root_prefix, "grib2"), files) != GRIB_SUCCESS) err = GRIB_IO_PROBLEM;
-        for (size_t i = 0; i < files.size(); ++i) {
-            if (starts_with(files[i], prefix)) rel_files.push_back(files[i].substr(prefix.size()));
+        cf.scope = rel.substr(0, last_slash);
+    }
+    return true;
+}
+
+// The directories of the definitions path in priority order, as ecCodes itself has split
+// and resolved them
+static std::vector<std::string> definitions_dirs(grib_context* ctx)
+{
+    // ecCodes sets up the directory list when it first looks up a definition file;
+    // the file need not exist
+    grib_context_full_defs_path(ctx, "boot.def");
+    std::vector<std::string> dirs;
+    for (const grib_string_list* d = ctx->grib_definition_files_dir; d; d = d->next) {
+        if (d->value && !vector_contains(dirs, d->value)) dirs.push_back(d->value);
+    }
+    return dirs;
+}
+
+// Add the concept files of one definitions directory, as paths relative to it. MEMFS cannot
+// be listed, so there the known candidates are looked up. The directory walk continues after
+// an error, so that every failure is reported.
+static int list_concept_files(const std::string& dir, std::set<std::string>& rel_files, bool debug)
+{
+    if (starts_with(dir, "/MEMFS")) {
+        // Joined as grib_context_full_defs_path joins them, so that exactly the files are
+        // listed which ecCodes finds (MEMFS paths are not normalised)
+        const std::vector<std::string> candidates = memfs_candidate_files();
+        for (size_t i = 0; i < candidates.size(); ++i) {
+            if (codes_access((dir + "/" + candidates[i]).c_str(), F_OK) == 0) rel_files.insert(candidates[i]);
         }
+        return GRIB_SUCCESS;
     }
 
-    // Directory listing order depends on the filesystem, and MEMFS has its own order: sort, so that
-    // the files are parsed and the sources listed in the same order everywhere
-    std::sort(rel_files.begin(), rel_files.end());
+    int err = GRIB_SUCCESS;
+    std::string root = dir;
+    while (root.size() > 1 && root[root.size() - 1] == '/')
+        root.erase(root.size() - 1);
+    // Concept files only live below grib1/ and grib2/, so do not walk the rest of the tree
+    std::vector<std::string> files;
+    if (scan_dir_recursive(path_join(root, "grib1"), files) != GRIB_SUCCESS) err = GRIB_IO_PROBLEM;
+    if (scan_dir_recursive(path_join(root, "grib2"), files) != GRIB_SUCCESS) err = GRIB_IO_PROBLEM;
 
-    for (size_t i = 0; i < rel_files.size(); ++i) {
-        const std::string& rel = rel_files[i];
-        std::string file_path = path_join(root_prefix, rel);
-
-        std::string filename = rel.substr(rel.find_last_of('/') + 1);
-
-        const bool legacy = is_legacy_concept_file(rel);
-        bool concept_file = legacy;
-        for (std::set<std::string>::const_iterator c = kConcepts.begin(); c != kConcepts.end() && !concept_file; ++c) {
-            if (filename == *c + ".def" || filename == *c + ".lte33.def" || filename == *c + ".chemsplit.def") {
-                concept_file = true;
-            }
-        }
-        if (!concept_file) continue;
-
-        std::string concept = get_concept_from_filename(filename);
-        if (concept.empty()) continue;
-
-        int edition = starts_with(rel, "grib1/") ? 1 : 2;
-        int sw = infer_switch(filename);
-        if (edition == 1) sw = -1;
-        if (edition == 2 && sw == -2 && !legacy) continue;
-        std::vector<int> switches(1, sw);
-        if (legacy) switches.assign(kLegacySwitches, kLegacySwitches + sizeof(kLegacySwitches) / sizeof(kLegacySwitches[0]));
-
+    const std::string prefix = (root == "/") ? root : root + "/";
+    for (size_t i = 0; i < files.size(); ++i) {
+        if (!starts_with(files[i], prefix)) continue;
+        const std::string rel = files[i].substr(prefix.size());
+        ConceptFile cf;
+        if (!classify_concept_file(rel, cf)) continue;
         // MEMFS cannot be listed, so a concept file found on disk but missing from the
         // MEMFS candidate list would be silently ignored in a MEMFS build (tested in ctest)
-        if (debug && !is_memfs_root) {
+        if (debug) {
             static const std::vector<std::string> memfs_list = memfs_candidate_files();
             if (std::find(memfs_list.begin(), memfs_list.end(), rel) == memfs_list.end())
                 fprintf(stderr, "DEBUG: concept file not in MEMFS candidate list: %s\n", rel.c_str());
         }
-
-        std::string scope;
-        size_t slash = rel.find('/');
-        size_t last_slash = rel.find_last_of('/');
-        if (slash == std::string::npos || last_slash == std::string::npos || last_slash <= slash) {
-            scope = starts_with(rel, "grib1/") ? "grib1" : "grib2";
-        }
-        else {
-            scope = rel.substr(0, last_slash);
-        }
-
-        if (!claimed.insert(rel).second) continue;  // also when not wanted: a later root must not supply it
-        if (filter && !filter->wants(edition, switches, legacy, scope)) {
-            n_skipped++;
-            continue;
-        }
-        const int perr = parse_def_file(file_path, concept, edition, switches, legacy, scope, rel, records);
-        if (perr != GRIB_SUCCESS) err = perr;
+        rel_files.insert(rel);
     }
-
     return err;
 }
 
-static std::string normalize_memfs_path(const std::string& p)
+// Parse the concept files, in path order. Each one is read from where ecCodes takes it:
+// grib_context_full_defs_path returns it from the first directory of the definitions path
+// which has it. With a filter, only the files it wants are parsed.
+static int parse_concept_files(grib_context* ctx, const std::set<std::string>& rel_files, std::map<std::string, Record>& records,
+                               const FileFilter* filter, size_t& n_parsed, size_t& n_skipped)
 {
-    std::string out;
-    for (size_t i = 0; i < p.size(); ++i) {
-        if (p[i] == '/' && !out.empty() && out[out.size() - 1] == '/') continue;
-        out += p[i];
+    int err = GRIB_SUCCESS;  // all files are parsed, so that every failure is reported
+    for (std::set<std::string>::const_iterator it = rel_files.begin(); it != rel_files.end(); ++it) {
+        const std::string& rel = *it;
+        ConceptFile cf;
+        if (!classify_concept_file(rel, cf)) continue;
+        if (filter && !filter->wants(cf.edition, cf.switches, cf.legacy, cf.scope)) {
+            n_skipped++;
+            continue;
+        }
+        const char* full = grib_context_full_defs_path(ctx, rel.c_str());
+        if (!full) {  // listed, but gone meanwhile
+            errorf("Cannot find concept file %s", rel.c_str());
+            err = GRIB_IO_PROBLEM;
+            continue;
+        }
+        n_parsed++;
+        const int perr = parse_def_file(full, cf.concept, cf.edition, cf.switches, cf.legacy, cf.scope, rel, records);
+        if (perr != GRIB_SUCCESS) err = perr;
     }
-    while (out.size() > 1 && out[out.size() - 1] == '/')
-        out.erase(out.size() - 1);
-    return out;
-}
-
-// Definitions roots in priority order: --definitions-root if given, otherwise the
-// definitions path of the ecCodes library itself, i.e. ECCODES_EXTRA_DEFINITION_PATH,
-// then ECCODES_DEFINITION_PATH or the built-in default (which may be MEMFS).
-static std::vector<std::string> definitions_roots(const Options& opt, grib_context* ctx, bool& from_option)
-{
-    const char sep = path_delimiter_char();
-    from_option = !opt.definitions_root.empty();
-    std::vector<std::string> roots;
-    if (from_option) {
-        roots = split(opt.definitions_root, sep);
-    }
-    else {
-        const char* p = grib_definition_path(ctx);
-        if (p) roots = split(p, sep);
-    }
-    uniq(roots);
-    return roots;
+    return err;
 }
 
 // Split a key=value list at commas outside array brackets, so that values such as [102,2]
@@ -968,8 +961,8 @@ static std::string usage_text(const char* prog)
       << "                        ECCODES_DEFINITION_PATH or the built-in default (which\n"
       << "                        may be MEMFS), with the built-in default appended\n"
       << "  --debug-path-resolution\n"
-      << "                        Print resolved definitions path candidates and\n"
-      << "                        selected roots to stderr. Also reports concept files\n"
+      << "                        Print the ecCodes definitions path and its\n"
+      << "                        directories to stderr. Also reports concept files\n"
       << "                        read from disk which a MEMFS build would not find,\n"
       << "                        and how many concept files were parsed and skipped\n"
       << "  --columns COLUMNS     Comma-separated list of output columns to show. Valid\n"
@@ -1516,43 +1509,41 @@ int main(int argc, char** argv)
         }
     }
 
+    // The definitions are found as in ecCodes, by ecCodes itself: --definitions-root replaces
+    // the definitions path of the context (without the built-in default and
+    // ECCODES_EXTRA_DEFINITION_PATH), before any definition file is looked up
     grib_context* ctx = grib_context_get_default();
+    if (!opt.definitions_root.empty()) grib_context_set_definitions_path(ctx, opt.definitions_root.c_str());
     const char* def_path = grib_definition_path(ctx);
-    bool roots_from_option = false;
-    std::vector<std::string> candidates = definitions_roots(opt, ctx, roots_from_option);
+    const std::vector<std::string> dirs = definitions_dirs(ctx);
 
-    // Usable roots in priority order (MEMFS or existing directories), without duplicates
-    std::vector<std::string> roots;
-    std::set<std::string> seen_real_roots;
-    for (size_t i = 0; i < candidates.size(); ++i) {
-        const std::string& r = candidates[i];
-        // MEMFS paths cannot be resolved: compare them without repeated or trailing slashes,
-        // so that /MEMFS/definitions/ and /MEMFS/definitions are one root but other prefixes stay
-        std::string canonical = normalize_memfs_path(r);
-        if (!starts_with(r, "/MEMFS")) {
-            if (!is_dir(r)) {
-                if (roots_from_option) warningf("Ignoring non-directory definitions root: %s", r.c_str());
-                continue;
-            }
-            char* real = codes_resolve_path(ctx, r.c_str());
-            canonical = real ? std::string(real) : r;
-            grib_context_free(ctx, real);
+    bool used_filesystem_backend = false;
+    bool used_memfs_backend = false;
+    for (size_t i = 0; i < dirs.size(); ++i) {
+        if (starts_with(dirs[i], "/MEMFS")) {
+            used_memfs_backend = true;
         }
-        if (!seen_real_roots.insert(canonical).second) continue;
-        roots.push_back(r);
+        else if (is_dir(dirs[i])) {
+            used_filesystem_backend = true;
+        }
+        else if (!opt.definitions_root.empty()) {
+            warningf("Ignoring non-directory definitions root: %s", dirs[i].c_str());
+        }
     }
 
     if (opt.debug_path_resolution) {
         fprintf(stderr, "DEBUG: ecCodes definitions path: %s\n", def_path ? def_path : "<unavailable>");
-        fprintf(stderr, "DEBUG: candidate roots (from %s):\n", roots_from_option ? "--definitions-root" : "ecCodes definitions path");
-        if (candidates.empty()) fprintf(stderr, "DEBUG:   <none>\n");
-        for (size_t i = 0; i < candidates.size(); ++i)
-            fprintf(stderr, "DEBUG:   %s\n", candidates[i].c_str());
+        fprintf(stderr, "DEBUG: definitions directories (first match wins):\n");
+        if (dirs.empty()) fprintf(stderr, "DEBUG:   <none>\n");
+        for (size_t i = 0; i < dirs.size(); ++i)
+            fprintf(stderr, "DEBUG:   %s\n", dirs[i].c_str());
+    }
 
-        fprintf(stderr, "DEBUG: selected roots (first match wins):\n");
-        if (roots.empty()) fprintf(stderr, "DEBUG:   <none>\n");
-        for (size_t i = 0; i < roots.size(); ++i)
-            fprintf(stderr, "DEBUG:   %s\n", roots[i].c_str());
+    // The concept files of all directories, in path order
+    std::set<std::string> rel_files;
+    bool scan_failed = false;
+    for (size_t i = 0; i < dirs.size(); ++i) {
+        if (list_concept_files(dirs[i], rel_files, opt.debug_path_resolution) != GRIB_SUCCESS) scan_failed = true;
     }
 
     FileFilter file_filter;
@@ -1568,26 +1559,13 @@ int main(int argc, char** argv)
     }
 
     std::map<std::string, Record> records_by_key;
-    bool used_filesystem_backend = false;
-    bool used_memfs_backend = false;
-    bool scan_failed = false;
 
-    // Both kinds of root are read in-process: codes_access/codes_fopen serve /MEMFS paths from memory
-    auto scan_all_roots = [&](const FileFilter* filter, bool debug) {
-        std::set<std::string> claimed_files;
-        size_t n_skipped = 0;
-        for (size_t i = 0; i < roots.size(); ++i) {
-            if (starts_with(roots[i], "/MEMFS"))
-                used_memfs_backend = true;
-            else
-                used_filesystem_backend = true;
-            if (scan_definitions(roots[i], records_by_key, claimed_files, filter, n_skipped, debug) != GRIB_SUCCESS)
-                scan_failed = true;
-        }
-        if (opt.debug_path_resolution) {
-            fprintf(stderr, "DEBUG: concept files parsed: %zu, skipped by filters: %zu\n",
-                    claimed_files.size() - n_skipped, n_skipped);
-        }
+    // Files on disk and in MEMFS are both read in-process: codes_fopen serves /MEMFS paths from memory
+    auto parse_all = [&](const FileFilter* filter, bool debug) {
+        size_t n_parsed = 0, n_skipped = 0;
+        if (parse_concept_files(ctx, rel_files, records_by_key, filter, n_parsed, n_skipped) != GRIB_SUCCESS)
+            scan_failed = true;
+        if (debug) fprintf(stderr, "DEBUG: concept files parsed: %zu, skipped by filters: %zu\n", n_parsed, n_skipped);
     };
 
     // Whether the checks below which look at all definitions (any results at all, known --attr
@@ -1607,16 +1585,17 @@ int main(int argc, char** argv)
         return false;
     };
 
+    // Parsed also after a directory listing error, so that every failure is reported
     if (file_filter.active()) {
-        scan_all_roots(&file_filter, opt.debug_path_resolution);
+        parse_all(&file_filter, opt.debug_path_resolution);
         if (!scan_failed && needs_all_files()) {
             if (opt.debug_path_resolution) fprintf(stderr, "DEBUG: reading all concept files to check the query\n");
             records_by_key.clear();
-            scan_all_roots(NULL, false);
+            parse_all(NULL, false);
         }
     }
     else {
-        scan_all_roots(NULL, opt.debug_path_resolution);
+        parse_all(NULL, opt.debug_path_resolution);
     }
     release_previous_concept_list();
     // ecCodes fails on a broken concept file as well: no partial results
