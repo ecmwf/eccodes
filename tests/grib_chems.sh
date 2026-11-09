@@ -326,5 +326,26 @@ if [ $HAVE_MEMFS -eq 1 ]; then
     export ECCODES_DEFINITION_PATH=$saved_def_path
 fi
 
+# JSON output
+${tools_dir}/grib_chems --help > $tempA
+grep -q -- "--format {line,table,json}" $tempA
+${tools_dir}/grib_chems --chemFormula O3 --format json > $tempA
+cat > $tempB <<EOF
+[
+  {"edition": 2, "scope": "grib2", "chemId": 236, "chemShortName": "O3", "chemName": "Ozone", "chemFormula": "O3"}
+]
+EOF
+diff $tempB $tempA
+${tools_dir}/grib_chems --chemFormula O3 --columns chemId,encoding --format json > $tempA
+grep -q '{"chemId": 236, "encoding": {' $tempA
+# No results: stdout stays valid JSON, message on stderr, exit status 1
+set +e
+${tools_dir}/grib_chems --chemId 123456789 --format json > $tempA 2> $tempErr
+status=$?
+set -e
+[ $status -eq 1 ]
+[ "$(cat $tempA)" = "[]" ]
+grep -q "No matching parameters found." $tempErr
+
 # Clean up
 rm -f $tempA $tempB $tempErr

@@ -858,7 +858,7 @@ static std::string short_usage_text(const char* prog)
       << "                        [--attr ATTR] [--attr-strict] [--attrkey ATTRKEY] [--nattrkey NATTRKEY]\n"
       << "                        [--nattr NATTR] [--regex-case-sensitive]\n"
       << "                        [--show-encoding] [--show-sources]\n"
-      << "                        [--format {line,table}] [--order {asc,desc}] [--order-by FIELD] [--no-truncate]\n";
+      << "                        [--format {line,table,json}] [--order {asc,desc}] [--order-by FIELD] [--no-truncate]\n";
     return o.str();
 }
 
@@ -876,7 +876,7 @@ static std::string usage_text(const char* prog)
       << "                        [--attr ATTR] [--attr-strict] [--attrkey ATTRKEY] [--nattrkey NATTRKEY]\n"
       << "                        [--nattr NATTR] [--regex-case-sensitive]\n"
       << "                        [--show-encoding] [--show-sources]\n"
-      << "                        [--format {line,table}] [--order {asc,desc}] [--order-by FIELD] [--no-truncate]\n"
+      << "                        [--format {line,table,json}] [--order {asc,desc}] [--order-by FIELD] [--no-truncate]\n"
       << "\n"
       << "Query chemical constituent definitions in ecCodes concept files.\n"
       << "\n"
@@ -935,8 +935,10 @@ static std::string usage_text(const char* prog)
       << "                        conditions)\n"
       << "  --show-sources        Show source definition files contributing to each\n"
       << "                        result\n"
-      << "  --format {line,table}\n"
-      << "                        Output format: line (default) or table\n"
+      << "  --format {line,table,json}\n"
+      << "                        Output format: line (default), table or json.\n"
+      << "                        json prints an array with one object per result;\n"
+      << "                        merged duplicates are arrays, missing values null\n"
       << "  --order {asc,desc}    Sort order for results by edition/scope/chemId\n"
       << "                        ascending (default) or descending\n"
       << "  --order-by FIELD      Primary sort fields (comma-separated, in priority\n"
@@ -1054,8 +1056,8 @@ static int parse_args(int argc, char** argv, Options& opt, std::string& err)
         else if (key == "--format") {
             if (!need_value("--format")) return -1;
             opt.format = val;
-            if (!(opt.format == "line" || opt.format == "table")) {
-                err = "--format must be one of: line, table";
+            if (!(opt.format == "line" || opt.format == "table" || opt.format == "json")) {
+                err = "--format must be one of: line, table, json";
                 return -1;
             }
         }
@@ -1173,6 +1175,148 @@ static std::string table_value(const Record& rec, const std::string& key)
         return out;
     }
     return "-";
+}
+
+// JSON output (--format json)
+
+static std::string json_escape(const std::string& s)
+{
+    std::string out = "\"";
+    for (size_t i = 0; i < s.size(); ++i) {
+        const unsigned char c = static_cast<unsigned char>(s[i]);
+        switch (c) {
+            case '"':
+                out += "\\\"";
+                break;
+            case '\\':
+                out += "\\\\";
+                break;
+            case '\n':
+                out += "\\n";
+                break;
+            case '\r':
+                out += "\\r";
+                break;
+            case '\t':
+                out += "\\t";
+                break;
+            default:
+                if (c < 0x20) {
+                    char buf[8];
+                    snprintf(buf, sizeof(buf), "\\u%04x", c);
+                    out += buf;
+                }
+                else {
+                    out += s[i];
+                }
+        }
+    }
+    return out + "\"";
+}
+
+static bool is_digit_at(const std::string& s, size_t i)
+{
+    return i < s.size() && isdigit(static_cast<unsigned char>(s[i]));
+}
+
+// True if s is a number in JSON syntax, e.g. 167, -1, 0.5 or 1e-05
+static bool is_json_number(const std::string& s)
+{
+    size_t i = 0;
+    if (i < s.size() && s[i] == '-') ++i;
+    if (!is_digit_at(s, i)) return false;
+    if (s[i] == '0') {
+        ++i;
+    }
+    else {
+        while (is_digit_at(s, i))
+            ++i;
+    }
+    if (i < s.size() && s[i] == '.') {
+        ++i;
+        if (!is_digit_at(s, i)) return false;
+        while (is_digit_at(s, i))
+            ++i;
+    }
+    if (i < s.size() && (s[i] == 'e' || s[i] == 'E')) {
+        ++i;
+        if (i < s.size() && (s[i] == '+' || s[i] == '-')) ++i;
+        if (!is_digit_at(s, i)) return false;
+        while (is_digit_at(s, i))
+            ++i;
+    }
+    return i == s.size();
+}
+
+static std::string json_scalar(const std::string& s, bool numeric)
+{
+    return (numeric && is_json_number(s)) ? s : json_escape(s);
+}
+
+// Encoding value as printed by --show-encoding: numbers stay numbers and
+// integer arrays such as [102,2] become JSON arrays
+static std::string json_attr_value(const std::string& v)
+{
+    if (v.size() >= 2 && v[0] == '[' && v[v.size() - 1] == ']') {
+        const std::string inner = v.substr(1, v.size() - 2);
+        std::string out = "[";
+        bool all_numbers = true;
+        size_t start = 0;
+        while (!inner.empty()) {
+            size_t comma = inner.find(',', start);
+            const std::string item = trim(inner.substr(start, comma == std::string::npos ? std::string::npos : comma - start));
+            if (!is_json_number(item)) {
+                all_numbers = false;
+                break;
+            }
+            if (start) out += ", ";
+            out += item;
+            if (comma == std::string::npos) break;
+            start = comma + 1;
+        }
+        if (all_numbers) return out + "]";
+    }
+    return json_scalar(v, true);
+}
+
+// Concept values: one value as a scalar, merged duplicates as an array
+static std::string json_values(const Record& rec, const std::string& key, bool numeric)
+{
+    std::map<std::string, std::vector<std::string> >::const_iterator it = rec.values.find(key);
+    if (it == rec.values.end() || it->second.empty()) return "null";
+    if (it->second.size() == 1) return json_scalar(it->second[0], numeric);
+    std::string out = "[";
+    for (size_t i = 0; i < it->second.size(); ++i) {
+        if (i) out += ", ";
+        out += json_scalar(it->second[i], numeric);
+    }
+    return out + "]";
+}
+
+static std::string json_value(const Record& rec, const std::string& key)
+{
+    if (key == "edition") return std::to_string(rec.edition);
+    if (key == "is_mtg2_switch") return rec.sw < 0 ? "null" : std::to_string(rec.sw);
+    if (key == "scope") return json_escape(rec.scope);
+    if (key == "chemId") return json_values(rec, key, true);
+    if (key == "chemShortName" || key == "chemName" || key == "chemFormula") return json_values(rec, key, false);
+    if (key == "encoding") {
+        std::string out = "{";
+        for (std::map<std::string, std::string>::const_iterator it = rec.attrs.begin(); it != rec.attrs.end(); ++it) {
+            if (out.size() > 1) out += ", ";
+            out += json_escape(it->first) + ": " + json_attr_value(it->second);
+        }
+        return out + "}";
+    }
+    if (key == "sources") {
+        std::string out = "[";
+        for (size_t i = 0; i < rec.sources.size(); ++i) {
+            if (i) out += ", ";
+            out += json_escape(rec.sources[i]);
+        }
+        return out + "]";
+    }
+    return "null";
 }
 
 static std::string truncate_cell(const std::string& s, size_t width)
@@ -1641,7 +1785,14 @@ int main(int argc, char** argv)
     }
 
     if (filtered.empty()) {
-        printf("No matching parameters found.\n");
+        if (opt.format == "json") {
+            // Keep stdout valid JSON
+            printf("[]\n");
+            fprintf(stderr, "No matching parameters found.\n");
+        }
+        else {
+            printf("No matching parameters found.\n");
+        }
         return 1;
     }
 
@@ -1677,6 +1828,32 @@ int main(int argc, char** argv)
                 printf("  sources: %s\n", table_value(r, "sources").c_str());
             }
         }
+        return 0;
+    }
+
+    if (opt.format == "json") {
+        std::vector<std::string> cols = selected_columns;
+        if (cols.empty()) {
+            cols.push_back("edition");
+            cols.push_back("scope");
+            cols.push_back("chemId");
+            cols.push_back("chemShortName");
+            cols.push_back("chemName");
+            cols.push_back("chemFormula");
+            if (opt.show_encoding) cols.push_back("encoding");
+            if (opt.show_sources) cols.push_back("sources");
+        }
+        printf("[\n");
+        for (size_t i = 0; i < filtered.size(); ++i) {
+            std::string line = "  {";
+            for (size_t c = 0; c < cols.size(); ++c) {
+                if (c) line += ", ";
+                line += json_escape(cols[c]) + ": " + json_value(filtered[i], cols[c]);
+            }
+            line += (i + 1 < filtered.size()) ? "}," : "}";
+            printf("%s\n", line.c_str());
+        }
+        printf("]\n");
         return 0;
     }
 

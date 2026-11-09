@@ -80,8 +80,10 @@
         Print encoding key/value constraints for each result.
  \n \n --show-sources \n
         Print source definition files contributing to each result.
- \n \n --format line|table \n
-        Output format. Default is line.
+ \n \n --format line|table|json \n
+        Output format. Default is line. json prints an array with one object per
+        result. Values of merged duplicates are arrays, missing values are null,
+        --show-encoding adds an encoding object and --show-sources a sources array.
  \n \n --order asc|desc \n
         Sort order. Default is asc. Without --order-by, records are sorted by
         edition, scope and chemId.
@@ -106,5 +108,10 @@ grib_chems --chemId-regex '^1[0-9]+$'
 -# Show the encoding of all oxides in table format:
 \verbatim
 grib_chems --chemName '*oxide*' --columns chemId,chemShortName,chemName,encoding --format table --no-truncate
+\endverbatim
+
+-# Entries for a formula as JSON:
+\verbatim
+grib_chems --chemFormula O3 --format json
 \endverbatim
 */

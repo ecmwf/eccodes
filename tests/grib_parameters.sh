@@ -484,5 +484,43 @@ if [ $HAVE_MEMFS -eq 1 ]; then
     export ECCODES_DEFINITION_PATH=$saved_def_path
 fi
 
+# JSON output
+${tools_dir}/grib_parameters --help > $tempA
+grep -q -- "--format {line,table,json}" $tempA
+${tools_dir}/grib_parameters --paramId 167 --scope grib2 --is_mtg2_switch 1 --format json > $tempA
+cat > $tempB <<EOF
+[
+  {"edition": 2, "is_mtg2_switch": 1, "is_legacy": 0, "scope": "grib2", "paramId": 167, "shortName": "2t", "name": "2 metre temperature", "units": "K"}
+]
+EOF
+diff $tempB $tempA
+# Edition 1 has no MTG2 switch and no legacy files
+${tools_dir}/grib_parameters --paramId 167 --scope grib1 --columns edition,is_mtg2_switch,is_legacy --format json > $tempA
+grep -q '{"edition": 1, "is_mtg2_switch": null, "is_legacy": null}' $tempA
+# One object per result, as in the line format
+n_line=$(${tools_dir}/grib_parameters --paramId 167 --format line | wc -l)
+n_json=$(${tools_dir}/grib_parameters --paramId 167 --format json | grep -c '^  {')
+[ $n_line -eq $n_json ]
+# Merged duplicates are arrays
+${tools_dir}/grib_parameters --paramId 500417 --scope grib2/localConcepts/edzw --is_mtg2_switch 1 --columns paramId,shortName --format json > $tempA
+grep -q '{"paramId": \[500417, 500582\], "shortName": null}' $tempA
+# Encoding is an object: numbers stay numbers, integer arrays become arrays
+${tools_dir}/grib_parameters --paramId 132044 --edition 2 --is_mtg2_switch 1 --columns encoding --format json > $tempA
+grep -q '"typeOfStatisticalProcessing": \[102, 2\]' $tempA
+grep -q '"scaleFactorOfFirstFixedSurface": "missing()"' $tempA
+grep -q '"parameterCategory": 7,' $tempA
+# Quotes in names are escaped, sources are an array
+${tools_dir}/grib_parameters --name '*"first guess - analysis"*' --columns name,sources --format json > $tempA
+grep -q '"name": "RMS of difference \\"first guess - analysis\\" of kinetic energy"' $tempA
+grep -q '"sources": \["grib2/localConcepts/edzw/[^]]*"grib2/localConcepts/edzw/name.def"' $tempA
+# No results: stdout stays valid JSON, message on stderr, exit status 1
+set +e
+${tools_dir}/grib_parameters --paramId 123456789 --format json > $tempA 2> $tempErr
+status=$?
+set -e
+[ $status -eq 1 ]
+[ "$(cat $tempA)" = "[]" ]
+grep -q "No matching parameters found." $tempErr
+
 # Clean up
 rm -f $tempA $tempB $tempErr $tempGrib

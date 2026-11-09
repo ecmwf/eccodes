@@ -99,8 +99,10 @@
         Print encoding key/value constraints for each result.
  \n \n --show-sources \n
         Print source definition files contributing to each result.
- \n \n --format line|table \n
-        Output format. Default is line.
+ \n \n --format line|table|json \n
+        Output format. Default is line. json prints an array with one object per
+        result. Values of merged duplicates are arrays, missing values are null,
+        --show-encoding adds an encoding object and --show-sources a sources array.
  \n \n --order asc|desc \n
         Sort order. Default is asc. Without --order-by, records are sorted by
         edition, MTG2 switch, scope, paramId and is_legacy.
@@ -146,6 +148,11 @@ grib_parameters --is_legacy 1 --scope grib2/localConcepts/ecmf --is_mtg2_switch 
 \verbatim
 grib_parameters --format line
 grib_parameters --format line | grep 'paramId=\['
+\endverbatim
+
+-# Encoding of paramId 167 as JSON, e.g. for processing with jq:\n
+\verbatim
+grib_parameters --paramId 167 --edition 2 --show-encoding --format json
 \endverbatim
 
 -# Since which ecCodes version does paramId 263006 exist? Query the definitions of
