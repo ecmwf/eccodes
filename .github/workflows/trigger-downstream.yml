@@ -40,6 +40,7 @@ jobs:
       head-branch: ${{ steps.ctx.outputs.head-branch }}
       ci-conclusion: ${{ steps.ctx.outputs.ci-conclusion }}
       ci-url: ${{ steps.ctx.outputs.ci-url }}
+      ci-run-id: ${{ steps.ctx.outputs.ci-run-id }}
       ci-summary: ${{ steps.ctx.outputs.ci-summary }}
       pull-request: ${{ steps.ctx.outputs.pull-request }}
       hpc-only: ${{ steps.ctx.outputs.hpc-only }}
@@ -94,6 +95,159 @@ jobs:
     - ci-approval
     - context
     - label-gate
+  resolve:
+    if: ${{ (needs.context.outputs.ci-conclusion == 'success') && needs['label-gate'].outputs.run == 'true' }}
+    needs:
+    - ci-approval
+    - context
+    - label-gate
+    - validate
+    runs-on: ubuntu-latest
+    env:
+      ARTIFACT_S3_ENDPOINT: ${{ secrets.ARTIFACT_S3_ENDPOINT }}
+      ARTIFACT_S3_BUCKET: ${{ secrets.ARTIFACT_S3_BUCKET }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    outputs:
+      metkit: ${{ steps.r-metkit.outcome == 'success' && steps.r-metkit.outputs.json || '' }}
+      metkit-ref: ${{ steps.r-metkit.outcome == 'success' && steps.r-metkit.outputs.own-sha || '' }}
+      fdb: ${{ steps.r-fdb.outcome == 'success' && steps.r-fdb.outputs.json || '' }}
+      fdb-ref: ${{ steps.r-fdb.outcome == 'success' && steps.r-fdb.outputs.own-sha || '' }}
+      gribjump: ${{ steps.r-gribjump.outcome == 'success' && steps.r-gribjump.outputs.json || '' }}
+      gribjump-ref: ${{ steps.r-gribjump.outcome == 'success' && steps.r-gribjump.outputs.own-sha || '' }}
+      pins: ${{ steps.pins.outputs.pins }}
+    steps:
+    - id: mint
+      uses: actions/create-github-app-token@v3
+      with:
+        client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
+        private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
+        owner: ${{ github.repository_owner }}
+    - name: Pin the commits the upstream's CI resolved
+      env:
+        GH_TOKEN: ${{ steps.mint.outputs.token }}
+        HEAD_SHA: ${{ needs.context.outputs.head-sha }}
+        CI_RUN_ID: ${{ needs.context.outputs.ci-run-id }}
+      run: "set -euo pipefail\npins=\"${GITHUB_REPOSITORY}@${HEAD_SHA}\"\ndir=\"${RUNNER_TEMP}/resolved-pins\"\nif [ -n \"${CI_RUN_ID}\" ] && gh run download \"${CI_RUN_ID}\" --repo \"${GITHUB_REPOSITORY}\" \\\n     --name resolved-pins --dir \"$dir\" 2>/dev/null; then\n  while read -r pin; do\n    if [[ \"$pin\" =~ ^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+@[0-9a-f]{40}$ ]] && [[ \"$pin\" != \"${GITHUB_REPOSITORY}@\"* ]]; then\n      pins=\"$pins $pin\"\n    fi\n  done < <(tr ' ' '\\n' < \"$dir/pins.txt\")\n  echo \"Starting from the commits run ${CI_RUN_ID} resolved: $pins\"\nelse\n  echo \"::notice::No resolved-pins artifact on CI run '${CI_RUN_ID}'; the other repos resolve at their branch tips.\"\nfi\necho \"PINS=$pins\" >> \"$GITHUB_ENV\"\necho \"EXPECTED=\" >> \"$GITHUB_ENV\"\n"
+    - id: pick-metkit
+      if: (needs['label-gate'].outputs.depth == 'all' || needs['label-gate'].outputs.depth >= 1)
+      uses: ecmwf/ci-infrastructure/actions/pick-ref@main
+      with:
+        repo: ecmwf/metkit
+        try-branch: ${{ needs.context.outputs.head-branch }}
+        fallback-ref: develop
+        token: ${{ steps.mint.outputs.token }}
+    - if: (needs['label-gate'].outputs.depth == 'all' || needs['label-gate'].outputs.depth >= 1)
+      uses: actions/checkout@v6
+      with:
+        repository: ecmwf/metkit
+        ref: ${{ steps.pick-metkit.outputs.ref }}
+        token: ${{ steps.mint.outputs.token }}
+        persist-credentials: false
+        path: .downstream/metkit
+        sparse-checkout: .ci
+    - name: Resolve metkit
+      id: r-metkit
+      if: (needs['label-gate'].outputs.depth == 'all' || needs['label-gate'].outputs.depth >= 1)
+      continue-on-error: true
+      uses: ecmwf/ci-infrastructure/actions/resolve-deps@main
+      with:
+        manifest: .downstream/metkit/.ci/manifest.toml
+        current-branch: ${{ steps.pick-metkit.outputs.ref }}
+        pin: ${{ env.PINS }}
+        expected-artifacts: ${{ env.EXPECTED }}
+        matrix: build,python
+        token: ${{ steps.mint.outputs.token }}
+        client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
+        app-private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
+    - name: Carry metkit's commits to the next consumer
+      if: steps.r-metkit.outcome == 'success'
+      env:
+        R_PINS: ${{ steps.r-metkit.outputs.pins }}
+        R_ARTIFACTS: ${{ steps.r-metkit.outputs.artifacts }}
+      run: 'echo "PINS=${R_PINS}" >> "$GITHUB_ENV"
+
+        echo "EXPECTED=${EXPECTED} ${R_ARTIFACTS}" >> "$GITHUB_ENV"'
+    - id: pick-fdb
+      if: (needs['label-gate'].outputs.depth == 'all' || needs['label-gate'].outputs.depth >= 2)
+      uses: ecmwf/ci-infrastructure/actions/pick-ref@main
+      with:
+        repo: ecmwf/fdb
+        try-branch: ${{ needs.context.outputs.head-branch }}
+        fallback-ref: develop
+        token: ${{ steps.mint.outputs.token }}
+    - if: (needs['label-gate'].outputs.depth == 'all' || needs['label-gate'].outputs.depth >= 2)
+      uses: actions/checkout@v6
+      with:
+        repository: ecmwf/fdb
+        ref: ${{ steps.pick-fdb.outputs.ref }}
+        token: ${{ steps.mint.outputs.token }}
+        persist-credentials: false
+        path: .downstream/fdb
+        sparse-checkout: .ci
+    - name: Resolve fdb
+      id: r-fdb
+      if: (needs['label-gate'].outputs.depth == 'all' || needs['label-gate'].outputs.depth >= 2)
+      continue-on-error: true
+      uses: ecmwf/ci-infrastructure/actions/resolve-deps@main
+      with:
+        manifest: .downstream/fdb/.ci/manifest.toml
+        current-branch: ${{ steps.pick-fdb.outputs.ref }}
+        pin: ${{ env.PINS }}
+        expected-artifacts: ${{ env.EXPECTED }}
+        matrix: build,python
+        token: ${{ steps.mint.outputs.token }}
+        client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
+        app-private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
+    - name: Carry fdb's commits to the next consumer
+      if: steps.r-fdb.outcome == 'success'
+      env:
+        R_PINS: ${{ steps.r-fdb.outputs.pins }}
+        R_ARTIFACTS: ${{ steps.r-fdb.outputs.artifacts }}
+      run: 'echo "PINS=${R_PINS}" >> "$GITHUB_ENV"
+
+        echo "EXPECTED=${EXPECTED} ${R_ARTIFACTS}" >> "$GITHUB_ENV"'
+    - id: pick-gribjump
+      if: (needs['label-gate'].outputs.depth == 'all' || needs['label-gate'].outputs.depth >= 3)
+      uses: ecmwf/ci-infrastructure/actions/pick-ref@main
+      with:
+        repo: ecmwf/gribjump
+        try-branch: ${{ needs.context.outputs.head-branch }}
+        fallback-ref: develop
+        token: ${{ steps.mint.outputs.token }}
+    - if: (needs['label-gate'].outputs.depth == 'all' || needs['label-gate'].outputs.depth >= 3)
+      uses: actions/checkout@v6
+      with:
+        repository: ecmwf/gribjump
+        ref: ${{ steps.pick-gribjump.outputs.ref }}
+        token: ${{ steps.mint.outputs.token }}
+        persist-credentials: false
+        path: .downstream/gribjump
+        sparse-checkout: .ci
+    - name: Resolve gribjump
+      id: r-gribjump
+      if: (needs['label-gate'].outputs.depth == 'all' || needs['label-gate'].outputs.depth >= 3)
+      continue-on-error: true
+      uses: ecmwf/ci-infrastructure/actions/resolve-deps@main
+      with:
+        manifest: .downstream/gribjump/.ci/manifest.toml
+        current-branch: ${{ steps.pick-gribjump.outputs.ref }}
+        pin: ${{ env.PINS }}
+        expected-artifacts: ${{ env.EXPECTED }}
+        matrix: build,python
+        token: ${{ steps.mint.outputs.token }}
+        client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
+        app-private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
+    - name: Carry gribjump's commits to the next consumer
+      if: steps.r-gribjump.outcome == 'success'
+      env:
+        R_PINS: ${{ steps.r-gribjump.outputs.pins }}
+        R_ARTIFACTS: ${{ steps.r-gribjump.outputs.artifacts }}
+      run: 'echo "PINS=${R_PINS}" >> "$GITHUB_ENV"
+
+        echo "EXPECTED=${EXPECTED} ${R_ARTIFACTS}" >> "$GITHUB_ENV"'
+    - id: pins
+      run: echo "pins=${PINS}" >> "$GITHUB_OUTPUT"
   report-start:
     if: ${{ (needs.context.outputs.ci-conclusion == 'success') && needs['label-gate'].outputs.run == 'true' }}
     runs-on: ubuntu-latest
@@ -141,6 +295,7 @@ jobs:
     - context
     - label-gate
     - validate
+    - resolve
     - metkit
     uses: ecmwf/fdb/.github/workflows/cross-repo-trigger.yml@develop
     with:
@@ -149,6 +304,9 @@ jobs:
       from-jobs: '["eccodes/build"]'
       branch: ${{ needs.context.outputs.head-branch }}
       fallback-ref: develop
+      pin: ${{ needs.resolve.outputs.pins }}
+      resolved: ${{ needs.resolve.outputs.fdb }}
+      resolved-ref: ${{ needs.resolve.outputs.fdb-ref }}
     secrets: inherit
     if: ${{ needs['label-gate'].outputs.run == 'true' && (needs['label-gate'].outputs.depth == 'all' || needs['label-gate'].outputs.depth >= 2) }}
   gribjump:
@@ -158,6 +316,7 @@ jobs:
     - context
     - label-gate
     - validate
+    - resolve
     - fdb
     uses: ecmwf/gribjump/.github/workflows/cross-repo-trigger.yml@develop
     with:
@@ -166,6 +325,9 @@ jobs:
       from-jobs: '["eccodes/build"]'
       branch: ${{ needs.context.outputs.head-branch }}
       fallback-ref: develop
+      pin: ${{ needs.resolve.outputs.pins }}
+      resolved: ${{ needs.resolve.outputs.gribjump }}
+      resolved-ref: ${{ needs.resolve.outputs.gribjump-ref }}
     secrets: inherit
     if: ${{ needs['label-gate'].outputs.run == 'true' && (needs['label-gate'].outputs.depth == 'all' || needs['label-gate'].outputs.depth >= 3) }}
   metkit:
@@ -175,6 +337,7 @@ jobs:
     - context
     - label-gate
     - validate
+    - resolve
     uses: ecmwf/metkit/.github/workflows/cross-repo-trigger.yml@develop
     with:
       from-repo: ${{ github.repository }}
@@ -182,25 +345,11 @@ jobs:
       from-jobs: '["eccodes/build"]'
       branch: ${{ needs.context.outputs.head-branch }}
       fallback-ref: develop
+      pin: ${{ needs.resolve.outputs.pins }}
+      resolved: ${{ needs.resolve.outputs.metkit }}
+      resolved-ref: ${{ needs.resolve.outputs.metkit-ref }}
     secrets: inherit
     if: ${{ needs['label-gate'].outputs.run == 'true' && (needs['label-gate'].outputs.depth == 'all' || needs['label-gate'].outputs.depth >= 1) }}
-  mir:
-    name: mir
-    needs:
-    - ci-approval
-    - context
-    - label-gate
-    - validate
-    - metkit
-    uses: ecmwf/mir/.github/workflows/cross-repo-trigger.yml@develop
-    with:
-      from-repo: ${{ github.repository }}
-      from-sha: ${{ needs.context.outputs.head-sha }}
-      from-jobs: '["eccodes/build"]'
-      branch: ${{ needs.context.outputs.head-branch }}
-      fallback-ref: develop
-    secrets: inherit
-    if: ${{ needs['label-gate'].outputs.run == 'true' && (needs['label-gate'].outputs.depth == 'all' || needs['label-gate'].outputs.depth >= 2) }}
   zfdb:
     name: zfdb
     needs:
@@ -208,6 +357,7 @@ jobs:
     - context
     - label-gate
     - validate
+    - resolve
     - gribjump
     runs-on: ubuntu-latest
     steps:
@@ -227,6 +377,7 @@ jobs:
         from-jobs: '["eccodes/build"]'
         branch: ${{ needs.context.outputs.head-branch }}
         fallback-ref: develop
+        pin: ${{ needs.resolve.outputs.pins }}
         token: ${{ steps.mint.outputs.token }}
         artifact-names: ''
         wait-for-run-conclusion: 'true'
@@ -240,7 +391,6 @@ jobs:
     - fdb
     - gribjump
     - metkit
-    - mir
     - zfdb
     if: ${{ (always() && needs.context.outputs.ci-conclusion == 'success') && needs['label-gate'].outputs.run == 'true' }}
     runs-on: ubuntu-latest
@@ -252,7 +402,7 @@ jobs:
         GH_TOKEN: ${{ github.token }}
       run: |
         state=success
-        for r in ${{ needs.validate.result }} ${{ needs.fdb.result }} ${{ needs.gribjump.result }} ${{ needs.metkit.result }} ${{ needs.mir.result }} ${{ needs.zfdb.result }}; do
+        for r in ${{ needs.validate.result }} ${{ needs.fdb.result }} ${{ needs.gribjump.result }} ${{ needs.metkit.result }} ${{ needs.zfdb.result }}; do
           if [ "$r" = failure ] || [ "$r" = cancelled ]; then
             state=failure
           fi
