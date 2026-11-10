@@ -940,9 +940,17 @@ const std::map<std::string, Projected>& projected()
             "DiInMetres", "DjInMetres" } },
         { "polar_stereographic",
           { [](codes_handle* h) {
+               const auto south = (get_long(h, "projectionCentreFlag") & 128) != 0;
+
+               // GRIB1 LaD is 60 for either pole
+               auto lat_ts = get_double(h, "LaDInDegrees");
+               if (south && get_long(h, "edition") == 1) {
+                   lat_ts = -lat_ts;
+               }
+
                return new Custom{ { "type", "stere" },
-                                  { "lat_0", (get_long(h, "projectionCentreFlag") & 128) != 0 ? -90. : 90. },
-                                  { "lat_ts", get_double(h, "LaDInDegrees") },
+                                  { "lat_0", south ? -90. : 90. },
+                                  { "lat_ts", lat_ts },
                                   { "lon_0", get_double(h, "orientationOfTheGridInDegrees") } };
            },
             "DxInMetres", "DyInMetres" } },
