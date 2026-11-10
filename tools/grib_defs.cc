@@ -347,53 +347,88 @@ static int add_record_value(
     return 0;
 }
 
-// Text form of a concept condition value, e.g. 128, -2, missing(), [102,2]
-static std::string condition_value_text(const grib_concept_condition* cond)
+// The parsed structure of an expression, e.g. unop(long(2)) or binop(long(1),long(1)),
+// as printed by ecCodes. Without a handle, printing does not look up any key.
+static std::string expression_structure(const eccodes::Expression* e)
+{
+    std::string out;
+    FILE* f = tmpfile();
+    if (!f) return std::string(e->class_name()) + "(...)";
+    e->print(grib_context_get_default(), NULL, f);
+    rewind(f);
+    char buf[256];
+    size_t n;
+    while ((n = fread(buf, 1, sizeof(buf), f)) > 0)
+        out.append(buf, n);
+    fclose(f);
+    return out;
+}
+
+// Text form of a concept condition value, e.g. 128, -2, missing(), [102,2].
+// Concept files define constant values only. Anything else (an expression such as 1+1,
+// a key, another function) cannot be shown as a value, so false is returned and text
+// is the parsed structure, for the error message.
+static bool condition_value_text(const grib_concept_condition* cond, std::string& text)
 {
     char buf[64];
+    text.clear();
     if (cond->iarray) {
-        std::string out = "[";
+        text = "[";
         for (size_t i = 0; i < cond->iarray->n; ++i) {
-            if (i) out += ",";
+            if (i) text += ",";
             snprintf(buf, sizeof(buf), "%ld", cond->iarray->v[i]);
-            out += buf;
+            text += buf;
         }
-        return out + "]";
+        text += "]";
+        return true;
     }
 
     const eccodes::Expression* e = cond->expression;
-    if (!e) return "";
+    if (!e) return true;
     const std::string cls = e->class_name();
     if (cls == "string") {
         int err = 0;
         const char* s = e->evaluate_string(NULL, NULL, NULL, &err);
-        return (err == 0 && s) ? s : "";
+        if (err == 0 && s) text = s;
+        return true;
     }
     if (cls == "functor") {
+        // missing() is the only function concept files use. Its argument list is not
+        // accessible, so missing(key) cannot be told apart from missing()
         const eccodes::expression::Functor* f = dynamic_cast<const eccodes::expression::Functor*>(e);
-        return f ? std::string(const_cast<eccodes::expression::Functor*>(f)->name()) + "()" : "";
+        const char* name = f ? const_cast<eccodes::expression::Functor*>(f)->name() : NULL;
+        if (name && strcmp(name, "missing") == 0) {
+            text = "missing()";
+            return true;
+        }
     }
-    if (cls == "accessor") {
-        return e->get_name();
+    // Numbers. A negative number is parsed as a unary minus applied to a number; the
+    // operand is checked first, as evaluating e.g. -key would need a handle
+    bool constant = (cls == "long" || cls == "double");
+    if (cls == "unop") {
+        const std::string s = expression_structure(e);
+        constant = s.compare(0, 10, "unop(long(") == 0 || s.compare(0, 12, "unop(double(") == 0;
     }
-    // Constants (negative numbers are a unary minus applied to a constant)
-    if (cls == "long" || cls == "double" || cls == "unop") {
+    if (constant) {
         if (e->native_type(NULL) == GRIB_TYPE_DOUBLE) {
             double d = 0;
             if (e->evaluate_double(NULL, &d) == GRIB_SUCCESS) {
                 snprintf(buf, sizeof(buf), "%g", d);
-                return buf;
+                text = buf;
+                return true;
             }
         }
         else {
             long l = 0;
             if (e->evaluate_long(NULL, &l) == GRIB_SUCCESS) {
                 snprintf(buf, sizeof(buf), "%ld", l);
-                return buf;
+                text = buf;
+                return true;
             }
         }
     }
-    return std::string("<") + cls + ">";
+    text = expression_structure(e);
+    return false;
 }
 
 // Whether a concept file has any content besides white space and '#' comments.
@@ -475,18 +510,31 @@ static int parse_def_file(
     for (grib_concept_value* v = list; v; v = v->next)
         entries.push_back(v);
 
-    std::map<std::string, std::string> attrs;
-    for (size_t i = 0; i < entries.size(); ++i) {
-        attrs.clear();
-        for (grib_concept_condition* cond = entries[i]->conditions; cond; cond = cond->next) {
-            attrs[cond->name] = condition_value_text(cond);
-        }
-        for (size_t s = 0; s < switches.size(); ++s)
-            add_record_value(records, edition, switches[s], legacy, scope, attrs, concept_name, entries[i]->name, source);
-    }
-
     previous_concept_list = list;
-    return 0;
+
+    // All conditions are checked before any record is added: a file with an unsupported
+    // value contributes nothing
+    std::vector<std::map<std::string, std::string> > entry_attrs(entries.size());
+    int err = GRIB_SUCCESS;
+    for (size_t i = 0; i < entries.size(); ++i) {
+        for (grib_concept_condition* cond = entries[i]->conditions; cond; cond = cond->next) {
+            std::string text;
+            if (!condition_value_text(cond, text)) {
+                errorf("Unsupported value of %s in entry '%s' of concept file %s: %s. Only numbers, strings, "
+                       "integer arrays and missing() are supported",
+                       cond->name, entries[i]->name, file_path.c_str(), text.c_str());
+                err = GRIB_INVALID_FILE;
+            }
+            entry_attrs[i][cond->name] = text;
+        }
+    }
+    if (err != GRIB_SUCCESS) return err;
+
+    for (size_t i = 0; i < entries.size(); ++i) {
+        for (size_t s = 0; s < switches.size(); ++s)
+            add_record_value(records, edition, switches[s], legacy, scope, entry_attrs[i], concept_name, entries[i]->name, source);
+    }
+    return GRIB_SUCCESS;
 }
 
 // All regular files below root. As ecCodes opens files by path, symbolic links to files and

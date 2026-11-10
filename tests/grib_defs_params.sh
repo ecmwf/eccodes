@@ -398,6 +398,25 @@ status=$?
 set -e
 [ $status -eq 2 ]
 grep -q "Cannot parse concept file .*other/grib2/name.lte33.def" $tempErr
+# Concept files define constant values: numbers, strings, integer arrays and missing().
+# Anything else (an expression, a key, another function) is an error, not a value
+mkdir -p $badDir/values/grib2
+printf "'1' = { discipline = 0; scaledValueOfLowerLimit = -15; scaleFactorOfLowerLimit = -2.5; typeOfFirstFixedSurface = missing(); stepType = \"accum\"; levels = [1,2]; }\n" > $badDir/values/grib2/paramId.def
+${tools_dir}/grib_defs params --definitions-root $badDir/values --paramId 1 --columns encoding > $tempA
+grep -q "encoding=discipline=0, levels=\[1,2\], scaleFactorOfLowerLimit=-2.5, scaledValueOfLowerLimit=-15, stepType=accum, typeOfFirstFixedSurface=missing()" $tempA
+for value in "1 + 1" "2 * 3" "-(1 + 1)" "otherKey" "-otherKey" "defined(otherKey)"; do
+    printf "'1' = { discipline = 0; parameterNumber = $value; }\n" > $badDir/values/grib2/paramId.def
+    set +e
+    ${tools_dir}/grib_defs params --definitions-root $badDir/values --paramId 1 > $tempA 2> $tempErr
+    status=$?
+    set -e
+    [ $status -eq 2 ]
+    grep -q "Unsupported value of parameterNumber in entry '1' of concept file .*grib2/paramId.def" $tempErr
+    if grep -q "paramId=" $tempA; then
+        echo "Unexpected result for parameterNumber = $value"
+        exit 1
+    fi
+done
 rm -rf $badDir
 
 # Array values in --attr/--nattr: commas inside brackets do not separate pairs
