@@ -26665,7 +26665,7 @@
 	 parameterNumber = 0 ;
 	}
 #Temperature anomaly
-'ta' = {
+'t_a' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 9 ;
@@ -27938,7 +27938,7 @@
 	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Temperature anomaly
-'t_a' = {
+'ta' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;

@@ -924,17 +924,17 @@
 	 indicatorOfParameter = 24 ;
 	}
 #Temperature anomaly
-'ta' = {
+'t_a' = {
 	 table2Version = 3 ;
 	 indicatorOfParameter = 25 ;
 	}
 #Temperature anomaly
-'ta' = {
+'t_a' = {
 	 table2Version = 2 ;
 	 indicatorOfParameter = 25 ;
 	}
 #Temperature anomaly
-'ta' = {
+'t_a' = {
 	 table2Version = 1 ;
 	 indicatorOfParameter = 25 ;
 	}
