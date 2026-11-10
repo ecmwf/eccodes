@@ -34,7 +34,17 @@ on:
         type: string
         default: main
       pin:
-        description: owner/repo@sha the dispatching consumer was pinned to; only with rebuild-request
+        description: 'Space-separated owner/repo@sha to resolve against: those of the downstream runner, or of the consumer that requests a rebuild. Empty pins from-repo@from-sha alone.'
+        required: false
+        default: ''
+        type: string
+      resolved:
+        description: The resolve-deps json output for this repo's kinds, resolved by the downstream runner with the rest of its run. Empty resolves here.
+        required: false
+        default: ''
+        type: string
+      resolved-ref:
+        description: The commit of this repo that `resolved` is for
         required: false
         default: ''
         type: string
@@ -73,7 +83,17 @@ on:
         type: string
         default: main
       pin:
-        description: owner/repo@sha the dispatching consumer was pinned to; only with rebuild-request
+        description: 'Space-separated owner/repo@sha to resolve against: those of the downstream runner, or of the consumer that requests a rebuild. Empty pins from-repo@from-sha alone.'
+        required: false
+        default: ''
+        type: string
+      resolved:
+        description: The resolve-deps json output for this repo's kinds, resolved by the downstream runner with the rest of its run. Empty resolves here.
+        required: false
+        default: ''
+        type: string
+      resolved-ref:
+        description: The commit of this repo that `resolved` is for
         required: false
         default: ''
         type: string
@@ -90,12 +110,11 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 jobs:
   resolve:
-    if: contains(fromJSON(inputs.from-jobs), 'ecbuild/build') || contains(fromJSON(inputs.from-jobs), 'stack-deps/build') || contains(fromJSON(inputs.from-jobs), 'eckit/build') || inputs.rebuild-request
+    if: (contains(fromJSON(inputs.from-jobs), 'ecbuild/build') || contains(fromJSON(inputs.from-jobs), 'stack-deps/build') || contains(fromJSON(inputs.from-jobs), 'eckit/build') || inputs.rebuild-request) && !inputs.resolved
     runs-on: ubuntu-latest
     outputs:
-      ref: ${{ steps.pick.outputs.ref }}
-      matrix-build: ${{ toJSON(fromJSON(steps.r.outputs.json)['build']) }}
-      matrix-fortran: ${{ toJSON(fromJSON(steps.r.outputs.json)['fortran']) }}
+      ref: ${{ steps.r.outputs.own-sha }}
+      json: ${{ steps.r.outputs.json }}
     steps:
     - id: mint
       uses: actions/create-github-app-token@v3
@@ -120,7 +139,7 @@ jobs:
       uses: ecmwf/ci-infrastructure/actions/resolve-deps@main
       with:
         current-branch: ${{ steps.pick.outputs.ref }}
-        pin: ${{ !inputs.rebuild-request && format('{0}@{1}', inputs.from-repo, inputs.from-sha) || inputs.pin }}
+        pin: ${{ !inputs.rebuild-request && (inputs.pin || format('{0}@{1}', inputs.from-repo, inputs.from-sha)) || inputs.pin }}
         matrix: build,fortran
         token: ${{ steps.mint.outputs.token }}
         client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
@@ -128,14 +147,14 @@ jobs:
   eccodes__build:
     needs:
     - resolve
-    if: contains(fromJSON(inputs.from-jobs), 'ecbuild/build') || contains(fromJSON(inputs.from-jobs), 'stack-deps/build') || contains(fromJSON(inputs.from-jobs), 'eckit/build') || inputs.rebuild-request
+    if: ${{ !failure() && !cancelled() && (contains(fromJSON(inputs.from-jobs), 'ecbuild/build') || contains(fromJSON(inputs.from-jobs), 'stack-deps/build') || contains(fromJSON(inputs.from-jobs), 'eckit/build') || inputs.rebuild-request) }}
     name: eccodes/build (${{ matrix._resolved['job-name'] }})
     runs-on: ${{ matrix['runs-on'] }}
     container:
       image: ${{ matrix.container || '' }}
     strategy:
       fail-fast: false
-      matrix: ${{ fromJSON(needs.resolve.outputs.matrix-build) }}
+      matrix: ${{ fromJSON(inputs.resolved || needs.resolve.outputs.json)['build'] }}
     steps:
     - id: mint
       uses: actions/create-github-app-token@v3
@@ -161,7 +180,7 @@ jobs:
     - uses: actions/checkout@v6
       with:
         repository: ecmwf/eccodes
-        ref: ${{ needs.resolve.outputs.ref }}
+        ref: ${{ inputs.resolved-ref || needs.resolve.outputs.ref }}
         token: ${{ steps.mint.outputs.token }}
         persist-credentials: false
     - name: Decode matrix-leg
@@ -226,14 +245,14 @@ jobs:
   eccodes__fortran:
     needs:
     - resolve
-    if: contains(fromJSON(inputs.from-jobs), 'ecbuild/build') || contains(fromJSON(inputs.from-jobs), 'stack-deps/build') || contains(fromJSON(inputs.from-jobs), 'eckit/build') || inputs.rebuild-request
+    if: ${{ !failure() && !cancelled() && (contains(fromJSON(inputs.from-jobs), 'ecbuild/build') || contains(fromJSON(inputs.from-jobs), 'stack-deps/build') || contains(fromJSON(inputs.from-jobs), 'eckit/build') || inputs.rebuild-request) }}
     name: eccodes/fortran (${{ matrix._resolved['job-name'] }})
     runs-on: ${{ matrix['runs-on'] }}
     container:
       image: ${{ matrix.container || '' }}
     strategy:
       fail-fast: false
-      matrix: ${{ fromJSON(needs.resolve.outputs.matrix-fortran) }}
+      matrix: ${{ fromJSON(inputs.resolved || needs.resolve.outputs.json)['fortran'] }}
     steps:
     - id: mint
       uses: actions/create-github-app-token@v3
@@ -259,7 +278,7 @@ jobs:
     - uses: actions/checkout@v6
       with:
         repository: ecmwf/eccodes
-        ref: ${{ needs.resolve.outputs.ref }}
+        ref: ${{ inputs.resolved-ref || needs.resolve.outputs.ref }}
         token: ${{ steps.mint.outputs.token }}
         persist-credentials: false
     - name: Decode matrix-leg
