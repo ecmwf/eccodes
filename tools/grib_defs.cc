@@ -1070,7 +1070,7 @@ static std::string usage_text(const std::string& prog)
         if (fc[i] == P->name) example = std::string(", e.g. '") + P->name_example + "'";
         if (fc[i] == P->short_name) example = std::string(", e.g. '") + P->short_name_example + "'";
         option_help(o, "  --" + fc[i] + " " + to_upper(fc[i]), "Wildcard pattern for " + fc[i] + example);
-        option_help(o, "  --" + fc[i] + "-regex " + to_upper(fc[i]) + "_REGEX", "PCRE2-style regex for " + fc[i]);
+        option_help(o, "  --" + fc[i] + "-regex " + to_upper(fc[i]) + "_REGEX", "ECMAScript regex (C++ std::regex) for " + fc[i]);
     }
     o << "  --attr ATTR           Filter by attribute key/value pairs as\n"
       << "                        key=value,key=value. Non-strict mode matches entries\n"

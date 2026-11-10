@@ -73,6 +73,8 @@
         with the list of available scopes.
  \n \n --regex-case-sensitive \n
         Make regex filters case-sensitive. By default they are case-insensitive.
+        The -regex filters use the ECMAScript syntax of C++ std::regex,
+        matched anywhere in the value; use ^ and $ to anchor.
  \n \n --attr key=value,key=value,... \n
         Filter by encoding. A record matches when its encoding contains at least
         the listed key/value pairs. Array values are written as --show-encoding
