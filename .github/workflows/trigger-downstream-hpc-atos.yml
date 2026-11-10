@@ -111,6 +111,8 @@ jobs:
     outputs:
       metkit: ${{ steps.r-metkit.outcome == 'success' && steps.r-metkit.outputs.json || '' }}
       metkit-ref: ${{ steps.r-metkit.outcome == 'success' && steps.r-metkit.outputs.own-sha || '' }}
+      mir: ${{ steps.r-mir.outcome == 'success' && steps.r-mir.outputs.json || '' }}
+      mir-ref: ${{ steps.r-mir.outcome == 'success' && steps.r-mir.outputs.own-sha || '' }}
       fdb: ${{ steps.r-fdb.outcome == 'success' && steps.r-fdb.outputs.json || '' }}
       fdb-ref: ${{ steps.r-fdb.outcome == 'success' && steps.r-fdb.outputs.own-sha || '' }}
       gribjump: ${{ steps.r-gribjump.outcome == 'success' && steps.r-gribjump.outputs.json || '' }}
@@ -165,6 +167,45 @@ jobs:
       env:
         R_PINS: ${{ steps.r-metkit.outputs.pins }}
         R_ARTIFACTS: ${{ steps.r-metkit.outputs.artifacts }}
+      run: 'echo "PINS=${R_PINS}" >> "$GITHUB_ENV"
+
+        echo "EXPECTED=${EXPECTED} ${R_ARTIFACTS}" >> "$GITHUB_ENV"'
+    - id: pick-mir
+      if: (needs['label-gate'].outputs.depth == 'all' || needs['label-gate'].outputs.depth >= 1)
+      uses: ecmwf/ci-infrastructure/actions/pick-ref@main
+      with:
+        repo: ecmwf/mir
+        try-branch: ${{ needs.context.outputs.head-branch }}
+        fallback-ref: develop
+        token: ${{ steps.mint.outputs.token }}
+    - if: (needs['label-gate'].outputs.depth == 'all' || needs['label-gate'].outputs.depth >= 1)
+      uses: actions/checkout@v6
+      with:
+        repository: ecmwf/mir
+        ref: ${{ steps.pick-mir.outputs.ref }}
+        token: ${{ steps.mint.outputs.token }}
+        persist-credentials: false
+        path: .downstream/mir
+        sparse-checkout: .ci
+    - name: Resolve mir
+      id: r-mir
+      if: (needs['label-gate'].outputs.depth == 'all' || needs['label-gate'].outputs.depth >= 1)
+      continue-on-error: true
+      uses: ecmwf/ci-infrastructure/actions/resolve-deps@main
+      with:
+        manifest: .downstream/mir/.ci/manifest.toml
+        current-branch: ${{ steps.pick-mir.outputs.ref }}
+        pin: ${{ env.PINS }}
+        expected-artifacts: ${{ env.EXPECTED }}
+        matrix: build-hpc
+        token: ${{ steps.mint.outputs.token }}
+        client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
+        app-private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
+    - name: Carry mir's commits to the next consumer
+      if: steps.r-mir.outcome == 'success'
+      env:
+        R_PINS: ${{ steps.r-mir.outputs.pins }}
+        R_ARTIFACTS: ${{ steps.r-mir.outputs.artifacts }}
       run: 'echo "PINS=${R_PINS}" >> "$GITHUB_ENV"
 
         echo "EXPECTED=${EXPECTED} ${R_ARTIFACTS}" >> "$GITHUB_ENV"'
@@ -350,6 +391,26 @@ jobs:
       resolved-ref: ${{ needs.resolve.outputs.metkit-ref }}
     secrets: inherit
     if: ${{ needs['label-gate'].outputs.run == 'true' && (needs['label-gate'].outputs.depth == 'all' || needs['label-gate'].outputs.depth >= 1) }}
+  mir:
+    name: mir
+    needs:
+    - ci-approval
+    - context
+    - label-gate
+    - validate
+    - resolve
+    uses: ecmwf/mir/.github/workflows/cross-repo-trigger-hpc-atos.yml@develop
+    with:
+      from-repo: ${{ github.repository }}
+      from-sha: ${{ needs.context.outputs.head-sha }}
+      from-jobs: '["eccodes/build-hpc"]'
+      branch: ${{ needs.context.outputs.head-branch }}
+      fallback-ref: develop
+      pin: ${{ needs.resolve.outputs.pins }}
+      resolved: ${{ needs.resolve.outputs.mir }}
+      resolved-ref: ${{ needs.resolve.outputs.mir-ref }}
+    secrets: inherit
+    if: ${{ needs['label-gate'].outputs.run == 'true' && (needs['label-gate'].outputs.depth == 'all' || needs['label-gate'].outputs.depth >= 1) }}
   zfdb:
     name: zfdb
     needs:
@@ -392,6 +453,7 @@ jobs:
     - fdb
     - gribjump
     - metkit
+    - mir
     - zfdb
     if: ${{ (always() && needs.context.outputs.ci-conclusion == 'success') && needs['label-gate'].outputs.run == 'true' }}
     runs-on: ubuntu-latest
@@ -403,7 +465,7 @@ jobs:
         GH_TOKEN: ${{ github.token }}
       run: |
         state=success
-        for r in ${{ needs.validate.result }} ${{ needs.fdb.result }} ${{ needs.gribjump.result }} ${{ needs.metkit.result }} ${{ needs.zfdb.result }}; do
+        for r in ${{ needs.validate.result }} ${{ needs.fdb.result }} ${{ needs.gribjump.result }} ${{ needs.metkit.result }} ${{ needs.mir.result }} ${{ needs.zfdb.result }}; do
           if [ "$r" = failure ] || [ "$r" = cancelled ]; then
             state=failure
           fi
