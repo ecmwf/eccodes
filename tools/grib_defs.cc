@@ -327,7 +327,7 @@ static int add_record_value(
     bool legacy,
     const std::string& scope,
     const std::map<std::string, std::string>& attrs,
-    const std::string& concept,
+    const std::string& concept_name,
     const std::string& value,
     const std::string& source)
 {
@@ -342,7 +342,7 @@ static int add_record_value(
         records[key] = rec;
     }
     Record& rec = records[key];
-    if (!vector_contains(rec.values[concept], value)) rec.values[concept].push_back(value);
+    if (!vector_contains(rec.values[concept_name], value)) rec.values[concept_name].push_back(value);
     if (!vector_contains(rec.sources, source)) rec.sources.push_back(source);
     return 0;
 }
@@ -450,7 +450,7 @@ static void release_previous_concept_list()
 // A file without entries is valid; a file which cannot be read or parsed is an error.
 static int parse_def_file(
     const std::string& file_path,
-    const std::string& concept,
+    const std::string& concept_name,
     int edition,
     const std::vector<int>& switches,
     bool legacy,
@@ -482,7 +482,7 @@ static int parse_def_file(
             attrs[cond->name] = condition_value_text(cond);
         }
         for (size_t s = 0; s < switches.size(); ++s)
-            add_record_value(records, edition, switches[s], legacy, scope, attrs, concept, entries[i]->name, source);
+            add_record_value(records, edition, switches[s], legacy, scope, attrs, concept_name, entries[i]->name, source);
     }
 
     previous_concept_list = list;
@@ -674,7 +674,7 @@ struct FileFilter
 // Classification of a concept file by its path relative to a definitions directory
 struct ConceptFile
 {
-    std::string concept;
+    std::string concept_name;
     int edition = 0;
     std::vector<int> switches;  // the MTG2 switch values it applies to; -1 for edition 1
     bool legacy = false;
@@ -694,8 +694,8 @@ static bool classify_concept_file(const std::string& rel, ConceptFile& cf)
     }
     if (!concept_file) return false;
 
-    cf.concept = get_concept_from_filename(filename);
-    if (cf.concept.empty()) return false;
+    cf.concept_name = get_concept_from_filename(filename);
+    if (cf.concept_name.empty()) return false;
 
     cf.edition = starts_with(rel, "grib1/") ? 1 : 2;
     int sw = infer_switch(filename);
@@ -793,7 +793,7 @@ static int parse_concept_files(grib_context* ctx, const std::set<std::string>& r
             continue;
         }
         n_parsed++;
-        const int perr = parse_def_file(full, cf.concept, cf.edition, cf.switches, cf.legacy, cf.scope, rel, records);
+        const int perr = parse_def_file(full, cf.concept_name, cf.edition, cf.switches, cf.legacy, cf.scope, rel, records);
         if (perr != GRIB_SUCCESS) err = perr;
     }
     return err;
@@ -1029,7 +1029,8 @@ static void option_help(std::ostringstream& o, const std::string& head, const st
     if (head.size() < strlen(kPad) - 1)
         o << std::string(strlen(kPad) - head.size(), ' ');
     else
-        o << "\n" << kPad;
+        o << "\n"
+          << kPad;
     o << text << "\n";
 }
 
