@@ -200,6 +200,18 @@ fi
 printf "# no entries\n\n" > $badDir/empty/grib2/chemName.def
 ${tools_dir}/grib_defs chems --definitions-root "$badDir/empty${psep}$def_dir" --chemFormula O3 > $tempA
 grep -q "chemName=- " $tempA
+# A readable tree without any entries (comment-only concept files, or none at all):
+# no matches (exit status 1, [] for JSON), not an error
+mkdir -p $badDir/none/grib2
+for root in $badDir/empty $badDir/none; do
+    set +e
+    ${tools_dir}/grib_defs chems --definitions-root $root --chemFormula O3 --format json > $tempA 2> $tempErr
+    status=$?
+    set -e
+    [ $status -eq 1 ]
+    [ "$(cat $tempA)" = "[]" ]
+    grep -q "No matching parameters found." $tempErr
+done
 # Other definitions than concepts, read after a valid concept file: an error, not a stale result
 cp $def_dir/grib2/chemFormula.def $badDir/first/grib2/chemFormula.def
 printf "transient dummy = 1;\n" > $badDir/other/grib2/chemName.def

@@ -1627,11 +1627,17 @@ int main(int argc, char** argv)
             fprintf(stderr, "DEBUG:   %s\n", dirs[i].c_str());
     }
 
-    // The concept files of all directories, in path order
+    // The concept files of all directories, in path order. A directory is usable when it
+    // exists, or for MEMFS (which cannot be listed) when ecCodes finds concept files in it.
+    // A usable tree without any entries gives no matches, not an error.
     std::set<std::string> rel_files;
     bool scan_failed = false;
+    bool usable_root = false;
     for (size_t i = 0; i < dirs.size(); ++i) {
-        if (list_concept_files(dirs[i], rel_files, opt.debug_path_resolution) != GRIB_SUCCESS) scan_failed = true;
+        std::set<std::string> dir_files;
+        if (list_concept_files(dirs[i], dir_files, opt.debug_path_resolution) != GRIB_SUCCESS) scan_failed = true;
+        if (!dir_files.empty() || (!starts_with(dirs[i], "/MEMFS") && is_dir(dirs[i]))) usable_root = true;
+        rel_files.insert(dir_files.begin(), dir_files.end());
     }
 
     FileFilter file_filter;
@@ -1704,7 +1710,7 @@ int main(int argc, char** argv)
         fprintf(stderr, "DEBUG: effective backend: %s\n", effective_backend.c_str());
     }
 
-    if (records_by_key.empty()) {
+    if (!usable_root) {
         errorf("No valid definitions roots were found. Provide --definitions-root or set ECCODES_DEFINITION_PATH/ECCODES_EXTRA_DEFINITION_PATH.");
         return 2;
     }
