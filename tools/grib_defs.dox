@@ -1,0 +1,212 @@
+/*!  \page grib_defs grib_defs
+\section DESCRIPTION
+ Query the definitions in ecCodes concept files (GRIB edition 1 and 2) and print
+ the matching entries, optionally with their GRIB encoding. A subcommand selects
+ the concepts:
+ \n
+ - params: parameters, from the concept files paramId.def, shortName.def, name.def
+   and units.def;
+ - chems: chemical constituents, from the concept files chemId.def, chemShortName.def,
+   chemName.def and chemFormula.def.
+ \n
+ The concept files are read below grib1/ and grib2/, including all localConcepts.
+ For GRIB2 the variants used by the MTG2 switch are read as well: *.lte33.def
+ (is_mtg2_switch=0), *.def (is_mtg2_switch=1) and *.chemsplit.def (is_mtg2_switch=2).
+ \n
+ params also reads the legacy concept files *.legacy.def in grib2/ and
+ grib2/localConcepts/ecmf/, which ecCodes uses as the last fallback, after the files
+ selected by the MTG2 switch. They apply to every MTG2 switch value, so each legacy entry
+ is listed for is_mtg2_switch 0, 1 and 2, marked with is_legacy=1. For the same paramId,
+ legacy entries are listed after the others. Legacy files in other directories are not
+ used by ecCodes and are not read.
+ \n
+ Entries of the different concept files are joined into one record when edition,
+ MTG2 switch, legacy flag, scope and encoding are identical. If several identifiers in
+ the same scope have the same encoding, they are shown as a list, e.g.
+ paramId=[500417, 500582]. A value which is not defined for an encoding is shown as '-'.
+ \n
+ Which definitions are read: without --definitions-root, the tool uses the same
+ definitions path as ecCodes, i.e. ECCODES_EXTRA_DEFINITION_PATH, then
+ ECCODES_DEFINITION_PATH or the built-in default, which may be MEMFS. Each concept
+ file is looked up by ecCodes itself, so a file present in several directories is
+ taken from the first one that has it, exactly as in ecCodes. The output therefore
+ shows what the installed ecCodes actually uses.
+ \n
+ Parsing the concept files takes most of the run time. With --edition, --is_mtg2_switch,
+ --is_legacy or --scope, only the files which can match are parsed, so these options
+ make a query much faster. A concept file which cannot be parsed is then only reported
+ if it is one of them, as in ecCodes, which only reads the files it needs.
+
+\section USAGE
+ grib_defs params|chems
+ [options]
+ \n
+ Without a subcommand, the subcommands are listed. Without options, a short usage text
+ of the subcommand is printed. To list all entries, give any option, e.g. --format line.
+
+\section OPTIONS
+ Options for both subcommands:
+ \n \n -h, --help  \n
+        Show the help text of the subcommand and exit.
+ \n \n --definitions-root path \n
+        Use only these definitions directories, instead of the ecCodes definitions path.
+        Multiple paths can be supplied using the platform path separator
+        (':' on Unix, ';' on Windows). A definition file present in several roots
+        is taken from the first root that has it.
+        Unlike ECCODES_DEFINITION_PATH, the built-in definitions are not appended and
+        ECCODES_EXTRA_DEFINITION_PATH is ignored: only the given directories are read.
+        This allows querying another definitions set on its own, e.g. the definitions
+        directory of an older ecCodes version, to find out since when a parameter exists.
+ \n \n --debug-path-resolution \n
+        Print the ecCodes definitions path, its directories and the
+        backend used (filesystem, memfs or mixed) to stderr. Also reports concept files
+        read from disk which a MEMFS build would not find, and how many concept files
+        were parsed and skipped by the filters.
+ \n \n --columns col1,col2,... \n
+        Output only selected columns.
+        Valid columns for params: edition,is_mtg2_switch,is_legacy,scope,paramId,shortName,name,units,encoding,sources
+        \n
+        Valid columns for chems: edition,scope,chemId,chemShortName,chemName,chemFormula,encoding,sources
+ \n \n --scope scope1,scope2,... \n
+        Comma-separated list of exact scopes to include,
+        e.g. grib2,grib2/localConcepts/ecmf. An unknown scope is reported together
+        with the list of available scopes.
+ \n \n --regex-case-sensitive \n
+        Make regex filters case-sensitive. By default they are case-insensitive.
+ \n \n --attr key=value,key=value,... \n
+        Filter by encoding. A record matches when its encoding contains at least
+        the listed key/value pairs. Array values are written as --show-encoding
+        prints them, e.g. typeOfStatisticalProcessing=[102,2].
+ \n \n --attr-strict \n
+        With --attr and/or --attrkey, require an exact match: the encoding must have
+        exactly the listed keys, with the values given in --attr.
+ \n \n --attrkey key1,key2,... \n
+        Keep only records whose encoding contains all listed keys, with any value.
+ \n \n --nattrkey key1,key2,... \n
+        Exclude records whose encoding contains any of the listed keys.
+ \n \n --nattr key=value,key=value,... \n
+        Exclude records whose encoding contains any of the listed key/value pairs.
+ \n \n --show-encoding \n
+        Print encoding key/value constraints for each result.
+ \n \n --show-sources \n
+        Print source definition files contributing to each result.
+ \n \n --format line|table|json \n
+        Output format. Default is line. json prints an array with one object per
+        result. Values of merged duplicates are arrays, missing values are null,
+        --show-encoding adds an encoding object and --show-sources a sources array.
+ \n \n --order asc|desc \n
+        Sort order. Default is asc. Without --order-by, params records are sorted by
+        edition, MTG2 switch, scope, paramId and is_legacy, chems records by
+        edition, scope and chemId.
+ \n \n --order-by field1,field2,... \n
+        Sort fields in priority order. Valid fields are the columns without
+        encoding and sources.
+ \n \n --no-truncate \n
+        With --format table, show cells in full. By default long cells are cut to a
+        fixed maximum width per column (e.g. name 48, encoding 60 characters).
+ \n \n
+ Options for params only:
+ \n \n --paramId pattern, --paramId-regex regex \n
+        Wildcard or regex filter for paramId.
+ \n \n --shortName pattern, --shortName-regex regex \n
+        Wildcard filter (case-insensitive), e.g. '10*', or regex filter for shortName.
+ \n \n --name pattern, --name-regex regex \n
+        Wildcard filter (case-insensitive), e.g. '*precipitation*', or regex filter for name.
+ \n \n --units pattern, --units-regex regex \n
+        Wildcard filter (case-insensitive) or regex filter for units.
+ \n \n --is_mtg2_switch 0|1|2 \n
+        Restrict GRIB2 records to lte33=0, def=1, chemsplit=2.
+ \n \n --is_legacy 0|1 \n
+        Restrict GRIB2 records to entries from *.legacy.def files (1) or from all
+        other concept files (0).
+ \n \n --edition 1|2 \n
+        Restrict to GRIB edition 1 or 2.
+ \n \n
+ Options for chems only:
+ \n \n --chemId pattern, --chemId-regex regex \n
+        Wildcard or regex filter for chemId.
+ \n \n --chemShortName pattern, --chemShortName-regex regex \n
+        Wildcard filter (case-insensitive), e.g. 'CH*', or regex filter for chemShortName.
+ \n \n --chemName pattern, --chemName-regex regex \n
+        Wildcard filter (case-insensitive), e.g. '*oxide*', or regex filter for chemName.
+ \n \n --chemFormula pattern, --chemFormula-regex regex \n
+        Wildcard filter (case-insensitive) or regex filter for chemFormula.
+ \n \n
+ An option of the other subcommand is rejected with a hint to that subcommand.
+ \n \n
+\section grib_defs_examples grib_defs examples
+-# List all entries for paramId 130:\n
+\verbatim
+grib_defs params --paramId 130
+\endverbatim
+
+-# Show encoding constraints for exact WMO temperature triplet in GRIB2:\n
+\verbatim
+grib_defs params --edition 2 --attr discipline=0,parameterCategory=0,parameterNumber=0 --attr-strict --show-encoding
+\endverbatim
+
+-# Show only selected columns in table format:\n
+\verbatim
+grib_defs params --name '*temperature*' --columns edition,scope,paramId,shortName,encoding --format table
+\endverbatim
+
+-# Parameters of one centre, as used with the MTG2 switch set to 1:\n
+\verbatim
+grib_defs params --scope grib2/localConcepts/ecmf --is_mtg2_switch 1
+\endverbatim
+
+-# GRIB2 parameters with a statistical process, sorted by shortName:\n
+\verbatim
+grib_defs params --edition 2 --attrkey typeOfStatisticalProcessing --order-by shortName
+\endverbatim
+
+-# Legacy entries of ECMWF local concepts, as a table:\n
+\verbatim
+grib_defs params --is_legacy 1 --scope grib2/localConcepts/ecmf --is_mtg2_switch 1 --format table
+\endverbatim
+
+-# List all entries, then only encodings shared by several paramIds:\n
+\verbatim
+grib_defs params --format line
+grib_defs params --format line | grep 'paramId=\['
+\endverbatim
+
+-# Encoding of paramId 167 as JSON, e.g. for processing with jq:\n
+\verbatim
+grib_defs params --paramId 167 --edition 2 --show-encoding --format json
+\endverbatim
+
+-# Since which ecCodes version does paramId 263006 exist? Query the definitions of
+   each version on their own (here from clones of the tagged versions):\n
+\verbatim
+for v in 2.38.0 2.39.0 2.40.0; do
+    printf '%s: ' $v
+    grib_defs params --definitions-root /path/to/eccodes-$v/definitions --paramId 263006 > /dev/null && echo yes || echo no
+done
+\endverbatim
+
+-# Check which definitions are read:\n
+\verbatim
+grib_defs params --paramId 167 --debug-path-resolution
+\endverbatim
+
+-# Chemical constituents with a given formula:\n
+\verbatim
+grib_defs chems --chemFormula O3
+\endverbatim
+
+-# Filter by chemId regex:\n
+\verbatim
+grib_defs chems --chemId-regex '^1[0-9]+$'
+\endverbatim
+
+-# Show the encoding of all oxides in table format:\n
+\verbatim
+grib_defs chems --chemName '*oxide*' --columns chemId,chemShortName,chemName,encoding --format table --no-truncate
+\endverbatim
+
+-# Entries for a formula as JSON:\n
+\verbatim
+grib_defs chems --chemFormula O3 --format json
+\endverbatim
+*/

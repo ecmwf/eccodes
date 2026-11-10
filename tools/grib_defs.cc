@@ -28,7 +28,40 @@
 #include <sys/stat.h>
 #include <vector>
 
-static const std::set<std::string> kConcepts = { "chemId", "chemShortName", "chemName", "chemFormula" };
+// What a subcommand queries. Everything else is the same for both.
+struct Profile
+{
+    const char* command;  // subcommand
+    const char* what;     // for the help text
+    // The four concepts by role: numeric identifier, short name, name, fourth column
+    const char* id;
+    const char* short_name;
+    const char* name;
+    const char* extra;
+    const char* short_name_example;  // wildcard examples for the help text
+    const char* name_example;
+    // The GRIB2 MTG2 switch and legacy concept files, with the options --edition,
+    // --is_mtg2_switch and --is_legacy and the columns is_mtg2_switch and is_legacy
+    bool mtg2;
+};
+
+static const Profile kParams = { "params", "parameter", "paramId", "shortName", "name", "units", "10*", "*precipitation*", true };
+static const Profile kChems = { "chems", "chemical constituent", "chemId", "chemShortName", "chemName", "chemFormula", "CH*", "*oxide*", false };
+
+// The subcommand's profile and its concepts, set in main()
+static const Profile* P = &kParams;
+static std::set<std::string> concept_names;
+
+// The concepts in column order: id, short name, name, fourth column
+static std::vector<std::string> concept_columns()
+{
+    std::vector<std::string> out;
+    out.push_back(P->id);
+    out.push_back(P->short_name);
+    out.push_back(P->name);
+    out.push_back(P->extra);
+    return out;
+}
 
 struct Options
 {
@@ -36,15 +69,15 @@ struct Options
     bool debug_path_resolution = false;
     std::string columns;
     std::string scope;
-    std::string chemName;
-    std::string name_regex;
-    std::string chemShortName;
-    std::string chemShortName_regex;
-    std::string chemId;
-    std::string chemId_regex;
-    std::string chemFormula;
-    std::string chemFormula_regex;
+    std::map<std::string, std::string> wildcard;  // concept -> pattern of --<concept>
+    std::map<std::string, std::string> regex;     // concept -> pattern of --<concept>-regex
     bool regex_case_sensitive = false;
+    bool has_is_mtg2_switch = false;
+    int is_mtg2_switch = 0;
+    bool has_is_legacy = false;
+    int is_legacy = 0;
+    bool has_edition = false;
+    int edition = 0;
     std::string attr;
     bool attr_strict = false;
     std::string attrkey;
@@ -70,7 +103,8 @@ struct FieldMatcher
 struct Record
 {
     int edition = 0;
-    int sw = -1;  // -1 means N/A for edition 1
+    int sw = -1;          // -1 means N/A for edition 1
+    bool legacy = false;  // from a *.legacy.def file: last fallback in ecCodes
     std::string scope;
     std::map<std::string, std::string> attrs;
     std::map<std::string, std::vector<std::string> > values;
@@ -81,7 +115,7 @@ static void errorf(const char* fmt, ...)
 {
     va_list args;
     va_start(args, fmt);
-    fprintf(stderr, "grib_chems: error: ");
+    fprintf(stderr, "grib_defs: error: ");
     vfprintf(stderr, fmt, args);
     fprintf(stderr, "\n");
     va_end(args);
@@ -128,15 +162,6 @@ static std::vector<std::string> split(const std::string& s, char delim)
         if (!part.empty()) out.push_back(part);
     }
     return out;
-}
-
-static char path_delimiter_char()
-{
-#ifdef ECCODES_ON_WINDOWS
-    return ';';
-#else
-    return ':';
-#endif
 }
 
 static void uniq(std::vector<std::string>& vals)
@@ -251,7 +276,7 @@ static std::string get_concept_from_filename(const std::string& filename)
     size_t p = filename.find('.');
     if (p == std::string::npos) return "";
     std::string base = filename.substr(0, p);
-    if (kConcepts.count(base)) return base;
+    if (concept_names.count(base)) return base;
     return "";
 }
 
@@ -263,10 +288,32 @@ static int infer_switch(const std::string& filename)
     return -2;
 }
 
-static std::string key_from_record(int edition, int sw, const std::string& scope, const std::map<std::string, std::string>& attrs)
+// Directories whose *.legacy.def files ecCodes reads (grib2/parameters.def: conceptsMasterDir and
+// conceptsLocalDirECMF). They are the last fallback, after the files selected by the MTG2 switch,
+// and apply to every MTG2 switch value. There are legacy files for parameters only.
+static const char* kLegacyDirs[] = { "grib2", "grib2/localConcepts/ecmf" };
+static const int kLegacySwitches[] = { 0, 1, 2 };
+
+static bool is_legacy_concept_file(const std::string& rel)
+{
+    if (!P->mtg2) return false;
+    size_t slash = rel.find_last_of('/');
+    if (slash == std::string::npos) return false;
+    const std::string dir = rel.substr(0, slash);
+    const std::string filename = rel.substr(slash + 1);
+    bool dir_ok = false;
+    for (size_t i = 0; i < sizeof(kLegacyDirs) / sizeof(kLegacyDirs[0]); ++i)
+        if (dir == kLegacyDirs[i]) dir_ok = true;
+    if (!dir_ok) return false;
+    for (std::set<std::string>::const_iterator c = concept_names.begin(); c != concept_names.end(); ++c)
+        if (filename == *c + ".legacy.def") return true;
+    return false;
+}
+
+static std::string key_from_record(int edition, int sw, bool legacy, const std::string& scope, const std::map<std::string, std::string>& attrs)
 {
     std::ostringstream oss;
-    oss << edition << "|" << sw << "|" << scope << "|";
+    oss << edition << "|" << sw << "|" << legacy << "|" << scope << "|";
     for (std::map<std::string, std::string>::const_iterator it = attrs.begin(); it != attrs.end(); ++it) {
         oss << it->first << "=" << it->second << ";";
     }
@@ -277,17 +324,19 @@ static int add_record_value(
     std::map<std::string, Record>& records,
     int edition,
     int sw,
+    bool legacy,
     const std::string& scope,
     const std::map<std::string, std::string>& attrs,
     const std::string& concept,
     const std::string& value,
     const std::string& source)
 {
-    std::string key = key_from_record(edition, sw, scope, attrs);
+    std::string key = key_from_record(edition, sw, legacy, scope, attrs);
     if (!records.count(key)) {
         Record rec;
         rec.edition = edition;
         rec.sw = sw;
+        rec.legacy = legacy;
         rec.scope = scope;
         rec.attrs = attrs;
         records[key] = rec;
@@ -403,7 +452,8 @@ static int parse_def_file(
     const std::string& file_path,
     const std::string& concept,
     int edition,
-    int sw,
+    const std::vector<int>& switches,
+    bool legacy,
     const std::string& scope,
     const std::string& source,
     std::map<std::string, Record>& records)
@@ -431,7 +481,8 @@ static int parse_def_file(
         for (grib_concept_condition* cond = entries[i]->conditions; cond; cond = cond->next) {
             attrs[cond->name] = condition_value_text(cond);
         }
-        add_record_value(records, edition, sw, scope, attrs, concept, entries[i]->name, source);
+        for (size_t s = 0; s < switches.size(); ++s)
+            add_record_value(records, edition, switches[s], legacy, scope, attrs, concept, entries[i]->name, source);
     }
 
     previous_concept_list = list;
@@ -582,133 +633,170 @@ static std::vector<std::string> memfs_candidate_files()
 
     std::vector<std::string> out;
     for (size_t d = 0; d < dirs1.size(); ++d)
-        for (std::set<std::string>::const_iterator c = kConcepts.begin(); c != kConcepts.end(); ++c)
+        for (std::set<std::string>::const_iterator c = concept_names.begin(); c != concept_names.end(); ++c)
             out.push_back(dirs1[d] + "/" + *c + ".def");
     for (size_t d = 0; d < dirs2.size(); ++d)
-        for (std::set<std::string>::const_iterator c = kConcepts.begin(); c != kConcepts.end(); ++c)
+        for (std::set<std::string>::const_iterator c = concept_names.begin(); c != concept_names.end(); ++c)
             for (size_t s = 0; s < sizeof(grib2_suffixes) / sizeof(grib2_suffixes[0]); ++s)
                 out.push_back(dirs2[d] + "/" + *c + grib2_suffixes[s]);
+    for (size_t d = 0; P->mtg2 && d < sizeof(kLegacyDirs) / sizeof(kLegacyDirs[0]); ++d)
+        for (std::set<std::string>::const_iterator c = concept_names.begin(); c != concept_names.end(); ++c)
+            out.push_back(std::string(kLegacyDirs[d]) + "/" + *c + ".legacy.def");
     return out;
 }
 
-// Scan one definitions root (a directory or a MEMFS root). As in ecCodes, a definition file
-// is taken from the first root which contains it: files already taken from a previous root
-// ('claimed') are skipped.
-static int scan_definitions(const std::string& definitions_root, std::map<std::string, Record>& records,
-                            std::set<std::string>& claimed, bool debug)
+// The concept files a query needs. Edition, MTG2 switch, legacy flag and scope are the same
+// for all entries of a file and part of the record key, so a file excluded by these filters
+// cannot contribute to any result and need not be parsed (parsing dominates the run time).
+struct FileFilter
 {
-    int err = GRIB_SUCCESS;  // all files are scanned, so that every failure is reported
-    const bool is_memfs_root = starts_with(definitions_root, "/MEMFS");
-    std::string root_prefix = definitions_root;
-    while (root_prefix.size() > 1 && root_prefix[root_prefix.size() - 1] == '/') {
-        root_prefix.erase(root_prefix.size() - 1);
-    }
+    bool has_edition = false;
+    int edition = 0;
+    bool has_is_mtg2_switch = false;
+    int is_mtg2_switch = 0;
+    bool has_is_legacy = false;
+    int is_legacy = 0;
+    std::set<std::string> scopes;  // empty: all
 
-    // Paths relative to the root
-    std::vector<std::string> rel_files;
-    if (is_memfs_root) {
-        std::vector<std::string> candidates = memfs_candidate_files();
-        for (size_t i = 0; i < candidates.size(); ++i) {
-            if (codes_access(path_join(root_prefix, candidates[i]).c_str(), F_OK) == 0) {
-                rel_files.push_back(candidates[i]);
-            }
+    bool active() const { return has_edition || has_is_mtg2_switch || has_is_legacy || !scopes.empty(); }
+
+    // Same conditions as the record filter in main()
+    bool wants(int ed, const std::vector<int>& switches, bool legacy, const std::string& scope) const
+    {
+        if (has_edition && ed != edition) return false;
+        if (has_is_mtg2_switch && std::find(switches.begin(), switches.end(), is_mtg2_switch) == switches.end()) return false;
+        if (has_is_legacy && (ed == 1 || (legacy ? 1 : 0) != is_legacy)) return false;
+        if (!scopes.empty() && !scopes.count(scope)) return false;
+        return true;
+    }
+};
+
+// Classification of a concept file by its path relative to a definitions directory
+struct ConceptFile
+{
+    std::string concept;
+    int edition = 0;
+    std::vector<int> switches;  // the MTG2 switch values it applies to; -1 for edition 1
+    bool legacy = false;
+    std::string scope;
+};
+
+// False if rel is not a concept file the tool reads
+static bool classify_concept_file(const std::string& rel, ConceptFile& cf)
+{
+    const std::string filename = rel.substr(rel.find_last_of('/') + 1);
+    cf.legacy = is_legacy_concept_file(rel);
+    bool concept_file = cf.legacy;
+    for (std::set<std::string>::const_iterator c = concept_names.begin(); c != concept_names.end() && !concept_file; ++c) {
+        if (filename == *c + ".def" || filename == *c + ".lte33.def" || filename == *c + ".chemsplit.def") {
+            concept_file = true;
         }
+    }
+    if (!concept_file) return false;
+
+    cf.concept = get_concept_from_filename(filename);
+    if (cf.concept.empty()) return false;
+
+    cf.edition = starts_with(rel, "grib1/") ? 1 : 2;
+    int sw = infer_switch(filename);
+    if (cf.edition == 1) sw = -1;
+    if (cf.edition == 2 && sw == -2 && !cf.legacy) return false;
+    cf.switches.assign(1, sw);
+    if (cf.legacy) cf.switches.assign(kLegacySwitches, kLegacySwitches + sizeof(kLegacySwitches) / sizeof(kLegacySwitches[0]));
+
+    const size_t slash = rel.find('/');
+    const size_t last_slash = rel.find_last_of('/');
+    if (slash == std::string::npos || last_slash == std::string::npos || last_slash <= slash) {
+        cf.scope = starts_with(rel, "grib1/") ? "grib1" : "grib2";
     }
     else {
-        // Concept files only live below grib1/ and grib2/, so do not walk the rest of the tree
-        std::vector<std::string> files;
-        // Walk the normalized root_prefix, so that the paths found start with exactly that prefix
-        // (a root written as "defs//" would otherwise give relative paths like "/grib1/...")
-        const std::string prefix = (root_prefix == "/") ? root_prefix : root_prefix + "/";
-        if (scan_dir_recursive(path_join(root_prefix, "grib1"), files) != GRIB_SUCCESS) err = GRIB_IO_PROBLEM;
-        if (scan_dir_recursive(path_join(root_prefix, "grib2"), files) != GRIB_SUCCESS) err = GRIB_IO_PROBLEM;
-        for (size_t i = 0; i < files.size(); ++i) {
-            if (starts_with(files[i], prefix)) rel_files.push_back(files[i].substr(prefix.size()));
+        cf.scope = rel.substr(0, last_slash);
+    }
+    return true;
+}
+
+// The directories of the definitions path in priority order, as ecCodes itself has split
+// and resolved them
+static std::vector<std::string> definitions_dirs(grib_context* ctx)
+{
+    // ecCodes sets up the directory list when it first looks up a definition file;
+    // the file need not exist
+    grib_context_full_defs_path(ctx, "boot.def");
+    std::vector<std::string> dirs;
+    for (const grib_string_list* d = ctx->grib_definition_files_dir; d; d = d->next) {
+        if (d->value && !vector_contains(dirs, d->value)) dirs.push_back(d->value);
+    }
+    return dirs;
+}
+
+// Add the concept files of one definitions directory, as paths relative to it. MEMFS cannot
+// be listed, so there the known candidates are looked up. The directory walk continues after
+// an error, so that every failure is reported.
+static int list_concept_files(const std::string& dir, std::set<std::string>& rel_files, bool debug)
+{
+    if (starts_with(dir, "/MEMFS")) {
+        // Joined as grib_context_full_defs_path joins them, so that exactly the files are
+        // listed which ecCodes finds (MEMFS paths are not normalised)
+        const std::vector<std::string> candidates = memfs_candidate_files();
+        for (size_t i = 0; i < candidates.size(); ++i) {
+            if (codes_access((dir + "/" + candidates[i]).c_str(), F_OK) == 0) rel_files.insert(candidates[i]);
         }
+        return GRIB_SUCCESS;
     }
 
-    // Directory listing order depends on the filesystem, and MEMFS has its own order: sort, so that
-    // the files are parsed and the sources listed in the same order everywhere
-    std::sort(rel_files.begin(), rel_files.end());
+    int err = GRIB_SUCCESS;
+    std::string root = dir;
+    while (root.size() > 1 && root[root.size() - 1] == '/')
+        root.erase(root.size() - 1);
+    // Concept files only live below grib1/ and grib2/, so do not walk the rest of the tree
+    std::vector<std::string> files;
+    if (scan_dir_recursive(path_join(root, "grib1"), files) != GRIB_SUCCESS) err = GRIB_IO_PROBLEM;
+    if (scan_dir_recursive(path_join(root, "grib2"), files) != GRIB_SUCCESS) err = GRIB_IO_PROBLEM;
 
-    for (size_t i = 0; i < rel_files.size(); ++i) {
-        const std::string& rel = rel_files[i];
-        std::string file_path = path_join(root_prefix, rel);
-
-        std::string filename = rel.substr(rel.find_last_of('/') + 1);
-
-        bool concept_file = false;
-        for (std::set<std::string>::const_iterator c = kConcepts.begin(); c != kConcepts.end(); ++c) {
-            if (filename == *c + ".def" || filename == *c + ".lte33.def" || filename == *c + ".chemsplit.def") {
-                concept_file = true;
-                break;
-            }
-        }
-        if (!concept_file) continue;
-
-        std::string concept = get_concept_from_filename(filename);
-        if (concept.empty()) continue;
-
-        int edition = starts_with(rel, "grib1/") ? 1 : 2;
-        int sw = infer_switch(filename);
-        if (edition == 1) sw = -1;
-        if (edition == 2 && sw == -2) continue;
-
+    const std::string prefix = (root == "/") ? root : root + "/";
+    for (size_t i = 0; i < files.size(); ++i) {
+        if (!starts_with(files[i], prefix)) continue;
+        const std::string rel = files[i].substr(prefix.size());
+        ConceptFile cf;
+        if (!classify_concept_file(rel, cf)) continue;
         // MEMFS cannot be listed, so a concept file found on disk but missing from the
         // MEMFS candidate list would be silently ignored in a MEMFS build (tested in ctest)
-        if (debug && !is_memfs_root) {
+        if (debug) {
             static const std::vector<std::string> memfs_list = memfs_candidate_files();
             if (std::find(memfs_list.begin(), memfs_list.end(), rel) == memfs_list.end())
                 fprintf(stderr, "DEBUG: concept file not in MEMFS candidate list: %s\n", rel.c_str());
         }
-
-        std::string scope;
-        size_t slash = rel.find('/');
-        size_t last_slash = rel.find_last_of('/');
-        if (slash == std::string::npos || last_slash == std::string::npos || last_slash <= slash) {
-            scope = starts_with(rel, "grib1/") ? "grib1" : "grib2";
-        }
-        else {
-            scope = rel.substr(0, last_slash);
-        }
-
-        if (!claimed.insert(rel).second) continue;
-        const int perr = parse_def_file(file_path, concept, edition, sw, scope, rel, records);
-        if (perr != GRIB_SUCCESS) err = perr;
+        rel_files.insert(rel);
     }
-
     return err;
 }
 
-static std::string normalize_memfs_path(const std::string& p)
+// Parse the concept files, in path order. Each one is read from where ecCodes takes it:
+// grib_context_full_defs_path returns it from the first directory of the definitions path
+// which has it. With a filter, only the files it wants are parsed.
+static int parse_concept_files(grib_context* ctx, const std::set<std::string>& rel_files, std::map<std::string, Record>& records,
+                               const FileFilter* filter, size_t& n_parsed, size_t& n_skipped)
 {
-    std::string out;
-    for (size_t i = 0; i < p.size(); ++i) {
-        if (p[i] == '/' && !out.empty() && out[out.size() - 1] == '/') continue;
-        out += p[i];
+    int err = GRIB_SUCCESS;  // all files are parsed, so that every failure is reported
+    for (std::set<std::string>::const_iterator it = rel_files.begin(); it != rel_files.end(); ++it) {
+        const std::string& rel = *it;
+        ConceptFile cf;
+        if (!classify_concept_file(rel, cf)) continue;
+        if (filter && !filter->wants(cf.edition, cf.switches, cf.legacy, cf.scope)) {
+            n_skipped++;
+            continue;
+        }
+        const char* full = grib_context_full_defs_path(ctx, rel.c_str());
+        if (!full) {  // listed, but gone meanwhile
+            errorf("Cannot find concept file %s", rel.c_str());
+            err = GRIB_IO_PROBLEM;
+            continue;
+        }
+        n_parsed++;
+        const int perr = parse_def_file(full, cf.concept, cf.edition, cf.switches, cf.legacy, cf.scope, rel, records);
+        if (perr != GRIB_SUCCESS) err = perr;
     }
-    while (out.size() > 1 && out[out.size() - 1] == '/')
-        out.erase(out.size() - 1);
-    return out;
-}
-
-// Definitions roots in priority order: --definitions-root if given, otherwise the
-// definitions path of the ecCodes library itself, i.e. ECCODES_EXTRA_DEFINITION_PATH,
-// then ECCODES_DEFINITION_PATH or the built-in default (which may be MEMFS).
-static std::vector<std::string> definitions_roots(const Options& opt, grib_context* ctx, bool& from_option)
-{
-    const char sep = path_delimiter_char();
-    from_option = !opt.definitions_root.empty();
-    std::vector<std::string> roots;
-    if (from_option) {
-        roots = split(opt.definitions_root, sep);
-    }
-    else {
-        const char* p = grib_definition_path(ctx);
-        if (p) roots = split(p, sep);
-    }
-    uniq(roots);
-    return roots;
+    return err;
 }
 
 // Split a key=value list at commas outside array brackets, so that values such as [102,2]
@@ -848,41 +936,109 @@ static int parse_nattr_filter(const std::string& text, std::map<std::string, std
     return parse_key_value_filter("--nattr", text, out, err);
 }
 
-static std::string short_usage_text(const char* prog)
+static std::string to_upper(std::string s)
+{
+    std::transform(s.begin(), s.end(), s.begin(), [](unsigned char c) { return static_cast<char>(toupper(c)); });
+    return s;
+}
+
+static std::string join(const std::vector<std::string>& v, const char* sep)
+{
+    std::string out;
+    for (size_t i = 0; i < v.size(); ++i) {
+        if (i) out += sep;
+        out += v[i];
+    }
+    return out;
+}
+
+// The fields a result can be sorted by, in column order
+static std::vector<std::string> sort_fields()
+{
+    std::vector<std::string> f(1, "edition");
+    if (P->mtg2) {
+        f.push_back("is_mtg2_switch");
+        f.push_back("is_legacy");
+    }
+    f.push_back("scope");
+    const std::vector<std::string> cc = concept_columns();
+    f.insert(f.end(), cc.begin(), cc.end());
+    return f;
+}
+
+// All output columns
+static std::vector<std::string> all_columns()
+{
+    std::vector<std::string> c = sort_fields();
+    c.push_back("encoding");
+    c.push_back("sources");
+    return c;
+}
+
+// The concepts in the order of their filter options
+static std::vector<std::string> filter_concepts()
+{
+    std::vector<std::string> out;
+    out.push_back(P->name);
+    out.push_back(P->short_name);
+    out.push_back(P->id);
+    out.push_back(P->extra);
+    return out;
+}
+
+static const char* const kMtg2Options[] = { "--is_mtg2_switch", "--is_legacy", "--edition" };
+
+// Whether key is an option of the given subcommand only
+static bool is_option_of(const Profile& p, const std::string& key)
+{
+    const char* concepts[] = { p.id, p.short_name, p.name, p.extra };
+    for (size_t i = 0; i < sizeof(concepts) / sizeof(concepts[0]); ++i) {
+        if (key == std::string("--") + concepts[i] || key == std::string("--") + concepts[i] + "-regex") return true;
+    }
+    for (size_t i = 0; p.mtg2 && i < sizeof(kMtg2Options) / sizeof(kMtg2Options[0]); ++i) {
+        if (key == kMtg2Options[i]) return true;
+    }
+    return false;
+}
+
+static const char* const kPad = "                        ";
+
+static std::string usage_synopsis(const std::string& prog)
 {
     std::ostringstream o;
     o << "usage: " << prog << " [-h] [--definitions-root DEFINITIONS_ROOT]\n"
-      << "                        [--debug-path-resolution] [--columns COLUMNS]\n"
-      << "                        [--scope SCOPE]\n"
-      << "                        [--chemName CHEMNAME] [--chemName-regex CHEMNAME_REGEX]\n"
-      << "                        [--chemShortName CHEMSHORTNAME]\n"
-      << "                        [--chemShortName-regex CHEMSHORTNAME_REGEX]\n"
-      << "                        [--chemId CHEMID] [--chemId-regex CHEMID_REGEX]\n"
-      << "                        [--chemFormula CHEMFORMULA] [--chemFormula-regex CHEMFORMULA_REGEX]\n"
-      << "                        [--attr ATTR] [--attr-strict] [--attrkey ATTRKEY] [--nattrkey NATTRKEY]\n"
-      << "                        [--nattr NATTR] [--regex-case-sensitive]\n"
-      << "                        [--show-encoding] [--show-sources]\n"
-      << "                        [--format {line,table,json}] [--order {asc,desc}] [--order-by FIELD] [--no-truncate]\n";
+      << kPad << "[--debug-path-resolution] [--columns COLUMNS]\n"
+      << kPad << "[--scope SCOPE]\n";
+    const std::vector<std::string> fc = filter_concepts();
+    for (size_t i = 0; i < fc.size(); ++i) {
+        const std::string up = to_upper(fc[i]);
+        o << kPad << "[--" << fc[i] << " " << up << "] [--" << fc[i] << "-regex " << up << "_REGEX]\n";
+    }
+    o << kPad << "[--attr ATTR] [--attr-strict] [--attrkey ATTRKEY] [--nattrkey NATTRKEY]\n"
+      << kPad << "[--nattr NATTR] [--regex-case-sensitive]\n";
+    if (P->mtg2) o << kPad << "[--is_mtg2_switch {0,1,2}] [--is_legacy {0,1}] [--edition {1,2}]\n";
+    o << kPad << "[--show-encoding] [--show-sources]\n"
+      << kPad << "[--format {line,table,json}] [--order {asc,desc}] [--order-by FIELD] [--no-truncate]\n";
     return o.str();
 }
 
-static std::string usage_text(const char* prog)
+// "  --option ARG" and its description, which starts in the description column if there is room
+static void option_help(std::ostringstream& o, const std::string& head, const std::string& text)
+{
+    o << head;
+    if (head.size() < strlen(kPad) - 1)
+        o << std::string(strlen(kPad) - head.size(), ' ');
+    else
+        o << "\n" << kPad;
+    o << text << "\n";
+}
+
+static std::string usage_text(const std::string& prog)
 {
     std::ostringstream o;
-    o << "usage: " << prog << " [-h] [--definitions-root DEFINITIONS_ROOT]\n"
-      << "                        [--debug-path-resolution] [--columns COLUMNS]\n"
-      << "                        [--scope SCOPE]\n"
-      << "                        [--chemName CHEMNAME] [--chemName-regex CHEMNAME_REGEX]\n"
-      << "                        [--chemShortName CHEMSHORTNAME]\n"
-      << "                        [--chemShortName-regex CHEMSHORTNAME_REGEX]\n"
-      << "                        [--chemId CHEMID] [--chemId-regex CHEMID_REGEX]\n"
-      << "                        [--chemFormula CHEMFORMULA] [--chemFormula-regex CHEMFORMULA_REGEX]\n"
-      << "                        [--attr ATTR] [--attr-strict] [--attrkey ATTRKEY] [--nattrkey NATTRKEY]\n"
-      << "                        [--nattr NATTR] [--regex-case-sensitive]\n"
-      << "                        [--show-encoding] [--show-sources]\n"
-      << "                        [--format {line,table,json}] [--order {asc,desc}] [--order-by FIELD] [--no-truncate]\n"
+    o << usage_synopsis(prog)
       << "\n"
-      << "Query chemical constituent definitions in ecCodes concept files.\n"
+      << "Query " << P->what << " definitions in ecCodes concept files.\n"
       << "\n"
       << "options:\n"
       << "  -h, --help            show this help message and exit\n"
@@ -899,31 +1055,27 @@ static std::string usage_text(const char* prog)
       << "                        ECCODES_DEFINITION_PATH or the built-in default (which\n"
       << "                        may be MEMFS), with the built-in default appended\n"
       << "  --debug-path-resolution\n"
-      << "                        Print resolved definitions path candidates and\n"
-      << "                        selected roots to stderr. Also reports concept files\n"
-      << "                        read from disk which a MEMFS build would not find\n"
+      << "                        Print the ecCodes definitions path and its\n"
+      << "                        directories to stderr. Also reports concept files\n"
+      << "                        read from disk which a MEMFS build would not find,\n"
+      << "                        and how many concept files were parsed and skipped\n"
       << "  --columns COLUMNS     Comma-separated list of output columns to show. Valid\n"
-      << "                        columns: edition,scope,chemId,chemShortName,\n"
-      << "                        chemName,chemFormula,encoding,sources\n"
+      << "                        columns: " << join(all_columns(), ",") << "\n"
       << "  --scope SCOPE         Comma-separated list of exact scopes to include,\n"
-      << "                        e.g. 'grib2,grib2/localConcepts/ecmf'\n"
-      << "  --chemName CHEMNAME   Wildcard pattern for chemName, e.g. '*oxide*'\n"
-      << "  --chemName-regex CHEMNAME_REGEX\n"
-      << "                        PCRE2-style regex for chemName\n"
-      << "  --chemShortName CHEMSHORTNAME\n"
-      << "                        Wildcard pattern for chemShortName, e.g. 'CH*'\n"
-      << "  --chemShortName-regex CHEMSHORTNAME_REGEX\n"
-      << "                        PCRE2-style regex for chemShortName\n"
-      << "  --chemId CHEMID       Wildcard pattern for chemId\n"
-      << "  --chemId-regex CHEMID_REGEX\n"
-      << "                        PCRE2-style regex for chemId\n"
-      << "  --chemFormula CHEMFORMULA\n"
-      << "                        Wildcard pattern for chemFormula\n"
-      << "  --chemFormula-regex CHEMFORMULA_REGEX\n"
-      << "                        PCRE2-style regex for chemFormula\n"
-      << "  --attr ATTR           Filter by attribute key/value pairs as\n"
+      << "                        e.g. 'grib2,grib2/localConcepts/ecmf'\n";
+    const std::vector<std::string> fc = filter_concepts();
+    for (size_t i = 0; i < fc.size(); ++i) {
+        std::string example;
+        if (fc[i] == P->name) example = std::string(", e.g. '") + P->name_example + "'";
+        if (fc[i] == P->short_name) example = std::string(", e.g. '") + P->short_name_example + "'";
+        option_help(o, "  --" + fc[i] + " " + to_upper(fc[i]), "Wildcard pattern for " + fc[i] + example);
+        option_help(o, "  --" + fc[i] + "-regex " + to_upper(fc[i]) + "_REGEX", "PCRE2-style regex for " + fc[i]);
+    }
+    o << "  --attr ATTR           Filter by attribute key/value pairs as\n"
       << "                        key=value,key=value. Non-strict mode matches entries\n"
-      << "                        containing at least these pairs\n"
+      << "                        containing at least these pairs. Array values as\n"
+      << "                        printed by --show-encoding, e.g.\n"
+      << "                        typeOfStatisticalProcessing=[102,2]\n"
       << "  --attr-strict         With --attr and/or --attrkey, require an exact\n"
       << "                        match (same keys and values)\n"
       << "  --attrkey ATTRKEY     Filter by attribute key presence (comma-separated).\n"
@@ -934,8 +1086,17 @@ static std::string usage_text(const char* prog)
       << "                        pairs as key=value,key=value\n"
       << "  --regex-case-sensitive\n"
       << "                        Make regex searches case-sensitive. By default regex\n"
-      << "                        searches are case-insensitive\n"
-      << "  --show-encoding       Show the GRIB encoding constraints (same key/value\n"
+      << "                        searches are case-insensitive\n";
+    if (P->mtg2) {
+        o << "  --is_mtg2_switch {0,1,2}\n"
+          << "                        Restrict GRIB2 to lte33=0, def=1, chemsplit=2\n"
+          << "  --is_legacy {0,1}     Restrict GRIB2 to entries from *.legacy.def files (1)\n"
+          << "                        or from all other files (0). ecCodes uses legacy\n"
+          << "                        entries only as the last fallback, for every MTG2\n"
+          << "                        switch value\n"
+          << "  --edition {1,2}       Restrict to GRIB edition 1 or 2\n";
+    }
+    o << "  --show-encoding       Show the GRIB encoding constraints (same key/value\n"
       << "                        conditions)\n"
       << "  --show-sources        Show source definition files contributing to each\n"
       << "                        result\n"
@@ -943,18 +1104,36 @@ static std::string usage_text(const char* prog)
       << "                        Output format: line (default), table or json.\n"
       << "                        json prints an array with one object per result;\n"
       << "                        merged duplicates are arrays, missing values null\n"
-      << "  --order {asc,desc}    Sort order for results by edition/scope/chemId\n"
+      << "  --order {asc,desc}    Sort order for results by edition/" << (P->mtg2 ? "switch/" : "") << "scope/" << P->id << "\n"
       << "                        ascending (default) or descending\n"
       << "  --order-by FIELD      Primary sort fields (comma-separated, in priority\n"
-      << "                        order). Valid: edition,scope,chemId,\n"
-      << "                        chemShortName,chemName,chemFormula\n"
+      << "                        order). Valid: " << join(sort_fields(), ",") << "\n"
       << "  --no-truncate         With --format table, show cells in full. By default\n"
       << "                        long cells are cut to a fixed maximum width per\n"
-      << "                        column (e.g. chemName 48, encoding 60 characters)\n";
+      << "                        column (e.g. " << P->name << " 48, encoding 60 characters)\n";
     return o.str();
 }
 
-static int parse_args(int argc, char** argv, Options& opt, std::string& err)
+// Without a valid subcommand
+static std::string main_usage_text(const char* prog)
+{
+    std::ostringstream o;
+    o << "usage: " << prog << " {" << kParams.command << "," << kChems.command << "} [options]\n"
+      << "\n"
+      << "Query definitions in ecCodes concept files.\n"
+      << "\n"
+      << "subcommands:\n"
+      << "  " << kParams.command << "                parameters: " << kParams.id << ", " << kParams.short_name << ", "
+      << kParams.name << ", " << kParams.extra << "\n"
+      << "  " << kChems.command << "                 chemical constituents: " << kChems.id << ", " << kChems.short_name << ",\n"
+      << kPad << kChems.name << ", " << kChems.extra << "\n"
+      << "\n"
+      << "Use '" << prog << " " << kParams.command << " --help' or '" << prog << " " << kChems.command << " --help' for the options.\n";
+    return o.str();
+}
+
+// argv[0] is the subcommand
+static int parse_args(int argc, char** argv, const std::string& prog, Options& opt, std::string& err)
 {
     if (argc == 1) return 0;  // no arguments - show short usage in main
 
@@ -972,15 +1151,31 @@ static int parse_args(int argc, char** argv, Options& opt, std::string& err)
             val = a.substr(eq + 1);
         }
 
-        auto need_value = [&](const char* opt_name) -> bool {
+        auto need_value = [&](const std::string& name) -> bool {
             if (!val.empty()) return true;
             if (i + 1 >= argc) {
-                err = std::string("option requires an argument: ") + opt_name;
+                err = "option requires an argument: " + name;
                 return false;
             }
             val = argv[++i];
             return true;
         };
+
+        // Filter options of the concepts: --<concept> and --<concept>-regex
+        bool is_concept_option = false;
+        for (std::set<std::string>::const_iterator c = concept_names.begin(); c != concept_names.end(); ++c) {
+            if (key == "--" + *c) {
+                if (!need_value(key)) return -1;
+                opt.wildcard[*c] = val;
+                is_concept_option = true;
+            }
+            else if (key == "--" + *c + "-regex") {
+                if (!need_value(key)) return -1;
+                opt.regex[*c] = val;
+                is_concept_option = true;
+            }
+        }
+        if (is_concept_option) continue;
 
         if (key == "--definitions-root") {
             if (!need_value("--definitions-root")) return -1;
@@ -996,38 +1191,6 @@ static int parse_args(int argc, char** argv, Options& opt, std::string& err)
         else if (key == "--scope") {
             if (!need_value("--scope")) return -1;
             opt.scope = val;
-        }
-        else if (key == "--chemName") {
-            if (!need_value("--chemName")) return -1;
-            opt.chemName = val;
-        }
-        else if (key == "--chemName-regex") {
-            if (!need_value("--chemName-regex")) return -1;
-            opt.name_regex = val;
-        }
-        else if (key == "--chemShortName") {
-            if (!need_value("--chemShortName")) return -1;
-            opt.chemShortName = val;
-        }
-        else if (key == "--chemShortName-regex") {
-            if (!need_value("--chemShortName-regex")) return -1;
-            opt.chemShortName_regex = val;
-        }
-        else if (key == "--chemId") {
-            if (!need_value("--chemId")) return -1;
-            opt.chemId = val;
-        }
-        else if (key == "--chemId-regex") {
-            if (!need_value("--chemId-regex")) return -1;
-            opt.chemId_regex = val;
-        }
-        else if (key == "--chemFormula") {
-            if (!need_value("--chemFormula")) return -1;
-            opt.chemFormula = val;
-        }
-        else if (key == "--chemFormula-regex") {
-            if (!need_value("--chemFormula-regex")) return -1;
-            opt.chemFormula_regex = val;
         }
         else if (key == "--attr") {
             if (!need_value("--attr")) return -1;
@@ -1050,6 +1213,35 @@ static int parse_args(int argc, char** argv, Options& opt, std::string& err)
         }
         else if (key == "--regex-case-sensitive") {
             opt.regex_case_sensitive = true;
+        }
+        else if (P->mtg2 && key == "--is_mtg2_switch") {
+            if (!need_value("--is_mtg2_switch")) return -1;
+            // Check the whole value: atoi would turn "garbage" into 0
+            if (val != "0" && val != "1" && val != "2") {
+                err = "--is_mtg2_switch must be one of 0,1,2";
+                return -1;
+            }
+            opt.has_is_mtg2_switch = true;
+            opt.is_mtg2_switch = atoi(val.c_str());
+        }
+        else if (P->mtg2 && key == "--is_legacy") {
+            if (!need_value("--is_legacy")) return -1;
+            if (val != "0" && val != "1") {
+                err = "--is_legacy must be one of 0,1";
+                return -1;
+            }
+            opt.has_is_legacy = true;
+            opt.is_legacy = atoi(val.c_str());
+        }
+        else if (P->mtg2 && key == "--edition") {
+            if (!need_value("--edition")) return -1;
+            // Check the whole value: atoi would turn "2junk" into 2
+            if (val != "1" && val != "2") {
+                err = "--edition must be 1 or 2";
+                return -1;
+            }
+            opt.has_edition = true;
+            opt.edition = atoi(val.c_str());
         }
         else if (key == "--show-encoding") {
             opt.show_encoding = true;
@@ -1075,17 +1267,15 @@ static int parse_args(int argc, char** argv, Options& opt, std::string& err)
         }
         else if (key == "--order-by") {
             if (!need_value("--order-by")) return -1;
-            static const std::set<std::string> valid_order_by = {
-                "edition", "scope", "chemId", "chemShortName", "chemName", "chemFormula"
-            };
+            const std::vector<std::string> valid_order_by = sort_fields();
             std::vector<std::string> fields = split(val, ',');
             if (fields.empty()) {
                 err = "--order-by must contain at least one field";
                 return -1;
             }
             for (size_t j = 0; j < fields.size(); ++j) {
-                if (!valid_order_by.count(fields[j])) {
-                    err = "--order-by must contain only: edition, scope, chemId, chemShortName, chemName, chemFormula";
+                if (std::find(valid_order_by.begin(), valid_order_by.end(), fields[j]) == valid_order_by.end()) {
+                    err = "--order-by must contain only: " + join(valid_order_by, ", ");
                     return -1;
                 }
             }
@@ -1095,7 +1285,11 @@ static int parse_args(int argc, char** argv, Options& opt, std::string& err)
             opt.no_truncate = true;
         }
         else {
-            err = "unrecognized arguments: " + a;
+            const Profile& other = (P == &kParams) ? kChems : kParams;
+            if (is_option_of(other, key))
+                err = key + " is only available with '" + prog.substr(0, prog.find(' ')) + " " + other.command + "'";
+            else
+                err = "unrecognized arguments: " + a;
             return -1;
         }
     }
@@ -1105,21 +1299,11 @@ static int parse_args(int argc, char** argv, Options& opt, std::string& err)
         return -1;
     }
 
-    if (!opt.chemName.empty() && !opt.name_regex.empty()) {
-        err = "Use either --chemName or --chemName-regex, not both";
-        return -1;
-    }
-    if (!opt.chemShortName.empty() && !opt.chemShortName_regex.empty()) {
-        err = "Use either --chemShortName or --chemShortName-regex, not both";
-        return -1;
-    }
-    if (!opt.chemId.empty() && !opt.chemId_regex.empty()) {
-        err = "Use either --chemId or --chemId-regex, not both";
-        return -1;
-    }
-    if (!opt.chemFormula.empty() && !opt.chemFormula_regex.empty()) {
-        err = "Use either --chemFormula or --chemFormula-regex, not both";
-        return -1;
+    for (std::set<std::string>::const_iterator c = concept_names.begin(); c != concept_names.end(); ++c) {
+        if (!opt.wildcard[*c].empty() && !opt.regex[*c].empty()) {
+            err = "Use either --" + *c + " or --" + *c + "-regex, not both";
+            return -1;
+        }
     }
 
     return 0;
@@ -1151,21 +1335,10 @@ static std::string table_value(const Record& rec, const std::string& key)
 {
     if (key == "edition") return std::to_string(rec.edition);
     if (key == "is_mtg2_switch") return rec.sw < 0 ? "-" : std::to_string(rec.sw);
+    if (key == "is_legacy") return rec.edition == 1 ? "-" : (rec.legacy ? "1" : "0");
     if (key == "scope") return rec.scope;
-    if (key == "chemId") {
-        std::map<std::string, std::vector<std::string> >::const_iterator it = rec.values.find("chemId");
-        return it == rec.values.end() ? "-" : format_values(it->second);
-    }
-    if (key == "chemShortName") {
-        std::map<std::string, std::vector<std::string> >::const_iterator it = rec.values.find("chemShortName");
-        return it == rec.values.end() ? "-" : format_values(it->second);
-    }
-    if (key == "chemName") {
-        std::map<std::string, std::vector<std::string> >::const_iterator it = rec.values.find("chemName");
-        return it == rec.values.end() ? "-" : format_values(it->second);
-    }
-    if (key == "chemFormula") {
-        std::map<std::string, std::vector<std::string> >::const_iterator it = rec.values.find("chemFormula");
+    if (concept_names.count(key)) {
+        std::map<std::string, std::vector<std::string> >::const_iterator it = rec.values.find(key);
         return it == rec.values.end() ? "-" : format_values(it->second);
     }
     if (key == "encoding") return format_attrs(rec.attrs);
@@ -1301,9 +1474,10 @@ static std::string json_value(const Record& rec, const std::string& key)
 {
     if (key == "edition") return std::to_string(rec.edition);
     if (key == "is_mtg2_switch") return rec.sw < 0 ? "null" : std::to_string(rec.sw);
+    if (key == "is_legacy") return rec.edition == 1 ? "null" : (rec.legacy ? "1" : "0");
     if (key == "scope") return json_escape(rec.scope);
-    if (key == "chemId") return json_values(rec, key, true);
-    if (key == "chemShortName" || key == "chemName" || key == "chemFormula") return json_values(rec, key, false);
+    if (key == P->id) return json_values(rec, key, true);
+    if (concept_names.count(key)) return json_values(rec, key, false);
     if (key == "encoding") {
         std::string out = "{";
         for (std::map<std::string, std::string>::const_iterator it = rec.attrs.begin(); it != rec.attrs.end(); ++it) {
@@ -1332,20 +1506,38 @@ static std::string truncate_cell(const std::string& s, size_t width)
 
 int main(int argc, char** argv)
 {
+    // The subcommand selects the concepts
+    const std::string command = argc > 1 ? argv[1] : "";
+    if (command == kParams.command) {
+        P = &kParams;
+    }
+    else if (command == kChems.command) {
+        P = &kChems;
+    }
+    else {
+        printf("%s", main_usage_text(argv[0]).c_str());
+        if (argc == 1 || command == "-h" || command == "--help") return 0;
+        errorf("unknown subcommand '%s'", command.c_str());
+        return 2;
+    }
+    const std::vector<std::string> cc = concept_columns();
+    concept_names.insert(cc.begin(), cc.end());
+    const std::string prog = std::string(argv[0]) + " " + P->command;
+
     Options opt;
     std::string arg_err;
-    int parse_res = parse_args(argc, argv, opt, arg_err);
+    int parse_res = parse_args(argc - 1, argv + 1, prog, opt, arg_err);
     if (parse_res == 1) {
-        printf("%s", usage_text(argv[0]).c_str());
+        printf("%s", usage_text(prog).c_str());
         return 0;
     }
-    if (parse_res == 0 && argc == 1) {
-        printf("%s", short_usage_text(argv[0]).c_str());
+    if (parse_res == 0 && argc == 2) {
+        printf("%s", usage_synopsis(prog).c_str());
         printf("Use --help for full help message.\n");
         return 0;
     }
     if (parse_res < 0) {
-        printf("%s", short_usage_text(argv[0]).c_str());
+        printf("%s", usage_synopsis(prog).c_str());
         errorf("%s", arg_err.c_str());
         return 2;
     }
@@ -1353,9 +1545,8 @@ int main(int argc, char** argv)
     std::vector<std::string> selected_columns;
     if (!opt.columns.empty()) {
         selected_columns = split(opt.columns, ',');
-        static const std::set<std::string> valid_columns = {
-            "edition", "scope", "chemId", "chemShortName", "chemName", "chemFormula", "encoding", "sources"
-        };
+        const std::vector<std::string> valid = all_columns();
+        const std::set<std::string> valid_columns(valid.begin(), valid.end());
         if (selected_columns.empty()) {
             errorf("--columns must contain at least one column name");
             return 2;
@@ -1405,63 +1596,93 @@ int main(int argc, char** argv)
         }
     }
 
+    // The definitions are found as in ecCodes, by ecCodes itself: --definitions-root replaces
+    // the definitions path of the context (without the built-in default and
+    // ECCODES_EXTRA_DEFINITION_PATH), before any definition file is looked up
     grib_context* ctx = grib_context_get_default();
+    if (!opt.definitions_root.empty()) grib_context_set_definitions_path(ctx, opt.definitions_root.c_str());
     const char* def_path = grib_definition_path(ctx);
-    bool roots_from_option = false;
-    std::vector<std::string> candidates = definitions_roots(opt, ctx, roots_from_option);
+    const std::vector<std::string> dirs = definitions_dirs(ctx);
 
-    // Usable roots in priority order (MEMFS or existing directories), without duplicates
-    std::vector<std::string> roots;
-    std::set<std::string> seen_real_roots;
-    for (size_t i = 0; i < candidates.size(); ++i) {
-        const std::string& r = candidates[i];
-        // MEMFS paths cannot be resolved: compare them without repeated or trailing slashes,
-        // so that /MEMFS/definitions/ and /MEMFS/definitions are one root but other prefixes stay
-        std::string canonical = normalize_memfs_path(r);
-        if (!starts_with(r, "/MEMFS")) {
-            if (!is_dir(r)) {
-                if (roots_from_option) warningf("Ignoring non-directory definitions root: %s", r.c_str());
-                continue;
-            }
-            char* real = codes_resolve_path(ctx, r.c_str());
-            canonical = real ? std::string(real) : r;
-            grib_context_free(ctx, real);
+    bool used_filesystem_backend = false;
+    bool used_memfs_backend = false;
+    for (size_t i = 0; i < dirs.size(); ++i) {
+        if (starts_with(dirs[i], "/MEMFS")) {
+            used_memfs_backend = true;
         }
-        if (!seen_real_roots.insert(canonical).second) continue;
-        roots.push_back(r);
+        else if (is_dir(dirs[i])) {
+            used_filesystem_backend = true;
+        }
+        else if (!opt.definitions_root.empty()) {
+            warningf("Ignoring non-directory definitions root: %s", dirs[i].c_str());
+        }
     }
 
     if (opt.debug_path_resolution) {
         fprintf(stderr, "DEBUG: ecCodes definitions path: %s\n", def_path ? def_path : "<unavailable>");
-        fprintf(stderr, "DEBUG: candidate roots (from %s):\n", roots_from_option ? "--definitions-root" : "ecCodes definitions path");
-        if (candidates.empty()) fprintf(stderr, "DEBUG:   <none>\n");
-        for (size_t i = 0; i < candidates.size(); ++i)
-            fprintf(stderr, "DEBUG:   %s\n", candidates[i].c_str());
+        fprintf(stderr, "DEBUG: definitions directories (first match wins):\n");
+        if (dirs.empty()) fprintf(stderr, "DEBUG:   <none>\n");
+        for (size_t i = 0; i < dirs.size(); ++i)
+            fprintf(stderr, "DEBUG:   %s\n", dirs[i].c_str());
+    }
 
-        fprintf(stderr, "DEBUG: selected roots (first match wins):\n");
-        if (roots.empty()) fprintf(stderr, "DEBUG:   <none>\n");
-        for (size_t i = 0; i < roots.size(); ++i)
-            fprintf(stderr, "DEBUG:   %s\n", roots[i].c_str());
+    // The concept files of all directories, in path order
+    std::set<std::string> rel_files;
+    bool scan_failed = false;
+    for (size_t i = 0; i < dirs.size(); ++i) {
+        if (list_concept_files(dirs[i], rel_files, opt.debug_path_resolution) != GRIB_SUCCESS) scan_failed = true;
+    }
+
+    FileFilter file_filter;
+    file_filter.has_edition = opt.has_edition;
+    file_filter.edition = opt.edition;
+    file_filter.has_is_mtg2_switch = opt.has_is_mtg2_switch;
+    file_filter.is_mtg2_switch = opt.is_mtg2_switch;
+    file_filter.has_is_legacy = opt.has_is_legacy;
+    file_filter.is_legacy = opt.is_legacy;
+    if (!opt.scope.empty()) {
+        std::vector<std::string> scope_items = split(opt.scope, ',');
+        file_filter.scopes.insert(scope_items.begin(), scope_items.end());
     }
 
     std::map<std::string, Record> records_by_key;
-    std::set<std::string> claimed_files;
-    bool used_filesystem_backend = false;
-    bool used_memfs_backend = false;
-    bool scan_failed = false;
 
-    for (size_t i = 0; i < roots.size(); ++i) {
-        if (!starts_with(roots[i], "/MEMFS")) {
-            used_filesystem_backend = true;
-            if (scan_definitions(roots[i], records_by_key, claimed_files, opt.debug_path_resolution) != GRIB_SUCCESS)
-                scan_failed = true;
-            continue;
-        }
-
-        // Read in-process: codes_access/codes_fopen serve /MEMFS paths from memory
-        used_memfs_backend = true;
-        if (scan_definitions(roots[i], records_by_key, claimed_files, opt.debug_path_resolution) != GRIB_SUCCESS)
+    // Files on disk and in MEMFS are both read in-process: codes_fopen serves /MEMFS paths from memory
+    auto parse_all = [&](const FileFilter* filter, bool debug) {
+        size_t n_parsed = 0, n_skipped = 0;
+        if (parse_concept_files(ctx, rel_files, records_by_key, filter, n_parsed, n_skipped) != GRIB_SUCCESS)
             scan_failed = true;
+        if (debug) fprintf(stderr, "DEBUG: concept files parsed: %zu, skipped by filters: %zu\n", n_parsed, n_skipped);
+    };
+
+    // Whether the checks below which look at all definitions (any results at all, known --attr
+    // keys and known scopes, with suggestions) could fail only because files were skipped
+    auto needs_all_files = [&]() -> bool {
+        if (records_by_key.empty()) return true;
+        std::set<std::string> known_keys, known_scopes;
+        for (std::map<std::string, Record>::const_iterator it = records_by_key.begin(); it != records_by_key.end(); ++it) {
+            known_scopes.insert(it->second.scope);
+            for (std::map<std::string, std::string>::const_iterator a = it->second.attrs.begin(); a != it->second.attrs.end(); ++a)
+                known_keys.insert(a->first);
+        }
+        for (std::map<std::string, std::string>::const_iterator a = attr_filter.begin(); a != attr_filter.end(); ++a)
+            if (!known_keys.count(a->first)) return true;
+        for (std::set<std::string>::const_iterator s = file_filter.scopes.begin(); s != file_filter.scopes.end(); ++s)
+            if (!known_scopes.count(*s)) return true;
+        return false;
+    };
+
+    // Parsed also after a directory listing error, so that every failure is reported
+    if (file_filter.active()) {
+        parse_all(&file_filter, opt.debug_path_resolution);
+        if (!scan_failed && needs_all_files()) {
+            if (opt.debug_path_resolution) fprintf(stderr, "DEBUG: reading all concept files to check the query\n");
+            records_by_key.clear();
+            parse_all(NULL, false);
+        }
+    }
+    else {
+        parse_all(NULL, opt.debug_path_resolution);
     }
     release_previous_concept_list();
     // ecCodes fails on a broken concept file as well: no partial results
@@ -1516,7 +1737,7 @@ int main(int argc, char** argv)
     }
 
     std::map<std::string, FieldMatcher> matchers;
-    auto build_matcher = [&](const std::string& wildcard, const std::string& re_text, const char* opt_name) -> bool {
+    auto build_matcher = [&](const std::string& wildcard, const std::string& re_text, const std::string& opt_name) -> bool {
         FieldMatcher fm;
         if (!wildcard.empty()) {
             fm.has_wildcard = true;
@@ -1531,7 +1752,7 @@ int main(int argc, char** argv)
                 fm.regex = std::regex(re_text, flags);
             }
             catch (const std::exception& e) {
-                errorf("Invalid pattern for %s-regex: %s", opt_name, e.what());
+                errorf("Invalid pattern for %s-regex: %s", opt_name.c_str(), e.what());
                 return false;
             }
         }
@@ -1539,10 +1760,10 @@ int main(int argc, char** argv)
         return true;
     };
 
-    if (!build_matcher(opt.chemName, opt.name_regex, "chemName")) return 2;
-    if (!build_matcher(opt.chemShortName, opt.chemShortName_regex, "chemShortName")) return 2;
-    if (!build_matcher(opt.chemId, opt.chemId_regex, "chemId")) return 2;
-    if (!build_matcher(opt.chemFormula, opt.chemFormula_regex, "chemFormula")) return 2;
+    const std::vector<std::string> fconcepts = filter_concepts();
+    for (size_t i = 0; i < fconcepts.size(); ++i) {
+        if (!build_matcher(opt.wildcard[fconcepts[i]], opt.regex[fconcepts[i]], fconcepts[i])) return 2;
+    }
 
     std::set<std::string> scope_filter;
     if (!opt.scope.empty()) {
@@ -1592,17 +1813,21 @@ int main(int argc, char** argv)
     for (size_t i = 0; i < records.size(); ++i) {
         const Record& rec = records[i];
         if (!scope_filter.empty() && !scope_filter.count(rec.scope)) continue;
+        if (opt.has_is_mtg2_switch) {
+            if (rec.sw < 0 || rec.sw != opt.is_mtg2_switch) continue;
+        }
+        if (opt.has_is_legacy) {
+            if (rec.edition == 1 || (rec.legacy ? 1 : 0) != opt.is_legacy) continue;
+        }
+        if (opt.has_edition && rec.edition != opt.edition) continue;
 
-        std::vector<std::string> empty;
-        const std::vector<std::string>& names = rec.values.count("chemName") ? rec.values.find("chemName")->second : empty;
-        const std::vector<std::string>& shorts = rec.values.count("chemShortName") ? rec.values.find("chemShortName")->second : empty;
-        const std::vector<std::string>& pids = rec.values.count("chemId") ? rec.values.find("chemId")->second : empty;
-        const std::vector<std::string>& chemFormula = rec.values.count("chemFormula") ? rec.values.find("chemFormula")->second : empty;
-
-        if (!match_any(names, matchers["chemName"])) continue;
-        if (!match_any(shorts, matchers["chemShortName"])) continue;
-        if (!match_any(pids, matchers["chemId"])) continue;
-        if (!match_any(chemFormula, matchers["chemFormula"])) continue;
+        bool values_match = true;
+        static const std::vector<std::string> empty;
+        for (size_t c = 0; c < fconcepts.size() && values_match; ++c) {
+            std::map<std::string, std::vector<std::string> >::const_iterator v = rec.values.find(fconcepts[c]);
+            values_match = match_any(v == rec.values.end() ? empty : v->second, matchers[fconcepts[c]]);
+        }
+        if (!values_match) continue;
 
         if (opt.attr_strict && (!attr_filter.empty() || !attrkey_filter.empty())) {
             std::set<std::string> expected_keys;
@@ -1718,7 +1943,9 @@ int main(int argc, char** argv)
         if (c) return c;
         c = cmp_str(a.scope, b.scope);
         if (c) return c;
-        return cmp_ll(parse_id(first_value(a, "chemId")), parse_id(first_value(b, "chemId")));
+        c = cmp_ll(parse_id(first_value(a, P->id)), parse_id(first_value(b, P->id)));
+        if (c) return c;
+        return cmp_ll(a.legacy, b.legacy);  // as in ecCodes, legacy entries come last
     };
 
     auto cmp_records = [&](const Record& a, const Record& b) -> int {
@@ -1727,16 +1954,16 @@ int main(int argc, char** argv)
             const std::string& field = opt.order_by_fields[i];
             if (field == "edition")
                 c = cmp_ll(a.edition, b.edition);
+            else if (field == "is_mtg2_switch")
+                c = cmp_ll(a.sw, b.sw);
+            else if (field == "is_legacy")
+                c = cmp_ll(a.legacy, b.legacy);
             else if (field == "scope")
                 c = cmp_str(a.scope, b.scope);
-            else if (field == "chemId")
-                c = cmp_ll(parse_id(first_value(a, "chemId")), parse_id(first_value(b, "chemId")));
-            else if (field == "chemShortName")
-                c = cmp_str(first_value(a, "chemShortName"), first_value(b, "chemShortName"));
-            else if (field == "chemName")
-                c = cmp_str(first_value(a, "chemName"), first_value(b, "chemName"));
-            else if (field == "chemFormula")
-                c = cmp_str(first_value(a, "chemFormula"), first_value(b, "chemFormula"));
+            else if (field == P->id)
+                c = cmp_ll(parse_id(first_value(a, field)), parse_id(first_value(b, field)));
+            else if (concept_names.count(field))
+                c = cmp_str(first_value(a, field), first_value(b, field));
             if (c) return c;
         }
         return cmp_default(a, b);
@@ -1753,8 +1980,9 @@ int main(int argc, char** argv)
         std::map<std::string, std::vector<Record> > groups;
         for (size_t i = 0; i < filtered.size(); ++i) {
             const Record& r = filtered[i];
-            std::string key = std::to_string(r.edition) + "|" + std::to_string(r.sw) + "|" + r.scope + "|";
-            key += table_value(r, "chemId") + "|" + table_value(r, "chemShortName") + "|" + table_value(r, "chemName") + "|" + table_value(r, "chemFormula");
+            std::string key = std::to_string(r.edition) + "|" + std::to_string(r.sw) + "|" + std::to_string(r.legacy) + "|" + r.scope + "|";
+            for (size_t c = 0; c < cc.size(); ++c)
+                key += (c ? "|" : "") + table_value(r, cc[c]);
             groups[key].push_back(r);
         }
 
@@ -1767,19 +1995,18 @@ int main(int argc, char** argv)
             }
             Record out = grp[0];
             out.attrs.clear();
-            std::vector<std::vector<std::string> > pv, sv, nv, uv, srcv;
+            std::map<std::string, std::vector<std::vector<std::string> > > values;
+            std::vector<std::vector<std::string> > srcv;
             for (size_t i = 0; i < grp.size(); ++i) {
                 const Record& rr = grp[i];
-                if (rr.values.count("chemId")) pv.push_back(rr.values.find("chemId")->second);
-                if (rr.values.count("chemShortName")) sv.push_back(rr.values.find("chemShortName")->second);
-                if (rr.values.count("chemName")) nv.push_back(rr.values.find("chemName")->second);
-                if (rr.values.count("chemFormula")) uv.push_back(rr.values.find("chemFormula")->second);
+                for (size_t c = 0; c < cc.size(); ++c) {
+                    std::map<std::string, std::vector<std::string> >::const_iterator v = rr.values.find(cc[c]);
+                    if (v != rr.values.end()) values[cc[c]].push_back(v->second);
+                }
                 srcv.push_back(rr.sources);
             }
-            out.values["chemId"] = merge_values(pv);
-            out.values["chemShortName"] = merge_values(sv);
-            out.values["chemName"] = merge_values(nv);
-            out.values["chemFormula"] = merge_values(uv);
+            for (size_t c = 0; c < cc.size(); ++c)
+                out.values[cc[c]] = merge_values(values[cc[c]]);
             out.sources = merge_values(srcv);
             deduped.push_back(out);
         }
@@ -1818,11 +2045,11 @@ int main(int argc, char** argv)
             const Record& r = filtered[i];
             std::string line;
             line += "edition=" + std::to_string(r.edition) + " ";
-            line += "scope=" + r.scope + " ";
-            line += "chemId=" + table_value(r, "chemId") + " ";
-            line += "chemShortName=" + table_value(r, "chemShortName") + " ";
-            line += "chemName=" + table_value(r, "chemName") + " ";
-            line += "chemFormula=" + table_value(r, "chemFormula");
+            if (P->mtg2 && r.sw >= 0) line += "is_mtg2_switch=" + std::to_string(r.sw) + " ";
+            if (r.legacy) line += "is_legacy=1 ";
+            line += "scope=" + r.scope;
+            for (size_t c = 0; c < cc.size(); ++c)
+                line += " " + cc[c] + "=" + table_value(r, cc[c]);
             printf("%s\n", line.c_str());
 
             if (opt.show_encoding && !r.attrs.empty()) {
@@ -1838,12 +2065,7 @@ int main(int argc, char** argv)
     if (opt.format == "json") {
         std::vector<std::string> cols = selected_columns;
         if (cols.empty()) {
-            cols.push_back("edition");
-            cols.push_back("scope");
-            cols.push_back("chemId");
-            cols.push_back("chemShortName");
-            cols.push_back("chemName");
-            cols.push_back("chemFormula");
+            cols = sort_fields();
             if (opt.show_encoding) cols.push_back("encoding");
             if (opt.show_sources) cols.push_back("sources");
         }
@@ -1867,12 +2089,16 @@ int main(int argc, char** argv)
         cols = selected_columns;
     }
     else {
+        bool include_switch = false, include_legacy = false;
+        for (size_t i = 0; i < filtered.size(); ++i) {
+            if (P->mtg2 && filtered[i].sw >= 0) include_switch = true;
+            if (filtered[i].legacy) include_legacy = true;
+        }
         cols.push_back("edition");
+        if (include_switch) cols.push_back("is_mtg2_switch");
+        if (include_legacy) cols.push_back("is_legacy");
         cols.push_back("scope");
-        cols.push_back("chemId");
-        cols.push_back("chemShortName");
-        cols.push_back("chemName");
-        cols.push_back("chemFormula");
+        cols.insert(cols.end(), cc.begin(), cc.end());
         if (opt.show_encoding) cols.push_back("encoding");
         if (opt.show_sources) cols.push_back("sources");
     }
@@ -1898,11 +2124,13 @@ int main(int argc, char** argv)
     if (!opt.no_truncate) {
         std::map<std::string, size_t> maxw;
         maxw["edition"] = 7;
+        maxw["is_mtg2_switch"] = 14;
+        maxw["is_legacy"] = 9;
         maxw["scope"] = 28;
-        maxw["chemId"] = 12;
-        maxw["chemShortName"] = 16;
-        maxw["chemName"] = 48;
-        maxw["chemFormula"] = 20;
+        maxw[P->id] = 12;
+        maxw[P->short_name] = 16;
+        maxw[P->name] = 48;
+        maxw[P->extra] = 20;
         maxw["encoding"] = 60;
         maxw["sources"] = 60;
         for (size_t c = 0; c < cols.size(); ++c) {
