@@ -67,7 +67,7 @@ int grib_tool_before_getopt(grib_runtime_options* /*options*/)
  grib_runtime_options* options has been loaded.
  Initialisation and startup can be done here
 */
-int grib_tool_init(grib_runtime_options* /*options*/)
+int grib_tool_init([[maybe_unused]] grib_runtime_options* options)
 {
     DEBUG_ASSERT(!options->latlon);
     return 0;
