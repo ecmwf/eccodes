@@ -290,13 +290,22 @@ grep -q "scope=grib1/localConcepts/kwbc paramId=3096 shortName=vice " $tempA
 grep -q "encoding: indicatorOfParameter=141, table2Version=128" $tempA
 
 # Legacy concepts (*.legacy.def): ecCodes reads them from grib2 and grib2/localConcepts/ecmf as the
-# last fallback, for every MTG2 switch value. This encoding is only in ecmf/paramId.legacy.def
+# last fallback, for every MTG2 switch value. This encoding is only in ecmf/paramId.legacy.def.
+# Each legacy entry is listed once, without an MTG2 switch (as for edition 1)
 ${tools_dir}/grib_defs params --attr discipline=192,parameterCategory=131,parameterNumber=60 > $tempA
-[ -s $tempA ]
-[ $(grep -c "is_legacy=1 scope=grib2/localConcepts/ecmf paramId=131060 shortName=tpg1 " $tempA) -eq 3 ]
-grep -q "is_mtg2_switch=0 is_legacy=1" $tempA
-grep -q "is_mtg2_switch=1 is_legacy=1" $tempA
-grep -q "is_mtg2_switch=2 is_legacy=1" $tempA
+[ $(grep -c "" $tempA) -eq 1 ]
+grep -q "^edition=2 is_legacy=1 scope=grib2/localConcepts/ecmf paramId=131060 shortName=tpg1 " $tempA
+${tools_dir}/grib_defs params --paramId 131060 --is_legacy 1 --columns is_mtg2_switch,is_legacy --format json > $tempA
+grep -q '{"is_mtg2_switch": null, "is_legacy": 1}' $tempA
+# --is_mtg2_switch selects the files of one switch value, so it excludes legacy entries
+set +e
+${tools_dir}/grib_defs params --paramId 131060 --is_legacy 1 --is_mtg2_switch 1 > $tempA
+status=$?
+set -e
+[ $status -eq 1 ]
+# Legacy entries come after all other GRIB2 entries
+${tools_dir}/grib_defs params --edition 2 --columns is_legacy > $tempA
+[ "$(grep -n "is_legacy=1" $tempA | head -1 | cut -d: -f1)" -gt "$(grep -n "is_legacy=0" $tempA | tail -1 | cut -d: -f1)" ]
 # ... and agrees with the library
 ${tools_dir}/grib_set -s discipline=192,parameterCategory=131,parameterNumber=60 $ECCODES_SAMPLES_PATH/GRIB2.tmpl $tempGrib
 [ "$(${tools_dir}/grib_get -p paramId $tempGrib)" = "131060" ]

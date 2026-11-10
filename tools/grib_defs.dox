@@ -16,8 +16,9 @@
  params also reads the legacy concept files *.legacy.def in grib2/ and
  grib2/localConcepts/ecmf/, which ecCodes uses as the last fallback, after the files
  selected by the MTG2 switch. They apply to every MTG2 switch value, so each legacy entry
- is listed for is_mtg2_switch 0, 1 and 2, marked with is_legacy=1. For the same paramId,
- legacy entries are listed after the others. Legacy files in other directories are not
+ is listed once, without an MTG2 switch (as for edition 1), and marked with is_legacy=1.
+ --is_mtg2_switch therefore excludes them. Legacy entries are listed after all other
+ GRIB2 entries. Legacy files in other directories are not
  used by ecCodes and are not read.
  \n
  Entries of the different concept files are joined into one record when edition,
@@ -117,7 +118,8 @@
  \n \n --units pattern, --units-regex regex \n
         Wildcard filter (case-insensitive) or regex filter for units.
  \n \n --is_mtg2_switch 0|1|2 \n
-        Restrict GRIB2 records to lte33=0, def=1, chemsplit=2.
+        Restrict GRIB2 records to lte33=0, def=1, chemsplit=2. Legacy entries have no
+        MTG2 switch and are excluded.
  \n \n --is_legacy 0|1 \n
         Restrict GRIB2 records to entries from *.legacy.def files (1) or from all
         other concept files (0).
@@ -164,7 +166,7 @@ grib_defs params --edition 2 --attrkey typeOfStatisticalProcessing --order-by sh
 
 -# Legacy entries of ECMWF local concepts, as a table:\n
 \verbatim
-grib_defs params --is_legacy 1 --scope grib2/localConcepts/ecmf --is_mtg2_switch 1 --format table
+grib_defs params --is_legacy 1 --scope grib2/localConcepts/ecmf --format table
 \endverbatim
 
 -# List all entries, then only encodings shared by several paramIds:\n

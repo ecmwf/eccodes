@@ -290,9 +290,9 @@ static int infer_switch(const std::string& filename)
 
 // Directories whose *.legacy.def files ecCodes reads (grib2/parameters.def: conceptsMasterDir and
 // conceptsLocalDirECMF). They are the last fallback, after the files selected by the MTG2 switch,
-// and apply to every MTG2 switch value. There are legacy files for parameters only.
+// and apply to every MTG2 switch value, so their entries have no switch value of their own
+// (like edition 1). There are legacy files for parameters only.
 static const char* kLegacyDirs[] = { "grib2", "grib2/localConcepts/ecmf" };
-static const int kLegacySwitches[] = { 0, 1, 2 };
 
 static bool is_legacy_concept_file(const std::string& rel)
 {
@@ -676,7 +676,7 @@ struct ConceptFile
 {
     std::string concept_name;
     int edition = 0;
-    std::vector<int> switches;  // the MTG2 switch values it applies to; -1 for edition 1
+    std::vector<int> switches;  // the MTG2 switch value; -1 for edition 1 and legacy files
     bool legacy = false;
     std::string scope;
 };
@@ -699,10 +699,9 @@ static bool classify_concept_file(const std::string& rel, ConceptFile& cf)
 
     cf.edition = starts_with(rel, "grib1/") ? 1 : 2;
     int sw = infer_switch(filename);
-    if (cf.edition == 1) sw = -1;
-    if (cf.edition == 2 && sw == -2 && !cf.legacy) return false;
+    if (cf.edition == 1 || cf.legacy) sw = -1;
+    if (cf.edition == 2 && sw == -2) return false;
     cf.switches.assign(1, sw);
-    if (cf.legacy) cf.switches.assign(kLegacySwitches, kLegacySwitches + sizeof(kLegacySwitches) / sizeof(kLegacySwitches[0]));
 
     const size_t slash = rel.find('/');
     const size_t last_slash = rel.find_last_of('/');
@@ -1094,7 +1093,7 @@ static std::string usage_text(const std::string& prog)
           << "  --is_legacy {0,1}     Restrict GRIB2 to entries from *.legacy.def files (1)\n"
           << "                        or from all other files (0). ecCodes uses legacy\n"
           << "                        entries only as the last fallback, for every MTG2\n"
-          << "                        switch value\n"
+          << "                        switch value, so they have no is_mtg2_switch\n"
           << "  --edition {1,2}       Restrict to GRIB edition 1 or 2\n";
     }
     o << "  --show-encoding       Show the GRIB encoding constraints (same key/value\n"
@@ -1946,13 +1945,13 @@ int main(int argc, char** argv)
     auto cmp_default = [&](const Record& a, const Record& b) -> int {
         int c = cmp_ll(a.edition, b.edition);
         if (c) return c;
+        c = cmp_ll(a.legacy, b.legacy);  // as in ecCodes, legacy entries come last
+        if (c) return c;
         c = cmp_ll(a.sw, b.sw);
         if (c) return c;
         c = cmp_str(a.scope, b.scope);
         if (c) return c;
-        c = cmp_ll(parse_id(first_value(a, P->id)), parse_id(first_value(b, P->id)));
-        if (c) return c;
-        return cmp_ll(a.legacy, b.legacy);  // as in ecCodes, legacy entries come last
+        return cmp_ll(parse_id(first_value(a, P->id)), parse_id(first_value(b, P->id)));
     };
 
     auto cmp_records = [&](const Record& a, const Record& b) -> int {
