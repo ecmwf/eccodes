@@ -175,7 +175,7 @@ for pdtn in $pdtns ; do
     stream=enda
   else
     echo "unknown productDefinitionTemplateNumber=$pdtn"
-    exit -1
+    exit 1
   fi
   ${tools_dir}/grib_set -s tablesVersion=32,marsExpver=$expver,centre=$centre,suiteName=$origin,type=$type,productionStatusOfProcessedData=$pspd,\
 grib2LocalSectionPresent=1,grib2LocalSectionNumber=0,crraLocalVersion=2,productDefinitionTemplateNumber=$pdtn $grib2_sample $temp1
