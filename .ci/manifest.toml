@@ -146,13 +146,6 @@ platform = "rocky-9"
 runs-on = "arc-runner-very-large"
 cxx-compiler = "g++-14"
 c-compiler = "gcc-14"
-container = "eccr.ecmwf.int/public-ci-images/rocky10-gcc14-gfortran14"
-platform = "rocky-10"
-
-[[matrix.build.include]]
-runs-on = "arc-runner-very-large"
-cxx-compiler = "g++-14"
-c-compiler = "gcc-14"
 options = "eckit-geo"
 container = "eccr.ecmwf.int/public-ci-images/rocky10-gcc14-gfortran14"
 platform = "rocky-10"
@@ -164,6 +157,8 @@ c-compiler = "gcc-10"
 container = "eccr.ecmwf.int/public-ci-images/debian11-gcc10-gfortran10"
 platform = "debian-11"
 
+# Debian 11 is end of life (LTS ended August 2026). Kept only because metkit requests
+# eccodes[eckit-geo] on debian-11; drop together with metkit's debian-11 leg.
 [[matrix.build.include]]
 runs-on = "arc-runner-normal"
 cxx-compiler = "g++-10"
@@ -269,6 +264,8 @@ modules = ["load prgenv/intel-llvm", "unload intel", "load intel/2025.3.1", "loa
 c-compiler-binary = "icx"
 cxx-compiler-binary = "icpx"
 
+# icpc (Intel classic) is deprecated and was removed from oneAPI 2024. Kept only because
+# metkit requests this artifact; drop together with metkit's icpc leg.
 [[matrix.build-hpc.include]]
 options = "eckit-geo"
 cxx-compiler = "icpc-2023.2.0"
