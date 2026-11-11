@@ -21,3 +21,6 @@ a C library, Fortran 90 bindings, command line tools, and Rust crates.
 
    content/c-api
    content/rust/index
+
+:ref:`The Rust interface <Rust_Introduction>` is the ``eccodes`` crate, a
+safe Rust API over the same C library.
