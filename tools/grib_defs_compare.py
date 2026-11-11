@@ -55,7 +55,7 @@ KINDS = {
 }
 
 # Change types in output order.
-CHANGES = ["new-scope", "removed-scope", "moved", "new", "removed", "changed-encoding", "renamed-shortName", "renamed-name",
+CHANGES = ["new-scope", "removed-scope", "moved", "new", "removed", "added-entry", "removed-entry", "changed-encoding", "renamed-shortName", "renamed-name",
            "changed-unit", "changed-formula", "common"]
 # Not part of the default selection: they are not differences
 NOT_DIFFERENCES = {"common"}
@@ -237,7 +237,12 @@ def compare(old, new, wanted, kind, old_rows, new_rows):
     # unit changes made at the same time are reported in addition.
     def signature(key, e):
         edition, sw, legacy, scope, ident = key
-        return (edition, scope, ident, frozenset(e["enc"]))
+        return (edition, ident, frozenset(e["enc"]))
+
+    def where(k, with_scope):
+        """Placement of an entry, with its scope when scopes are compared separately."""
+        text = placement(k[1], k[2])
+        return "%s [%s]" % (k[3], text) if with_scope and k[3] is not None else text
 
     only_old = {k: v for k, v in old.items() if k not in new}
     only_new = {k: v for k, v in new.items() if k not in old}
@@ -254,11 +259,13 @@ def compare(old, new, wanted, kind, old_rows, new_rows):
             if "moved" in wanted:
                 edition, _, _, scope, ident = first
                 e = new[first]
+                # Moved between scopes, e.g. from grib2/localConcepts/ecmf to grib2: show the scopes
+                cross_scope = len({k[3] for k in g["old"] + g["new"]}) > 1
                 diffs.append({"change": "moved", "edition": edition, "is_mtg2_switch": None, "is_legacy": None,
-                              "scope": scope, "id": ident, "short": joined(e["short"]), "name": joined(e["name"]),
-                              "extra": joined(e["extra"]), "encoding": sorted(e["enc"]),
-                              "old": ", ".join(placement(k[1], k[2]) for k in sorted(g["old"], key=sort_key)),
-                              "new": ", ".join(placement(k[1], k[2]) for k in sorted(g["new"], key=sort_key))})
+                              "scope": None if cross_scope else scope, "id": ident, "short": joined(e["short"]),
+                              "name": joined(e["name"]), "extra": joined(e["extra"]), "encoding": sorted(e["enc"]),
+                              "old": ", ".join(where(k, cross_scope) for k in sorted(g["old"], key=sort_key)),
+                              "new": ", ".join(where(k, cross_scope) for k in sorted(g["new"], key=sort_key))})
             moved_renames.append((sorted(g["old"], key=sort_key)[0], first))
 
     for okey, nkey in moved_renames:
@@ -271,15 +278,41 @@ def compare(old, new, wanted, kind, old_rows, new_rows):
         if o["extra"] != n["extra"]:
             add(extra_change, nkey, short, joined(o["extra"]), joined(n["extra"]))
 
+    # Where each id is, per edition: an entry only in one version is a new or removed parameter only
+    # if its id is nowhere else in the other version (within the compared selection) for the same
+    # MTG2 switch. Legacy entries count for every switch: ecCodes uses them as the last fallback.
+    def by_id(entries):
+        out = {}
+        for k in entries:
+            out.setdefault((k[0], k[4]), []).append(k)
+        return out
+
+    old_ids, new_ids = by_id(old), by_id(new)
+
+    def elsewhere(key, ids):
+        found = [k for k in ids.get((key[0], key[4]), [])
+                 if k[1] == key[1] or k[2] or key[2]]
+        return ", ".join(where(k, True) for k in sorted(found, key=sort_key))
+
     for key in sorted(set(old) | set(new), key=sort_key):
         if key in moved_keys:
             continue
         o, n = old.get(key), new.get(key)
         if o is None:
-            add("new", key, joined(n["short"]), "", "%s | %s | %s" % (joined(n["short"]), joined(n["name"]), joined(n["extra"])))
+            text = "%s | %s | %s" % (joined(n["short"]), joined(n["name"]), joined(n["extra"]))
+            other = elsewhere(key, old_ids)
+            if other:
+                add("added-entry", key, joined(n["short"]), other, text)
+            else:
+                add("new", key, joined(n["short"]), "", text)
             continue
         if n is None:
-            add("removed", key, joined(o["short"]), "%s | %s | %s" % (joined(o["short"]), joined(o["name"]), joined(o["extra"])), "")
+            text = "%s | %s | %s" % (joined(o["short"]), joined(o["name"]), joined(o["extra"]))
+            other = elsewhere(key, new_ids)
+            if other:
+                add("removed-entry", key, joined(o["short"]), text, other)
+            else:
+                add("removed", key, joined(o["short"]), text, "")
             continue
         short = joined(n["short"])
         if all(o[k] == n[k] for k in ("enc", "short", "name", "extra")):
@@ -434,8 +467,19 @@ def main():
                    help="Entries moved between MTG2 switches or to/from legacy files, with the same "
                         "encodings (name or unit changes are listed in addition); old and new list the placements, e.g. 'switch 0, switch 1' -> 'legacy'. "
                         "Such entries are not listed under --new and --removed")
-    g.add_argument("--new", action="store_true", help="Entries only in the new definitions")
-    g.add_argument("--removed", action="store_true", help="Entries only in the old definitions")
+    g.add_argument("--new", action="store_true",
+                   help="New parameters: ids which the old definitions do not have for this edition and MTG2 "
+                        "switch, in any compared scope (legacy entries count for every switch)")
+    g.add_argument("--removed", action="store_true",
+                   help="Removed parameters: ids which the new definitions no longer have for this edition and "
+                        "MTG2 switch, in any compared scope")
+    g.add_argument("--added-entry", action="store_true",
+                   help="Entries added to a scope for an id which the old definitions have in another scope "
+                        "for the same switch (or as legacy), e.g. a parameter added to grib2 which was only in "
+                        "grib2/localConcepts/ecmf; old lists where the id was")
+    g.add_argument("--removed-entry", action="store_true",
+                   help="Entries removed from a scope for an id which the new definitions still have in another "
+                        "scope for the same switch (or as legacy); new lists where the id is")
     g.add_argument("--changed-encoding", action="store_true",
                    help="Entries whose set of encodings differs; one row per entry, the encodings only in the old "
                         "definitions under old and those only in the new ones under new (separated by '; ')")
