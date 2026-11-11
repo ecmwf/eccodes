@@ -661,10 +661,8 @@ static int scan_dir_recursive(const std::string& root, std::vector<std::string>&
 static std::vector<std::string> memfs_candidate_files()
 {
     static const char* grib1_local_concepts[] = {
-        "ammc", "cerise", "cnmc", "destine", "destinegen1", "ecmf", "edzw", "efkl",
-        "egrr", "eidb", "ekmi", "enmi", "era", "era6", "eswi", "fire", "hydro",
-        "hydro_legacy", "kwbc", "lcgcr", "lfpw", "lfpw1", "lowm", "nextgems", "rjtd",
-        "s2s", "sbsj", "tigge", "uerra", "wpmip"
+        "ammc", "cnmc", "ecmf", "edzw", "efkl", "eidb", "ekmi",
+        "enmi", "eswi", "kwbc", "lfpw", "lowm", "rjtd", "sbsj"
     };
     static const char* grib2_local_concepts[] = {
         "cerise", "cnmc", "destine", "destinegen1", "ecmf", "edzw", "efkl",
