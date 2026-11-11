@@ -33,6 +33,7 @@ set marsType = 73;
 set marsStream = 1025;
 set offsetToStartOfAnalysisInHours = 96;
 set offsetToStartOfForecastFillupInHours = 24;
+set productDefinitionTemplateNumber = 72;
 set significanceOfReferenceTime = 1;
 set year = 2000;
 set month = 1;
@@ -46,6 +47,8 @@ set backgroundProcess = 147;
 set generatingProcessIdentifier = 42;
 write;
 EOF
+
+${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample_grib2
 
 result=$(${tools_dir}/grib_get -p mars.date $tempGrib)
 [ "$result" = "20000105" ]
@@ -59,6 +62,7 @@ set marsType = 72;
 set marsStream = 1025;
 set offsetToStartOfAnalysisInHours = 96;
 set offsetToStartOfForecastFillupInHours = 24;
+set productDefinitionTemplateNumber = 72;
 set significanceOfReferenceTime = 1;
 set year = 2000;
 set month = 1;
@@ -72,6 +76,8 @@ set backgroundProcess = 147;
 set generatingProcessIdentifier = 42;
 write;
 EOF
+
+${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample_grib2
 
 result=$(${tools_dir}/grib_get -p mars.date $tempGrib)
 [ "$result" = "20000102" ]
