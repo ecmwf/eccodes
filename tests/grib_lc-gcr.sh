@@ -40,7 +40,7 @@ test_stream_and_type()
         pspd=15
     else
         echo "Abort: expver not prod/test (i.e. productionStatusOfProcessedData not 14/15)!"
-        exit -1
+        exit 1
     fi
 
     # change productionStatusOfProcessedData
