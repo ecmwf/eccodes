@@ -84,3 +84,8 @@ trash
 # Rust
 /rust/target/
 /rust/**/Cargo.lock
+
+# Sphinx docs
+!/docs/Makefile
+/docs/_build/
+/docs/.venv/
