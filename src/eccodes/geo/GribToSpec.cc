@@ -1143,6 +1143,11 @@ GribToSpec::GribToSpec(codes_handle* h, bool rotated) :
             spec_.reset(make_space_view_spec(h));
             return;
         }
+
+        // not representable (and not to default to the unprojected)
+        if (type == "equatorial_azimuthal_equidistant") {
+            throw eckit::geo::exception::ProjectionError("GribToSpec: gridType=" + type + " not supported", Here());
+        }
     }
 
     std::string gridType;
