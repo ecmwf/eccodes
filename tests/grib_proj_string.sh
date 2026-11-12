@@ -109,8 +109,14 @@ grep -q "Hint: Try unpacking as string" $tempText
 ${tools_dir}/grib_set -s gridType=albers,LaDInDegrees=23,LoVInDegrees=264,Latin1InDegrees=29.5,Latin2InDegrees=45.5,DxInMetres=5000,DyInMetres=5000 $grib2_sample $tempGrib
 ${tools_dir}/grib_get -p projString $tempGrib
 
+# Transverse Mercator (British National Grid; sample Ni=16, Nj=31, scanning i+j-)
+${tools_dir}/grib_set -s gridType=transverse_mercator,latitudeOfReferencePointInDegrees=49,longitudeOfReferencePointInDegrees=-2,scaleFactorAtReferencePoint=0.9996012717,XR=40000000,YR=-10000000,Di=200000,Dj=200000,X1=0,Y1=6000000,X2=3000000,Y2=0 $grib2_sample $tempGrib
+${tools_dir}/grib_get -p projString $tempGrib > $tempText
+grep -q "proj=tmerc" $tempText
+grep -q "k_0=0.99960124" $tempText
+
 # Unsupported grids
-unsupported_grids="space_view equatorial_azimuthal_equidistant transverse_mercator"
+unsupported_grids="space_view equatorial_azimuthal_equidistant"
 for ug in $unsupported_grids; do
   ${tools_dir}/grib_set -s gridType=$ug $grib2_sample $tempGrib
   set +e

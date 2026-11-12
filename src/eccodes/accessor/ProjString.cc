@@ -121,9 +121,26 @@ static int proj_albers(grib_handle* h, char* result)
     return err;
 }
 
-static int proj_transverse_mercator(grib_handle* /*h*/, char* /*result*/)
+static int proj_transverse_mercator(grib_handle* h, char* result)
 {
-    return GRIB_NOT_IMPLEMENTED;
+    int err = 0;
+    char shape[128] = { 0 };
+    double lat0 = 0, lon0 = 0, k0 = 0;
+
+    if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_double_internal(h, "latitudeOfReferencePointInDegrees", &lat0)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_double_internal(h, "longitudeOfReferencePointInDegrees", &lon0)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_double_internal(h, "scaleFactorAtReferencePoint", &k0)) != GRIB_SUCCESS)
+        return err;
+    if (!(k0 > 0))
+        return GRIB_GEOCALCULUS_PROBLEM;
+
+    snprintf(result, 1024, "+proj=tmerc +lon_0=%lf +lat_0=%lf +k_0=%.10g %s", lon0, lat0, k0, shape);
+
+    return err;
 }
 static int proj_equatorial_azimuthal_equidistant(grib_handle* /*h*/, char* /*result*/)
 {
