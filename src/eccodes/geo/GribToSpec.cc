@@ -1088,6 +1088,49 @@ Custom* make_space_view_spec(codes_handle* h)
 }
 
 
+/// Transverse Mercator (template 3.12): the grid by the (x, y) of its first and last points, including the false
+/// easting/northing (XR, YR), and the projection of origin at the reference point (LoR, LaR) with scale factor m. The
+/// lengths are in centimetres (exact, to check the grid consistency).
+Custom* make_transverse_mercator_spec(codes_handle* h)
+{
+    auto metres = [](long centimetres) { return static_cast<double>(centimetres) / 100.; };
+
+    auto range = [h, metres](const char* first, const char* last, const char* increment, const char* n, bool negative) {
+        const auto a = get_long(h, first);
+        const auto b = get_long(h, last);
+        const auto d = negative ? -get_long(h, increment) : get_long(h, increment);
+        const auto count = get_long(h, n);
+
+        if (d == 0 || count < 1 || a + (count - 1) * d != b) {
+            wrongly_encoded_grib_error(std::string("GribToSpec: gridType=transverse_mercator, keys ") + first + ", " +
+                                       last + ", " + increment + ", " + n + " and scanning mode are inconsistent");
+        }
+
+        return std::vector<double>{ metres(a), metres(b), metres(d) };
+    };
+
+    const auto x = range("X1", "X2", "Di", "Ni", get_long(h, "iScansNegatively") != 0);
+    const auto y = range("Y1", "Y2", "Dj", "Nj", get_long(h, "jScansPositively") == 0);
+
+    std::unique_ptr<Custom> projection(new Custom{ { "type", "tmerc" },
+                                                   { "lat_0", get_double(h, "latitudeOfReferencePointInDegrees") },
+                                                   { "lon_0", get_double(h, "longitudeOfReferencePointInDegrees") },
+                                                   { "k_0", get_double(h, "scaleFactorAtReferencePoint") } });
+    set_figure(h, *projection);
+    projection->set("reverse", true);
+
+    auto* spec = new Custom{ { "x", x },
+                             { "y", y },
+                             { "false_xy", std::vector<double>{ metres(get_long(h, "XR")), metres(get_long(h, "YR")) } } };
+    spec->set("projection", projection.release());
+
+    if (const auto order = scanning_order(h, x[2], y[2]); !order.empty()) {
+        spec->set("order", order);
+    }
+
+    return spec;
+}
+
 }  // namespace
 
 
@@ -1141,6 +1184,11 @@ GribToSpec::GribToSpec(codes_handle* h, bool rotated) :
 
         if (type == "space_view") {
             spec_.reset(make_space_view_spec(h));
+            return;
+        }
+
+        if (type == "transverse_mercator") {
+            spec_.reset(make_transverse_mercator_spec(h));
             return;
         }
 

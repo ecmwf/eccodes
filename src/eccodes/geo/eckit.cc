@@ -90,6 +90,7 @@ bool eckit_geo_use_for_iterator(const grib_handle* h)
         "regular_ll",
         "rotated_ll",
         "space_view",
+        "transverse_mercator",
         "unstructured_grid",
     };
     return GRID_TYPES.count(get_string(h, "gridType")) != 0;
