@@ -13,6 +13,7 @@
 #include "eccodes/geo/GribToSpec.h"
 
 #include <algorithm>
+#include <cmath>
 #include <map>
 #include <cstring>
 #include <functional>
@@ -23,7 +24,10 @@
 #include <vector>
 
 #include "eckit/geo/Exceptions.h"
+#include "eckit/geo/Figure.h"
+#include "eckit/geo/Point.h"
 #include "eckit/geo/PointLonLat.h"
+#include "eckit/geo/Projection.h"
 #include "eckit/geo/util/mutex.h"
 #include "eckit/log/JSON.h"
 #include "eckit/spec/Custom.h"
@@ -249,6 +253,9 @@ bool get_figure(codes_handle* h, std::string& value)
     if (codes_get_long(h, "shapeOfTheEarth", &code) != CODES_SUCCESS) {
         value = "earth";
     }
+    else if (long oblate = 0; code == 0 && codes_get_long(h, "earthIsOblate", &oblate) == CODES_SUCCESS && oblate != 0) {
+        value = "iau1965";  // GRIB1 oblate spheroid (resolution and component flags)
+    }
     else if (code == 1) {
         double R = 0;
         ASSERT(CODES_SUCCESS == codes_get_double(h, "radiusInMetres", &R));
@@ -388,6 +395,7 @@ const char* get_key(const std::string& name, codes_handle* h)
         /// FIXME: Find something that does no clash
         { "reduced", "numberOfParallelsBetweenAPoleAndTheEquator", is("isOctahedral", 0L) },
         { "regular", "N", is("gridType", "regular_gg") },
+        { "ni", "ni_fix_for_regular_gaussian_grids", _or(is("gridType", "regular_gg"), is("gridType", "rotated_gg")) },
         { "octahedral", "numberOfParallelsBetweenAPoleAndTheEquator", is("isOctahedral", 1L) },
 
         /// TODO: is that a good idea?
@@ -405,6 +413,22 @@ const char* get_key(const std::string& name, codes_handle* h)
 
     const auto* key = name.c_str();
     return key;
+}
+
+
+double get_double(codes_handle* h, const char* key)
+{
+    double value = 0;
+    CHECK_CALL(codes_get_double(h, key, &value));
+    return value;
+}
+
+
+long get_long(codes_handle* h, const char* key)
+{
+    long value = 0;
+    CHECK_CALL(codes_get_long(h, key, &value));
+    return value;
 }
 
 
@@ -542,6 +566,60 @@ ProcessingT<double>* longitudeOfLastGridPointInDegrees_fix_for_global_reduced_gr
 }
 
 
+// GRIB latitudes are encoded to the angular precision, and grids are cropped exactly: a latitude that close to a
+// Gaussian latitude is that latitude (so its row is kept), and to the first or last Gaussian latitude the pole
+double gaussian_latitude_snapped(long N, double lat, double eps)
+{
+    const auto& lats = eckit::geo::util::gaussian_latitudes(N, false);
+    const auto nearest = std::min_element(lats.begin(), lats.end(), [lat](double a, double b) {
+        return std::abs(a - lat) < std::abs(b - lat);
+    });
+
+    if (nearest == lats.end() || !eckit::types::is_approximately_equal(lat, *nearest, eps)) {
+        return lat;
+    }
+
+    if (nearest == lats.begin()) {
+        return eckit::geo::NORTH_POLE.lat();
+    }
+
+    if (nearest == lats.end() - 1) {
+        return eckit::geo::SOUTH_POLE.lat();
+    }
+
+    return *nearest;
+}
+
+
+// Regular Gaussian grids of other than 4N longitudes (globally), by the increment (to the angular precision)
+ProcessingT<long>* ni_fix_for_regular_gaussian_grids()
+{
+    return new ProcessingT<long>([](codes_handle* h, long& ni) {
+        double eps = 0.;
+        ASSERT(std::unique_ptr<ProcessingT<double>>(angular_precision())->eval(h, eps));
+
+        long N = 0;
+        long given = 0;
+        double inc = 0.;
+        if (codes_get_long(h, "N", &N) != CODES_SUCCESS || N <= 0 ||
+            codes_get_long(h, "iDirectionIncrementGiven", &given) != CODES_SUCCESS || given == 0 ||
+            codes_get_double(h, "iDirectionIncrementInDegrees", &inc) != CODES_SUCCESS || !(inc > 0.)) {
+            return false;
+        }
+
+        // 4N if within the precision (e.g. 0.141 is 360/2560, not 360/2553)
+        const auto n = std::lround(360. / inc);
+        if (eckit::types::is_approximately_equal(360. / static_cast<double>(4 * N), inc, eps) || n <= 0 ||
+            !eckit::types::is_approximately_equal(360. / static_cast<double>(n), inc, eps)) {
+            return false;
+        }
+
+        ni = n;
+        return true;
+    });
+}
+
+
 ProcessingT<double>* latitudeOfFirstGridPointInDegrees_fix_for_gaussian_grids()
 {
     return new ProcessingT<double>([](codes_handle* h, double& lat) {
@@ -552,17 +630,9 @@ ProcessingT<double>* latitudeOfFirstGridPointInDegrees_fix_for_gaussian_grids()
         CHECK_CALL(codes_get_long(h, "N", &N));
         ASSERT(N > 0);
 
-        double& Lat1 = lat;
-        CHECK_CALL(codes_get_double(h, "latitudeOfFirstGridPointInDegrees", &Lat1));
+        CHECK_CALL(codes_get_double(h, "latitudeOfFirstGridPointInDegrees", &lat));
 
-        double Lat2 = 0.;
-        CHECK_CALL(codes_get_double(h, "latitudeOfLastGridPointInDegrees", &Lat2));
-
-        const auto snap = eckit::geo::util::gaussian_latitudes(N, Lat1 < Lat2).front();
-        if (eckit::types::is_approximately_equal(Lat1, snap, eps)) {
-            lat = snap < 0. ? eckit::geo::SOUTH_POLE.lat() : eckit::geo::NORTH_POLE.lat();
-        }
-
+        lat = gaussian_latitude_snapped(N, lat, eps);
         return true;
     });
 }
@@ -578,17 +648,9 @@ ProcessingT<double>* latitudeOfLastGridPointInDegrees_fix_for_gaussian_grids()
         CHECK_CALL(codes_get_long(h, "N", &N));
         ASSERT(N > 0);
 
-        double Lat1 = 0.;
-        CHECK_CALL(codes_get_double(h, "latitudeOfFirstGridPointInDegrees", &Lat1));
+        CHECK_CALL(codes_get_double(h, "latitudeOfLastGridPointInDegrees", &lat));
 
-        double& Lat2 = lat;
-        CHECK_CALL(codes_get_double(h, "latitudeOfLastGridPointInDegrees", &Lat2));
-
-        const auto snap = eckit::geo::util::gaussian_latitudes(N, Lat1 < Lat2).back();
-        if (eckit::types::is_approximately_equal(Lat2, snap, eps)) {
-            lat = snap < 0. ? eckit::geo::SOUTH_POLE.lat() : eckit::geo::NORTH_POLE.lat();
-        }
-
+        lat = gaussian_latitude_snapped(N, lat, eps);
         return true;
     });
 }
@@ -832,6 +894,200 @@ void cache_set(GribToSpec::cache_type& cache, const std::string& name, const T& 
 }
 
 
+using Custom = eckit::spec::Custom;
+
+
+/// False easting/northing to millimetres
+double millimetres(double value)
+{
+    return std::round(value * 1000.) / 1000.;
+}
+
+
+/// Projected grids: the projection (as PROJ) from (lon, lat), and the grid lengths [m]
+struct Projected
+{
+    std::function<Custom*(codes_handle*)> projection;
+    const char* dx;
+    const char* dy;
+};
+
+
+const std::map<std::string, Projected>& projected()
+{
+    auto lcc = [](codes_handle* h) {
+        return new Custom{ { "type", "lcc" },
+                           { "lat_0", get_double(h, "LaDInDegrees") },
+                           { "lat_1", get_double(h, "Latin1InDegrees") },
+                           { "lat_2", get_double(h, "Latin2InDegrees") },
+                           { "lon_0", get_double(h, "LoVInDegrees") } };
+    };
+
+    static const std::map<std::string, Projected> PROJECTED{
+        { "albers",
+          { [](codes_handle* h) {
+               return new Custom{ { "type", "aea" },
+                                  { "lat_0", get_double(h, "LaDInDegrees") },
+                                  { "lat_1", get_double(h, "Latin1InDegrees") },
+                                  { "lat_2", get_double(h, "Latin2InDegrees") },
+                                  { "lon_0", get_double(h, "LoVInDegrees") } };
+           },
+            "DxInMetres", "DyInMetres" } },
+        { "lambert", { lcc, "DxInMetres", "DyInMetres" } },
+        { "lambert_lam", { lcc, "DxInMetres", "DyInMetres" } },
+        { "mercator",
+          { [](codes_handle* h) { return new Custom{ { "type", "merc" }, { "lat_ts", get_double(h, "LaDInDegrees") } }; },
+            "DiInMetres", "DjInMetres" } },
+        { "polar_stereographic",
+          { [](codes_handle* h) {
+               const auto south = (get_long(h, "projectionCentreFlag") & 128) != 0;
+
+               // GRIB1 LaD is 60 for either pole
+               auto lat_ts = get_double(h, "LaDInDegrees");
+               if (south && get_long(h, "edition") == 1) {
+                   lat_ts = -lat_ts;
+               }
+
+               return new Custom{ { "type", "stere" },
+                                  { "lat_0", south ? -90. : 90. },
+                                  { "lat_ts", lat_ts },
+                                  { "lon_0", get_double(h, "orientationOfTheGridInDegrees") } };
+           },
+            "DxInMetres", "DyInMetres" } },
+        { "lambert_azimuthal_equal_area",
+          { [](codes_handle* h) {
+               return new Custom{ { "type", "laea" },
+                                  { "lat_0", get_double(h, "standardParallelInDegrees") },
+                                  { "lon_0", get_double(h, "centralLongitudeInDegrees") } };
+           },
+            "xDirectionGridLengthInMetres", "yDirectionGridLengthInMetres" } },
+    };
+
+    return PROJECTED;
+}
+
+
+void set_figure(codes_handle* h, Custom& projection)
+{
+    if (std::string figure; get_figure(h, figure)) {
+        projection.set("figure", figure);
+    }
+}
+
+
+/// Scanning order (eckit::geo::order::Scan) of the grid lengths dx, dy (directions) and the scanning mode, empty if as
+/// the directions (i then j, not alternating)
+std::string scanning_order(codes_handle* h, double dx, double dy)
+{
+    const auto alternating = get_long(h, "alternativeRowScanning") != 0;
+    const auto j_first = get_long(h, "jPointsAreConsecutive") != 0;
+    if (!alternating && !j_first) {
+        return {};
+    }
+
+    // the first (consecutive) index alternates direction
+    auto sign = [](double d, bool alternate) { return std::string(d > 0 ? "+" : "-") + (alternate ? (d > 0 ? "-" : "+") : ""); };
+    return j_first ? "j" + sign(dy, alternating) + "i" + sign(dx, false)
+                   : "i" + sign(dx, alternating) + "j" + sign(dy, false);
+}
+
+
+/// The grid on the projection plane; the false easting/northing places the first grid point at (0, 0), to millimetres
+Custom* make_projected_spec(codes_handle* h, const Projected& p)
+{
+    std::unique_ptr<Custom> projection(p.projection(h));
+    set_figure(h, *projection);
+
+    std::unique_ptr<const eckit::geo::Projection> to_xy(eckit::geo::ProjectionFactory::build(*projection));
+    const auto first = std::get<eckit::geo::PointXY>(to_xy->fwd(eckit::geo::PointLonLat{
+        get_double(h, "longitudeOfFirstGridPointInDegrees"), get_double(h, "latitudeOfFirstGridPointInDegrees") }));
+
+    if (!std::isfinite(first.X()) || !std::isfinite(first.Y())) {
+        throw eckit::geo::exception::ProjectionError("GribToSpec: first grid point is not projectable", Here());
+    }
+
+    const auto dx = get_long(h, "iScansNegatively") != 0 ? -get_double(h, p.dx) : get_double(h, p.dx);
+    const auto dy = get_long(h, "jScansPositively") != 0 ? get_double(h, p.dy) : -get_double(h, p.dy);
+    const auto nx = static_cast<double>(get_long(h, "Ni"));
+    const auto ny = static_cast<double>(get_long(h, "Nj"));
+
+    projection->set("reverse", true);
+
+    auto* spec = new Custom{ { "x", std::vector<double>{ 0., (nx - 1.) * dx, dx } },
+                             { "y", std::vector<double>{ 0., (ny - 1.) * dy, dy } },
+                             { "false_xy", std::vector<double>{ millimetres(-first.X()), millimetres(-first.Y()) } } };
+    spec->set("projection", projection.release());
+
+    if (const auto order = scanning_order(h, dx, dy); !order.empty()) {
+        spec->set("order", order);
+    }
+
+    return spec;
+}
+
+
+/// The satellite at Nr Earth (equatorial) radii from the centre, (x, y) as scanning angles [m] (on the projection
+/// plane): dx, dy are the apparent Earth diameters in grid lengths, Xp, Yp the sub-satellite point and Xo, Yo the
+/// first grid point, in grid lengths along the scanning directions
+Custom* make_space_view_spec(codes_handle* h)
+{
+    // (as the eccodes iterator, the apparent Earth diameters divide)
+    if (!(get_double(h, "dx") > 0.) || !(get_double(h, "dy") > 0.)) {
+        throw eckit::geo::exception::SpecError("GribToSpec: Keys dx and dy must be greater than zero", Here());
+    }
+
+    if (int err = 0; codes_is_missing(h, "Nr", &err) != 0) {
+        throw eckit::geo::exception::SpecError("GribToSpec: Orthographic view (Nr missing) not supported", Here());
+    }
+
+    const auto Nr = get_double(h, "NrInRadiusOfEarthScaled");
+    if (!(Nr > 0.)) {
+        throw eckit::geo::exception::SpecError("GribToSpec: Key NrInRadiusOfEarthScaled must be greater than zero", Here());
+    }
+
+    if (!(Nr > 1.)) {
+        throw eckit::geo::exception::SpecError(
+            "GribToSpec: Key NrInRadiusOfEarthScaled must be greater than one (the satellite outside the Earth)", Here());
+    }
+
+    if (get_double(h, "latitudeOfSubSatellitePointInDegrees") != 0.) {
+        throw eckit::geo::exception::SpecError(
+            "GribToSpec: Key latitudeOfSubSatellitePointInDegrees must be 0 (satellite must be located in the equator "
+            "plane)",
+            Here());
+    }
+
+    std::unique_ptr<Custom> projection(
+        new Custom{ { "type", "space_view" }, { "lon_0", get_double(h, "longitudeOfSubSatellitePointInDegrees") } });
+    set_figure(h, *projection);
+
+    std::unique_ptr<const eckit::geo::Figure> figure(eckit::geo::FigureFactory::build(*projection));
+    const auto height = (Nr - 1.) * figure->a();
+    const auto angle = 2. * std::asin(1. / Nr) * height;
+    projection->set("h", height);
+    projection->set("reverse", true);
+
+    const auto nx = static_cast<double>(get_long(h, "Nx"));
+    const auto ny = static_cast<double>(get_long(h, "Ny"));
+    const auto dx = (get_long(h, "iScansNegatively") != 0 ? -angle : angle) / get_double(h, "dx");
+    const auto dy = (get_long(h, "jScansPositively") != 0 ? angle : -angle) * figure->b() / figure->a() / get_double(h, "dy");
+    const auto xp = get_double(h, "XpInGridLengths") - get_double(h, "Xo");
+    const auto yp = get_double(h, "YpInGridLengths") - get_double(h, "Yo");
+
+    // the false easting/northing places the first grid point at (0, 0), to millimetres
+    auto* spec = new Custom{ { "x", std::vector<double>{ 0., (nx - 1.) * dx, dx } },
+                             { "y", std::vector<double>{ 0., (ny - 1.) * dy, dy } },
+                             { "false_xy", std::vector<double>{ millimetres(xp * dx), millimetres(yp * dy) } } };
+    spec->set("projection", projection.release());
+
+    if (const auto order = scanning_order(h, dx, dy); !order.empty()) {
+        spec->set("order", order);
+    }
+
+    return spec;
+}
+
+
 }  // namespace
 
 
@@ -877,6 +1133,23 @@ GribToSpec::GribToSpec(codes_handle* h, bool rotated) :
         }
     };
 
+    if (std::string type; get("gridType", type)) {
+        if (const auto& p = projected().find(type); p != projected().end()) {
+            spec_.reset(make_projected_spec(h, p->second));
+            return;
+        }
+
+        if (type == "space_view") {
+            spec_.reset(make_space_view_spec(h));
+            return;
+        }
+
+        // not representable (and not to default to the unprojected)
+        if (type == "equatorial_azimuthal_equidistant") {
+            throw eckit::geo::exception::ProjectionError("GribToSpec: gridType=" + type + " not supported", Here());
+        }
+    }
+
     std::string gridType;
     ASSERT(get("gridType", gridType));
 
@@ -917,6 +1190,10 @@ GribToSpec::GribToSpec(codes_handle* h, bool rotated) :
 
 bool GribToSpec::has(const std::string& name) const
 {
+    if (spec_) {
+        return spec_->has(name);
+    }
+
     lock_type lock;
 
     if (name == "figure") {
@@ -941,6 +1218,10 @@ bool GribToSpec::has(const std::string& name) const
 
 bool GribToSpec::get(const std::string& name, std::string& value) const
 {
+    if (spec_) {
+        return spec_->get(name, value);
+    }
+
     lock_type lock;
 
     if (name == "figure") {
@@ -987,6 +1268,10 @@ bool GribToSpec::get(const std::string& name, std::string& value) const
 
 bool GribToSpec::get(const std::string& name, bool& value) const
 {
+    if (spec_) {
+        return spec_->get(name, value);
+    }
+
     lock_type lock;
 
     const auto* key = get_key(name, handle_);
@@ -1029,6 +1314,10 @@ bool GribToSpec::get(const std::string& name, int& value) const
 
 bool GribToSpec::get(const std::string& name, long& value) const
 {
+    if (spec_) {
+        return spec_->get(name, value);
+    }
+
     lock_type lock;
 
     const std::string key = get_key(name, handle_);
@@ -1043,6 +1332,15 @@ bool GribToSpec::get(const std::string& name, long& value) const
     // FIXME: make sure that 'value' is not set if CODES_MISSING_LONG
     int err = codes_get_long(handle_, key.c_str(), &value);
     if (err == CODES_NOT_FOUND || codes_is_missing(handle_, key.c_str(), &err) != 0) {
+        static const ProcessingList<long> process{
+            { "ni_fix_for_regular_gaussian_grids", ni_fix_for_regular_gaussian_grids() },
+        };
+
+        if (get_value(key, handle_, value, process)) {
+            cache_set(cache_, name, value);
+            return true;
+        }
+
         return false;
     }
 
@@ -1093,6 +1391,10 @@ bool GribToSpec::get(const std::string& name, float& value) const
 
 bool GribToSpec::get(const std::string& name, double& value) const
 {
+    if (spec_) {
+        return spec_->get(name, value);
+    }
+
     lock_type lock;
 
     ASSERT(name != "grid");
@@ -1147,6 +1449,10 @@ bool GribToSpec::get(const std::string& /*name*/, std::vector<int>& /*value*/) c
 
 bool GribToSpec::get(const std::string& name, std::vector<long>& value) const
 {
+    if (spec_) {
+        return spec_->get(name, value);
+    }
+
     lock_type lock;
 
     const auto* key = get_key(name, handle_);
@@ -1214,6 +1520,10 @@ bool GribToSpec::get(const std::string& name, std::vector<float>& value) const
 
 bool GribToSpec::get(const std::string& name, std::vector<double>& value) const
 {
+    if (spec_) {
+        return spec_->get(name, value);
+    }
+
     lock_type lock;
 
     if (name == "rotation" && !rotated_) {
@@ -1305,8 +1615,20 @@ void GribToSpec::pl_expand_to_global(std::vector<long>& pl) const
     pl.swap(pl_global);
 }
 
+
+const Spec& GribToSpec::spec(const std::string& name) const
+{
+    return spec_ ? spec_->spec(name) : Spec::spec(name);
+}
+
+
 void GribToSpec::json(eckit::JSON& j) const
 {
+    if (spec_) {
+        spec_->json(j);
+        return;
+    }
+
     j.startObject();
 
     auto* kit = codes_keys_iterator_new(

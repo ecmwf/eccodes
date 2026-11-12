@@ -130,7 +130,7 @@ ${tools_dir}/grib_get_data $tempGrib > $tempLog 2>&1
 status=$?
 set -e
 [ $status -ne 0 ]
-grep -q "Nside must be a power of 2" $tempLog
+grep -q -e "Nside must be a power of 2" -e "Nside a power of 2" $tempLog
 
 
 # Nested N=1
