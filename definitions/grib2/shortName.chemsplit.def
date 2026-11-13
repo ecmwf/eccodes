@@ -14678,12 +14678,6 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 16 ;
 	}
-#Vapor pressure
-'vapp' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 4 ;
-	}
 #Large scale precipitation (non-convective)
 'ncpcp' = {
 	 discipline = 0 ;
@@ -22167,7 +22161,7 @@
 	 parameterNumber = 0 ;
 	}
 #Temperature anomaly
-'ta' = {
+'t_a' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 9 ;
