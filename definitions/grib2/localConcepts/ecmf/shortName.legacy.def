@@ -2530,7 +2530,7 @@
 	 parameterNumber = 129 ;
 	}
 #Temperature anomaly
-'ta' = {
+'t_a' = {
 	 discipline = 192 ;
 	 parameterCategory = 171 ;
 	 parameterNumber = 130 ;
@@ -2582,6 +2582,12 @@
 	 discipline = 192 ;
 	 parameterCategory = 171 ;
 	 parameterNumber = 155 ;
+	}
+#Height anomaly
+'gha' = {
+	 discipline = 192 ;
+	 parameterCategory = 171 ;
+	 parameterNumber = 156 ;
 	}
 #10 metre U wind component anomaly
 '10ua' = {
@@ -2636,6 +2642,12 @@
 	 discipline = 192 ;
 	 parameterCategory = 171 ;
 	 parameterNumber = 207 ;
+	}
+#Total precipitation anomaly
+'tpa' = {
+	 discipline = 192 ;
+	 parameterCategory = 171 ;
+	 parameterNumber = 228 ;
 	}
 #Instantaneous X surface stress anomaly
 'iewsa' = {
