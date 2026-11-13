@@ -446,3 +446,7 @@ platform = "ubuntu-24.04"
 [[trigger-downstream]]
 repo = "ecmwf/metkit"
 ref = "develop"
+
+[[trigger-downstream]]
+repo = "ecmwf/mir"
+ref = "develop"
