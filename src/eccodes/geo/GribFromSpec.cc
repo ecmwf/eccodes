@@ -576,6 +576,89 @@ void set_grid_type_polar_stereographic(grib_info& info, const Grid& grid)
 }
 
 
+// GRIB2 templates without a grib_util grid type, set directly: transverse_mercator (3.12) and albers (3.31)
+bool is_set_by_template(const Grid& grid)
+{
+    const auto p = grid.projection().type();
+    return grid.type() == "regular_xy" && (p == "tmerc" || p == "aea");
+}
+
+
+void set_by_template(codes_handle* h, const Grid& grid)
+{
+    ASSERT(is_set_by_template(grid));
+
+    auto set_long = [h](const char* key, long value) { CODES_CHECK(codes_set_long(h, key, value), key); };
+    auto set_double = [h](const char* key, double value) { CODES_CHECK(codes_set_double(h, key, value), key); };
+    auto centimetres = [](double metres) { return std::lround(metres * 100.); };
+
+    const auto& g = dynamic_cast<const ::eckit::geo::grid::Regular&>(grid);
+    const auto& spec = grid.spec();
+    const auto& projection = spec.spec("projection");
+    const auto x = spec.get_double_vector("x");
+    const auto y = spec.get_double_vector("y");
+    const auto false_xy = spec.get_double_vector("false_xy", { 0., 0. });
+    ASSERT(x.size() == 3 && y.size() == 3 && false_xy.size() == 2);
+
+    const auto tmerc = grid.projection().type() == "tmerc";
+
+    set_long("edition", 2);
+    set_long("gridDefinitionTemplateNumber", tmerc ? 12 : 31);
+
+    if (tmerc) {
+        // as GribToSpec: grid coordinates and false easting/northing [cm], reference point [microdegree]
+        set_long("Ni", static_cast<long>(g.nx()));
+        set_long("Nj", static_cast<long>(g.ny()));
+        set_long("latitudeOfReferencePoint", std::lround(projection.get_double("lat_0", 0.) * 1e6));
+        set_long("longitudeOfReferencePoint", std::lround(projection.get_double("lon_0", 0.) * 1e6));
+        set_double("scaleFactorAtReferencePoint", projection.get_double("k_0", 1.));
+        set_long("XR", centimetres(false_xy[0]));
+        set_long("YR", centimetres(false_xy[1]));
+        set_long("X1", centimetres(x[0]));
+        set_long("X2", centimetres(x[1]));
+        set_long("Di", centimetres(std::abs(x[2])));
+        set_long("Y1", centimetres(y[0]));
+        set_long("Y2", centimetres(y[1]));
+        set_long("Dj", centimetres(std::abs(y[2])));
+    }
+    else {
+        // as GribToSpec: the first point, and the projection
+        const auto first = std::get<PointLonLat>(grid.first_point());
+        const auto lat_1 = projection.get_double("lat_1");
+
+        set_long("Nx", static_cast<long>(g.nx()));
+        set_long("Ny", static_cast<long>(g.ny()));
+        set_double("latitudeOfFirstGridPointInDegrees", first.lat());
+        set_double("longitudeOfFirstGridPointInDegrees", normalise_longitude(first.lon(), 0));
+        set_double("LaDInDegrees", projection.get_double("lat_0"));
+        set_double("LoVInDegrees", normalise_longitude(projection.get_double("lon_0"), 0));
+        set_double("Latin1InDegrees", lat_1);
+        set_double("Latin2InDegrees", projection.get_double("lat_2", lat_1));
+        set_double("DxInMetres", std::abs(x[2]));
+        set_double("DyInMetres", std::abs(y[2]));
+    }
+
+    set_long("iScansNegatively", x[1] < x[0] ? 1L : 0L);
+    set_long("jScansPositively", y[1] > y[0] ? 1L : 0L);
+
+    // the figure, as other grids
+    grib_info info;
+    Shape(grid.projection().figure()).fillGrib(info);
+    for (long j = 0; j < info.packing.extra_settings_count; ++j) {
+        const auto& set = info.packing.extra_settings[j];
+        set.type == CODES_TYPE_LONG ? set_long(set.name, set.long_value) : set_double(set.name, set.double_value);
+    }
+
+    // values (as many as points)
+    const auto n = static_cast<long>(grid.size());
+    set_long("numberOfDataPoints", n);
+    set_long("numberOfValues", n);
+
+    const std::vector<double> values(static_cast<size_t>(n), 0.);
+    CODES_CHECK(codes_set_double_array(h, "values", values.data(), values.size()), "values");
+}
+
+
 struct grib_handle_unique_ptr : std::unique_ptr<grib_handle, decltype(&codes_handle_delete)>
 {
     explicit grib_handle_unique_ptr(element_type* ptr) :
@@ -606,6 +689,17 @@ codes_handle* GribFromSpec::set(const codes_handle* h, const Spec& spec, const s
     // - polar-stereographic => stere
     std::unique_ptr<const Grid> grid(::eckit::geo::GridFactory::build(spec));
     ASSERT(grid);
+
+    if (is_set_by_template(*grid)) {
+        auto* result = const_cast<codes_handle*>(h);
+        set_by_template(result, *grid);
+
+        for (const auto& [key, value] : extra) {
+            CODES_CHECK(codes_set_long(result, key.c_str(), value), key.c_str());
+        }
+
+        return result;
+    }
 
     grib_info info;
 
