@@ -4045,16 +4045,6 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 40 ;
 	}
-#Total Precipitation anomaly
-'kg m**-2' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 52 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfStatisticalProcessing = 1 ;
-	 typeOfRelationToReferenceDataset = 0 ;
-	 numberOfAdditionalParametersForReferencePeriod = 0 ;
-	}
 #2 metre specific humidity
 'kg kg**-1' = {
 	 discipline = 0 ;
@@ -7979,24 +7969,6 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 1 ;
-	}
-#Geopotential height significance
-'gpm' = {
-	 discipline = 0 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 5 ;
-	 typeOfRelationToReferenceDataset = 2 ;
-	 numberOfAdditionalParametersForReferencePeriod = 1 ;
-	}
-#Total Precipitation significance
-'kg m**-2' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 52 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfStatisticalProcessing = 1 ;
-	 typeOfRelationToReferenceDataset = 2 ;
-	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Time-mean temperature tendency due to short-wave radiation
 'K s**-1' = {
@@ -21164,12 +21136,6 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 3 ;
 	}
-#Vapour pressure
-'Pa' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 4 ;
-	}
 #Saturation deficit
 'Pa' = {
 	 discipline = 0 ;
@@ -22075,26 +22041,6 @@
 	 parameterNumber = 40 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Height anomaly
-'m' = {
-	 discipline = 0 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 5 ;
-	 typeOfRelationToReferenceDataset = 0 ;
-	 numberOfAdditionalParametersForReferencePeriod = 0 ;
-	}
-#Total precipitation anomaly
-'m' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 193 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfSecondFixedSurface = 255 ;
-	 typeOfStatisticalProcessing = 1 ;
-	 typeOfRelationToReferenceDataset = 0 ;
-	 numberOfAdditionalParametersForReferencePeriod = 0 ;
-	}
 #Surface runoff
 'kg m**-2' = {
 	 discipline = 2 ;
@@ -22393,18 +22339,6 @@
 	 parameterNumber = 52 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
-	}
-#Total precipitation significance
-'%' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 193 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfSecondFixedSurface = 255 ;
-	 typeOfStatisticalProcessing = 1 ;
-	 typeOfRelationToReferenceDataset = 2 ;
-	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #U-component surface stokes drift
 'm s**-1' = {
