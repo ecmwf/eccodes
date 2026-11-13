@@ -666,7 +666,7 @@
 	 indicatorOfParameter = 53 ;
 	}
 #Vapour pressure
-'vp' = {
+'vapp' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 55 ;
 	}
