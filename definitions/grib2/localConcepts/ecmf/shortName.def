@@ -12769,6 +12769,41 @@
 	 parameterCategory = 228 ;
 	 parameterNumber = 43 ;
 	}
+#SMOS observed soil moisture retrieved using neural network
+'smnnob' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 252 ;
+	 parameterNumber = 192 ;
+	}
+#SMOS observed soil moisture uncertainty retrieved using neural network
+'smnner' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 252 ;
+	 parameterNumber = 193 ;
+	}
+#SMOS radio frequency interference probability
+'smnnrfi' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 252 ;
+	 parameterNumber = 194 ;
+	}
+#SMOS number of observations per grid point
+'smnnnb' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 252 ;
+	 parameterNumber = 195 ;
+	}
+#SMOS observation time for the satellite soil moisture data
+'smnntim' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 252 ;
+	 parameterNumber = 196 ;
+	}
 #GPP coefficient from Biogenic Flux Adjustment System
 'gppbfas' = {
 	 localTablesVersion = 1 ;
@@ -12885,6 +12920,20 @@
 	 parameterNumber = 194 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
+	}
+#SMOS first Brightness Temperature Bias Correction parameter
+'smos_tb_cdfa' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 252 ;
+	 parameterNumber = 197 ;
+	}
+#SMOS second Brightness Temperature Bias Correction parameter
+'smos_tb_cdfb' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 252 ;
+	 parameterNumber = 198 ;
 	}
 #Surface short wave-effective total cloudiness
 'tccsw' = {
