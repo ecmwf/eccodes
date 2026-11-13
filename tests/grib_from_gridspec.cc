@@ -53,6 +53,13 @@ void set_string(grib_handle* h, const char* key, const std::string& value)
 }
 
 
+bool exists(const char* path)
+{
+    std::unique_ptr<FILE, decltype(&std::fclose)> file(std::fopen(path, "rb"), &std::fclose);
+    return file != nullptr;
+}
+
+
 struct grib_file_t
 {
     int err = 0;
@@ -180,6 +187,10 @@ CASE("gridType=regular_ll")
 
     SECTION("special cases")
     {
+        if (!exists("mtg2-d.grib2")) {
+            return;  // test data not available
+        }
+
         grib_file_t file("mtg2-d.grib2");
 
         struct test_t
@@ -215,6 +226,10 @@ CASE("gridType=regular_ll")
 
     SECTION("scanningMode=96")
     {
+        if (!exists("scanningMode=96.grib")) {
+            return;  // test data not available
+        }
+
         grib_file_t file("scanningMode=96.grib");
         auto h = file.handle.get();
 
@@ -290,6 +305,58 @@ CASE("gridType=reduced_ll")
         EXPECT(eckit::types::is_approximately_equal(area[3], 324.));
 
         codes_handle_delete(h);
+    }
+}
+
+
+CASE("gridType=transverse_mercator, albers (GRIB2 templates, set directly)")
+{
+    // as decoded (GribToSpec), see grib_eckit_geo_projections.sh
+    for (const std::string spec_str : {
+             R"({"false_xy":[400000,-100000],"order":"i+j+","projection":{"figure":{"a":6377563.4,"b":6356256.91},"k_0":0.999601244926453,"lat_0":49,"lon_0":-2,"reverse":true,"type":"tmerc"},"x":[500000,506000,2000],"y":[200000,206000,3000]})",
+             R"({"false_xy":[400000,-100000],"order":"i-j-","projection":{"figure":{"a":6377563.4,"b":6356256.91},"k_0":0.999601244926453,"lat_0":49,"lon_0":-2,"reverse":true,"type":"tmerc"},"x":[506000,500000,-2000],"y":[206000,200000,-3000]})",
+             R"({"order":"i+j+","projection":{"figure":"grs80","lat_0":23,"lat_1":29.5,"lat_2":45.5,"lon_0":264,"reverse":true,"type":"aea"},"x":[0,1500000,50000],"y":[0,1400000,50000]})",
+         }) {
+        std::unique_ptr<const eckit::geo::Grid> grid(eckit::geo::GridFactory::make_from_string(spec_str));
+        const std::string type = grid->projection().type() == "tmerc" ? "transverse_mercator" : "albers";
+
+        for (const auto* name : { "GRIB1", "GRIB2" }) {
+            auto* sample = codes_grib_handle_new_from_samples(nullptr, name);
+            EXPECT(sample != nullptr);
+
+            auto* h = eccodes::geo::GribFromSpec::set(sample, grid->spec());
+            EXPECT(h != nullptr);
+
+            long valid = 0;
+            set_string(h, "messageValidityChecks", "grid");
+            CHECK(codes_get_long(h, "isMessageValid", &valid));
+            EXPECT(valid == 1);
+
+            long edition = 0;
+            CHECK(codes_get_long(h, "edition", &edition));
+            EXPECT(edition == 2);
+
+            std::string gridType;
+            get_string(h, "gridType", gridType);
+            EXPECT(gridType == type);
+
+            // decoded back, the same grid (to the encoding precision)
+            std::string gridSpec;
+            get_string(h, "gridSpec", gridSpec);
+            std::unique_ptr<const eckit::geo::Grid> back(eckit::geo::GridFactory::make_from_string(gridSpec));
+
+            EXPECT(back->size() == grid->size());
+            EXPECT(back->order() == grid->order());
+
+            const auto [lat1, lon1] = grid->to_latlons();
+            const auto [lat2, lon2] = back->to_latlons();
+            for (size_t i = 0; i < lat1.size(); ++i) {
+                EXPECT(eckit::types::is_approximately_equal(lat1[i], lat2[i], 1e-6));
+                EXPECT(eckit::types::is_approximately_equal(lon1[i], lon2[i], 1e-6));
+            }
+
+            codes_handle_delete(h);
+        }
     }
 }
 
