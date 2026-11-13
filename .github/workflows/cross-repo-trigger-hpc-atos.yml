@@ -33,6 +33,21 @@ on:
         required: false
         type: string
         default: main
+      pin:
+        description: 'Space-separated owner/repo@sha to resolve against: those of the downstream runner, or of the consumer that requests a rebuild. Empty pins from-repo@from-sha alone.'
+        required: false
+        default: ''
+        type: string
+      resolved:
+        description: The resolve-deps json output for this repo's kinds, resolved by the downstream runner with the rest of its run. Empty resolves here.
+        required: false
+        default: ''
+        type: string
+      resolved-ref:
+        description: The commit of this repo that `resolved` is for
+        required: false
+        default: ''
+        type: string
   workflow_dispatch:
     inputs:
       dispatch-id:
@@ -67,6 +82,21 @@ on:
         required: false
         type: string
         default: main
+      pin:
+        description: 'Space-separated owner/repo@sha to resolve against: those of the downstream runner, or of the consumer that requests a rebuild. Empty pins from-repo@from-sha alone.'
+        required: false
+        default: ''
+        type: string
+      resolved:
+        description: The resolve-deps json output for this repo's kinds, resolved by the downstream runner with the rest of its run. Empty resolves here.
+        required: false
+        default: ''
+        type: string
+      resolved-ref:
+        description: The commit of this repo that `resolved` is for
+        required: false
+        default: ''
+        type: string
 concurrency:
   group: cross-repo-trigger-hpc-atos-eccodes-${{ github.ref }}
   cancel-in-progress: false
@@ -80,17 +110,12 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 jobs:
   resolve:
-    if: contains(fromJSON(inputs.from-jobs), 'ecbuild/build-hpc') || contains(fromJSON(inputs.from-jobs), 'stack-deps/build-hpc') || contains(fromJSON(inputs.from-jobs), 'eckit/build-hpc') || inputs.rebuild-request
-    runs-on: arc-runner-normal
-    container:
-      image: eccr.ecmwf.int/public-ci-images/ubuntu24.04-base:latest
+    if: (contains(fromJSON(inputs.from-jobs), 'ecbuild/build-hpc') || contains(fromJSON(inputs.from-jobs), 'stack-deps/build-hpc') || contains(fromJSON(inputs.from-jobs), 'eckit/build-hpc') || inputs.rebuild-request) && !inputs.resolved
+    runs-on: ubuntu-latest
     outputs:
-      ref: ${{ steps.pick.outputs.ref }}
-      matrix-build-hpc: ${{ toJSON(fromJSON(steps.r.outputs.json)['build-hpc']) }}
-      matrix-fortran-hpc: ${{ toJSON(fromJSON(steps.r.outputs.json)['fortran-hpc']) }}
+      ref: ${{ steps.r.outputs.own-sha }}
+      json: ${{ steps.r.outputs.json }}
     steps:
-    - name: Announce image
-      uses: ecmwf/ci-infrastructure/actions/announce-image@main
     - id: mint
       uses: actions/create-github-app-token@v3
       with:
@@ -114,7 +139,7 @@ jobs:
       uses: ecmwf/ci-infrastructure/actions/resolve-deps@main
       with:
         current-branch: ${{ steps.pick.outputs.ref }}
-        pin: ${{ !inputs.rebuild-request && format('{0}@{1}', inputs.from-repo, inputs.from-sha) || '' }}
+        pin: ${{ !inputs.rebuild-request && (inputs.pin || format('{0}@{1}', inputs.from-repo, inputs.from-sha)) || inputs.pin }}
         matrix: build-hpc,fortran-hpc
         token: ${{ steps.mint.outputs.token }}
         client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
@@ -122,7 +147,7 @@ jobs:
   eccodes__build_hpc:
     needs:
     - resolve
-    if: contains(fromJSON(inputs.from-jobs), 'ecbuild/build-hpc') || contains(fromJSON(inputs.from-jobs), 'stack-deps/build-hpc') || contains(fromJSON(inputs.from-jobs), 'eckit/build-hpc') || inputs.rebuild-request
+    if: ${{ !failure() && !cancelled() && (contains(fromJSON(inputs.from-jobs), 'ecbuild/build-hpc') || contains(fromJSON(inputs.from-jobs), 'stack-deps/build-hpc') || contains(fromJSON(inputs.from-jobs), 'eckit/build-hpc') || inputs.rebuild-request) }}
     name: eccodes/build-hpc (${{ matrix._resolved['job-name'] }})
     runs-on: ${{ matrix['runs-on'] }}
     container:
@@ -132,7 +157,7 @@ jobs:
         password: ${{ secrets.ECCR_PULL_ROBOT_TOKEN }}
     strategy:
       fail-fast: false
-      matrix: ${{ fromJSON(needs.resolve.outputs.matrix-build-hpc) }}
+      matrix: ${{ fromJSON(inputs.resolved || needs.resolve.outputs.json)['build-hpc'] }}
     steps:
     - id: mint
       uses: actions/create-github-app-token@v3
@@ -158,7 +183,7 @@ jobs:
     - uses: actions/checkout@v6
       with:
         repository: ecmwf/eccodes
-        ref: ${{ needs.resolve.outputs.ref }}
+        ref: ${{ inputs.resolved-ref || needs.resolve.outputs.ref }}
         token: ${{ steps.mint.outputs.token }}
         persist-credentials: false
     - name: Decode matrix-leg
@@ -223,7 +248,7 @@ jobs:
   eccodes__fortran_hpc:
     needs:
     - resolve
-    if: contains(fromJSON(inputs.from-jobs), 'ecbuild/build-hpc') || contains(fromJSON(inputs.from-jobs), 'stack-deps/build-hpc') || contains(fromJSON(inputs.from-jobs), 'eckit/build-hpc') || inputs.rebuild-request
+    if: ${{ !failure() && !cancelled() && (contains(fromJSON(inputs.from-jobs), 'ecbuild/build-hpc') || contains(fromJSON(inputs.from-jobs), 'stack-deps/build-hpc') || contains(fromJSON(inputs.from-jobs), 'eckit/build-hpc') || inputs.rebuild-request) }}
     name: eccodes/fortran-hpc (${{ matrix._resolved['job-name'] }})
     runs-on: ${{ matrix['runs-on'] }}
     container:
@@ -233,7 +258,7 @@ jobs:
         password: ${{ secrets.ECCR_PULL_ROBOT_TOKEN }}
     strategy:
       fail-fast: false
-      matrix: ${{ fromJSON(needs.resolve.outputs.matrix-fortran-hpc) }}
+      matrix: ${{ fromJSON(inputs.resolved || needs.resolve.outputs.json)['fortran-hpc'] }}
     steps:
     - id: mint
       uses: actions/create-github-app-token@v3
@@ -259,7 +284,7 @@ jobs:
     - uses: actions/checkout@v6
       with:
         repository: ecmwf/eccodes
-        ref: ${{ needs.resolve.outputs.ref }}
+        ref: ${{ inputs.resolved-ref || needs.resolve.outputs.ref }}
         token: ${{ steps.mint.outputs.token }}
         persist-credentials: false
     - name: Decode matrix-leg
