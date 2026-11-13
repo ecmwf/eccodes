@@ -17346,6 +17346,18 @@
 	 parameterCategory = 171 ;
 	 parameterNumber = 227 ;
 	}
+#Total precipitation anomaly
+'m' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 193 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
+	}
 #Instantaneous surface heat flux anomaly
 'J m**-2' = {
 	 discipline = 192 ;
@@ -20145,6 +20157,18 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 0 ;
+	}
+#Total precipitation significance
+'%' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 193 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
 #Wildfire radiative power maximum
 'W' = {
