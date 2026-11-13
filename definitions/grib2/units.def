@@ -28141,18 +28141,6 @@
 	 typeOfRelationToReferenceDataset = 0 ;
 	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
-#Total precipitation anomaly
-'m' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 193 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfSecondFixedSurface = 255 ;
-	 typeOfStatisticalProcessing = 1 ;
-	 typeOfRelationToReferenceDataset = 0 ;
-	 numberOfAdditionalParametersForReferencePeriod = 0 ;
-	}
 #Instantaneous X surface stress anomaly
 'N m**-2' = {
 	 discipline = 0 ;
@@ -28616,18 +28604,6 @@
 	 typeOfFirstFixedSurface = 103 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
-	 typeOfRelationToReferenceDataset = 2 ;
-	 numberOfAdditionalParametersForReferencePeriod = 1 ;
-	}
-#Total precipitation significance
-'%' = {
-	 localTablesVersion = 1 ;
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 193 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfSecondFixedSurface = 255 ;
-	 typeOfStatisticalProcessing = 1 ;
 	 typeOfRelationToReferenceDataset = 2 ;
 	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
