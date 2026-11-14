@@ -361,6 +361,49 @@ CASE("gridType=transverse_mercator, albers (GRIB2 templates, set directly)")
 }
 
 
+CASE("gridType=space_view (GRIB2 template, set directly)")
+{
+    // as decoded (GribToSpec), see grib_eckit_geo_projections.sh
+    for (const std::string spec_str : {
+             R"({"dx":3622,"dy":3622,"nr":6.6107,"nx":16,"ny":16,"type":"space_view","xo":1500,"xp":1856,"yo":1700,"yp":1856})",
+             R"({"dx":3622,"dy":3610,"figure":"wgs84","lon_0":-75,"nr":6.6107,"nx":16,"ny":12,"type":"space_view","xo":2400,"xp":1856,"yo":1200,"yp":1856})",
+             R"({"dx":3622,"dy":3610,"figure":{"a":6378140,"b":6356755},"nr":6.6107,"nx":16,"ny":16,"order":"i-j+","type":"space_view","xo":1500,"xp":1856,"yo":1700,"yp":1856})",
+             R"({"dx":5434,"dy":5434,"figure":"iau1965","lon_0":140.7,"nr":6.61071,"nx":16,"ny":16,"type":"space_view","xo":2600,"xp":2750,"yo":2700,"yp":2750})",
+         }) {
+        std::unique_ptr<const eckit::geo::Grid> grid(eckit::geo::GridFactory::make_from_string(spec_str));
+        EXPECT(grid->spec_str() == spec_str);
+
+        for (const auto* name : { "GRIB1", "GRIB2" }) {
+            auto* sample = codes_grib_handle_new_from_samples(nullptr, name);
+            EXPECT(sample != nullptr);
+
+            auto* h = eccodes::geo::GribFromSpec::set(sample, grid->spec());
+            EXPECT(h != nullptr);
+
+            long valid = 0;
+            set_string(h, "messageValidityChecks", "grid");
+            CHECK(codes_get_long(h, "isMessageValid", &valid));
+            EXPECT(valid == 1);
+
+            long edition = 0;
+            CHECK(codes_get_long(h, "edition", &edition));
+            EXPECT(edition == 2);
+
+            std::string gridType;
+            get_string(h, "gridType", gridType);
+            EXPECT(gridType == "space_view");
+
+            // decoded back, the same grid (the parameters are as encoded)
+            std::string gridSpec;
+            get_string(h, "gridSpec", gridSpec);
+            EXPECT(gridSpec == spec_str);
+
+            codes_handle_delete(h);
+        }
+    }
+}
+
+
 int main(int argc, char* argv[])
 {
     const char* ev_name = "ECCODES_ECKIT_GEO";
