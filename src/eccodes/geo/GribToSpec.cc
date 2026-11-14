@@ -1026,9 +1026,9 @@ Custom* make_projected_spec(codes_handle* h, const Projected& p)
 }
 
 
-/// The satellite at Nr Earth (equatorial) radii from the centre, (x, y) as scanning angles [m] (on the projection
-/// plane): dx, dy are the apparent Earth diameters in grid lengths, Xp, Yp the sub-satellite point and Xo, Yo the
-/// first grid point, in grid lengths along the scanning directions
+/// Space view (eckit::geo space_view): the satellite at Nr Earth (equatorial) radii from the centre, dx, dy the apparent
+/// Earth diameters in grid lengths, Xp, Yp the sub-satellite point and Xo, Yo the first grid point, in grid lengths
+/// along the scanning directions
 Custom* make_space_view_spec(codes_handle* h)
 {
     // (as the eccodes iterator, the apparent Earth diameters divide)
@@ -1057,32 +1057,27 @@ Custom* make_space_view_spec(codes_handle* h)
             Here());
     }
 
-    std::unique_ptr<Custom> projection(
-        new Custom{ { "type", "space_view" }, { "lon_0", get_double(h, "longitudeOfSubSatellitePointInDegrees") } });
-    set_figure(h, *projection);
+    // the grid as GRIB (eckit::geo space_view), the order as the scanning mode
+    auto* spec = new Custom{ { "type", "space_view" },
+                             { "nx", get_long(h, "Nx") },
+                             { "ny", get_long(h, "Ny") },
+                             { "dx", get_double(h, "dx") },
+                             { "dy", get_double(h, "dy") },
+                             { "xp", get_double(h, "XpInGridLengths") },
+                             { "yp", get_double(h, "YpInGridLengths") },
+                             { "xo", get_double(h, "Xo") },
+                             { "yo", get_double(h, "Yo") },
+                             { "nr", Nr },
+                             { "lon_0", get_double(h, "longitudeOfSubSatellitePointInDegrees") } };
+    set_figure(h, *spec);
 
-    std::unique_ptr<const eckit::geo::Figure> figure(eckit::geo::FigureFactory::build(*projection));
-    const auto height = (Nr - 1.) * figure->a();
-    const auto angle = 2. * std::asin(1. / Nr) * height;
-    projection->set("h", height);
-    projection->set("reverse", true);
-
-    const auto nx = static_cast<double>(get_long(h, "Nx"));
-    const auto ny = static_cast<double>(get_long(h, "Ny"));
-    const auto dx = (get_long(h, "iScansNegatively") != 0 ? -angle : angle) / get_double(h, "dx");
-    const auto dy = (get_long(h, "jScansPositively") != 0 ? angle : -angle) * figure->b() / figure->a() / get_double(h, "dy");
-    const auto xp = get_double(h, "XpInGridLengths") - get_double(h, "Xo");
-    const auto yp = get_double(h, "YpInGridLengths") - get_double(h, "Yo");
-
-    // the false easting/northing places the first grid point at (0, 0), to millimetres
-    auto* spec = new Custom{ { "x", std::vector<double>{ 0., (nx - 1.) * dx, dx } },
-                             { "y", std::vector<double>{ 0., (ny - 1.) * dy, dy } },
-                             { "false_xy", std::vector<double>{ millimetres(xp * dx), millimetres(yp * dy) } } };
-    spec->set("projection", projection.release());
-
-    if (const auto order = scanning_order(h, dx, dy); !order.empty()) {
-        spec->set("order", order);
+    const auto i_positive = get_long(h, "iScansNegatively") == 0;
+    const auto j_positive = get_long(h, "jScansPositively") != 0;
+    auto order = scanning_order(h, i_positive ? 1. : -1., j_positive ? 1. : -1.);
+    if (order.empty()) {
+        order = std::string("i") + (i_positive ? "+" : "-") + "j" + (j_positive ? "+" : "-");
     }
+    spec->set("order", order);
 
     return spec;
 }

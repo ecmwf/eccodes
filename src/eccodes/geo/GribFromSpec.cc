@@ -31,6 +31,8 @@
 #include "eckit/geo/grid/reduced/ReducedLonLat.h"
 #include "eckit/geo/grid/reduced/ReducedGaussian.h"
 #include "eckit/geo/grid/regular/RegularGaussian.h"
+#include "eckit/geo/grid/regular/SpaceView.h"
+#include "eckit/geo/order/RegularScan.h"
 #include "eckit/geo/grid/SphericalHarmonics.h"
 #include "eckit/geo/projection/Rotation.h"
 #include "eckit/geo/util/mutex.h"
@@ -576,17 +578,79 @@ void set_grid_type_polar_stereographic(grib_info& info, const Grid& grid)
 }
 
 
-// GRIB2 templates without a grib_util grid type, set directly: transverse_mercator (3.12) and albers (3.31)
+// GRIB2 templates without a grib_util grid type, set directly: transverse_mercator (3.12), albers (3.31) and
+// space_view (3.90)
 bool is_set_by_template(const Grid& grid)
 {
     const auto p = grid.projection().type();
-    return grid.type() == "regular_xy" && (p == "tmerc" || p == "aea");
+    return (grid.type() == "regular_xy" && (p == "tmerc" || p == "aea")) || grid.type() == "space_view";
+}
+
+
+void set_figure_and_values(codes_handle* h, const Grid& grid)
+{
+    auto set_long = [h](const char* key, long value) { CODES_CHECK(codes_set_long(h, key, value), key); };
+    auto set_double = [h](const char* key, double value) { CODES_CHECK(codes_set_double(h, key, value), key); };
+
+    // the figure, as other grids
+    grib_info info;
+    Shape(grid.projection().figure()).fillGrib(info);
+    for (long j = 0; j < info.packing.extra_settings_count; ++j) {
+        const auto& set = info.packing.extra_settings[j];
+        set.type == CODES_TYPE_LONG ? set_long(set.name, set.long_value) : set_double(set.name, set.double_value);
+    }
+
+    // values (as many as points)
+    const auto n = static_cast<long>(grid.size());
+    set_long("numberOfDataPoints", n);
+    set_long("numberOfValues", n);
+
+    const std::vector<double> values(static_cast<size_t>(n), 0.);
+    CODES_CHECK(codes_set_double_array(h, "values", values.data(), values.size()), "values");
+}
+
+
+void set_space_view(codes_handle* h, const Grid& grid)
+{
+    auto set_long = [h](const char* key, long value) { CODES_CHECK(codes_set_long(h, key, value), key); };
+
+    // as GribToSpec: the grid parameters as GRIB, the scanning mode as the order
+    const auto& p = dynamic_cast<const ::eckit::geo::grid::regular::SpaceView&>(grid).parameters();
+    const ::eckit::geo::order::RegularScan scan(grid.order());
+
+    set_long("edition", 2);
+    set_long("gridDefinitionTemplateNumber", 90);
+
+    set_long("Nx", static_cast<long>(p.nx));
+    set_long("Ny", static_cast<long>(p.ny));
+    set_long("latitudeOfSubSatellitePoint", 0);
+    set_long("longitudeOfSubSatellitePoint", std::lround(normalise_longitude(p.lon_0, -180.) * 1e6));
+    set_long("dx", std::lround(p.dx));
+    set_long("dy", std::lround(p.dy));
+    set_long("Xp", std::lround(p.xp * 1e3));
+    set_long("Yp", std::lround(p.yp * 1e3));
+    set_long("Xo", std::lround(p.xo));
+    set_long("Yo", std::lround(p.yo));
+    set_long("orientationOfTheGrid", 0);
+    set_long("Nr", std::lround(p.nr * 1e6));
+
+    set_long("iScansNegatively", scan.is_scan_i_positive() ? 0L : 1L);
+    set_long("jScansPositively", scan.is_scan_j_positive() ? 1L : 0L);
+    set_long("jPointsAreConsecutive", scan.is_scan_i_then_j() ? 0L : 1L);
+    set_long("alternativeRowScanning", scan.is_scan_alternating() ? 1L : 0L);
+
+    set_figure_and_values(h, grid);
 }
 
 
 void set_by_template(codes_handle* h, const Grid& grid)
 {
     ASSERT(is_set_by_template(grid));
+
+    if (grid.type() == "space_view") {
+        set_space_view(h, grid);
+        return;
+    }
 
     auto set_long = [h](const char* key, long value) { CODES_CHECK(codes_set_long(h, key, value), key); };
     auto set_double = [h](const char* key, double value) { CODES_CHECK(codes_set_double(h, key, value), key); };
@@ -641,21 +705,7 @@ void set_by_template(codes_handle* h, const Grid& grid)
     set_long("iScansNegatively", x[1] < x[0] ? 1L : 0L);
     set_long("jScansPositively", y[1] > y[0] ? 1L : 0L);
 
-    // the figure, as other grids
-    grib_info info;
-    Shape(grid.projection().figure()).fillGrib(info);
-    for (long j = 0; j < info.packing.extra_settings_count; ++j) {
-        const auto& set = info.packing.extra_settings[j];
-        set.type == CODES_TYPE_LONG ? set_long(set.name, set.long_value) : set_double(set.name, set.double_value);
-    }
-
-    // values (as many as points)
-    const auto n = static_cast<long>(grid.size());
-    set_long("numberOfDataPoints", n);
-    set_long("numberOfValues", n);
-
-    const std::vector<double> values(static_cast<size_t>(n), 0.);
-    CODES_CHECK(codes_set_double_array(h, "values", values.data(), values.size()), "values");
+    set_figure_and_values(h, grid);
 }
 
 
