@@ -5,6 +5,7 @@ visibility = "public"
 fork-pull-requests = true
 compiler-inputs = ["cxx-compiler"]
 add-to-path = ["bin"]
+ci-yml = "custom"
 
 [[deps]]
 repo = "ecmwf/ecbuild"
@@ -366,6 +367,7 @@ apt-packages = "cppcheck"
 # Valgrind, sanitizers and coverage: each takes 15-50 min, so run only by hand
 # from analysis.yml.
 [matrix.analysis]
+ci = false
 packages = ["eccodes-analysis"]
 publishes = false
 
@@ -429,6 +431,7 @@ rust-compiler = "rust-1.90"
 compiler-inputs = ["cxx-compiler", "rust-compiler"]
 
 [matrix.rust-publish]
+ci = false
 packages = ["eccodes-crates"]
 publishes = false
 
