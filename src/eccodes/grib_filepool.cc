@@ -45,6 +45,7 @@ void grib_file_pool_clean()
 {
     grib_file *file, *next;
 
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
     if (!file_pool.first)
         return;
 
@@ -152,6 +153,11 @@ grib_file* grib_file_open(const char* filename, const char* mode, int* err)
     int same_mode = 0;
     int is_new = 0;
 
+    // GitHub issue #643: The pool (including the 'current' fast path) is shared between threads.
+    // Hold the mutex for the whole lookup/open so the selected entry is consistent and cannot be
+    // replaced or deleted by another thread while we inspect its mode and handle.
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
+
     if (!file_pool.context)
         file_pool.context = grib_context_get_default();
 
@@ -159,7 +165,6 @@ grib_file* grib_file_open(const char* filename, const char* mode, int* err)
         file = file_pool.current;
     }
     else {
-        eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
         file = file_pool.first;
         while (file) {
             if (!grib_inline_strcmp(filename, file->name))
@@ -170,6 +175,8 @@ grib_file* grib_file_open(const char* filename, const char* mode, int* err)
         if (!file) {
             is_new = 1;
             file = grib_file_new(file_pool.context, filename, err);
+            if (!file)
+                return NULL;
             if (prev)
                 prev->next = file;
             file_pool.current = file;
@@ -186,9 +193,12 @@ grib_file* grib_file_open(const char* filename, const char* mode, int* err)
         return file;
     }
 
-    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
     if (!same_mode && file->handle) {
         fclose(file->handle);
+        file->handle = NULL;
+        free(file->buffer);
+        file->buffer = NULL;
+        file_pool.number_of_opened_files--;
     }
 
     if (!file->handle) {
@@ -301,6 +311,8 @@ void grib_file_close(const char* filename, int force, int* err)
     grib_file* file = NULL;
     const grib_context* context = grib_context_get_default();
 
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
+
     /* Performance: keep the files open to avoid opening and closing files when writing the output. */
     /* So only call fclose() when too many files are open. */
     /* Also see ECC-411 */
@@ -310,9 +322,8 @@ void grib_file_close(const char* filename, int force, int* err)
 
     if (do_close) {
         /*printf("+++++++++++++ closing file %s (n=%d)\n",filename, file_pool.number_of_opened_files);*/
-        eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
         file = grib_get_file(filename, err);
-        if (file->handle) {
+        if (file && file->handle) {
             if (fclose(file->handle) != 0) {
                 *err = GRIB_IO_PROBLEM;
             }
@@ -329,10 +340,11 @@ void grib_file_close(const char* filename, int force, int* err)
 void grib_file_close_all(int* err)
 {
     grib_file* file = NULL;
+
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
     if (!file_pool.first)
         return;
 
-    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
     file = file_pool.first;
     while (file) {
         if (file->handle) {
@@ -349,6 +361,7 @@ grib_file* grib_get_file(const char* filename, int* err)
 {
     grib_file* file = NULL;
 
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
     if (!file_pool.current) {
         *err = GRIB_IO_PROBLEM;
         return NULL;
@@ -440,6 +453,7 @@ void grib_file_delete(grib_file* file)
 void grib_file_pool_print(const char* title, FILE* out)
 {
     int i = 0;
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
     grib_file* file = file_pool.first;
     fprintf(out, "%s: size=%zu, num_opened_files=%d\n", title, file_pool.size, file_pool.number_of_opened_files);
     while (file) {
