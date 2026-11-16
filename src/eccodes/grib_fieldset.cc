@@ -778,7 +778,11 @@ grib_handle* grib_fieldset_retrieve(grib_fieldset* set, int i, int* err)
     if (*err != GRIB_SUCCESS)
         return NULL;
 
-    fseeko(field->file->handle, field->offset, SEEK_SET);
+    if (fseeko(field->file->handle, field->offset, SEEK_SET) != 0) {
+        grib_context_log(set->context, GRIB_LOG_PERROR, "%s: Unable to seek in file '%s'", __func__, field->file->name);
+        *err = GRIB_IO_PROBLEM;
+        return NULL;
+    }
     h = grib_handle_new_from_file(set->context, field->file->handle, err);
     if (*err != GRIB_SUCCESS)
         return NULL;
