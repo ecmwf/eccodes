@@ -4,7 +4,3 @@ exempt:
   - workflow: notify_new_pr.yml
   - workflow: old_CI.yml
     reason: "legacy, retiring; gates downstream-ci with an if: rather than needs:"
-credentials:
-  - workflow: publish-crates.yml
-    jobs: [publish]
-    reason: "runs only on tags and manual dispatch; the crates.io token cannot be split from the build"
