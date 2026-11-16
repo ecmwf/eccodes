@@ -113,6 +113,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_dump_samples
         bufr_check_descriptors
         definitions
+        grib_check_shortname_duplicates
         grib2_version
         grib_accessors
         grib_calendar
