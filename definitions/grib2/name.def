@@ -11977,6 +11977,20 @@
 	 parameterNumber = 70 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean stream function
+'Time-mean stream function' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 4 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean velocity potential
+'Time-mean velocity potential' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 5 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-integrated land surface heat net flux
 'Time-integrated land surface heat net flux' = {
 	 discipline = 2 ;
@@ -14034,6 +14048,20 @@
 	 parameterNumber = 70 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
+#Time-maximum stream function
+'Time-maximum stream function' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 4 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum velocity potential
+'Time-maximum velocity potential' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 5 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
 #Time-minimum temperature tendency due to short-wave radiation
 'Time-minimum temperature tendency due to short-wave radiation' = {
 	 discipline = 0 ;
@@ -16055,6 +16083,20 @@
 	 parameterNumber = 70 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
+#Time-minimum stream function
+'Time-minimum stream function' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 4 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum velocity potential
+'Time-minimum velocity potential' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 5 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
 #Time-standard-deviation temperature tendency due to short-wave radiation
 'Time-standard-deviation temperature tendency due to short-wave radiation' = {
 	 discipline = 0 ;
@@ -18057,6 +18099,20 @@
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 70 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation stream function
+'Time-standard-deviation stream function' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 4 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation velocity potential
+'Time-standard-deviation velocity potential' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 5 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Cross sectional area of flow in channel
