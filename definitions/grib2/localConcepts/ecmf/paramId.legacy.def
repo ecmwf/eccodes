@@ -2583,6 +2583,12 @@
 	 parameterCategory = 171 ;
 	 parameterNumber = 155 ;
 	}
+#Height anomaly
+'171156' = {
+	 discipline = 192 ;
+	 parameterCategory = 171 ;
+	 parameterNumber = 156 ;
+	}
 #10 metre U wind component anomaly
 '171165' = {
 	 discipline = 192 ;
@@ -2636,6 +2642,12 @@
 	 discipline = 192 ;
 	 parameterCategory = 171 ;
 	 parameterNumber = 207 ;
+	}
+#Total precipitation anomaly
+'171228' = {
+	 discipline = 192 ;
+	 parameterCategory = 171 ;
+	 parameterNumber = 228 ;
 	}
 #Instantaneous X surface stress anomaly
 '171229' = {
