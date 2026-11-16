@@ -583,6 +583,14 @@ if( HAVE_BUILD_TOOLS )
                           TYPE SCRIPT
                           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_encode_threads.sh )
 
+        ecbuild_add_executable( TARGET    grib_threads_gh-643-index
+                                NOINSTALL
+                                SOURCES   grib_threads_gh-643-index.cc
+                                LIBS      ${eccodes_thread_test_libs} )
+        ecbuild_add_test( TARGET eccodes_t_grib_threads_gh-643-index
+                          TYPE SCRIPT
+                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_threads_gh-643-index.sh )
+
         foreach( test grib_encode_threads2 grib_threads_ecc-604-encode bufr_encode_threads )
             ecbuild_add_executable( TARGET    ${test}
                                     NOINSTALL
