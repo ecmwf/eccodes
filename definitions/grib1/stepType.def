@@ -17,6 +17,8 @@
 
 # Since grib1 has not min/max, we had to use our own convention
 # therefore we set the centre to ECMWF (98)
+# Legacy {timeRangeIndicator=2;centre=98;} is ambiguous: it decodes as "max" (last match) (ECC-2385).
+"min"     = {timeRangeIndicator=119;centre=98;}
 "min"     = {timeRangeIndicator=2;centre=98;}
 "min"     = {timeRangeIndicator=119;}
 "max"     = {timeRangeIndicator=2;centre=98;}
