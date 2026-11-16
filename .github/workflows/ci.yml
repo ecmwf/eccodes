@@ -64,11 +64,12 @@ jobs:
       lint-matrix: ${{ toJSON(fromJSON(steps.r.outputs.json).lint) }}
     steps:
       - id: mint
-        uses: actions/create-github-app-token@v3
+        uses: ecmwf/ci-infrastructure/actions/mint-token@main
         with:
-          client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
-          private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
-          owner: ${{ github.repository_owner }}
+          client-id: ${{ secrets.CI_READER_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CI_READER_APP_PRIVATE_KEY }}
+          repositories: ecbuild,eccodes,eckit,stack-dependencies
+          permissions: contents:read actions:read
       - uses: ecmwf/ci-infrastructure/actions/checkout-under-test@main
         with:
           allow-unsafe-pr-checkout: ${{ github.event_name == 'pull_request_target' }}
@@ -77,8 +78,6 @@ jobs:
         with:
           matrix: build,build-hpc,fortran,fortran-hpc,rust,lint
           token: ${{ steps.mint.outputs.token }}
-          client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
-          app-private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
       - uses: ecmwf/ci-infrastructure/actions/wait-for-deps@main
         with:
           matrix: ${{ steps.r.outputs.matrix-build }}
@@ -130,11 +129,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - id: mint
-        uses: actions/create-github-app-token@v3
+        uses: ecmwf/ci-infrastructure/actions/mint-token@main
         with:
-          client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
-          private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
-          owner: ${{ github.repository_owner }}
+          client-id: ${{ secrets.CI_READER_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CI_READER_APP_PRIVATE_KEY }}
+          repositories: ecbuild,eccodes,eckit,stack-dependencies
+          permissions: contents:read actions:read
       - uses: ecmwf/ci-infrastructure/actions/wait-for-deps@main
         with:
           matrix: ${{ needs.resolve.outputs.build-hpc-matrix }}
@@ -145,11 +145,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - id: mint
-        uses: actions/create-github-app-token@v3
+        uses: ecmwf/ci-infrastructure/actions/mint-token@main
         with:
-          client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
-          private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
-          owner: ${{ github.repository_owner }}
+          client-id: ${{ secrets.CI_READER_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CI_READER_APP_PRIVATE_KEY }}
+          repositories: ecbuild,eccodes,eckit,stack-dependencies
+          permissions: contents:read actions:read
       - uses: ecmwf/ci-infrastructure/actions/wait-for-deps@main
         with:
           matrix: ${{ needs.resolve.outputs.fortran-matrix }}
@@ -161,11 +162,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - id: mint
-        uses: actions/create-github-app-token@v3
+        uses: ecmwf/ci-infrastructure/actions/mint-token@main
         with:
-          client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
-          private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
-          owner: ${{ github.repository_owner }}
+          client-id: ${{ secrets.CI_READER_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CI_READER_APP_PRIVATE_KEY }}
+          repositories: ecbuild,eccodes,eckit,stack-dependencies
+          permissions: contents:read actions:read
       - uses: ecmwf/ci-infrastructure/actions/wait-for-deps@main
         with:
           matrix: ${{ needs.resolve.outputs.fortran-hpc-matrix }}
@@ -184,11 +186,12 @@ jobs:
       - name: Announce image
         uses: ecmwf/ci-infrastructure/actions/announce-image@main
       - id: mint
-        uses: actions/create-github-app-token@v3
+        uses: ecmwf/ci-infrastructure/actions/mint-token@main
         with:
-          client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
-          private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
-          owner: ${{ github.repository_owner }}
+          client-id: ${{ secrets.CI_READER_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CI_READER_APP_PRIVATE_KEY }}
+          repositories: ecbuild,eccodes,eckit,stack-dependencies
+          permissions: contents:read actions:read
       - uses: ecmwf/ci-infrastructure/actions/checkout-under-test@main
         with:
           allow-unsafe-pr-checkout: ${{ github.event_name == 'pull_request_target' }}
@@ -241,11 +244,12 @@ jobs:
       - name: Announce image
         uses: ecmwf/ci-infrastructure/actions/announce-image@main
       - id: mint
-        uses: actions/create-github-app-token@v3
+        uses: ecmwf/ci-infrastructure/actions/mint-token@main
         with:
-          client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
-          private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
-          owner: ${{ github.repository_owner }}
+          client-id: ${{ secrets.CI_READER_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CI_READER_APP_PRIVATE_KEY }}
+          repositories: ecbuild,eccodes,eckit,stack-dependencies
+          permissions: contents:read actions:read
       - uses: ecmwf/ci-infrastructure/actions/checkout-under-test@main
         with:
           allow-unsafe-pr-checkout: ${{ github.event_name == 'pull_request_target' }}
@@ -285,11 +289,12 @@ jobs:
       - name: Announce image
         uses: ecmwf/ci-infrastructure/actions/announce-image@main
       - id: mint
-        uses: actions/create-github-app-token@v3
+        uses: ecmwf/ci-infrastructure/actions/mint-token@main
         with:
-          client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
-          private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
-          owner: ${{ github.repository_owner }}
+          client-id: ${{ secrets.CI_READER_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CI_READER_APP_PRIVATE_KEY }}
+          repositories: ecbuild,eccodes,eckit,stack-dependencies
+          permissions: contents:read actions:read
       - uses: ecmwf/ci-infrastructure/actions/checkout-under-test@main
         with:
           allow-unsafe-pr-checkout: ${{ github.event_name == 'pull_request_target' }}
@@ -343,11 +348,12 @@ jobs:
       - name: Announce image
         uses: ecmwf/ci-infrastructure/actions/announce-image@main
       - id: mint
-        uses: actions/create-github-app-token@v3
+        uses: ecmwf/ci-infrastructure/actions/mint-token@main
         with:
-          client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
-          private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
-          owner: ${{ github.repository_owner }}
+          client-id: ${{ secrets.CI_READER_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CI_READER_APP_PRIVATE_KEY }}
+          repositories: ecbuild,eccodes,eckit,stack-dependencies
+          permissions: contents:read actions:read
       - uses: ecmwf/ci-infrastructure/actions/checkout-under-test@main
         with:
           allow-unsafe-pr-checkout: ${{ github.event_name == 'pull_request_target' }}
@@ -412,11 +418,12 @@ jobs:
       - name: Announce image
         uses: ecmwf/ci-infrastructure/actions/announce-image@main
       - id: mint
-        uses: actions/create-github-app-token@v3
+        uses: ecmwf/ci-infrastructure/actions/mint-token@main
         with:
-          client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
-          private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
-          owner: ${{ github.repository_owner }}
+          client-id: ${{ secrets.CI_READER_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CI_READER_APP_PRIVATE_KEY }}
+          repositories: ecbuild,eccodes,eckit,stack-dependencies
+          permissions: contents:read actions:read
       - uses: ecmwf/ci-infrastructure/actions/checkout-under-test@main
         with:
           allow-unsafe-pr-checkout: ${{ github.event_name == 'pull_request_target' }}
@@ -468,11 +475,12 @@ jobs:
       - name: Announce image
         uses: ecmwf/ci-infrastructure/actions/announce-image@main
       - id: mint
-        uses: actions/create-github-app-token@v3
+        uses: ecmwf/ci-infrastructure/actions/mint-token@main
         with:
-          client-id: ${{ secrets.CI_PERMISSIONS_APP_CLIENT_ID }}
-          private-key: ${{ secrets.CI_PERMISSIONS_APP_PRIVATE_KEY }}
-          owner: ${{ github.repository_owner }}
+          client-id: ${{ secrets.CI_READER_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CI_READER_APP_PRIVATE_KEY }}
+          repositories: ecbuild,eccodes,eckit,stack-dependencies
+          permissions: contents:read actions:read
       - uses: ecmwf/ci-infrastructure/actions/checkout-under-test@main
         with:
           allow-unsafe-pr-checkout: ${{ github.event_name == 'pull_request_target' }}
