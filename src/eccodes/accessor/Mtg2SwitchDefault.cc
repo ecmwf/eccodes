@@ -20,7 +20,7 @@ void Mtg2SwitchDefault::init(const long len, grib_arguments* arg)
 
     if (context_->debug) {
         const int numActualArgs = arg->get_count();
-        const int numExpectedArgs = 4;
+        const int numExpectedArgs = 5;
         if (numActualArgs != numExpectedArgs) {
             grib_context_log(context_, GRIB_LOG_FATAL, "Accessor %s (key %s): %d arguments provided but expected %d",
                              accessor_type().c_str(), name_, numActualArgs, numExpectedArgs);
@@ -31,6 +31,7 @@ void Mtg2SwitchDefault::init(const long len, grib_arguments* arg)
     tablesVersionMTG2Switch_ = arg->get_name(1);
     marsClass_ = arg->get_name(2);
     MTG2SwitchViaTablesVersion_ = arg->get_name(3);
+    backgroundProcess_ = arg->get_name(4);
 
     length_ = 0;
     flags_ |= GRIB_ACCESSOR_FLAG_READ_ONLY;
@@ -48,11 +49,23 @@ int Mtg2SwitchDefault::unpack_long(long* val, size_t* /*len*/)
     int err = 0;
     long tablesVersion = 0, tablesVersionMTG2Switch = 0;
     char marsClass[32] = { 0 };
+    long backgroundProcess = 255;
 
     err = grib_get_long(h, tablesVersion_, &tablesVersion);
     if (err) return err;
     err = grib_get_long_internal(h, tablesVersionMTG2Switch_, &tablesVersionMTG2Switch);
     if (err) return err;
+    // backgroundProcess may not be present (depends on the template); default to 255 (missing)
+    err = grib_get_long(h, backgroundProcess_, &backgroundProcess);
+    if (err) {
+        if (err == GRIB_NOT_FOUND) {
+            backgroundProcess = 255;
+            err = 0;
+        }
+        else {
+            return err;
+        }
+    }
 
     bool marsClassExists = true;
     size_t size = sizeof(marsClass);
@@ -77,13 +90,16 @@ int Mtg2SwitchDefault::unpack_long(long* val, size_t* /*len*/)
             *val = 0;  // Pre-MTG2
         }
         else {
-            // For certain classes post MTG2 we always want the param + chem split (value 2)
+            // For certain classes post MTG2 we want the param + chem split (value 2),
+            // unless backgroundProcess is 254 or 255.
             // For TIGGE, marsClass is not defined in the empty local Section 2, but is defined later on.
-            if (marsClassExists && (STR_EQUAL(marsClass, "a5") ||
-                                    STR_EQUAL(marsClass, "cr") ||
-                                    STR_EQUAL(marsClass, "mc") ||
-                                    STR_EQUAL(marsClass, "we") ||
-                                    STR_EQUAL(marsClass, "gg"))) {
+            if (marsClassExists &&
+                backgroundProcess != 254 &&
+                (STR_EQUAL(marsClass, "a5") ||
+                 STR_EQUAL(marsClass, "cr") ||
+                 STR_EQUAL(marsClass, "mc") ||
+                 STR_EQUAL(marsClass, "we") ||
+                 STR_EQUAL(marsClass, "gg"))) {
                 *val = 2;
             }
             else {
