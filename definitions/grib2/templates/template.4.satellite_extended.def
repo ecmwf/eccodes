@@ -20,3 +20,5 @@ listOfContributingSpectralBands list(numberOfContributingSpectralBands){
 
 alias instrument = instrumentType;
 alias ident = satelliteNumber;
+
+alias mars.channel = channelNumber;
