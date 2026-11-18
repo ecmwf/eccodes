@@ -40,6 +40,12 @@ long GridSpec::get_native_type()
     return GRIB_TYPE_STRING;
 }
 
+size_t GridSpec::string_length()
+{
+    // gridSpecs with (pl) arrays can be longer than the default
+    return 10 * 1024;
+}
+
 
 int GridSpec::pack_string([[maybe_unused]] const char* v, [[maybe_unused]] size_t* len)
 {
