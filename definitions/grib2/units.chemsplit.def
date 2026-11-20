@@ -8628,6 +8628,14 @@
 	 parameterNumber = 5 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean albedo (climatological)
+'%' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
 #Time-integrated land surface heat net flux
 'J m**-2' = {
 	 discipline = 2 ;
@@ -10600,6 +10608,14 @@
 	 parameterNumber = 5 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
+#Time-maximum albedo (climatological)
+'%' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 1 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
 #Time-minimum temperature tendency due to short-wave radiation
 'K s**-1' = {
 	 discipline = 0 ;
@@ -12536,6 +12552,14 @@
 	 parameterNumber = 5 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
+#Time-minimum albedo (climatological)
+'%' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 1 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
 #Time-standard-deviation temperature tendency due to short-wave radiation
 'K s**-1' = {
 	 discipline = 0 ;
@@ -14454,6 +14478,14 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 5 ;
 	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation albedo (climatological)
+'%' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	 typeOfGeneratingProcess = 9 ;
 	}
 #Cross sectional area of flow in channel
 'm**2' = {
@@ -16734,6 +16766,13 @@
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 70 ;
+	}
+#Albedo (climatological)
+'%' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 1 ;
+	 typeOfGeneratingProcess = 9 ;
 	}
 #Universal thermal climate index
 'K' = {

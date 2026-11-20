@@ -11991,6 +11991,14 @@
 	 parameterNumber = 5 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean albedo (climatological)
+'avg_alc' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
 #Time-integrated land surface heat net flux
 'acc_lshnf' = {
 	 discipline = 2 ;
@@ -14078,6 +14086,14 @@
 	 parameterNumber = 5 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
+#Time-maximum albedo (climatological)
+'max_alc' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 1 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
 #Time-minimum temperature tendency due to short-wave radiation
 'min_ttswr' = {
 	 discipline = 0 ;
@@ -16129,6 +16145,14 @@
 	 parameterNumber = 5 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
+#Time-minimum albedo (climatological)
+'min_alc' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 1 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
 #Time-standard-deviation temperature tendency due to short-wave radiation
 'std_ttswr' = {
 	 discipline = 0 ;
@@ -18162,6 +18186,14 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 5 ;
 	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation albedo (climatological)
+'std_alc' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	 typeOfGeneratingProcess = 9 ;
 	}
 #Cross sectional area of flow in channel
 'chcross' = {
@@ -20508,6 +20540,13 @@
 	 parameterNumber = 27 ;
 	 typeOfFirstFixedSurface = 28 ;
 	 typeOfSecondFixedSurface = 29 ;
+	}
+#Albedo (climatological)
+'alc' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 1 ;
+	 typeOfGeneratingProcess = 9 ;
 	}
 #Universal thermal climate index
 'utci' = {
