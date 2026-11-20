@@ -4786,6 +4786,16 @@
 	 typeOfRelationToReferenceDataset = 0 ;
 	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
+#Total Precipitation anomaly
+'tpa' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
+	}
 #Mean surface runoff rate anomaly
 'msrora' = {
 	 discipline = 2 ;
@@ -8853,6 +8863,14 @@
 	 typeOfRelationToReferenceDataset = 2 ;
 	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
+#Geopotential height significance
+'ghs' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 5 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
+	}
 #10 metre U wind component significance
 '10us' = {
 	 discipline = 0 ;
@@ -9599,6 +9617,16 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 11 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
+	}
+#Total Precipitation significance
+'tps' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
 	 typeOfRelationToReferenceDataset = 2 ;
 	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
@@ -11949,6 +11977,28 @@
 	 parameterNumber = 70 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean stream function
+'avg_strf' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 4 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean velocity potential
+'avg_vp' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 5 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean albedo (climatological)
+'avg_alc' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
 #Time-integrated land surface heat net flux
 'acc_lshnf' = {
 	 discipline = 2 ;
@@ -12061,6 +12111,22 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 20 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum surface runoff rate
+'max_surfror' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 51 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum sub-surface runoff rate
+'max_ssurfror' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
 #Time-maximum surface photosynthetically active radiation flux, clear sky
@@ -14006,6 +14072,28 @@
 	 parameterNumber = 70 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
+#Time-maximum stream function
+'max_strf' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 4 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum velocity potential
+'max_vp' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 5 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum albedo (climatological)
+'max_alc' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 1 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
 #Time-minimum temperature tendency due to short-wave radiation
 'min_ttswr' = {
 	 discipline = 0 ;
@@ -14102,6 +14190,22 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 20 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum  surface runoff rate
+'min_surfror' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 51 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum  sub-surface runoff rate
+'min_ssurfror' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
 #Time-minimum surface photosynthetically active radiation flux, clear sky
@@ -16027,6 +16131,28 @@
 	 parameterNumber = 70 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
+#Time-minimum stream function
+'min_strf' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 4 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum velocity potential
+'min_vp' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 5 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum albedo (climatological)
+'min_alc' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 1 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
 #Time-standard-deviation temperature tendency due to short-wave radiation
 'std_ttswr' = {
 	 discipline = 0 ;
@@ -16123,6 +16249,22 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 20 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation surface runoff rate
+'std_surfror' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 51 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation sub-surface runoff rate
+'std_ssurfror' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Time-standard-deviation surface photosynthetically active radiation flux, clear sky
@@ -18031,6 +18173,28 @@
 	 parameterNumber = 70 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
+#Time-standard-deviation stream function
+'std_strf' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 4 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation velocity potential
+'std_vp' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 5 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation albedo (climatological)
+'std_alc' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
 #Cross sectional area of flow in channel
 'chcross' = {
 	 discipline = 1 ;
@@ -18333,12 +18497,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 16 ;
-	}
-#Vapor pressure
-'vapp' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 4 ;
 	}
 #Large scale precipitation (non-convective)
 'ncpcp' = {
@@ -20382,6 +20540,13 @@
 	 parameterNumber = 27 ;
 	 typeOfFirstFixedSurface = 28 ;
 	 typeOfSecondFixedSurface = 29 ;
+	}
+#Albedo (climatological)
+'alc' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 1 ;
+	 typeOfGeneratingProcess = 9 ;
 	}
 #Universal thermal climate index
 'utci' = {
@@ -26665,7 +26830,7 @@
 	 parameterNumber = 0 ;
 	}
 #Temperature anomaly
-'ta' = {
+'t_a' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 9 ;
@@ -26741,6 +26906,12 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 3 ;
+	}
+#Vapour pressure
+'vapp' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 4 ;
 	}
 #Saturation deficit
 'satd' = {
@@ -27938,7 +28109,7 @@
 	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
 #Temperature anomaly
-'t_a' = {
+'ta' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
@@ -28011,6 +28182,14 @@
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 13 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
+	}
+#Height anomaly
+'gha' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 5 ;
 	 typeOfRelationToReferenceDataset = 0 ;
 	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
