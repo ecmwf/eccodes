@@ -10366,6 +10366,22 @@
 	 parameterNumber = 20 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
+#Time-maximum surface runoff rate
+'237020' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 51 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum sub-surface runoff rate
+'237021' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
 #Time-maximum surface photosynthetically active radiation flux, clear sky
 '237022' = {
 	 discipline = 0 ;
@@ -12271,6 +12287,22 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 20 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum  surface runoff rate
+'238020' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 51 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum  sub-surface runoff rate
+'238021' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
 #Time-minimum surface photosynthetically active radiation flux, clear sky
@@ -14206,6 +14238,22 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 20 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation surface runoff rate
+'239020' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 51 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation sub-surface runoff rate
+'239021' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Time-standard-deviation surface photosynthetically active radiation flux, clear sky

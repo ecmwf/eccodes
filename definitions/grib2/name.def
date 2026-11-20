@@ -12105,6 +12105,22 @@
 	 parameterNumber = 20 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
+#Time-maximum surface runoff rate
+'Time-maximum surface runoff rate' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 51 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum sub-surface runoff rate
+'Time-maximum sub-surface runoff rate' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
 #Time-maximum surface photosynthetically active radiation flux, clear sky
 'Time-maximum surface photosynthetically active radiation flux, clear sky' = {
 	 discipline = 0 ;
@@ -14160,6 +14176,22 @@
 	 parameterNumber = 20 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
+#Time-minimum  surface runoff rate
+'Time-minimum  surface runoff rate' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 51 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum  sub-surface runoff rate
+'Time-minimum  sub-surface runoff rate' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
 #Time-minimum surface photosynthetically active radiation flux, clear sky
 'Time-minimum surface photosynthetically active radiation flux, clear sky' = {
 	 discipline = 0 ;
@@ -16193,6 +16225,22 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 20 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation surface runoff rate
+'Time-standard-deviation surface runoff rate' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 51 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation sub-surface runoff rate
+'Time-standard-deviation sub-surface runoff rate' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Time-standard-deviation surface photosynthetically active radiation flux, clear sky
