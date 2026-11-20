@@ -651,12 +651,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 184 ;
 	}
-#Convective cloud cover
-'185' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 185 ;
-	}
 #Low cloud cover
 '186' = {
 	 localTablesVersion = 1 ;

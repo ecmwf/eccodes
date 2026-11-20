@@ -8214,6 +8214,28 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	}
+#Convective cloud cover
+'231075' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
+#Geometric height of tropopause above ground
+'231076' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 34 ;
+	 typeOfFirstFixedSurface = 7 ;
+	}
+#Graupel (snow pellets) precipitation rate
+'231077' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 75 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
 #Thunderstorm hazard index
 '231500' = {
 	 discipline = 20 ;
@@ -11991,6 +12013,31 @@
 	 parameterNumber = 5 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean Convective cloud cover
+'235419' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean geometric height of tropopause above ground
+'235420' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 34 ;
+	 typeOfFirstFixedSurface = 7 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean graupel (snow pellets) precipitation rate
+'235421' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 75 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-mean albedo (climatological)
 '235701' = {
 	 discipline = 0 ;
@@ -14086,6 +14133,31 @@
 	 parameterNumber = 5 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
+#Time-maximum Convective cloud cover
+'237419' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum geometric height of tropopause above ground
+'237420' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 34 ;
+	 typeOfFirstFixedSurface = 7 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum graupel (snow pellets) precipitation rate
+'237421' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 75 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
 #Time-maximum albedo (climatological)
 '237701' = {
 	 discipline = 0 ;
@@ -16145,6 +16217,31 @@
 	 parameterNumber = 5 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
+#Time-minimum Convective cloud cover
+'238419' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum geometric height of tropopause above ground
+'238420' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 34 ;
+	 typeOfFirstFixedSurface = 7 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum graupel (snow pellets) precipitation rate
+'238421' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 75 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
 #Time-minimum albedo (climatological)
 '238701' = {
 	 discipline = 0 ;
@@ -18185,6 +18282,31 @@
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 5 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation Convective cloud cover
+'239419' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation geometric height of tropopause above ground
+'239420' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 34 ;
+	 typeOfFirstFixedSurface = 7 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation graupel (snow pellets) precipitation rate
+'239421' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 75 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Time-standard-deviation albedo (climatological)

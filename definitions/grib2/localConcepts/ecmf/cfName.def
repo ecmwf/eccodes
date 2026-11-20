@@ -77,12 +77,6 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Convective cloud cover
-'convective_cloud_area_fraction' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 185 ;
-	}
 #Total column ozone
 'atmosphere_mass_content_of_ozone' = {
 	 localTablesVersion = 1 ;
