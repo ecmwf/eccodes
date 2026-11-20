@@ -8614,6 +8614,28 @@
 	 parameterNumber = 70 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean stream function
+'Time-mean stream function' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 4 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean velocity potential
+'Time-mean velocity potential' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 5 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean albedo (climatological)
+'Time-mean albedo (climatological)' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
 #Time-integrated land surface heat net flux
 'Time-integrated land surface heat net flux' = {
 	 discipline = 2 ;
@@ -10572,6 +10594,28 @@
 	 parameterNumber = 70 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
+#Time-maximum stream function
+'Time-maximum stream function' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 4 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum velocity potential
+'Time-maximum velocity potential' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 5 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum albedo (climatological)
+'Time-maximum albedo (climatological)' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 1 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
 #Time-minimum temperature tendency due to short-wave radiation
 'Time-minimum temperature tendency due to short-wave radiation' = {
 	 discipline = 0 ;
@@ -12494,6 +12538,28 @@
 	 parameterNumber = 70 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
+#Time-minimum stream function
+'Time-minimum stream function' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 4 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum velocity potential
+'Time-minimum velocity potential' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 5 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum albedo (climatological)
+'Time-minimum albedo (climatological)' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 1 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
 #Time-standard-deviation temperature tendency due to short-wave radiation
 'Time-standard-deviation temperature tendency due to short-wave radiation' = {
 	 discipline = 0 ;
@@ -14399,6 +14465,28 @@
 	 parameterNumber = 70 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
+#Time-standard-deviation stream function
+'Time-standard-deviation stream function' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 4 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation velocity potential
+'Time-standard-deviation velocity potential' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 5 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation albedo (climatological)
+'Time-standard-deviation albedo (climatological)' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
 #Cross sectional area of flow in channel
 'Cross sectional area of flow in channel' = {
 	 discipline = 1 ;
@@ -14677,12 +14765,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 16 ;
-	}
-#Vapor pressure
-'Vapor pressure' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 4 ;
 	}
 #Large scale precipitation (non-convective)
 'Large scale precipitation (non-convective)' = {
@@ -16684,6 +16766,13 @@
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 70 ;
+	}
+#Albedo (climatological)
+'Albedo (climatological)' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 1 ;
+	 typeOfGeneratingProcess = 9 ;
 	}
 #Universal thermal climate index
 'Universal thermal climate index' = {

@@ -377,6 +377,12 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 182 ;
 	}
+#Convective cloud cover
+'185' = {
+	 discipline = 192 ;
+	 parameterCategory = 128 ;
+	 parameterNumber = 185 ;
+	}
 #Low cloud cover
 '186' = {
 	 discipline = 192 ;
@@ -1562,6 +1568,30 @@
 	 parameterCategory = 228 ;
 	 parameterNumber = 94 ;
 	}
+#Evaporation from the top of canopy
+'228100' = {
+	 discipline = 192 ;
+	 parameterCategory = 228 ;
+	 parameterNumber = 100 ;
+	}
+#Evaporation from bare soil
+'228101' = {
+	 discipline = 192 ;
+	 parameterCategory = 228 ;
+	 parameterNumber = 101 ;
+	}
+#Evaporation from open water surfaces excluding oceans
+'228102' = {
+	 discipline = 192 ;
+	 parameterCategory = 228 ;
+	 parameterNumber = 102 ;
+	}
+#Evaporation from vegetation transpiration
+'228103' = {
+	 discipline = 192 ;
+	 parameterCategory = 228 ;
+	 parameterNumber = 103 ;
+	}
 #Surface short-wave (solar) radiation downward clear-sky
 '228129' = {
 	 discipline = 192 ;
@@ -2583,6 +2613,12 @@
 	 parameterCategory = 171 ;
 	 parameterNumber = 155 ;
 	}
+#Height anomaly
+'171156' = {
+	 discipline = 192 ;
+	 parameterCategory = 171 ;
+	 parameterNumber = 156 ;
+	}
 #10 metre U wind component anomaly
 '171165' = {
 	 discipline = 192 ;
@@ -2636,6 +2672,12 @@
 	 discipline = 192 ;
 	 parameterCategory = 171 ;
 	 parameterNumber = 207 ;
+	}
+#Total precipitation anomaly
+'171228' = {
+	 discipline = 192 ;
+	 parameterCategory = 171 ;
+	 parameterNumber = 228 ;
 	}
 #Instantaneous X surface stress anomaly
 '171229' = {

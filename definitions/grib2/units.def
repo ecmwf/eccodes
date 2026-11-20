@@ -4786,6 +4786,16 @@
 	 typeOfRelationToReferenceDataset = 0 ;
 	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
+#Total Precipitation anomaly
+'kg m**-2' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
+	}
 #Mean surface runoff rate anomaly
 'kg m**-2 s**-1' = {
 	 discipline = 2 ;
@@ -8204,6 +8214,28 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	}
+#Convective cloud cover
+'%' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
+#Geometric height of tropopause above ground
+'m' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 34 ;
+	 typeOfFirstFixedSurface = 7 ;
+	}
+#Graupel (snow pellets) precipitation rate
+'kg m**-2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 75 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
 #Thunderstorm hazard index
 '(Code table 4.253)' = {
 	 discipline = 20 ;
@@ -8850,6 +8882,14 @@
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 13 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
+	}
+#Geopotential height significance
+'gpm' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 5 ;
 	 typeOfRelationToReferenceDataset = 2 ;
 	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
@@ -9599,6 +9639,16 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 11 ;
+	 typeOfRelationToReferenceDataset = 2 ;
+	 numberOfAdditionalParametersForReferencePeriod = 1 ;
+	}
+#Total Precipitation significance
+'kg m**-2' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
 	 typeOfRelationToReferenceDataset = 2 ;
 	 numberOfAdditionalParametersForReferencePeriod = 1 ;
 	}
@@ -11949,6 +11999,53 @@
 	 parameterNumber = 70 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean stream function
+'m**2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 4 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean velocity potential
+'m**2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 5 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean Convective cloud cover
+'%' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean geometric height of tropopause above ground
+'m' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 34 ;
+	 typeOfFirstFixedSurface = 7 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean graupel (snow pellets) precipitation rate
+'kg m**-2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 75 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean albedo (climatological)
+'%' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
 #Time-integrated land surface heat net flux
 'J m**-2' = {
 	 discipline = 2 ;
@@ -12061,6 +12158,22 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 20 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum surface runoff rate
+'kg m**-2 s**-1' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 51 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum sub-surface runoff rate
+'kg m**-2 s**-1' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
 #Time-maximum surface photosynthetically active radiation flux, clear sky
@@ -14006,6 +14119,53 @@
 	 parameterNumber = 70 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
+#Time-maximum stream function
+'m**2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 4 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum velocity potential
+'m**2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 5 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum Convective cloud cover
+'%' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum geometric height of tropopause above ground
+'m' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 34 ;
+	 typeOfFirstFixedSurface = 7 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum graupel (snow pellets) precipitation rate
+'kg m**-2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 75 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Time-maximum albedo (climatological)
+'%' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 1 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
 #Time-minimum temperature tendency due to short-wave radiation
 'K s**-1' = {
 	 discipline = 0 ;
@@ -14102,6 +14262,22 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 20 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum  surface runoff rate
+'kg m**-2 s**-1' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 51 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum  sub-surface runoff rate
+'kg m**-2 s**-1' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
 #Time-minimum surface photosynthetically active radiation flux, clear sky
@@ -16027,6 +16203,53 @@
 	 parameterNumber = 70 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
+#Time-minimum stream function
+'m**2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 4 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum velocity potential
+'m**2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 5 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum Convective cloud cover
+'%' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum geometric height of tropopause above ground
+'m' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 34 ;
+	 typeOfFirstFixedSurface = 7 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum graupel (snow pellets) precipitation rate
+'kg m**-2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 75 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Time-minimum albedo (climatological)
+'%' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 1 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
 #Time-standard-deviation temperature tendency due to short-wave radiation
 'K s**-1' = {
 	 discipline = 0 ;
@@ -16123,6 +16346,22 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 20 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation surface runoff rate
+'kg m**-2 s**-1' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 51 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation sub-surface runoff rate
+'kg m**-2 s**-1' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
 #Time-standard-deviation surface photosynthetically active radiation flux, clear sky
@@ -18031,6 +18270,53 @@
 	 parameterNumber = 70 ;
 	 typeOfStatisticalProcessing = 6 ;
 	}
+#Time-standard-deviation stream function
+'m**2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 4 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation velocity potential
+'m**2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 5 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation Convective cloud cover
+'%' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation geometric height of tropopause above ground
+'m' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 34 ;
+	 typeOfFirstFixedSurface = 7 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation graupel (snow pellets) precipitation rate
+'kg m**-2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 75 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	}
+#Time-standard-deviation albedo (climatological)
+'%' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 1 ;
+	 typeOfStatisticalProcessing = 6 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
 #Cross sectional area of flow in channel
 'm**2' = {
 	 discipline = 1 ;
@@ -18333,12 +18619,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 16 ;
-	}
-#Vapor pressure
-'Pa' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 4 ;
 	}
 #Large scale precipitation (non-convective)
 'kg m**-2' = {
@@ -20382,6 +20662,13 @@
 	 parameterNumber = 27 ;
 	 typeOfFirstFixedSurface = 28 ;
 	 typeOfSecondFixedSurface = 29 ;
+	}
+#Albedo (climatological)
+'%' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 1 ;
+	 typeOfGeneratingProcess = 9 ;
 	}
 #Universal thermal climate index
 'K' = {
@@ -26742,6 +27029,12 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 3 ;
 	}
+#Vapour pressure
+'Pa' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 4 ;
+	}
 #Saturation deficit
 'Pa' = {
 	 discipline = 0 ;
@@ -28011,6 +28304,14 @@
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 13 ;
+	 typeOfRelationToReferenceDataset = 0 ;
+	 numberOfAdditionalParametersForReferencePeriod = 0 ;
+	}
+#Height anomaly
+'m' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 5 ;
 	 typeOfRelationToReferenceDataset = 0 ;
 	 numberOfAdditionalParametersForReferencePeriod = 0 ;
 	}
