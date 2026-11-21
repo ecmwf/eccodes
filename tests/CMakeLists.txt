@@ -427,6 +427,7 @@ if( HAVE_BUILD_TOOLS )
         grib_missing
         grib_local_ECMWF
         grib_step
+        grib_step_type_minmax
         grib_set
         grib_set_fail
         grib_iterator
