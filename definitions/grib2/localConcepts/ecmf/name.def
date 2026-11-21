@@ -12769,6 +12769,41 @@
 	 parameterCategory = 228 ;
 	 parameterNumber = 43 ;
 	}
+#SMOS observed soil moisture retrieved using neural network
+'SMOS observed soil moisture retrieved using neural network' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 252 ;
+	 parameterNumber = 192 ;
+	}
+#SMOS observed soil moisture uncertainty retrieved using neural network
+'SMOS observed soil moisture uncertainty retrieved using neural network' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 252 ;
+	 parameterNumber = 193 ;
+	}
+#SMOS radio frequency interference probability
+'SMOS radio frequency interference probability' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 252 ;
+	 parameterNumber = 194 ;
+	}
+#SMOS number of observations per grid point
+'SMOS number of observations per grid point' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 252 ;
+	 parameterNumber = 195 ;
+	}
+#SMOS observation time for the satellite soil moisture data
+'SMOS observation time for the satellite soil moisture data' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 252 ;
+	 parameterNumber = 196 ;
+	}
 #GPP coefficient from Biogenic Flux Adjustment System
 'GPP coefficient from Biogenic Flux Adjustment System' = {
 	 localTablesVersion = 1 ;
@@ -12885,6 +12920,20 @@
 	 parameterNumber = 194 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
+	}
+#SMOS first Brightness Temperature Bias Correction parameter
+'SMOS first Brightness Temperature Bias Correction parameter' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 252 ;
+	 parameterNumber = 197 ;
+	}
+#SMOS second Brightness Temperature Bias Correction parameter
+'SMOS second Brightness Temperature Bias Correction parameter' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 252 ;
+	 parameterNumber = 198 ;
 	}
 #Surface short wave-effective total cloudiness
 'Surface short wave-effective total cloudiness' = {
@@ -16968,12 +17017,6 @@
 	 parameterCategory = 171 ;
 	 parameterNumber = 154 ;
 	}
-#Height anomaly
-'Height anomaly' = {
-	 discipline = 192 ;
-	 parameterCategory = 171 ;
-	 parameterNumber = 156 ;
-	}
 #Relative humidity anomaly
 'Relative humidity anomaly' = {
 	 discipline = 192 ;
@@ -17333,12 +17376,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 171 ;
 	 parameterNumber = 227 ;
-	}
-#Total precipitation anomaly
-'Total precipitation anomaly' = {
-	 discipline = 192 ;
-	 parameterCategory = 171 ;
-	 parameterNumber = 228 ;
 	}
 #Instantaneous surface heat flux anomaly
 'Instantaneous surface heat flux anomaly' = {

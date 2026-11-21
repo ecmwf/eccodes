@@ -591,7 +591,7 @@
 	 indicatorOfParameter = 24 ;
 	}
 #Temperature anomaly
-'ta' = {
+'t_a' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 25 ;
 	}
@@ -666,7 +666,7 @@
 	 indicatorOfParameter = 53 ;
 	}
 #Vapour pressure
-'vp' = {
+'vapp' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 55 ;
 	}
