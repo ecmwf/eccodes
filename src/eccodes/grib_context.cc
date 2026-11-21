@@ -812,6 +812,7 @@ void grib_context_reset(grib_context* c)
             grib_concept_value_delete(c, cv);
             cv = n;
         }
+        c->concepts[i] = NULL;
     }
 }
 
