@@ -89,6 +89,10 @@ private:
     template <typename T>
     int unpack_helper(grib_accessor* a, T* v);
 
+protected:
+    // Decode with unpack_double and narrow the values to float
+    int unpack_float_via_double(float* val, size_t* len);
+
 public:
     static constexpr AccessorType accessor_type_{ "gen" };
 };

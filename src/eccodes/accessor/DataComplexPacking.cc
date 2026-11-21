@@ -9,6 +9,8 @@
  */
 
 #include "DataComplexPacking.h"
+#include <type_traits>
+#include <vector>
 
 namespace eccodes::accessor
 {
@@ -60,7 +62,8 @@ int DataComplexPacking::value_count(long* count)
     return ret;
 }
 
-double calculate_pfactor(const grib_context* ctx, const double* spectralField, long fieldTruncation, long subsetTruncation)
+template <typename T>
+static double calculate_pfactor(const grib_context* ctx, const T* spectralField, long fieldTruncation, long subsetTruncation)
 {
     /*long n_vals = ((fieldTruncation+1)*(fieldTruncation+2));*/
     long loop, index, m, n = 0;
@@ -99,8 +102,8 @@ double calculate_pfactor(const grib_context* ctx, const double* spectralField, l
         for (n = m; n <= fieldTruncation; n++) {
             index += 2;
             if (n >= subsetTruncation) {
-                norms[n] = std::max(norms[n], fabs(spectralField[index]));
-                norms[n] = std::max(norms[n], fabs(spectralField[index + 1]));
+                norms[n] = std::max(norms[n], fabs((double)spectralField[index]));
+                norms[n] = std::max(norms[n], fabs((double)spectralField[index + 1]));
             }
         }
     }
@@ -111,8 +114,8 @@ double calculate_pfactor(const grib_context* ctx, const double* spectralField, l
     for (m = subsetTruncation; m <= fieldTruncation; m++) {
         for (n = m; n <= fieldTruncation; n++) {
             index += 2;
-            norms[n] = std::max(norms[n], fabs(spectralField[index]));
-            norms[n] = std::max(norms[n], fabs(spectralField[index + 1]));
+            norms[n] = std::max(norms[n], fabs((double)spectralField[index]));
+            norms[n] = std::max(norms[n], fabs((double)spectralField[index + 1]));
         }
     }
 
@@ -164,7 +167,8 @@ double calculate_pfactor(const grib_context* ctx, const double* spectralField, l
     return pFactor;
 }
 
-int DataComplexPacking::pack_double(const double* val, size_t* len)
+template <typename T>
+int DataComplexPacking::pack_real(const T* val, size_t* len)
 {
     grib_handle* gh = get_enclosing_handle();
 
@@ -217,6 +221,19 @@ int DataComplexPacking::pack_double(const double* val, size_t* len)
     int bytes;
 
     encode_float_proc encode_float = NULL;
+
+    // Free the work buffers on every return path
+    struct Cleanup
+    {
+        const grib_context* c;
+        unsigned char*& buf;
+        double*& scals;
+        ~Cleanup()
+        {
+            if (buf) grib_context_free(c, buf);
+            if (scals) grib_context_free(c, scals);
+        }
+    } cleanup{ context_, buf, scals };
 
     if (*len == 0)
         return GRIB_NO_VALUES;
@@ -312,21 +329,21 @@ int DataComplexPacking::pack_double(const double* val, size_t* len)
     }
 
     if (pen_j == sub_j) {
+        // The whole field is stored as IEEE/IBM floats
         double* values;
         d = codes_power<double>(decimal_scale_factor, 10);
-        if (d) {
-            values = (double*)grib_context_malloc_clear(context_, sizeof(double) * n_vals);
-            for (i = 0; i < n_vals; i++)
-                values[i] = val[i] * d;
-        }
-        else {
-            values = (double*)val;
-        }
+        values = (double*)grib_context_malloc(context_, sizeof(double) * n_vals);
+        if (!values) return GRIB_OUT_OF_MEMORY;
+        for (i = 0; i < n_vals; i++)
+            values[i] = d ? val[i] * d : val[i];
         buflen = n_vals * bytes;
         buf = (unsigned char*)grib_context_malloc_clear(context_, buflen);
-        grib_ieee_encode_array(context_, values, n_vals, bytes, buf);
-        if (d)
+        if (!buf) {
             grib_context_free(context_, values);
+            return GRIB_OUT_OF_MEMORY;
+        }
+        grib_ieee_encode_array(context_, values, n_vals, bytes, buf);
+        grib_context_free(context_, values);
 
         // ECC-2328
         // Reset unused keys to default values
@@ -340,7 +357,6 @@ int DataComplexPacking::pack_double(const double* val, size_t* len)
             return ret;
 
         grib_buffer_replace(this, buf, buflen, 1, 1);
-        grib_context_free(context_, buf);
         return 0;
     }
 
@@ -360,6 +376,7 @@ int DataComplexPacking::pack_double(const double* val, size_t* len)
     buflen = hsize + lsize;
 
     buf = (unsigned char*)grib_context_malloc(context_, buflen);
+    if (!buf) return GRIB_OUT_OF_MEMORY;
     hres = buf;
     lres = buf + hsize;
 
@@ -482,7 +499,14 @@ int DataComplexPacking::pack_double(const double* val, size_t* len)
         }
 
 #if FAST_BIG_ENDIAN
-        grib_encode_double_array_complex((maxv - hcount) * 2, &(val[i]), bits_per_value, reference_value, &(scals[lup]), d, s, lres, &lpos);
+        if constexpr (std::is_same<T, double>::value) {
+            // The encoder does not modify the values
+            grib_encode_double_array_complex((maxv - hcount) * 2, const_cast<double*>(&(val[i])), bits_per_value, reference_value, &(scals[lup]), d, s, lres, &lpos);
+        }
+        else {
+            std::vector<double> dval(&(val[i]), &(val[i]) + (maxv - hcount) * 2);
+            grib_encode_double_array_complex((maxv - hcount) * 2, dval.data(), bits_per_value, reference_value, &(scals[lup]), d, s, lres, &lpos);
+        }
         i += (maxv - hcount) * 2;
 #else
         if (bits_per_value % 8) {
@@ -527,8 +551,6 @@ int DataComplexPacking::pack_double(const double* val, size_t* len)
     if (((hpos / 8) != hsize) && ((lpos / 8) != lsize)) {
         grib_context_log(context_, GRIB_LOG_ERROR,
                          "%s: Mismatch in packing between high resolution and low resolution part", accessor_type().c_str());
-        grib_context_free(context_, buf);
-        grib_context_free(context_, scals);
         return GRIB_INTERNAL_ERROR;
     }
 
@@ -553,10 +575,18 @@ int DataComplexPacking::pack_double(const double* val, size_t* len)
         return ret;
 
     grib_buffer_replace(this, buf, buflen, 1, 1);
-    grib_context_free(context_, buf);
-    grib_context_free(context_, scals);
 
     return ret;
+}
+
+int DataComplexPacking::pack_double(const double* val, size_t* len)
+{
+    return pack_real(val, len);
+}
+
+int DataComplexPacking::pack_float(const float* val, size_t* len)
+{
+    return pack_real(val, len);
 }
 
 template <typename T>

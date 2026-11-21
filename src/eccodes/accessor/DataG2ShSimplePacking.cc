@@ -28,65 +28,24 @@ int DataG2ShSimplePacking::value_count(long* len)
     return grib_get_long(get_enclosing_handle(), numberOfValues_, len);
 }
 
-int DataG2ShSimplePacking::unpack_double(double* val, size_t* len)
+// After packing: numberOfValues and numberOfDataPoints include the real part
+int DataG2ShSimplePacking::set_number_of_values(int err, size_t n)
 {
-    int err = GRIB_SUCCESS;
-
-    size_t n_vals = 0;
-
-    if ((err = grib_get_size(get_enclosing_handle(), coded_values_, &n_vals)) != GRIB_SUCCESS)
-        return err;
-
-    dirty_ = 0;
-
-    /* n_vals = coded_n_vals+1; */
-
-    if (*len < n_vals) {
-        *len = n_vals;
-        return GRIB_ARRAY_TOO_SMALL;
-    }
-
-    if ((err = grib_get_double_internal(get_enclosing_handle(), real_part_, val)) != GRIB_SUCCESS)
-        return err;
-
-    val++;
-
-    if ((err = grib_get_double_array_internal(get_enclosing_handle(), coded_values_, val, &n_vals)) != GRIB_SUCCESS)
-        return err;
-
-    *len = n_vals;
-
+    if (err == GRIB_SUCCESS)
+        err = grib_set_long_internal(get_enclosing_handle(), numberOfValues_, (long)n);
+    if (err == GRIB_SUCCESS)
+        err = grib_set_long_internal(get_enclosing_handle(), numberOfDataPoints_, (long)n);
     return err;
 }
 
 int DataG2ShSimplePacking::pack_double(const double* val, size_t* len)
 {
-    int err = GRIB_SUCCESS;
+    return set_number_of_values(DataShSimplePacking::pack_double(val, len), *len);
+}
 
-    size_t coded_n_vals = *len - 1;
-    size_t n_vals = *len;
-
-    if (*len == 0)
-        return GRIB_NO_VALUES;
-
-    dirty_ = 1;
-
-    if ((err = grib_set_double_internal(get_enclosing_handle(), real_part_, *val)) != GRIB_SUCCESS)
-        return err;
-
-    val++;
-
-    if ((err = grib_set_double_array_internal(get_enclosing_handle(), coded_values_, val, coded_n_vals)) != GRIB_SUCCESS)
-        return err;
-
-    *len = n_vals;
-
-    if ((err = grib_set_long_internal(get_enclosing_handle(), numberOfValues_, (long)n_vals)) != GRIB_SUCCESS)
-        return err;
-    if ((err = grib_set_long_internal(get_enclosing_handle(), numberOfDataPoints_, (long)n_vals)) != GRIB_SUCCESS)
-        return err;
-
-    return err;
+int DataG2ShSimplePacking::pack_float(const float* val, size_t* len)
+{
+    return set_number_of_values(DataShSimplePacking::pack_float(val, len), *len);
 }
 
 }  // namespace eccodes::accessor

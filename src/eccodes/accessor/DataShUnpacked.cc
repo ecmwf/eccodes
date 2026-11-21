@@ -232,4 +232,10 @@ int DataShUnpacked::unpack_double(double* val, size_t* len)
     return ret;
 }
 
+// The inherited simple-packing float decoder does not know the layout of this accessor
+int DataShUnpacked::unpack_float(float* val, size_t* len)
+{
+    return unpack_float_via_double(val, len);
+}
+
 }  // namespace eccodes::accessor

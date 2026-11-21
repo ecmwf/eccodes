@@ -46,6 +46,8 @@ list(APPEND test_c_bins
     grib_codedValues_as_bytes
     grib_get_header_length
     grib_ecc-1467
+    grib_spectral_float
+    codes_set_float_array
     grib_ecc-1431
     grib_ecc-1433
     grib_ecc-1764
@@ -347,6 +349,8 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1397
         grib_ecc-1425
         grib_ecc-1467
+        grib_spectral_float
+        codes_set_float_array
         grib_ecc-1764
         grib_ecc-1792
         grib_ecc-1806

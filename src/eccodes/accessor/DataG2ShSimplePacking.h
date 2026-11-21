@@ -22,11 +22,12 @@ public:
         DataShSimplePacking() {}
     const AccessorType& accessor_type() const override { return accessor_type_; }
     int pack_double(const double* val, size_t* len) override;
-    int unpack_double(double* val, size_t* len) override;
+    int pack_float(const float* val, size_t* len) override;
     int value_count(long*) override;
     void init(const long, grib_arguments*) override;
 
 private:
+    int set_number_of_values(int err, size_t n);
     const char* numberOfValues_ = nullptr;
     const char* numberOfDataPoints_ = nullptr;
 

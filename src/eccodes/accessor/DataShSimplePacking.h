@@ -23,8 +23,18 @@ public:
     const AccessorType& accessor_type() const override { return accessor_type_; }
     long get_native_type() override;
     int pack_double(const double* val, size_t* len) override;
+    int pack_float(const float* val, size_t* len) override;
+    int unpack_double(double* val, size_t* len) override;
+    int unpack_float(float* val, size_t* len) override;
     void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;
+
+private:
+    // values = [realPart, codedValues...]
+    template <typename T>
+    int pack_values(const T* val, size_t* len);
+    template <typename T>
+    int unpack_values(T* val, size_t* len);
 
 protected:
     const char* coded_values_ = nullptr;

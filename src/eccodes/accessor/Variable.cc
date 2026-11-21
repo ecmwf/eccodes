@@ -112,6 +112,7 @@ int Variable::pack_double(const double* val, size_t* len)
     // }
 
     dval_ = dval;
+    fval_ = dval;
     if (dval < (double)LONG_MIN || dval > (double)LONG_MAX)
         type_ = GRIB_TYPE_DOUBLE;
     else
@@ -130,7 +131,10 @@ int Variable::pack_float(const float* val, size_t* len)
         return GRIB_ARRAY_TOO_SMALL;
     }
 
+    // Keep both representations in step, like pack_long and pack_string do.
+    // Otherwise a value set as float is not seen by unpack_double/unpack_long.
     fval_ = fval;
+    dval_ = fval;
     if (fval < (float)LONG_MIN || fval > (float)LONG_MAX)
         type_ = GRIB_TYPE_DOUBLE;
     else

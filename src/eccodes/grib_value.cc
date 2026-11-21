@@ -826,11 +826,22 @@ int grib_set_flag(grib_handle* h, const char* name, unsigned long flag)
     return GRIB_SUCCESS;
 }
 
-static int _grib_set_double_array_internal(grib_handle* h, grib_accessor* a,
-                                           const double* val, size_t buffer_len, size_t* encoded_length, int check)
+// Pack an array of values of type T (double or float) into an accessor
+static int pack_array(grib_accessor* a, const double* val, size_t* len)
+{
+    return a->pack_double(val, len);
+}
+static int pack_array(grib_accessor* a, const float* val, size_t* len)
+{
+    return a->pack_float(val, len);
+}
+
+template <typename T>
+static int _grib_set_array_internal(grib_handle* h, grib_accessor* a,
+                                    const T* val, size_t buffer_len, size_t* encoded_length, int check)
 {
     if (a) {
-        int err = _grib_set_double_array_internal(h, a->same_, val, buffer_len, encoded_length, check);
+        int err = _grib_set_array_internal(h, a->same_, val, buffer_len, encoded_length, check);
 
         if (check && (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY))
             return GRIB_READ_ONLY;
@@ -838,7 +849,7 @@ static int _grib_set_double_array_internal(grib_handle* h, grib_accessor* a,
         if (err == GRIB_SUCCESS) {
             size_t len = buffer_len - *encoded_length;
             if (len) {
-                err = a->pack_double(val + *encoded_length, &len);
+                err = pack_array(a, val + *encoded_length, &len);
                 *encoded_length += len;
                 if (err == GRIB_SUCCESS) {
                     // See ECC-778
@@ -858,8 +869,9 @@ static int _grib_set_double_array_internal(grib_handle* h, grib_accessor* a,
     }
 }
 
-static int _grib_set_double_array(grib_handle* h, const char* name,
-                                  const double* val, size_t length, int check)
+template <typename T>
+static int _grib_set_array(grib_handle* h, const char* name,
+                           const T* val, size_t length, int check)
 {
     size_t encoded = 0;
     grib_accessor* a = grib_find_accessor(h, name);
@@ -870,11 +882,11 @@ static int _grib_set_double_array(grib_handle* h, const char* name,
     if (name[0] == '/' || name[0] == '#') {
         if (check && (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY))
             return GRIB_READ_ONLY;
-        err = a->pack_double(val, &length);
+        err = pack_array(a, val, &length);
         encoded = length;
     }
     else
-        err = _grib_set_double_array_internal(h, a, val, length, &encoded, check);
+        err = _grib_set_array_internal(h, a, val, length, &encoded, check);
 
     if (err == GRIB_SUCCESS && length > encoded)
         err = GRIB_ARRAY_TOO_SMALL;
@@ -885,7 +897,8 @@ static int _grib_set_double_array(grib_handle* h, const char* name,
     return err;
 }
 
-int grib_set_double_array_internal(grib_handle* h, const char* name, const double* val, size_t length)
+template <typename T>
+int grib_set_array_internal(grib_handle* h, const char* name, const T* val, size_t length)
 {
     int ret = GRIB_SUCCESS;
 
@@ -895,22 +908,36 @@ int grib_set_double_array_internal(grib_handle* h, const char* name, const doubl
 
     if (length == 0) {
         grib_accessor* a = grib_find_accessor(h, name);
-        ret = a->pack_double(val, &length);
+        if (!a) return GRIB_NOT_FOUND;
+        ret = pack_array(a, val, &length);
     }
     else {
-        ret = _grib_set_double_array(h, name, val, length, 0);
+        ret = _grib_set_array(h, name, val, length, 0);
     }
 
     if (ret != GRIB_SUCCESS)
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to set double array '%s' (%s)",
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to set %s array '%s' (%s)",
+                         std::is_same<T, float>::value ? "float" : "double",
                          name, grib_get_error_message(ret));
-    // if (h->context->debug) fprintf(stderr,"ECCODES DEBUG grib_set_double_array_internal key=%s --DONE\n",name);
     return ret;
 }
 
-static int __grib_set_double_array(grib_handle* h, const char* name, const double* val, size_t length, int check)
+template int grib_set_array_internal<double>(grib_handle*, const char*, const double*, size_t);
+template int grib_set_array_internal<float>(grib_handle*, const char*, const float*, size_t);
+
+int grib_set_double_array_internal(grib_handle* h, const char* name, const double* val, size_t length)
 {
-    double v = 0;
+    return grib_set_array_internal<double>(h, name, val, length);
+}
+
+int grib_set_float_array_internal(grib_handle* h, const char* name, const float* val, size_t length)
+{
+    return grib_set_array_internal<float>(h, name, val, length);
+}
+
+template <typename T>
+static int __grib_set_array(grib_handle* h, const char* name, const T* val, size_t length, int check)
+{
     size_t i = 0;
 
     if (h->context->debug) {
@@ -919,22 +946,26 @@ static int __grib_set_double_array(grib_handle* h, const char* name, const doubl
 
     if (length == 0) {
         grib_accessor* a = grib_find_accessor(h, name);
-        return a->pack_double(val, &length);
+        if (!a) return GRIB_NOT_FOUND;
+        return pack_array(a, val, &length);
     }
 
     /*second order doesn't have a proper representation for constant fields
       the best is not to do the change of packing type if the field is constant
      */
     if (!strcmp(name, "values") || !strcmp(name, "codedValues")) {
-        double missingValue;
+        double missingValueD;
         int ret = GRIB_SUCCESS;
         int constant = 0;
 
-        ret = grib_get_double(h, "missingValue", &missingValue);
+        ret = grib_get_double(h, "missingValue", &missingValueD);
         if (ret)
-            missingValue = 9999;
+            missingValueD = 9999;
+        // The missing value in the precision of the input values
+        // (a float client marks missing points with (float)missingValue)
+        const T missingValue = (T)missingValueD;
 
-        v = missingValue;
+        T v = missingValue;
         constant = 1;
         for (i = 0; i < length; i++) {
             if (val[i] != missingValue) {
@@ -959,26 +990,26 @@ static int __grib_set_double_array(grib_handle* h, const char* name, const doubl
                 !strcmp(packingType, "grid_second_order_SPD3")) {
                 slen = 11; /*length of 'grid_simple' */
                 if (h->context->debug) {
-                    fprintf(stderr, "ECCODES DEBUG __grib_set_double_array: Cannot use second order packing for constant fields. Using simple packing\n");
+                    fprintf(stderr, "ECCODES DEBUG __grib_set_array: Cannot use second order packing for constant fields. Using simple packing\n");
                 }
                 ret = grib_set_string(h, "packingType", "grid_simple", &slen);
                 if (ret != GRIB_SUCCESS) {
                     if (h->context->debug) {
-                        fprintf(stderr, "ECCODES DEBUG __grib_set_double_array: could not switch to simple packing!\n");
+                        fprintf(stderr, "ECCODES DEBUG __grib_set_array: could not switch to simple packing!\n");
                     }
                 }
             }
         }
     }
 
-    return _grib_set_double_array(h, name, val, length, check);
+    return _grib_set_array(h, name, val, length, check);
 }
 
 static int grib_set_force_double_array_(grib_handle* h, const char* name, const double* val, size_t length)
 {
     /* GRIB-285: Same as grib_set_double_array but allows setting of READ-ONLY keys like codedValues */
     /* Use with great caution!! */
-    return __grib_set_double_array(h, name, val, length, /*check=*/0);
+    return __grib_set_array(h, name, val, length, /*check=*/0);
 }
 
 // C-API: Ensure all exceptions are converted to error codes
@@ -988,17 +1019,23 @@ int grib_set_force_double_array(grib_handle* h, const char* name, const double* 
     return eccodes::getErrorCode(result);
 }
 
-// C-API: Ensure all exceptions are converted to error codes
-int grib_set_force_float_array(grib_handle*, const char*, const float*, size_t)
+static int grib_set_force_float_array_(grib_handle* h, const char* name, const float* val, size_t length)
 {
     /* GRIB-285: Same as grib_set_float_array but allows setting of READ-ONLY keys like codedValues */
     /* Use with great caution!! */
-    return GRIB_NOT_IMPLEMENTED;
+    return __grib_set_array(h, name, val, length, /*check=*/0);
+}
+
+// C-API: Ensure all exceptions are converted to error codes
+int grib_set_force_float_array(grib_handle* h, const char* name, const float* val, size_t length)
+{
+    auto result = eccodes::handleExceptions(grib_set_force_float_array_, h, name, val, length);
+    return eccodes::getErrorCode(result);
 }
 
 static int grib_set_double_array_(grib_handle* h, const char* name, const double* val, size_t length)
 {
-    return __grib_set_double_array(h, name, val, length, /*check=*/1);
+    return __grib_set_array(h, name, val, length, /*check=*/1);
 }
 
 // C-API: Ensure all exceptions are converted to error codes
@@ -1008,10 +1045,16 @@ int grib_set_double_array(grib_handle* h, const char* name, const double* val, s
     return eccodes::getErrorCode(result);
 }
 
-// C-API: Ensure all exceptions are converted to error codes
-int grib_set_float_array(grib_handle*, const char*, const float*, size_t)
+static int grib_set_float_array_(grib_handle* h, const char* name, const float* val, size_t length)
 {
-    return GRIB_NOT_IMPLEMENTED;
+    return __grib_set_array(h, name, val, length, /*check=*/1);
+}
+
+// C-API: Ensure all exceptions are converted to error codes
+int grib_set_float_array(grib_handle* h, const char* name, const float* val, size_t length)
+{
+    auto result = eccodes::handleExceptions(grib_set_float_array_, h, name, val, length);
+    return eccodes::getErrorCode(result);
 }
 
 static int _grib_set_long_array_internal(grib_handle* h, grib_accessor* a, const long* val, size_t buffer_len, size_t* encoded_length, int check)

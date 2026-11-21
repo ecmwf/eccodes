@@ -29,19 +29,30 @@ int DataG2ComplexPacking::value_count(long* numberOfValues)
     return grib_get_long(get_enclosing_handle(), numberOfValues_, numberOfValues);
 }
 
-int DataG2ComplexPacking::pack_double(const double* val, size_t* len)
+template <typename T>
+int DataG2ComplexPacking::pack(const T* val, size_t* len)
 {
     int ret = GRIB_SUCCESS;
 
     if (*len == 0)
         return GRIB_NO_VALUES;
 
-    ret = DataComplexPacking::pack_double(val, len);
+    ret = DataComplexPacking::pack_real(val, len);
 
     if (ret == GRIB_SUCCESS)
         ret = grib_set_long_internal(get_enclosing_handle(), numberOfValues_, *len);
 
     return ret;
+}
+
+int DataG2ComplexPacking::pack_double(const double* val, size_t* len)
+{
+    return pack(val, len);
+}
+
+int DataG2ComplexPacking::pack_float(const float* val, size_t* len)
+{
+    return pack(val, len);
 }
 
 }  // namespace eccodes::accessor

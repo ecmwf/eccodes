@@ -603,7 +603,8 @@ int DataG1SecondOrderGeneralExtendedPacking::pack_double(const double* val, size
         return ret;
 
     // ECC-1986: Make sure we set the dirty flag after calling get_bits_per_value
-    double_dirty_ = 1;
+    // Both caches (double and float) are stale after new values have been packed
+    double_dirty_ = float_dirty_ = 1;
 
     if (optimize_scaling_factor) {
         const int compat_gribex = handle->context->gribex_mode_on && edition_ == 1;

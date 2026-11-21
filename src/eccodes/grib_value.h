@@ -26,6 +26,10 @@ inline const char* type_to_string<>(float)
 template <typename T>
 int grib_get_array(const grib_handle* h, const char* name, T* val, size_t* length);
 
+// Set an array of doubles or floats (no read-only check). Instantiated for double and float.
+template <typename T>
+int grib_set_array_internal(grib_handle* h, const char* name, const T* val, size_t length);
+
 template <typename T>
 int grib_get_array_internal(const grib_handle* h, const char* name, T* val, size_t* length)
 {

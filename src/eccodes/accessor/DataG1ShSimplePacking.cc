@@ -25,38 +25,4 @@ int DataG1ShSimplePacking::value_count(long* count)
     return err;
 }
 
-int DataG1ShSimplePacking::unpack_double(double* val, size_t* len)
-{
-    int err = GRIB_SUCCESS;
-
-    size_t coded_n_vals = 0;
-    size_t n_vals = 0;
-
-    if ((err = grib_get_size(get_enclosing_handle(), coded_values_, &coded_n_vals)) != GRIB_SUCCESS)
-        return err;
-
-    n_vals = coded_n_vals + 1;
-
-    if (*len < n_vals) {
-        *len = n_vals;
-        return GRIB_ARRAY_TOO_SMALL;
-    }
-
-    if ((err = grib_get_double_internal(get_enclosing_handle(), real_part_, val)) != GRIB_SUCCESS)
-        return err;
-
-    val++;
-
-    if ((err = grib_get_double_array_internal(get_enclosing_handle(), coded_values_, val, &coded_n_vals)) != GRIB_SUCCESS)
-        return err;
-
-    grib_context_log(context_, GRIB_LOG_DEBUG,
-                     "DataG1shsimplePacking_bitmap : unpack_double : creating %s, %d values",
-                     name_, n_vals);
-
-    *len = n_vals;
-
-    return err;
-}
-
 }  // namespace eccodes::accessor

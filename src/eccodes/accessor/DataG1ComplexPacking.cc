@@ -25,7 +25,8 @@ void DataG1ComplexPacking::init(const long v, grib_arguments* args)
     flags_ |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
-int DataG1ComplexPacking::pack_double(const double* val, size_t* len)
+template <typename T>
+int DataG1ComplexPacking::pack(const T* val, size_t* len)
 {
     int ret = GRIB_SUCCESS;
     long seclen = 0;
@@ -73,7 +74,7 @@ int DataG1ComplexPacking::pack_double(const double* val, size_t* len)
 
     ECCODES_ASSERT((sub_j == sub_k) && (sub_m == sub_j));
 
-    ret = DataComplexPacking::pack_double(val, len);
+    ret = DataComplexPacking::pack_real(val, len);
 
     if (ret == GRIB_SUCCESS) {
         n = offset_ + 4 * ((sub_k + 1) * (sub_k + 2));
@@ -107,6 +108,16 @@ int DataG1ComplexPacking::pack_double(const double* val, size_t* len)
             return ret;
     }
     return ret;
+}
+
+int DataG1ComplexPacking::pack_double(const double* val, size_t* len)
+{
+    return pack(val, len);
+}
+
+int DataG1ComplexPacking::pack_float(const float* val, size_t* len)
+{
+    return pack(val, len);
 }
 
 }  // namespace eccodes::accessor

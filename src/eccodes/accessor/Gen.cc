@@ -11,6 +11,7 @@
 
 #include "Gen.h"
 #include <stdexcept>
+#include <vector>
 
 namespace eccodes::accessor
 {
@@ -608,9 +609,26 @@ int Gen::pack_missing()
 {
     throw std::runtime_error("Gen::pack_missing not implemented");
 }
-int Gen::pack_float(const float*, size_t* /*len*/)
+int Gen::unpack_float_via_double(float* val, size_t* len)
 {
-    throw std::runtime_error("Gen::pack_float not implemented");
+    std::vector<double> dval(*len > 0 ? *len : 1);
+    size_t dlen = *len;
+    const int err = unpack_double(dval.data(), &dlen);
+    if (err == GRIB_SUCCESS || err == GRIB_ARRAY_TOO_SMALL)
+        *len = dlen;
+    if (err != GRIB_SUCCESS)
+        return err;
+    for (size_t i = 0; i < dlen; ++i)
+        val[i] = (float)dval[i];
+    return GRIB_SUCCESS;
+}
+
+// Default: widen the values to double and use pack_double.
+// Accessors with a native single-precision encoder override this.
+int Gen::pack_float(const float* v, size_t* len)
+{
+    std::vector<double> dval(v, v + *len);
+    return pack_double(dval.data(), len);
 }
 void Gen::resize(size_t)
 {

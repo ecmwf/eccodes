@@ -22,9 +22,12 @@ public:
         DataComplexPacking() {}
     const AccessorType& accessor_type() const override { return accessor_type_; }
     int pack_double(const double* val, size_t* len) override;
+    int pack_float(const float* val, size_t* len) override;
     void init(const long, grib_arguments*) override;
 
 private:
+    template <typename T>
+    int pack(const T* val, size_t* len);
     const char* N_ = nullptr;
     const char* half_byte_ = nullptr;
     const char* packingType_ = nullptr;
