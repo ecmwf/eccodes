@@ -57,6 +57,7 @@ alias ls.date = dataDate;
 meta julianDay julian_day(dataDate,hour,minute,second) : edition_specific;
 
 meta dataTime time(hour,minute,second) : dump;
+meta dataDateTimeISO iso_datetime(year,month,day,hour,minute,second) : read_only,no_copy;
 alias mars.time = dataTime;
 
 # Production status of processed data in this GRIB message

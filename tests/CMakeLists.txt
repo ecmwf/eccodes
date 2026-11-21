@@ -110,6 +110,7 @@ if( HAVE_BUILD_TOOLS )
         unit_tests
         julian
         grib_dump_samples
+        grib_iso_datetime
         bufr_dump_samples
         bufr_check_descriptors
         definitions

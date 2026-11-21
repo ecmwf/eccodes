@@ -30,3 +30,4 @@ alias time.endStep=endStep;
 meta time.validityDate validity_date(dataDate,dataTime,step,stepUnits) : no_copy;
 meta time.validityTime validity_time(dataDate,dataTime,step,stepUnits) : no_copy;
 meta validityDateTime julian_date(validityDate, validityTime) : no_copy;
+meta validityDateTimeISO iso_datetime(validityDate, validityTime, second, step, stepUnits) : read_only,no_copy;
