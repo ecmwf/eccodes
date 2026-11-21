@@ -43,6 +43,7 @@ list( APPEND test_bins
     grib_elements
     grib_get_data
     grib_get_data_real4
+    codes_real4_get_set
     grib_get_keys
     grib_get_pl
     grib_get_pv
@@ -147,6 +148,7 @@ if( HAVE_BUILD_TOOLS )
           bufr_set_keys
           bufr_copy_keys
           bufr_subset
+          codes_real4_get_set
           get_product_kind )
 else()
     # No command line tools

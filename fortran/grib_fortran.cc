@@ -2270,11 +2270,18 @@ int grib_f_key_is_computed_(int* gid, char* key, int* isComputed, int len)
 }
 
 /*****************************************************************************/
+// GRIB_MISSING_DOUBLE does not fit in a real4 (it would become -inf)
+static float to_real4(double d)
+{
+    return d == GRIB_MISSING_DOUBLE ? GRIB_MISSING_FLOAT : (float)d;
+}
+
+/*****************************************************************************/
 int grib_f_set_real4_(int* gid, char* key, float* val, int len)
 {
     grib_handle* h = get_handle(*gid);
     char buf[1024];
-    double val8 = *val;
+    double val8 = (*val == GRIB_MISSING_FLOAT) ? GRIB_MISSING_DOUBLE : *val;
     if (!h) return GRIB_INVALID_GRIB;
 
     return grib_set_double(h, cast_char(buf, key, len), val8);
@@ -2290,7 +2297,7 @@ int grib_f_get_real4_element_(int* gid, char* key, int* index, float* val, int l
     if (!h) return GRIB_INVALID_GRIB;
 
     err = grib_get_double_element(h, cast_char(buf, key, len), *index, &val8);
-    *val = val8;
+    *val = to_real4(val8);
     return err;
 }
 
@@ -2315,7 +2322,7 @@ int grib_f_get_real4_elements_(int* gid, char* key, int* index, float* val, int*
     err = grib_get_double_elements(h, cast_char(buf, key, len), index, (long)lsize, val8);
 
     for (i = 0; i < lsize; (i)++)
-        val[i] = val8[i];
+        val[i] = to_real4(val8[i]);
 
     grib_context_free(h->context, val8);
 
@@ -2331,8 +2338,12 @@ int grib_f_get_real4_(int* gid, char* key, float* val, int len)
 
     if (!h) return GRIB_INVALID_GRIB;
 
+    if (h->context->single_precision != 0) {
+        return grib_get_float(h, cast_char(buf, key, len), val);
+    }
+
     err = grib_get_double(h, cast_char(buf, key, len), &val8);
-    *val = val8;
+    *val = to_real4(val8);
     return err;
 }
 
@@ -2348,9 +2359,9 @@ int grib_f_get_real4_array_(int* gid, char* key, float* val, int* size, int len)
     size_t lsize = *size;
     char buf[1024];
     int err = GRIB_SUCCESS;
-    const int single_precision_mode = (h->context->single_precision != 0);
 
     if (!h) return GRIB_INVALID_GRIB;
+    const int single_precision_mode = (h->context->single_precision != 0);
 
     if (single_precision_mode) {
         err = grib_get_float_array(h, cast_char(buf, key, len), val, &lsize);
@@ -2373,7 +2384,7 @@ int grib_f_get_real4_array_(int* gid, char* key, float* val, int* size, int len)
         }
 
         for (i = 0; i < lsize; i++)
-            val[i] = val8[i];
+            val[i] = to_real4(val8[i]);
 
         grib_context_free(h->context, val8);
     }
@@ -2385,61 +2396,21 @@ int grib_f_get_real4_array_(int* gid, char* key, float* val, int* size, int len)
 int grib_f_set_force_real4_array_(int* gid, char* key, float* val, int* size, int len)
 {
     grib_handle* h = get_handle(*gid);
-    int err = GRIB_SUCCESS;
     char buf[1024];
-    size_t lsize = *size;
-    double* val8 = NULL;
-    size_t numElements = lsize;
-
     if (!h) return GRIB_INVALID_GRIB;
 
-    if (*size)
-        val8 = (double*)grib_context_malloc(h->context, lsize * (sizeof(double)));
-    else
-        val8 = (double*)grib_context_malloc(h->context, sizeof(double));
-
-    if (!val8) return GRIB_OUT_OF_MEMORY;
-
-    for (lsize = 0; lsize < numElements; lsize++)
-        val8[lsize] = val[lsize];
-
-    err = grib_set_force_double_array(h, cast_char(buf, key, len), val8, lsize);
-    grib_context_free(h->context, val8);
-    return err;
+    return grib_set_force_float_array(h, cast_char(buf, key, len), val, (size_t)*size);
 }
 
 /*****************************************************************************/
 int grib_f_set_real4_array_(int* gid, char* key, float* val, int* size, int len)
 {
     grib_handle* h = get_handle(*gid);
-    int err = GRIB_SUCCESS;
     char buf[1024];
-    const size_t lsize = *size;
-    const int single_precision_mode = (h->context->single_precision != 0);
-
     if (!h) return GRIB_INVALID_GRIB;
 
-    if (single_precision_mode) {
-        err = grib_set_float_array(h, cast_char(buf, key, len), val, lsize);
-    }
-    else {
-        double* val8 = NULL;
-        size_t i = 0;
-        if (*size)
-            val8 = (double*)grib_context_malloc(h->context, lsize * (sizeof(double)));
-        else
-            val8 = (double*)grib_context_malloc(h->context, sizeof(double));
-
-        if (!val8) return GRIB_OUT_OF_MEMORY;
-
-        for (i = 0; i < lsize; i++)
-            val8[i] = val[i];
-
-        err = grib_set_double_array(h, cast_char(buf, key, len), val8, lsize);
-        grib_context_free(h->context, val8);
-    }
-
-    return err;
+    // The message is the same as for the values widened to double
+    return grib_set_float_array(h, cast_char(buf, key, len), val, (size_t)*size);
 }
 
 /*****************************************************************************/

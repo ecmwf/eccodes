@@ -18,6 +18,8 @@ module eccodes
   include "eccodes_settings.h"
 
   real(8),    parameter, public :: CODES_MISSING_DOUBLE = -1.D+100
+  !> Missing value for single-precision (real4) access: -huge(1.0_4)
+  real(4),    parameter, public :: CODES_MISSING_FLOAT  = -huge(1.0_4)
   integer(4), parameter, public :: CODES_MISSING_LONG   = 2147483647
 
   integer, parameter, public :: CODES_PRODUCT_ANY  = 0
