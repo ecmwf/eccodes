@@ -1,0 +1,8 @@
+# Code table 4.2 - discipline=254 category=252 for ECMWF
+192 192 SMOS observed soil moisture retrieved using neural network [m**3 m**-3]
+193 193 SMOS observed soil moisture uncertainty retrieved using neural network [m**3 m**-3]
+194 194 SMOS radio frequency interference probability [%]
+195 195 SMOS number of observations per grid point [dimensionless]
+196 196 SMOS observation time for the satellite soil moisture data [hour]
+197 197 SMOS first Brightness Temperature Bias Correction parameter [K]
+198 198 SMOS second Brightness Temperature Bias Correction parameter [dimensionless]

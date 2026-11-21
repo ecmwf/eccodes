@@ -1179,17 +1179,17 @@
 	 indicatorOfParameter = 54 ;
 	}
 #Vapour pressure
-'vp' = {
+'vapp' = {
 	 table2Version = 3 ;
 	 indicatorOfParameter = 55 ;
 	}
 #Vapour pressure
-'vp' = {
+'vapp' = {
 	 table2Version = 2 ;
 	 indicatorOfParameter = 55 ;
 	}
 #Vapour pressure
-'vp' = {
+'vapp' = {
 	 table2Version = 1 ;
 	 indicatorOfParameter = 55 ;
 	}
