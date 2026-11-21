@@ -597,6 +597,14 @@ if( HAVE_BUILD_TOOLS )
                           TYPE SCRIPT
                           TEST_DEPENDS eccodes_download_bufrs
                           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/bufr_encode_threads.sh )
+
+        ecbuild_add_executable( TARGET    grib_threads_ecc-899-index
+                                NOINSTALL
+                                SOURCES   grib_threads_ecc-899-index.cc
+                                LIBS      ${eccodes_thread_test_libs} )
+        ecbuild_add_test( TARGET eccodes_t_grib_threads_ecc-899-index
+                          TYPE SCRIPT
+                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_threads_ecc-899-index.sh )
     endif()
 
     if( NOT ECCODES_ON_WINDOWS )

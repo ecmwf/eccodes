@@ -9,9 +9,11 @@
  */
 
 #include "grib_api_internal.h"
+#include <atomic>
 #include <map>
 #include <string>
 #include "ExceptionHandler.h"
+#include "sync/Mutex.h"
 
 #define UNDEF_LONG   -99999
 #define UNDEF_DOUBLE -99999
@@ -30,9 +32,18 @@ static const char* mars_keys =
 
 
 /* See GRIB-32: start off ID with -1 as it is incremented before being used */
-static int grib_filesid = -1;
-static int index_count;
-static long values_count = 0;
+static std::atomic<int> grib_filesid{ -1 };
+
+// ECC-899: Counters used while reading an index file. They must not be shared
+// between threads which read index files concurrently.
+static thread_local int index_count = 0;
+static thread_local long values_count = 0;
+
+// ECC-899: Fields of different indexes can refer to the same file in the file pool,
+// i.e. share one FILE*. Serialise all index operations which open, read or close
+// such a file: otherwise one thread can move the file position or close the file
+// while another thread is reading from it.
+static eccodes::sync::Mutex index_file_io_mutex;
 
 static int codes_index_add_file_internal(grib_index* index, const char* filename, int message_type);
 
@@ -738,8 +749,12 @@ static void grib_field_list_delete(grib_context* c, grib_field_list* field_list)
 static void grib_index_delete_(grib_index* index)
 {
     grib_file* file = index->files;
+    {
+        // ECC-899: grib_field_delete() closes the (shared) pool files
+        eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(index_file_io_mutex);
+        grib_field_tree_delete(index->context, index->fields);
+    }
     grib_index_key_delete(index->context, index->keys);
-    grib_field_tree_delete(index->context, index->fields);
     grib_field_list_delete(index->context, index->fieldset);
     while (file) {
         grib_file* f = file;
@@ -942,6 +957,7 @@ static grib_index* grib_index_read_(grib_context* c, const char* filename, int* 
 
     f = file;
     while (f) {
+        eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(index_file_io_mutex);
         grib_file_open(f->name, "r", err);
         if (*err)
             return NULL;
@@ -1097,14 +1113,14 @@ static int codes_index_add_file_internal(grib_index* index, const char* filename
         return GRIB_NULL_INDEX;
     c = index->context;
 
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(index_file_io_mutex);  // ECC-899
     file = grib_file_open(filename, "r", &err);
 
     if (!file || !file->handle)
         return err;
 
     if (!index->files) {
-        grib_filesid++;
-        index->files = grib_file_pool_create_clone(c, grib_filesid, file);
+        index->files = grib_file_pool_create_clone(c, ++grib_filesid, file);
     }
     else {
         indfile = index->files;
@@ -1116,11 +1132,13 @@ static int codes_index_add_file_internal(grib_index* index, const char* filename
         indfile = index->files;
         while (indfile->next)
             indfile = indfile->next;
-        grib_filesid++;
-        indfile->next = grib_file_pool_create_clone(c, grib_filesid, file);
+        indfile->next = grib_file_pool_create_clone(c, ++grib_filesid, file);
     }
 
-    fseeko(file->handle, 0, SEEK_SET);
+    if (fseeko(file->handle, 0, SEEK_SET) != 0) {
+        grib_context_log(c, GRIB_LOG_PERROR, "%s: Unable to seek in file '%s'", __func__, filename);
+        return GRIB_IO_PROBLEM;
+    }
 
     std::map<off_t, grib_handle*> map_of_offsets;
     while ((h = new_message_from_file(message_type, c, file->handle, &err)) != NULL) {
@@ -1551,7 +1569,7 @@ static int grib_index_get_long_(const grib_index* index, const char* key, long* 
     kv = k->values;
     while (kv) {
         if (strcmp(kv->value, GRIB_KEY_UNDEF))
-            values[i++] = atol(kv->value);
+            values[i++] = strtol(kv->value, NULL, 10);
         else
             values[i++] = UNDEF_LONG;
         kv = kv->next;
@@ -1587,7 +1605,7 @@ static int grib_index_get_double_(const grib_index* index, const char* key, doub
     kv = k->values;
     while (kv) {
         if (strcmp(kv->value, GRIB_KEY_UNDEF))
-            values[i++] = atof(kv->value);
+            values[i++] = strtod(kv->value, NULL);
         else
             values[i++] = UNDEF_DOUBLE;
 
@@ -1735,6 +1753,7 @@ grib_handle* codes_index_get_handle(grib_field* field, int message_type, int* er
         return NULL;
     }
 
+    eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(index_file_io_mutex);
     grib_file_open(field->file->name, "r", err);
 
     if (*err != GRIB_SUCCESS)
@@ -1752,7 +1771,11 @@ grib_handle* codes_index_get_handle(grib_field* field, int message_type, int* er
             return NULL;
     }
 
-    fseeko(field->file->handle, field->offset, SEEK_SET);
+    if (fseeko(field->file->handle, field->offset, SEEK_SET) != 0) {
+        grib_context_log(grib_context_get_default(), GRIB_LOG_PERROR, "%s: Unable to seek in file '%s'", __func__, field->file->name);
+        *err = GRIB_IO_PROBLEM;
+        return NULL;
+    }
     h = message_new(0, field->file->handle, err);
     if (*err != GRIB_SUCCESS)
         return NULL;
