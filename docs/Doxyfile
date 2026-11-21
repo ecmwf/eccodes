@@ -1,0 +1,43 @@
+# SPDX-FileCopyrightText: 2005- European Centre for Medium-Range Weather Forecasts (ECMWF)
+# SPDX-License-Identifier: Apache-2.0
+
+# Doxygen runs from docs/ (see conf.py) and only emits XML for Breathe.
+# Unset options keep Doxygen's defaults.
+
+PROJECT_NAME           = "ecCodes"
+OUTPUT_DIRECTORY       = _build
+OUTPUT_LANGUAGE        = English
+
+INPUT                  = ../src/eccodes/eccodes.h
+FILE_PATTERNS          = *.h
+RECURSIVE              = NO
+INCLUDE_PATH           = ../src/eccodes
+
+OPTIMIZE_OUTPUT_FOR_C  = YES
+EXTRACT_ALL            = YES
+EXTRACT_STATIC         = NO
+HIDE_UNDOC_MEMBERS     = NO
+TYPEDEF_HIDES_STRUCT   = YES
+MACRO_EXPANSION        = NO
+JAVADOC_AUTOBRIEF      = YES
+MARKDOWN_SUPPORT       = YES
+AUTOLINK_SUPPORT       = YES
+SORT_MEMBER_DOCS       = NO
+SHOW_INCLUDE_FILES     = NO
+TIMESTAMP              = NO
+
+QUIET                  = YES
+WARNINGS               = YES
+WARN_IF_UNDOCUMENTED   = NO
+WARN_IF_DOC_ERROR      = YES
+WARN_NO_PARAMDOC       = NO
+WARN_AS_ERROR          = NO
+WARN_FORMAT            = "$file:$line: $text"
+
+GENERATE_HTML          = NO
+GENERATE_LATEX         = NO
+GENERATE_XML           = YES
+XML_OUTPUT             = xml
+XML_PROGRAMLISTING     = NO
+
+HAVE_DOT               = NO

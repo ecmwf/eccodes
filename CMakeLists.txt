@@ -111,6 +111,10 @@ ecbuild_add_option( FEATURE GEOGRAPHY
     DESCRIPTION "Support for Geoiterator and nearest neighbour"
     DEFAULT ON )
 
+ecbuild_add_option( FEATURE DOCS
+    DESCRIPTION "Build the Sphinx documentation"
+    DEFAULT OFF )
+
 ecbuild_add_option( FEATURE ECKIT_GEO
     DESCRIPTION "Support for Geoiterator and nearest neighbour (additional backend)"
     CONDITION ENABLE_GEOGRAPHY
@@ -485,6 +489,9 @@ add_subdirectory( examples )
 add_subdirectory( data )
 add_subdirectory( samples )
 add_subdirectory( ifs_samples ) # must come after samples
+if( HAVE_DOCS )
+    add_subdirectory( docs )
+endif()
 
 # ecbuild_dont_pack( DIRS samples DONT_PACK_REGEX "*.grib" )
 ecbuild_dont_pack( FILES .cproject .project eccodes.code-workspace )
