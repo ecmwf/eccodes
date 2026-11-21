@@ -120,10 +120,25 @@ double calculate_pfactor(const grib_context* ctx, const double* spectralField, l
      * Ensure the norms have a value which is not too small in case of
      * problems with math functions (e.g. LOG).
      */
+    long numValidNorms = 0;
     for (loop = ismin; loop <= ismax; loop++) {
         norms[loop] = std::max(norms[loop], zeps);
         if (norms[loop] == zeps)
             weights[loop] = 100.0 * zeps;
+        else
+            numValidNorms++;
+    }
+
+    /*
+     * Catch corner case: fewer than two rows with non-negligible coefficients,
+     * e.g. a field zero-padded to a higher truncation. The fit would then be driven
+     * solely by the artificial zeps norms, giving a huge, meaningless operator
+     * and an IEEE float overflow when scaling. Same fallback as GRIB-172.
+     */
+    if (numValidNorms < 2) {
+        grib_context_free(ctx, weights);
+        grib_context_free(ctx, norms);
+        return 1;
     }
 
     /*

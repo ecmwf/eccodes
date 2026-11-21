@@ -205,10 +205,10 @@ int grib_nearest_smaller_ieee_float(double a, double* ret)
 {
     unsigned long l = 0;
 
-    if (a > ieee_table.vmax) {
+    if (fabs(a) > ieee_table.vmax) {
         const grib_context* c = grib_context_get_default();
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "Number is too large: x=%e > xmax=%e (IEEE float)", a, ieee_table.vmax);
+                         "Number is too large: |x|=%e > xmax=%e (IEEE float)", fabs(a), ieee_table.vmax);
         return GRIB_INTERNAL_ERROR;
     }
 
