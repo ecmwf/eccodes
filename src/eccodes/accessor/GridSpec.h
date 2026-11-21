@@ -22,6 +22,7 @@ public:
         Gen() {}
     const AccessorType& accessor_type() const override { return accessor_type_; }
     long get_native_type() override;
+    size_t string_length() override;
     int unpack_string(char*, size_t* len) override;
     int pack_string(const char*, size_t* len) override;
     void init(const long, grib_arguments*) override;

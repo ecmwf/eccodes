@@ -40,6 +40,12 @@ long GridSpec::get_native_type()
     return GRIB_TYPE_STRING;
 }
 
+size_t GridSpec::string_length()
+{
+    // gridSpecs with (pl) arrays can be longer than the default
+    return 10 * 1024;
+}
+
 
 int GridSpec::pack_string([[maybe_unused]] const char* v, [[maybe_unused]] size_t* len)
 {
@@ -99,6 +105,12 @@ int GridSpec::unpack_string([[maybe_unused]] char* v, [[maybe_unused]] size_t* l
 
         std::unique_ptr<const eckit::geo::Grid> grid(eckit::geo::GridFactory::build(*spec));
         ASSERT(grid);
+
+        if (long n = 0; grib_get_long(h, "numberOfDataPoints", &n) == GRIB_SUCCESS && static_cast<size_t>(n) != grid->size()) {
+            grib_context_log(context_, GRIB_LOG_ERROR,
+                             "GridSpec: Wrong number of points: numberOfDataPoints != grid size (%ld!=%zu)", n, grid->size());
+            return GRIB_WRONG_GRID;
+        }
 
         spec_str = grid->spec_str();
     }

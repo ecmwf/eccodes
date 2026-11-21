@@ -56,6 +56,12 @@ int GeoIterator::init(grib_handle* h, grib_arguments*)
         return err;
     }
 
+    if (static_cast<size_t>(numberOfPoints) != grid_->size()) {
+        grib_context_log(h_->context, GRIB_LOG_ERROR, "Geoiterator: Wrong number of points: numberOfPoints != grid size (%ld!=%zu)",
+                         numberOfPoints, grid_->size());
+        return GRIB_WRONG_GRID;
+    }
+
     if ((flags_ & GRIB_GEOITERATOR_NO_VALUES) == 0) {
         // printf("GeoIterator::init WE WANT values - numberOfPoints=%ld nv_=%zu\n", numberOfPoints , nv_);
         if (static_cast<size_t>(numberOfPoints) != nv_) {
@@ -88,14 +94,14 @@ int GeoIterator::next(double* lat, double* lon, double* val) const
 {
     try {
         if (iter_) {
-            if (iter_->index() >= nv_) return 0;
+            if (iter_.index() >= nv_) return 0;
             const auto p = *iter_;
             const auto& q(std::get<eckit::geo::PointLonLat>(p));
 
             *lat = q.lat();
             *lon = q.lon();
             if (val != nullptr && data_ != nullptr) {
-                if (const size_t i = iter_->index(); i < nv_) {
+                if (const size_t i = iter_.index(); i < nv_) {
                     *val = data_[i];
                 }
             }
@@ -117,14 +123,14 @@ int GeoIterator::next(double* lat, double* lon, double* val) const
 int GeoIterator::previous(double* lat, double* lon, double* val) const
 {
     try {
-        if (iter_->index() > 0 && --iter_) {
+        if (iter_.index() > 0 && --iter_) {
             const auto p = *iter_;
             const auto& q(std::get<eckit::geo::PointLonLat>(p));
 
             *lat = q.lat();
             *lon = q.lon();
             if (val != nullptr && data_ != nullptr) {
-                if (const size_t i = iter_->index(); i < nv_) {
+                if (const size_t i = iter_.index(); i < nv_) {
                     *val = data_[i];
                 }
             }
