@@ -98,7 +98,7 @@ on:
         default: ''
         type: string
 concurrency:
-  group: cross-repo-trigger-runner-eccodes-${{ github.ref }}
+  group: cross-repo-trigger-runner-eccodes-${{ inputs.from-repo }}-${{ inputs.from-sha }}
   cancel-in-progress: false
 env:
   ARTIFACT_POLL_INTERVAL: ${{ vars.ARTIFACT_POLL_INTERVAL || '60' }}
