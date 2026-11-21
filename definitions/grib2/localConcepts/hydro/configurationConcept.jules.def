@@ -2,4 +2,4 @@
 'v1.0' = { generatingProcessIdentifier = 1; }
 
 #40-79 keep the numbers for JULES global
-'v1.0' = { generatingProcessIdentifier = 40; }
+'v8.0-ral3p2-w' = { generatingProcessIdentifier = 40; }
