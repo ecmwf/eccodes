@@ -9,6 +9,7 @@
  */
 
 #include "DataG2SimplePackingWithPreprocessing.h"
+#include <vector>
 #define DIRECT  0
 #define INVERSE 1
 
@@ -164,6 +165,13 @@ int DataG2SimplePackingWithPreprocessing::pack_double(const double* val, size_t*
         return err;
 
     return GRIB_SUCCESS;
+}
+
+// The inherited simple-packing float decoder does not do what unpack_double of this
+// accessor does. Decode as double and narrow.
+int DataG2SimplePackingWithPreprocessing::unpack_float(float* val, size_t* len)
+{
+    return unpack_float_via_double(val, len);
 }
 
 }  // namespace eccodes::accessor

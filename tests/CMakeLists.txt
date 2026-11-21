@@ -48,6 +48,7 @@ list(APPEND test_c_bins
     grib_ecc-1467
     grib_spectral_float
     codes_set_float_array
+    codes_get_float
     grib_ecc-1431
     grib_ecc-1433
     grib_ecc-1764
@@ -63,6 +64,7 @@ list(APPEND test_c_bins
     bufr_edition0
     bufr_get_element
     bufr_extract_headers
+    bufr_float
     bufr_check_descriptors
     bufr_coordinate_descriptors
     codes_new_from_samples
@@ -302,6 +304,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_get_element
         bufr_wmo_tables
         bufr_extract_headers
+        bufr_float
         extract_offsets
         bufr_operator_203
         bufr_ecc-147
@@ -351,6 +354,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1467
         grib_spectral_float
         codes_set_float_array
+        codes_get_float
         grib_ecc-1764
         grib_ecc-1792
         grib_ecc-1806

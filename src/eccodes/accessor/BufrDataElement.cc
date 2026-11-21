@@ -413,6 +413,15 @@ int BufrDataElement::unpack_double_element(size_t idx, double* val)
     return ret;
 }
 
+int BufrDataElement::unpack_float_element(size_t idx, float* val)
+{
+    double dval = 0;
+    int ret = unpack_double_element(idx, &dval);
+    if (ret != GRIB_SUCCESS)
+        return ret;
+    return codes_double_to_float(dval, val);
+}
+
 long BufrDataElement::get_native_type()
 {
     int ret = GRIB_TYPE_DOUBLE;

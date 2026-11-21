@@ -90,7 +90,7 @@ private:
     int unpack_helper(grib_accessor* a, T* v);
 
 protected:
-    // Decode with unpack_double and narrow the values to float
+    // Decode with unpack_double and narrow the values to float (see codes_double_to_float)
     int unpack_float_via_double(float* val, size_t* len);
 
 public:

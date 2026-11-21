@@ -85,9 +85,10 @@ int DataJpeg2000Packing::value_count(long* n_vals)
 #define EXTRA_BUFFER_SIZE 10240
 
 #if HAVE_JPEG
-int DataJpeg2000Packing::unpack_float(float* /*val*/, size_t* /*len*/)
+// No native single-precision decoder: decode as double and narrow
+int DataJpeg2000Packing::unpack_float(float* val, size_t* len)
 {
-    return GRIB_NOT_IMPLEMENTED;
+    return unpack_float_via_double(val, len);
 }
 
 int DataJpeg2000Packing::unpack_double(double* val, size_t* len)

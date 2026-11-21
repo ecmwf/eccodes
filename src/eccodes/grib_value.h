@@ -11,7 +11,29 @@
 #pragma once
 
 #include "grib_api_internal.h"
+#include <cfloat>
+#include <cmath>
 #include <type_traits>
+
+// Single-precision access to values that are decoded as double.
+// GRIB_MISSING_DOUBLE does not fit in a float: it becomes GRIB_MISSING_FLOAT and back.
+// Other values outside the float range give GRIB_OUT_OF_RANGE.
+inline int codes_double_to_float(double d, float* f)
+{
+    if (d == GRIB_MISSING_DOUBLE) {
+        *f = GRIB_MISSING_FLOAT;
+        return GRIB_SUCCESS;
+    }
+    if (std::isfinite(d) && std::fabs(d) > (double)FLT_MAX)
+        return GRIB_OUT_OF_RANGE;
+    *f = (float)d;
+    return GRIB_SUCCESS;
+}
+
+inline double codes_float_to_double(float f)
+{
+    return f == GRIB_MISSING_FLOAT ? GRIB_MISSING_DOUBLE : (double)f;
+}
 
 template <typename T>
 const char* type_to_string(T)

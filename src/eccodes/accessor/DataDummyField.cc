@@ -9,6 +9,7 @@
  */
 
 #include "DataDummyField.h"
+#include <vector>
 
 namespace eccodes::accessor
 {
@@ -96,6 +97,13 @@ int DataDummyField::value_count(long* numberOfPoints)
     }
 
     return err;
+}
+
+// The inherited simple-packing float decoder does not do what unpack_double of this
+// accessor does. Decode as double and narrow.
+int DataDummyField::unpack_float(float* val, size_t* len)
+{
+    return unpack_float_via_double(val, len);
 }
 
 }  // namespace eccodes::accessor

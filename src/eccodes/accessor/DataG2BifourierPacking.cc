@@ -9,6 +9,7 @@
  */
 
 #include "DataG2BifourierPacking.h"
+#include <vector>
 #include "grib_scaling.h"
 #include <algorithm>
 
@@ -745,6 +746,13 @@ cleanup:
         grib_context_free(gh->context, buf);
 
     return ret;
+}
+
+// The inherited simple-packing float decoder does not do what unpack_double of this
+// accessor does. Decode as double and narrow.
+int DataG2BifourierPacking::unpack_float(float* val, size_t* len)
+{
+    return unpack_float_via_double(val, len);
 }
 
 }  // namespace eccodes::accessor

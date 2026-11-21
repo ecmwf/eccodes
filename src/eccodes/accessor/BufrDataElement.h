@@ -37,6 +37,7 @@ public:
     void dump(eccodes::Dumper*) override;
     void init(const long, grib_arguments*) override;
     int unpack_double_element(size_t i, double* val) override;
+    int unpack_float_element(size_t i, float* val) override;
     grib_accessor* make_clone(grib_section*, int*) override;
 
     void index(long index) { index_ = index; }

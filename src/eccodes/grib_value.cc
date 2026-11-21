@@ -1601,33 +1601,41 @@ int grib_get_float_array_internal(const grib_handle* h, const char* name, float*
     return grib_get_array_internal<float>(h, name, val, length);
 }
 
-static int grib_get_double_array_(const grib_handle* h, const char* name, double* val, size_t* length)
+// Get an array of doubles or floats. Keys can be '/condition/key' (accessors list), '#n#key', or a name
+template <typename T>
+static int grib_get_array_(const grib_handle* h, const char* name, T* val, size_t* length)
 {
-    size_t len = *length;
-    grib_accessor* a = NULL;
-    grib_accessors_list* al = NULL;
-    int ret = GRIB_SUCCESS;
+    const size_t len = *length;
 
     if (name[0] == '/') {
-        al = grib_find_accessors_list(h, name);
+        grib_accessors_list* al = grib_find_accessors_list(h, name);
         if (!al)
             return GRIB_NOT_FOUND;
-        ret = al->unpack_double(val, length);
+        int ret = 0;
+        if constexpr (std::is_same<T, double>::value)
+            ret = al->unpack_double(val, length);
+        else
+            ret = al->unpack_float(val, length);
         grib_accessors_list_delete(h->context, al);
         return ret;
     }
-    else {
-        a = grib_find_accessor(h, name);
-        if (!a)
-            return GRIB_NOT_FOUND;
-        if (name[0] == '#') {
+
+    grib_accessor* a = grib_find_accessor(h, name);
+    if (!a)
+        return GRIB_NOT_FOUND;
+    if (name[0] == '#') {
+        if constexpr (std::is_same<T, double>::value)
             return a->unpack_double(val, length);
-        }
-        else {
-            *length = 0;
-            return _grib_get_array_internal<double>(a, val, len, length);
-        }
+        else
+            return a->unpack_float(val, length);
     }
+    *length = 0;
+    return _grib_get_array_internal<T>(a, val, len, length);
+}
+
+static int grib_get_double_array_(const grib_handle* h, const char* name, double* val, size_t* length)
+{
+    return grib_get_array_<double>(h, name, val, length);
 }
 
 // C-API: Ensure all exceptions are converted to error codes
@@ -1639,19 +1647,7 @@ int grib_get_double_array(const grib_handle* h, const char* name, double* val, s
 
 static int grib_get_float_array_(const grib_handle* h, const char* name, float* val, size_t* length)
 {
-    size_t len = *length;
-    grib_accessor* a = grib_find_accessor(h, name);
-    if (!a) return GRIB_NOT_FOUND;
-
-    //[> TODO: For now only GRIB supported... no BUFR keys <]
-    if (h->product_kind != PRODUCT_GRIB) {
-        // grib_context_log(h->context, GRIB_LOG_ERROR, "grib_get_float_array only supported for GRIB");
-        return GRIB_NOT_IMPLEMENTED;
-    }
-    ECCODES_ASSERT(name[0] != '/');
-    ECCODES_ASSERT(name[0] != '#');
-    *length = 0;
-    return _grib_get_array_internal<float>(a, val, len, length);
+    return grib_get_array_<float>(h, name, val, length);
 }
 
 // C-API: Ensure all exceptions are converted to error codes

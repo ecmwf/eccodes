@@ -48,9 +48,10 @@ int DataG1SecondOrderConstantWidthPacking::value_count(long* numberOfSecondOrder
     return err;
 }
 
-int DataG1SecondOrderConstantWidthPacking::unpack_float(float* /*val*/, size_t* /*len*/)
+// No native single-precision decoder: decode as double and narrow
+int DataG1SecondOrderConstantWidthPacking::unpack_float(float* val, size_t* len)
 {
-    return GRIB_NOT_IMPLEMENTED;
+    return unpack_float_via_double(val, len);
 }
 
 int DataG1SecondOrderConstantWidthPacking::unpack_double(double* values, size_t* len)

@@ -92,6 +92,9 @@ extern "C" {
 /* #define GRIB_MISSING_LONG 0xffffffff */
 #define GRIB_MISSING_LONG   2147483647
 #define GRIB_MISSING_DOUBLE -1e+100
+/* Missing value for single-precision access: GRIB_MISSING_DOUBLE does not fit in a float. */
+/* Its value is -FLT_MAX */
+#define GRIB_MISSING_FLOAT -3.40282346638528859811704183484516925440e+38F
 
 /* Dump option flags */
 #define GRIB_DUMP_FLAG_READ_ONLY      (1 << 0)

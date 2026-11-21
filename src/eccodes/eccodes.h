@@ -55,6 +55,7 @@ Log mode for processing information
 /* Missing values */
 #define CODES_MISSING_LONG   GRIB_MISSING_LONG
 #define CODES_MISSING_DOUBLE GRIB_MISSING_DOUBLE
+#define CODES_MISSING_FLOAT  GRIB_MISSING_FLOAT
 
 /* Dump option flags*/
 #define CODES_DUMP_FLAG_READ_ONLY      GRIB_DUMP_FLAG_READ_ONLY

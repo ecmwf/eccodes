@@ -215,8 +215,16 @@ int Gen::unpack_double(double* v, size_t* /*len*/)
     return unpack_helper<double>(this, v);
 }
 
-int Gen::unpack_float(float* v, size_t* /*len*/)
+// Default: accessors that decode doubles are read as double and narrowed to float.
+// Otherwise the long/string conversion of a single value is used.
+int Gen::unpack_float(float* v, size_t* len)
 {
+    if (is_overridden_[UNPACK_DOUBLE]) {
+        const int err = unpack_float_via_double(v, len);
+        // unpack_double may itself be the default (it then clears the flag)
+        if (is_overridden_[UNPACK_DOUBLE] && (err == GRIB_SUCCESS || err == GRIB_ARRAY_TOO_SMALL || err == GRIB_OUT_OF_RANGE))
+            return err;
+    }
     return unpack_helper<float>(this, v);
 }
 
@@ -611,24 +619,50 @@ int Gen::pack_missing()
 }
 int Gen::unpack_float_via_double(float* val, size_t* len)
 {
-    std::vector<double> dval(*len > 0 ? *len : 1);
-    size_t dlen = *len;
-    const int err = unpack_double(dval.data(), &dlen);
-    if (err == GRIB_SUCCESS || err == GRIB_ARRAY_TOO_SMALL)
+    // Work buffer of the size of the key (not of the caller's buffer, which may be larger).
+    // Scalars need no allocation.
+    size_t n = *len;
+    long count = 0;
+    if (value_count(&count) == GRIB_SUCCESS && count > 0 && (size_t)count < n)
+        n = (size_t)count;
+    double one = 0;
+    std::vector<double> many(n > 1 ? n : 0);
+    double* dval = n > 1 ? many.data() : &one;
+
+    size_t dlen = n;
+    int err = unpack_double(dval, &dlen);
+    if (err == GRIB_ARRAY_TOO_SMALL && n < *len) {
+        // value_count was too small: use the caller's size
+        many.resize(*len);
+        dval = many.data();
+        dlen = *len;
+        err = unpack_double(dval, &dlen);
+    }
+    if (err == GRIB_ARRAY_TOO_SMALL)
         *len = dlen;
     if (err != GRIB_SUCCESS)
         return err;
-    for (size_t i = 0; i < dlen; ++i)
-        val[i] = (float)dval[i];
+
+    for (size_t i = 0; i < dlen; ++i) {
+        if (codes_double_to_float(dval[i], &val[i]) != GRIB_SUCCESS) {
+            grib_context_log(context_, GRIB_LOG_ERROR, "Key '%s': Value %g cannot be represented as a float", name_, dval[i]);
+            return GRIB_OUT_OF_RANGE;
+        }
+    }
+    *len = dlen;
     return GRIB_SUCCESS;
 }
 
-// Default: widen the values to double and use pack_double.
-// Accessors with a native single-precision encoder override this.
+// Default: widen the values to double and use pack_double (GRIB_MISSING_FLOAT becomes
+// GRIB_MISSING_DOUBLE). Accessors with a native single-precision encoder override this.
 int Gen::pack_float(const float* v, size_t* len)
 {
+    // Converting copy (no zero-initialisation), then the rare missing values
     std::vector<double> dval(v, v + *len);
-    return pack_double(dval.data(), len);
+    for (double& d : dval)
+        if (d == (double)GRIB_MISSING_FLOAT) d = GRIB_MISSING_DOUBLE;
+    double dummy = 0;
+    return pack_double(*len > 0 ? dval.data() : &dummy, len);
 }
 void Gen::resize(size_t)
 {
