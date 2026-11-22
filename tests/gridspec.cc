@@ -644,9 +644,9 @@ CASE("gridType=regular_ll")
         for (const auto& test : std::vector<test_t>{
                  { "{grid:[0,0]}", R"({"area":[90,0,90,0],"grid":[0,0]})", { 1, 1 } },
                  { "{area:[0,0,0,0], grid:[0,0]}", R"({"area":[0,0,0,0],"grid":[0,0]})", { 1, 1 } },
-                 { "{area:[0,0,0,0], grid:[1,1]}", R"({"area":[0,0,0,0],"grid":[0,0]})", { 1, 1 } },
-                 { "{area:[60,0,60,30], grid:[2,2]}", R"({"area":[60,0,60,30],"grid":[2,0]})", { 1, 16 } },
-                 { "{area:[60,0,0,0], grid:[2,2]}", R"({"area":[60,0,0,0],"grid":[0,2]})", { 31, 1 } },
+                 { "{area:[0,0,0,0], grid:[1,1]}", R"({"area":[0,0,0,0],"grid":[1,1]})", { 1, 1 } },
+                 { "{area:[60,0,60,30], grid:[2,2]}", R"({"area":[60,0,60,30],"grid":[2,2]})", { 1, 16 } },
+                 { "{area:[60,0,0,0], grid:[2,2]}", R"({"area":[60,0,0,0],"grid":[2,2]})", { 31, 1 } },
                  { "{area:[60,0,0,30], grid:[2,2]}", R"({"area":[60,0,0,30],"grid":[2,2]})", { 31, 16 } },
              }) {
             std::unique_ptr<const ::eckit::geo::Grid> grid(::eckit::geo::GridFactory::make_from_string(test.user));

@@ -78,7 +78,7 @@ echo 'set gridType="rotated_ll"; set latitudeOfSouthernPoleInDegrees=-40; set lo
 ${tools_dir}/grib_filter -o $tempGrib $tempFilt $ECCODES_SAMPLES_PATH/regular_ll_sfc_grib2.tmpl
 check $tempGrib
 for l in 1 2; do
-    [ "$(ECCODES_ECKIT_GEO=$l ${tools_dir}/grib_get -p gridSpec $tempGrib)" = '{"area":[45,10,45,10],"grid":[0,0],"projection":{"south_pole":[10,-40],"type":"rotation"}}' ]
+    [ "$(ECCODES_ECKIT_GEO=$l ${tools_dir}/grib_get -p gridSpec $tempGrib)" = '{"area":[45,10,45,10],"grid":[0.5,0.5],"projection":{"south_pole":[10,-40],"type":"rotation"}}' ]
 done
 rm -f $tempGrib
 

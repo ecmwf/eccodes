@@ -738,8 +738,9 @@ ProcessingT<double>* grid_increment(const char* inc_key, const char* incgiven_ke
                 throw eckit::geo::exception::GridError("GribToSpec: number of points is zero, invalid increment", Here());
             }
 
+            // a single point, of the increment given (if any)
             if (n == 1) {
-                value = 0.;
+                value = given ? value : 0.;
                 return true;
             }
 
