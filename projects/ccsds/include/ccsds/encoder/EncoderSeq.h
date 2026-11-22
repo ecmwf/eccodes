@@ -128,10 +128,16 @@ public:
         buffer.writeCodeword(cwLength - 1);
     }
 
-    // Zero Block ROS
+    // Zero blocks up to the end of a segment or RSI: like libaec (and CCSDS 121.0-B), use the
+    // "remainder of segment" codeword only for runs of at least rosLength blocks
     template <ReferenceType RType>
-    void zbEncodeROS(BitBuffer& buffer, DeltaType reference)
+    void zbEncodeROS(BitBuffer& buffer, DeltaType reference, size_t nBlocks)
     {
+        if (nBlocks < rosLength) {
+            zbEncode<RType>(buffer, reference, nBlocks);
+            return;
+        }
+        zbCounter_ += nBlocks;
         buffer.writeId(zbId_.valueShifted, zbId_.length);
         if constexpr (RType == ReferenceType::Ref) {
             buffer.writeBits(reference, bpv_);
@@ -247,10 +253,10 @@ public:
         // ROS
         if (nZeroBlocks != 0) {
             if (isRefZeroBlock) {
-                zbEncodeROS<ReferenceType::Ref>(buffer, reference);
+                zbEncodeROS<ReferenceType::Ref>(buffer, reference, nZeroBlocks);
             }
             else {
-                zbEncodeROS<ReferenceType::NoRef>(buffer, 0);
+                zbEncodeROS<ReferenceType::NoRef>(buffer, 0, nZeroBlocks);
             }
         }
     }
@@ -281,7 +287,7 @@ public:
 
         // ROS
         if (nZeroBlocks != 0) {
-            zbEncodeROS<ReferenceType::NoRef>(buffer, 0);
+            zbEncodeROS<ReferenceType::NoRef>(buffer, 0, nZeroBlocks);
         }
     }
 
@@ -358,10 +364,10 @@ public:
         // ROS
         if (nZeroBlocks != 0) {
             if (isRefZeroBlock) {
-                zbEncodeROS<ReferenceType::Ref>(buffer, reference);
+                zbEncodeROS<ReferenceType::Ref>(buffer, reference, nZeroBlocks);
             }
             else {
-                zbEncodeROS<ReferenceType::NoRef>(buffer, 0);
+                zbEncodeROS<ReferenceType::NoRef>(buffer, 0, nZeroBlocks);
             }
         }
     }
@@ -402,7 +408,7 @@ public:
 
         // ROS
         if (nZeroBlocks != 0) {
-            zbEncodeROS<ReferenceType::NoRef>(buffer, 0);
+            zbEncodeROS<ReferenceType::NoRef>(buffer, 0, nZeroBlocks);
         }
     }
 
