@@ -192,7 +192,7 @@ public:
     template <ReferenceType RType>
     void encodePartBlock(const Span<DeltaType> partBlock, BitBuffer& buffer)
     {
-        static std::vector<DeltaType> fullBlock;
+        std::vector<DeltaType>& fullBlock = partBlockBuf_;  // not static: encoders may run concurrently
         fullBlock.assign(blockSizeV_, 0);
         std::copy(partBlock.begin(), partBlock.end(), fullBlock.begin());
         encodeFullBlock<RType>(Span<DeltaType>(fullBlock.data(), blockSizeV_), buffer);
@@ -519,6 +519,7 @@ private:
 
     PredictivePreprocessingEncodeFast<ValueType, DeltaType, EncoderFunc> preprocessor_;
     std::vector<DeltaType> preprocessBuffer_;
+    std::vector<DeltaType> partBlockBuf_;
     std::array<size_t, 32> ssCounter_{};  // Counters for each k in split sample method
     size_t zbCounter_ = 0;
     size_t ncCounter_ = 0;
