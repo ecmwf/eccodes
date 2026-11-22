@@ -255,6 +255,10 @@ struct SpAecStats
 
     void printMetrics()
     {
+        if (nValues == 0 || nBlocks == 0) {
+            std::cout << "No values decoded, no metrics\n";
+            return;
+        }
         std::cout << "Overhead percentage" << ": " << static_cast<double>(overhead()) / totalNumberOfBits() * 100.0 << "%" << std::endl;
         auto zb_stats = zeroStats();
         auto ss_stats = ssStats();
