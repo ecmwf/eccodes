@@ -53,6 +53,12 @@ class SpAec
             return static_cast<MappedType>(mapped);
         }
 
+        // The value before the conversion to MappedType (to check its range)
+        double mapped(ValueType value) const
+        {
+            return static_cast<double>(((value * decimal_) - referenceValue_) * binary_ + 0.5);
+        }
+
     private:
         const ValueType referenceValue_;
         const ValueType decimal_;
@@ -180,9 +186,21 @@ private:
         std::memset(target.data(), 0, needed);
 
         SimpleMapper<DeltaType> mapper{ referenceValue_, binaryScaleFactor_, decimalScaleFactor_ };
+        const double maxMapped = std::ldexp(1.0, bpv_);  // values must map to [0, 2^bpv)
         std::vector<DeltaType> mapped(data.size());
+        bool inRange = true;
         for (size_t i = 0; i < data.size(); ++i) {
-            mapped[i] = mapper(data[i]);
+            const double m = mapper.mapped(data[i]);
+            inRange &= (m >= 0.0) & (m < maxMapped);  // false for NaN
+            mapped[i] = inRange ? static_cast<DeltaType>(m) : 0;
+        }
+        if (!inRange) {
+            for (size_t i = 0; i < data.size(); ++i) {
+                const double m = mapper.mapped(data[i]);
+                if (!(m >= 0.0 && m < maxMapped)) {
+                    throwValueOutOfRange(i, static_cast<double>(data[i]));
+                }
+            }
         }
 
         if (nThreads_ > 1) {
@@ -193,6 +211,11 @@ private:
             EncoderSeq<DeltaType, DeltaType> encoder{ bpv_, blockSize_, rsiSize_, CodeOptionSet::Basic };
             return encoder.encode(Span<DeltaType>(mapped), target);
         }
+    }
+
+    [[noreturn]] __attribute__((cold, noinline)) void throwValueOutOfRange(size_t index, double value) const
+    {
+        throw std::invalid_argument("CCSDS encoding: value " + std::to_string(value) + " at index " + std::to_string(index) + " cannot be packed with " + std::to_string(bpv_) + " bits per value (reference value " + std::to_string(static_cast<double>(referenceValue_)) + ", binary scale factor " + std::to_string(binaryScaleFactor_) + ", decimal scale factor " + std::to_string(decimalScaleFactor_) + ")");
     }
 
     template <typename DeltaType>
