@@ -50,6 +50,7 @@ int GridSpec::pack_string([[maybe_unused]] const char* v, [[maybe_unused]] size_
 {
 #if defined(HAVE_GEOGRAPHY) && defined(HAVE_ECKIT_GEO)
 
+    // the message can be restructured (e.g. converting its edition), so this accessor isn't used after setting it
     auto* h = get_enclosing_handle();
     ECCODES_ASSERT(h);
 
@@ -69,11 +70,11 @@ int GridSpec::pack_string([[maybe_unused]] const char* v, [[maybe_unused]] size_
         if (!result) return GRIB_GEOCALCULUS_PROBLEM;
     }
     catch (eckit::geo::Exception& e) {
-        grib_context_log(context_, GRIB_LOG_ERROR, "GridSpec: geo::Exception thrown (%s)", e.what());
+        grib_context_log(h->context, GRIB_LOG_ERROR, "GridSpec: geo::Exception thrown (%s)", e.what());
         return GRIB_GEOCALCULUS_PROBLEM;
     }
     catch (std::exception& e) {
-        grib_context_log(context_, GRIB_LOG_ERROR, "GridSpec: Exception thrown (%s)", e.what());
+        grib_context_log(h->context, GRIB_LOG_ERROR, "GridSpec: Exception thrown (%s)", e.what());
         return GRIB_GEOCALCULUS_PROBLEM;
     }
 

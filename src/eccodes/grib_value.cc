@@ -573,7 +573,7 @@ static int grib_set_string_(grib_handle* h, const char* name, const char* val, s
             if (add_bitmap) {
                 grib_set_long(h, "bitmapPresent", 1);
             }
-            ret = grib_dependency_notify_change(a);
+            ret = grib_dependency_notify_change_h(h, a);  // the accessor may not survive its own packing (ECC-778)
             if (changing_packing_type) {
                 grib_context_set_data_quality_checks(ctx, quality_checks_saved);  // ECC-2141: restore
             }
