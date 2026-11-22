@@ -3,6 +3,8 @@
 #include <cstdint>
 #include <cmath>
 #include <cstring>
+#include <stdexcept>
+#include <string>
 #include "ccsds/encoder/EncoderSeq.h"
 #include "ccsds/encoder/EncoderPar.h"
 #include "ccsds/decoder/DecoderSeq.h"
@@ -92,14 +94,22 @@ public:
         codeOptionSet_(codeOptionSet),
         nThreads_(nThreads)
     {
-        if (bpv_ == 0 || bpv_ > 32) {
-            throw std::invalid_argument("Unsupported bpv. Supported bpv: 1-32.");
+        validateCcsdsParameters(bpv_, blockSize_, rsiSize_);
+        if (codeOptionSet_ != CodeOptionSet::Basic) {
+            throw std::invalid_argument("CCSDS: unsupported code option set (only CodeOptionSet::Basic is supported)");
         }
-        if (blockSize_ == 0) {
-            throw std::invalid_argument("Block size must be greater than 0.");
+        if (nThreads_ == 0) {
+            throw std::invalid_argument("CCSDS: the number of threads must be at least 1");
         }
-        if (rsiSize_ == 0) {
-            throw std::invalid_argument("RSI size must be greater than 0.");
+        // GRIB stores the scale factors in 16 bits (sign and magnitude)
+        if (binaryScaleFactor_ < -maxScaleFactor || binaryScaleFactor_ > maxScaleFactor) {
+            throw std::invalid_argument("CCSDS: binary scale factor " + std::to_string(binaryScaleFactor_) + " is out of range (must be between " + std::to_string(-maxScaleFactor) + " and " + std::to_string(maxScaleFactor) + ")");
+        }
+        if (decimalScaleFactor_ < -maxScaleFactor || decimalScaleFactor_ > maxScaleFactor) {
+            throw std::invalid_argument("CCSDS: decimal scale factor " + std::to_string(decimalScaleFactor_) + " is out of range (must be between " + std::to_string(-maxScaleFactor) + " and " + std::to_string(maxScaleFactor) + ")");
+        }
+        if (!std::isfinite(static_cast<double>(referenceValue_))) {
+            throw std::invalid_argument("CCSDS: the reference value must be a finite number");
         }
     }
     ~SpAec() {}
@@ -182,6 +192,8 @@ private:
     }
 
 private:
+    static constexpr int maxScaleFactor = 32767;
+
     uint8_t bpv_;
     uint8_t blockSize_;
     uint16_t rsiSize_;

@@ -22,7 +22,7 @@ void testRefEncodeDecode(Span<ValueType> block)
     {
         // SecondExtensionEncoder<ValueType, BPV, ReferenceType::Ref, CodeOptionSet::Basic, blockSize> se{block};
         // se.encode(bitBuffer);
-        encoder::EncoderSeq<ValueType, ValueType> seIres{ BPV, rsiSize, blockSize, CodeOptionSet::Basic };
+        encoder::EncoderSeq<ValueType, ValueType> seIres{ BPV, blockSize, rsiSize, CodeOptionSet::Basic };
         size_t expectedSize = seIres.sePrepare<ReferenceType::Ref>(block);
         seIres.seEncode<ReferenceType::Ref>(bitBuffer);
         std::cout << bitBuffer.bitPos() << " bits written to buffer." << std::endl;
@@ -73,7 +73,7 @@ void testNorefEncodeDecode(Span<ValueType> block)
     BitBuffer bitBuffer(vec);      // Extra space for overhead
 
     {
-        encoder::EncoderSeq<ValueType, ValueType> seIres{ BPV, rsiSize, blockSize, CodeOptionSet::Basic };
+        encoder::EncoderSeq<ValueType, ValueType> seIres{ BPV, blockSize, rsiSize, CodeOptionSet::Basic };
         size_t expectedSize = seIres.sePrepare<ReferenceType::NoRef>(block);
         seIres.seEncode<ReferenceType::NoRef>(bitBuffer);
         std::cout << bitBuffer.bitPos() << " bits written to buffer." << std::endl;

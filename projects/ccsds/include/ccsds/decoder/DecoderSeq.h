@@ -623,7 +623,7 @@ public:
 
     template <typename... Args>
     DecoderSeq(uint8_t bpv, uint8_t block_size, uint16_t rsiSize, CodeOptionSet codeOptionSet, Args&&... args) :
-        bpv_(bpv),
+        bpv_((validateCcsdsParameters(bpv, block_size, rsiSize, 8 * std::min(sizeof(ValueType), sizeof(DeltaType))), bpv)),
         blockSizeV_(block_size),
         rsiSizeB_(rsiSize),
         rsiSizeV_(rsiSize * block_size),
