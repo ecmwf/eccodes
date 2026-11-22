@@ -13,6 +13,7 @@
 #include <cstddef>
 #include <vector>
 #include <stdexcept>
+#include <string>
 #include <algorithm>
 #include <memory>
 #include <memory>
@@ -50,7 +51,7 @@ public:
         Parameters params;
 
         if (check_data_values_range(min, max) != SP_SUCCESS) {
-            throw std::runtime_error("Invalid data values range");
+            throw std::runtime_error("Values out of range (minimum " + std::to_string(min) + ", maximum " + std::to_string(max) + "): values must be finite");
         }
 
         if (max == min) {

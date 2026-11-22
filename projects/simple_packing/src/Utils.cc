@@ -125,9 +125,7 @@ unsigned long ieee_to_long(double x)
     }
 
     if (x > ieee_table.vmax) {
-        fprintf(stderr, "ieee_to_long: Number is too large: x=%.20e > xmax=%.20e\n", x, ieee_table.vmax);
-        assert(0);
-        return 0;
+        return 0;  // not reached: the callers check the range
     }
 
     binary_search(ieee_table.v, 254, x, &e);
@@ -223,10 +221,7 @@ unsigned long ieee_nearest_smaller_to_long(double x)
     else
         return l;
 
-    if (x < long_to_ieee(l)) {
-        printf("ieee_nearest_smaller_to_long: x=%.20e long_to_ieee(0x%lX)=%.20e\n", x, l, long_to_ieee(l));
-        assert(x >= long_to_ieee(l));
-    }
+    assert(x >= long_to_ieee(l));
 
     return l;
 }
@@ -469,11 +464,9 @@ long get_binary_scale_factor(double max, double min, long bpval, int* ret)
 int check_data_values_range(double min_val, double max_val)
 {
     if (!(min_val < dbl_max && min_val > -dbl_max)) {
-        std::cout << "Minimum value out of range: " << min_val << std::endl;
         return SP_ENCODING_ERROR;
     }
     if (!(max_val < dbl_max && max_val > -dbl_max)) {
-        std::cout << "Maximum value out of range: " << max_val << std::endl;
         return SP_ENCODING_ERROR;
     }
 
