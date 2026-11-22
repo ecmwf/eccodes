@@ -555,9 +555,13 @@ public:
             decodeRefFullRsi(buffer, chunks.part());
         }
         buffer.checkPos();
+        bitsDecoded_ = buffer.bitPos();
 
         setStats(target.size(), source.size());
     }
+
+    // Number of bits of the source used by the last decode(source, target)
+    size_t bitsDecoded() const { return bitsDecoded_; }
 
     // Per-RSI decode with callback for fused post-processing (avoids large temp buffers)
     template <typename PostProcess>
@@ -658,6 +662,7 @@ protected:
     mutable std::vector<ValueType> rsiBuf_;
     mutable std::vector<ValueType> paddedSegmentBuf_;
     mutable std::vector<uint8_t> paddedSource_;
+    size_t bitsDecoded_ = 0;
 
     SpAecStats stats_;
 
