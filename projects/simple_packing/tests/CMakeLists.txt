@@ -37,3 +37,6 @@ add_test(NAME ${SP_TEST_PREFIX}bit_packing_element COMMAND sp_bit_packing_elemen
 
 sp_add_test(reference_value_range)
 add_test(NAME ${SP_TEST_PREFIX}reference_value_range COMMAND sp_reference_value_range)
+
+sp_add_test(no_output)
+add_test(NAME ${SP_TEST_PREFIX}no_output COMMAND sp_no_output)
