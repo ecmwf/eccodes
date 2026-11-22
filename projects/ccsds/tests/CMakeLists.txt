@@ -26,4 +26,5 @@ ccsds_add_test(se_encode_decode)
 ccsds_add_test(ccsds_spec_compliance)
 ccsds_add_test(encode_decode_sweep)
 ccsds_add_test(bitbuffer_test)
+ccsds_add_test(decode_zero_block_run)
 
