@@ -164,21 +164,16 @@ private:
     template <typename DeltaType>
     void decodeImpl(Span<uint8_t> source, Span<ValueType> target)
     {
-        // Pad source buffer to prevent out-of-bounds reads in loadU64
-        static constexpr size_t LOAD_PADDING = 8;
-        std::vector<uint8_t> paddedSource(source.size() + LOAD_PADDING, 0);
-        std::memcpy(paddedSource.data(), source.data(), source.size());
-        Span<uint8_t> padded(paddedSource);
-
+        // The decoders copy the source into a padded buffer and check all reads (see BitBuffer)
         SimpleUnmapper<DeltaType> unmapper{ referenceValue_, binaryScaleFactor_, decimalScaleFactor_ };
 
         if (nThreads_ > 1) {
             DecoderPar<DeltaType, DeltaType> decoder{ bpv_, blockSize_, rsiSize_, CodeOptionSet::Basic, nThreads_ };
-            decoder.decodeParallel(padded, target, unmapper);
+            decoder.decodeParallel(source, target, unmapper);
         }
         else {
             DecoderSeq<DeltaType, DeltaType> decoder{ bpv_, blockSize_, rsiSize_, CodeOptionSet::Basic };
-            decoder.decodeFused(padded, target.size(),
+            decoder.decodeFused(source, target.size(),
                                 [&](DeltaType value, size_t idx) {
                                     target[idx] = unmapper(value);
                                 });

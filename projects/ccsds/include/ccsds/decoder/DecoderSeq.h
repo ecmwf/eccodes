@@ -31,6 +31,17 @@ protected:
         throw std::runtime_error("CCSDS decoding failed: the compressed data is corrupt (" + what + ")");
     }
 
+    // The readers may load bytes beyond the end of the compressed data (see BitBuffer::guardBytes):
+    // decode from a copy of the source followed by zero bytes.
+    BitBuffer makeBuffer(Span<uint8_t> source) const
+    {
+        paddedSource_.assign(source.size() + BitBuffer::guardBytes, 0);
+        if (source.size() > 0) {
+            std::memcpy(paddedSource_.data(), source.data(), source.size());
+        }
+        return BitBuffer{ Span<uint8_t>(paddedSource_), 0, source.size() * 8 };
+    }
+
 public:
     // NC - batched readBits using accumulator
     template <ReferenceType RType>
@@ -83,6 +94,7 @@ public:
             // Batched codeword read
             size_t cw_start = pos;
             while (__builtin_expect(acc == 0, 0)) {
+                buffer.checkPos(pos);
                 pos += (64 - consumed);
                 bytepos = pos >> 3;
                 bitpos = pos & 7;
@@ -144,6 +156,7 @@ public:
                 for (size_t i = startIndex; i < blockSizeV_; ++i) {
                     size_t cw_start = pos;
                     while (__builtin_expect(acc == 0, 0)) {
+                        buffer.checkPos(pos);
                         pos += (64 - consumed);
                         bytepos = pos >> 3;
                         bitpos = pos & 7;
@@ -153,7 +166,7 @@ public:
                     }
                     size_t lz = static_cast<size_t>(__builtin_clzll(acc));
                     size_t total_zeros = (pos - cw_start) + lz;
-                    values[i] = static_cast<ValueType>(total_zeros) << k;
+                    values[i] = static_cast<ValueType>(static_cast<uint64_t>(total_zeros) << k);
                     pos += lz + 1;
                     consumed += lz + 1;
                     if (__builtin_expect(consumed >= 64, 0)) {
@@ -206,6 +219,7 @@ public:
             for (size_t i = startIndex; i < blockSizeV_; ++i) {
                 size_t cw_start = pos;
                 while (__builtin_expect(acc == 0, 0)) {
+                    buffer.checkPos(pos);
                     pos += (64 - consumed);
                     bytepos = pos >> 3;
                     bitpos = pos & 7;
@@ -341,6 +355,7 @@ public:
         size_t pos = 0;
 
         // First Block containing a reference
+        buffer.checkPos();
         auto id = buffer.peekBits(maxIdLength);
         ValueType reference = 0;
 
@@ -356,6 +371,7 @@ public:
 
         // Remaining Blocks
         for (; pos < blocks.nFull();) {
+            buffer.checkPos();
             auto id = buffer.peekBits(maxIdLength);
             if (id == 0) {
                 buffer.skipBits(maxIdLength);
@@ -380,6 +396,7 @@ public:
 
         // All Blocks
         for (size_t pos = 0; pos < blocks.nFull();) {
+            buffer.checkPos();
             auto id = buffer.peekBits(maxIdLength);
             if (id == 0) {
                 assert(pos < segment.size() / blockSizeV_ && "Position exceeds number of blocks in segment.");
@@ -460,6 +477,7 @@ public:
         const size_t nFullSegments = rsiSizeV_ / maxSegmentSizeV_;
 
         auto skipOneBlock = [&](bool withRef) -> std::pair<bool, size_t> {
+            buffer.checkPos();
             auto id = buffer.peekBits(maxIdLength);
             bool isRos = false;
             size_t nBlocks = 1;
@@ -528,7 +546,7 @@ public:
 public:
     void decode(Span<uint8_t> source, Span<ValueType> target)
     {
-        const BitBuffer buffer{ source };
+        const BitBuffer buffer = makeBuffer(source);
         SplitBlock<ValueType> chunks(target, rsiSizeV_);
         for (size_t i = 0; i < chunks.nFull(); ++i) {
             decodeRefFullRsi(buffer, chunks.full(i));
@@ -536,6 +554,7 @@ public:
         if (chunks.hasPart()) {
             decodeRefFullRsi(buffer, chunks.part());
         }
+        buffer.checkPos();
 
         setStats(target.size(), source.size());
     }
@@ -544,7 +563,7 @@ public:
     template <typename PostProcess>
     void decode(Span<uint8_t> source, size_t nValues, PostProcess&& postProcess)
     {
-        const BitBuffer buffer{ source };
+        const BitBuffer buffer = makeBuffer(source);
 
         size_t nFull = nValues / rsiSizeV_;
         size_t remainder = nValues % rsiSizeV_;
@@ -562,6 +581,7 @@ public:
             decodeRefFullRsi(buffer, rsiSpan);
             postProcess(rsiSpan, nFull * rsiSizeV_);
         }
+        buffer.checkPos();
 
         setStats(nValues, source.size());
     }
@@ -570,34 +590,17 @@ public:
     template <typename OutputFunc>
     void decodeFused(Span<uint8_t> source, size_t nValues, OutputFunc&& outputFunc)
     {
-        const BitBuffer buffer{ source };
-
-        size_t nFull = nValues / rsiSizeV_;
-        size_t remainder = nValues % rsiSizeV_;
-
-        for (size_t i = 0; i < nFull; ++i) {
-            ValueType reference = decodeRsiRaw(buffer, rsiSizeV_);
-            preprocessor_.decodeFused(
-                rsiBuf_.data(), rsiSizeV_,
-                reference, i * rsiSizeV_, outputFunc);
-        }
-
-        if (remainder > 0) {
-            ValueType reference = decodeRsiRaw(buffer, remainder);
-            preprocessor_.decodeFused(
-                rsiBuf_.data(), remainder,
-                reference, nFull * rsiSizeV_, outputFunc);
-        }
-
+        decodeFusedAt(makeBuffer(source), 0, nValues, std::forward<OutputFunc>(outputFunc));
         setStats(nValues, source.size());
     }
 
-    // Fused decode starting from a specific bit offset (for parallel decoding)
+    // Fused decode of nValues values starting at bitOffset (for parallel decoding).
+    // paddedBuffer must be followed by BitBuffer::guardBytes readable bytes (see makeBuffer).
     template <typename OutputFunc>
-    void decodeFused(Span<uint8_t> source, size_t bitOffset, size_t nValues, OutputFunc&& outputFunc)
+    void decodeFusedAt(const BitBuffer& paddedBuffer, size_t bitOffset, size_t nValues, OutputFunc&& outputFunc)
     {
-        const BitBuffer buffer{ source };
-        buffer.bitPos(bitOffset);
+        const BitBuffer buffer{ paddedBuffer, bitOffset };
+        buffer.checkPos();
 
         size_t nFull = nValues / rsiSizeV_;
         size_t remainder = nValues % rsiSizeV_;
@@ -615,8 +618,7 @@ public:
                 rsiBuf_.data(), remainder,
                 reference, nFull * rsiSizeV_, outputFunc);
         }
-
-        setStats(nValues, source.size());
+        buffer.checkPos();
     }
 
     template <typename... Args>
@@ -655,6 +657,7 @@ protected:
 
     mutable std::vector<ValueType> rsiBuf_;
     mutable std::vector<ValueType> paddedSegmentBuf_;
+    mutable std::vector<uint8_t> paddedSource_;
 
     SpAecStats stats_;
 

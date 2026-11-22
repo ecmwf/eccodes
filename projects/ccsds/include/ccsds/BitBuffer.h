@@ -4,6 +4,8 @@
 #include <cstddef>
 #include <cstring>
 #include <cassert>
+#include <stdexcept>
+#include <string>
 #include <byteswap.h>
 
 #include "ccsds/Span.h"
@@ -31,8 +33,33 @@ private:
     }
 
 public:
-    BitBuffer(const BitBuffer& buffer, size_t bitPos = 0) : buffer_{ buffer.buffer_ }, currentBitPos_{ bitPos } {}
-    BitBuffer(Span<uint8_t> data, size_t bitPos = 0) : buffer_{ data }, currentBitPos_{ bitPos } {}
+    // Readers may load up to 8 bytes at the current position and decode a whole block before the
+    // position is checked again. A decoder therefore reads from a copy of the input followed by
+    // this many zero bytes (see DecoderSeq::makeBuffer) and checks the position against
+    // limitBits() at every block start and in every unbounded scan.
+    static constexpr size_t guardBytes = 512;
+
+    BitBuffer(const BitBuffer& buffer, size_t bitPos = 0) : buffer_{ buffer.buffer_ }, currentBitPos_{ bitPos }, limitBits_{ buffer.limitBits_ } {}
+    BitBuffer(Span<uint8_t> data, size_t bitPos = 0) : buffer_{ data }, currentBitPos_{ bitPos }, limitBits_{ data.size() * 8 } {}
+    // data must contain at least guardBytes bytes after the first limitBits bits
+    BitBuffer(Span<uint8_t> data, size_t bitPos, size_t limitBits) : buffer_{ data }, currentBitPos_{ bitPos }, limitBits_{ limitBits } {}
+
+    // Number of valid bits (the end of the compressed data)
+    size_t limitBits() const { return limitBits_; }
+
+    [[noreturn]] __attribute__((cold, noinline)) static void throwOverrun(size_t pos, size_t limitBits)
+    {
+        throw std::runtime_error("CCSDS decoding failed: the compressed data is truncated or corrupt (needed data beyond its end: bit " + std::to_string(pos) + " of " + std::to_string(limitBits) + ")");
+    }
+
+    // Throws if the read position is beyond the end of the compressed data
+    void checkPos(size_t pos) const
+    {
+        if (__builtin_expect(pos > limitBits_, 0)) {
+            throwOverrun(pos, limitBits_);
+        }
+    }
+    void checkPos() const { checkPos(currentBitPos_); }
 
     uint16_t peekBits(size_t nBits, size_t offset) const
     {
@@ -86,6 +113,7 @@ public:
                 // advance past them and load next window.
                 size_t remaining = 64 - bitpos;
                 currentBitPos_ += remaining;
+                checkPos();
             }
         }
     }
@@ -103,13 +131,14 @@ public:
             return static_cast<size_t>(__builtin_clzll(acc)) + 1;
         }
 
-        // Codeword spans more than 56 bits — fall back to byte scanning
+        // Codeword spans more than 56 bits — fall back to byte scanning.
+        // The data after limitBits_ is zero, so an unterminated codeword ends here.
         size_t zeros = 64 - bitpos;
         bytepos += 8;
         while (buffer_[bytepos] == 0) {
             zeros += 8;
             bytepos++;
-            assert(bytepos <= buffer_.size() && "Codeword exceeds buffer size");
+            checkPos(bytepos * 8);
         }
         zeros += static_cast<size_t>(__builtin_clz(static_cast<unsigned>(buffer_[bytepos]))) - 24;
         return zeros + 1;
@@ -330,4 +359,5 @@ public:
 private:
     Span<uint8_t> buffer_;
     mutable size_t currentBitPos_ = 0;
+    size_t limitBits_ = 0;
 };
