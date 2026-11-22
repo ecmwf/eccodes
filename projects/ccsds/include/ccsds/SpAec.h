@@ -6,7 +6,6 @@
 #include <stdexcept>
 #include <string>
 #include "ccsds/encoder/EncoderSeq.h"
-#include "ccsds/encoder/EncoderPar.h"
 #include "ccsds/decoder/DecoderSeq.h"
 #include "ccsds/decoder/DecoderPar.h"
 #include "ccsds/Stats.h"
@@ -203,14 +202,10 @@ private:
             }
         }
 
-        if (nThreads_ > 1) {
-            EncoderPar<DeltaType, DeltaType> encoder{ bpv_, blockSize_, rsiSize_, CodeOptionSet::Basic, nThreads_ };
-            return encoder.encodeParallel(Span<DeltaType>(mapped), target);
-        }
-        else {
-            EncoderSeq<DeltaType, DeltaType> encoder{ bpv_, blockSize_, rsiSize_, CodeOptionSet::Basic };
-            return encoder.encode(Span<DeltaType>(mapped), target);
-        }
+        // Note: the parallel encoder (EncoderPar) does not produce valid streams in all cases
+        // (zero blocks at chunk boundaries, partial blocks): always encode sequentially.
+        EncoderSeq<DeltaType, DeltaType> encoder{ bpv_, blockSize_, rsiSize_, CodeOptionSet::Basic };
+        return encoder.encode(Span<DeltaType>(mapped), target);
     }
 
     [[noreturn]] __attribute__((cold, noinline)) void throwValueOutOfRange(size_t index, double value) const
