@@ -24,8 +24,8 @@ public:
 
     ValueType& operator[](size_t index) const
     {
-        return data_[index];
         assert(index < size_ && "Index out of bounds in Span::operator[]");
+        return data_[index];
     }
 
     Span<ValueType> drop(size_t n) const
