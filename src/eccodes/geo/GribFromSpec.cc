@@ -401,9 +401,23 @@ void set_grid_type_unstructured(grib_info& info, const Grid& grid)
 {
     info.grid.grid_type = CODES_UTIL_GRID_SPEC_UNSTRUCTURED;
 
-    info.extra_set("unstructuredGridType", grid.name().c_str());
-    info.extra_set("unstructuredGridSubtype", grid.arrangement().c_str());
-    info.extra_set("uuidOfHGrid", grid.uid().c_str());
+    // the grid by its type and arrangement (FESOM, ORCA), its number of grid (ICON), or just its points
+    if (const auto type = grid.type(); type == "FESOM" || type == "ORCA") {
+        info.extra_set("unstructuredGridType", grid.name().c_str());
+        info.extra_set("unstructuredGridSubtype", grid.arrangement().c_str());
+        info.extra_set("uuidOfHGrid", grid.uid().c_str());
+    }
+    else if (type == "ICON") {
+        info.extra_set("uuidOfHGrid", grid.uid().c_str());
+
+        const auto& catalog = grid.catalog();
+        if (static const std::string key{ "icon_number_of_grid_used" }; catalog.has(key)) {
+            info.extra_set("numberOfGridUsed", static_cast<long>(catalog.get_unsigned(key)));
+        }
+        if (static const std::string key{ "icon_number_of_grid_in_reference" }; catalog.has(key)) {
+            info.extra_set("numberOfGridInReference", static_cast<long>(catalog.get_unsigned(key)));
+        }
+    }
 }
 
 
