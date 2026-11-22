@@ -487,7 +487,14 @@ bool codes_is_well_defined(codes_handle* h, const char* key)
 ProcessingT<double>* angular_precision()
 {
     return new ProcessingT<double>([](codes_handle* h, double& value) {
-        if (codes_is_well_defined(h, "basicAngleOfTheInitialProductionDomain") && codes_is_well_defined(h, "subdivisionsOfBasicAngle")) {
+        // angles of a basic angle and its subdivisions are exact (0 stands for the default units, of the edition)
+        long basic = 0;
+        long subdivisions = 0;
+        if (codes_is_well_defined(h, "basicAngleOfTheInitialProductionDomain") &&
+            codes_is_well_defined(h, "subdivisionsOfBasicAngle") &&
+            codes_get_long(h, "basicAngleOfTheInitialProductionDomain", &basic) == CODES_SUCCESS &&
+            codes_get_long(h, "subdivisionsOfBasicAngle", &subdivisions) == CODES_SUCCESS && basic > 0 &&
+            subdivisions > 0) {
             value = 0.;
             return true;
         }
