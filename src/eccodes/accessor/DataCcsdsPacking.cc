@@ -34,6 +34,15 @@ static bool use_spaec()
     // }
     return cached == 1;
 }
+
+// SpAec implements the CCSDS options used by GRIB: preprocessed unsigned samples, basic code
+// options and no RSI padding. Messages with other options are handled by libaec (if available).
+static bool spaec_supports_flags(long flags)
+{
+    // Values of AEC_DATA_SIGNED, AEC_DATA_PREPROCESS, AEC_RESTRICTED and AEC_PAD_RSI in libaec.h
+    constexpr long signedFlag = 1, preprocessFlag = 8, restrictedFlag = 16, padRsiFlag = 32;
+    return (flags & preprocessFlag) && !(flags & (signedFlag | restrictedFlag | padRsiFlag));
+}
 #endif
 
 void DataCcsdsPacking::init(const long v, grib_arguments* args)
@@ -303,7 +312,7 @@ int DataCcsdsPacking::pack_double(const double* val, size_t* len)
         return err;
 
     #ifdef HAVE_CCSDS_SPAEC
-    if (use_spaec()) {
+    if (use_spaec() && spaec_supports_flags(ccsds_flags)) {
         if (bits_per_value < 1 || bits_per_value > MAX_BITS_PER_VALUE) {
             grib_context_log(context_, GRIB_LOG_ERROR, "%s pack_double: packing %s, bitsPerValue=%ld (max %d)",
                              accessor_type().c_str(), name_, bits_per_value, MAX_BITS_PER_VALUE);
@@ -447,6 +456,16 @@ int DataCcsdsPacking::pack_double(const double* val, size_t* len)
     }
     #endif
 
+    #ifdef HAVE_CCSDS_SPAEC
+    if (!spaec_supports_flags(ccsds_flags)) {
+        grib_context_log(context_, GRIB_LOG_ERROR,
+                         "%s %s: ccsdsFlags=%ld (signed, restricted, RSI padded or not preprocessed data) are not supported by SpAec. "
+                         "Please rebuild with -DENABLE_AEC=ON",
+                         accessor_type().c_str(), __func__, ccsds_flags);
+        return GRIB_NOT_IMPLEMENTED;
+    }
+    #endif
+
     grib_context_log(context_, GRIB_LOG_ERROR,
                      "CCSDS support not enabled. "
                      "Please rebuild with -DENABLE_AEC=ON or -DENABLE_CCSDS_SPAEC=ON");
@@ -520,7 +539,7 @@ int DataCcsdsPacking::unpack(T* val, size_t* len)
     buf += byte_offset();
 
     #ifdef HAVE_CCSDS_SPAEC
-    if (use_spaec()) {
+    if (use_spaec() && spaec_supports_flags(ccsds_flags)) {
         if (hand->context->debug) {
             fprintf(stderr, "ECCODES DEBUG CCSDS unpack_* aec_stream.flags=%ld\n", ccsds_flags);
             fprintf(stderr, "ECCODES DEBUG CCSDS unpack_* aec_stream.bits_per_sample=%ld\n", bits_per_value);
@@ -615,6 +634,16 @@ int DataCcsdsPacking::unpack(T* val, size_t* len)
         *len = n_vals;
         grib_context_buffer_free(context_, decoded);
         return GRIB_SUCCESS;
+    }
+    #endif
+
+    #ifdef HAVE_CCSDS_SPAEC
+    if (!spaec_supports_flags(ccsds_flags)) {
+        grib_context_log(context_, GRIB_LOG_ERROR,
+                         "%s %s: ccsdsFlags=%ld (signed, restricted, RSI padded or not preprocessed data) are not supported by SpAec. "
+                         "Please rebuild with -DENABLE_AEC=ON",
+                         accessor_type().c_str(), __func__, ccsds_flags);
+        return GRIB_NOT_IMPLEMENTED;
     }
     #endif
 
