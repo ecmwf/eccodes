@@ -112,6 +112,23 @@ public:
             throw std::invalid_argument("CCSDS: the reference value must be a finite number");
         }
     }
+
+    // Largest possible size in bytes of the encoded data of nValues values (every block
+    // uncompressed), including the 8 bytes the encoder may touch after the end of the data.
+    // The target of encode() must be at least this large.
+    static size_t maxEncodedSize(size_t nValues, uint8_t bpv, uint8_t blockSize)
+    {
+        validateCcsdsParameters(bpv, blockSize, 1);
+        const size_t nBlocks = (nValues + blockSize - 1) / blockSize;
+        const size_t idLength = CodeOptionBase{ bpv, CodeOptionSet::Basic }.maxIdLength - 1u;
+        const size_t bitsPerBlock = idLength + static_cast<size_t>(blockSize) * bpv;
+        return (nBlocks * bitsPerBlock + 7) / 8 + 8;
+    }
+
+    size_t maxEncodedSize(size_t nValues) const
+    {
+        return maxEncodedSize(nValues, bpv_, blockSize_);
+    }
     ~SpAec() {}
 
     size_t encode(const Span<ValueType> data, Span<uint8_t> target)
@@ -155,6 +172,13 @@ private:
     template <typename DeltaType>
     size_t encodeImpl(const Span<ValueType> data, Span<uint8_t> target)
     {
+        const size_t needed = maxEncodedSize(data.size());
+        if (target.size() < needed) {
+            throw std::invalid_argument("CCSDS encoding: the output buffer is too small (" + std::to_string(target.size()) + " bytes; " + std::to_string(needed) + " bytes are needed for " + std::to_string(data.size()) + " values in the worst case)");
+        }
+        // The encoder ORs bits into the output: it must start zeroed
+        std::memset(target.data(), 0, needed);
+
         SimpleMapper<DeltaType> mapper{ referenceValue_, binaryScaleFactor_, decimalScaleFactor_ };
         std::vector<DeltaType> mapped(data.size());
         for (size_t i = 0; i < data.size(); ++i) {

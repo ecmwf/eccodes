@@ -319,16 +319,6 @@ int DataCcsdsPacking::pack_double(const double* val, size_t* len)
             fprintf(stderr, "ECCODES DEBUG CCSDS pack_double aec_stream.rsi=%ld\n", ccsds_rsi);
         }
 
-        size_t nbytes = (bits_per_value + 7) / 8;
-        if (nbytes == 3) nbytes = 4;
-
-        // Worst-case output buffer
-        buflen = (nbytes * n_vals) * 67 / 64 + 256;
-        buf = (unsigned char*)grib_context_buffer_malloc_clear(context_, buflen);
-        if (!buf) {
-            return GRIB_OUT_OF_MEMORY;
-        }
-
         try {
             encoder::SpAec<double> spaec(
                 static_cast<uint8_t>(bits_per_value),
@@ -338,6 +328,13 @@ int DataCcsdsPacking::pack_double(const double* val, size_t* len)
                 reference_value,
                 static_cast<int>(binary_scale_factor),
                 static_cast<int>(decimal_scale_factor));
+
+            // Worst-case output buffer
+            buflen = spaec.maxEncodedSize(n_vals);
+            buf = (unsigned char*)grib_context_buffer_malloc_clear(context_, buflen);
+            if (!buf) {
+                return GRIB_OUT_OF_MEMORY;
+            }
 
             Span<double> input(const_cast<double*>(val), n_vals);
             Span<uint8_t> output(buf, buflen);
