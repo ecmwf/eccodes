@@ -238,8 +238,7 @@ int nearest_smaller_ieee_float(double a, double* ret)
 
     init_table_if_needed();
 
-    if (a > ieee_table.vmax) {
-        std::cout << "Number is too large: x=" << a << " > xmax=" << ieee_table.vmax << " (IEEE float)";
+    if (!(std::fabs(a) <= ieee_table.vmax)) {  // beyond the float range on either side, or NaN
         return SP_INTERNAL_ERROR;
     }
 
