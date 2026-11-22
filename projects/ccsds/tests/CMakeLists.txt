@@ -13,6 +13,8 @@ function(ccsds_add_test name)
   add_test(NAME ${CCSDS_TEST_PREFIX}${name} COMMAND ${name})
 endfunction()
 
+find_package(Threads REQUIRED)
+
 # --- Pure SpAec tests (no external dependencies) ---
 
 ccsds_add_test(code_option_no_compression)
@@ -31,4 +33,5 @@ ccsds_add_test(decode_truncated)
 ccsds_add_test(parameter_validation)
 ccsds_add_test(encode_target_buffer)
 ccsds_add_test(encode_value_range)
+ccsds_add_test(encode_concurrent LIBS Threads::Threads)
 
