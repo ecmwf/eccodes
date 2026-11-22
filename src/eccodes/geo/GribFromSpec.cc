@@ -72,28 +72,6 @@ static inline double normalise_longitude(const double& lon, const double& minimu
 }
 
 
-bool get_edition(const grib_info& info, long& edition)
-{
-    static const std::string EDITION{ "edition" };
-
-    auto _edition = info.packing.editionNumber;
-
-    for (long j = 0; j < info.packing.extra_settings_count; ++j) {
-        if (const auto& set = info.packing.extra_settings[j]; set.name == EDITION) {
-            _edition = set.long_value;
-            break;
-        }
-    }
-
-    if (_edition != 0) {
-        edition = _edition;
-        return true;
-    }
-
-    return false;
-}
-
-
 struct BoundingBox
 {
     BoundingBox(double _north, double _west, double _south, double _east) :
@@ -445,103 +423,86 @@ void set_grid_type_spherical_harmonics(grib_info& info, const Grid& grid)
 }
 
 
-void set_grid_type_lambert_azimuthal_equal_area(grib_info& info, const Grid& grid)
+// GRIB1 cannot encode LaD, GRIB2 negative longitudes
+double grib_longitude(double lon, long edition)
+{
+    return edition == 2 ? normalise_longitude(lon, 0) : lon;
+}
+
+
+void set_projected(grib_info& info, const ::eckit::geo::grid::Regular& grid, long edition)
+{
+    const auto first = std::get<PointLonLat>(grid.first_point());
+
+    info.grid.latitudeOfFirstGridPointInDegrees = first.lat();
+    info.grid.longitudeOfFirstGridPointInDegrees = grib_longitude(first.lon(), edition);
+
+    info.grid.Ni = static_cast<long>(grid.nx());
+    info.grid.Nj = static_cast<long>(grid.ny());
+
+    // the scanning directions are in the scanning mode, not in the increments
+    info.extra_set("DxInMetres", std::abs(grid.dx()));
+    info.extra_set("DyInMetres", std::abs(grid.dy()));
+
+    ScanningMode(grid).fillGrib(info);
+
+    // GRIB1 figures (see encoding_edition), GRIB2 as other grids
+    if (edition == 1) {
+        info.extra_set("earthIsOblate", grid.figure() == ::eckit::geo::figure::EarthIau1965{} ? 1L : 0L);
+    }
+}
+
+
+void set_grid_type_lambert_azimuthal_equal_area(grib_info& info, const Grid& grid, long edition)
 {
     info.grid.grid_type = CODES_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA;
 
-    const auto& g(dynamic_cast<const ::eckit::geo::grid::Regular&>(grid));
-    const auto reference = std::get<PointLonLat>(grid.projection().fwd(PointXY{ 0., 0. }));
-    const auto first = std::get<PointLonLat>(grid.first_point());
+    const auto& projection = grid.projection().spec();
+    info.extra_set("standardParallelInDegrees", projection.get_double("lat_0", 0.));
+    info.extra_set("centralLongitudeInDegrees", grib_longitude(projection.get_double("lon_0", 0.), edition));
 
-
-    info.grid.Ni = static_cast<long>(g.nx());
-    info.grid.Nj = static_cast<long>(g.ny());
-
-    info.grid.latitudeOfFirstGridPointInDegrees = first.lat();
-    info.grid.longitudeOfFirstGridPointInDegrees = first.lon();
-
-    info.extra_set("DxInMetres", g.dx());
-    info.extra_set("DyInMetres", g.dy());
-    info.extra_set("standardParallelInDegrees", reference.lat());
-    info.extra_set("centralLongitudeInDegrees", reference.lon());
-
-    ScanningMode scan(g);
-    scan.fillGrib(info);
+    set_projected(info, dynamic_cast<const ::eckit::geo::grid::Regular&>(grid), edition);
 }
 
 
-void set_grid_type_grid_type_lambert(grib_info& info, const Grid& grid)
+void set_grid_type_grid_type_lambert(grib_info& info, const Grid& grid, long edition)
 {
     info.grid.grid_type = CODES_UTIL_GRID_SPEC_LAMBERT_CONFORMAL;
 
-    const auto& g(dynamic_cast<const ::eckit::geo::grid::Regular&>(grid));
-    const auto reference = std::get<PointLonLat>(grid.projection().fwd(PointXY{ 0., 0. }));
-    const auto first = std::get<PointLonLat>(grid.first_point());
+    // the projection is not rotated
+    info.grid.latitudeOfSouthernPoleInDegrees = -90.;
+    info.grid.longitudeOfSouthernPoleInDegrees = 0.;
 
-    auto writeLonPositive = false;
-    auto writeLaDInDegrees = false;
+    const auto& projection = grid.projection().spec();
+    const auto lat_1 = projection.get_double("lat_1");
 
-    if (long edition = 0; get_edition(info, edition)) {
-        writeLonPositive = edition >= 2;
-        writeLaDInDegrees = edition >= 2;
+    info.extra_set("Latin1InDegrees", lat_1);
+    info.extra_set("Latin2InDegrees", projection.get_double("lat_2", lat_1));
+    info.extra_set("LoVInDegrees", grib_longitude(projection.get_double("lon_0", 0.), edition));
+    if (edition == 2) {
+        info.extra_set("LaDInDegrees", projection.get_double("lat_0", 0.));
     }
 
-    info.grid.latitudeOfFirstGridPointInDegrees = first.lat();
-    info.grid.longitudeOfFirstGridPointInDegrees = writeLonPositive ? normalise_longitude(first.lon(), 0) : first.lon();
-
-    info.grid.Ni = static_cast<long>(g.nx());
-    info.grid.Nj = static_cast<long>(g.ny());
-
-    info.extra_set("DxInMetres", g.dx());
-    info.extra_set("DyInMetres", g.dy());
-    info.extra_set("Latin1InDegrees", reference.lat());
-    info.extra_set("Latin2InDegrees", reference.lat());
-    info.extra_set("LoVInDegrees", writeLonPositive ? normalise_longitude(reference.lon(), 0)
-                                                    : reference.lon());
-
-    if (writeLaDInDegrees) {
-        info.extra_set("LaDInDegrees", reference.lat());
-    }
-
-    ScanningMode scan(g);
-    scan.fillGrib(info);
+    set_projected(info, dynamic_cast<const ::eckit::geo::grid::Regular&>(grid), edition);
 }
 
 
-void set_grid_type_polar_stereographic(grib_info& info, const Grid& grid)
+void set_grid_type_polar_stereographic(grib_info& info, const Grid& grid, long edition)
 {
     info.grid.grid_type = CODES_UTIL_GRID_SPEC_POLAR_STEREOGRAPHIC;
 
-    const auto& g(dynamic_cast<const ::eckit::geo::grid::Regular&>(grid));
-    const auto reference = std::get<PointLonLat>(grid.projection().fwd(PointXY{ 0., 0. }));
-    const auto first = std::get<PointLonLat>(grid.first_point());
+    const auto& projection = grid.projection().spec();
+    const auto lat_0 = projection.get_double("lat_0");
 
-    auto writeLonPositive = false;
-    auto writeLaDInDegrees = false;
-
-    if (long edition = 0; get_edition(info, edition)) {
-        writeLonPositive = edition >= 2;
-        writeLaDInDegrees = edition >= 2;
+    info.extra_set("orientationOfTheGridInDegrees", grib_longitude(projection.get_double("lon_0", 0.), edition));
+    if (lat_0 < 0.) {
+        info.extra_set("southPoleOnProjectionPlane", 1L);
+    }
+    if (edition == 2) {
+        info.extra_set("LaDInDegrees", projection.get_double("lat_ts", lat_0));
     }
 
-
-    info.grid.latitudeOfFirstGridPointInDegrees = first.lat();
-    info.grid.longitudeOfFirstGridPointInDegrees =
-        writeLonPositive ? normalise_longitude(first.lon(), 0) : first.lon();
-
-    info.grid.Ni = static_cast<long>(g.nx());
-    info.grid.Nj = static_cast<long>(g.ny());
-
-    info.extra_set("DxInMetres", g.dx());
-    info.extra_set("DyInMetres", g.dy());
-    info.extra_set("orientationOfTheGridInDegrees", normalise_longitude(reference.lon(), 0));
-
-    if (writeLaDInDegrees) {
-        info.extra_set("LaDInDegrees", reference.lat());
-    }
-
-    ScanningMode scan(g);
-    scan.fillGrib(info);
+    set_projected(info, dynamic_cast<const ::eckit::geo::grid::Regular&>(grid), edition);
 }
 
 
@@ -761,13 +722,13 @@ codes_handle* GribFromSpec::set(const codes_handle* h, const Spec& spec, const s
         set_grid_type_regular_ll(info, *grid, basic_angle);
     }
     else if (g == "regular_xy" && p == "laea") {
-        set_grid_type_lambert_azimuthal_equal_area(info, *grid);
+        set_grid_type_lambert_azimuthal_equal_area(info, *grid, edition);
     }
     else if (g == "regular_xy" && p == "lcc") {
-        set_grid_type_grid_type_lambert(info, *grid);
+        set_grid_type_grid_type_lambert(info, *grid, edition);
     }
-    else if (g == "regular_xy" && p == "polar_stereographic") {
-        set_grid_type_polar_stereographic(info, *grid);
+    else if (g == "regular_xy" && p == "stere") {
+        set_grid_type_polar_stereographic(info, *grid, edition);
     }
     else if (g == "reduced_ll") {
         set_grid_type_reduced_ll(info, *grid);
