@@ -37,8 +37,8 @@ signed[4] centralLongitudeInMicrodegrees : dump;
 alias centralLongitude=centralLongitudeInMicrodegrees;
 meta geography.centralLongitudeInDegrees scale(centralLongitudeInMicrodegrees,one,grib2divider,truncateDegrees) : dump;
 
-# Resolution and component flag
-flags[1] resolutionAndComponentFlags 'grib2/tables/[tablesVersion]/3.3.table' : dump;
+# Resolution and component flag (as other templates, e.g. 3.30)
+include "grib2/templates/template.3.resolution_flags.def"
 
 # Dx - X-direction grid length in millimetres
 unsigned[4] xDirectionGridLengthInMillimetres: dump;
