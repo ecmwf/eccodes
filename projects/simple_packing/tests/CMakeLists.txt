@@ -34,3 +34,6 @@ add_test(NAME ${SP_TEST_PREFIX}power COMMAND sp_power)
 
 sp_add_test(bit_packing_element)
 add_test(NAME ${SP_TEST_PREFIX}bit_packing_element COMMAND sp_bit_packing_element 10)
+
+sp_add_test(reference_value_range)
+add_test(NAME ${SP_TEST_PREFIX}reference_value_range COMMAND sp_reference_value_range)
