@@ -508,6 +508,16 @@ ProcessingT<double>* angular_precision()
 }
 
 
+// Gaussian latitudes (and longitudes) are matched to the angular precision, but at least to a millidegree, as by the
+// ecCodes Gaussian iterators (GRIB2 messages converted from GRIB1 keep the millidegrees)
+double gaussian_precision(codes_handle* h)
+{
+    double eps = 0.;
+    ASSERT(std::unique_ptr<ProcessingT<double>>(angular_precision())->eval(h, eps));
+    return std::max(eps, 1e-3);
+}
+
+
 ProcessingT<double>* longitudeOfLastGridPointInDegrees_fix_for_global_reduced_grids()
 {
     return new ProcessingT<double>([](codes_handle* h, double& Lon2) {
@@ -630,8 +640,7 @@ ProcessingT<long>* ni_fix_for_regular_gaussian_grids()
 ProcessingT<double>* latitudeOfFirstGridPointInDegrees_fix_for_gaussian_grids()
 {
     return new ProcessingT<double>([](codes_handle* h, double& lat) {
-        double eps = 0.;
-        ASSERT(std::unique_ptr<ProcessingT<double>>(angular_precision())->eval(h, eps));
+        const auto eps = gaussian_precision(h);
 
         long N = 0L;
         CHECK_CALL(codes_get_long(h, "N", &N));
@@ -648,8 +657,7 @@ ProcessingT<double>* latitudeOfFirstGridPointInDegrees_fix_for_gaussian_grids()
 ProcessingT<double>* latitudeOfLastGridPointInDegrees_fix_for_gaussian_grids()
 {
     return new ProcessingT<double>([](codes_handle* h, double& lat) {
-        double eps = 0.;
-        ASSERT(std::unique_ptr<ProcessingT<double>>(angular_precision())->eval(h, eps));
+        const auto eps = gaussian_precision(h);
 
         long N = 0L;
         CHECK_CALL(codes_get_long(h, "N", &N));
@@ -1673,7 +1681,7 @@ void GribToSpec::pl_expand_to_global(std::vector<long>& pl) const
 
     const auto increasing = lat1 < lat2;
     const auto& lats(eckit::geo::util::gaussian_latitudes(N, increasing));
-    const auto eps = std::max(eckit::geo::PointLonLat::EPS, get_double("angular_precision"));
+    const auto eps = gaussian_precision(handle_);
 
     auto approx = [=](double a, double b) { return increasing ? a + eps < b : a - eps > b; };
     const auto j = std::distance(lats.begin(), std::lower_bound(lats.begin(), lats.end(), lat1, approx));
