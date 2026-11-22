@@ -1271,7 +1271,13 @@ bool GribToSpec::has(const std::string& name) const
         return false;
     }
 
-    return cache_.find(key) != cache_.end() || codes_is_defined(handle_, key) != 0;
+    if (cache_.find(key) != cache_.end() || codes_is_defined(handle_, key) != 0) {
+        return true;
+    }
+
+    // a key computed from the message's (a fix, not a key of the message), if it computes
+    double value = 0.;
+    return std::strstr(key, "_fix_for_") != nullptr && get(name, value);
 }
 
 
