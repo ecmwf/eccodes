@@ -34,4 +34,5 @@ ccsds_add_test(parameter_validation)
 ccsds_add_test(encode_target_buffer)
 ccsds_add_test(encode_value_range)
 ccsds_add_test(encode_concurrent LIBS Threads::Threads)
+ccsds_add_test(decode_parallel LIBS Threads::Threads)
 
