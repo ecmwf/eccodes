@@ -634,6 +634,12 @@ if( HAVE_BUILD_TOOLS )
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_ccsds.sh
                       TEST_DEPENDS eccodes_download_gribs )
 
+    ecbuild_add_test( TARGET eccodes_t_grib_ccsds_flags
+                      TYPE SCRIPT
+                      CONDITION HAVE_AEC AND HAVE_CCSDS_SPAEC AND ENABLE_EXTRA_TESTS
+                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_ccsds_flags.sh
+                      TEST_DEPENDS eccodes_download_gribs )
+
     ecbuild_add_test( TARGET eccodes_t_grib_check_param_concepts
                       TYPE SCRIPT
                       CONDITION ENABLE_EXTRA_TESTS
