@@ -14,8 +14,26 @@
 #include <float.h>
 #include <type_traits>
 
+#ifdef HAVE_SIMPLE_PACKING_SP
+    #include "simple_packing/simple/Binary.h"
+    #include "simple_packing/Parameters.h"
+#endif
+
 namespace eccodes::accessor
 {
+
+bool DataSimplePacking::use_new_simple_packing()
+{
+#ifdef HAVE_SIMPLE_PACKING_SP
+    static const bool useNew = [] {
+        const char* env = getenv("ECCODES_USE_LEGACY_SIMPLE_PACKING");
+        return env == nullptr || env[0] == '\0';
+    }();
+    return useNew;
+#else
+    return false;
+#endif
+}
 
 void DataSimplePacking::init(const long v, grib_arguments* args)
 {
@@ -272,7 +290,34 @@ int DataSimplePacking::unpack(T* val, size_t* len)
     grib_context_log(context_, GRIB_LOG_DEBUG,
                      "%s %s: calling outline function: bpv: %ld, rv: %g, bsf: %ld, dsf: %ld",
                      accessor_type().c_str(), __func__, bits_per_value, reference_value, binary_scale_factor, decimal_scale_factor);
-    grib_decode_array<T>(buf, &pos, bits_per_value, reference_value, s, d, n_vals, val);
+
+#ifdef HAVE_SIMPLE_PACKING_SP
+    if (use_new_simple_packing() && bits_per_value >= 1 && bits_per_value <= 64) {
+        grib_context_log(context_, GRIB_LOG_DEBUG,
+                         "%s %s: using new Simple Packing (SP) for decode, %zu values", accessor_type().c_str(), __func__, n_vals);
+        try {
+            SimplePackingBinary<T> sp(nullptr);
+            Parameters params;
+            params.bitsPerValue(bits_per_value);
+            params.binaryScaleFactor(binary_scale_factor);
+            params.decimalScaleFactor(decimal_scale_factor);
+            params.referenceValue(static_cast<T>(reference_value));
+
+            // Decode straight into the caller's array: no intermediate copy
+            // of either the coded bytes or the decoded field.
+            sp.unpackTo(params, buf, n_vals, val);
+        }
+        catch (const std::exception& e) {
+            grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: SP decode error: %s",
+                             accessor_type().c_str(), __func__, e.what());
+            return GRIB_DECODING_ERROR;
+        }
+    }
+    else
+#endif
+    {
+        grib_decode_array<T>(buf, &pos, bits_per_value, reference_value, s, d, n_vals, val);
+    }
 
     *len = (long)n_vals;
 
@@ -413,7 +458,32 @@ int DataSimplePacking::_unpack_double(double* val, size_t* len, unsigned char* b
     grib_context_log(context_, GRIB_LOG_DEBUG,
                      "unpack_double: calling outline function : bpv %d, rv : %g, sf : %d, dsf : %d ",
                      bits_per_value, reference_value, binary_scale_factor, decimal_scale_factor);
-    grib_decode_array<double>(buf, &pos, bits_per_value, reference_value, s, d, n_vals, val);
+
+#ifdef HAVE_SIMPLE_PACKING_SP
+    if (use_new_simple_packing() && bits_per_value >= 1 && bits_per_value <= 64) {
+        try {
+            SimplePackingBinary<double> sp(nullptr);
+            Parameters params;
+            params.bitsPerValue(bits_per_value);
+            params.binaryScaleFactor(binary_scale_factor);
+            params.decimalScaleFactor(decimal_scale_factor);
+            params.referenceValue(reference_value);
+
+            // Decode straight into the caller's array: no intermediate copy
+            // of either the coded bytes or the decoded field.
+            sp.unpackTo(params, buf, n_vals, val);
+        }
+        catch (const std::exception& e) {
+            grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: SP decode error: %s",
+                             accessor_type().c_str(), __func__, e.what());
+            return GRIB_DECODING_ERROR;
+        }
+    }
+    else
+#endif
+    {
+        grib_decode_array<double>(buf, &pos, bits_per_value, reference_value, s, d, n_vals, val);
+    }
 
     *len = (long)n_vals;
 

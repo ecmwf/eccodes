@@ -11,6 +11,14 @@
 #include "DataG2SimplePacking.h"
 #include "grib_scaling.h"
 
+#ifdef HAVE_SIMPLE_PACKING_SP
+    #include "simple_packing/simple/Binary.h"
+    #include "simple_packing/Parameters.h"
+    #include "simple_packing/optimizer/BPVOptimizer.h"
+    #include "simple_packing/optimizer/BinDecOptimizer.h"
+    #include "simple_packing/optimizer/DecOptimizer.h"
+#endif
+
 namespace eccodes::accessor
 {
 
@@ -102,6 +110,89 @@ int DataG2SimplePacking::pack_double(const double* cval, size_t* len)
 
         return grib_set_double_array(h, "values", val, *len);
     }
+
+#ifdef HAVE_SIMPLE_PACKING_SP
+    if (use_new_simple_packing() && n_vals > 0) {
+        const auto [min_val, max_val] = sp_minmax(val, n_vals);
+
+        if (min_val != max_val) {
+            grib_context_log(context_, GRIB_LOG_DEBUG,
+                             "DataG2simplePacking : pack_double : packing %s, %zu values (SP optimizer)", name_, n_vals);
+            try {
+                grib_handle* gh = get_enclosing_handle();
+                long bpv_l = 0, dsf_get = 0, bsf_l = 0, osf_l = 0, changing_prec = 0;
+                if ((ret = grib_get_long_internal(gh, bits_per_value_, &bpv_l)) != GRIB_SUCCESS) return ret;
+                if ((ret = grib_get_long_internal(gh, decimal_scale_factor_, &dsf_get)) != GRIB_SUCCESS) return ret;
+                if ((ret = grib_get_long_internal(gh, binary_scale_factor_, &bsf_l)) != GRIB_SUCCESS) return ret;
+                if ((ret = grib_get_long_internal(gh, optimize_scaling_factor_, &osf_l)) != GRIB_SUCCESS) return ret;
+                if ((ret = grib_get_long_internal(gh, changing_precision_, &changing_prec)) != GRIB_SUCCESS) return ret;
+
+                if (bpv_l > (long)(sizeof(long) * 8 - 1)) {
+                    grib_context_log(context_, GRIB_LOG_ERROR, "Unable to compute packing parameters. Invalid bits per value");
+                    return GRIB_INVALID_BPV;
+                }
+
+                if ((ret = grib_check_data_values_minmax(gh, min_val, max_val)) != GRIB_SUCCESS) {
+                    grib_context_log(context_, GRIB_LOG_ERROR, "GRIB2 simple packing: unable to set values (%s)", grib_get_error_message(ret));
+                    return ret;
+                }
+
+                dirty_ = 1;
+
+                if (changing_prec == 0 && bpv_l == 0 && dsf_get == 0) {
+                    grib_context_log(context_, GRIB_LOG_WARNING,
+                                     "%s==0 and %s==0 (setting %s=24)",
+                                     bits_per_value_, decimal_scale_factor_, bits_per_value_);
+                    bpv_l = 24;
+                }
+
+                std::unique_ptr<Optimizer> optimizer;
+                if (bpv_l == 0 || (bsf_l == 0 && dsf_get != 0)) {
+                    optimizer = std::make_unique<BPVOptimizer>(static_cast<int>(dsf_get));
+                }
+                else if (osf_l) {
+                    int compat_gribex = c->gribex_mode_on && edition_ == 1;
+                    optimizer = std::make_unique<BinDecOptimizer>(compat_gribex, 1, static_cast<int>(bpv_l));
+                }
+                else {
+                    int last = 127;
+                    if (c->gribex_mode_on && edition_ == 1) last = 99;
+                    optimizer = std::make_unique<DecOptimizer>(bpv_l, last);
+                }
+
+                SimplePackingBinary<double> sp(std::move(optimizer));
+                // min_val/max_val have already been computed above; do not rescan.
+                const Parameters params = std::get<0>(sp.getParameters(min_val, max_val));
+
+                if ((ret = grib_set_double_internal(gh, reference_value_, params.referenceValue())) != GRIB_SUCCESS) return ret;
+                if ((ret = grib_set_long_internal(gh, changing_precision_, 0)) != GRIB_SUCCESS) return ret;
+                if ((ret = grib_set_long_internal(gh, binary_scale_factor_, params.binaryScaleFactor())) != GRIB_SUCCESS) return ret;
+                if ((ret = grib_set_long_internal(gh, decimal_scale_factor_, params.decimalScaleFactor())) != GRIB_SUCCESS) return ret;
+                if ((ret = grib_set_long_internal(gh, bits_per_value_, params.bitsPerValue())) != GRIB_SUCCESS) return ret;
+
+                // Encode straight into the section buffer: no intermediate
+                // copy of the field nor of the coded bytes.
+                buflen = (((params.bitsPerValue() * n_vals) + 7) / 8) * sizeof(unsigned char);
+                if (buflen == 0) {
+                    return grib_buffer_replace(this, NULL, 0, 1, 1);
+                }
+                buf = (unsigned char*)grib_context_buffer_malloc_clear(context_, buflen);
+                if (!buf) return GRIB_OUT_OF_MEMORY;
+
+                sp.packTo(params, val, n_vals, buf);
+
+                ret = grib_buffer_replace(this, buf, buflen, 1, 1);
+                grib_context_buffer_free(context_, buf);
+                return ret;
+            }
+            catch (const std::exception& e) {
+                grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: SP encode error: %s",
+                                 accessor_type().c_str(), __func__, e.what());
+                return GRIB_ENCODING_ERROR;
+            }
+        }
+    }
+#endif
 
     ret = DataSimplePacking::pack_double(cval, len);
     switch (ret) {

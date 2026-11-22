@@ -180,6 +180,10 @@ ecbuild_add_option( FEATURE CCSDS_SPAEC
     DESCRIPTION "Use SpAec CCSDS compression (built-in, replaces libaec at runtime unless ECCODES_USE_LIBAEC is set)"
     DEFAULT ON )
 
+ecbuild_add_option( FEATURE SIMPLE_PACKING_SP
+    DESCRIPTION "Use the simple_packing library for GRIB simple packing (the legacy code is used at runtime if ECCODES_USE_LEGACY_SIMPLE_PACKING is set)"
+    DEFAULT ON )
+
 ecbuild_find_python( VERSION 3.6 NO_LIBS )
 # find_package( NumPy )
 
@@ -483,6 +487,12 @@ if( HAVE_CCSDS_SPAEC )
     set( CCSDS_BUILD_TESTS ${ENABLE_TESTS} )
     set( CCSDS_INSTALL OFF )
     add_subdirectory( projects/ccsds )
+endif()
+if( HAVE_SIMPLE_PACKING_SP )
+    # Standalone library, also installable on its own (see projects/simple_packing)
+    set( SIMPLE_PACKING_BUILD_TESTS ${ENABLE_TESTS} )
+    set( SIMPLE_PACKING_INSTALL OFF )
+    add_subdirectory( projects/simple_packing )
 endif()
 add_subdirectory( src )
 if( HAVE_BUILD_TOOLS )

@@ -40,6 +40,9 @@ if(SIMPLE_PACKING_NATIVE_ARCH AND NOT CMAKE_CROSSCOMPILING)
     list(APPEND SIMPLE_PACKING_OPT_FLAGS -march=native -mtune=native)
   endif()
 endif()
+if(NOT SIMPLE_PACKING_TOP_LEVEL)
+  set(SIMPLE_PACKING_OPT_FLAGS ${SIMPLE_PACKING_OPT_FLAGS} PARENT_SCOPE)
+endif()
 
 # --- simple_packing::headers: the public headers ---
 

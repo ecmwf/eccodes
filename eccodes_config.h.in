@@ -111,6 +111,8 @@
 
 #cmakedefine HAVE_CCSDS_SPAEC
 
+#cmakedefine HAVE_SIMPLE_PACKING_SP
+
 #cmakedefine HAVE_NETCDF
 
 #cmakedefine HAVE_GEOGRAPHY
