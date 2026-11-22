@@ -230,13 +230,9 @@ public:
         return figure.spherical() ? 1 : 7;
     }
 
+    // GRIB2 only
     void fillGrib(grib_info& info) const
     {
-        // GRIB edition=2 only
-        if (long edition = 0; get_edition(info, edition) && edition != 2) {
-            return;
-        }
-
         static const std::string SHAPE{ "shapeOfTheEarth" };
         static const auto* A = "earthMajorAxis";
         static const auto* B = "earthMinorAxis";
@@ -320,9 +316,6 @@ void set_grid_type_regular_ll(grib_info& info, const Grid& grid, const BasicAngl
         BasicAngle basic(basic_angle.num, basic_angle.den);
         basic.fillGrib(info);
     }
-
-    Shape shape(grid.figure());
-    shape.fillGrib(info);
 }
 
 
@@ -350,9 +343,6 @@ void set_grid_type_regular_gg(grib_info& info, const Grid& grid)
         Rotation rotation(dynamic_cast<const ::eckit::geo::projection::Rotation&>(grid.projection()));
         rotation.fillGrib(info);
     }
-
-    Shape shape(grid.figure());
-    shape.fillGrib(info);
 }
 
 
@@ -377,9 +367,6 @@ void set_grid_type_reduced_ll(grib_info& info, const Grid& grid)
     const auto east = bbox.periodic() ? bbox.west() + 360. - 360. / static_cast<double>(max_pl) : bbox.east();
 
     BoundingBox(bbox.north(), bbox.west(), bbox.south(), east).fillGrib(info);
-
-    Shape shape(grid.figure());
-    shape.fillGrib(info);
 }
 
 
@@ -416,23 +403,16 @@ void set_grid_type_reduced_gg(grib_info& info, const Grid& grid)
     else {
         BoundingBox::make_from_points_minmax(g).fillGrib(info);
     }
-
-    Shape shape(grid.figure());
-    shape.fillGrib(info);
 }
 
 
 void set_grid_type_unstructured(grib_info& info, const Grid& grid)
 {
     info.grid.grid_type = CODES_UTIL_GRID_SPEC_UNSTRUCTURED;
-    info.packing.editionNumber = 2;
 
     info.extra_set("unstructuredGridType", grid.name().c_str());
     info.extra_set("unstructuredGridSubtype", grid.arrangement().c_str());
     info.extra_set("uuidOfHGrid", grid.uid().c_str());
-
-    Shape shape(grid.figure());
-    shape.fillGrib(info);
 }
 
 
@@ -446,9 +426,6 @@ void set_grid_type_healpix(grib_info& info, const Grid& grid)
     info.grid.longitudeOfFirstGridPointInDegrees = 45.;
 
     info.extra_set("orderingConvention", g.order().c_str());
-
-    Shape shape(grid.figure());
-    shape.fillGrib(info);
 }
 
 
@@ -476,7 +453,6 @@ void set_grid_type_lambert_azimuthal_equal_area(grib_info& info, const Grid& gri
     const auto reference = std::get<PointLonLat>(grid.projection().fwd(PointXY{ 0., 0. }));
     const auto first = std::get<PointLonLat>(grid.first_point());
 
-    info.packing.editionNumber = 2;
 
     info.grid.Ni = static_cast<long>(g.nx());
     info.grid.Nj = static_cast<long>(g.ny());
@@ -491,9 +467,6 @@ void set_grid_type_lambert_azimuthal_equal_area(grib_info& info, const Grid& gri
 
     ScanningMode scan(g);
     scan.fillGrib(info);
-
-    Shape shape(g.projection().figure());
-    shape.fillGrib(info);
 }
 
 
@@ -532,9 +505,6 @@ void set_grid_type_grid_type_lambert(grib_info& info, const Grid& grid)
 
     ScanningMode scan(g);
     scan.fillGrib(info);
-
-    Shape shape(g.projection().figure());
-    shape.fillGrib(info);
 }
 
 
@@ -572,9 +542,6 @@ void set_grid_type_polar_stereographic(grib_info& info, const Grid& grid)
 
     ScanningMode scan(g);
     scan.fillGrib(info);
-
-    Shape shape(g.projection().figure());
-    shape.fillGrib(info);
 }
 
 
@@ -719,6 +686,34 @@ struct grib_handle_unique_ptr : std::unique_ptr<grib_handle, decltype(&codes_han
 }  // namespace
 
 
+// HEALPix and unstructured grids, of GRIB2 only (encoded from the generic GRIB2 sample)
+bool is_generic(const std::string& type)
+{
+    return type == "HEALPix" || type == "unstructured_ll" || type == "FESOM" || type == "ICON" || type == "ORCA";
+}
+
+
+// The edition encoding a grid: the message's, unless GRIB1 cannot encode the grid type, or the figure of a projected
+// grid (GRIB1 encodes two figures only, by earthIsOblate)
+long encoding_edition(const Grid& grid, long edition)
+{
+    if (edition != 1) {
+        return edition;
+    }
+
+    if (const auto g = grid.type(); is_generic(g)) {
+        return 2;
+    }
+    else if (g == "regular_xy") {
+        const auto& figure = grid.figure();
+        const auto grib1 = figure == ::eckit::geo::figure::EarthGrib1{} || figure == ::eckit::geo::figure::EarthIau1965{};
+        return grid.projection().type() == "laea" || !grib1 ? 2 : 1;
+    }
+
+    return 1;
+}
+
+
 codes_handle* GribFromSpec::set(const codes_handle* h, const Spec& spec, const std::map<std::string, long>& extra, const BasicAngle& basic_angle)
 {
     // Protect ecCodes and set error callback handling (throws)
@@ -752,6 +747,15 @@ codes_handle* GribFromSpec::set(const codes_handle* h, const Spec& spec, const s
     }
 
     grib_info info;
+
+    // converted first, so the keys (the figure too) are of that edition, as by a sample of it
+    long edition = 0;
+    CODES_CHECK(codes_get_long(h, "edition", &edition), nullptr);
+    if (const auto e = encoding_edition(*grid, edition); e != edition) {
+        CODES_CHECK(codes_set_long(const_cast<codes_handle*>(h), "edition", e), nullptr);
+        edition = e;
+    }
+    const bool has_figure = codes_is_defined(h, "shapeOfTheEarth") != 0;
 
     if (const auto g = grid->type(), p = grid->projection().type(); g == "regular_ll") {
         set_grid_type_regular_ll(info, *grid, basic_angle);
@@ -794,13 +798,15 @@ codes_handle* GribFromSpec::set(const codes_handle* h, const Spec& spec, const s
         info.extra_set(key.c_str(), value);
     }
 
+    // the figure, as from a sample of the grid type: the grid's, but the default stands for none so the message keeps its
+    // own, and a message without one (e.g. spectral) gets the sample's (the default, but the generic sample's of HEALPix
+    // and unstructured grids)
+    if (const auto g = grid->type();
+        edition == 2 && g != "sh" && (!grid->figure().is_default() || (!has_figure && !is_generic(g)))) {
+        Shape(grid->figure()).fillGrib(info);
+    }
+
     // Ensure values size (edition >= 2)
-    long edition = 2;
-    CODES_CHECK(codes_get_long(h, "edition", &edition), nullptr);
-
-    get_edition(info, edition);
-    ASSERT(edition != 0);
-
     if (edition >= 2) {
         if (info.grid.grid_type == CODES_UTIL_GRID_SPEC_SH) {
             // For spherical harmonics, numberOfDataPoints is the number of real
