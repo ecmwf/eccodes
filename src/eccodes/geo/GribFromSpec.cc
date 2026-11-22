@@ -308,6 +308,10 @@ void set_grid_type_regular_gg(grib_info& info, const Grid& grid)
     info.grid.N = static_cast<long>(g.N());
     info.grid.iDirectionIncrementInDegrees = 90. / static_cast<double>(g.N());
 
+    const auto order = g.order();
+    info.grid.iScansNegatively = order.find("i-") != std::string::npos ? 1L : 0L;
+    info.grid.jScansPositively = order.find("j+") != std::string::npos ? 1L : 0L;
+
     info.grid.Ni = static_cast<long>(g.nx());
     info.grid.Nj = static_cast<long>(g.ny());
 
