@@ -37,3 +37,9 @@ ccsds_add_test(encode_concurrent LIBS Threads::Threads)
 ccsds_add_test(decode_parallel LIBS Threads::Threads)
 ccsds_add_test(encode_parallel LIBS Threads::Threads)
 
+# Out of range access must be detected in debug builds: compiled with assertions
+add_executable(span_bounds span_bounds.cc)
+target_link_libraries(span_bounds PRIVATE ccsds::spaec)
+target_compile_options(span_bounds PRIVATE -UNDEBUG)
+add_test(NAME ${CCSDS_TEST_PREFIX}span_bounds COMMAND span_bounds)
+
