@@ -4,6 +4,8 @@
 #include <cstring>
 #include <assert.h>
 #include <array>
+#include <stdexcept>
+#include <string>
 
 #include "ccsds/Span.h"
 #include "ccsds/CodeOption.h"
@@ -21,6 +23,12 @@ private:
         uint64_t val;
         std::memcpy(&val, ptr, sizeof(uint64_t));
         return val;
+    }
+
+protected:
+    [[noreturn]] __attribute__((cold, noinline)) static void throwCorrupt(const std::string& what)
+    {
+        throw std::runtime_error("CCSDS decoding failed: the compressed data is corrupt (" + what + ")");
     }
 
 public:
@@ -232,6 +240,10 @@ public:
         size_t length = buffer.readCodeword();
         assert(segment.size() % blockSizeV_ == 0 && "Segment size must be multiple of block size.");
         size_t blocksWritten = 0;
+        const size_t nBlocksInSegment = segment.size() / blockSizeV_;
+        if (blockOffset >= nBlocksInSegment) {
+            throwCorrupt("zero block at block " + std::to_string(blockOffset) + " of a segment of " + std::to_string(nBlocksInSegment) + " blocks");
+        }
 
         if (length == rosLength) {  // All zeros segment
             size_t start = blockOffset * blockSizeV_;
@@ -247,6 +259,9 @@ public:
         else {  // First n blocks are zeros
             if (length > rosLength) {
                 length--;
+            }
+            if (length > nBlocksInSegment - blockOffset) {
+                throwCorrupt("run of " + std::to_string(length) + " zero blocks, but only " + std::to_string(nBlocksInSegment - blockOffset) + " blocks remain in the segment");
             }
 
             blocksWritten = length;
