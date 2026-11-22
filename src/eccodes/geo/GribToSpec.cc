@@ -220,6 +220,12 @@ Condition* _or(const Condition* left, const Condition* right)
 */
 
 
+Condition* is_regular_gaussian()
+{
+    return _or(is("gridType", "regular_gg"), is("gridType", "rotated_gg"));
+}
+
+
 Condition* is_gaussian()
 {
     const auto* key = "gridType";
@@ -298,8 +304,14 @@ const char* get_key(const std::string& name, codes_handle* h)
         { "west_east_increment", "iDirectionIncrementInDegrees" },
         { "south_north_increment", "jDirectionIncrementInDegrees" },
 
+        { "west", "longitudeOfLastGridPointInDegrees_fix_for_regular_gaussian_grids",
+          _and(is("iScansNegatively", 1L), is_regular_gaussian()) },
+        { "east", "longitudeOfFirstGridPointInDegrees_fix_for_regular_gaussian_grids",
+          _and(is("iScansNegatively", 1L), is_regular_gaussian()) },
         { "west", "longitudeOfLastGridPointInDegrees", is("iScansNegatively", 1L) },
         { "east", "longitudeOfFirstGridPointInDegrees", is("iScansNegatively", 1L) },
+        { "west", "longitudeOfFirstGridPointInDegrees_fix_for_regular_gaussian_grids", is_regular_gaussian() },
+        { "east", "longitudeOfLastGridPointInDegrees_fix_for_regular_gaussian_grids", is_regular_gaussian() },
         { "west", "longitudeOfFirstGridPointInDegrees" },
         { "east", "longitudeOfLastGridPointInDegrees_fix_for_global_reduced_grids", is("gridType", "reduced_gg") },
         { "east", "longitudeOfLastGridPointInDegrees" },
@@ -666,6 +678,31 @@ ProcessingT<double>* latitudeOfLastGridPointInDegrees_fix_for_gaussian_grids()
         CHECK_CALL(codes_get_double(h, "latitudeOfLastGridPointInDegrees", &lat));
 
         lat = gaussian_latitude_snapped(N, lat, eps);
+        return true;
+    });
+}
+
+
+// GRIB longitudes are encoded to the angular precision, and grids are cropped exactly: a longitude that close to one of
+// a regular Gaussian grid (of ni longitudes, 4N or as encoded) is that longitude (so its column is kept)
+ProcessingT<double>* longitude_fix_for_regular_gaussian_grids(const char* key)
+{
+    return new ProcessingT<double>([key](codes_handle* h, double& lon) {
+        const auto eps = gaussian_precision(h);
+
+        long N = 0;
+        CHECK_CALL(codes_get_long(h, "N", &N));
+        ASSERT(N > 0);
+
+        long ni = 4 * N;
+        std::unique_ptr<ProcessingT<long>>(ni_fix_for_regular_gaussian_grids())->eval(h, ni);
+
+        CHECK_CALL(codes_get_double(h, key, &lon));
+
+        const auto inc = 360. / static_cast<double>(ni);
+        if (const auto snapped = std::round(lon / inc) * inc; eckit::types::is_approximately_equal(lon, snapped, eps)) {
+            lon = snapped;
+        }
         return true;
     });
 }
@@ -1504,6 +1541,10 @@ bool GribToSpec::get(const std::string& name, double& value) const
               latitudeOfFirstGridPointInDegrees_fix_for_gaussian_grids() },
             { "latitudeOfLastGridPointInDegrees_fix_for_gaussian_grids",
               latitudeOfLastGridPointInDegrees_fix_for_gaussian_grids() },
+            { "longitudeOfFirstGridPointInDegrees_fix_for_regular_gaussian_grids",
+              longitude_fix_for_regular_gaussian_grids("longitudeOfFirstGridPointInDegrees") },
+            { "longitudeOfLastGridPointInDegrees_fix_for_regular_gaussian_grids",
+              longitude_fix_for_regular_gaussian_grids("longitudeOfLastGridPointInDegrees") },
         };
 
         if (get_value(key, handle_, value, process)) {
