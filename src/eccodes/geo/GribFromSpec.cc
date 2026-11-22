@@ -360,24 +360,33 @@ void set_grid_type_reduced_gg(grib_info& info, const Grid& grid)
     const auto& g =
         dynamic_cast<const ::eckit::geo::grid::reduced::ReducedGaussian&>(grid);
 
-    info.grid.pl = g.pl().data();
-    info.grid.pl_size = static_cast<long>(g.pl().size());
-    info.grid.N = static_cast<long>(g.N());
+    // the rows with points (a sub-area has fewer), of their pl (number of points of the whole parallel)
+    size_t first = 0;
+    size_t last = g.latitudes().size();
+    while (first < last && g.longitudes(first).empty()) {
+        ++first;
+    }
+    while (last > first && g.longitudes(last - 1).empty()) {
+        --last;
+    }
+    ASSERT(first < last);
 
-    info.grid.Nj = static_cast<long>(g.ny());
+    info.grid.pl = g.pl().data() + first;
+    info.grid.pl_size = static_cast<long>(last - first);
+    info.grid.N = static_cast<long>(g.N());
+    info.grid.Nj = static_cast<long>(last - first);
 
     if (rotated) {
         // first/last grid points are in the unrotated frame, as encoded
-        const PointLonLat first{ g.longitudes(0).front(), g.latitudes().front() };
-        auto west = first.lon();
-        auto east = g.longitudes(0).back();
-        for (size_t j = 1; j < g.ny(); ++j) {
+        auto west = g.longitudes(first).front();
+        auto east = g.longitudes(first).back();
+        for (size_t j = first + 1; j < last; ++j) {
             if (const auto& lons = g.longitudes(j); !lons.empty()) {
                 west = std::min(west, lons.front());
                 east = std::max(east, lons.back());
             }
         }
-        BoundingBox(first.lat(), west, g.latitudes().back(), east).fillGrib(info);
+        BoundingBox(g.latitudes()[first], west, g.latitudes()[last - 1], east).fillGrib(info);
 
         Rotation rotation(dynamic_cast<const ::eckit::geo::projection::Rotation&>(grid.projection()));
         rotation.fillGrib(info);
