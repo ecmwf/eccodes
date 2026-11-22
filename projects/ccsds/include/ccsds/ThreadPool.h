@@ -9,33 +9,48 @@
 #include <future>
 #include <functional>
 #include <memory>
+#include <stdexcept>
 
 class ThreadPool
 {
 public:
     ThreadPool(size_t threads) : stop_(false)
     {
-        for (size_t i = 0; i < threads; ++i) {
-            workers_.emplace_back([this] {
-                for (;;) {
-                    std::function<void()> task;
-                    {
-                        std::unique_lock<std::mutex> lock(this->queueMutex_);
-                        this->condition_.wait(lock, [this] { return this->stop_ || !this->tasks_.empty(); });
-                        if (this->stop_ && this->tasks_.empty()) return;
-                        task = std::move(this->tasks_.front());
-                        this->tasks_.pop();
+        if (threads == 0) {
+            throw std::invalid_argument("ThreadPool: the number of threads must be at least 1");
+        }
+        try {
+            for (size_t i = 0; i < threads; ++i) {
+                workers_.emplace_back([this] {
+                    for (;;) {
+                        std::function<void()> task;
+                        {
+                            std::unique_lock<std::mutex> lock(this->queueMutex_);
+                            this->condition_.wait(lock, [this] { return this->stop_ || !this->tasks_.empty(); });
+                            if (this->stop_ && this->tasks_.empty()) return;
+                            task = std::move(this->tasks_.front());
+                            this->tasks_.pop();
+                        }
+                        task();
                     }
-                    task();
-                }
-            });
+                });
+            }
+        }
+        catch (...) {
+            // Thread creation failed (e.g. resource limit): join the threads already started,
+            // a joinable std::thread in the destroyed vector would call std::terminate
+            stopAndJoin();
+            throw;
         }
     }
 
     template <class F, class... Args>
     auto enqueue(F&& f, Args&&... args) -> std::future<typename std::result_of<F(Args...)>::type>;
 
-    ~ThreadPool()
+    ~ThreadPool() { stopAndJoin(); }
+
+private:
+    void stopAndJoin()
     {
         {
             std::unique_lock<std::mutex> lock(queueMutex_);
@@ -43,11 +58,12 @@ public:
         }
         condition_.notify_all();
         for (std::thread& worker : workers_) {
-            worker.join();
+            if (worker.joinable()) {
+                worker.join();
+            }
         }
     }
 
-private:
     std::vector<std::thread> workers_;
     std::queue<std::function<void()>> tasks_;
     std::mutex queueMutex_;
