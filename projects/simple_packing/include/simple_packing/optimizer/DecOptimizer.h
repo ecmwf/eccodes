@@ -50,7 +50,7 @@ public:
 
         params.decimalScaleFactor(decimalScaleFactor);
 
-        auto ref = nearest_smaller_value(min);
+        auto ref = nearest_smaller_value(min, referenceFloatType_);
         if (ref.has_value()) {
             params.referenceValue(ref.value());
         }

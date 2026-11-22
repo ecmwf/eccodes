@@ -160,11 +160,18 @@ int DataG2SimplePacking::pack_double(const double* cval, size_t* len)
                     optimizer = std::make_unique<DecOptimizer>(bpv_l, last);
                 }
 
+                // The reference value is stored as IBM float in GRIB edition 1, as IEEE float in edition 2
+                optimizer->referenceFloatType(FloatType::IEEE32);
+
                 SimplePackingBinary<double> sp(std::move(optimizer));
                 // min_val/max_val have already been computed above; do not rescan.
-                const Parameters params = std::get<0>(sp.getParameters(min_val, max_val));
+                Parameters params = std::get<0>(sp.getParameters(min_val, max_val));
 
                 if ((ret = grib_set_double_internal(gh, reference_value_, params.referenceValue())) != GRIB_SUCCESS) return ret;
+                // Pack against the reference value as it is coded in the message (like the legacy code)
+                double codedReference = 0;
+                if ((ret = grib_get_double_internal(gh, reference_value_, &codedReference)) != GRIB_SUCCESS) return ret;
+                params.referenceValue(codedReference);
                 if ((ret = grib_set_long_internal(gh, changing_precision_, 0)) != GRIB_SUCCESS) return ret;
                 if ((ret = grib_set_long_internal(gh, binary_scale_factor_, params.binaryScaleFactor())) != GRIB_SUCCESS) return ret;
                 if ((ret = grib_set_long_internal(gh, decimal_scale_factor_, params.decimalScaleFactor())) != GRIB_SUCCESS) return ret;

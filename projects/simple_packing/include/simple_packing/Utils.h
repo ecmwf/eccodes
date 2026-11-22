@@ -75,7 +75,17 @@ struct ieee_table_t
 };
 
 std::optional<long> number_of_bits(unsigned long x);
-std::optional<double> nearest_smaller_value(double val);
+
+// Floating-point format in which the reference value is stored:
+// IEEE 754 single precision (GRIB edition 2) or IBM single precision (GRIB edition 1)
+enum class FloatType
+{
+    IEEE32,
+    IBM32
+};
+
+// Largest value of the given format that is <= val (std::nullopt if there is none)
+std::optional<double> nearest_smaller_value(double val, FloatType type = FloatType::IEEE32);
 
 
 /* Minimum and maximum of an array.

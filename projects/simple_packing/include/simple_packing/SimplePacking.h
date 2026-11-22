@@ -25,14 +25,6 @@
 #include "simple_packing/codec/Array.h"
 
 
-enum class FloatType
-{
-    IEEE32,
-    IBM32,
-    UNKNOWN
-};
-
-
 template <typename ValueType>
 class SimplePacking
 {
@@ -62,7 +54,7 @@ public:
         }
 
         if (max == min) {
-            auto ref = nearest_smaller_value(min);
+            auto ref = nearest_smaller_value(min, optimizer_ ? optimizer_->referenceFloatType() : FloatType::IEEE32);
             if (ref.has_value()) {
                 params.referenceValue(ref.value());
             }

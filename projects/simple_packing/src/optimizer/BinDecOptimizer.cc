@@ -148,7 +148,7 @@ Parameters BinDecOptimizer::getParams(const double pmin, const double pmax)
         [[maybe_unused]] double max = pmax * decimal;
         long vmin, vmax;
         // if (grib_get_nearest_smaller_value(min, ref) != LIB_ECCODES_SUCCESS) {
-        auto ref = nearest_smaller_value(min);
+        auto ref = nearest_smaller_value(min, referenceFloatType_);
         if (ref.has_value()) {
             params.referenceValue(ref.value());
         }
@@ -199,7 +199,7 @@ Parameters BinDecOptimizer::getParams(const double pmin, const double pmax)
         }
 
         // if (grib_get_nearest_smaller_value(min, ref) != LIB_ECCODES_SUCCESS) {
-        auto ref = nearest_smaller_value(min);
+        auto ref = nearest_smaller_value(min, referenceFloatType_);
         if (ref.has_value()) {
             params.referenceValue(ref.value());
         }

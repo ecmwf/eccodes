@@ -29,7 +29,7 @@ public:
             throw std::runtime_error("Range of values too large. Try a smaller value for decimal precision");
         }
 
-        auto ref = nearest_smaller_value(min);
+        auto ref = nearest_smaller_value(min, referenceFloatType_);
         if (ref.has_value()) {
             params.referenceValue(ref.value());
         }
