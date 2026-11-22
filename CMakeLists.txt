@@ -478,6 +478,12 @@ include_directories(
 
 add_subdirectory( definitions ) # must be before memfs
 add_subdirectory( memfs )
+if( HAVE_CCSDS_SPAEC )
+    # Standalone header-only library, also installable on its own (see projects/ccsds)
+    set( CCSDS_BUILD_TESTS ${ENABLE_TESTS} )
+    set( CCSDS_INSTALL OFF )
+    add_subdirectory( projects/ccsds )
+endif()
 add_subdirectory( src )
 if( HAVE_BUILD_TOOLS )
     add_subdirectory( tools )
