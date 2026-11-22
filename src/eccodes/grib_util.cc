@@ -1431,6 +1431,24 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
         return err;
     }
 
+    // In place, the flags of the input's grid stay, so they are set as by a sample of the grid type: vector components
+    // relative to the grid of the spec (the input's grid isn't), and the increments given for grids with increments
+    if (grib_is_defined(h, "uvRelativeToGrid") &&
+        (err = grib_set_long(h, "uvRelativeToGrid", spec->uvRelativeToGrid)) != 0) {
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Cannot set uvRelativeToGrid: %s", __func__, grib_get_error_message(err));
+        return err;
+    }
+
+    if ((spec->grid_type == GRIB_UTIL_GRID_SPEC_HEALPIX || spec->grid_type == GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL ||
+         spec->grid_type == GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA ||
+         spec->grid_type == GRIB_UTIL_GRID_SPEC_POLAR_STEREOGRAPHIC) &&
+        grib_is_defined(h, "ijDirectionIncrementGiven") &&
+        (err = grib_set_long(h, "ijDirectionIncrementGiven", 1)) != 0) {
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Cannot set ijDirectionIncrementGiven: %s", __func__,
+                         grib_get_error_message(err));
+        return err;
+    }
+
     // GRIB-857: Set "pl" array if provided (For reduced Gaussian grids)
     // Note: We must set the PL array after we've submitted the key/values and gridType
     ECCODES_ASSERT(spec->pl_size >= 0);
