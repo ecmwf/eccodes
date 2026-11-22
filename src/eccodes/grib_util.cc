@@ -1412,6 +1412,20 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
         }
     }
 
+    // In place (unlike from a sample of the grid type), the grid keys of gridded data aren't defined for spectral data
+    // and vice versa, so changing between them changes the data representation first
+    if (const bool spectralInput = strncmp(input_packing_type, "spectral_", 9) == 0,
+        spectralOutput = spec->grid_type == GRIB_UTIL_GRID_SPEC_SH;
+        spectralInput != spectralOutput) {
+        const char* packingType = spectralOutput ? "spectral_complex" : "grid_simple";
+        size_t packingTypeLen = strlen(packingType);
+        if ((err = grib_set_string(h, "packingType", packingType, &packingTypeLen)) != 0) {
+            grib_context_log(c, GRIB_LOG_ERROR, "%s: Cannot set packingType=%s: %s", __func__, packingType,
+                             grib_get_error_message(err));
+            return err;
+        }
+    }
+
     if ((err = grib_set_values(h, values, count)) != 0) {
         grib_context_log(c, GRIB_LOG_ERROR, "%s: Cannot set key values: %s", __func__, grib_get_error_message(err));
         return err;
