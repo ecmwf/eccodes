@@ -52,3 +52,6 @@ add_test(NAME ${SP_TEST_PREFIX}unpack_buffer_size COMMAND sp_unpack_buffer_size)
 
 sp_add_test(field_range)
 add_test(NAME ${SP_TEST_PREFIX}field_range COMMAND sp_field_range)
+
+sp_add_test(optimizer_parameters)
+add_test(NAME ${SP_TEST_PREFIX}optimizer_parameters COMMAND sp_optimizer_parameters)
