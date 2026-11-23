@@ -249,6 +249,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ccsds_truncated
         grib_reference_value_not_finite
         grib_bitmap_truncated
+        grib2_section_length_corrupt
         grib_paramtypeConcept
         grib_element
         grib_change_packing
