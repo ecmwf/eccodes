@@ -40,7 +40,13 @@ public:
         }
 
         /* bits_per_value = ceil(log2(fabs(max - min))) (ceil: see GRIB-540) */
-        auto bpv = number_of_bits((unsigned long)ceil(fabs(max - min)));
+        // The ceil() result must fit into an unsigned long, otherwise the conversion is
+        // undefined: such a range cannot be counted in bits anyway
+        const double scaledRange = ceil(fabs(max - min));
+        if (!(scaledRange <= 9.223372036854775808e18)) {
+            throw std::runtime_error("Range of values too large. Try a smaller value for decimal precision");
+        }
+        auto bpv = number_of_bits(static_cast<unsigned long>(scaledRange));
         if (bpv.has_value()) {
             params.bitsPerValue(bpv.value());
         }
