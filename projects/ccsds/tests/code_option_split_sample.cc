@@ -6,7 +6,6 @@
 #include <exception>
 #include "ccsds/CodeOption.h"
 
-
 template <size_t K>
 void testK1()
 {
@@ -142,14 +141,6 @@ void testK1()
     }
 
     // Restricted
-    // {
-    //     SplitSampleCodeOption co(1, K, CodeOptionSet::Restricted);
-    //     assert(co.length == 2);
-    // }
-    // {
-    //     SplitSampleCodeOption co(2, K, CodeOptionSet::Restricted);
-    //     assert(co.length == 2);
-    // }
     {
         SplitSampleCodeOption co(3, K, CodeOptionSet::Restricted);
         assert(co.length == 2);
@@ -408,22 +399,6 @@ void testK2_5()
     }
 
     // Restricted
-    // {
-    //     SplitSampleCodeOption co(1, K, CodeOptionSet::Restricted);
-    //     assert(co.length == 2);
-    // }
-    // {
-    //     SplitSampleCodeOption co(2, K, CodeOptionSet::Restricted);
-    //     assert(co.length == 2);
-    // }
-    // {
-    //     SplitSampleCodeOption co(3, K, CodeOptionSet::Restricted);
-    //     assert(co.length == 2);
-    // }
-    // {
-    //     SplitSampleCodeOption co(4, K, CodeOptionSet::Restricted);
-    //     assert(co.length == 2);
-    // }
     {
         SplitSampleCodeOption co(5, K, CodeOptionSet::Restricted);
         assert(co.length == 3);
@@ -543,38 +518,6 @@ template <size_t K>
 void testK6_13()
 {
     // Basic
-    // {
-    //     SplitSampleCodeOption co(1, K, CodeOptionSet::Basic);
-    //     assert(co.length == 3);
-    // }
-    // {
-    //     SplitSampleCodeOption co(2, K, CodeOptionSet::Basic);
-    //     assert(co.length == 3);
-    // }
-    // {
-    //     SplitSampleCodeOption co(3, K, CodeOptionSet::Basic);
-    //     assert(co.length == 3);
-    // }
-    // {
-    //     SplitSampleCodeOption co(4, K, CodeOptionSet::Basic);
-    //     assert(co.length == 3);
-    // }
-    // {
-    //     SplitSampleCodeOption co(5, K, CodeOptionSet::Basic);
-    //     assert(co.length == 3);
-    // }
-    // {
-    //     SplitSampleCodeOption co(6, K, CodeOptionSet::Basic);
-    //     assert(co.length == 3);
-    // }
-    // {
-    //     SplitSampleCodeOption co(7, K, CodeOptionSet::Basic);
-    //     assert(co.length == 3);
-    // }
-    // {
-    //     SplitSampleCodeOption co(8, K, CodeOptionSet::Basic);
-    //     assert(co.length == 3);
-    // }
     {
         SplitSampleCodeOption co(9, K, CodeOptionSet::Basic);
         assert(co.length == 4);
@@ -673,38 +616,6 @@ void testK6_13()
     }
 
     // Restricted
-    // {
-    //     SplitSampleCodeOption co(1, K, CodeOptionSet::Restricted);
-    //     assert(co.length == 2);
-    // }
-    // {
-    //     SplitSampleCodeOption co(2, K, CodeOptionSet::Restricted);
-    //     assert(co.length == 2);
-    // }
-    // {
-    //     SplitSampleCodeOption co(3, K, CodeOptionSet::Restricted);
-    //     assert(co.length == 2);
-    // }
-    // {
-    //     SplitSampleCodeOption co(4, K, CodeOptionSet::Restricted);
-    //     assert(co.length == 2);
-    // }
-    // {
-    //     SplitSampleCodeOption co(5, K, CodeOptionSet::Restricted);
-    //     assert(co.length == 3);
-    // }
-    // {
-    //     SplitSampleCodeOption co(6, K, CodeOptionSet::Restricted);
-    //     assert(co.length == 3);
-    // }
-    // {
-    //     SplitSampleCodeOption co(7, K, CodeOptionSet::Restricted);
-    //     assert(co.length == 3);
-    // }
-    // {
-    //     SplitSampleCodeOption co(8, K, CodeOptionSet::Restricted);
-    //     assert(co.length == 3);
-    // }
     {
         SplitSampleCodeOption co(9, K, CodeOptionSet::Restricted);
         assert(co.length == 4);
@@ -808,70 +719,6 @@ template <size_t K>
 void testK14_29()
 {
     // Basic
-    // {
-    //     SplitSampleCodeOption co(1, K, CodeOptionSet::Basic);
-    //     assert(co.length == 3);
-    // }
-    // {
-    //     SplitSampleCodeOption co(2, K, CodeOptionSet::Basic);
-    //     assert(co.length == 3);
-    // }
-    // {
-    //     SplitSampleCodeOption co(3, K, CodeOptionSet::Basic);
-    //     assert(co.length == 3);
-    // }
-    // {
-    //     SplitSampleCodeOption co(4, K, CodeOptionSet::Basic);
-    //     assert(co.length == 3);
-    // }
-    // {
-    //     SplitSampleCodeOption co(5, K, CodeOptionSet::Basic);
-    //     assert(co.length == 3);
-    // }
-    // {
-    //     SplitSampleCodeOption co(6, K, CodeOptionSet::Basic);
-    //     assert(co.length == 3);
-    // }
-    // {
-    //     SplitSampleCodeOption co(7, K, CodeOptionSet::Basic);
-    //     assert(co.length == 3);
-    // }
-    // {
-    //     SplitSampleCodeOption co(8, K, CodeOptionSet::Basic);
-    //     assert(co.length == 3);
-    // }
-    // {
-    //     SplitSampleCodeOption co(9, K, CodeOptionSet::Basic);
-    //     assert(co.length == 4);
-    // }
-    // {
-    //     SplitSampleCodeOption co(10, K, CodeOptionSet::Basic);
-    //     assert(co.length == 4);
-    // }
-    // {
-    //     SplitSampleCodeOption co(11, K, CodeOptionSet::Basic);
-    //     assert(co.length == 4);
-    // }
-    // {
-    //     SplitSampleCodeOption co(12, K, CodeOptionSet::Basic);
-    //     assert(co.length == 4);
-    // }
-    // {
-    //     SplitSampleCodeOption co(13, K, CodeOptionSet::Basic);
-    //     assert(co.length == 4);
-    // }
-    // {
-    //     SplitSampleCodeOption co(14, K, CodeOptionSet::Basic);
-    //     assert(co.length == 4);
-    // }
-    // {
-    //     SplitSampleCodeOption co(15, K, CodeOptionSet::Basic);
-    //     assert(co.length == 4);
-    // }
-    // {
-    //     SplitSampleCodeOption co(16, K, CodeOptionSet::Basic);
-    //     assert(co.length == 4);
-    // }
     {
         SplitSampleCodeOption co(17, K, CodeOptionSet::Basic);
         assert(co.length == 5);
@@ -938,70 +785,6 @@ void testK14_29()
         assert(co.length == 5);
     }
     // Restricted
-    // {
-    //     SplitSampleCodeOption co(1, K, CodeOptionSet::Restricted);
-    //     assert(co.length == 2);
-    // }
-    // {
-    //     SplitSampleCodeOption co(2, K, CodeOptionSet::Restricted);
-    //     assert(co.length == 2);
-    // }
-    // {
-    //     SplitSampleCodeOption co(3, K, CodeOptionSet::Restricted);
-    //     assert(co.length == 2);
-    // }
-    // {
-    //     SplitSampleCodeOption co(4, K, CodeOptionSet::Restricted);
-    //     assert(co.length == 2);
-    // }
-    // {
-    //     SplitSampleCodeOption co(5, K, CodeOptionSet::Restricted);
-    //     assert(co.length == 3);
-    // }
-    // {
-    //     SplitSampleCodeOption co(6, K, CodeOptionSet::Restricted);
-    //     assert(co.length == 3);
-    // }
-    // {
-    //     SplitSampleCodeOption co(7, K, CodeOptionSet::Restricted);
-    //     assert(co.length == 3);
-    // }
-    // {
-    //     SplitSampleCodeOption co(8, K, CodeOptionSet::Restricted);
-    //     assert(co.length == 3);
-    // }
-    // {
-    //     SplitSampleCodeOption co(9, K, CodeOptionSet::Restricted);
-    //     assert(co.length == 4);
-    // }
-    // {
-    //     SplitSampleCodeOption co(10, K, CodeOptionSet::Restricted);
-    //     assert(co.length == 4);
-    // }
-    // {
-    //     SplitSampleCodeOption co(11, K, CodeOptionSet::Restricted);
-    //     assert(co.length == 4);
-    // }
-    // {
-    //     SplitSampleCodeOption co(12, K, CodeOptionSet::Restricted);
-    //     assert(co.length == 4);
-    // }
-    // {
-    //     SplitSampleCodeOption co(13, K, CodeOptionSet::Restricted);
-    //     assert(co.length == 4);
-    // }
-    // {
-    //     SplitSampleCodeOption co(14, K, CodeOptionSet::Restricted);
-    //     assert(co.length == 4);
-    // }
-    // {
-    //     SplitSampleCodeOption co(15, K, CodeOptionSet::Restricted);
-    //     assert(co.length == 4);
-    // }
-    // {
-    //     SplitSampleCodeOption co(16, K, CodeOptionSet::Restricted);
-    //     assert(co.length == 4);
-    // }
     {
         SplitSampleCodeOption co(17, K, CodeOptionSet::Restricted);
         assert(co.length == 5);

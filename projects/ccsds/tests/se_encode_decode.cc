@@ -25,8 +25,6 @@ void testRefEncodeDecode(Span<ValueType> block)
     BitBuffer bitBuffer(vec);      // Extra space for overhead
 
     {
-        // SecondExtensionEncoder<ValueType, BPV, ReferenceType::Ref, CodeOptionSet::Basic, blockSize> se{block};
-        // se.encode(bitBuffer);
         encoder::EncoderSeq<ValueType, ValueType> seIres{ BPV, blockSize, rsiSize, CodeOptionSet::Basic };
         size_t expectedSize = seIres.sePrepare<ReferenceType::Ref>(block);
         seIres.seEncode<ReferenceType::Ref>(bitBuffer);
@@ -67,7 +65,6 @@ void testRefEncodeDecode(Span<ValueType> block)
     }
     std::cout << "Test passed for block of size " << block.size() << '\n';
 }
-
 
 void testNorefEncodeDecode(Span<ValueType> block)
 {
@@ -112,7 +109,6 @@ void testNorefEncodeDecode(Span<ValueType> block)
     }
     std::cout << "Test passed for block of size " << block.size() << '\n';
 }
-
 
 int main()
 {
