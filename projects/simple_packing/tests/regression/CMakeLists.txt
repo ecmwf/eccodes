@@ -37,6 +37,9 @@ add_test(NAME ${SP_TEST_PREFIX}optimizer_direct_range COMMAND sp_optimizer_direc
 sp_add_test(optimizer_scaling_overflow)
 add_test(NAME ${SP_TEST_PREFIX}optimizer_scaling_overflow COMMAND sp_optimizer_scaling_overflow)
 
+sp_add_test(binary_scale_tiny_range)
+add_test(NAME ${SP_TEST_PREFIX}binary_scale_tiny_range COMMAND sp_binary_scale_tiny_range)
+
 sp_add_test(dec64_optimizer)
 add_test(NAME ${SP_TEST_PREFIX}dec64_optimizer COMMAND sp_dec64_optimizer)
 
