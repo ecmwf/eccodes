@@ -598,14 +598,13 @@ public:
         buffer.checkPos();
     }
 
-    template <typename... Args>
-    DecoderSeq(uint8_t bpv, uint8_t block_size, uint16_t rsiSize, CodeOptionSet codeOptionSet, Args&&... args) :
+    DecoderSeq(uint8_t bpv, uint8_t block_size, uint16_t rsiSize, CodeOptionSet codeOptionSet) :
         bpv_((validateCcsdsParameters(bpv, block_size, rsiSize, 8 * std::min(sizeof(ValueType), sizeof(DeltaType))), bpv)),
         blockSizeV_(block_size),
         rsiSizeB_(rsiSize),
         rsiSizeV_(rsiSize * block_size),
         codeOptionSet_(codeOptionSet),
-        preprocessor_(bpv, std::forward<Args>(args)...)
+        preprocessor_(bpv)
     {
         noCompressionId_ = (1u << (maxIdLength - 1)) - 1;
     }

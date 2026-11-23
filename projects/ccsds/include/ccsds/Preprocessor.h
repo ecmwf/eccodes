@@ -2,7 +2,6 @@
 
 #include <cmath>
 #include <cstdint>
-#include <utility>
 #include <type_traits>
 
 #include "ccsds/Span.h"
@@ -40,12 +39,7 @@ template <typename ValueType, typename DeltaType = ValueType, typename EncodeFun
 class PredictivePreprocessingEncodeFast : public Preprocessor<ValueType, DeltaType>
 {
 public:
-    PredictivePreprocessingEncodeFast() = default;
-
-    template <typename... Args>
-    PredictivePreprocessingEncodeFast(uint8_t bpv, Args... args) : Preprocessor<ValueType, DeltaType>(bpv), encodeFunc_(std::forward<Args>(args)...)
-    {
-    }
+    explicit PredictivePreprocessingEncodeFast(uint8_t bpv) : Preprocessor<ValueType, DeltaType>(bpv) {}
 
     void encode(Span<ValueType> data, Span<DeltaType> mapped)
     {
@@ -73,13 +67,7 @@ template <typename ValueType, typename DeltaType = ValueType, typename DecodeFun
 class PredictivePreprocessingDecodeFast : public Preprocessor<ValueType, DeltaType>
 {
 public:
-    PredictivePreprocessingDecodeFast() = default;
-    PredictivePreprocessingDecodeFast(uint8_t bpv) : Preprocessor<ValueType, DeltaType>(bpv) {}
-
-    template <typename... Args>
-    PredictivePreprocessingDecodeFast(uint8_t bpv, Args... args) : Preprocessor<ValueType, DeltaType>(bpv), decodeFunc_(std::forward<Args>(args)...)
-    {
-    }
+    explicit PredictivePreprocessingDecodeFast(uint8_t bpv) : Preprocessor<ValueType, DeltaType>(bpv) {}
 
     void decode(Span<DeltaType> mapped_span, ValueType reference, Span<ValueType> data_span)
     {

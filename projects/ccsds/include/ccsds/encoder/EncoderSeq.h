@@ -443,10 +443,9 @@ public:
         return (buffer.bitPos() + 7) / 8;
     }
 
-    template <typename... Args>
-    EncoderSeq(uint8_t bpv, uint8_t block_size, uint16_t rsiSize, CodeOptionSet codeOptionSet, Args&&... args) : EncoderBase<ValueType, DeltaType>(bpv, block_size, rsiSize, codeOptionSet),
-                                                                                                                 preprocessor_(bpv, std::forward<Args>(args)...),
-                                                                                                                 preprocessBuffer_(rsiSize * block_size)
+    EncoderSeq(uint8_t bpv, uint8_t block_size, uint16_t rsiSize, CodeOptionSet codeOptionSet) : EncoderBase<ValueType, DeltaType>(bpv, block_size, rsiSize, codeOptionSet),
+                                                                                                  preprocessor_(bpv),
+                                                                                                  preprocessBuffer_(rsiSize * block_size)
     {
         seState_.encodedValues_.resize(blockSizeV_ / 2);
     }
