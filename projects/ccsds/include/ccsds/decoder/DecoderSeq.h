@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <bit>
 #include <cassert>
 #include <cstddef>
@@ -212,8 +213,12 @@ public:
     }
 
     // ZB
+    // maxBlocks caps the run length: the number of blocks still available at blockOffset,
+    // in the segment or, for the last RSI of a shorter target, in the whole RSI (the run
+    // may legitimately cover blocks beyond the requested values, like libaec, which stops
+    // with success when its output is full)
     template <ReferenceType RType>
-    size_t zbDecode(const BitBuffer& buffer, Span<ValueType> segment, size_t blockOffset)
+    size_t zbDecode(const BitBuffer& buffer, Span<ValueType> segment, size_t blockOffset, size_t maxBlocks)
     {
         size_t length = buffer.readCodeword();
         assert(segment.size() % blockSizeV_ == 0 && "Segment size must be multiple of block size.");
@@ -238,11 +243,13 @@ public:
             if (length > rosLength) {
                 length--;
             }
-            if (length > nBlocksInSegment - blockOffset) {
-                throwCorrupt("run of " + std::to_string(length) + " zero blocks, but only " + std::to_string(nBlocksInSegment - blockOffset) + " blocks remain in the segment");
+            if (length > maxBlocks - blockOffset) {
+                throwCorrupt("run of " + std::to_string(length) + " zero blocks, but only " + std::to_string(maxBlocks - blockOffset) + " blocks remain");
             }
 
-            blocksWritten = length;
+            // A run may reach beyond the segment if it still fits in the RSI: the requested
+            // values are then exhausted, so the run is cut at the end of the segment
+            blocksWritten = std::min(length, nBlocksInSegment - blockOffset);
 
             size_t start = blockOffset * blockSizeV_;
             std::memset(&segment[start], 0, blocksWritten * blockSizeV_ * sizeof(ValueType));
@@ -311,7 +318,8 @@ public:
 
 
     // SEGMENT
-    ValueType decodeRefFullSegment(const BitBuffer& buffer, Span<ValueType> segment)
+    // maxBlocks is the zero-block run limit handed to zbDecode (see there)
+    ValueType decodeRefFullSegment(const BitBuffer& buffer, Span<ValueType> segment, size_t maxBlocks)
     {
         assert(segment.size() % blockSizeV_ == 0 && "Segment size must be multiple of block size.");
 
@@ -326,7 +334,7 @@ public:
         if (id == 0) {
             buffer.skipBits(maxIdLength);
             reference = buffer.template readBits<ValueType>(bpv_);
-            pos += zbDecode<ReferenceType::Ref>(buffer, segment, pos);
+            pos += zbDecode<ReferenceType::Ref>(buffer, segment, pos, maxBlocks);
         }
         else {
             reference = handleRefBlock(buffer, id, blocks.full(0));
@@ -339,7 +347,7 @@ public:
             const auto nextId = buffer.peekBits(maxIdLength);
             if (nextId == 0) {
                 buffer.skipBits(maxIdLength);
-                pos += zbDecode<ReferenceType::NoRef>(buffer, segment, pos);
+                pos += zbDecode<ReferenceType::NoRef>(buffer, segment, pos, maxBlocks);
             }
             else {
                 handleBlock(buffer, nextId, blocks.full(pos));
@@ -353,7 +361,7 @@ public:
         return reference;
     }
 
-    void decodeAltFullSegment(const BitBuffer& buffer, Span<ValueType> segment)
+    void decodeAltFullSegment(const BitBuffer& buffer, Span<ValueType> segment, size_t maxBlocks)
     {
         assert(segment.size() % blockSizeV_ == 0 && "Segment size must be multiple of block size.");
         SplitBlock<ValueType> blocks(segment, blockSizeV_);
@@ -366,7 +374,7 @@ public:
                 assert(pos < segment.size() / blockSizeV_ && "Position exceeds number of blocks in segment.");
 
                 buffer.skipBits(maxIdLength);
-                pos += zbDecode<ReferenceType::NoRef>(buffer, segment, pos);
+                pos += zbDecode<ReferenceType::NoRef>(buffer, segment, pos, maxBlocks);
             }
             else {
                 handleBlock(buffer, id, blocks.full(pos));
@@ -378,20 +386,21 @@ public:
     }
 
     // Decodes a trailing partial segment: decode a zero-padded full segment and copy back.
+    // maxBlocks is the zero-block run limit handed to the segment decoders (see zbDecode).
     template <bool HasReference>
-    auto decodePartSegment(const BitBuffer& buffer, Span<ValueType> segment)
+    auto decodePartSegment(const BitBuffer& buffer, Span<ValueType> segment, size_t maxBlocks)
     {
         size_t newSize = (segment.size() + blockSizeV_ - 1) / blockSizeV_ * blockSizeV_;
         paddedSegmentBuf_.resize(newSize);
         std::memset(paddedSegmentBuf_.data(), 0, newSize * sizeof(ValueType));
         Span<ValueType> paddedSpan{ paddedSegmentBuf_.data(), paddedSegmentBuf_.size() };
         if constexpr (HasReference) {
-            ValueType reference = decodeRefFullSegment(buffer, paddedSpan);
+            ValueType reference = decodeRefFullSegment(buffer, paddedSpan, maxBlocks);
             copyBackPartSegment(segment);
             return reference;
         }
         else {
-            decodeAltFullSegment(buffer, paddedSpan);
+            decodeAltFullSegment(buffer, paddedSpan, maxBlocks);
             copyBackPartSegment(segment);
             return ValueType(0);
         }
@@ -405,7 +414,11 @@ public:
     }
 
     // RSI
-    ValueType decodeRsiRaw(const BitBuffer& buffer, size_t rsiSize)
+    // maxRunBlocks is the number of blocks the zero-block runs of this RSI may cover: 0
+    // limits them to the blocks of their segment, the block count of the RSI as encoded
+    // (rsiSizeB_) allows them to reach beyond the requested values of a shorter target
+    // (see zbDecode)
+    ValueType decodeRsiRaw(const BitBuffer& buffer, size_t rsiSize, size_t maxRunBlocks)
     {
         rsiBuf_.resize(rsiSize);
         Span<ValueType> rsiBufSpan(rsiBuf_);
@@ -414,26 +427,33 @@ public:
         ValueType reference = 0;
 
         if (rsiSize < maxSegmentSizeV_) {
-            reference = decodePartSegment<true>(buffer, segments.part());
+            // The whole RSI is one (padded) segment: its own blocks are the strict limit
+            const size_t segmentBlocks = (rsiSize + blockSizeV_ - 1) / blockSizeV_;
+            reference = decodePartSegment<true>(buffer, segments.part(),
+                                                maxRunBlocks != 0 ? maxRunBlocks : segmentBlocks);
         }
         else {
-            reference = decodeRefFullSegment(buffer, segments.full(0));
+            reference = decodeRefFullSegment(buffer, segments.full(0), maxSegmentSizeB_);
 
             for (size_t i = 1; i < segments.nFull(); ++i) {
-                decodeAltFullSegment(buffer, segments.full(i));
+                decodeAltFullSegment(buffer, segments.full(i), maxSegmentSizeB_);
             }
 
             if (segments.hasPart()) {
-                decodePartSegment<false>(buffer, segments.part());
+                const size_t segmentBlocks = (segments.part().size() + blockSizeV_ - 1) / blockSizeV_;
+                const size_t maxBlocks = maxRunBlocks != 0
+                                                     ? maxRunBlocks - segments.nFull() * maxSegmentSizeB_
+                                                     : segmentBlocks;
+                decodePartSegment<false>(buffer, segments.part(), maxBlocks);
             }
         }
 
         return reference;
     }
 
-    void decodeRefFullRsi(const BitBuffer& buffer, Span<ValueType> rsi)
+    void decodeRefFullRsi(const BitBuffer& buffer, Span<ValueType> rsi, size_t maxRunBlocks)
     {
-        ValueType reference = decodeRsiRaw(buffer, rsi.size());
+        ValueType reference = decodeRsiRaw(buffer, rsi.size(), maxRunBlocks);
         preprocessor_.decode(Span<DeltaType>(rsiBuf_), reference, rsi);
     }
 
@@ -515,10 +535,10 @@ public:
         const BitBuffer buffer = makeBuffer(source);
         SplitBlock<ValueType> chunks(target, rsiSizeV_);
         for (size_t i = 0; i < chunks.nFull(); ++i) {
-            decodeRefFullRsi(buffer, chunks.full(i));
+            decodeRefFullRsi(buffer, chunks.full(i), 0);
         }
         if (chunks.hasPart()) {
-            decodeRefFullRsi(buffer, chunks.part());
+            decodeRefFullRsi(buffer, chunks.part(), rsiSizeB_);
         }
         buffer.checkPos();
         bitsDecoded_ = buffer.bitPos();
@@ -549,14 +569,14 @@ public:
         size_t remainder = nValues % rsiSizeV_;
 
         for (size_t i = 0; i < nFull; ++i) {
-            ValueType reference = decodeRsiRaw(buffer, rsiSizeV_);
+            ValueType reference = decodeRsiRaw(buffer, rsiSizeV_, 0);
             preprocessor_.decodeFused(
                 rsiBuf_.data(), rsiSizeV_,
                 reference, i * rsiSizeV_, outputFunc);
         }
 
         if (remainder > 0) {
-            ValueType reference = decodeRsiRaw(buffer, remainder);
+            ValueType reference = decodeRsiRaw(buffer, remainder, rsiSizeB_);
             preprocessor_.decodeFused(
                 rsiBuf_.data(), remainder,
                 reference, nFull * rsiSizeV_, outputFunc);
