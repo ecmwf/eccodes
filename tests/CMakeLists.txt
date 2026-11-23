@@ -16,6 +16,7 @@ list(APPEND test_c_bins
     wmo_read_any_from_stream
     grib_bpv_limit
     grib_double_cmp
+    grib_element_index_range
     read_any
     julian
     grib_update_sections_lengths
@@ -239,6 +240,7 @@ if( HAVE_BUILD_TOOLS )
         grib_bpv_limit
         grib_complex
         grib_double_cmp
+        grib_element_index_range
         grib_paramtypeConcept
         grib_element
         grib_change_packing
