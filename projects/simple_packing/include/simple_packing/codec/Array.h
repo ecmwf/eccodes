@@ -25,7 +25,7 @@ public:
     using CodedValues = std::vector<CodedValueType>;
 
     CodedValues pack(const Values& values, int decimalScaleFactor, int binaryScaleFactor, ValueType referenceValue, ValueType /*min*/, ValueType /*max*/);
-    Values unpack(const CodedValues& codedValues, int decimalScaleFactor, int binaryScaleFactor, ValueType referenceValue, size_t /*nVals*/);
+    Values unpack(const CodedValues& codedValues, int decimalScaleFactor, int binaryScaleFactor, double referenceValue, size_t /*nVals*/);
 };
 
 
@@ -50,15 +50,16 @@ typename ArrayCodec<ValueType, BPV>::CodedValues ArrayCodec<ValueType, BPV>::pac
 
 
 template <typename ValueType, uint8_t BPV>
-typename ArrayCodec<ValueType, BPV>::Values ArrayCodec<ValueType, BPV>::unpack(const CodedValues& codedValues, int decimalScaleFactor, int binaryScaleFactor, ValueType referenceValue, size_t /*nVals*/)
+typename ArrayCodec<ValueType, BPV>::Values ArrayCodec<ValueType, BPV>::unpack(const CodedValues& codedValues, int decimalScaleFactor, int binaryScaleFactor, double referenceValue, size_t /*nVals*/)
 {
-    const ValueType s = sp_power<ValueType>(binaryScaleFactor, 2);
-    const ValueType d = sp_power<ValueType>(-decimalScaleFactor, 10);
+    // Computed like the legacy ecCodes code, see Binary::unpackTo
+    const double s = sp_power<ValueType>(binaryScaleFactor, 2);
+    const double d = sp_power<ValueType>(-decimalScaleFactor, 10);
 
     Values values(codedValues.size());
 
     auto decode = [&](auto val) {
-        return ((static_cast<ValueType>(val) * s) + referenceValue) * d;
+        return static_cast<ValueType>((static_cast<double>(val) * s + referenceValue) * d);
     };
 
     std::transform(codedValues.begin(), codedValues.end(), values.begin(),

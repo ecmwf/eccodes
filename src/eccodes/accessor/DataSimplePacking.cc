@@ -314,7 +314,7 @@ int DataSimplePacking::unpack(T* val, size_t* len)
             params.bitsPerValue(bits_per_value);
             params.binaryScaleFactor(binary_scale_factor);
             params.decimalScaleFactor(decimal_scale_factor);
-            params.referenceValue(static_cast<T>(reference_value));
+            params.referenceValue(reference_value);  // in double, like the legacy code
 
             // Decode straight into the caller's array: no intermediate copy
             // of either the coded bytes or the decoded field.

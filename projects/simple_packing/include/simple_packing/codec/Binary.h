@@ -22,13 +22,13 @@ public:
     virtual ~BinaryInterface() = default;
 
     virtual Buffer pack(const Values& values, int decimalScaleFactor, int binaryScaleFactor, ValueType referenceValue, ValueType min, ValueType max) = 0;
-    virtual Values unpack(const Buffer& codedBuf, int decimalScaleFactor, int binaryScaleFactor, ValueType referenceValue, size_t nVals) = 0;
+    virtual Values unpack(const Buffer& codedBuf, int decimalScaleFactor, int binaryScaleFactor, double referenceValue, size_t nVals) = 0;
 
     // Zero-copy variants: read from / write into caller-owned memory.
     // 'out' must hold at least (BPV * nVals + 7) / 8 bytes (packTo) or
     // nVals elements (unpackTo).
     virtual void packTo(const ValueType* values, size_t nVals, int decimalScaleFactor, int binaryScaleFactor, ValueType referenceValue, unsigned char* out) = 0;
-    virtual void unpackTo(const unsigned char* codedBuf, int decimalScaleFactor, int binaryScaleFactor, ValueType referenceValue, size_t nVals, ValueType* out) = 0;
+    virtual void unpackTo(const unsigned char* codedBuf, int decimalScaleFactor, int binaryScaleFactor, double referenceValue, size_t nVals, ValueType* out) = 0;
 };
 
 template <typename ValueType, uint8_t BPV>
@@ -42,9 +42,9 @@ public:
     using Buffer = std::vector<unsigned char>;
 
     Buffer pack(const Values& values, int decimalScaleFactor, int binaryScaleFactor, ValueType referenceValue, ValueType min, ValueType max) override;
-    Values unpack(const Buffer& codedBuf, int decimalScaleFactor, int binaryScaleFactor, ValueType referenceValue, size_t nVals) override;
+    Values unpack(const Buffer& codedBuf, int decimalScaleFactor, int binaryScaleFactor, double referenceValue, size_t nVals) override;
     void packTo(const ValueType* values, size_t nVals, int decimalScaleFactor, int binaryScaleFactor, ValueType referenceValue, unsigned char* out) override;
-    void unpackTo(const unsigned char* codedBuf, int decimalScaleFactor, int binaryScaleFactor, ValueType referenceValue, size_t nVals, ValueType* out) override;
+    void unpackTo(const unsigned char* codedBuf, int decimalScaleFactor, int binaryScaleFactor, double referenceValue, size_t nVals, ValueType* out) override;
 };
 
 
@@ -97,13 +97,16 @@ void Binary<ValueType, BPV>::packTo(const ValueType* values, size_t nVals, int d
 
 
 template <typename ValueType, uint8_t BPV>
-void Binary<ValueType, BPV>::unpackTo(const unsigned char* codedBuf, int decimalScaleFactor, int binaryScaleFactor, ValueType referenceValue, size_t nVals, ValueType* out)
+void Binary<ValueType, BPV>::unpackTo(const unsigned char* codedBuf, int decimalScaleFactor, int binaryScaleFactor, double referenceValue, size_t nVals, ValueType* out)
 {
-    const ValueType s = sp_power<ValueType>(binaryScaleFactor, 2);
-    const ValueType d = sp_power<ValueType>(-decimalScaleFactor, 10);
+    // Like the legacy ecCodes code: the powers are computed in ValueType, the scaling in double,
+    // and the result is rounded to ValueType once (scaling in float loses the low bits of values
+    // with more than 24 bits and cancels catastrophically near zero)
+    const double s = sp_power<ValueType>(binaryScaleFactor, 2);
+    const double d = sp_power<ValueType>(-decimalScaleFactor, 10);
 
-    auto decode = [&](const ValueType& val) {
-        return (static_cast<ValueType>(val) * s + referenceValue) * d;
+    auto decode = [&](auto val) {
+        return static_cast<ValueType>((static_cast<double>(val) * s + referenceValue) * d);
     };
 
     // The block codec reads and writes whole words: it handles all values except the last block,
@@ -134,7 +137,7 @@ typename Binary<ValueType, BPV>::Buffer Binary<ValueType, BPV>::pack(const Value
 
 
 template <typename ValueType, uint8_t BPV>
-typename Binary<ValueType, BPV>::Values Binary<ValueType, BPV>::unpack(const Buffer& codedBuf, int decimalScaleFactor, int binaryScaleFactor, ValueType referenceValue, size_t nVals)
+typename Binary<ValueType, BPV>::Values Binary<ValueType, BPV>::unpack(const Buffer& codedBuf, int decimalScaleFactor, int binaryScaleFactor, double referenceValue, size_t nVals)
 {
     Values values(nVals);
     unpackTo(codedBuf.data(), decimalScaleFactor, binaryScaleFactor, referenceValue, nVals, values.data());
