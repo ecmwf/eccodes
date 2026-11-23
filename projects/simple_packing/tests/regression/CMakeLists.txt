@@ -98,4 +98,7 @@ if(SIMPLE_PACKING_HAVE_THREAD_SANITIZER)
   set_tests_properties(${SP_TEST_PREFIX}table_init_race PROPERTIES ENVIRONMENT "TSAN_OPTIONS=halt_on_error=1:exitcode=66")
 endif()
 
+sp_add_test(unpack_float_precision)
+add_test(NAME ${SP_TEST_PREFIX}unpack_float_precision COMMAND sp_unpack_float_precision)
+
 sp_label_tests(regression)
