@@ -246,6 +246,7 @@ if( HAVE_BUILD_TOOLS )
         grib_pack_extreme_values
         grib_ccsds_empty_data
         grib_ccsds_truncated
+        grib_reference_value_not_finite
         grib_paramtypeConcept
         grib_element
         grib_change_packing
