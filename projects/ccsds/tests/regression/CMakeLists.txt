@@ -13,6 +13,7 @@ ccsds_add_test(decode_parallel_stats LIBS Threads::Threads)
 ccsds_add_test(decode_thread_pool LIBS Threads::Threads)
 ccsds_add_test(encode_parallel LIBS Threads::Threads)
 ccsds_add_test(stats_empty)
+ccsds_add_test(decode_float_precision LIBS Threads::Threads)
 
 # Out of range access must be detected in debug builds: compiled with assertions
 add_executable(span_bounds ${CMAKE_CURRENT_SOURCE_DIR}/span_bounds.cc)
