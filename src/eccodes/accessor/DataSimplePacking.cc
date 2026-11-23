@@ -101,6 +101,12 @@ int DataSimplePacking::unpack_double_element(size_t idx, double* val)
     if (err)
         return err;
 
+    if (n_vals < 0 || idx >= static_cast<size_t>(n_vals)) {
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s: %s: Invalid index %zu (should be between 0 and %ld)",
+                         accessor_type().c_str(), __func__, idx, n_vals - 1);
+        return GRIB_INVALID_ARGUMENT;
+    }
+
     if ((err = grib_get_long_internal(gh, bits_per_value_, &bits_per_value)) != GRIB_SUCCESS)
         return err;
 
@@ -121,7 +127,6 @@ int DataSimplePacking::unpack_double_element(size_t idx, double* val)
         return GRIB_SUCCESS;
     }
 
-    ECCODES_ASSERT(idx < n_vals);
     s = codes_power<double>(binary_scale_factor, 2);
     d = codes_power<double>(-decimal_scale_factor, 10);
 
