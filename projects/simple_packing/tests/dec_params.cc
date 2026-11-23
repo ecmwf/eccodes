@@ -118,7 +118,7 @@ int main(int argc, char* argv[])
     double min = 0;
     double max = 0;
 
-    for (size_t i = 1; i < argc; ++i) {
+    for (int i = 1; i < argc; ++i) {
         std::string arg = argv[i];
         if (arg == "--bpv" && i + 1 < argc) {
             bpv = std::stol(argv[++i]);
