@@ -18,7 +18,7 @@ struct ComprStats
 
     virtual void print() const
     {
-        std::cout << "  ov: " << overhead << " un: " << uncompressed << " nB: " << nBlocks << std::endl;
+        std::cout << "  ov: " << overhead << " un: " << uncompressed << " nB: " << nBlocks << '\n';
     }
 };
 
@@ -37,7 +37,7 @@ struct SsComprStats : public ComprStats
     {
         std::cout << "  ov: " << overhead << " un: " << uncompressed << " nB: " << nBlocks
                   << " min_k: " << min_k << " max_k: " << max_k << " avg_k: " << avg_k << " median_k: " << median_k
-                  << std::endl;
+                  << '\n';
     }
 };
 
@@ -259,7 +259,7 @@ struct SpAecStats
             std::cout << "No values decoded, no metrics\n";
             return;
         }
-        std::cout << "Overhead percentage" << ": " << static_cast<double>(overhead()) / totalNumberOfBits() * 100.0 << "%" << std::endl;
+        std::cout << "Overhead percentage" << ": " << static_cast<double>(overhead()) / totalNumberOfBits() * 100.0 << "%" << '\n';
         auto zb_stats = zeroStats();
         auto ss_stats = ssStats();
         auto se_stats = seStats();
@@ -280,28 +280,28 @@ struct SpAecStats
 
 
         auto compressed_bits_before = total_size - total_stats.uncompressed;
-        std::cout << "Compressed size (bits): " << compressed_size << " uncompressed (bits): " << total_stats.uncompressed << " overhead (bits): " << total_stats.overhead << std::endl;
+        std::cout << "Compressed size (bits): " << compressed_size << " uncompressed (bits): " << total_stats.uncompressed << " overhead (bits): " << total_stats.overhead << '\n';
         auto compressed_bits_after = compressed_size - total_stats.uncompressed;
 
-        std::cout << "Compressibility: " << (double)(compressed_bits_before - compressed_bits_after) / compressed_bits_before * 100.0 << "%" << " before: " << compressed_bits_before << " bits, after: " << compressed_bits_after << " bits" << std::endl;
-        std::cout << "Block distribution: " << std::endl;
+        std::cout << "Compressibility: " << (double)(compressed_bits_before - compressed_bits_after) / compressed_bits_before * 100.0 << "%" << " before: " << compressed_bits_before << " bits, after: " << compressed_bits_after << " bits" << '\n';
+        std::cout << "Block distribution: " << '\n';
         size_t total_blocks = (nValues + blockSize - 1) / blockSize;
         std::cout << "  Zero blocks: "
                   << zb_stats.nBlocks << " (" << (double)zb_stats.nBlocks / total_blocks * 100.0 << "%"
                   << " of data reduced to " << (double)zb_stats.compressed_after / zb_stats.compressed_before * 100.0 << "%)"
-                  << std::endl;
-        std::cout << "  Split sample blocks: " << ss_stats.nBlocks << " (" << (double)ss_stats.nBlocks / total_blocks * 100.0 << "%)" << std::endl;
-        std::cout << "  Second extension blocks: " << se_stats.nBlocks << " (" << (double)se_stats.nBlocks / total_blocks * 100.0 << "%)" << std::endl;
-        std::cout << "  No compression blocks: " << nc_stats.nBlocks << " (" << (double)nc_stats.nBlocks / total_blocks * 100.0 << "%)" << std::endl;
+                  << '\n';
+        std::cout << "  Split sample blocks: " << ss_stats.nBlocks << " (" << (double)ss_stats.nBlocks / total_blocks * 100.0 << "%)" << '\n';
+        std::cout << "  Second extension blocks: " << se_stats.nBlocks << " (" << (double)se_stats.nBlocks / total_blocks * 100.0 << "%)" << '\n';
+        std::cout << "  No compression blocks: " << nc_stats.nBlocks << " (" << (double)nc_stats.nBlocks / total_blocks * 100.0 << "%)" << '\n';
         //
         auto compression_ratio = ((double)(total_size - compressedSize * 8) / total_size) * 100.0;
-        std::cout << "Compression ratio: " << compression_ratio << std::endl;
+        std::cout << "Compression ratio: " << compression_ratio << '\n';
         auto uncompression_ratio = ((double)(total_stats.uncompressed) / total_size) * 100.0;
-        std::cout << "Uncompression ratio: " << uncompression_ratio << std::endl;
+        std::cout << "Uncompression ratio: " << uncompression_ratio << '\n';
         compression_ratio = (double)compressed_size / total_size * 100.0;
-        std::cout << "Actual compression ratio: " << compression_ratio << std::endl;
+        std::cout << "Actual compression ratio: " << compression_ratio << '\n';
 
-        std::cout << "Check uncompressed: " << (double)total_stats.uncompressed / total_size * 100.0 << "%" << std::endl;
+        std::cout << "Check uncompressed: " << (double)total_stats.uncompressed / total_size * 100.0 << "%" << '\n';
 
         total_stats.print();
     }
@@ -309,16 +309,16 @@ struct SpAecStats
 
     void print()
     {
-        std::cout << "SpAecStats:" << std::endl;
-        std::cout << "  bpv: " << (uint32_t)bpv << std::endl;
-        std::cout << "  blockSize: " << (uint32_t)blockSize << std::endl;
-        std::cout << "  rsiSize: " << rsiSize << std::endl;
-        std::cout << "  codeOptionSet: " << static_cast<uint32_t>(codeOptionSet) << std::endl;
-        std::cout << "  binaryScaleFactor: " << binaryScaleFactor << std::endl;
-        std::cout << "  decimalScaleFactor: " << decimalScaleFactor << std::endl;
-        std::cout << "  referenceValue: " << referenceValue << std::endl;
-        std::cout << "  nBlocks: " << nBlocks << std::endl;
-        std::cout << "  nValues: " << nValues << std::endl;
+        std::cout << "SpAecStats:" << '\n';
+        std::cout << "  bpv: " << (uint32_t)bpv << '\n';
+        std::cout << "  blockSize: " << (uint32_t)blockSize << '\n';
+        std::cout << "  rsiSize: " << rsiSize << '\n';
+        std::cout << "  codeOptionSet: " << static_cast<uint32_t>(codeOptionSet) << '\n';
+        std::cout << "  binaryScaleFactor: " << binaryScaleFactor << '\n';
+        std::cout << "  decimalScaleFactor: " << decimalScaleFactor << '\n';
+        std::cout << "  referenceValue: " << referenceValue << '\n';
+        std::cout << "  nBlocks: " << nBlocks << '\n';
+        std::cout << "  nValues: " << nValues << '\n';
 
         size_t totalSSNoRef = 0;
         size_t totalSSRef = 0;
@@ -326,26 +326,26 @@ struct SpAecStats
             totalSSNoRef += counter.ssNoRef[k];
             totalSSRef += counter.ssRef[k];
             if (counter.ssNoRef[k] > 0 || counter.ssRef[k] > 0) {
-                std::cout << "    ss k=" << k << ": " << counter.ssNoRef[k] + counter.ssRef[k] << " blocks" << std::endl;
+                std::cout << "    ss k=" << k << ": " << counter.ssNoRef[k] + counter.ssRef[k] << " blocks" << '\n';
             }
         }
 
         if (counter.seNoRef > 0 || counter.seRef > 0) {
-            std::cout << "    se: " << counter.seNoRef + counter.seRef << std::endl;
+            std::cout << "    se: " << counter.seNoRef + counter.seRef << '\n';
         }
 
         if (counter.ncNoRef > 0 || counter.ncRef > 0) {
-            std::cout << "    nc: " << counter.ncNoRef + counter.ncRef << std::endl;
+            std::cout << "    nc: " << counter.ncNoRef + counter.ncRef << '\n';
         }
 
         for (size_t i = 0; i < segmentSize; ++i) {
             if (counter.zbNoRef[i] > 0 || counter.zbRef[i] > 0) {
-                std::cout << "    zb: n=" << i << ": " << counter.zbNoRef[i] + counter.zbRef[i] << " blocks" << std::endl;
+                std::cout << "    zb: n=" << i << ": " << counter.zbNoRef[i] + counter.zbRef[i] << " blocks" << '\n';
             }
         }
         for (size_t i = 0; i < segmentSize; ++i) {
             if (counter.zbRosNoRef[i] > 0 || counter.zbRosRef[i] > 0) {
-                std::cout << "    zb ROS: n=" << i << ": " << counter.zbRosNoRef[i] + counter.zbRosRef[i] << " blocks" << std::endl;
+                std::cout << "    zb ROS: n=" << i << ": " << counter.zbRosNoRef[i] + counter.zbRosRef[i] << " blocks" << '\n';
             }
         }
     }

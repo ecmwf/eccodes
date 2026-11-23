@@ -38,10 +38,10 @@ void testReadWriteCodeword()
     BitBuffer bitBuffer(data);
 
     bitBuffer.writeCodeword(5);  // 5 zeros + 1 stopper = 6 bits
-    std::cout << "Bit position after writing codeword 5: " << bitBuffer.bitPos() << std::endl;
+    std::cout << "Bit position after writing codeword 5: " << bitBuffer.bitPos() << '\n';
     assert(bitBuffer.bitPos() == 6);
     bitBuffer.writeBits<uint8_t>(0b11, 2);
-    std::cout << "Bit position after writing 2 bits: " << bitBuffer.bitPos() << std::endl;
+    std::cout << "Bit position after writing 2 bits: " << bitBuffer.bitPos() << '\n';
     assert(bitBuffer.bitPos() == 8);
 
     std::cout << "Data written to buffer: ";
@@ -49,11 +49,11 @@ void testReadWriteCodeword()
     for (auto b : buf) {
         std::cout << std::bitset<8>(b) << " ";
     }
-    std::cout << std::endl;
+    std::cout << '\n';
 
     bitBuffer.resetBitPos();
     auto result = bitBuffer.readCodeword();
-    std::cout << "Codeword read: " << result << std::endl;
+    std::cout << "Codeword read: " << result << '\n';
     assert(result == 6);
 }
 
@@ -70,11 +70,11 @@ void testReadWriteCodeword2()
     for (auto b : buf) {
         std::cout << std::bitset<8>(b) << " ";
     }
-    std::cout << std::endl;
+    std::cout << '\n';
 
     bitBuffer.resetBitPos();
     auto result = bitBuffer.readCodeword();
-    std::cout << "Codeword read: " << result << std::endl;
+    std::cout << "Codeword read: " << result << '\n';
     assert(result == 16);
 }
 
@@ -91,12 +91,12 @@ void testReadWriteCodeword3()
     for (auto b : buf) {
         std::cout << std::bitset<8>(b) << " ";
     }
-    std::cout << std::endl;
+    std::cout << '\n';
 
     bitBuffer.resetBitPos();
     bitBuffer.skipBits(5);
     auto result = bitBuffer.readCodeword();
-    std::cout << "Codeword read: " << result << std::endl;
+    std::cout << "Codeword read: " << result << '\n';
     assert(result == 11);
 }
 

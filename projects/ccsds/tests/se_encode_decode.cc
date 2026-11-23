@@ -25,26 +25,26 @@ void testRefEncodeDecode(Span<ValueType> block)
         encoder::EncoderSeq<ValueType, ValueType> seIres{ BPV, blockSize, rsiSize, CodeOptionSet::Basic };
         size_t expectedSize = seIres.sePrepare<ReferenceType::Ref>(block);
         seIres.seEncode<ReferenceType::Ref>(bitBuffer);
-        std::cout << bitBuffer.bitPos() << " bits written to buffer." << std::endl;
-        std::cout << "Expected size: " << expectedSize << " bits." << std::endl;
+        std::cout << bitBuffer.bitPos() << " bits written to buffer." << '\n';
+        std::cout << "Expected size: " << expectedSize << " bits." << '\n';
         assert(expectedSize == bitBuffer.bitPos() && "Bits written do not match expected size.");
     }
     // dump buffer
     const auto& buf = bitBuffer.getBuffer();
-    std::cout << "Encoded buffer size: " << buf.size() << " bytes" << std::endl;
+    std::cout << "Encoded buffer size: " << buf.size() << " bytes" << '\n';
     for (size_t i = 0; i < buf.size(); ++i) {
         std::cout << std::bitset<8>(buf[i]) << " ";
     }
-    std::cout << std::endl;
+    std::cout << '\n';
 
     bitBuffer.resetBitPos();
 
     auto id = bitBuffer.readBits<uint8_t>(5);
-    std::cout << "Read code ID: " << std::bitset<8>(id) << std::endl;
+    std::cout << "Read code ID: " << std::bitset<8>(id) << '\n';
     assert(id == 0b00001 && "Incorrect code ID");
 
     ValueType ref = bitBuffer.readBits<ValueType>(BPV);
-    std::cerr << "Read reference value: " << ref << " " << "Expected: " << block[0] << std::endl;
+    std::cerr << "Read reference value: " << ref << " " << "Expected: " << block[0] << '\n';
     assert(ref == block[0] && "Incorrect reference value");
 
     std::vector<ValueType> decodedBlock(block.size(), 0);
@@ -60,7 +60,7 @@ void testRefEncodeDecode(Span<ValueType> block)
     for (size_t i = 0; i < block.size(); ++i) {
         assert(block[i] == decodedBlock[i]);
     }
-    std::cout << "Test passed for block of size " << block.size() << std::endl;
+    std::cout << "Test passed for block of size " << block.size() << '\n';
 }
 
 
@@ -76,22 +76,22 @@ void testNorefEncodeDecode(Span<ValueType> block)
         encoder::EncoderSeq<ValueType, ValueType> seIres{ BPV, blockSize, rsiSize, CodeOptionSet::Basic };
         size_t expectedSize = seIres.sePrepare<ReferenceType::NoRef>(block);
         seIres.seEncode<ReferenceType::NoRef>(bitBuffer);
-        std::cout << bitBuffer.bitPos() << " bits written to buffer." << std::endl;
-        std::cout << "Expected size: " << expectedSize << " bits." << std::endl;
+        std::cout << bitBuffer.bitPos() << " bits written to buffer." << '\n';
+        std::cout << "Expected size: " << expectedSize << " bits." << '\n';
         assert(expectedSize == bitBuffer.bitPos() && "Bits written do not match expected size.");
     }
     // dump buffer
     const auto& buf = bitBuffer.getBuffer();
-    std::cout << "Encoded buffer size: " << buf.size() << " bytes" << std::endl;
+    std::cout << "Encoded buffer size: " << buf.size() << " bytes" << '\n';
     for (size_t i = 0; i < buf.size(); ++i) {
         std::cout << std::bitset<8>(buf[i]) << " ";
     }
-    std::cout << std::endl;
+    std::cout << '\n';
 
     bitBuffer.resetBitPos();
 
     auto id = bitBuffer.readBits<uint8_t>(5);
-    std::cout << "Read code ID: " << std::bitset<5>(id) << std::endl;
+    std::cout << "Read code ID: " << std::bitset<5>(id) << '\n';
     assert(id == 0b00001 && "Incorrect code ID");
 
     std::vector<ValueType> decodedBlock(block.size(), 0);
@@ -105,7 +105,7 @@ void testNorefEncodeDecode(Span<ValueType> block)
     for (size_t i = 0; i < block.size(); ++i) {
         assert(block[i] == decodedBlock[i]);
     }
-    std::cout << "Test passed for block of size " << block.size() << std::endl;
+    std::cout << "Test passed for block of size " << block.size() << '\n';
 }
 
 

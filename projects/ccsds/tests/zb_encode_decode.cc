@@ -29,7 +29,7 @@ void testEncodeDecode(std::vector<ValueType>& vec)
     for (size_t i = 0; i < encodedSize; ++i) {
         std::cout << std::bitset<8>(encoded[i]) << " ";
     }
-    std::cout << std::endl;
+    std::cout << '\n';
 
     std::vector<ValueType> decoded(vec.size());
     {
@@ -40,18 +40,18 @@ void testEncodeDecode(std::vector<ValueType>& vec)
     // Verify
     assert(decoded.size() == vec.size());
     for (size_t i = 0; i < vec.size(); ++i) {
-        std::cout << "Index " << i << ": original " << vec[i] << ", decoded " << decoded[i] << std::endl;
+        std::cout << "Index " << i << ": original " << vec[i] << ", decoded " << decoded[i] << '\n';
         if (decoded[i] != vec[i]) {
-            std::cerr << "Mismatch at index " << i << ": original " << vec[i] << ", decoded " << decoded[i] << std::endl;
+            std::cerr << "Mismatch at index " << i << ": original " << vec[i] << ", decoded " << decoded[i] << '\n';
             // dump encoded data
             for (size_t j = 0; j < encoded.size(); ++j) {
                 std::cout << std::bitset<8>(encoded[j]) << " ";
             }
-            std::cout << std::endl;
+            std::cout << '\n';
             throw std::runtime_error("Encoded/decoded data mismatch.");
         }
     }
-    std::cout << "Decoded data matches original data." << std::endl;
+    std::cout << "Decoded data matches original data." << '\n';
 }
 
 int main(int argc, char* argv[])

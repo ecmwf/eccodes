@@ -26,7 +26,7 @@ static int passCount = 0;
 #define PASS()                            \
     do {                                  \
         passCount++;                      \
-        std::cout << "PASS" << std::endl; \
+        std::cout << "PASS" << '\n'; \
     } while (0)
 
 #define ASSERT_EQ(a, b)                                                             \
@@ -35,7 +35,7 @@ static int passCount = 0;
         auto _b = (b);                                                              \
         if (_a != _b) {                                                             \
             std::cerr << "FAIL: " << #a << "=" << +_a << " != " << #b << "=" << +_b \
-                      << " at " << __FILE__ << ":" << __LINE__ << std::endl;        \
+                      << " at " << __FILE__ << ":" << __LINE__ << '\n';        \
             std::exit(1);                                                           \
         }                                                                           \
     } while (0)
@@ -44,7 +44,7 @@ static int passCount = 0;
     do {                                                                     \
         if (!(cond)) {                                                       \
             std::cerr << "FAIL: " << #cond                                   \
-                      << " at " << __FILE__ << ":" << __LINE__ << std::endl; \
+                      << " at " << __FILE__ << ":" << __LINE__ << '\n'; \
             std::exit(1);                                                    \
         }                                                                    \
     } while (0)
@@ -61,7 +61,7 @@ template <typename ValueType>
 void testPreprocessorMapperSpecFormula()
 {
     std::cout << "§4.4 Prediction Error Mapper (" << sizeof(ValueType) * 8 << "-bit "
-              << (std::is_signed_v<ValueType> ? "signed" : "unsigned") << "):" << std::endl;
+              << (std::is_signed_v<ValueType> ? "signed" : "unsigned") << "):" << '\n';
 
     constexpr uint8_t bpv = sizeof(ValueType) * 8;
     PredictivePreprocessingEncodeFast<ValueType> preprocessor(bpv);
@@ -239,7 +239,7 @@ void testPreprocessorMapperSpecFormula()
 
 void testFundamentalSequenceCodewords()
 {
-    std::cout << "§3.2 Fundamental Sequence Codewords (Table 3-1):" << std::endl;
+    std::cout << "§3.2 Fundamental Sequence Codewords (Table 3-1):" << '\n';
 
     {
         TEST("δ=0 → codeword '1' (length 1)");
@@ -303,7 +303,7 @@ void testFundamentalSequenceCodewords()
 
 void testCodeOptionIds()
 {
-    std::cout << "§5.2.1 Code Option ID Keys (Table 5-1):" << std::endl;
+    std::cout << "§5.2.1 Code Option ID Keys (Table 5-1):" << '\n';
 
     // Basic, 1 ≤ n ≤ 8: ZB/SE are 4 bits, SS/NC are 3 bits (prefix code)
     {
@@ -386,7 +386,7 @@ void testCodeOptionIds()
 
 void testZeroBlockEncoding()
 {
-    std::cout << "§3.5 Zero Block Option:" << std::endl;
+    std::cout << "§3.5 Zero Block Option:" << '\n';
 
     constexpr uint8_t BPV = 16;
     constexpr size_t blockSize = 8;
@@ -494,7 +494,7 @@ void testZeroBlockEncoding()
 
 void testSecondExtension()
 {
-    std::cout << "§3.4 Second Extension Transform:" << std::endl;
+    std::cout << "§3.4 Second Extension Transform:" << '\n';
 
     {
         TEST("γⱼ = (d1+d2)(d1+d2+1)/2 + d2 (Cantor pairing)");
@@ -567,7 +567,7 @@ void test_block_sizes()
 {
     constexpr uint8_t BPV = sizeof(ValueType) * 8;
     std::cout << "§3.1.6 Block Sizes (J=8,16,32,64) for " << BPV << "-bit "
-              << (std::is_signed_v<ValueType> ? "signed" : "unsigned") << ":" << std::endl;
+              << (std::is_signed_v<ValueType> ? "signed" : "unsigned") << ":" << '\n';
 
     constexpr size_t blockSizes[] = { 8, 16, 32, 64 };
 
@@ -604,7 +604,7 @@ void test_block_sizes()
         for (size_t i = 0; i < vec.size(); ++i) {
             if (vec[i] != decoded[i]) {
                 std::cerr << "FAIL at index " << i << ": original=" << +vec[i]
-                          << " decoded=" << +decoded[i] << " (bs=" << bs << ")" << std::endl;
+                          << " decoded=" << +decoded[i] << " (bs=" << bs << ")" << '\n';
                 std::exit(1);
             }
         }
@@ -624,7 +624,7 @@ void testDataPatterns()
     constexpr uint16_t rsiSize = 128;
 
     std::cout << "End-to-end data patterns (" << (int)BPV << "-bit "
-              << (std::is_signed_v<ValueType> ? "signed" : "unsigned") << "):" << std::endl;
+              << (std::is_signed_v<ValueType> ? "signed" : "unsigned") << "):" << '\n';
 
     auto roundtrip = [](const std::vector<ValueType>& vec) {
         std::vector<uint8_t> encoded(vec.size() * sizeof(ValueType) * 2 + 256);
@@ -638,7 +638,7 @@ void testDataPatterns()
         for (size_t i = 0; i < vec.size(); ++i) {
             if (vec[i] != decoded[i]) {
                 std::cerr << "FAIL at index " << i << ": original=" << (int)vec[i]
-                          << " decoded=" << (int)decoded[i] << std::endl;
+                          << " decoded=" << (int)decoded[i] << '\n';
                 std::exit(1);
             }
         }
@@ -730,7 +730,7 @@ void testDataPatterns()
 
 void testCodeOptionSets()
 {
-    std::cout << "§5.2.1 Basic vs Restricted Code Option Sets:" << std::endl;
+    std::cout << "§5.2.1 Basic vs Restricted Code Option Sets:" << '\n';
 
     using ValueType = uint16_t;
     constexpr uint8_t BPV = 16;
@@ -749,7 +749,7 @@ void testCodeOptionSets()
         for (size_t i = 0; i < vec.size(); ++i) {
             if (vec[i] != decoded[i]) {
                 std::cerr << "FAIL at index " << i << ": original=" << vec[i]
-                          << " decoded=" << decoded[i] << std::endl;
+                          << " decoded=" << decoded[i] << '\n';
                 std::exit(1);
             }
         }
@@ -800,7 +800,7 @@ void testCodeOptionSets()
 
 void testSplitSample()
 {
-    std::cout << "§3.3 Split-Sample Options:" << std::endl;
+    std::cout << "§3.3 Split-Sample Options:" << '\n';
 
     using ValueType = uint16_t;
     constexpr uint8_t BPV = 16;
@@ -838,7 +838,7 @@ void testSplitSample()
 
 void testReferenceSampleIntervals()
 {
-    std::cout << "§4.3 Reference Sample Interval:" << std::endl;
+    std::cout << "§4.3 Reference Sample Interval:" << '\n';
 
     using ValueType = uint16_t;
     constexpr uint8_t BPV = 16;
@@ -868,7 +868,7 @@ void testReferenceSampleIntervals()
         for (size_t i = 0; i < vec.size(); ++i) {
             if (vec[i] != decoded[i]) {
                 std::cerr << "FAIL at index " << i << ": original=" << vec[i]
-                          << " decoded=" << decoded[i] << " (RSI=" << rsi << ")" << std::endl;
+                          << " decoded=" << decoded[i] << " (RSI=" << rsi << ")" << '\n';
                 std::exit(1);
             }
         }
@@ -882,7 +882,7 @@ void testReferenceSampleIntervals()
 
 void testNoCompression()
 {
-    std::cout << "§3.6 No-Compression Option:" << std::endl;
+    std::cout << "§3.6 No-Compression Option:" << '\n';
 
     using ValueType = uint16_t;
     constexpr uint8_t BPV = 16;
@@ -920,7 +920,7 @@ void testNoCompression()
 
 void testCompressionEfficiency()
 {
-    std::cout << "§3.7 Compression Efficiency:" << std::endl;
+    std::cout << "§3.7 Compression Efficiency:" << '\n';
 
     using ValueType = uint16_t;
     constexpr uint8_t BPV = 16;
@@ -976,9 +976,9 @@ void testCompressionEfficiency()
 
 int main()
 {
-    std::cout << "CCSDS 121.0-B-3 Compliance Tests" << std::endl;
-    std::cout << "=================================" << std::endl
-              << std::endl;
+    std::cout << "CCSDS 121.0-B-3 Compliance Tests" << '\n';
+    std::cout << "=================================" << '\n'
+              << '\n';
 
     // §4.4 Prediction Error Mapper (spec defines unsigned J-bit samples only)
     testPreprocessorMapperSpecFormula<uint8_t>();
@@ -1019,9 +1019,9 @@ int main()
     // §3.7 Compression efficiency
     testCompressionEfficiency();
 
-    std::cout << std::endl;
-    std::cout << "=================================" << std::endl;
-    std::cout << passCount << "/" << testCount << " tests passed." << std::endl;
+    std::cout << '\n';
+    std::cout << "=================================" << '\n';
+    std::cout << passCount << "/" << testCount << " tests passed." << '\n';
 
     return (passCount == testCount) ? 0 : 1;
 }

@@ -21,12 +21,12 @@
 //             << "Original: " << data[i]
 //             << ", Encoded: " << temp[i]
 //             << ", Restored: " << restored[i]
-//             << std::endl;
+//             << '\n';
 //     }
 //
 //     for (size_t i = 0; i < data.size(); ++i) {
 //         if (data[i] != restored[i]) {
-//             std::cerr << "Error at index " << i << ": original " << data[i] << ", restored " << restored[i] << std::endl;
+//             std::cerr << "Error at index " << i << ": original " << data[i] << ", restored " << restored[i] << '\n';
 //             assert(false);
 //         }
 //     }
@@ -48,11 +48,11 @@
 //             << "Original: " << data[i]
 //             << ", Encoded: " << temp[i]
 //             << ", Restored: " << restored[i]
-//             << std::endl;
+//             << '\n';
 //     }
 //     for (size_t i = 0; i < data.size(); ++i) {
 //         if (data[i] != restored[i]) {
-//             std::cerr << "Error at index " << i << ": original " << data[i] << ", restored " << restored[i] << std::endl;
+//             std::cerr << "Error at index " << i << ": original " << data[i] << ", restored " << restored[i] << '\n';
 //             assert(false);
 //         }
 //     }
@@ -76,7 +76,7 @@ void checkUnsignedPreprocessor2()
 
     for (size_t i = 0; i < data.size(); ++i) {
         std::cout << "Data[" << i << "] = " << data[i]
-                  << ", Encoded = " << temp[i] << std::endl;
+                  << ", Encoded = " << temp[i] << '\n';
     }
 
     PredictivePreprocessingDecodeFast<ValueType, ValueType> preprocessorDecode(bpv);
@@ -87,11 +87,11 @@ void checkUnsignedPreprocessor2()
             << "Original: " << data[i]
             << ", Encoded: " << temp[i]
             << ", Restored: " << restored[i]
-            << std::endl;
+            << '\n';
     }
     for (size_t i = 0; i < data.size(); ++i) {
         if (data[i] != restored[i]) {
-            std::cerr << "Error at index " << i << ": original " << data[i] << ", restored " << restored[i] << std::endl;
+            std::cerr << "Error at index " << i << ": original " << data[i] << ", restored " << restored[i] << '\n';
             assert(false);
         }
     }

@@ -17,7 +17,7 @@ static int failCount = 0;
     do {                                                         \
         if ((a) != (b)) {                                        \
             std::cerr << "FAIL: " << msg << " (expected " << (a) \
-                      << ", got " << (b) << ")" << std::endl;    \
+                      << ", got " << (b) << ")" << '\n';    \
             failCount++;                                         \
             return false;                                        \
         }                                                        \
@@ -117,7 +117,7 @@ void sweep(const std::string& typeName)
                         passCount++;
                     }
                     else {
-                        std::cerr << "  FAILED: " << label << std::endl;
+                        std::cerr << "  FAILED: " << label << '\n';
                     }
                 }
             }
@@ -127,20 +127,20 @@ void sweep(const std::string& typeName)
 
 int main()
 {
-    std::cout << "=== Encode/Decode Sweep Test ===" << std::endl;
+    std::cout << "=== Encode/Decode Sweep Test ===" << '\n';
 
-    std::cout << "\n--- uint8_t ---" << std::endl;
+    std::cout << "\n--- uint8_t ---" << '\n';
     sweep<uint8_t>("uint8");
 
-    std::cout << "\n--- uint16_t ---" << std::endl;
+    std::cout << "\n--- uint16_t ---" << '\n';
     sweep<uint16_t>("uint16");
 
-    std::cout << "\n--- Summary ---" << std::endl;
+    std::cout << "\n--- Summary ---" << '\n';
     std::cout << passCount << "/" << testCount << " passed";
     if (failCount > 0) {
         std::cout << ", " << failCount << " FAILED";
     }
-    std::cout << std::endl;
+    std::cout << '\n';
 
     return (failCount > 0) ? 1 : 0;
 }
