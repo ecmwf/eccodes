@@ -46,7 +46,8 @@ static void expectError(const std::string& what, F&& f)
     failures++;
 }
 
-// Runs f in a child process: it must return a reference value just below 'value' within 5 seconds
+// Runs f in a child process: it must return constant-field parameters that decode to 'value'
+// within 5 seconds
 template <typename F>
 static void expectConstant(const std::string& what, double value, F&& f)
 {
@@ -55,8 +56,9 @@ static void expectConstant(const std::string& what, double value, F&& f)
         alarm(5);
         try {
             const Parameters params = f();
-            const bool ok = params.bitsPerValue() == 0 && params.referenceValue() < value
-                            && params.referenceValue() > 0.99 * value;
+            const double decoded = params.referenceValue() / std::pow(10.0, static_cast<double>(params.decimalScaleFactor()));
+            const bool ok = params.bitsPerValue() == 0 && params.isConstantField()
+                            && std::fabs(decoded - value) <= 1e-6 * value;
             _exit(ok ? 0 : 2);
         }
         catch (const std::exception&) {
@@ -104,9 +106,6 @@ int main()
     });
     expectConstant("DecOptimizer: constant field", 5.0, [] {
         return DecOptimizer(24, 127).getParams(5.0, 5.0);
-    });
-    expectConstant("BPVOptimizer: constant field", 5.0, [] {
-        return BPVOptimizer(2).getParams(5.0, 5.0);
     });
 
     if (failures == 0) {

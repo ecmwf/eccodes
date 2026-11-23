@@ -28,6 +28,22 @@ public:
         check_data_values_range(min, max);
 
         Parameters params;
+
+        if (min == max) {
+            auto ref = nearest_smaller_value(min, referenceFloatType_);
+            if (ref.has_value()) {
+                params.referenceValue(ref.value());
+            }
+            else {
+                throw std::runtime_error("unable to find nearest_smaller_value");
+            }
+            params.bitsPerValue(0);
+            params.binaryScaleFactor(0);
+            params.decimalScaleFactor(0);
+            params.isConstantField(true);
+            return params;
+        }
+
         params.bitsPerValue(bitsPerValue_);
 
         ValueType decimal = 1;

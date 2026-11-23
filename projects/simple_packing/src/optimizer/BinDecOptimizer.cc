@@ -74,10 +74,17 @@ Parameters BinDecOptimizer::getParams(const double pmin, const double pmax)
     Parameters params;
 
     if (pa == 0) {
+        auto ref = nearest_smaller_value(pmin, referenceFloatType_);
+        if (ref.has_value()) {
+            params.referenceValue(ref.value());
+        }
+        else {
+            throw std::runtime_error("unable to find nearest_smaller_value");
+        }
         params.bitsPerValue(0);
         params.decimalScaleFactor(0);
         params.binaryScaleFactor(0);
-        params.referenceValue(0);
+        params.isConstantField(true);
         return params;
     }
 
