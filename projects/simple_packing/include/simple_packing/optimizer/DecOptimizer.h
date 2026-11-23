@@ -21,6 +21,11 @@ public:
 
     Parameters getParams(double min, double max)
     {
+        // The optimiser assumes a validated field: finite values, minimum <= maximum.
+        // Direct callers must not be able to make the parameter search loop forever
+        // (it scales the field by powers of ten, which never converges for a negative range).
+        check_data_values_range(min, max);
+
         Parameters params;
         params.bitsPerValue(bitsPerValue_);
 

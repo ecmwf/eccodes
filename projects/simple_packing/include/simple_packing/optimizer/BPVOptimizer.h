@@ -17,6 +17,11 @@ public:
 
     Parameters getParams(double min, double max)
     {
+        // The optimiser assumes a validated field: finite values, minimum <= maximum.
+        // Direct callers must not be able to make the parameter search convert NaN or
+        // infinity to integers.
+        check_data_values_range(min, max);
+
         /* decimal_scale_factor is given, binary_scale_factor=0 and params.bits_per_value is computed */
 
         Parameters params;

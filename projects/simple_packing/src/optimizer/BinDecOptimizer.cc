@@ -52,6 +52,11 @@ std::optional<FactecResult> factec(double pa, int knbit, long kdec, int range)
 
 Parameters BinDecOptimizer::getParams(const double pmin, const double pmax)
 {
+    // The optimiser assumes a validated field: finite values, minimum <= maximum.
+    // Direct callers must not be able to make the parameter search loop forever or
+    // convert NaN to integers.
+    check_data_values_range(pmin, pmax);
+
     constexpr double flt_min = std::numeric_limits<float>::min();
     constexpr double flt_max = std::numeric_limits<float>::max();
 

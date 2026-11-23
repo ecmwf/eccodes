@@ -1,7 +1,8 @@
 // Calling an optimiser's getParams() directly with an out-of-range field (minimum > maximum,
 // non-finite values) must be rejected with an exception: the parameter search looped forever
-// for minimum > maximum and converted NaN to integers (undefined behaviour) otherwise.
-// Each case runs in a child process with a time limit.
+// for minimum > maximum and converted NaN or infinity to integers (undefined behaviour)
+// Otherwise. SimplePacking::getParameters() validates on its own, the optimisers did not.
+// Each case runs in a child process with a five-second time limit.
 
 #include <cmath>
 #include <exception>
