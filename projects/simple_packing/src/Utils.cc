@@ -32,45 +32,41 @@ const unsigned long nbits_table[32] = {
     0x40000000, 0x80000000
 };
 
-ieee_table_t ieee_table = { 0, {
-                                   0,
-                               },
-                            {
-                                0,
-                            },
-                            0,
-                            0 };
-
-
-void fill_ieee_table()
+// Lookup table for IEEE 754 single precision floats, filled on first use
+struct IeeeTable
 {
-    unsigned long i;
-    unsigned long mmin = 0x800000;
-    unsigned long mmax = 0xffffff;
-    double e = 1;
-    for (i = 1; i <= 104; i++) {
-        e *= 2;
-        ieee_table.e[i + 150] = e;
-        ieee_table.v[i + 150] = e * mmin;
-    }
-    ieee_table.e[150] = 1;
-    ieee_table.v[150] = mmin;
-    e = 1;
-    for (i = 1; i < 150; i++) {
-        e /= 2;
-        ieee_table.e[150 - i] = e;
-        ieee_table.v[150 - i] = e * mmin;
-    }
-    ieee_table.vmin = ieee_table.v[1];
-    ieee_table.vmax = ieee_table.e[254] * mmax;
-    ieee_table.inited = 1;
-}
+    std::array<double, 255> e;  // e[i] = 2^(i - 150)
+    std::array<double, 255> v;  // v[i] = smallest value with exponent i
+    double vmin;
+    double vmax;
+};
 
 // Thread-safe: the first caller fills the table, concurrent callers wait for it
-void init_table_if_needed()
+const IeeeTable& ieee_table()
 {
-    static const bool filled = (fill_ieee_table(), true);
-    (void)filled;
+    static const IeeeTable table = [] {
+        IeeeTable t{};
+        const unsigned long mmin = 0x800000;
+        const unsigned long mmax = 0xffffff;
+        double e = 1;
+        for (unsigned long i = 1; i <= 104; i++) {
+            e *= 2;
+            t.e[i + 150] = e;
+            t.v[i + 150] = e * mmin;
+        }
+        t.e[150] = 1;
+        t.v[150] = mmin;
+        e = 1;
+        for (unsigned long i = 1; i < 150; i++) {
+            e /= 2;
+            t.e[150 - i] = e;
+            t.v[150 - i] = e * mmin;
+        }
+        t.vmin = t.v[1];
+        t.vmax = t.e[254] * mmax;
+        return t;
+    }();
+    return table;
 }
 
 
@@ -92,6 +88,7 @@ void binary_search(const double xx[], const unsigned long n, double x, unsigned 
 
 unsigned long ieee_to_long(double x)
 {
+    const IeeeTable& t = ieee_table();
     unsigned long s = 0;
     unsigned long mmax = 0xffffff;
     unsigned long mmin = 0x800000;
@@ -99,24 +96,22 @@ unsigned long ieee_to_long(double x)
     unsigned long e = 0;
     double rmmax = mmax + 0.5;
 
-    init_table_if_needed();
-
     if (x < 0) {
         s = 1;
         x = -x;
     }
 
-    if (x < ieee_table.vmin) {
+    if (x < t.vmin) {
         return (s << 31);
     }
 
-    if (x > ieee_table.vmax) {
+    if (x > t.vmax) {
         return 0;  // not reached: the callers check the range
     }
 
-    binary_search(ieee_table.v, 254, x, &e);
+    binary_search(t.v.data(), 254, x, &e);
 
-    x /= ieee_table.e[e];
+    x /= t.e[e];
 
     while (x < mmin) {
         x *= 2;
@@ -146,8 +141,6 @@ double long_to_ieee(unsigned long x)
 
     double val;
 
-    init_table_if_needed();
-
     if (c == 0 && m == 0)
         return 0;
 
@@ -158,7 +151,7 @@ double long_to_ieee(unsigned long x)
     else
         m |= 0x800000;
 
-    val = m * ieee_table.e[c];
+    val = m * ieee_table().e[c];
     if (s)
         val = -val;
 
@@ -168,6 +161,7 @@ double long_to_ieee(unsigned long x)
 
 unsigned long ieee_nearest_smaller_to_long(double x)
 {
+    const IeeeTable& t = ieee_table();
     unsigned long l;
     unsigned long e;
     unsigned long m;
@@ -177,13 +171,11 @@ unsigned long ieee_nearest_smaller_to_long(double x)
     if (x == 0)
         return 0;
 
-    init_table_if_needed();
-
     l = ieee_to_long(x);
     double y = long_to_ieee(l);
 
     if (x < y) {
-        if (x < 0 && -x < ieee_table.vmin) {
+        if (x < 0 && -x < t.vmin) {
             l = 0x80800000;
         }
         else {
@@ -199,7 +191,7 @@ unsigned long ieee_nearest_smaller_to_long(double x)
                     e = 254;
             }
 
-            double eps = ieee_table.e[e];
+            double eps = t.e[e];
 
             l = ieee_to_long(y - eps);
         }
@@ -217,9 +209,7 @@ int nearest_smaller_ieee_float(double a, double* ret)
 {
     unsigned long l = 0;
 
-    init_table_if_needed();
-
-    if (!(std::fabs(a) <= ieee_table.vmax)) {  // beyond the float range on either side, or NaN
+    if (!(std::fabs(a) <= ieee_table().vmax)) {  // beyond the float range on either side, or NaN
         return SP_INTERNAL_ERROR;
     }
 

@@ -68,15 +68,6 @@ inline void checkRange(const char* what, long value, long lo, long hi)
 
 // --- IEEE float utilities ---
 
-struct ieee_table_t
-{
-    int inited;
-    double e[255];
-    double v[255];
-    double vmin;
-    double vmax;
-};
-
 std::optional<long> number_of_bits(unsigned long x);
 
 // Floating-point format in which the reference value is stored:
