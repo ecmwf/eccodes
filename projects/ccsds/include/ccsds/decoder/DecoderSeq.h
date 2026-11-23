@@ -5,9 +5,12 @@
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
+#include <cmath>
 #include <stdexcept>
 #include <string>
+#include <utility>
 #include <vector>
+#include <byteswap.h>
 
 #include "ccsds/Span.h"
 #include "ccsds/CodeOption.h"
@@ -79,7 +82,7 @@ private:
     };
 
 protected:
-    [[noreturn]] __attribute__((cold, noinline)) static void throwCorrupt(const std::string& what)
+    [[noreturn]] [[gnu::cold, gnu::noinline]] static void throwCorrupt(const std::string& what)
     {
         throw std::runtime_error("CCSDS decoding failed: the compressed data is corrupt (" + what + ")");
     }

@@ -1,11 +1,14 @@
 #pragma once
 
-#include <vector>
 #include <algorithm>
+#include <cstddef>
+#include <cstdint>
 #include <exception>
+#include <vector>
 
 #include "ccsds/Span.h"
 #include "ccsds/CodeOption.h"
+#include "ccsds/Preprocessor.h"
 #include "ccsds/BitBuffer.h"
 #include "ccsds/ThreadPool.h"
 #include "ccsds/decoder/DecoderSeq.h"

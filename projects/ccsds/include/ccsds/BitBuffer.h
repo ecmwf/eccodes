@@ -1,16 +1,17 @@
 #pragma once
 
-#include <cstdint>
-#include <cstddef>
-#include <cstring>
+#include <bit>
 #include <cassert>
+#include <cstddef>
+#include <cstdint>
+#include <cstring>
 #include <stdexcept>
 #include <string>
 #include <byteswap.h>
 
 #include "ccsds/Span.h"
 
-constexpr bool isLittleEndian = (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__);
+constexpr bool isLittleEndian = (std::endian::native == std::endian::little);
 
 class BitBuffer
 {
@@ -52,7 +53,7 @@ public:
     // Throws if the read position is beyond the end of the compressed data
     void checkPos(size_t pos) const
     {
-        if (__builtin_expect(pos > limitBits_, 0)) {
+        if (pos > limitBits_) [[unlikely]] {
             throwOverrun(pos, limitBits_);
         }
     }
@@ -95,7 +96,7 @@ public:
 
             while (acc != 0 && nCodewords > 0) {
                 // Find the next 1-bit (codeword terminator)
-                size_t lz = static_cast<size_t>(__builtin_clzll(acc));
+                size_t lz = std::countl_zero(acc);
                 size_t cwBits = lz + 1;  // zeros + terminating 1
                 currentBitPos_ += cwBits;
                 nCodewords--;
@@ -125,10 +126,10 @@ public:
         acc <<= bitpos;
 
         if (acc != 0) {
-            return static_cast<size_t>(__builtin_clzll(acc)) + 1;
+            return std::countl_zero(acc) + 1;
         }
 
-        // Codeword spans more than 56 bits — fall back to byte scanning.
+        // Codeword spans more than 56 bits: fall back to byte scanning.
         // The data after limitBits_ is zero, so an unterminated codeword ends here.
         size_t zeros = 64 - bitpos;
         bytepos += 8;
@@ -137,7 +138,7 @@ public:
             bytepos++;
             checkPos(bytepos * 8);
         }
-        zeros += static_cast<size_t>(__builtin_clz(static_cast<unsigned>(buffer_[bytepos]))) - 24;
+        zeros += std::countl_zero(static_cast<unsigned>(buffer_[bytepos])) - 24;
         return zeros + 1;
     }
 
@@ -212,7 +213,7 @@ public:
             size_t bytePos = currentBitPos_ >> 3;
             size_t bitOffset = currentBitPos_ & 7;
             acc <<= (64 - totalBits - bitOffset);
-            acc = __builtin_bswap64(acc);
+            acc = bswap_64(acc);
 
             uint64_t old;
             std::memcpy(&old, &buffer_[bytePos], 8);
@@ -247,7 +248,7 @@ public:
             size_t bytePos = pos >> 3;
             size_t bitOffset = pos & 7;
             acc <<= (64 - totalBits - bitOffset);
-            acc = __builtin_bswap64(acc);
+            acc = bswap_64(acc);
 
             uint64_t old;
             std::memcpy(&old, &buffer_[bytePos], 8);

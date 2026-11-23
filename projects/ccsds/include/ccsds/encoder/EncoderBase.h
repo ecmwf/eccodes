@@ -33,7 +33,7 @@ public:
             sum += values[j];
         }
 
-        // Estimate optimal k (Eq. 10): k̂ = max{0, ⌊log2(µ + 49/128)⌋}
+        // Estimate optimal k (Eq. 10): k = max{0, floor(log2(mean + 49/128))}
         size_t kEst = 0;
         {
             uint64_t num = 128 * sum + 49 * static_cast<uint64_t>(nEncoded);
