@@ -372,7 +372,8 @@ void testRandomRoundtrip()
 
     TEST("random round-trip " + typeName);
 
-    std::mt19937 gen(42 + sizeof(T));
+    // Fixed seed: the test must be reproducible
+    std::mt19937 gen(42 + sizeof(T));  // NOLINT(bugprone-random-generator-seed,cert-msc32-c,cert-msc51-cpp)
     std::vector<uint8_t> buf(8192, 0);
     BitBuffer bb{ Span<uint8_t>(buf) };
 

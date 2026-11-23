@@ -2,11 +2,10 @@
 #include <vector>
 #include <cassert>
 #include <cstdint>
-#include <cmath>
+#include <limits>
 #include <random>
-#include <numeric>
-#include <algorithm>
 #include <string>
+#include <type_traits>
 
 #include "ccsds/Preprocessor.h"
 #include "ccsds/encoder/EncoderSeq.h"
@@ -23,9 +22,9 @@ static int passCount = 0;
         std::cout << "  " << name << "... "; \
     } while (0)
 
-#define PASS()                            \
-    do {                                  \
-        passCount++;                      \
+#define PASS()                       \
+    do {                             \
+        passCount++;                 \
         std::cout << "PASS" << '\n'; \
     } while (0)
 
@@ -35,18 +34,18 @@ static int passCount = 0;
         auto _b = (b);                                                              \
         if (_a != _b) {                                                             \
             std::cerr << "FAIL: " << #a << "=" << +_a << " != " << #b << "=" << +_b \
-                      << " at " << __FILE__ << ":" << __LINE__ << '\n';        \
+                      << " at " << __FILE__ << ":" << __LINE__ << '\n';             \
             std::exit(1);                                                           \
         }                                                                           \
     } while (0)
 
-#define ASSERT_TRUE(cond)                                                    \
-    do {                                                                     \
-        if (!(cond)) {                                                       \
-            std::cerr << "FAIL: " << #cond                                   \
+#define ASSERT_TRUE(cond)                                               \
+    do {                                                                \
+        if (!(cond)) {                                                  \
+            std::cerr << "FAIL: " << #cond                              \
                       << " at " << __FILE__ << ":" << __LINE__ << '\n'; \
-            std::exit(1);                                                    \
-        }                                                                    \
+            std::exit(1);                                               \
+        }                                                               \
     } while (0)
 
 // ============================================================================
@@ -178,7 +177,8 @@ void testPreprocessorMapperSpecFormula()
 
     {
         TEST("roundtrip with random data");
-        std::mt19937 gen(42);
+        // Fixed seed: reproducible data
+        std::mt19937 gen(42);  // NOLINT(bugprone-random-generator-seed,cert-msc32-c,cert-msc51-cpp)
         std::vector<ValueType> data(64);
         if constexpr (std::is_signed_v<ValueType>) {
             std::uniform_int_distribution<int> dist(
@@ -204,7 +204,8 @@ void testPreprocessorMapperSpecFormula()
 
     {
         TEST("mapped values are non-negative (§4.4 requirement)");
-        std::mt19937 gen(123);
+        // Fixed seed: reproducible data
+        std::mt19937 gen(123);  // NOLINT(bugprone-random-generator-seed,cert-msc32-c,cert-msc51-cpp)
         std::vector<ValueType> data(128);
         if constexpr (std::is_signed_v<ValueType>) {
             std::uniform_int_distribution<int> dist(
@@ -566,7 +567,7 @@ template <typename ValueType>
 void test_block_sizes()
 {
     constexpr uint8_t BPV = sizeof(ValueType) * 8;
-    std::cout << "§3.1.6 Block Sizes (J=8,16,32,64) for " << BPV << "-bit "
+    std::cout << "§3.1.6 Block Sizes (J=8,16,32,64) for " << static_cast<unsigned int>(BPV) << "-bit "
               << (std::is_signed_v<ValueType> ? "signed" : "unsigned") << ":" << '\n';
 
     constexpr size_t blockSizes[] = { 8, 16, 32, 64 };
@@ -578,7 +579,8 @@ void test_block_sizes()
         constexpr uint16_t rsiSize = 128;
         size_t dataSize = static_cast<size_t>(bs) * rsiSize;
 
-        std::mt19937 gen(42 + bs);
+        // Fixed seed: reproducible data
+        std::mt19937 gen(42 + bs);  // NOLINT(bugprone-random-generator-seed,cert-msc32-c,cert-msc51-cpp)
         std::vector<ValueType> vec(dataSize);
         if constexpr (std::is_signed_v<ValueType>) {
             std::uniform_int_distribution<int> dist(
@@ -679,7 +681,8 @@ void testDataPatterns()
 
     {
         TEST("random data");
-        std::mt19937 gen(999);
+        // Fixed seed: reproducible data
+        std::mt19937 gen(999);  // NOLINT(bugprone-random-generator-seed,cert-msc32-c,cert-msc51-cpp)
         std::vector<ValueType> vec(N);
         if constexpr (std::is_signed_v<ValueType>) {
             std::uniform_int_distribution<int> dist(
@@ -759,7 +762,8 @@ void testCodeOptionSets()
 
     {
         TEST("Basic code option set - random data");
-        std::mt19937 gen(777);
+        // Fixed seed: reproducible data
+        std::mt19937 gen(777);  // NOLINT(bugprone-random-generator-seed,cert-msc32-c,cert-msc51-cpp)
         std::uniform_int_distribution<uint16_t> dist(0, 65535);
         std::vector<ValueType> vec(N);
         for (auto& v : vec)
@@ -770,7 +774,8 @@ void testCodeOptionSets()
 
     {
         TEST("Restricted code option set - random data");
-        std::mt19937 gen(777);
+        // Fixed seed: reproducible data
+        std::mt19937 gen(777);  // NOLINT(bugprone-random-generator-seed,cert-msc32-c,cert-msc51-cpp)
         std::uniform_int_distribution<uint16_t> dist(0, 65535);
         std::vector<ValueType> vec(N);
         for (auto& v : vec)
@@ -810,7 +815,8 @@ void testSplitSample()
     {
         TEST("data favoring split-sample encoding (moderate entropy)");
         // Data with moderate variation should use split-sample
-        std::mt19937 gen(42);
+        // Fixed seed: reproducible data
+        std::mt19937 gen(42);  // NOLINT(bugprone-random-generator-seed,cert-msc32-c,cert-msc51-cpp)
         std::uniform_int_distribution<uint16_t> dist(0, 65535);
         size_t N = blockSize * rsiSize;
         std::vector<ValueType> vec(N);
@@ -892,7 +898,8 @@ void testNoCompression()
     {
         TEST("max-value data (NC should be selected for high-entropy data)");
         // High-entropy random data may trigger NC for some blocks
-        std::mt19937 gen(12345);
+        // Fixed seed: reproducible data
+        std::mt19937 gen(12345);  // NOLINT(bugprone-random-generator-seed,cert-msc32-c,cert-msc51-cpp)
         std::uniform_int_distribution<uint16_t> dist(0, 65535);
         size_t N = blockSize * rsiSize;
         std::vector<ValueType> vec(N);
@@ -955,7 +962,8 @@ void testCompressionEfficiency()
     {
         TEST("random data does not expand more than ~1.1x");
         size_t N = blockSize * rsiSize;
-        std::mt19937 gen(42);
+        // Fixed seed: reproducible data
+        std::mt19937 gen(42);  // NOLINT(bugprone-random-generator-seed,cert-msc32-c,cert-msc51-cpp)
         std::uniform_int_distribution<uint16_t> dist(0, 65535);
         std::vector<ValueType> vec(N);
         for (auto& v : vec)

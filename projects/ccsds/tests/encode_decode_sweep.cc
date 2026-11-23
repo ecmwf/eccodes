@@ -17,7 +17,7 @@ static int failCount = 0;
     do {                                                         \
         if ((a) != (b)) {                                        \
             std::cerr << "FAIL: " << msg << " (expected " << (a) \
-                      << ", got " << (b) << ")" << '\n';    \
+                      << ", got " << (b) << ")" << '\n';         \
             failCount++;                                         \
             return false;                                        \
         }                                                        \
@@ -44,7 +44,8 @@ bool roundTrip(uint8_t bpv, uint8_t block_size, uint16_t rsi,
 
     // Verify
     for (size_t i = 0; i < data.size(); ++i) {
-        CHECK_EQ(data[i], decoded[i],
+        // Cast to unsigned: uint8_t values would otherwise be printed as characters
+        CHECK_EQ(unsigned(data[i]), unsigned(decoded[i]),
                  label + " sample[" + std::to_string(i) + "]");
     }
     return true;

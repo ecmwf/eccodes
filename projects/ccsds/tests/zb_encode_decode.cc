@@ -1,14 +1,16 @@
-#include <iostream>
-#include <vector>
-#include <assert.h>
-#include <random>
 #include <bitset>
+#include <cstdint>
+#include <iostream>
+#include <stdexcept>
+#include <vector>
 
+#include "ccsds/CodeOption.h"
+#include "ccsds/Span.h"
 #include "ccsds/encoder/EncoderSeq.h"
 #include "ccsds/decoder/DecoderSeq.h"
 
 using ValueType = uint16_t;
-constexpr size_t BPV = 16;
+constexpr uint8_t BPV = 16;
 constexpr CodeOptionSet COS = CodeOptionSet::Basic;
 
 void testEncodeDecode(std::vector<ValueType>& vec)
@@ -54,26 +56,32 @@ void testEncodeDecode(std::vector<ValueType>& vec)
     std::cout << "Decoded data matches original data." << '\n';
 }
 
-int main(int argc, char* argv[])
+int main()
 {
-    {
-        std::vector<ValueType> vec{ 0, 0, 0, 0, 0, 0, 0, 0 };
-        testEncodeDecode(vec);
-    }
+    try {
+        {
+            std::vector<ValueType> vec{ 0, 0, 0, 0, 0, 0, 0, 0 };
+            testEncodeDecode(vec);
+        }
 
-    {
-        std::vector<ValueType> vec{ 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-        testEncodeDecode(vec);
-    }
+        {
+            std::vector<ValueType> vec{ 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            testEncodeDecode(vec);
+        }
 
-    {
-        std::vector<ValueType> vec(8 * 128, 0xFFFF);  // full segment
-        testEncodeDecode(vec);
-    }
+        {
+            std::vector<ValueType> vec(8 * 128, 0xFFFF);  // full segment
+            testEncodeDecode(vec);
+        }
 
-    {
-        std::vector<ValueType> vec(8 * 64 + 1, 0xFFFF);
-        testEncodeDecode(vec);
+        {
+            std::vector<ValueType> vec(8 * 64 + 1, 0xFFFF);
+            testEncodeDecode(vec);
+        }
+    }
+    catch (const std::exception& e) {
+        std::cerr << "FAIL: " << e.what() << '\n';
+        return 1;
     }
     return 0;
 }
