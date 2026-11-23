@@ -1,7 +1,10 @@
 #pragma once
 
+#include <algorithm>
 #include <array>
 #include <memory>
+#include <stdexcept>
+#include <string>
 #include <utility>
 
 #include "simple_packing/codec/Binary.h"
@@ -51,6 +54,16 @@ public:
     }
 
 private:
+    // The codec for the given bits per value (1..64)
+    static BinaryInterface<ValueType>& codecFor(long bitsPerValue)
+    {
+        if (bitsPerValue < 1 || bitsPerValue > maxNBits) {
+            throw std::invalid_argument("Simple packing: unsupported number of bits per value " + std::to_string(bitsPerValue) +
+                                        " (must be between 1 and " + std::to_string(maxNBits) + ", or 0 for a constant field)");
+        }
+        return *codecs_[bitsPerValue - 1];
+    }
+
     static constexpr uint8_t maxNBits = 64;
     inline static const std::array<std::unique_ptr<BinaryInterface<ValueType>>, maxNBits> codecs_ = make_binary_codecs<ValueType, maxNBits>();
 };
@@ -65,7 +78,7 @@ std::pair<Parameters, typename SimplePackingBinary<ValueType>::Buffer> SimplePac
     auto d = params.decimalScaleFactor();
     auto b = params.binaryScaleFactor();
     auto r = params.referenceValue();
-    return { params, codecs_[params.bitsPerValue() - 1]->pack(values, d, b, r, min, max) };
+    return { params, codecFor(params.bitsPerValue()).pack(values, d, b, r, min, max) };
 }
 
 
@@ -84,20 +97,17 @@ void SimplePackingBinary<ValueType>::packTo(const Parameters& params, const Valu
     if (params.isConstantField() || params.bitsPerValue() == 0) {
         return;
     }
-    codecs_[params.bitsPerValue() - 1]->packTo(values, nVals,
-                                               params.decimalScaleFactor(),
-                                               params.binaryScaleFactor(),
-                                               params.referenceValue(),
-                                               out);
+    codecFor(params.bitsPerValue()).packTo(values, nVals, params.decimalScaleFactor(), params.binaryScaleFactor(), params.referenceValue(), out);
 }
 
 
 template <typename ValueType>
 void SimplePackingBinary<ValueType>::unpackTo(const Parameters& params, const unsigned char* buf, size_t nVals, ValueType* out)
 {
-    codecs_[params.bitsPerValue() - 1]->unpackTo(buf,
-                                                 params.decimalScaleFactor(),
-                                                 params.binaryScaleFactor(),
-                                                 params.referenceValue(),
-                                                 nVals, out);
+    // Constant field: no packed data
+    if (params.isConstantField() || params.bitsPerValue() == 0) {
+        std::fill(out, out + nVals, static_cast<ValueType>(params.referenceValue()));
+        return;
+    }
+    codecFor(params.bitsPerValue()).unpackTo(buf, params.decimalScaleFactor(), params.binaryScaleFactor(), params.referenceValue(), nVals, out);
 }
