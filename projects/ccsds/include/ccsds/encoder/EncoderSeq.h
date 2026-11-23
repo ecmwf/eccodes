@@ -229,8 +229,9 @@ public:
             }
         };
 
-        // REF
-        if (isZeroBlock(segmentBlocks.full(0))) {
+        // REF: the reference sample is not part of the zero test (as in libaec, where the first
+        // preprocessed sample of an RSI is 0)
+        if (isZeroBlock(segmentBlocks.full(0).drop(1))) {
             nZeroBlocks++;
             isRefZeroBlock = true;
         }
