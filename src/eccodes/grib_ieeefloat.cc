@@ -134,6 +134,13 @@ double grib_long_to_ieee(unsigned long x)
     if (c == 0 && m == 0)
         return 0;
 
+    // Exponent 255: infinity or NaN (the exponent table has entries up to 254 only)
+    if (c == 255) {
+        if (m != 0)
+            return std::numeric_limits<double>::quiet_NaN();
+        return s ? -std::numeric_limits<double>::infinity() : std::numeric_limits<double>::infinity();
+    }
+
     if (c == 0) {
         m |= 0x800000;
         c = 1;
