@@ -374,26 +374,28 @@ public:
         }
     }
 
-    ValueType decodeRefPartSegment(const BitBuffer& buffer, Span<ValueType> segment)
+    // Decodes a trailing partial segment: decode a zero-padded full segment and copy back.
+    template <bool HasReference>
+    auto decodePartSegment(const BitBuffer& buffer, Span<ValueType> segment)
     {
         size_t newSize = (segment.size() + blockSizeV_ - 1) / blockSizeV_ * blockSizeV_;
         paddedSegmentBuf_.resize(newSize);
         std::memset(paddedSegmentBuf_.data(), 0, newSize * sizeof(ValueType));
         Span<ValueType> paddedSpan{ paddedSegmentBuf_.data(), paddedSegmentBuf_.size() };
-        ValueType reference = decodeRefFullSegment(buffer, paddedSpan);
-        for (size_t i = 0; i < segment.size(); ++i) {
-            segment[i] = paddedSegmentBuf_[i];
+        if constexpr (HasReference) {
+            ValueType reference = decodeRefFullSegment(buffer, paddedSpan);
+            copyBackPartSegment(segment);
+            return reference;
         }
-        return reference;
+        else {
+            decodeAltFullSegment(buffer, paddedSpan);
+            copyBackPartSegment(segment);
+            return ValueType(0);
+        }
     }
 
-    void decodeAltPartSegment(const BitBuffer& buffer, Span<ValueType> segment)
+    void copyBackPartSegment(Span<ValueType> segment)
     {
-        size_t newSize = (segment.size() + blockSizeV_ - 1) / blockSizeV_ * blockSizeV_;
-        paddedSegmentBuf_.resize(newSize);
-        std::memset(paddedSegmentBuf_.data(), 0, newSize * sizeof(ValueType));
-        Span<ValueType> paddedSpan{ paddedSegmentBuf_.data(), paddedSegmentBuf_.size() };
-        decodeAltFullSegment(buffer, paddedSpan);
         for (size_t i = 0; i < segment.size(); ++i) {
             segment[i] = paddedSegmentBuf_[i];
         }
@@ -409,7 +411,7 @@ public:
         ValueType reference = 0;
 
         if (rsiSize < maxSegmentSizeV_) {
-            reference = decodeRefPartSegment(buffer, segments.part());
+            reference = decodePartSegment<true>(buffer, segments.part());
         }
         else {
             reference = decodeRefFullSegment(buffer, segments.full(0));
@@ -419,7 +421,7 @@ public:
             }
 
             if (segments.hasPart()) {
-                decodeAltPartSegment(buffer, segments.part());
+                decodePartSegment<false>(buffer, segments.part());
             }
         }
 
