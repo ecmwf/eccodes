@@ -3,6 +3,7 @@
 
 ccsds_add_test(decode_zero_block_run)
 ccsds_add_test(decode_truncated)
+ccsds_add_test(decode_prefix)
 ccsds_add_test(parameter_validation)
 ccsds_add_test(encode_target_buffer)
 ccsds_add_test(encode_value_range)
