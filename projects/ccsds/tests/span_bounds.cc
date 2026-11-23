@@ -20,7 +20,7 @@ static void onAbort(int)
 
 int main()
 {
-    std::signal(SIGABRT, onAbort);
+    (void)std::signal(SIGABRT, onAbort);
     std::vector<uint8_t> data = { 1, 2, 3, 4 };
     Span<uint8_t> span(data);
     volatile uint8_t value = span[data.size()];
