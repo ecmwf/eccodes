@@ -163,24 +163,32 @@ public:
             seLowerBound += bpv_;
         }
 
+        // SE wins some ties (see below), so it must be evaluated when it can be equal
         size_t cheapest = std::min(ssSize, ncSize);
         size_t seSize;
-        if (seLowerBound < cheapest) {
+        if (seLowerBound <= cheapest) {
             seSize = sePrepare<RType>(block);
         }
         else {
             seSize = cheapest + 1;  // SE cannot win
         }
 
-        // §3.7.4 tie-breaking: NC > SE > smallest k
-        if (ncSize <= ssSize && ncSize <= seSize) {
+        // Selection and tie-breaking of libaec (m_select_code_option), for identical streams:
+        // split sample if strictly smaller than both other options, otherwise SE or NC (NC wins
+        // a tie with SE)
+        if (ssSize < ncSize) {
+            if (ssSize < seSize) {
+                ssEncode<RType>(ssK, block, bitBuffer);
+            }
+            else {
+                seEncode<RType>(bitBuffer);
+            }
+        }
+        else if (ncSize <= seSize) {
             ncEncode(block, bitBuffer);
         }
-        else if (seSize <= ssSize && seSize <= ncSize) {
-            seEncode<RType>(bitBuffer);
-        }
         else {
-            ssEncode<RType>(ssK, block, bitBuffer);
+            seEncode<RType>(bitBuffer);
         }
     }
 
