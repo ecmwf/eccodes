@@ -49,3 +49,6 @@ add_test(NAME ${SP_TEST_PREFIX}zero_values COMMAND sp_zero_values)
 
 sp_add_test(unpack_buffer_size)
 add_test(NAME ${SP_TEST_PREFIX}unpack_buffer_size COMMAND sp_unpack_buffer_size)
+
+sp_add_test(field_range)
+add_test(NAME ${SP_TEST_PREFIX}field_range COMMAND sp_field_range)
