@@ -58,3 +58,6 @@ add_test(NAME ${SP_TEST_PREFIX}optimizer_parameters COMMAND sp_optimizer_paramet
 
 sp_add_test(scale_factor_range)
 add_test(NAME ${SP_TEST_PREFIX}scale_factor_range COMMAND sp_scale_factor_range)
+
+sp_add_test(pack_value_range)
+add_test(NAME ${SP_TEST_PREFIX}pack_value_range COMMAND sp_pack_value_range)
