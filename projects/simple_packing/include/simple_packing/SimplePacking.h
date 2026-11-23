@@ -13,7 +13,6 @@
 #include <cstddef>
 #include <memory>
 #include <stdexcept>
-#include <string>
 #include <tuple>
 #include <utility>
 #include <vector>
@@ -21,7 +20,6 @@
 #include "simple_packing/Parameters.h"
 #include "simple_packing/Optimizer.h"
 #include "simple_packing/Utils.h"
-#include "simple_packing/codec/Binary.h"
 
 
 template <typename ValueType>
@@ -48,9 +46,7 @@ public:
     {
         Parameters params;
 
-        if (check_data_values_range(min, max) != SP_SUCCESS) {
-            throw std::runtime_error("Values out of range (minimum " + std::to_string(min) + ", maximum " + std::to_string(max) + "): values must be finite and the minimum must not be larger than the maximum");
-        }
+        check_data_values_range(min, max);
 
         if (max == min) {
             auto ref = nearest_smaller_value(min, optimizer_ ? optimizer_->referenceFloatType() : FloatType::IEEE32);

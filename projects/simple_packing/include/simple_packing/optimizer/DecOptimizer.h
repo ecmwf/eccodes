@@ -65,11 +65,11 @@ public:
             throw std::runtime_error("unable to find nearest_smaller_value of " + std::to_string(min));
         }
 
-        int err;
-        params.binaryScaleFactor(get_binary_scale_factor(max, params.referenceValue(), params.bitsPerValue(), &err));
-        if (err) {
+        auto scale = get_binary_scale_factor(max, params.referenceValue(), params.bitsPerValue());
+        if (!scale) {
             throw std::runtime_error("unable to compute binary_scale_factor");
         }
+        params.binaryScaleFactor(*scale);
         return params;
     }
 

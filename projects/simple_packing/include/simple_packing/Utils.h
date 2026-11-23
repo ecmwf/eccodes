@@ -18,14 +18,6 @@
 #include <limits>
 #include <utility>
 
-// --- Error codes ---
-
-#define SP_SUCCESS        0
-#define SP_INTERNAL_ERROR 3
-#define SP_ENCODING_ERROR 6
-#define SP_OUT_OF_RANGE   7
-#define SP_UNDERFLOW      8
-
 // --- Power function ---
 
 /* Return n to the power of s */
@@ -157,8 +149,15 @@ std::pair<T, T> sp_minmax(const T* values, size_t n)
     }
     return { rmn, rmx };
 }
-long get_binary_scale_factor(double max, double min, long bpval, int* ret);
-int check_data_values_range(double min_val, double max_val);
+// The binary scale factor E (a power of 2 exponent) such that (max - min) * 2^-E fills
+// bpval bits. std::nullopt if the range is too small for bpval bits even with E = -127
+// (underflow). Throws std::invalid_argument if bpval is not in [1, 63] and std::range_error
+// if the range is not finite or max is smaller than min.
+std::optional<long> get_binary_scale_factor(double max, double min, long bpval);
+
+// Throws std::runtime_error unless both values are finite and the minimum is not larger
+// than the maximum
+void check_data_values_range(double min_val, double max_val);
 
 
 // --- Byte swap macros ---

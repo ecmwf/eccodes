@@ -205,17 +205,14 @@ unsigned long ieee_nearest_smaller_to_long(double x)
 }
 
 
-int nearest_smaller_ieee_float(double a, double* ret)
+// Largest IEEE 32 bit float <= a; std::nullopt if there is none
+std::optional<double> nearest_smaller_ieee_float(double a)
 {
-    unsigned long l = 0;
-
     if (!(std::fabs(a) <= ieee_table().vmax)) {  // beyond the float range on either side, or NaN
-        return SP_INTERNAL_ERROR;
+        return std::nullopt;
     }
 
-    l = ieee_nearest_smaller_to_long(a);
-    *ret = long_to_ieee(l);
-    return SP_SUCCESS;
+    return long_to_ieee(ieee_nearest_smaller_to_long(a));
 }
 
 
@@ -298,21 +295,20 @@ double long_to_ibm(unsigned long x)
     return s ? -val : val;
 }
 
-// Largest IBM float <= a; returns false if there is none
-bool nearest_smaller_ibm_float(double a, double* ret)
+// Largest IBM float <= a; std::nullopt if there is none
+std::optional<double> nearest_smaller_ibm_float(double a)
 {
     const IbmTable& t = ibm_table();
     if (!(std::fabs(a) <= t.vmax)) {  // also NaN
-        return false;
+        return std::nullopt;
     }
     if (a == 0) {
-        *ret = 0;
-        return true;
+        return 0.0;
     }
 
     unsigned long l = 0;
     if (!ibm_to_long(a, l)) {
-        return false;
+        return std::nullopt;
     }
     const double y = long_to_ibm(l);
     double eps = 0;
@@ -332,17 +328,16 @@ bool nearest_smaller_ibm_float(double a, double* ret)
             }
             eps = t.e[e];
             if (!ibm_to_long(y - eps, l)) {
-                return false;
+                return std::nullopt;
             }
         }
     }
     if (a < long_to_ibm(l)) {
         if (!ibm_to_long(a - eps, l) || a < long_to_ibm(l)) {
-            return false;
+            return std::nullopt;
         }
     }
-    *ret = long_to_ibm(l);
-    return true;
+    return long_to_ibm(l);
 }
 
 }  // anonymous namespace
@@ -369,49 +364,30 @@ std::optional<long> number_of_bits(unsigned long x)
 
 std::optional<double> nearest_smaller_value(double val, FloatType type)
 {
-    double nearest = 0;
-    if (type == FloatType::IBM32) {
-        if (!nearest_smaller_ibm_float(val, &nearest)) {
-            return std::nullopt;
-        }
-        return nearest;
-    }
-    int err = nearest_smaller_ieee_float(val, &nearest);
-    if (err != SP_SUCCESS) {
-        return std::nullopt;
-    }
-    return nearest;
+    return type == FloatType::IBM32 ? nearest_smaller_ibm_float(val) : nearest_smaller_ieee_float(val);
 }
 
 
-long get_binary_scale_factor(double max, double min, long bpval, int* ret)
+std::optional<long> get_binary_scale_factor(double max, double min, long bpval)
 {
     const double range = max - min;
     double zs = 1;
     long scale = 0;
     const long last = 127;
-    const size_t ulong_size = sizeof(unsigned long) * 8;
 
     // Check the arguments before using them (ECC-246, ECC-1927 in ecCodes)
-    if (bpval >= static_cast<long>(ulong_size)) {
-        *ret = SP_OUT_OF_RANGE;
-        return 0;
-    }
-    if (bpval < 1) {
-        *ret = SP_ENCODING_ERROR;
-        return 0;
+    if (bpval < 1 || bpval >= 64) {
+        throw std::invalid_argument("Simple packing: unsupported number of bits per value " + std::to_string(bpval) +
+                                    " (must be between 1 and 63)");
     }
     if (!std::isfinite(range)) {
-        *ret = SP_OUT_OF_RANGE;
-        return 0;
+        throw std::range_error("Simple packing: the range of the values is not finite");
     }
     if (range < 0) {  // maximum < minimum
-        *ret = SP_ENCODING_ERROR;
-        return 0;
+        throw std::range_error("Simple packing: the maximum is smaller than the minimum");
     }
-    const unsigned long maxint = static_cast<unsigned long>(sp_power<double>(bpval, 2)) - 1;
 
-    *ret = 0;
+    const unsigned long maxint = static_cast<unsigned long>(sp_power<double>(bpval, 2)) - 1;
 
     assert(bpval >= 1);
     if (range == 0)
@@ -438,25 +414,17 @@ long get_binary_scale_factor(double max, double min, long bpval, int* ret)
     }
 
     if (scale < -last) {
-        *ret = SP_UNDERFLOW;
-        scale = -last;
+        return std::nullopt;  // the range is too small even with the smallest binary scale factor
     }
     assert(scale <= last);
     return scale;
 }
 
 
-int check_data_values_range(double min_val, double max_val)
+void check_data_values_range(double min_val, double max_val)
 {
-    if (!(min_val < dbl_max && min_val > -dbl_max)) {
-        return SP_ENCODING_ERROR;
+    if (!(min_val < dbl_max && min_val > -dbl_max) || !(max_val < dbl_max && max_val > -dbl_max) || min_val > max_val) {
+        throw std::runtime_error("Values out of range (minimum " + std::to_string(min_val) + ", maximum " + std::to_string(max_val) +
+                                 "): values must be finite and the minimum must not be larger than the maximum");
     }
-    if (!(max_val < dbl_max && max_val > -dbl_max)) {
-        return SP_ENCODING_ERROR;
-    }
-    if (min_val > max_val) {
-        return SP_ENCODING_ERROR;
-    }
-
-    return SP_SUCCESS;
 }

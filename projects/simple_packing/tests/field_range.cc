@@ -74,14 +74,10 @@ int main()
 
     // The scale factor search directly
     expectError("get_binary_scale_factor with maximum < minimum", [&] {
-        int err = 0;
-        get_binary_scale_factor(1.0, 5.0, 24, &err);
-        if (err != 0) throw std::runtime_error("error");
+        get_binary_scale_factor(1.0, 5.0, 24);
     });
     expectError("get_binary_scale_factor with an infinite range", [&] {
-        int err = 0;
-        get_binary_scale_factor(1e308, -1e308, 24, &err);
-        if (err != 0) throw std::runtime_error("error");
+        get_binary_scale_factor(1e308, -1e308, 24);
     });
 
     if (failures == 0) {

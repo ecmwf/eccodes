@@ -163,7 +163,6 @@ Parameters BinDecOptimizer::getParams(const double pmin, const double pmax)
         double minrange = sp_power<double>(-last, 2) * f;
         double maxrange = sp_power<double>(+last, 2) * f;
         double decimal = 1;
-        int err;
 
         params.decimalScaleFactor(0);
 
@@ -191,9 +190,13 @@ Parameters BinDecOptimizer::getParams(const double pmin, const double pmax)
             throw std::runtime_error("unable to find nearest_smaller_value");
         }
 
-        params.binaryScaleFactor(get_binary_scale_factor(max, params.referenceValue(), knbit_, &err));
-
-        if (err == SP_UNDERFLOW) {
+        auto scale = get_binary_scale_factor(max, params.referenceValue(), knbit_);
+        if (scale) {
+            params.binaryScaleFactor(*scale);
+        }
+        else {
+            // The range is too small even with the smallest binary scale factor:
+            // fall back to no scaling
             params.binaryScaleFactor(0);
             params.decimalScaleFactor(0);
             params.referenceValue(0.);
