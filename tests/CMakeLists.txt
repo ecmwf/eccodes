@@ -693,6 +693,13 @@ if( eccodes_HAVE_ECKIT_GEO AND eccodes_HAVE_GEOGRAPHY )
     target_link_libraries(grib_eckit_geo_proj_string eckit_geo)
     target_link_libraries(grib_geo_iterator eckit_geo)
 
+    # the gridSpec scripts are run with eckit::geo (they are disabled otherwise)
+    foreach( _test grib_gridSpec grib_ecc-2317 grib_ecc-2319 )
+        if( TEST eccodes_t_${_test} )
+            set_property( TEST eccodes_t_${_test} APPEND PROPERTY ENVIRONMENT ECCODES_ECKIT_GEO=1 )
+        endif()
+    endforeach()
+
     ecbuild_add_test( TARGET eccodes_t_gridspec
                       SOURCES gridspec.cc
                       CONDITION ENABLE_EXTRA_TESTS
