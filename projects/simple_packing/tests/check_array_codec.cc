@@ -2,11 +2,9 @@
 #include <fstream>
 #include <cassert>
 #include <algorithm>
-#include <bitset>
 
 
 #include "simple_packing/optimizer/DecOptimizer.h"
-#include "simple_packing/optimizer/BinDecOptimizer.h"
 #include "simple_packing/optimizer/BPVOptimizer.h"
 #include "simple_packing/simple/Array.h"
 
@@ -31,21 +29,8 @@ void encode_decode(size_t nVals, size_t bpv)
 
     auto [params, encoded] = sp.pack(original);
 
-    // std::visit([&](auto&& arg){
-    //     using T = std::decay_t<decltype(arg)>;
-    //     std::cerr << "Encoded data type: " << typeid(T).name() << ", size: " << arg.size() << std::endl;
-    //     std::cerr << "ValueType size: " << sizeof(typename T::value_type) << " bytes" << std::endl;
-    //     for (size_t i = 0; i < std::min(arg.size(), size_t(30)); ++i) {
-    //         std::cerr << "encoded[" << i << "] = " << static_cast<uint64_t>(arg[i]) << " " << std::bitset<sizeof(typename T::value_type) * 8>(static_cast<typename T::value_type>(arg[i])) << std::endl;
-    //     }
-    // }, encoded);
-
-
-    params.print();
     typename SP::Values decoded = sp.unpack(params, encoded, original.size());
 
-    // check
-    // assert(encoded.size() != 0);
     assert(decoded.size() == original.size());
     auto failed = false;
     for (unsigned int i = 0; i < original.size(); ++i) {
@@ -62,8 +47,6 @@ void encode_decode(size_t nVals, size_t bpv)
         }
         throw std::runtime_error("Decoded data does not match original data");
     }
-
-    params.print();
 }
 
 int main(int argc, char* argv[])
