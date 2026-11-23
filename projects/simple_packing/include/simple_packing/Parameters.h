@@ -7,10 +7,8 @@ struct Parameters
 {
 public:
     Parameters() : bitsPerValue_(0), decimalScaleFactor_(0), binaryScaleFactor_(0), referenceValue_(0.0), isConstantField_(false) {}
-    Parameters(long bitsPerValue, long decimalScaleFactor, long binaryScaleFactor, double referenceValue, bool /*isConstantField*/) : bitsPerValue_(bitsPerValue),
-                                                                                                                                      decimalScaleFactor_(decimalScaleFactor),
-                                                                                                                                      binaryScaleFactor_(binaryScaleFactor),
-                                                                                                                                      referenceValue_(referenceValue) {}
+    Parameters(long bitsPerValue, long decimalScaleFactor, long binaryScaleFactor, double referenceValue, bool isConstantField) :
+        bitsPerValue_(bitsPerValue), decimalScaleFactor_(decimalScaleFactor), binaryScaleFactor_(binaryScaleFactor), referenceValue_(referenceValue), isConstantField_(isConstantField) {}
     void print()
     {
         std::cout << "reference_value: " << referenceValue_ << std::endl;

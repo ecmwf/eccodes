@@ -56,6 +56,14 @@ public:
     }
 
 private:
+    // The codec for the given parameters (bits per value 1..64, GRIB scale factors)
+    static BinaryInterface<ValueType>& codecFor(const Parameters& params)
+    {
+        checkRange("binary scale factor", params.binaryScaleFactor(), -maxScaleFactor, maxScaleFactor);
+        checkRange("decimal scale factor", params.decimalScaleFactor(), -maxScaleFactor, maxScaleFactor);
+        return codecFor(params.bitsPerValue());
+    }
+
     // The codec for the given bits per value (1..64)
     static BinaryInterface<ValueType>& codecFor(long bitsPerValue)
     {
@@ -80,7 +88,7 @@ std::pair<Parameters, typename SimplePackingBinary<ValueType>::Buffer> SimplePac
     auto d = params.decimalScaleFactor();
     auto b = params.binaryScaleFactor();
     auto r = params.referenceValue();
-    return { params, codecFor(params.bitsPerValue()).pack(values, d, b, r, min, max) };
+    return { params, codecFor(params).pack(values, d, b, r, min, max) };
 }
 
 
@@ -99,7 +107,7 @@ void SimplePackingBinary<ValueType>::packTo(const Parameters& params, const Valu
     if (params.isConstantField() || params.bitsPerValue() == 0) {
         return;
     }
-    codecFor(params.bitsPerValue()).packTo(values, nVals, params.decimalScaleFactor(), params.binaryScaleFactor(), params.referenceValue(), out);
+    codecFor(params).packTo(values, nVals, params.decimalScaleFactor(), params.binaryScaleFactor(), params.referenceValue(), out);
 }
 
 
@@ -111,7 +119,7 @@ void SimplePackingBinary<ValueType>::unpackTo(const Parameters& params, const un
         std::fill(out, out + nVals, static_cast<ValueType>(params.referenceValue()));
         return;
     }
-    BinaryInterface<ValueType>& codec = codecFor(params.bitsPerValue());
+    BinaryInterface<ValueType>& codec = codecFor(params);
     const size_t bpv = static_cast<size_t>(params.bitsPerValue());
     if (nVals > (std::numeric_limits<size_t>::max() - 7) / bpv || bufferSize < (bpv * nVals + 7) / 8) {
         throw std::invalid_argument("Simple packing: the coded data is too short (" + std::to_string(bufferSize) + " bytes for " + std::to_string(nVals) +
