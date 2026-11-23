@@ -393,7 +393,12 @@ std::optional<long> get_binary_scale_factor(double max, double min, long bpval)
     if (range == 0)
         return 0;
 
+    // Scaling up must not overflow zs to infinity, otherwise the search below could never
+    // halve it back (inf / 2 == inf): the range is too small for any binary scale factor
     while ((range * zs) <= maxint) {
+        if (zs > (std::numeric_limits<double>::max() / 2)) {
+            return std::nullopt;
+        }
         scale--;
         zs *= 2;
     }
