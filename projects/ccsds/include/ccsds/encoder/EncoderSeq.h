@@ -254,36 +254,6 @@ public:
         }
     }
 
-    void encodeAltFullSegment(const Span<DeltaType> segment, BitBuffer& buffer)
-    {
-        size_t nZeroBlocks = 0;
-        SplitBlock<DeltaType> segmentBlocks(segment, blockSizeV_);
-
-        auto handleZeroBlocks = [&]() {
-            if (nZeroBlocks != 0) {
-                zbEncode<ReferenceType::NoRef>(buffer, 0, nZeroBlocks);
-                nZeroBlocks = 0;
-            }
-        };
-
-        // ALT
-        for (size_t i = 0; i < segmentBlocks.nFull(); ++i) {
-            auto block = segmentBlocks.full(i);
-            if (isZeroBlock(block)) {
-                nZeroBlocks++;
-            }
-            else {
-                handleZeroBlocks();
-                encodeFullBlock<ReferenceType::NoRef>(block, buffer);
-            }
-        }
-
-        // ROS
-        if (nZeroBlocks != 0) {
-            zbEncodeROS<ReferenceType::NoRef>(buffer, 0, nZeroBlocks);
-        }
-    }
-
     void encodeRefPartSegment(const Span<DeltaType> segment, BitBuffer& buffer)
     {
         DeltaType reference = segment[0];
@@ -365,7 +335,9 @@ public:
         }
     }
 
-    void encodeAltPartSegment(const Span<DeltaType> segment, BitBuffer& buffer)
+    // Alternative segments carry no reference: all blocks are NoRef, a trailing partial
+    // block is simply absent for full segments.
+    void encodeAltSegment(const Span<DeltaType> segment, BitBuffer& buffer)
     {
         SplitBlock<DeltaType> segmentBlocks(segment, blockSizeV_);
         size_t nZeroBlocks = 0;
@@ -419,10 +391,10 @@ public:
         else {
             encodeRefFullSegment(segmentBlocks.full(0), buffer);
             for (size_t i = 1; i < segmentBlocks.nFull(); ++i) {
-                encodeAltFullSegment(segmentBlocks.full(i), buffer);
+                encodeAltSegment(segmentBlocks.full(i), buffer);
             }
             if (segmentBlocks.hasPart()) {
-                encodeAltPartSegment(segmentBlocks.part(), buffer);
+                encodeAltSegment(segmentBlocks.part(), buffer);
             }
         }
     }
@@ -444,8 +416,8 @@ public:
     }
 
     EncoderSeq(uint8_t bpv, uint8_t block_size, uint16_t rsiSize, CodeOptionSet codeOptionSet) : EncoderBase<ValueType, DeltaType>(bpv, block_size, rsiSize, codeOptionSet),
-                                                                                                  preprocessor_(bpv),
-                                                                                                  preprocessBuffer_(rsiSize * block_size)
+                                                                                                 preprocessor_(bpv),
+                                                                                                 preprocessBuffer_(rsiSize * block_size)
     {
         seState_.encodedValues_.resize(blockSizeV_ / 2);
     }
