@@ -69,6 +69,9 @@ public:
             return std::make_tuple(params, min, max);
         }
         else {
+            if (!optimizer_) {
+                throw std::logic_error("Simple packing: no optimiser to compute the packing parameters (created for decoding only)");
+            }
             params = optimizer_->getParams(min, max);
         }
         return std::make_tuple(params, min, max);
