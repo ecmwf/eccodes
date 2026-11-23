@@ -1,11 +1,13 @@
 #pragma once
 
-#include <vector>
+#include <bit>
+#include <cassert>
+#include <cstddef>
+#include <cstdint>
 #include <cstring>
-#include <assert.h>
-#include <array>
 #include <stdexcept>
 #include <string>
+#include <vector>
 
 #include "ccsds/Span.h"
 #include "ccsds/CodeOption.h"
@@ -24,6 +26,57 @@ private:
         std::memcpy(&val, ptr, sizeof(uint64_t));
         return val;
     }
+
+    // Reads unary codewords (zero bits terminated by a one bit) from a 64-bit accumulator.
+    // The shared inner loop of the SE and SS decoders: all three call sites decode one
+    // codeword per iteration from the same (data, pos, acc, consumed) state.
+    struct UnaryCodewordReader
+    {
+        const uint8_t* data;
+        const BitBuffer& buffer;
+        size_t pos;
+        uint64_t acc;
+        size_t consumed;
+
+        explicit UnaryCodewordReader(const BitBuffer& buffer) :
+            data(buffer.getBuffer().data()),
+            buffer(buffer),
+            pos(buffer.bitPos())
+        {
+            const size_t bitpos = pos & 7;
+            acc = bswap_64(loadU64(&data[pos >> 3]));
+            acc <<= bitpos;
+            consumed = bitpos;
+        }
+
+        // Returns the number of zeros before the terminating one bit and advances the state.
+        size_t read()
+        {
+            const size_t cw_start = pos;
+            while (acc == 0) [[unlikely]] {
+                buffer.checkPos(pos);
+                pos += (64 - consumed);
+                const size_t bitpos = pos & 7;
+                acc = bswap_64(loadU64(&data[pos >> 3]));
+                acc <<= bitpos;
+                consumed = bitpos;
+            }
+            const size_t lz = std::countl_zero(acc);
+            const size_t total_zeros = (pos - cw_start) + lz;
+            pos += lz + 1;
+            consumed += lz + 1;
+            if (consumed >= 64) [[unlikely]] {
+                const size_t bitpos = pos & 7;
+                acc = bswap_64(loadU64(&data[pos >> 3]));
+                acc <<= bitpos;
+                consumed = bitpos;
+            }
+            else {
+                acc <<= (lz + 1);
+            }
+            return total_zeros;
+        }
+    };
 
 protected:
     [[noreturn]] __attribute__((cold, noinline)) static void throwCorrupt(const std::string& what)
@@ -62,7 +115,7 @@ public:
         int bitsAvail = 64 - static_cast<int>(bitpos);
 
         for (size_t i = startIndex; i < blockSizeV_; ++i) {
-            if (__builtin_expect(bitsAvail < nBits, 0)) {
+            if (bitsAvail < nBits) [[unlikely]] {
                 bytepos = pos >> 3;
                 bitpos = pos & 7;
                 acc = bswap_64(loadU64(&data[bytepos]));
@@ -81,46 +134,14 @@ public:
     void seDecode(const BitBuffer& buffer, Span<ValueType> values) const
     {
         assert(values.size() == blockSizeV_ && "Decoded values size mismatch");
-        const uint8_t* data = buffer.getBuffer().data();
 
-        size_t pos = buffer.bitPos();
-        size_t bytepos = pos >> 3;
-        size_t bitpos = pos & 7;
-        uint64_t acc = bswap_64(loadU64(&data[bytepos]));
-        acc <<= bitpos;
-        size_t consumed = bitpos;
-
+        UnaryCodewordReader codewords{ buffer };
         for (size_t i = 0; i < blockSizeV_ / 2; ++i) {
-            // Batched codeword read
-            size_t cw_start = pos;
-            while (__builtin_expect(acc == 0, 0)) {
-                buffer.checkPos(pos);
-                pos += (64 - consumed);
-                bytepos = pos >> 3;
-                bitpos = pos & 7;
-                acc = bswap_64(loadU64(&data[bytepos]));
-                acc <<= bitpos;
-                consumed = bitpos;
-            }
-            size_t lz = static_cast<size_t>(__builtin_clzll(acc));
-            size_t total_zeros = (pos - cw_start) + lz;
-            const ValueType tmp = static_cast<ValueType>(total_zeros);
-            pos += lz + 1;
-            consumed += lz + 1;
-            if (__builtin_expect(consumed >= 64, 0)) {
-                bytepos = pos >> 3;
-                bitpos = pos & 7;
-                acc = bswap_64(loadU64(&data[bytepos]));
-                acc <<= bitpos;
-                consumed = bitpos;
-            }
-            else {
-                acc <<= (lz + 1);
-            }
+            const ValueType tmp = static_cast<ValueType>(codewords.read());
 
             // Fast integer sqrt: w = floor((sqrt(8*tmp+1) - 1) / 2)
             const uint32_t val = 8u * static_cast<uint32_t>(tmp) + 1;
-            uint32_t s = static_cast<uint32_t>(__builtin_sqrtf(static_cast<float>(val)));
+            uint32_t s = static_cast<uint32_t>(std::sqrt(static_cast<float>(val)));
             s -= (s * s > val);  // adjust down if needed
             const ValueType w = static_cast<ValueType>((s - 1) >> 1);
             const ValueType t = w * (w + 1) / 2;
@@ -129,7 +150,7 @@ public:
             values[2 * i] = d1;
             values[2 * i + 1] = d2;
         }
-        buffer.bitPos(pos);
+        buffer.bitPos(codewords.pos);
     }
 
     // SS
@@ -141,46 +162,16 @@ public:
         }
 
         constexpr size_t startIndex = (RType == ReferenceType::Ref) ? 1 : 0;
-        const uint8_t* data = buffer.getBuffer().data();
+        const uint8_t* data = buffer.getBuffer().data();  // also used by the phase 2 reader
 
         if (k != 0) {
             // Phase 1: Read codewords using batched accumulator
             {
-                size_t pos = buffer.bitPos();
-                size_t bytepos = pos >> 3;
-                size_t bitpos = pos & 7;
-                uint64_t acc = bswap_64(loadU64(&data[bytepos]));
-                acc <<= bitpos;
-                size_t consumed = bitpos;
-
+                UnaryCodewordReader codewords{ buffer };
                 for (size_t i = startIndex; i < blockSizeV_; ++i) {
-                    size_t cw_start = pos;
-                    while (__builtin_expect(acc == 0, 0)) {
-                        buffer.checkPos(pos);
-                        pos += (64 - consumed);
-                        bytepos = pos >> 3;
-                        bitpos = pos & 7;
-                        acc = bswap_64(loadU64(&data[bytepos]));
-                        acc <<= bitpos;
-                        consumed = bitpos;
-                    }
-                    size_t lz = static_cast<size_t>(__builtin_clzll(acc));
-                    size_t total_zeros = (pos - cw_start) + lz;
-                    values[i] = static_cast<ValueType>(static_cast<uint64_t>(total_zeros) << k);
-                    pos += lz + 1;
-                    consumed += lz + 1;
-                    if (__builtin_expect(consumed >= 64, 0)) {
-                        bytepos = pos >> 3;
-                        bitpos = pos & 7;
-                        acc = bswap_64(loadU64(&data[bytepos]));
-                        acc <<= bitpos;
-                        consumed = bitpos;
-                    }
-                    else {
-                        acc <<= (lz + 1);
-                    }
+                    values[i] = static_cast<ValueType>(static_cast<uint64_t>(codewords.read()) << k);
                 }
-                buffer.bitPos(pos);
+                buffer.bitPos(codewords.pos);
             }
 
             // Phase 2: Read k-bit LSBs using batched accumulator
@@ -193,7 +184,7 @@ public:
                 int bitsAvail = 64 - static_cast<int>(bitpos);
 
                 for (size_t i = startIndex; i < blockSizeV_; ++i) {
-                    if (__builtin_expect(bitsAvail < k, 0)) {
+                    if (bitsAvail < k) [[unlikely]] {
                         bytepos = pos >> 3;
                         bitpos = pos & 7;
                         acc = bswap_64(loadU64(&data[bytepos]));
@@ -209,41 +200,11 @@ public:
             }
         }
         else {  // FS - batched codeword reading
-            size_t pos = buffer.bitPos();
-            size_t bytepos = pos >> 3;
-            size_t bitpos = pos & 7;
-            uint64_t acc = bswap_64(loadU64(&data[bytepos]));
-            acc <<= bitpos;
-            size_t consumed = bitpos;
-
+            UnaryCodewordReader codewords{ buffer };
             for (size_t i = startIndex; i < blockSizeV_; ++i) {
-                size_t cw_start = pos;
-                while (__builtin_expect(acc == 0, 0)) {
-                    buffer.checkPos(pos);
-                    pos += (64 - consumed);
-                    bytepos = pos >> 3;
-                    bitpos = pos & 7;
-                    acc = bswap_64(loadU64(&data[bytepos]));
-                    acc <<= bitpos;
-                    consumed = bitpos;
-                }
-                size_t lz = static_cast<size_t>(__builtin_clzll(acc));
-                size_t total_zeros = (pos - cw_start) + lz;
-                values[i] = static_cast<ValueType>(total_zeros);
-                pos += lz + 1;
-                consumed += lz + 1;
-                if (__builtin_expect(consumed >= 64, 0)) {
-                    bytepos = pos >> 3;
-                    bitpos = pos & 7;
-                    acc = bswap_64(loadU64(&data[bytepos]));
-                    acc <<= bitpos;
-                    consumed = bitpos;
-                }
-                else {
-                    acc <<= (lz + 1);
-                }
+                values[i] = static_cast<ValueType>(codewords.read());
             }
-            buffer.bitPos(pos);
+            buffer.bitPos(codewords.pos);
         }
     }
 
