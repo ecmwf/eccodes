@@ -55,36 +55,35 @@ ieee_table_t ieee_table = { 0, {
                             0 };
 
 
-void init_ieee_table()
+void fill_ieee_table()
 {
-    if (!ieee_table.inited) {
-        unsigned long i;
-        unsigned long mmin = 0x800000;
-        unsigned long mmax = 0xffffff;
-        double e = 1;
-        for (i = 1; i <= 104; i++) {
-            e *= 2;
-            ieee_table.e[i + 150] = e;
-            ieee_table.v[i + 150] = e * mmin;
-        }
-        ieee_table.e[150] = 1;
-        ieee_table.v[150] = mmin;
-        e = 1;
-        for (i = 1; i < 150; i++) {
-            e /= 2;
-            ieee_table.e[150 - i] = e;
-            ieee_table.v[150 - i] = e * mmin;
-        }
-        ieee_table.vmin = ieee_table.v[1];
-        ieee_table.vmax = ieee_table.e[254] * mmax;
-        ieee_table.inited = 1;
+    unsigned long i;
+    unsigned long mmin = 0x800000;
+    unsigned long mmax = 0xffffff;
+    double e = 1;
+    for (i = 1; i <= 104; i++) {
+        e *= 2;
+        ieee_table.e[i + 150] = e;
+        ieee_table.v[i + 150] = e * mmin;
     }
+    ieee_table.e[150] = 1;
+    ieee_table.v[150] = mmin;
+    e = 1;
+    for (i = 1; i < 150; i++) {
+        e /= 2;
+        ieee_table.e[150 - i] = e;
+        ieee_table.v[150 - i] = e * mmin;
+    }
+    ieee_table.vmin = ieee_table.v[1];
+    ieee_table.vmax = ieee_table.e[254] * mmax;
+    ieee_table.inited = 1;
 }
 
+// Thread-safe: the first caller fills the table, concurrent callers wait for it
 void init_table_if_needed()
 {
-    if (!ieee_table.inited)
-        init_ieee_table();
+    static const bool filled = (fill_ieee_table(), true);
+    (void)filled;
 }
 
 
