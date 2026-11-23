@@ -69,7 +69,6 @@ struct UInt128
     // Shifts
     friend constexpr UInt128 operator<<(const UInt128& x, unsigned s)
     {
-        s &= 127u;
         if (s == 0) return x;
         if (s >= 128) return UInt128(0, 0);
         if (s >= 64) {
@@ -83,7 +82,6 @@ struct UInt128
     }
     friend constexpr UInt128 operator>>(const UInt128& x, unsigned s)
     {
-        s &= 127u;
         if (s == 0) return x;
         if (s >= 128) return UInt128(0, 0);
         if (s >= 64) {
