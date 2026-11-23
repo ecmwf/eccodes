@@ -5,6 +5,7 @@ visibility = "public"
 fork-pull-requests = true
 compiler-inputs = ["cxx-compiler"]
 add-to-path = ["bin"]
+ci-yml = "custom"
 
 [[deps]]
 repo = "ecmwf/ecbuild"
@@ -58,7 +59,9 @@ when = { options = ["eckit-geo"] }
 eckit-geo-env = 1
 job-script = "./.ci/build.sh.j2"
 build-type = "RelWithDebInfo"
-runs-on = "arc-runner-very-large"
+# ARC runners off: GitHub-hosted until they are back.
+# runs-on = "arc-runner-very-large"
+runs-on = "ubuntu-latest"
 
 [[matrix.build.include]]
 cxx-compiler = "clang++-18"
@@ -96,111 +99,112 @@ options = "static"
 container = "eccr.ecmwf.int/public-ci-images/ubuntu24.04-gcc13-gfortran13:latest"
 platform = "ubuntu-24.04"
 
-[[matrix.build.include]]
-runs-on = "arc-runner-very-large"
-cxx-compiler = "g++-15"
-c-compiler = "gcc-15"
-container = "eccr.ecmwf.int/public-ci-images/ubuntu26.04-gcc15-gfortran15"
-platform = "ubuntu-26.04"
+# ARC runners off: legs on other platforms disabled until they are back.
+# [[matrix.build.include]]
+# runs-on = "arc-runner-very-large"
+# cxx-compiler = "g++-15"
+# c-compiler = "gcc-15"
+# container = "eccr.ecmwf.int/public-ci-images/ubuntu26.04-gcc15-gfortran15"
+# platform = "ubuntu-26.04"
 
-[[matrix.build.include]]
-runs-on = "arc-runner-very-large"
-cxx-compiler = "g++-15"
-c-compiler = "gcc-15"
-options = "eckit-geo"
-container = "eccr.ecmwf.int/public-ci-images/ubuntu26.04-gcc15-gfortran15"
-platform = "ubuntu-26.04"
+# [[matrix.build.include]]
+# runs-on = "arc-runner-very-large"
+# cxx-compiler = "g++-15"
+# c-compiler = "gcc-15"
+# options = "eckit-geo"
+# container = "eccr.ecmwf.int/public-ci-images/ubuntu26.04-gcc15-gfortran15"
+# platform = "ubuntu-26.04"
 
-[[matrix.build.include]]
-runs-on = "arc-runner-very-large"
-cxx-compiler = "g++-8"
-c-compiler = "gcc-8"
-container = "eccr.ecmwf.int/public-ci-images/rocky8-gcc8-gfortran8"
-platform = "rocky-8"
+# [[matrix.build.include]]
+# runs-on = "arc-runner-very-large"
+# cxx-compiler = "g++-8"
+# c-compiler = "gcc-8"
+# container = "eccr.ecmwf.int/public-ci-images/rocky8-gcc8-gfortran8"
+# platform = "rocky-8"
 
-[[matrix.build.include]]
-runs-on = "arc-runner-very-large"
-cxx-compiler = "g++-8"
-c-compiler = "gcc-8"
-options = "eckit-geo"
-eckit-geo-env = 0
-container = "eccr.ecmwf.int/public-ci-images/rocky8-gcc8-gfortran8"
-platform = "rocky-8"
+# [[matrix.build.include]]
+# runs-on = "arc-runner-very-large"
+# cxx-compiler = "g++-8"
+# c-compiler = "gcc-8"
+# options = "eckit-geo"
+# eckit-geo-env = 0
+# container = "eccr.ecmwf.int/public-ci-images/rocky8-gcc8-gfortran8"
+# platform = "rocky-8"
 
-[[matrix.build.include]]
-runs-on = "arc-runner-very-large"
-cxx-compiler = "g++-11"
-c-compiler = "gcc-11"
-container = "eccr.ecmwf.int/public-ci-images/rocky9-gcc11-gfortran11"
-platform = "rocky-9"
+# [[matrix.build.include]]
+# runs-on = "arc-runner-very-large"
+# cxx-compiler = "g++-11"
+# c-compiler = "gcc-11"
+# container = "eccr.ecmwf.int/public-ci-images/rocky9-gcc11-gfortran11"
+# platform = "rocky-9"
 
-[[matrix.build.include]]
-runs-on = "arc-runner-very-large"
-cxx-compiler = "g++-11"
-c-compiler = "gcc-11"
-options = "eckit-geo"
-container = "eccr.ecmwf.int/public-ci-images/rocky9-gcc11-gfortran11"
-platform = "rocky-9"
+# [[matrix.build.include]]
+# runs-on = "arc-runner-very-large"
+# cxx-compiler = "g++-11"
+# c-compiler = "gcc-11"
+# options = "eckit-geo"
+# container = "eccr.ecmwf.int/public-ci-images/rocky9-gcc11-gfortran11"
+# platform = "rocky-9"
 
-[[matrix.build.include]]
-runs-on = "arc-runner-very-large"
-cxx-compiler = "g++-14"
-c-compiler = "gcc-14"
-container = "eccr.ecmwf.int/public-ci-images/rocky10-gcc14-gfortran14"
-platform = "rocky-10"
+# [[matrix.build.include]]
+# runs-on = "arc-runner-very-large"
+# cxx-compiler = "g++-14"
+# c-compiler = "gcc-14"
+# container = "eccr.ecmwf.int/public-ci-images/rocky10-gcc14-gfortran14"
+# platform = "rocky-10"
 
-[[matrix.build.include]]
-runs-on = "arc-runner-very-large"
-cxx-compiler = "g++-14"
-c-compiler = "gcc-14"
-options = "eckit-geo"
-container = "eccr.ecmwf.int/public-ci-images/rocky10-gcc14-gfortran14"
-platform = "rocky-10"
+# [[matrix.build.include]]
+# runs-on = "arc-runner-very-large"
+# cxx-compiler = "g++-14"
+# c-compiler = "gcc-14"
+# options = "eckit-geo"
+# container = "eccr.ecmwf.int/public-ci-images/rocky10-gcc14-gfortran14"
+# platform = "rocky-10"
 
-[[matrix.build.include]]
-runs-on = "arc-runner-normal"
-cxx-compiler = "g++-10"
-c-compiler = "gcc-10"
-container = "eccr.ecmwf.int/public-ci-images/debian11-gcc10-gfortran10"
-platform = "debian-11"
+# [[matrix.build.include]]
+# runs-on = "arc-runner-normal"
+# cxx-compiler = "g++-10"
+# c-compiler = "gcc-10"
+# container = "eccr.ecmwf.int/public-ci-images/debian11-gcc10-gfortran10"
+# platform = "debian-11"
 
-[[matrix.build.include]]
-runs-on = "arc-runner-normal"
-cxx-compiler = "g++-10"
-c-compiler = "gcc-10"
-options = "eckit-geo"
-container = "eccr.ecmwf.int/public-ci-images/debian11-gcc10-gfortran10"
-platform = "debian-11"
+# [[matrix.build.include]]
+# runs-on = "arc-runner-normal"
+# cxx-compiler = "g++-10"
+# c-compiler = "gcc-10"
+# options = "eckit-geo"
+# container = "eccr.ecmwf.int/public-ci-images/debian11-gcc10-gfortran10"
+# platform = "debian-11"
 
-[[matrix.build.include]]
-runs-on = "arc-runner-normal"
-cxx-compiler = "g++-12"
-c-compiler = "gcc-12"
-container = "eccr.ecmwf.int/public-ci-images/debian12-gcc12-gfortran12"
-platform = "debian-12"
+# [[matrix.build.include]]
+# runs-on = "arc-runner-normal"
+# cxx-compiler = "g++-12"
+# c-compiler = "gcc-12"
+# container = "eccr.ecmwf.int/public-ci-images/debian12-gcc12-gfortran12"
+# platform = "debian-12"
 
-[[matrix.build.include]]
-runs-on = "arc-runner-normal"
-cxx-compiler = "g++-12"
-c-compiler = "gcc-12"
-options = "eckit-geo"
-container = "eccr.ecmwf.int/public-ci-images/debian12-gcc12-gfortran12"
-platform = "debian-12"
+# [[matrix.build.include]]
+# runs-on = "arc-runner-normal"
+# cxx-compiler = "g++-12"
+# c-compiler = "gcc-12"
+# options = "eckit-geo"
+# container = "eccr.ecmwf.int/public-ci-images/debian12-gcc12-gfortran12"
+# platform = "debian-12"
 
-[[matrix.build.include]]
-runs-on = "arc-runner-normal"
-cxx-compiler = "g++-14"
-c-compiler = "gcc-14"
-container = "eccr.ecmwf.int/public-ci-images/debian13-gcc14-gfortran14"
-platform = "debian-13"
+# [[matrix.build.include]]
+# runs-on = "arc-runner-normal"
+# cxx-compiler = "g++-14"
+# c-compiler = "gcc-14"
+# container = "eccr.ecmwf.int/public-ci-images/debian13-gcc14-gfortran14"
+# platform = "debian-13"
 
-[[matrix.build.include]]
-runs-on = "arc-runner-normal"
-cxx-compiler = "g++-14"
-c-compiler = "gcc-14"
-options = "eckit-geo"
-container = "eccr.ecmwf.int/public-ci-images/debian13-gcc14-gfortran14"
-platform = "debian-13"
+# [[matrix.build.include]]
+# runs-on = "arc-runner-normal"
+# cxx-compiler = "g++-14"
+# c-compiler = "gcc-14"
+# options = "eckit-geo"
+# container = "eccr.ecmwf.int/public-ci-images/debian13-gcc14-gfortran14"
+# platform = "debian-13"
 
 [matrix.build]
 packages = ["eccodes"]
@@ -210,7 +214,8 @@ triggers = ["upstream-change", "rebuild-request"]
 eckit-geo-env = 1
 job-script = "./.ci/build.sh.j2"
 build-type = "RelWithDebInfo"
-runs-on = "arc-runner-very-large"
+# runs-on = "arc-runner-very-large"
+runs-on = "ubuntu-latest"
 cxx-compiler = "g++-13"
 c-compiler = "gcc-13"
 fortran-compiler = "gfortran-13"
@@ -337,7 +342,8 @@ publishes = false
 job-script = "./.ci/analysis.sh.j2"
 build-type = "Debug"
 deps-build-type = "RelWithDebInfo"
-runs-on = "arc-runner-very-large"
+# runs-on = "arc-runner-very-large"
+runs-on = "ubuntu-latest"
 cxx-compiler = "g++-13"
 c-compiler = "gcc-13"
 container = "eccr.ecmwf.int/public-ci-images/ubuntu24.04-gcc13-gfortran13:latest"
@@ -366,6 +372,7 @@ apt-packages = "cppcheck"
 # Valgrind, sanitizers and coverage: each takes 15-50 min, so run only by hand
 # from analysis.yml.
 [matrix.analysis]
+ci = false
 packages = ["eccodes-analysis"]
 publishes = false
 
@@ -373,7 +380,8 @@ publishes = false
 job-script = "./.ci/analysis.sh.j2"
 build-type = "Debug"
 deps-build-type = "RelWithDebInfo"
-runs-on = "arc-runner-very-large"
+# runs-on = "arc-runner-very-large"
+runs-on = "ubuntu-latest"
 cxx-compiler = "g++-13"
 c-compiler = "gcc-13"
 container = "eccr.ecmwf.int/public-ci-images/ubuntu24.04-gcc13-gfortran13:latest"
@@ -413,7 +421,8 @@ publishes = false
 
 [matrix.rust.defaults]
 job-script = "./.ci/rust.sh.j2"
-runs-on = "arc-runner-normal"
+# runs-on = "arc-runner-normal"
+runs-on = "ubuntu-latest"
 build-type = "RelWithDebInfo"
 cxx-compiler = "g++-13"
 c-compiler = "gcc-13"
@@ -429,6 +438,7 @@ rust-compiler = "rust-1.90"
 compiler-inputs = ["cxx-compiler", "rust-compiler"]
 
 [matrix.rust-publish]
+ci = false
 packages = ["eccodes-crates"]
 publishes = false
 
@@ -436,7 +446,8 @@ publishes = false
 job-script = "./.ci/rust-publish.sh.j2"
 # eccodes-compat versions its own frozen API surface, not the ecCodes release.
 cargo-skip-published = ["eccodes-compat"]
-runs-on = "arc-runner-very-large"
+# runs-on = "arc-runner-very-large"
+runs-on = "ubuntu-latest"
 cxx-compiler = "g++-13"
 c-compiler = "gcc-13"
 rust-compiler = "rust-1.90"
