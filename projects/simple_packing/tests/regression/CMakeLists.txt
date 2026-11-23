@@ -41,6 +41,30 @@ sp_add_test(binary_scale_tiny_range)
 add_test(NAME ${SP_TEST_PREFIX}binary_scale_tiny_range COMMAND sp_binary_scale_tiny_range)
 
 sp_add_test(dec64_optimizer)
+
+# The optimiser used to convert an out-of-range double to long (undefined behaviour). The
+# test needs an UBSan-instrumented copy of the library to observe it (float-cast-overflow
+# is a separate sanitizer group for GCC); without sanitizers it only checks that packing
+# the minimised input does not crash and stays consistent.
+set(CMAKE_REQUIRED_FLAGS "-fsanitize=undefined,float-cast-overflow")
+set(CMAKE_REQUIRED_LINK_OPTIONS "-fsanitize=undefined,float-cast-overflow")
+check_cxx_source_compiles("int main() { return 0; }" SIMPLE_PACKING_HAVE_UBSAN)
+unset(CMAKE_REQUIRED_FLAGS)
+unset(CMAKE_REQUIRED_LINK_OPTIONS)
+if(SIMPLE_PACKING_HAVE_UBSAN)
+  add_library(simple_packing_ubsan STATIC EXCLUDE_FROM_ALL
+    ${PROJECT_SOURCE_DIR}/src/Utils.cc
+    ${PROJECT_SOURCE_DIR}/src/optimizer/BinDecOptimizer.cc)
+  target_link_libraries(simple_packing_ubsan PUBLIC simple_packing_headers)
+  target_compile_options(simple_packing_ubsan PRIVATE -fsanitize=undefined,float-cast-overflow -fno-sanitize-recover=undefined,float-cast-overflow)
+  add_executable(sp_optimizer_overflow ${CMAKE_CURRENT_SOURCE_DIR}/optimizer_overflow.cc)
+  target_link_libraries(sp_optimizer_overflow PRIVATE simple_packing_ubsan)
+  target_compile_options(sp_optimizer_overflow PRIVATE -fsanitize=undefined,float-cast-overflow -fno-sanitize-recover=undefined,float-cast-overflow)
+  target_link_options(sp_optimizer_overflow PRIVATE -fsanitize=undefined,float-cast-overflow)
+else()
+  sp_add_test(optimizer_overflow)
+endif()
+add_test(NAME ${SP_TEST_PREFIX}optimizer_overflow COMMAND sp_optimizer_overflow)
 add_test(NAME ${SP_TEST_PREFIX}dec64_optimizer COMMAND sp_dec64_optimizer)
 
 # Misaligned memory accesses are detected by the alignment sanitizer
