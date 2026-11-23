@@ -46,3 +46,6 @@ add_test(NAME ${SP_TEST_PREFIX}bits_per_value_range COMMAND sp_bits_per_value_ra
 
 sp_add_test(zero_values)
 add_test(NAME ${SP_TEST_PREFIX}zero_values COMMAND sp_zero_values)
+
+sp_add_test(unpack_buffer_size)
+add_test(NAME ${SP_TEST_PREFIX}unpack_buffer_size COMMAND sp_unpack_buffer_size)
