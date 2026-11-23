@@ -678,15 +678,19 @@ int DataCcsdsPacking::unpack_double_element(size_t idx, double* val)
     if ((err = grib_get_double_internal(hand, reference_value_, &reference_value)) != GRIB_SUCCESS)
         return err;
 
+    err = grib_get_size(hand, "codedValues", &size);
+    if (err) return err;
+    if (idx >= size) {
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s: %s: Invalid index %zu (should be less than %zu)",
+                         accessor_type().c_str(), __func__, idx, size);
+        return GRIB_INVALID_ARGUMENT;
+    }
+
     // Special case of constant field
     if (bits_per_value == 0) {
         *val = reference_value;
         return GRIB_SUCCESS;
     }
-
-    err = grib_get_size(hand, "codedValues", &size);
-    if (err) return err;
-    if (idx > size) return GRIB_INVALID_ARGUMENT;
 
     values = (double*)grib_context_malloc_clear(context_, size * sizeof(double));
     err = grib_get_double_array(hand, "codedValues", values, &size);
@@ -713,21 +717,25 @@ int DataCcsdsPacking::unpack_double_element_set(const size_t* index_array, size_
     if ((err = grib_get_double_internal(hand, reference_value_, &reference_value)) != GRIB_SUCCESS)
         return err;
 
-    // Special case of constant field
-    if (bits_per_value == 0) {
-        for (i = 0; i < len; i++) {
-            val_array[i] = reference_value;
-        }
-        return GRIB_SUCCESS;
-    }
-
     // GRIB-564: The indexes in index_array relate to codedValues NOT values!
     err = grib_get_size(get_enclosing_handle(), "codedValues", &size);
     if (err)
         return err;
 
     for (i = 0; i < len; i++) {
-        if (index_array[i] > size) return GRIB_INVALID_ARGUMENT;
+        if (index_array[i] >= size) {
+            grib_context_log(context_, GRIB_LOG_ERROR, "%s: %s: Invalid index %zu (should be less than %zu)",
+                             accessor_type().c_str(), __func__, index_array[i], size);
+            return GRIB_INVALID_ARGUMENT;
+        }
+    }
+
+    // Special case of constant field
+    if (bits_per_value == 0) {
+        for (i = 0; i < len; i++) {
+            val_array[i] = reference_value;
+        }
+        return GRIB_SUCCESS;
     }
 
     values = (double*)grib_context_malloc_clear(context_, size * sizeof(double));
