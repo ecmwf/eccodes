@@ -11,19 +11,9 @@
 #include "simple_packing/Utils.h"
 
 #include <array>
+#include <cassert>
 #include <cmath>
-
-#include <cmath>
-#include <cstdio>
 #include <limits>
-
-
-size_t nSplits(size_t totalSize, size_t splitSize)
-{
-    size_t nSplits = totalSize / splitSize;
-    size_t remainder = totalSize % splitSize;
-    return nSplits + (remainder > 0 ? 1 : 0);
-}
 
 
 // --- Internal helpers ---
@@ -31,10 +21,7 @@ size_t nSplits(size_t totalSize, size_t splitSize)
 namespace
 {
 
-[[maybe_unused]] constexpr double dbl_min = std::numeric_limits<double>::min();
 constexpr double dbl_max = std::numeric_limits<double>::max();
-
-#define DebugAssert(a) assert(a)
 
 const unsigned long nbits_table[32] = {
     0x1, 0x2, 0x4, 0x8, 0x10, 0x20,

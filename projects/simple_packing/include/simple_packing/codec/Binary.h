@@ -2,12 +2,11 @@
 
 #include "simple_packing/BitPacking.h"
 
-#include <vector>
-#include <cstdio>
-#include <stdexcept>
 #include <cmath>
 #include <cstdint>
-#include <cassert>
+#include <cstdio>
+#include <stdexcept>
+#include <vector>
 
 
 template <typename ValueType>

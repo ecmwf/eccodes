@@ -1,27 +1,16 @@
 #pragma once
 
+#include <array>
 #include <cstddef>
 #include <cstdint>
-#include <type_traits>
-#include <array>
-#include <bitset>
-#include <iostream>
 #include <cstring>
-#include <iostream>
+#include <type_traits>
 
 #include "simple_packing/Utils.h"
 
 #include "simple_packing/U128.h"
 
 // Byte swap for 128 bit unsigned integer
-// inline __uint128_t bswap128(__uint128_t x) {
-//     uint64_t high = static_cast<uint64_t>(x >> 64);
-//     uint64_t low = static_cast<uint64_t>(x & 0xFFFFFFFFFFFFFFFFULL);
-//     high = bswap64(high);
-//     low = bswap64(low);
-//     return (static_cast<__uint128_t>(low) << 64) | static_cast<__uint128_t>(high);
-// }
-
 inline UInt128 bswap128(UInt128 x)
 {
     uint64_t high = static_cast<uint64_t>(x >> 64);
@@ -31,10 +20,6 @@ inline UInt128 bswap128(UInt128 x)
     return (static_cast<UInt128>(low) << 64) | static_cast<UInt128>(high);
 }
 
-
-// using U128 = __uint128_t;
-
-// using U128 = UInt128;
 
 template <uint8_t BPV>
 union UInt

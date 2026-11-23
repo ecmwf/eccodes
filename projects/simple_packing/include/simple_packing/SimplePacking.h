@@ -11,19 +11,17 @@
 #pragma once
 
 #include <cstddef>
-#include <vector>
+#include <memory>
 #include <stdexcept>
 #include <string>
-#include <algorithm>
-#include <memory>
-#include <memory>
-#include <variant>
+#include <tuple>
+#include <utility>
+#include <vector>
 
 #include "simple_packing/Parameters.h"
 #include "simple_packing/Optimizer.h"
 #include "simple_packing/Utils.h"
 #include "simple_packing/codec/Binary.h"
-#include "simple_packing/codec/Array.h"
 
 
 template <typename ValueType>

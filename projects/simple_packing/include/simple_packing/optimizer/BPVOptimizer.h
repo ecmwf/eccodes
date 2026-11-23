@@ -1,5 +1,8 @@
 #pragma once
 
+#include <cmath>
+#include <stdexcept>
+
 #include "simple_packing/Parameters.h"
 #include "simple_packing/Optimizer.h"
 #include "simple_packing/Utils.h"

@@ -12,35 +12,19 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <optional>
 #include <string>
 #include <stdexcept>
-#include <cassert>
-#include <cmath>
-#include <iostream>
 #include <limits>
 #include <utility>
-#include <vector>
-
-#include <optional>
-
 
 // --- Error codes ---
 
-#define SP_SUCCESS         0
-#define SP_NO_VALUES       1
-#define SP_INVALID_BPV     2
-#define SP_INTERNAL_ERROR  3
-#define SP_LOG_DEBUG       4
-#define SP_LOG_ERROR       5
-#define SP_ENCODING_ERROR  6
-#define SP_OUT_OF_RANGE    7
-#define SP_UNDERFLOW       8
-#define SP_ARRAY_TOO_SMALL 9
-
-// --- Utility functions ---
-
-size_t nSplits(size_t totalSize, size_t splitSize);
-
+#define SP_SUCCESS        0
+#define SP_INTERNAL_ERROR 3
+#define SP_ENCODING_ERROR 6
+#define SP_OUT_OF_RANGE   7
+#define SP_UNDERFLOW      8
 
 // --- Power function ---
 

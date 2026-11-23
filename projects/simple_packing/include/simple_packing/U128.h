@@ -1,13 +1,8 @@
 
 #pragma once
-#include <cstdint>
-#include <stdexcept>
-#include <string>
-#include <limits>
-#include <ostream>
-#include <istream>
-#include <bitset>
 
+#include <cstdint>
+#include <type_traits>
 
 struct UInt128
 {
@@ -22,47 +17,27 @@ struct UInt128
     constexpr UInt128(u64 low) : lo(low), hi(0) {}
     constexpr UInt128(u64 high, u64 low) : lo(low), hi(high) {}
 
-    // Conversions
-    explicit constexpr operator bool() const { return (hi | lo) != 0; }
-
     // Comparison
     friend constexpr bool operator==(const UInt128& a, const UInt128& b)
     {
         return a.hi == b.hi && a.lo == b.lo;
     }
     friend constexpr bool operator!=(const UInt128& a, const UInt128& b) { return !(a == b); }
-    friend constexpr bool operator<(const UInt128& a, const UInt128& b)
-    {
-        return (a.hi < b.hi) || (a.hi == b.hi && a.lo < b.lo);
-    }
-    friend constexpr bool operator>(const UInt128& a, const UInt128& b) { return b < a; }
-    friend constexpr bool operator<=(const UInt128& a, const UInt128& b) { return !(b < a); }
-    friend constexpr bool operator>=(const UInt128& a, const UInt128& b) { return !(a < b); }
 
     // Unary
-    constexpr UInt128 operator~() const { return UInt128(~hi, ~lo); }
+    friend constexpr UInt128 operator~(const UInt128& x)
+    {
+        return UInt128(~x.hi, ~x.lo);
+    }
 
     // Bitwise
     friend constexpr UInt128 operator&(const UInt128& a, const UInt128& b) { return UInt128(a.hi & b.hi, a.lo & b.lo); }
     friend constexpr UInt128 operator|(const UInt128& a, const UInt128& b) { return UInt128(a.hi | b.hi, a.lo | b.lo); }
-    friend constexpr UInt128 operator^(const UInt128& a, const UInt128& b) { return UInt128(a.hi ^ b.hi, a.lo ^ b.lo); }
 
-    UInt128& operator&=(const UInt128& o)
-    {
-        hi &= o.hi;
-        lo &= o.lo;
-        return *this;
-    }
     UInt128& operator|=(const UInt128& o)
     {
         hi |= o.hi;
         lo |= o.lo;
-        return *this;
-    }
-    UInt128& operator^=(const UInt128& o)
-    {
-        hi ^= o.hi;
-        lo ^= o.lo;
         return *this;
     }
 
@@ -110,27 +85,10 @@ struct UInt128
         return r;
     }
 
-    friend constexpr UInt128 operator~(const UInt128& x)
-    {
-        return UInt128(~x.hi, ~x.lo);
-    }
-
     UInt128& operator<<=(unsigned s)
     {
         *this = *this << s;
         return *this;
-    }
-    UInt128& operator>>=(unsigned s)
-    {
-        *this = *this >> s;
-        return *this;
-    }
-
-    explicit operator std::bitset<128>() const
-    {
-        std::bitset<128> bs(lo);                     // low 64 bits
-        if (hi) bs |= (std::bitset<128>(hi) << 64);  // high 64 bits
-        return bs;
     }
 
     template <class T, class = std::enable_if_t<std::is_integral<T>::value && std::is_unsigned<T>::value && (sizeof(T) <= sizeof(std::uint64_t))>>

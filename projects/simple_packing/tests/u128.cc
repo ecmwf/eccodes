@@ -2,6 +2,7 @@
 
 #include <bitset>
 #include <iostream>
+#include <stdexcept>
 #include <vector>
 
 void test_left_shifts()

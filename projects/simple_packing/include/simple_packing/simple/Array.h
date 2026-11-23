@@ -1,5 +1,9 @@
 #pragma once
 
+#include <stdexcept>
+#include <variant>
+#include <vector>
+
 #include "simple_packing/SimplePacking.h"
 #include "simple_packing/codec/Array.h"
 

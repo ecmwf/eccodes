@@ -2,7 +2,7 @@
 
 #include <vector>
 #include <cstdint>
-#include <algorithm>
+#include <type_traits>
 
 
 template <typename ValueType, uint8_t BPV>
