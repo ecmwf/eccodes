@@ -30,17 +30,24 @@ int Accessor::evaluate_double(grib_handle* h, double* result) const
 
 const char* Accessor::evaluate_string(grib_handle* h, char* buf, size_t* size, int* err) const
 {
-    char mybuf[GRIB_STRING_LENGTH_MAX] = { 0 };
+    char mybuf[GRIB_STRING_LENGTH_MAX];
     long start = start_;
     if (length_ > sizeof(mybuf)) {
         *err = GRIB_INVALID_ARGUMENT;
         return NULL;
+    }
+    if (length_ != 0) {
+        memset(mybuf, 0, sizeof(mybuf));
     }
 
     if (!buf) {
         *err = GRIB_INVALID_ARGUMENT;
         return NULL;
     }
+    if (*size > sizeof(mybuf)) {
+        *size = sizeof(mybuf);
+    }
+    const size_t capacity = *size;
     if ((*err = grib_get_string_internal(h, name_, mybuf, size)) != GRIB_SUCCESS)
         return NULL;
 
@@ -54,7 +61,7 @@ const char* Accessor::evaluate_string(grib_handle* h, char* buf, size_t* size, i
     }
     else {
         memcpy(buf, mybuf, *size);
-        if (*size == GRIB_STRING_LENGTH_MAX)
+        if (*size == capacity)
             *size = *size - 1; /* ECC-336 */
         buf[*size] = 0;
     }

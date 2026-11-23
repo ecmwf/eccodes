@@ -40,6 +40,11 @@ long GridSpec::get_native_type()
     return GRIB_TYPE_STRING;
 }
 
+size_t GridSpec::string_length()
+{
+    return GRIB_STRING_LENGTH_GRIDSPEC;
+}
+
 
 int GridSpec::pack_string([[maybe_unused]] const char* v, [[maybe_unused]] size_t* len)
 {

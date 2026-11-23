@@ -29,9 +29,9 @@ GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
 int StringCompare::evaluate_long(grib_handle* h, long* lres) const
 {
     int ret = 0;
-    char b1[GRIB_STRING_LENGTH_MAX] = { 0 };
+    char b1[GRIB_STRING_LENGTH_MAX];
     size_t l1 = sizeof(b1);
-    char b2[GRIB_STRING_LENGTH_MAX] = { 0 };
+    char b2[GRIB_STRING_LENGTH_MAX];
     size_t l2 = sizeof(b2);
     const char* v1 = NULL;
     const char* v2 = NULL;
