@@ -75,3 +75,6 @@ if(SIMPLE_PACKING_HAVE_ALIGNMENT_SANITIZER)
   target_link_options(sp_unaligned_access PRIVATE -fsanitize=alignment)
   add_test(NAME ${SP_TEST_PREFIX}unaligned_access COMMAND sp_unaligned_access)
 endif()
+
+sp_add_test(u128_shift)
+add_test(NAME ${SP_TEST_PREFIX}u128_shift COMMAND sp_u128_shift)
