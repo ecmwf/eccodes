@@ -15,6 +15,7 @@
 #include <algorithm>
 #include <memory>
 #include <cmath>
+#include <cstring>
 
 #include "eckit/geo/Exceptions.h"
 #include "eckit/geo/Figure.h"
@@ -789,6 +790,11 @@ codes_handle* GribFromSpec::set(const codes_handle* h, const Spec& spec, const s
     }
     const bool has_figure = codes_is_defined(h, "shapeOfTheEarth") != 0;
 
+    char packingType[64] = { 0 };
+    size_t packingTypeLength = sizeof(packingType);
+    const bool spectral = codes_get_string(h, "packingType", packingType, &packingTypeLength) == CODES_SUCCESS &&
+                          std::strncmp(packingType, "spectral_", 9) == 0;
+
     if (const auto g = grid->type(), p = grid->projection().type(); g == "regular_ll") {
         set_grid_type_regular_ll(info, h, *grid, basic_angle);
     }
@@ -817,6 +823,10 @@ codes_handle* GribFromSpec::set(const codes_handle* h, const Spec& spec, const s
         set_grid_type_unstructured(info, *grid);
     }
     else if (g == "sh") {
+        // in place, the spectral data representation is of a spectral message only (not converted from gridded data)
+        if (!spectral) {
+            throw ::eckit::UserError("GribFromSpec: spherical harmonics are set on a message of spectral data only");
+        }
         set_grid_type_spherical_harmonics(info, *grid);
     }
     else {
