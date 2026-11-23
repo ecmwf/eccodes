@@ -57,11 +57,13 @@ void Binary<ValueType, BPV>::packTo(const ValueType* values, size_t nVals, int d
         return ((val * decimal) - referenceValue) * divisor + 0.5;
     };
 
-    const size_t nBlocks = (nVals + 7) / 8;
+    // The block codec reads and writes whole words: it handles all values except the last block,
+    // whose values are encoded one by one (also when there are fewer than 8 values, or none)
+    const size_t nBlockVals = nVals >= 8 ? ((nVals + 7) / 8 - 1) * 8 : 0;
 
     BitPacking<BPV, Optimization::Block> bvf;
     size_t nval = 0, nbit = 0;
-    for (; nval < (nBlocks - 1) * 8; nbit += BPV, ++nval) {
+    for (; nval < nBlockVals; nbit += BPV, ++nval) {
         bvf.encode(&out[nbit / 8], nbit % 8, encode(values[nval]));
     }
 
@@ -82,11 +84,13 @@ void Binary<ValueType, BPV>::unpackTo(const unsigned char* codedBuf, int decimal
         return (static_cast<ValueType>(val) * s + referenceValue) * d;
     };
 
-    const size_t nBlocks = (nVals + 7) / 8;
+    // The block codec reads and writes whole words: it handles all values except the last block,
+    // whose values are encoded one by one (also when there are fewer than 8 values, or none)
+    const size_t nBlockVals = nVals >= 8 ? ((nVals + 7) / 8 - 1) * 8 : 0;
 
     BitPacking<BPV, Optimization::Block> bvf;
     size_t nval = 0, nbit = 0;
-    for (; nval < (nBlocks - 1) * 8; nbit += BPV, ++nval) {
+    for (; nval < nBlockVals; nbit += BPV, ++nval) {
         out[nval] = decode(bvf.decode(&codedBuf[nbit / 8], nbit % 8));
     }
 
