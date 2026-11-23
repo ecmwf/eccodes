@@ -73,6 +73,9 @@ class SpAec
     class SimpleUnmapper
     {
     public:
+        // Like ecCodes with libaec: the powers are computed in ValueType, the scaling in double, and
+        // the result is rounded to ValueType once. Scaling in float would lose the low bits of
+        // samples with more than 24 bits and cancel catastrophically near zero.
         SimpleUnmapper(ValueType referenceValue, int binaryScaleFactor, int decimalScaleFactor) :
             referenceValue_(referenceValue),
             bscale_{ grib_power<ValueType>(binaryScaleFactor, 2) },
@@ -82,13 +85,13 @@ class SpAec
 
         ValueType operator()(MappedType mapped) const
         {
-            return (static_cast<ValueType>(mapped) * bscale_ + referenceValue_) * dscale_;
+            return static_cast<ValueType>((static_cast<double>(mapped) * bscale_ + referenceValue_) * dscale_);
         }
 
     private:
-        const ValueType referenceValue_;
-        const ValueType bscale_;
-        const ValueType dscale_;
+        const double referenceValue_;
+        const double bscale_;
+        const double dscale_;
     };
 
 
