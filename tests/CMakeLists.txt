@@ -444,6 +444,7 @@ if( HAVE_BUILD_TOOLS )
         grib_level
         grib_indexing
         grib_bitmap
+        grib_bitmap_coded_values
         grib_secondary_bitmap
         grib_list
         grib_second_order
