@@ -538,19 +538,20 @@ int DataCcsdsPacking::unpack(T* val, size_t* len)
     buf = hand->buffer->data;
     buf += byte_offset();
 
+    if (buflen == 0) {
+        // An empty data section decodes as a constant field of the reference value (all samples
+        // are 0), as ecCodes always did with libaec
+        grib_context_log(context_, GRIB_LOG_DEBUG, "%s %s: empty data section, constant field of %zu values",
+                         accessor_type().c_str(), __func__, n_vals);
+        const T constant = static_cast<T>((0 * bscale + reference_value) * dscale);
+        for (size_t i = 0; i < n_vals; i++)
+            val[i] = constant;
+        *len = n_vals;
+        return GRIB_SUCCESS;
+    }
+
     #ifdef HAVE_CCSDS_SPAEC
     if (use_spaec() && spaec_supports_flags(ccsds_flags)) {
-        if (buflen == 0) {
-            // An empty data section decodes as a constant field of the reference value, like with
-            // libaec (it decodes no samples, all samples are 0)
-            grib_context_log(context_, GRIB_LOG_DEBUG, "%s %s: empty data section, constant field of %zu values",
-                             accessor_type().c_str(), __func__, n_vals);
-            const T constant = static_cast<T>((0 * bscale + reference_value) * dscale);
-            for (size_t i = 0; i < n_vals; i++)
-                val[i] = constant;
-            *len = n_vals;
-            return GRIB_SUCCESS;
-        }
         if (hand->context->debug) {
             fprintf(stderr, "ECCODES DEBUG CCSDS unpack_* aec_stream.flags=%ld\n", ccsds_flags);
             fprintf(stderr, "ECCODES DEBUG CCSDS unpack_* aec_stream.bits_per_sample=%ld\n", bits_per_value);
@@ -614,6 +615,15 @@ int DataCcsdsPacking::unpack(T* val, size_t* len)
         if ((err = aec_buffer_decode(&strm)) != AEC_OK) {
             grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: aec_buffer_decode error %d (%s)",
                              accessor_type().c_str(), __func__, err, aec_get_error_message(err));
+            grib_context_buffer_free(context_, decoded);
+            return GRIB_DECODING_ERROR;
+        }
+        // libaec does not report truncated data: it stops early without an error
+        if (strm.total_out != size) {
+            grib_context_log(context_, GRIB_LOG_ERROR,
+                             "%s %s: CCSDS decoding failed: the compressed data is truncated or corrupt "
+                             "(decoded %zu of %zu values from %zu bytes)",
+                             accessor_type().c_str(), __func__, strm.total_out / nbytes, n_vals, buflen);
             grib_context_buffer_free(context_, decoded);
             return GRIB_DECODING_ERROR;
         }
