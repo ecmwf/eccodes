@@ -522,6 +522,8 @@ void set_grid_type_grid_type_lambert(grib_info& info, const codes_handle* h, con
     const auto& projection = grid.projection().spec();
     const auto lat_1 = projection.get_double("lat_1");
 
+    // the projection centre, south pole or north pole (not bipolar), as the message can have another's
+    info.extra_set("projectionCentreFlag", lat_1 < 0. ? 128L : 0L);
     info.extra_set("Latin1InDegrees", lat_1);
     info.extra_set("Latin2InDegrees", projection.get_double("lat_2", lat_1));
     info.extra_set("LoVInDegrees", grib_longitude(projection.get_double("lon_0", 0.), edition));
@@ -541,9 +543,7 @@ void set_grid_type_polar_stereographic(grib_info& info, const codes_handle* h, c
     const auto lat_0 = projection.get_double("lat_0");
 
     info.extra_set("orientationOfTheGridInDegrees", grib_longitude(projection.get_double("lon_0", 0.), edition));
-    if (lat_0 < 0.) {
-        info.extra_set("southPoleOnProjectionPlane", 1L);
-    }
+    info.extra_set("southPoleOnProjectionPlane", lat_0 < 0. ? 1L : 0L);
     if (edition == 2) {
         info.extra_set("LaDInDegrees", projection.get_double("lat_ts", lat_0));
     }
