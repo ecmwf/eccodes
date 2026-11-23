@@ -1107,6 +1107,9 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
             SET_LONG_VALUE("ijDirectionIncrementGiven", 1);
 
+            COPY_SPEC_LONG(iScansNegatively);
+            COPY_SPEC_LONG(jScansPositively);
+
             COPY_SPEC_LONG(Ni);
             COPY_SPEC_DOUBLE(iDirectionIncrementInDegrees);
             COPY_SPEC_LONG(Nj);
