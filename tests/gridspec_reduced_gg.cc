@@ -110,6 +110,24 @@ CASE("GRIB keys to gridSpec")
 }
 
 
+CASE("GRIB keys to gridSpec, of known wrongly encoded messages")
+{
+    // fixed by md5GridSection, then as other messages (snapped to the Gaussian latitudes): O2560 of the latitudes 89.972
+    // (not 89.973, rounded outwards; beyond the millidegree of snapping), and of other latitudes (not fixed), an error
+    auto o2560 = [](double lat) {
+        return gridspec::keys_t{ { "gridSpec", R"({"grid":"O2560"})" },
+                                 { "latitudeOfFirstGridPointInDegrees", lat },
+                                 { "latitudeOfLastGridPointInDegrees", -lat },
+                                 { "longitudeOfLastGridPointInDegrees", 359.964 } };
+    };
+
+    EXPECT(gridspec::check_all<decode_t>({
+        { "reduced_gg_pl_128_grib1", o2560(89.972), R"({"grid":"O2560"})" },
+        { "reduced_gg_pl_128_grib1", o2560(89.971), "error: Grid description is wrong or inconsistent" },
+    }));
+}
+
+
 CASE("GRIB to gridSpec")
 {
     EXPECT(gridspec::check_decoded("gridspec/gridType=reduced_gg.grib",

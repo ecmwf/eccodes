@@ -474,10 +474,37 @@ bool get_bool(codes_handle* h, const char* key)
 }
 
 
+// A message, of its keys of known wrongly encoded messages fixed (by md5GridSection, see GribToSpec::fixes_), so that
+// the processing of keys (e.g. snapping to a grid) starts from the fixed values
+class Message
+{
+public:
+    Message(codes_handle* h, const GribToSpec::cache_type* fixes = nullptr) :
+        h_(h), fixes_(fixes) {}
+
+    operator codes_handle*() const { return h_; }
+
+    int get_double(const char* key, double* value) const
+    {
+        if (fixes_ != nullptr) {
+            if (auto it = fixes_->find(key); it != fixes_->end() && std::holds_alternative<double>(it->second)) {
+                *value = std::get<double>(it->second);
+                return CODES_SUCCESS;
+            }
+        }
+        return codes_get_double(h_, key, value);
+    }
+
+private:
+    codes_handle* h_;
+    const GribToSpec::cache_type* fixes_;
+};
+
+
 template <typename T>
 struct ProcessingT
 {
-    using fun_t = std::function<bool(codes_handle*, T&)>;
+    using fun_t = std::function<bool(const Message&, T&)>;
     fun_t fun_;
     explicit ProcessingT(fun_t&& fun) :
         fun_(fun) {}
@@ -486,7 +513,7 @@ struct ProcessingT
     ProcessingT(ProcessingT&&) = delete;
     void operator=(const ProcessingT&) = delete;
     void operator=(ProcessingT&&) = delete;
-    bool eval(codes_handle* h, T& v) const { return fun_(h, v); }
+    bool eval(const Message& h, T& v) const { return fun_(h, v); }
 };
 
 
@@ -533,13 +560,13 @@ double gaussian_precision(codes_handle* h)
 
 ProcessingT<double>* longitudeOfLastGridPointInDegrees_fix_for_global_reduced_grids()
 {
-    return new ProcessingT<double>([](codes_handle* h, double& Lon2) {
+    return new ProcessingT<double>([](const Message& h, double& Lon2) {
         Lon2 = 0;
-        CHECK_CALL(codes_get_double(h, "longitudeOfLastGridPointInDegrees", &Lon2));
+        CHECK_CALL(h.get_double("longitudeOfLastGridPointInDegrees", &Lon2));
 
         if (codes_is_defined(h, "pl") != 0) {
             double Lon1 = 0;
-            CHECK_CALL(codes_get_double(h, "longitudeOfFirstGridPointInDegrees", &Lon1));
+            CHECK_CALL(h.get_double("longitudeOfFirstGridPointInDegrees", &Lon1));
 
             if (eckit::types::is_approximately_equal<double>(Lon1, 0)) {
                 // get pl array maximum and sum
@@ -624,7 +651,7 @@ double gaussian_latitude_snapped(long N, double lat, double eps)
 // Regular Gaussian grids of other than 4N longitudes (globally), by the increment (to the angular precision)
 ProcessingT<long>* ni_fix_for_regular_gaussian_grids()
 {
-    return new ProcessingT<long>([](codes_handle* h, long& ni) {
+    return new ProcessingT<long>([](const Message& h, long& ni) {
         double eps = 0.;
         ASSERT(std::unique_ptr<ProcessingT<double>>(angular_precision())->eval(h, eps));
 
@@ -633,7 +660,7 @@ ProcessingT<long>* ni_fix_for_regular_gaussian_grids()
         double inc = 0.;
         if (codes_get_long(h, "N", &N) != CODES_SUCCESS || N <= 0 ||
             codes_get_long(h, "iDirectionIncrementGiven", &given) != CODES_SUCCESS || given == 0 ||
-            codes_get_double(h, "iDirectionIncrementInDegrees", &inc) != CODES_SUCCESS || !(inc > 0.)) {
+            h.get_double("iDirectionIncrementInDegrees", &inc) != CODES_SUCCESS || !(inc > 0.)) {
             return false;
         }
 
@@ -652,14 +679,14 @@ ProcessingT<long>* ni_fix_for_regular_gaussian_grids()
 
 ProcessingT<double>* latitudeOfFirstGridPointInDegrees_fix_for_gaussian_grids()
 {
-    return new ProcessingT<double>([](codes_handle* h, double& lat) {
+    return new ProcessingT<double>([](const Message& h, double& lat) {
         const auto eps = gaussian_precision(h);
 
         long N = 0L;
         CHECK_CALL(codes_get_long(h, "N", &N));
         ASSERT(N > 0);
 
-        CHECK_CALL(codes_get_double(h, "latitudeOfFirstGridPointInDegrees", &lat));
+        CHECK_CALL(h.get_double("latitudeOfFirstGridPointInDegrees", &lat));
 
         lat = gaussian_latitude_snapped(N, lat, eps);
         return true;
@@ -669,14 +696,14 @@ ProcessingT<double>* latitudeOfFirstGridPointInDegrees_fix_for_gaussian_grids()
 
 ProcessingT<double>* latitudeOfLastGridPointInDegrees_fix_for_gaussian_grids()
 {
-    return new ProcessingT<double>([](codes_handle* h, double& lat) {
+    return new ProcessingT<double>([](const Message& h, double& lat) {
         const auto eps = gaussian_precision(h);
 
         long N = 0L;
         CHECK_CALL(codes_get_long(h, "N", &N));
         ASSERT(N > 0);
 
-        CHECK_CALL(codes_get_double(h, "latitudeOfLastGridPointInDegrees", &lat));
+        CHECK_CALL(h.get_double("latitudeOfLastGridPointInDegrees", &lat));
 
         lat = gaussian_latitude_snapped(N, lat, eps);
         return true;
@@ -688,7 +715,7 @@ ProcessingT<double>* latitudeOfLastGridPointInDegrees_fix_for_gaussian_grids()
 // a regular Gaussian grid (of ni longitudes, 4N or as encoded) is that longitude (so its column is kept)
 ProcessingT<double>* longitude_fix_for_regular_gaussian_grids(const char* key)
 {
-    return new ProcessingT<double>([key](codes_handle* h, double& lon) {
+    return new ProcessingT<double>([key](const Message& h, double& lon) {
         const auto eps = gaussian_precision(h);
 
         long N = 0;
@@ -698,7 +725,7 @@ ProcessingT<double>* longitude_fix_for_regular_gaussian_grids(const char* key)
         long ni = 4 * N;
         std::unique_ptr<ProcessingT<long>>(ni_fix_for_regular_gaussian_grids())->eval(h, ni);
 
-        CHECK_CALL(codes_get_double(h, key, &lon));
+        CHECK_CALL(h.get_double(key, &lon));
 
         const auto inc = 360. / static_cast<double>(ni);
         if (const auto snapped = std::round(lon / inc) * inc; eckit::types::is_approximately_equal(lon, snapped, eps)) {
@@ -711,19 +738,19 @@ ProcessingT<double>* longitude_fix_for_regular_gaussian_grids(const char* key)
 
 ProcessingT<double>* iDirectionIncrementInDegrees_fix_for_periodic_regular_grids()
 {
-    return new ProcessingT<double>([](codes_handle* h, double& we) {
+    return new ProcessingT<double>([](const Message& h, double& we) {
         long iScansPositively = 0L;
         CHECK_CALL(codes_get_long(h, "iScansPositively", &iScansPositively));
         ASSERT(iScansPositively == 1L);
 
-        CHECK_CALL(codes_get_double(h, "iDirectionIncrementInDegrees", &we));
+        CHECK_CALL(h.get_double("iDirectionIncrementInDegrees", &we));
         ASSERT(we > 0.);
 
         double Lon1 = 0.;
         double Lon2 = 0.;
         long Ni = 0;
-        CHECK_CALL(codes_get_double(h, "longitudeOfFirstGridPointInDegrees", &Lon1));
-        CHECK_CALL(codes_get_double(h, "longitudeOfLastGridPointInDegrees", &Lon2));
+        CHECK_CALL(h.get_double("longitudeOfFirstGridPointInDegrees", &Lon1));
+        CHECK_CALL(h.get_double("longitudeOfLastGridPointInDegrees", &Lon2));
         CHECK_CALL(codes_get_long(h, "Ni", &Ni));
         ASSERT(Ni > 0);
 
@@ -770,19 +797,19 @@ ProcessingT<double>* iDirectionIncrementInDegrees_fix_for_periodic_regular_grids
 ProcessingT<double>* grid_increment(const char* inc_key, const char* incgiven_key,
                                     const char* x0_key, const char* x1_key, const char* n_key, const char* sign_key)
 {
-    return new ProcessingT<double>([=](codes_handle* h, double& value) {
+    return new ProcessingT<double>([=](const Message& h, double& value) {
         bool given = false;
         if (long incgiven = 0; codes_is_well_defined(h, inc_key) && (codes_get_long(h, incgiven_key, &incgiven) == CODES_SUCCESS) && (incgiven != 0)) {
-            CHECK_CALL(codes_get_double(h, inc_key, &value));
+            CHECK_CALL(h.get_double(inc_key, &value));
             given = value != CODES_MISSING_DOUBLE;
         }
 
         if (codes_is_well_defined(h, x0_key) && codes_is_well_defined(h, x1_key) && codes_is_well_defined(h, n_key) && codes_is_well_defined(h, sign_key)) {
             double x0 = 0.;
-            CHECK_CALL(codes_get_double(h, x0_key, &x0));
+            CHECK_CALL(h.get_double(x0_key, &x0));
 
             double x1 = 0.;
-            CHECK_CALL(codes_get_double(h, x1_key, &x1));
+            CHECK_CALL(h.get_double(x1_key, &x1));
 
             long n = 0;
             CHECK_CALL(codes_get_long(h, n_key, &n));
@@ -860,7 +887,7 @@ ProcessingT<double>* grid_increment(const char* inc_key, const char* incgiven_ke
 ProcessingT<std::vector<double>>* vector_double(std::initializer_list<std::string> keys)
 {
     const std::vector<std::string> keys_(keys);
-    return new ProcessingT<std::vector<double>>([=](codes_handle* h, std::vector<double>& values) {
+    return new ProcessingT<std::vector<double>>([=](const Message& h, std::vector<double>& values) {
         ASSERT(keys_.size());
 
         values.assign(keys_.size(), 0);
@@ -869,7 +896,7 @@ ProcessingT<std::vector<double>>* vector_double(std::initializer_list<std::strin
             if (codes_is_defined(h, key.c_str()) == 0) {
                 return false;
             }
-            CHECK_CALL(codes_get_double(h, key.c_str(), &values[i++]));
+            CHECK_CALL(h.get_double(key.c_str(), &values[i++]));
         }
         return true;
     });
@@ -933,7 +960,7 @@ using ProcessingList = std::initializer_list<ConditionedProcessingT<ProcessingT<
 
 
 template <typename T>
-bool get_value(const std::string& name, codes_handle* h, T& value, const ProcessingList<T>& process)
+bool get_value(const std::string& name, const Message& h, T& value, const ProcessingList<T>& process)
 {
     for (auto& p : process) {
         if (name == p.name) {
@@ -1249,7 +1276,8 @@ GribToSpec::GribToSpec(codes_handle* h, bool rotated) :
 
         if (const auto& fix = FIXES.find(md5GridSection); fix != FIXES.end()) {
             grib_context_log(nullptr, GRIB_LOG_WARNING, "GribToSpec: applying fix for md5GridSection=%s", md5GridSection.c_str());
-            cache_ = fix->second;
+            fixes_ = fix->second;
+            cache_ = fixes_;
         }
     };
 
@@ -1380,7 +1408,7 @@ bool GribToSpec::get(const std::string& name, std::string& value) const
             { "packing", packing() },
         };
 
-        return get_value(key, handle_, value, process);
+        return get_value(key, Message(handle_, &fixes_), value, process);
     }
 
     CHECK_ERROR(err, key);
@@ -1467,7 +1495,7 @@ bool GribToSpec::get(const std::string& name, long& value) const
             { "ni_fix_for_regular_gaussian_grids", ni_fix_for_regular_gaussian_grids() },
         };
 
-        if (get_value(key, handle_, value, process)) {
+        if (get_value(key, Message(handle_, &fixes_), value, process)) {
             cache_set(cache_, name, value);
             return true;
         }
@@ -1561,7 +1589,7 @@ bool GribToSpec::get(const std::string& name, double& value) const
               longitude_fix_for_regular_gaussian_grids("longitudeOfLastGridPointInDegrees") },
         };
 
-        if (get_value(key, handle_, value, process)) {
+        if (get_value(key, Message(handle_, &fixes_), value, process)) {
             cache_set(cache_, name, value);
             return true;
         }
@@ -1689,7 +1717,7 @@ bool GribToSpec::get(const std::string& name, std::vector<double>& value) const
               is("gridType", "reduced_rotated_gg")) },
     };
 
-    if (get_value(key, handle_, value, process)) {
+    if (get_value(key, Message(handle_, &fixes_), value, process)) {
         cache_set(cache_, name, value);
         return true;
     }
