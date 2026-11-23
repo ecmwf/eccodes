@@ -41,10 +41,10 @@ private:
         uint64_t acc;
         size_t consumed;
 
-        explicit UnaryCodewordReader(const BitBuffer& buffer) :
-            data(buffer.getBuffer().data()),
-            buffer(buffer),
-            pos(buffer.bitPos())
+        explicit UnaryCodewordReader(const BitBuffer& bitBuffer) :
+            data(bitBuffer.getBuffer().data()),
+            buffer(bitBuffer),
+            pos(bitBuffer.bitPos())
         {
             const size_t bitpos = pos & 7;
             acc = bswap_64(loadU64(&data[pos >> 3]));
