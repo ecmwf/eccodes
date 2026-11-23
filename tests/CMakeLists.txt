@@ -243,6 +243,7 @@ if( HAVE_BUILD_TOOLS )
         grib_double_cmp
         grib_element_index_range
         grib_pack_extreme_values
+        grib_ccsds_empty_data
         grib_paramtypeConcept
         grib_element
         grib_change_packing
