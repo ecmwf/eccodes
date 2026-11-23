@@ -9,6 +9,8 @@
  */
 
 #include "DataSimplePacking.h"
+
+#include <cmath>
 #include "grib_optimize_decimal_factor.h"
 #include "grib_bits_any_endian_simple.h"
 #include <float.h>
@@ -114,6 +116,11 @@ int DataSimplePacking::unpack_double_element(size_t idx, double* val)
 
     if ((err = grib_get_double_internal(gh, reference_value_, &reference_value)) != GRIB_SUCCESS)
         return err;
+    if (!std::isfinite(reference_value)) {
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: referenceValue=%g is not finite (corrupt message)",
+                         accessor_type().c_str(), __func__, reference_value);
+        return GRIB_DECODING_ERROR;
+    }
 
     if ((err = grib_get_long_internal(gh, binary_scale_factor_, &binary_scale_factor)) != GRIB_SUCCESS)
         return err;
@@ -241,6 +248,11 @@ int DataSimplePacking::unpack(T* val, size_t* len)
 
     if ((err = grib_get_double_internal(gh, reference_value_, &reference_value)) != GRIB_SUCCESS)
         return err;
+    if (!std::isfinite(reference_value)) {
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: referenceValue=%g is not finite (corrupt message)",
+                         accessor_type().c_str(), __func__, reference_value);
+        return GRIB_DECODING_ERROR;
+    }
 
     if ((err = grib_get_long_internal(gh, binary_scale_factor_, &binary_scale_factor)) != GRIB_SUCCESS)
         return err;
@@ -418,6 +430,11 @@ int DataSimplePacking::_unpack_double(double* val, size_t* len, unsigned char* b
 
     if ((err = grib_get_double_internal(gh, self->reference_value_, &reference_value)) != GRIB_SUCCESS)
         return err;
+    if (!std::isfinite(reference_value)) {
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: referenceValue=%g is not finite (corrupt message)",
+                         accessor_type().c_str(), __func__, reference_value);
+        return GRIB_DECODING_ERROR;
+    }
 
     if ((err = grib_get_long_internal(gh, self->binary_scale_factor_, &binary_scale_factor)) != GRIB_SUCCESS)
         return err;

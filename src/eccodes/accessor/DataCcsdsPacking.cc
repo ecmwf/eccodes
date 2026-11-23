@@ -10,6 +10,8 @@
 
 #include "DataCcsdsPacking.h"
 
+#include <cmath>
+
 #if defined(HAVE_LIBAEC) || defined(HAVE_AEC)
     #include <libaec.h>
     #ifndef LIBAEC_DLL_EXPORTED
@@ -505,6 +507,11 @@ int DataCcsdsPacking::unpack(T* val, size_t* len)
         return err;
     if ((err = grib_get_double_internal(hand, reference_value_, &reference_value)) != GRIB_SUCCESS)
         return err;
+    if (!std::isfinite(reference_value)) {
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: referenceValue=%g is not finite (corrupt message)",
+                         accessor_type().c_str(), __func__, reference_value);
+        return GRIB_DECODING_ERROR;
+    }
     if ((err = grib_get_long_internal(hand, binary_scale_factor_, &binary_scale_factor)) != GRIB_SUCCESS)
         return err;
     if ((err = grib_get_long_internal(hand, decimal_scale_factor_, &decimal_scale_factor)) != GRIB_SUCCESS)
@@ -698,6 +705,11 @@ int DataCcsdsPacking::unpack_double_element(size_t idx, double* val)
         return err;
     if ((err = grib_get_double_internal(hand, reference_value_, &reference_value)) != GRIB_SUCCESS)
         return err;
+    if (!std::isfinite(reference_value)) {
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: referenceValue=%g is not finite (corrupt message)",
+                         accessor_type().c_str(), __func__, reference_value);
+        return GRIB_DECODING_ERROR;
+    }
 
     err = grib_get_size(hand, "codedValues", &size);
     if (err) return err;
@@ -737,6 +749,11 @@ int DataCcsdsPacking::unpack_double_element_set(const size_t* index_array, size_
         return err;
     if ((err = grib_get_double_internal(hand, reference_value_, &reference_value)) != GRIB_SUCCESS)
         return err;
+    if (!std::isfinite(reference_value)) {
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: referenceValue=%g is not finite (corrupt message)",
+                         accessor_type().c_str(), __func__, reference_value);
+        return GRIB_DECODING_ERROR;
+    }
 
     // GRIB-564: The indexes in index_array relate to codedValues NOT values!
     err = grib_get_size(get_enclosing_handle(), "codedValues", &size);
