@@ -35,7 +35,7 @@ int main()
         Parameters params;
         params.bitsPerValue(bpv);
         SimplePackingBinary<double> sp(nullptr);
-        expectInvalid("unpackTo", bpv, [&] { sp.unpackTo(params, buffer.data(), values.size(), values.data()); });
+        expectInvalid("unpackTo", bpv, [&] { sp.unpackTo(params, buffer.data(), buffer.size(), values.size(), values.data()); });
         expectInvalid("packTo", bpv, [&] { sp.packTo(params, values.data(), values.size(), buffer.data()); });
     }
 

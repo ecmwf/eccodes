@@ -268,8 +268,16 @@ int DataSimplePacking::unpack(T* val, size_t* len)
         /* Must turn off this check when the environment variable ECCODES_GRIB_IEEE_PACKING is on */
         long offsetAfterData = 0;
         err = grib_get_long(gh, "offsetAfterData", &offsetAfterData);
+        if (!err && offsetAfterData == offsetBeforeData) {
+            // Empty data section with bitsPerValue > 0 (e.g. while the packing is being changed):
+            // there are no coded values, decode as a constant field
+            for (i = 0; i < n_vals; i++)
+                val[i] = reference_value;
+            *len = n_vals;
+            return GRIB_SUCCESS;
+        }
         if (!err && offsetAfterData > offsetBeforeData) {
-            const long valuesSize = (bits_per_value * n_vals) / 8; /*in bytes*/
+            const long valuesSize = (bits_per_value * n_vals + 7) / 8; /*in bytes*/
             if (offsetBeforeData + valuesSize > offsetAfterData) {
                 grib_context_log(context_, GRIB_LOG_ERROR,
                                  "%s: Data section size mismatch: "
@@ -305,7 +313,8 @@ int DataSimplePacking::unpack(T* val, size_t* len)
 
             // Decode straight into the caller's array: no intermediate copy
             // of either the coded bytes or the decoded field.
-            sp.unpackTo(params, buf, n_vals, val);
+            const size_t available = (gh->buffer->data + gh->buffer->ulength) - buf;  // bytes from buf to the end of the message
+            sp.unpackTo(params, buf, available, n_vals, val);
         }
         catch (const std::exception& e) {
             grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: SP decode error: %s",
@@ -436,8 +445,16 @@ int DataSimplePacking::_unpack_double(double* val, size_t* len, unsigned char* b
         /* Must turn off this check when the environment variable ECCODES_GRIB_IEEE_PACKING is on */
         long offsetAfterData = 0;
         err = grib_get_long(gh, "offsetAfterData", &offsetAfterData);
+        if (!err && offsetAfterData == offsetBeforeData) {
+            // Empty data section with bitsPerValue > 0 (e.g. while the packing is being changed):
+            // there are no coded values, decode as a constant field
+            for (i = 0; i < n_vals; i++)
+                val[i] = reference_value;
+            *len = n_vals;
+            return GRIB_SUCCESS;
+        }
         if (!err && offsetAfterData > offsetBeforeData) {
-            const long valuesSize = (bits_per_value * n_vals) / 8; /*in bytes*/
+            const long valuesSize = (bits_per_value * n_vals + 7) / 8; /*in bytes*/
             if (offsetBeforeData + valuesSize > offsetAfterData) {
                 grib_context_log(context_, GRIB_LOG_ERROR,
                                  "Data section size mismatch: offset before data=%ld, offset after data=%ld (num values=%ld, bits per value=%ld)",
@@ -471,7 +488,8 @@ int DataSimplePacking::_unpack_double(double* val, size_t* len, unsigned char* b
 
             // Decode straight into the caller's array: no intermediate copy
             // of either the coded bytes or the decoded field.
-            sp.unpackTo(params, buf, n_vals, val);
+            const size_t available = (gh->buffer->data + gh->buffer->ulength) - buf;  // bytes from buf to the end of the message
+            sp.unpackTo(params, buf, available, n_vals, val);
         }
         catch (const std::exception& e) {
             grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: SP decode error: %s",

@@ -16,7 +16,7 @@ int main()
 
         std::vector<double> values(8, -1.0);
         std::vector<unsigned char> buffer(8, 0);
-        sp.unpackTo(params, buffer.data(), 0, values.data());
+        sp.unpackTo(params, buffer.data(), buffer.size(), 0, values.data());
         sp.packTo(params, values.data(), 0, buffer.data());
         for (double v : values) {
             if (v != -1.0) {

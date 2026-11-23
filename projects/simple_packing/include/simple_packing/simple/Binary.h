@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <array>
+#include <limits>
 #include <memory>
 #include <stdexcept>
 #include <string>
@@ -33,7 +34,8 @@ public:
     // packTo()   writes ceil(bitsPerValue * nVals / 8) bytes into 'out'
     // unpackTo() writes nVals elements into 'out'
     void packTo(const Parameters& params, const ValueType* values, size_t nVals, unsigned char* out);
-    void unpackTo(const Parameters& params, const unsigned char* buffer, size_t nVals, ValueType* out);
+    // 'buffer' holds 'bufferSize' bytes; std::invalid_argument is thrown if that is too short for nVals values
+    void unpackTo(const Parameters& params, const unsigned char* buffer, size_t bufferSize, size_t nVals, ValueType* out);
 
 
 private:
@@ -86,7 +88,7 @@ template <typename ValueType>
 typename SimplePackingBinary<ValueType>::Values SimplePackingBinary<ValueType>::unpack(const Parameters& params, const Buffer& buf, size_t nVals)
 {
     Values values(nVals);
-    unpackTo(params, buf.data(), nVals, values.data());
+    unpackTo(params, buf.data(), buf.size(), nVals, values.data());
     return values;
 }
 
@@ -102,12 +104,18 @@ void SimplePackingBinary<ValueType>::packTo(const Parameters& params, const Valu
 
 
 template <typename ValueType>
-void SimplePackingBinary<ValueType>::unpackTo(const Parameters& params, const unsigned char* buf, size_t nVals, ValueType* out)
+void SimplePackingBinary<ValueType>::unpackTo(const Parameters& params, const unsigned char* buf, size_t bufferSize, size_t nVals, ValueType* out)
 {
     // Constant field: no packed data
     if (params.isConstantField() || params.bitsPerValue() == 0) {
         std::fill(out, out + nVals, static_cast<ValueType>(params.referenceValue()));
         return;
     }
-    codecFor(params.bitsPerValue()).unpackTo(buf, params.decimalScaleFactor(), params.binaryScaleFactor(), params.referenceValue(), nVals, out);
+    BinaryInterface<ValueType>& codec = codecFor(params.bitsPerValue());
+    const size_t bpv = static_cast<size_t>(params.bitsPerValue());
+    if (nVals > (std::numeric_limits<size_t>::max() - 7) / bpv || bufferSize < (bpv * nVals + 7) / 8) {
+        throw std::invalid_argument("Simple packing: the coded data is too short (" + std::to_string(bufferSize) + " bytes for " + std::to_string(nVals) +
+                                    " values with " + std::to_string(bpv) + " bits per value)");
+    }
+    codec.unpackTo(buf, params.decimalScaleFactor(), params.binaryScaleFactor(), params.referenceValue(), nVals, out);
 }
