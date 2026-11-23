@@ -20,8 +20,18 @@ else()
 endif()
 
 option(SIMPLE_PACKING_BUILD_TESTS "Build the simple_packing tests" ${SIMPLE_PACKING_TOP_LEVEL})
+option(SIMPLE_PACKING_BUILD_FUZZERS "Build the simple_packing libFuzzer fuzzers (requires Clang)" OFF)
 option(SIMPLE_PACKING_INSTALL "Install the simple_packing library, headers and CMake package" ${SIMPLE_PACKING_TOP_LEVEL})
 option(SIMPLE_PACKING_NATIVE_ARCH "Optimise for the host CPU (-march=native): faster, but not portable" ON)
+
+# libFuzzer + ASan + UBSan instrumentation for the fuzzers and the library code they exercise
+if(SIMPLE_PACKING_BUILD_FUZZERS)
+  if(NOT CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    message(FATAL_ERROR "SIMPLE_PACKING_BUILD_FUZZERS requires Clang (found ${CMAKE_CXX_COMPILER_ID})")
+  endif()
+  set(SIMPLE_PACKING_FUZZER_COMPILE_OPTIONS -fsanitize=fuzzer,address,undefined -fno-sanitize-recover=undefined -g -O1)
+  set(SIMPLE_PACKING_FUZZER_LINK_OPTIONS -fsanitize=fuzzer,address,undefined)
+endif()
 
 if(SIMPLE_PACKING_TOP_LEVEL)
   set(CMAKE_CXX_STANDARD 20)
@@ -64,6 +74,12 @@ set_target_properties(simple_packing_objects PROPERTIES POSITION_INDEPENDENT_COD
 target_compile_options(simple_packing_objects PRIVATE ${SIMPLE_PACKING_OPT_FLAGS})
 target_compile_definitions(simple_packing_objects PRIVATE NDEBUG)
 
+if(SIMPLE_PACKING_BUILD_FUZZERS)
+  # The fuzzers need the library itself instrumented (they are built standalone, with the
+  # tests switched off, since the instrumented objects cannot be linked uninstrumented)
+  target_compile_options(simple_packing_objects PRIVATE ${SIMPLE_PACKING_FUZZER_COMPILE_OPTIONS})
+endif()
+
 # --- simple_packing::simple_packing: the library ---
 
 add_library(simple_packing STATIC $<TARGET_OBJECTS:simple_packing_objects>)
@@ -75,6 +91,12 @@ if(SIMPLE_PACKING_BUILD_TESTS)
     enable_testing()
   endif()
   add_subdirectory(tests)
+endif()
+
+# --- libFuzzer fuzzers (Clang only; see SIMPLE_PACKING_FUZZER_* options above) ---
+
+if(SIMPLE_PACKING_BUILD_FUZZERS)
+  add_subdirectory(tests/fuzz)
 endif()
 
 # --- Installation ---
