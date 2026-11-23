@@ -172,6 +172,13 @@ public:
 
         assert(nBits <= sizeof(T) * 8 && "nBits exceeds size of T");
 
+        // Only the low nBits bits of the value are written, like in libaec: values with more
+        // bits (possible in the C API for bits per sample below the sample type width) must not
+        // leak into the following bits of the stream
+        if (nBits < sizeof(T) * 8) {
+            valuePlus &= static_cast<TPlus>((TPlus{ 1 } << nBits) - 1);
+        }
+
         constexpr uint8_t nbitsInTplus = sizeof(TPlus) * 8;
         const auto shift = currentBitPos_ % 8;
         valuePlus = valuePlus << (nbitsInTplus - nBits - shift);
