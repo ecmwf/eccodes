@@ -31,6 +31,9 @@ add_test(NAME ${SP_TEST_PREFIX}pack_value_range COMMAND sp_pack_value_range)
 sp_add_test(no_optimizer)
 add_test(NAME ${SP_TEST_PREFIX}no_optimizer COMMAND sp_no_optimizer)
 
+sp_add_test(optimizer_direct_range)
+add_test(NAME ${SP_TEST_PREFIX}optimizer_direct_range COMMAND sp_optimizer_direct_range)
+
 sp_add_test(dec64_optimizer)
 add_test(NAME ${SP_TEST_PREFIX}dec64_optimizer COMMAND sp_dec64_optimizer)
 
