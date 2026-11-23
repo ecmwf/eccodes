@@ -540,6 +540,17 @@ int DataCcsdsPacking::unpack(T* val, size_t* len)
 
     #ifdef HAVE_CCSDS_SPAEC
     if (use_spaec() && spaec_supports_flags(ccsds_flags)) {
+        if (buflen == 0) {
+            // An empty data section decodes as a constant field of the reference value, like with
+            // libaec (it decodes no samples, all samples are 0)
+            grib_context_log(context_, GRIB_LOG_DEBUG, "%s %s: empty data section, constant field of %zu values",
+                             accessor_type().c_str(), __func__, n_vals);
+            const T constant = static_cast<T>((0 * bscale + reference_value) * dscale);
+            for (size_t i = 0; i < n_vals; i++)
+                val[i] = constant;
+            *len = n_vals;
+            return GRIB_SUCCESS;
+        }
         if (hand->context->debug) {
             fprintf(stderr, "ECCODES DEBUG CCSDS unpack_* aec_stream.flags=%ld\n", ccsds_flags);
             fprintf(stderr, "ECCODES DEBUG CCSDS unpack_* aec_stream.bits_per_sample=%ld\n", bits_per_value);
