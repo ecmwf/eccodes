@@ -311,7 +311,7 @@ void testCodeOptionIds()
         ZeroBlockCodeOption zb(8, CodeOptionSet::Basic);
         SecondExtensionCodeOption se(8, CodeOptionSet::Basic);
         NoCompressionCodeOption nc(8, CodeOptionSet::Basic);
-        SplitSampleCodeOption<uint8_t> ss(8, 0, CodeOptionSet::Basic);
+        SplitSampleCodeOption ss(8, 0, CodeOptionSet::Basic);
         ASSERT_EQ(zb.value, uint32_t(0));
         ASSERT_EQ(se.value, uint32_t(1));
         ASSERT_EQ(nc.value, uint32_t(0b111));
@@ -329,7 +329,7 @@ void testCodeOptionIds()
         ZeroBlockCodeOption zb(16, CodeOptionSet::Basic);
         SecondExtensionCodeOption se(16, CodeOptionSet::Basic);
         NoCompressionCodeOption nc(16, CodeOptionSet::Basic);
-        SplitSampleCodeOption<uint16_t> ss(16, 0, CodeOptionSet::Basic);
+        SplitSampleCodeOption ss(16, 0, CodeOptionSet::Basic);
         ASSERT_EQ(zb.length, uint8_t(5));
         ASSERT_EQ(se.length, uint8_t(5));
         ASSERT_EQ(nc.length, uint8_t(4));
@@ -344,7 +344,7 @@ void testCodeOptionIds()
         ZeroBlockCodeOption zb(32, CodeOptionSet::Basic);
         SecondExtensionCodeOption se(32, CodeOptionSet::Basic);
         NoCompressionCodeOption nc(32, CodeOptionSet::Basic);
-        SplitSampleCodeOption<uint32_t> ss(32, 0, CodeOptionSet::Basic);
+        SplitSampleCodeOption ss(32, 0, CodeOptionSet::Basic);
         ASSERT_EQ(zb.length, uint8_t(6));
         ASSERT_EQ(se.length, uint8_t(6));
         ASSERT_EQ(nc.length, uint8_t(5));
@@ -364,7 +364,7 @@ void testCodeOptionIds()
     // Split-sample k values
     {
         TEST("Split-sample k=1 for n=16 Basic: value = k+1 = 2");
-        SplitSampleCodeOption<uint16_t> ss(16, 1, CodeOptionSet::Basic);
+        SplitSampleCodeOption ss(16, 1, CodeOptionSet::Basic);
         ASSERT_EQ(ss.value, uint32_t(2));
         ASSERT_EQ(ss.length, uint8_t(4));
         PASS();
@@ -373,7 +373,7 @@ void testCodeOptionIds()
     {
         TEST("Split-sample IDs are unique and ordered");
         for (uint8_t k = 0; k < 13; ++k) {
-            SplitSampleCodeOption<uint16_t> ss(16, k, CodeOptionSet::Basic);
+            SplitSampleCodeOption ss(16, k, CodeOptionSet::Basic);
             ASSERT_EQ(ss.value, uint32_t(k + 1));
         }
         PASS();

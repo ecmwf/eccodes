@@ -30,7 +30,6 @@ public:
     // No Compression
     void ncEncode(const Span<DeltaType> values, BitBuffer& buffer)
     {
-        ncCounter_++;
         buffer.writeId(ncId_.valueShifted, ncId_.length);
         for (size_t i = 0; i < blockSizeV_; ++i) {
             buffer.writeBits(values[i], bpv_);
@@ -73,7 +72,6 @@ public:
     template <ReferenceType RefType>
     void seEncode(BitBuffer& buffer)
     {
-        seCounter_++;
         buffer.writeId(seId_.valueShifted, seId_.length);
         if constexpr (RefType == ReferenceType::Ref) {
             buffer.writeBits(seState_.reference_, bpv_);
@@ -88,11 +86,8 @@ public:
     template <ReferenceType RType>
     void ssEncode(const IdType k, const Span<DeltaType> values, BitBuffer& buffer)
     {
-        ssCounter_[k]++;
-
         const auto& ssId_ = ssIdStore[k];
         const IdType valueShifted = ssId_.valueShifted;
-        const DeltaType mask = ssId_.mask;
 
         buffer.writeId(valueShifted, ssId_.length);
 
@@ -114,7 +109,6 @@ public:
     void zbEncode(BitBuffer& buffer, DeltaType reference, size_t nBlocks)
     {
         assert(nBlocks > 0 && "Number of zero blocks must be greater than 0.");
-        zbCounter_ += nBlocks;
 
         size_t cwLength = nBlocks;
         if (nBlocks >= rosLength) {
@@ -137,7 +131,6 @@ public:
             zbEncode<RType>(buffer, reference, nBlocks);
             return;
         }
-        zbCounter_ += nBlocks;
         buffer.writeId(zbId_.valueShifted, zbId_.length);
         if constexpr (RType == ReferenceType::Ref) {
             buffer.writeBits(reference, bpv_);
@@ -455,13 +448,6 @@ public:
 public:
     size_t encode(const Span<ValueType> source, Span<uint8_t> target)
     {
-        // reset counters
-        ssCounter_.fill(0);
-        zbCounter_ = 0;
-        ncCounter_ = 0;
-        seCounter_ = 0;
-        nBlocks = (source.size() + blockSizeV_ - 1) / blockSizeV_;
-
         SplitBlock<ValueType> rsiBlocks(source, rsiSizeV_);
         BitBuffer buffer(target);
 
@@ -475,19 +461,6 @@ public:
         return (buffer.bitPos() + 7) / 8;
     }
 
-
-    double compressibility() const
-    {
-        size_t nEncodedBits = 0;
-        for (size_t k = 0; k < kMax; ++k) {
-            nEncodedBits += ssCounter_[k] * (bpv_ - k) * blockSizeV_;
-        }
-        nEncodedBits += seCounter_ * bpv_ * blockSizeV_;
-        nEncodedBits += zbCounter_ * bpv_ * blockSizeV_;
-        return static_cast<double>(nEncodedBits) / (nBlocks * blockSizeV_ * bpv_);
-    }
-
-
     template <typename... Args>
     EncoderSeq(uint8_t bpv, uint8_t block_size, uint16_t rsiSize, CodeOptionSet codeOptionSet, Args&&... args) : preprocessor_(bpv, std::forward<Args>(args)...),
                                                                                                                  EncoderBase<ValueType, DeltaType>(bpv, block_size, rsiSize, codeOptionSet),
@@ -495,7 +468,6 @@ public:
     {
         seState_.encodedValues_.resize(blockSizeV_ / 2);
     }
-    ~EncoderSeq() {}
 
 
 private:
@@ -504,27 +476,16 @@ private:
     using Base = EncoderBase<ValueType, DeltaType>;
     using Base::blockSizeV_;
     using Base::bpv_;
-    using Base::kMax;
-    using Base::kMin;
-    using Base::limits_;
     using Base::ncId_;
-    using Base::rsiSizeB_;
     using Base::rsiSizeV_;
-    using Base::segmentSizeB_;
     using Base::segmentSizeV_;
     using Base::seId_;
-    using Base::ssId_;
     using Base::ssIdStore;
     using Base::zbId_;
 
     PredictivePreprocessingEncodeFast<ValueType, DeltaType, EncoderFunc> preprocessor_;
     std::vector<DeltaType> preprocessBuffer_;
     std::vector<DeltaType> partBlockBuf_;
-    std::array<size_t, 32> ssCounter_{};  // Counters for each k in split sample method
-    size_t zbCounter_ = 0;
-    size_t ncCounter_ = 0;
-    size_t seCounter_ = 0;
-    size_t nBlocks = 0;
 };
 
 }  // namespace encoder

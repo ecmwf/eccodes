@@ -35,17 +35,14 @@ private:
 public:
     // Readers may load up to 8 bytes at the current position and decode a whole block before the
     // position is checked again. A decoder therefore reads from a copy of the input followed by
-    // this many zero bytes (see DecoderSeq::makeBuffer) and checks the position against
-    // limitBits() at every block start and in every unbounded scan.
+    // this many zero bytes (see DecoderSeq::makeBuffer) and checks the position against the end
+    // of the data at every block start and in every unbounded scan.
     static constexpr size_t guardBytes = 512;
 
     BitBuffer(const BitBuffer& buffer, size_t bitPos = 0) : buffer_{ buffer.buffer_ }, currentBitPos_{ bitPos }, limitBits_{ buffer.limitBits_ } {}
     BitBuffer(Span<uint8_t> data, size_t bitPos = 0) : buffer_{ data }, currentBitPos_{ bitPos }, limitBits_{ data.size() * 8 } {}
     // data must contain at least guardBytes bytes after the first limitBits bits
     BitBuffer(Span<uint8_t> data, size_t bitPos, size_t limitBits) : buffer_{ data }, currentBitPos_{ bitPos }, limitBits_{ limitBits } {}
-
-    // Number of valid bits (the end of the compressed data)
-    size_t limitBits() const { return limitBits_; }
 
     [[noreturn]] __attribute__((cold, noinline)) static void throwOverrun(size_t pos, size_t limitBits)
     {

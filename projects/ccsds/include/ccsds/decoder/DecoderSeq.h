@@ -563,33 +563,6 @@ public:
     // Number of bits of the source used by the last decode(source, target)
     size_t bitsDecoded() const { return bitsDecoded_; }
 
-    // Per-RSI decode with callback for fused post-processing (avoids large temp buffers)
-    template <typename PostProcess>
-    void decode(Span<uint8_t> source, size_t nValues, PostProcess&& postProcess)
-    {
-        const BitBuffer buffer = makeBuffer(source);
-
-        size_t nFull = nValues / rsiSizeV_;
-        size_t remainder = nValues % rsiSizeV_;
-
-        std::vector<ValueType> perRsiBuf(rsiSizeV_);
-
-        for (size_t i = 0; i < nFull; ++i) {
-            Span<ValueType> rsiSpan(perRsiBuf.data(), rsiSizeV_);
-            decodeRefFullRsi(buffer, rsiSpan);
-            postProcess(rsiSpan, i * rsiSizeV_);
-        }
-
-        if (remainder > 0) {
-            Span<ValueType> rsiSpan(perRsiBuf.data(), remainder);
-            decodeRefFullRsi(buffer, rsiSpan);
-            postProcess(rsiSpan, nFull * rsiSizeV_);
-        }
-        buffer.checkPos();
-
-        setStats(nValues, source.size());
-    }
-
     // Fused decode: preprocessor + output callback in one pass (no intermediate buffer)
     template <typename OutputFunc>
     void decodeFused(Span<uint8_t> source, size_t nValues, OutputFunc&& outputFunc)

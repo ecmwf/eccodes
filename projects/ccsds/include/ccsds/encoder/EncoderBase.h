@@ -69,24 +69,6 @@ public:
         return Result{ static_cast<uint8_t>(kEst), bestSize, sum };
     }
 
-    template <ReferenceType RType>
-    size_t computeSize(Span<DeltaType> values, uint8_t k) const
-    {
-        size_t sumMSBs = 0;
-        constexpr size_t startIndex = (RType == ReferenceType::Ref) ? 1 : 0;
-        const size_t nEncoded = blockSizeV_ - startIndex;
-        for (size_t j = startIndex; j < blockSizeV_; ++j) {
-            sumMSBs += (values[j] >> k);
-        }
-
-        if constexpr (RType == ReferenceType::Ref) {
-            return ssId_.length + bpv_ + (sumMSBs + nEncoded) + k * nEncoded;
-        }
-        else {
-            return ssId_.length + (sumMSBs + nEncoded) + k * nEncoded;
-        }
-    }
-
     EncoderBase(uint8_t bpv, uint8_t block_size, uint16_t rsiSize, CodeOptionSet codeOptionSet) :
         bpv_((validateCcsdsParameters(bpv, block_size, rsiSize, 8 * sizeof(DeltaType)), bpv)),
         blockSizeV_(block_size),
@@ -126,7 +108,7 @@ public:
     const size_t kMin = limits_.kMin_;
     const size_t kMax = limits_.kMax_;
 
-    std::vector<SplitSampleCodeOption<DeltaType>> ssIdStore;
+    std::vector<SplitSampleCodeOption> ssIdStore;
 };
 
 }  // namespace encoder

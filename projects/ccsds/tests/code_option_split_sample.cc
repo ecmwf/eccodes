@@ -8,263 +8,263 @@ void testK1()
 {
     // Basic
     {
-        SplitSampleCodeOption<uint32_t> co(1, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(1, K, CodeOptionSet::Basic);
         assert(co.length == 3);
         assert(co.value == K + 1);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(2, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(2, K, CodeOptionSet::Basic);
         assert(co.length == 3);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(3, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(3, K, CodeOptionSet::Basic);
         assert(co.length == 3);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(4, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(4, K, CodeOptionSet::Basic);
         assert(co.length == 3);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(5, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(5, K, CodeOptionSet::Basic);
         assert(co.length == 3);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(6, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(6, K, CodeOptionSet::Basic);
         assert(co.length == 3);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(7, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(7, K, CodeOptionSet::Basic);
         assert(co.length == 3);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(8, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(8, K, CodeOptionSet::Basic);
         assert(co.length == 3);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(9, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(9, K, CodeOptionSet::Basic);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(10, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(10, K, CodeOptionSet::Basic);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(11, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(11, K, CodeOptionSet::Basic);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(12, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(12, K, CodeOptionSet::Basic);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(13, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(13, K, CodeOptionSet::Basic);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(14, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(14, K, CodeOptionSet::Basic);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(15, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(15, K, CodeOptionSet::Basic);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(16, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(16, K, CodeOptionSet::Basic);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(17, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(17, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(18, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(18, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(19, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(19, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(20, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(20, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(21, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(21, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(22, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(22, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(23, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(23, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(24, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(24, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(25, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(25, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(26, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(26, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(27, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(27, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(28, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(28, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(29, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(29, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(30, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(30, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(31, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(31, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(32, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(32, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
 
     // Restricted
     // {
-    //     SplitSampleCodeOption<uint32_t> co(1, K, CodeOptionSet::Restricted);
+    //     SplitSampleCodeOption co(1, K, CodeOptionSet::Restricted);
     //     assert(co.length == 2);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(2, K, CodeOptionSet::Restricted);
+    //     SplitSampleCodeOption co(2, K, CodeOptionSet::Restricted);
     //     assert(co.length == 2);
     // }
     {
-        SplitSampleCodeOption<uint32_t> co(3, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(3, K, CodeOptionSet::Restricted);
         assert(co.length == 2);
         assert(co.value == K + 1);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(4, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(4, K, CodeOptionSet::Restricted);
         assert(co.length == 2);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(5, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(5, K, CodeOptionSet::Restricted);
         assert(co.length == 3);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(6, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(6, K, CodeOptionSet::Restricted);
         assert(co.length == 3);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(7, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(7, K, CodeOptionSet::Restricted);
         assert(co.length == 3);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(8, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(8, K, CodeOptionSet::Restricted);
         assert(co.length == 3);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(9, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(9, K, CodeOptionSet::Restricted);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(10, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(10, K, CodeOptionSet::Restricted);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(11, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(11, K, CodeOptionSet::Restricted);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(12, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(12, K, CodeOptionSet::Restricted);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(13, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(13, K, CodeOptionSet::Restricted);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(14, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(14, K, CodeOptionSet::Restricted);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(15, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(15, K, CodeOptionSet::Restricted);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(16, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(16, K, CodeOptionSet::Restricted);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(17, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(17, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(18, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(18, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(19, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(19, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(20, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(20, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(21, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(21, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(22, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(22, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(23, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(23, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(24, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(24, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(25, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(25, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(26, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(26, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(27, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(27, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(28, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(28, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(29, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(29, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(30, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(30, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(31, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(31, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(32, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(32, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
 }
@@ -274,263 +274,263 @@ void testK2_5()
 {
     // Basic
     {
-        SplitSampleCodeOption<uint32_t> co(1, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(1, K, CodeOptionSet::Basic);
         assert(co.length == 3);
         assert(co.value == K + 1);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(2, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(2, K, CodeOptionSet::Basic);
         assert(co.length == 3);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(3, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(3, K, CodeOptionSet::Basic);
         assert(co.length == 3);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(4, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(4, K, CodeOptionSet::Basic);
         assert(co.length == 3);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(5, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(5, K, CodeOptionSet::Basic);
         assert(co.length == 3);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(6, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(6, K, CodeOptionSet::Basic);
         assert(co.length == 3);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(7, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(7, K, CodeOptionSet::Basic);
         assert(co.length == 3);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(8, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(8, K, CodeOptionSet::Basic);
         assert(co.length == 3);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(9, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(9, K, CodeOptionSet::Basic);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(10, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(10, K, CodeOptionSet::Basic);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(11, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(11, K, CodeOptionSet::Basic);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(12, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(12, K, CodeOptionSet::Basic);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(13, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(13, K, CodeOptionSet::Basic);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(14, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(14, K, CodeOptionSet::Basic);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(15, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(15, K, CodeOptionSet::Basic);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(16, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(16, K, CodeOptionSet::Basic);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(17, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(17, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(18, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(18, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(19, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(19, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(20, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(20, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(21, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(21, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(22, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(22, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(23, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(23, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(24, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(24, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(25, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(25, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(26, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(26, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(27, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(27, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(28, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(28, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(29, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(29, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(30, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(30, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(31, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(31, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(32, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(32, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
 
     // Restricted
     // {
-    //     SplitSampleCodeOption<uint32_t> co(1, K, CodeOptionSet::Restricted);
+    //     SplitSampleCodeOption co(1, K, CodeOptionSet::Restricted);
     //     assert(co.length == 2);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(2, K, CodeOptionSet::Restricted);
+    //     SplitSampleCodeOption co(2, K, CodeOptionSet::Restricted);
     //     assert(co.length == 2);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(3, K, CodeOptionSet::Restricted);
+    //     SplitSampleCodeOption co(3, K, CodeOptionSet::Restricted);
     //     assert(co.length == 2);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(4, K, CodeOptionSet::Restricted);
+    //     SplitSampleCodeOption co(4, K, CodeOptionSet::Restricted);
     //     assert(co.length == 2);
     // }
     {
-        SplitSampleCodeOption<uint32_t> co(5, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(5, K, CodeOptionSet::Restricted);
         assert(co.length == 3);
         assert(co.value == K + 1);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(6, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(6, K, CodeOptionSet::Restricted);
         assert(co.length == 3);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(7, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(7, K, CodeOptionSet::Restricted);
         assert(co.length == 3);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(8, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(8, K, CodeOptionSet::Restricted);
         assert(co.length == 3);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(9, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(9, K, CodeOptionSet::Restricted);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(10, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(10, K, CodeOptionSet::Restricted);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(11, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(11, K, CodeOptionSet::Restricted);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(12, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(12, K, CodeOptionSet::Restricted);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(13, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(13, K, CodeOptionSet::Restricted);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(14, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(14, K, CodeOptionSet::Restricted);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(15, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(15, K, CodeOptionSet::Restricted);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(16, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(16, K, CodeOptionSet::Restricted);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(17, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(17, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(18, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(18, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(19, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(19, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(20, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(20, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(21, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(21, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(22, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(22, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(23, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(23, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(24, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(24, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(25, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(25, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(26, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(26, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(27, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(27, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(28, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(28, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(29, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(29, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(30, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(30, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(31, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(31, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(32, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(32, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
 }
@@ -540,262 +540,262 @@ void testK6_13()
 {
     // Basic
     // {
-    //     SplitSampleCodeOption<uint32_t> co(1, K, CodeOptionSet::Basic);
+    //     SplitSampleCodeOption co(1, K, CodeOptionSet::Basic);
     //     assert(co.length == 3);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(2, K, CodeOptionSet::Basic);
+    //     SplitSampleCodeOption co(2, K, CodeOptionSet::Basic);
     //     assert(co.length == 3);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(3, K, CodeOptionSet::Basic);
+    //     SplitSampleCodeOption co(3, K, CodeOptionSet::Basic);
     //     assert(co.length == 3);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(4, K, CodeOptionSet::Basic);
+    //     SplitSampleCodeOption co(4, K, CodeOptionSet::Basic);
     //     assert(co.length == 3);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(5, K, CodeOptionSet::Basic);
+    //     SplitSampleCodeOption co(5, K, CodeOptionSet::Basic);
     //     assert(co.length == 3);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(6, K, CodeOptionSet::Basic);
+    //     SplitSampleCodeOption co(6, K, CodeOptionSet::Basic);
     //     assert(co.length == 3);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(7, K, CodeOptionSet::Basic);
+    //     SplitSampleCodeOption co(7, K, CodeOptionSet::Basic);
     //     assert(co.length == 3);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(8, K, CodeOptionSet::Basic);
+    //     SplitSampleCodeOption co(8, K, CodeOptionSet::Basic);
     //     assert(co.length == 3);
     // }
     {
-        SplitSampleCodeOption<uint32_t> co(9, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(9, K, CodeOptionSet::Basic);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(10, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(10, K, CodeOptionSet::Basic);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(11, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(11, K, CodeOptionSet::Basic);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(12, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(12, K, CodeOptionSet::Basic);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(13, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(13, K, CodeOptionSet::Basic);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(14, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(14, K, CodeOptionSet::Basic);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(15, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(15, K, CodeOptionSet::Basic);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(16, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(16, K, CodeOptionSet::Basic);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(17, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(17, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(18, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(18, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(19, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(19, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(20, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(20, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(21, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(21, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(22, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(22, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(23, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(23, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(24, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(24, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(25, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(25, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(26, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(26, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(27, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(27, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(28, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(28, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(29, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(29, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(30, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(30, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(31, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(31, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(32, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(32, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
 
     // Restricted
     // {
-    //     SplitSampleCodeOption<uint32_t> co(1, K, CodeOptionSet::Restricted);
+    //     SplitSampleCodeOption co(1, K, CodeOptionSet::Restricted);
     //     assert(co.length == 2);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(2, K, CodeOptionSet::Restricted);
+    //     SplitSampleCodeOption co(2, K, CodeOptionSet::Restricted);
     //     assert(co.length == 2);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(3, K, CodeOptionSet::Restricted);
+    //     SplitSampleCodeOption co(3, K, CodeOptionSet::Restricted);
     //     assert(co.length == 2);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(4, K, CodeOptionSet::Restricted);
+    //     SplitSampleCodeOption co(4, K, CodeOptionSet::Restricted);
     //     assert(co.length == 2);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(5, K, CodeOptionSet::Restricted);
+    //     SplitSampleCodeOption co(5, K, CodeOptionSet::Restricted);
     //     assert(co.length == 3);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(6, K, CodeOptionSet::Restricted);
+    //     SplitSampleCodeOption co(6, K, CodeOptionSet::Restricted);
     //     assert(co.length == 3);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(7, K, CodeOptionSet::Restricted);
+    //     SplitSampleCodeOption co(7, K, CodeOptionSet::Restricted);
     //     assert(co.length == 3);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(8, K, CodeOptionSet::Restricted);
+    //     SplitSampleCodeOption co(8, K, CodeOptionSet::Restricted);
     //     assert(co.length == 3);
     // }
     {
-        SplitSampleCodeOption<uint32_t> co(9, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(9, K, CodeOptionSet::Restricted);
         assert(co.length == 4);
         assert(co.value == K + 1);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(10, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(10, K, CodeOptionSet::Restricted);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(11, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(11, K, CodeOptionSet::Restricted);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(12, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(12, K, CodeOptionSet::Restricted);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(13, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(13, K, CodeOptionSet::Restricted);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(14, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(14, K, CodeOptionSet::Restricted);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(15, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(15, K, CodeOptionSet::Restricted);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(16, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(16, K, CodeOptionSet::Restricted);
         assert(co.length == 4);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(17, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(17, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(18, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(18, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(19, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(19, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(20, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(20, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(21, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(21, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(22, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(22, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(23, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(23, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(24, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(24, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(25, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(25, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(26, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(26, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(27, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(27, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(28, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(28, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(29, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(29, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(30, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(30, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(31, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(31, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(32, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(32, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
 }
@@ -805,262 +805,262 @@ void testK14_29()
 {
     // Basic
     // {
-    //     SplitSampleCodeOption<uint32_t> co(1, K, CodeOptionSet::Basic);
+    //     SplitSampleCodeOption co(1, K, CodeOptionSet::Basic);
     //     assert(co.length == 3);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(2, K, CodeOptionSet::Basic);
+    //     SplitSampleCodeOption co(2, K, CodeOptionSet::Basic);
     //     assert(co.length == 3);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(3, K, CodeOptionSet::Basic);
+    //     SplitSampleCodeOption co(3, K, CodeOptionSet::Basic);
     //     assert(co.length == 3);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(4, K, CodeOptionSet::Basic);
+    //     SplitSampleCodeOption co(4, K, CodeOptionSet::Basic);
     //     assert(co.length == 3);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(5, K, CodeOptionSet::Basic);
+    //     SplitSampleCodeOption co(5, K, CodeOptionSet::Basic);
     //     assert(co.length == 3);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(6, K, CodeOptionSet::Basic);
+    //     SplitSampleCodeOption co(6, K, CodeOptionSet::Basic);
     //     assert(co.length == 3);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(7, K, CodeOptionSet::Basic);
+    //     SplitSampleCodeOption co(7, K, CodeOptionSet::Basic);
     //     assert(co.length == 3);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(8, K, CodeOptionSet::Basic);
+    //     SplitSampleCodeOption co(8, K, CodeOptionSet::Basic);
     //     assert(co.length == 3);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(9, K, CodeOptionSet::Basic);
+    //     SplitSampleCodeOption co(9, K, CodeOptionSet::Basic);
     //     assert(co.length == 4);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(10, K, CodeOptionSet::Basic);
+    //     SplitSampleCodeOption co(10, K, CodeOptionSet::Basic);
     //     assert(co.length == 4);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(11, K, CodeOptionSet::Basic);
+    //     SplitSampleCodeOption co(11, K, CodeOptionSet::Basic);
     //     assert(co.length == 4);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(12, K, CodeOptionSet::Basic);
+    //     SplitSampleCodeOption co(12, K, CodeOptionSet::Basic);
     //     assert(co.length == 4);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(13, K, CodeOptionSet::Basic);
+    //     SplitSampleCodeOption co(13, K, CodeOptionSet::Basic);
     //     assert(co.length == 4);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(14, K, CodeOptionSet::Basic);
+    //     SplitSampleCodeOption co(14, K, CodeOptionSet::Basic);
     //     assert(co.length == 4);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(15, K, CodeOptionSet::Basic);
+    //     SplitSampleCodeOption co(15, K, CodeOptionSet::Basic);
     //     assert(co.length == 4);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(16, K, CodeOptionSet::Basic);
+    //     SplitSampleCodeOption co(16, K, CodeOptionSet::Basic);
     //     assert(co.length == 4);
     // }
     {
-        SplitSampleCodeOption<uint32_t> co(17, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(17, K, CodeOptionSet::Basic);
         assert(co.length == 5);
         assert(co.value == K + 1);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(18, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(18, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(19, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(19, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(20, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(20, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(21, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(21, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(22, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(22, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(23, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(23, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(24, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(24, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(25, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(25, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(26, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(26, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(27, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(27, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(28, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(28, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(29, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(29, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(30, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(30, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(31, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(31, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(32, K, CodeOptionSet::Basic);
+        SplitSampleCodeOption co(32, K, CodeOptionSet::Basic);
         assert(co.length == 5);
     }
     // Restricted
     // {
-    //     SplitSampleCodeOption<uint32_t> co(1, K, CodeOptionSet::Restricted);
+    //     SplitSampleCodeOption co(1, K, CodeOptionSet::Restricted);
     //     assert(co.length == 2);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(2, K, CodeOptionSet::Restricted);
+    //     SplitSampleCodeOption co(2, K, CodeOptionSet::Restricted);
     //     assert(co.length == 2);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(3, K, CodeOptionSet::Restricted);
+    //     SplitSampleCodeOption co(3, K, CodeOptionSet::Restricted);
     //     assert(co.length == 2);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(4, K, CodeOptionSet::Restricted);
+    //     SplitSampleCodeOption co(4, K, CodeOptionSet::Restricted);
     //     assert(co.length == 2);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(5, K, CodeOptionSet::Restricted);
+    //     SplitSampleCodeOption co(5, K, CodeOptionSet::Restricted);
     //     assert(co.length == 3);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(6, K, CodeOptionSet::Restricted);
+    //     SplitSampleCodeOption co(6, K, CodeOptionSet::Restricted);
     //     assert(co.length == 3);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(7, K, CodeOptionSet::Restricted);
+    //     SplitSampleCodeOption co(7, K, CodeOptionSet::Restricted);
     //     assert(co.length == 3);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(8, K, CodeOptionSet::Restricted);
+    //     SplitSampleCodeOption co(8, K, CodeOptionSet::Restricted);
     //     assert(co.length == 3);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(9, K, CodeOptionSet::Restricted);
+    //     SplitSampleCodeOption co(9, K, CodeOptionSet::Restricted);
     //     assert(co.length == 4);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(10, K, CodeOptionSet::Restricted);
+    //     SplitSampleCodeOption co(10, K, CodeOptionSet::Restricted);
     //     assert(co.length == 4);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(11, K, CodeOptionSet::Restricted);
+    //     SplitSampleCodeOption co(11, K, CodeOptionSet::Restricted);
     //     assert(co.length == 4);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(12, K, CodeOptionSet::Restricted);
+    //     SplitSampleCodeOption co(12, K, CodeOptionSet::Restricted);
     //     assert(co.length == 4);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(13, K, CodeOptionSet::Restricted);
+    //     SplitSampleCodeOption co(13, K, CodeOptionSet::Restricted);
     //     assert(co.length == 4);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(14, K, CodeOptionSet::Restricted);
+    //     SplitSampleCodeOption co(14, K, CodeOptionSet::Restricted);
     //     assert(co.length == 4);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(15, K, CodeOptionSet::Restricted);
+    //     SplitSampleCodeOption co(15, K, CodeOptionSet::Restricted);
     //     assert(co.length == 4);
     // }
     // {
-    //     SplitSampleCodeOption<uint32_t> co(16, K, CodeOptionSet::Restricted);
+    //     SplitSampleCodeOption co(16, K, CodeOptionSet::Restricted);
     //     assert(co.length == 4);
     // }
     {
-        SplitSampleCodeOption<uint32_t> co(17, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(17, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
         assert(co.value == K + 1);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(18, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(18, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(19, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(19, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(20, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(20, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(21, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(21, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(22, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(22, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(23, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(23, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(24, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(24, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(25, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(25, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(26, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(26, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(27, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(27, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(28, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(28, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(29, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(29, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(30, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(30, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(31, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(31, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
     {
-        SplitSampleCodeOption<uint32_t> co(32, K, CodeOptionSet::Restricted);
+        SplitSampleCodeOption co(32, K, CodeOptionSet::Restricted);
         assert(co.length == 5);
     }
 }

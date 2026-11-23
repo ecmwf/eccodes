@@ -4,14 +4,6 @@
 #include <stdexcept>
 #include <cassert>
 
-enum class CodeOptionName
-{
-    ZeroBlock,
-    SecondExtension,
-    NoCompression,
-    SplitSample
-};
-
 enum class CodeOptionSet
 {
     Basic,
@@ -168,19 +160,12 @@ public:
     // static_assert(kMin_ <= kMax_, "Invalid K range calculation");
 
 public:
-    std::pair<uint8_t, uint8_t> getKRange()
-    {
-        return { kMin_, kMax_ };
-    }
-
     uint8_t kMin_;
     uint8_t kMax_;
 };
 
 class SplitSampleIdLength
 {
-    // static_assert(K >= SplitSampleLimits<BPV, COS>::kMin_ && K <= SplitSampleLimits<BPV, COS>::kMax_, "K value out of range for given BPV and option set");
-
 public:
     SplitSampleIdLength(uint8_t bpv, CodeOptionSet cos)
     {
@@ -213,18 +198,15 @@ public:
     uint8_t length;
 };
 
-template <typename ValueType>
 class SplitSampleCodeOption : public SplitSampleIdLength
 {
 public:
     SplitSampleCodeOption(uint8_t bpv, uint8_t k, CodeOptionSet cos) : SplitSampleIdLength(bpv, cos), value(k + 1)
     {
         valueShifted = value << (sizeof(IdType) * 8 - length);
-        mask = (ValueType(1) << k) - 1;
     }
     IdType value;
     IdType valueShifted;
-    ValueType mask;
 };
 
 class NoCompressionCodeOption
