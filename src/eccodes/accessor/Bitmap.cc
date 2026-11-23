@@ -76,6 +76,19 @@ void Bitmap::dump(eccodes::Dumper* dumper)
     dumper->dump_bytes(this, label);
 }
 
+// The bitmap must contain nbits bits: a corrupt section length gives a shorter bitmap, which was
+// read beyond its end
+static int check_bitmap_size(grib_accessor* a, long nbits)
+{
+    if (nbits > a->length_ * 8) {
+        grib_context_log(a->context_, GRIB_LOG_ERROR,
+                         "%s: %s has %ld bytes (%ld bits) but %ld bits are needed (corrupt message)",
+                         a->accessor_type().c_str(), a->name_, a->length_, a->length_ * 8, nbits);
+        return GRIB_DECODING_ERROR;
+    }
+    return GRIB_SUCCESS;
+}
+
 int Bitmap::unpack_long(long* val, size_t* len)
 {
     long pos = offset_ * 8;
@@ -84,6 +97,8 @@ int Bitmap::unpack_long(long* val, size_t* len)
 
     int err = value_count(&tlen);
     if (err)
+        return err;
+    if ((err = check_bitmap_size(this, tlen)) != GRIB_SUCCESS)
         return err;
 
     if (*len < tlen) {
@@ -109,6 +124,8 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
 
     int err = a->value_count(&tlen);
     if (err)
+        return err;
+    if ((err = check_bitmap_size(a, tlen)) != GRIB_SUCCESS)
         return err;
 
     if (*len < tlen) {
@@ -137,6 +154,9 @@ int Bitmap::unpack_float(float* val, size_t* len)
 int Bitmap::unpack_double_element(size_t idx, double* val)
 {
     long pos = offset_ * 8;
+    int err = check_bitmap_size(this, static_cast<long>(idx) + 1);
+    if (err)
+        return err;
 
     pos += idx;
     *val = (double)grib_decode_unsigned_long(this->get_enclosing_handle()->buffer->data, &pos, 1);
@@ -146,7 +166,9 @@ int Bitmap::unpack_double_element(size_t idx, double* val)
 int Bitmap::unpack_double_element_set(const size_t* index_array, size_t len, double* val_array)
 {
     for (size_t i = 0; i < len; ++i) {
-        unpack_double_element(index_array[i], val_array + i);
+        int err = unpack_double_element(index_array[i], val_array + i);
+        if (err)
+            return err;
     }
     return GRIB_SUCCESS;
 }
