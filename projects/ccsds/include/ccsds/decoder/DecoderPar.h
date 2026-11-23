@@ -1,7 +1,6 @@
 #pragma once
 
 #include <vector>
-#include <assert.h>
 #include <algorithm>
 #include <exception>
 
@@ -15,28 +14,6 @@ template <typename ValueType, typename DeltaType, typename DecodeFunc = Identity
 class DecoderPar : public DecoderSeq<ValueType, DeltaType, DecodeFunc>
 {
 public:
-    // Bit offsets of all RSIs of nValues values, including a trailing partial RSI.
-    // buffer must be followed by BitBuffer::guardBytes readable bytes (see DecoderSeq::makeBuffer).
-    std::vector<size_t> decodeRsiOffsets(const BitBuffer& buffer, size_t nValues)
-    {
-        const size_t nRsis = (nValues + rsiSizeV_ - 1) / rsiSizeV_;
-        std::vector<size_t> rsiOffsets;
-        rsiOffsets.reserve(nRsis);
-        for (size_t i = 0; i < nRsis; ++i) {
-            buffer.checkPos();
-            rsiOffsets.push_back(buffer.bitPos());
-            if (i + 1 < nRsis) {
-                this->skipFullRsi(buffer);
-            }
-        }
-        return rsiOffsets;
-    }
-
-    std::vector<size_t> decodeRsiOffsets(Span<uint8_t> source, size_t nValues)
-    {
-        return decodeRsiOffsets(this->makeBuffer(source), nValues);
-    }
-
     // Decodes target.size() values in parallel: each thread decodes a contiguous range of RSIs.
     // Errors in the compressed data are reported as exceptions (see DecoderSeq).
     template <typename OutputType, typename UnmapFunc>
@@ -121,11 +98,6 @@ public:
         waitAll();
     }
 
-    void decode(Span<uint8_t> source, Span<ValueType> target)
-    {
-        decodeParallel(source, target, [](ValueType value) { return value; });
-    }
-
     DecoderPar(uint8_t bpv, uint8_t block_size, uint16_t rsiSize, CodeOptionSet codeOptionSet, size_t nThreads = 3) :
         DecoderSeq<ValueType, DeltaType, DecodeFunc>(bpv, block_size, rsiSize, codeOptionSet),
         nThreads_(nThreads)
@@ -142,11 +114,6 @@ private:
     using Base::blockSizeV_;
     using Base::bpv_;
     using Base::codeOptionSet_;
-    using Base::maxIdLength;
-    using Base::maxSegmentSizeB_;
-    using Base::maxSegmentSizeV_;
-    using Base::noCompressionId_;
-    using Base::preprocessor_;
     using Base::rsiSizeB_;
     using Base::rsiSizeV_;
 };

@@ -151,25 +151,18 @@ public:
         return result;
     }
 
-    void writeCodeword(size_t length, size_t pos)
+    void writeCodeword(size_t length)
     {
-        // size_t bytepos = pos / 8;
-        // size_t bitpos = pos % 8;
-
+        const size_t pos = currentBitPos_;
         size_t bitOffset = (pos + length) % 8;
         uint8_t mask = 0b1000'0000 >> bitOffset;
         buffer_[(pos + length) / 8] |= mask;
-    }
-
-    void writeCodeword(size_t length)
-    {
-        writeCodeword(length, currentBitPos_);
         currentBitPos_ += length + 1;
     }
 
     template <typename T>
         requires(std::is_integral<T>::value)
-    void writeBits(T value, size_t nBits, size_t pos)
+    void writeBits(T value, size_t nBits)
     {
         using TPlus =
             typename std::conditional_t<sizeof(T) <= 1, uint16_t,
@@ -182,8 +175,7 @@ public:
         assert(nBits <= sizeof(T) * 8 && "nBits exceeds size of T");
 
         constexpr uint8_t nbitsInTplus = sizeof(TPlus) * 8;
-        constexpr uint8_t nbytesInTplus = sizeof(TPlus);
-        const auto shift = pos % 8;
+        const auto shift = currentBitPos_ % 8;
         valuePlus = valuePlus << (nbitsInTplus - nBits - shift);
 
         if constexpr (sizeof(TPlus) == 2) {
@@ -195,14 +187,7 @@ public:
         else if constexpr (sizeof(TPlus) == 8) {
             valuePlus = bswap_64(valuePlus);
         }
-        storeUnaligned<TPlus>(&buffer_[pos / 8], valuePlus);
-    }
-
-    template <typename T>
-        requires(std::is_integral<T>::value)
-    void writeBits(T value, size_t nBits)
-    {
-        writeBits(value, nBits, currentBitPos_);
+        storeUnaligned<TPlus>(&buffer_[currentBitPos_ / 8], valuePlus);
         currentBitPos_ += nBits;
     }
 
@@ -280,17 +265,10 @@ public:
 
     template <typename IdType>
         requires(std::is_integral<IdType>::value && std::is_unsigned<IdType>::value)
-    void writeId(IdType idShifted, uint8_t idLength, size_t pos)
-    {
-        idShifted >>= pos % 8;
-        storeUnaligned<IdType>(&buffer_[pos / 8], bswap_16(idShifted));
-    }
-
-    template <typename IdType>
-        requires(std::is_integral<IdType>::value && std::is_unsigned<IdType>::value)
     void writeId(IdType idShifted, uint8_t idLength)
     {
-        writeId(idShifted, idLength, currentBitPos_);
+        idShifted >>= currentBitPos_ % 8;
+        storeUnaligned<IdType>(&buffer_[currentBitPos_ / 8], bswap_16(idShifted));
         currentBitPos_ += idLength;
     }
 

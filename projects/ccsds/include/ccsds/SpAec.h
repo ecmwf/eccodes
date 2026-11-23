@@ -5,6 +5,9 @@
 #include <cstring>
 #include <stdexcept>
 #include <string>
+#include <vector>
+#include "ccsds/CodeOption.h"
+#include "ccsds/Span.h"
 #include "ccsds/encoder/EncoderSeq.h"
 #include "ccsds/decoder/DecoderSeq.h"
 #include "ccsds/decoder/DecoderPar.h"
@@ -202,8 +205,6 @@ private:
             }
         }
 
-        // Note: the parallel encoder (EncoderPar) does not produce valid streams in all cases
-        // (zero blocks at chunk boundaries, partial blocks): always encode sequentially.
         EncoderSeq<DeltaType, DeltaType> encoder{ bpv_, blockSize_, rsiSize_, CodeOptionSet::Basic };
         return encoder.encode(Span<DeltaType>(mapped), target);
     }
