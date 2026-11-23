@@ -421,6 +421,7 @@ public:
     {
         SplitBlock<ValueType> rsiBlocks(source, rsiSizeV_);
         BitBuffer buffer(target);
+        this->splitK(0);  // the split-sample k state starts at 0 in every stream, like in libaec
 
         for (size_t i = 0; i < rsiBlocks.nFull(); ++i) {
             encodeRsi(rsiBlocks.full(i), buffer);
@@ -444,6 +445,11 @@ private:
     SETmpState<DeltaType> seState_;
 
     using Base = EncoderBase<ValueType, DeltaType>;
+
+public:
+    using Base::splitK;
+
+private:
     using Base::blockSizeV_;
     using Base::bpv_;
     using Base::ncId_;
