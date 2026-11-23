@@ -2,6 +2,7 @@
 
 import random
 
+
 def gen_rand_data(bpv, length, pattern="zeros"):
     data = []
     values = []
