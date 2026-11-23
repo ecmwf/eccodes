@@ -51,7 +51,7 @@ public:
         Parameters params;
 
         if (check_data_values_range(min, max) != SP_SUCCESS) {
-            throw std::runtime_error("Values out of range (minimum " + std::to_string(min) + ", maximum " + std::to_string(max) + "): values must be finite");
+            throw std::runtime_error("Values out of range (minimum " + std::to_string(min) + ", maximum " + std::to_string(max) + "): values must be finite and the minimum must not be larger than the maximum");
         }
 
         if (max == min) {

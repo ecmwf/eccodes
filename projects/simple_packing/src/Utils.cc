@@ -410,23 +410,32 @@ std::optional<double> nearest_smaller_value(double val, FloatType type)
 
 long get_binary_scale_factor(double max, double min, long bpval, int* ret)
 {
-    double range = max - min;
+    const double range = max - min;
     double zs = 1;
     long scale = 0;
     const long last = 127;
-    const unsigned long maxint = static_cast<unsigned long>(sp_power<double>(bpval, 2)) - 1;
-    const size_t ulong_size = sizeof(maxint) * 8;
+    const size_t ulong_size = sizeof(unsigned long) * 8;
 
+    // Check the arguments before using them (ECC-246, ECC-1927 in ecCodes)
     if (bpval >= static_cast<long>(ulong_size)) {
         *ret = SP_OUT_OF_RANGE;
         return 0;
     }
-
-    *ret = 0;
     if (bpval < 1) {
         *ret = SP_ENCODING_ERROR;
         return 0;
     }
+    if (!std::isfinite(range)) {
+        *ret = SP_OUT_OF_RANGE;
+        return 0;
+    }
+    if (range < 0) {  // maximum < minimum
+        *ret = SP_ENCODING_ERROR;
+        return 0;
+    }
+    const unsigned long maxint = static_cast<unsigned long>(sp_power<double>(bpval, 2)) - 1;
+
+    *ret = 0;
 
     assert(bpval >= 1);
     if (range == 0)
@@ -467,6 +476,9 @@ int check_data_values_range(double min_val, double max_val)
         return SP_ENCODING_ERROR;
     }
     if (!(max_val < dbl_max && max_val > -dbl_max)) {
+        return SP_ENCODING_ERROR;
+    }
+    if (min_val > max_val) {
         return SP_ENCODING_ERROR;
     }
 
