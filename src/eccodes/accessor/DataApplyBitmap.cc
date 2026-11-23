@@ -65,6 +65,12 @@ int DataApplyBitmap::unpack_double_element(size_t idx, double* val)
     if (!grib_find_accessor(gh, bitmap_))
         return grib_get_double_element_internal(gh, coded_values_, idx, val);
 
+    if (idx >= n_vals) {
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s: %s: Invalid index %zu (should be less than %zu)",
+                         accessor_type().c_str(), __func__, idx, n_vals);
+        return GRIB_INVALID_ARGUMENT;
+    }
+
     if ((err = grib_get_double_internal(gh, missing_value_, &missing_value)) != GRIB_SUCCESS)
         return err;
 
@@ -80,8 +86,16 @@ int DataApplyBitmap::unpack_double_element(size_t idx, double* val)
     if (bvals == NULL)
         return GRIB_OUT_OF_MEMORY;
 
-    if ((err = grib_get_double_array_internal(gh, bitmap_, bvals, &n_vals)) != GRIB_SUCCESS)
+    if ((err = grib_get_double_array_internal(gh, bitmap_, bvals, &n_vals)) != GRIB_SUCCESS) {
+        grib_context_free(context_, bvals);
         return err;
+    }
+    if (idx >= n_vals) {
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s: %s: Invalid index %zu (the bitmap has %zu entries)",
+                         accessor_type().c_str(), __func__, idx, n_vals);
+        grib_context_free(context_, bvals);
+        return GRIB_INVALID_ARGUMENT;
+    }
 
     cidx = 0;
     for (i = 0; i < idx; i++) {
@@ -112,6 +126,14 @@ int DataApplyBitmap::unpack_double_element_set(const size_t* index_array, size_t
     if (!grib_find_accessor(gh, bitmap_))
         return grib_get_double_element_set_internal(gh, coded_values_, index_array, len, val_array);
 
+    for (i = 0; i < len; i++) {
+        if (index_array[i] >= n_vals) {
+            grib_context_log(context_, GRIB_LOG_ERROR, "%s: %s: Invalid index %zu (should be less than %zu)",
+                             accessor_type().c_str(), __func__, index_array[i], n_vals);
+            return GRIB_INVALID_ARGUMENT;
+        }
+    }
+
     if ((err = grib_get_double_internal(gh, missing_value_, &missing_value)) != GRIB_SUCCESS)
         return err;
 
@@ -137,8 +159,18 @@ int DataApplyBitmap::unpack_double_element_set(const size_t* index_array, size_t
     bvals = (double*)grib_context_malloc(context_, n_vals * sizeof(double));
     if (!bvals) return GRIB_OUT_OF_MEMORY;
 
-    if ((err = grib_get_double_array_internal(gh, bitmap_, bvals, &n_vals)) != GRIB_SUCCESS)
+    if ((err = grib_get_double_array_internal(gh, bitmap_, bvals, &n_vals)) != GRIB_SUCCESS) {
+        grib_context_free(context_, bvals);
         return err;
+    }
+    for (i = 0; i < len; i++) {
+        if (index_array[i] >= n_vals) {
+            grib_context_log(context_, GRIB_LOG_ERROR, "%s: %s: Invalid index %zu (the bitmap has %zu entries)",
+                             accessor_type().c_str(), __func__, index_array[i], n_vals);
+            grib_context_free(context_, bvals);
+            return GRIB_INVALID_ARGUMENT;
+        }
+    }
 
     cidx_array = (size_t*)grib_context_malloc(context_, count_1s * sizeof(size_t));
     cval_array = (double*)grib_context_malloc(context_, count_1s * sizeof(double));
