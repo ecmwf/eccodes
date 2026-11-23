@@ -17,6 +17,7 @@ list(APPEND test_c_bins
     grib_bpv_limit
     grib_double_cmp
     grib_element_index_range
+    grib_pack_extreme_values
     read_any
     julian
     grib_update_sections_lengths
@@ -241,6 +242,7 @@ if( HAVE_BUILD_TOOLS )
         grib_complex
         grib_double_cmp
         grib_element_index_range
+        grib_pack_extreme_values
         grib_paramtypeConcept
         grib_element
         grib_change_packing
