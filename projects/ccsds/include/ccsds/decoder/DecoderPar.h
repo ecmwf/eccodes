@@ -37,13 +37,14 @@ public:
         const size_t nThreads = std::min(nThreads_, nRsi);
         const size_t nRsiPerThread = (nRsi + nThreads - 1) / nThreads;
 
+        // The pool is sized for this decode: oversized pools would make thread creation
+        // fail when several decodes run concurrently
+        std::vector<SpAecStats> chunkStats(nThreads);
+        ThreadPool threadPool{ nThreads };
+
         const BitBuffer scanBuf{ padded, 0 };
         std::vector<std::future<void>> futures;
         futures.reserve(nThreads);
-
-        // Per-chunk statistics: worker t writes chunkStats[t], the main thread merges them
-        // after waiting for all workers (the futures synchronize the accesses)
-        std::vector<SpAecStats> chunkStats(nThreads);
 
         // Waits for all started threads (they reference local variables) and rethrows the first error
         auto waitAll = [&futures]() {
@@ -75,7 +76,7 @@ public:
                 const size_t chunkLen = endVal - startVal;
                 const size_t bitOffset = scanBuf.bitPos();
 
-                futures.push_back(threadPool_.enqueue(
+                futures.push_back(threadPool.enqueue(
                     [&padded, &target, unmapper, bitOffset, startVal, chunkLen, &chunkStats, t, this]() {
                         // Per-thread decoder to avoid shared mutable state (rsiBuf_, paddedSegmentBuf_)
                         DecoderSeq<ValueType, DeltaType, DecodeFunc> localDecoder{
@@ -142,7 +143,6 @@ private:
     using Base = DecoderSeq<ValueType, DeltaType, DecodeFunc>;
 
     const size_t nThreads_;
-    mutable ThreadPool threadPool_{ this->nThreads_ };
 
     using Base::blockSizeV_;
     using Base::bpv_;
