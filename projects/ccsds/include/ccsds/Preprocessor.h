@@ -81,8 +81,7 @@ public:
     {
     }
 
-    template <typename... Args>
-    void decode(Span<DeltaType> mapped_span, ValueType reference, Span<ValueType> data_span, Args&&... args)
+    void decode(Span<DeltaType> mapped_span, ValueType reference, Span<ValueType> data_span)
     {
         const DeltaType* __restrict__ mapped = mapped_span.data();
         ValueType* __restrict__ data = data_span.data();

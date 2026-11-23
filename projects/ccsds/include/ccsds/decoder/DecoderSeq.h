@@ -372,13 +372,13 @@ public:
         // Remaining Blocks
         for (; pos < blocks.nFull();) {
             buffer.checkPos();
-            auto id = buffer.peekBits(maxIdLength);
-            if (id == 0) {
+            const auto nextId = buffer.peekBits(maxIdLength);
+            if (nextId == 0) {
                 buffer.skipBits(maxIdLength);
                 pos += zbDecode<ReferenceType::NoRef>(buffer, segment, pos);
             }
             else {
-                handleBlock(buffer, id, blocks.full(pos));
+                handleBlock(buffer, nextId, blocks.full(pos));
                 pos++;
             }
             assert(pos <= segment.size() / blockSizeV_ && "Decoded blocks exceed segment size.");

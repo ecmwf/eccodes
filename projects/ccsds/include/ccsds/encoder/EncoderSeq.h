@@ -1,14 +1,16 @@
 #pragma once
 
-#include <array>
-#include <vector>
-#include <assert.h>
 #include <algorithm>
+#include <cassert>
+#include <cstddef>
+#include <cstdint>
 #include <numeric>
+#include <vector>
 
 #include "ccsds/encoder/EncoderBase.h"
 #include "ccsds/CodeOption.h"
 #include "ccsds/BitBuffer.h"
+#include "ccsds/Preprocessor.h"
 #include "ccsds/Span.h"
 #include "ccsds/Utils.h"
 
@@ -230,7 +232,6 @@ public:
         }
 
         // ALT
-        size_t count = 1;
         for (size_t i = 1; i < segmentBlocks.nFull(); ++i) {
             const auto block = segmentBlocks.full(i);
             if (isZeroBlock(block)) {
@@ -240,7 +241,6 @@ public:
                 handleZeroBlocks();
                 encodeFullBlock<ReferenceType::NoRef>(block, buffer);
             }
-            count++;
         }
 
         // ROS
@@ -331,25 +331,25 @@ public:
 
             // ALT
             for (size_t i = 1; i < segmentBlocks.nFull(); ++i) {
-                auto block = segmentBlocks.full(i);
-                if (isZeroBlock(block)) {
+                const auto altBlock = segmentBlocks.full(i);
+                if (isZeroBlock(altBlock)) {
                     nZeroBlocks++;
                 }
                 else {
                     handleZeroBlocks();
-                    encodeFullBlock<ReferenceType::NoRef>(block, buffer);
+                    encodeFullBlock<ReferenceType::NoRef>(altBlock, buffer);
                 }
             }
 
             // ALT PART
             if (segmentBlocks.hasPart()) {
-                auto block = segmentBlocks.part();
-                if (isZeroBlock(block)) {
+                const auto partBlock = segmentBlocks.part();
+                if (isZeroBlock(partBlock)) {
                     nZeroBlocks++;
                 }
                 else {
                     handleZeroBlocks();
-                    encodePartBlock<ReferenceType::NoRef>(block, buffer);
+                    encodePartBlock<ReferenceType::NoRef>(partBlock, buffer);
                 }
             }
         }
@@ -462,8 +462,8 @@ public:
     }
 
     template <typename... Args>
-    EncoderSeq(uint8_t bpv, uint8_t block_size, uint16_t rsiSize, CodeOptionSet codeOptionSet, Args&&... args) : preprocessor_(bpv, std::forward<Args>(args)...),
-                                                                                                                 EncoderBase<ValueType, DeltaType>(bpv, block_size, rsiSize, codeOptionSet),
+    EncoderSeq(uint8_t bpv, uint8_t block_size, uint16_t rsiSize, CodeOptionSet codeOptionSet, Args&&... args) : EncoderBase<ValueType, DeltaType>(bpv, block_size, rsiSize, codeOptionSet),
+                                                                                                                 preprocessor_(bpv, std::forward<Args>(args)...),
                                                                                                                  preprocessBuffer_(rsiSize * block_size)
     {
         seState_.encodedValues_.resize(blockSizeV_ / 2);

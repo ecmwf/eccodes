@@ -1,12 +1,12 @@
 #pragma once
 
+#include <cassert>
+#include <cstddef>
+#include <cstdint>
 #include <vector>
-#include <bit>
-#include <assert.h>
 
 #include "ccsds/Utils.h"
 #include "ccsds/CodeOption.h"
-#include "ccsds/Preprocessor.h"
 #include "ccsds/Span.h"
 
 

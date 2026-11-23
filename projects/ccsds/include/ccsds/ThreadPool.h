@@ -1,15 +1,16 @@
 #pragma once
 
+#include <functional>
+#include <future>
 #include <iostream>
-#include <vector>
-#include <thread>
-#include <queue>
+#include <memory>
 #include <mutex>
 #include <condition_variable>
-#include <future>
-#include <functional>
-#include <memory>
+#include <queue>
 #include <stdexcept>
+#include <thread>
+#include <type_traits>
+#include <vector>
 
 class ThreadPool
 {
@@ -45,7 +46,7 @@ public:
     }
 
     template <class F, class... Args>
-    auto enqueue(F&& f, Args&&... args) -> std::future<typename std::result_of<F(Args...)>::type>;
+    auto enqueue(F&& f, Args&&... args) -> std::future<std::invoke_result_t<F, Args...>>;
 
     ~ThreadPool() { stopAndJoin(); }
 
@@ -72,9 +73,9 @@ private:
 };
 
 template <class F, class... Args>
-auto ThreadPool::enqueue(F&& f, Args&&... args) -> std::future<typename std::result_of<F(Args...)>::type>
+auto ThreadPool::enqueue(F&& f, Args&&... args) -> std::future<std::invoke_result_t<F, Args...>>
 {
-    using returnType = typename std::result_of<F(Args...)>::type;
+    using returnType = std::invoke_result_t<F, Args...>;
 
     // auto task = std::make_shared<std::packaged_task<returnType()>>(std::bind(std::forward<F>(f), std::forward<Args>(args)...));
     auto task = std::make_shared<std::packaged_task<returnType()>>(

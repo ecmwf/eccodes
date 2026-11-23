@@ -1,13 +1,14 @@
 #pragma once
 
-#include <cstdint>
 #include <cmath>
+#include <cstdint>
 #include <cstring>
 #include <stdexcept>
 #include <string>
 #include <vector>
 #include "ccsds/CodeOption.h"
 #include "ccsds/Span.h"
+#include "ccsds/Utils.h"
 #include "ccsds/encoder/EncoderSeq.h"
 #include "ccsds/decoder/DecoderSeq.h"
 #include "ccsds/decoder/DecoderPar.h"
@@ -43,8 +44,8 @@ class SpAec
     public:
         SimpleMapper(ValueType referenceValue, int binaryScaleFactor, int decimalScaleFactor) :
             referenceValue_(referenceValue),
-            binary_{ grib_power<ValueType>(-binaryScaleFactor, 2) },
-            decimal_{ grib_power<ValueType>(decimalScaleFactor, 10) }
+            decimal_{ grib_power<ValueType>(decimalScaleFactor, 10) },
+            binary_{ grib_power<ValueType>(-binaryScaleFactor, 2) }
         {
         }
 
@@ -95,11 +96,11 @@ public:
         bpv_(bpv),
         blockSize_(blockSize),
         rsiSize_(rsiSize),
+        nThreads_(nThreads),
         referenceValue_(referenceValue),
         binaryScaleFactor_(binaryScaleFactor),
         decimalScaleFactor_(decimalScaleFactor),
-        codeOptionSet_(codeOptionSet),
-        nThreads_(nThreads)
+        codeOptionSet_(codeOptionSet)
     {
         validateCcsdsParameters(bpv_, blockSize_, rsiSize_);
         if (codeOptionSet_ != CodeOptionSet::Basic) {

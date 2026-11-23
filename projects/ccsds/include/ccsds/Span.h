@@ -9,7 +9,8 @@ class Span
 {
 public:
     Span() : data_{ nullptr }, size_{ 0 } {}
-    Span(const Span<ValueType>& other) : data_{ other.data() }, size_{ other.size() } {}
+    Span(const Span<ValueType>&) = default;
+    Span& operator=(const Span<ValueType>&) = default;
     Span(ValueType* data, size_t size) : data_{ data }, size_{ size } {}
     Span(std::vector<ValueType>& vec) : data_{ vec.data() }, size_{ vec.size() } {}
 

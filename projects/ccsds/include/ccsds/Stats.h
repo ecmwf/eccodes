@@ -320,11 +320,7 @@ struct SpAecStats
         std::cout << "  nBlocks: " << nBlocks << '\n';
         std::cout << "  nValues: " << nValues << '\n';
 
-        size_t totalSSNoRef = 0;
-        size_t totalSSRef = 0;
         for (size_t k = 0; k < kMax; ++k) {
-            totalSSNoRef += counter.ssNoRef[k];
-            totalSSRef += counter.ssRef[k];
             if (counter.ssNoRef[k] > 0 || counter.ssRef[k] > 0) {
                 std::cout << "    ss k=" << k << ": " << counter.ssNoRef[k] + counter.ssRef[k] << " blocks" << '\n';
             }
