@@ -139,16 +139,16 @@ int DataApplyBoustrophedonicBitmap::unpack_double(double* val, size_t* len)
             val[i] = missing_value;
         }
         else {
-            val[i] = coded_vals[j++];
-            if (j > coded_n_vals) {
+            // The bitmap must not ask for more coded values than there are: check before reading
+            if (j >= coded_n_vals) {
                 grib_context_free(context_, coded_vals);
                 grib_context_log(context_, GRIB_LOG_ERROR,
-                                 "grib_accessor_data_apply_boustrophedonic_bitmap [%s]:"
-                                 " unpack_double :  number of coded values does not match bitmap %ld %ld",
-                                 name_, coded_n_vals, n_vals);
-
-                return GRIB_ARRAY_TOO_SMALL;
+                                 "%s %s: too few coded values for the bitmap: %s contains %zu value(s) "
+                                 "but at least %zu of the %zu points in %s are present -- expected at least %zu coded values",
+                                 name_, __func__, coded_values_, coded_n_vals, j + 1, n_vals, bitmap_, j + 1);
+                return GRIB_DECODING_ERROR;
             }
+            val[i] = coded_vals[j++];
         }
     }
 
