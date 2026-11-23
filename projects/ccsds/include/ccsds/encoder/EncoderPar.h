@@ -104,26 +104,33 @@ public:
             }
             const size_t first = firstRsi[t];
             const size_t nR = c.kIn.size();
-            Encoder encoder{ bpv_, blockSize_, rsiSize_, codeOptionSet_ };
-            encoder.splitK(kReal);
-            c.prefix.assign(scratchSize(rsiRangeValues(source.size(), first, nR)), 0);
-            BitBuffer buffer(Span<uint8_t>(c.prefix.data(), c.prefix.size()));
+            // The k usually converges after one RSI: first try with a small buffer, and only if
+            // that is not enough, encode again with a buffer for the whole chunk
             size_t r = 0;
             bool converged = false;
-            for (; r < nR; ++r) {
-                encoder.encodeRsi(rsiSpan(source, first + r), buffer);
-                if (r + 1 < nR && encoder.splitK() == c.kIn[r + 1]) {
-                    converged = true;
+            size_t prefixBits = 0;
+            for (size_t limit = std::min<size_t>(nR, 4);; limit = nR) {
+                Encoder encoder{ bpv_, blockSize_, rsiSize_, codeOptionSet_ };
+                encoder.splitK(kReal);
+                c.prefix.assign(scratchSize(rsiRangeValues(source.size(), first, limit)), 0);
+                BitBuffer buffer(Span<uint8_t>(c.prefix.data(), c.prefix.size()));
+                for (r = 0; r < limit; ++r) {
+                    encoder.encodeRsi(rsiSpan(source, first + r), buffer);
+                    if (r + 1 < nR && encoder.splitK() == c.kIn[r + 1]) {
+                        converged = true;
+                        break;
+                    }
+                }
+                prefixBits = buffer.bitPos();
+                if (converged || limit == nR) {
+                    c.kOut = converged ? c.kOut : encoder.splitK();
                     break;
                 }
             }
             c.pieces.clear();
-            c.pieces.push_back(Piece{ c.prefix.data(), 0, buffer.bitPos() });
+            c.pieces.push_back(Piece{ c.prefix.data(), 0, prefixBits });
             if (converged) {
                 c.pieces.push_back(Piece{ c.scratch.data(), c.rsiEnd[r], c.rsiEnd[nR - 1] - c.rsiEnd[r] });
-            }
-            else {
-                c.kOut = encoder.splitK();
             }
         }
 
