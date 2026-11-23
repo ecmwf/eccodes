@@ -25,8 +25,7 @@ public:
         min *= decimal;
         max *= decimal;
 
-        /* params.bits_per_value=(long)ceil(log((double)(imax-imin+1))/log(2.0)); */
-        /* See GRIB-540 for why we use ceil */
+        /* bits_per_value = ceil(log2(fabs(max - min))) (ceil: see GRIB-540) */
         auto bpv = number_of_bits((unsigned long)ceil(fabs(max - min)));
         if (bpv.has_value()) {
             params.bitsPerValue(bpv.value());

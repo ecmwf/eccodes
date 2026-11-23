@@ -83,9 +83,7 @@ public:
             params.referenceValue(ref.value());
         }
         else {
-            std::stringstream ss;
-            ss << "unable to find nearest_smaller_value of " << min;
-            throw std::runtime_error(ss.str());
+            throw std::runtime_error("unable to find nearest_smaller_value of " + std::to_string(min));
         }
 
         int binaryScaleFactor = bitsPerValue_ - static_cast<int>(std::ceil(std::log2(range))) - 1;

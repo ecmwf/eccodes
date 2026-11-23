@@ -1,5 +1,8 @@
 #pragma once
 
+#include <stdexcept>
+#include <string>
+
 #include "simple_packing/Optimizer.h"
 #include "simple_packing/Parameters.h"
 #include "simple_packing/Utils.h"
@@ -59,9 +62,7 @@ public:
             params.referenceValue(ref.value());
         }
         else {
-            std::stringstream ss;
-            ss << "unable to find nearest_smaller_value of " << min;
-            throw std::runtime_error(ss.str());
+            throw std::runtime_error("unable to find nearest_smaller_value of " + std::to_string(min));
         }
 
         int err;

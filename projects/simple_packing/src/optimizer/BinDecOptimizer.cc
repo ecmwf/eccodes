@@ -4,50 +4,50 @@
 
 #include "simple_packing/optimizer/BinDecOptimizer.h"
 #include "simple_packing/Utils.h"
+
 #include <cmath>
 #include <limits>
-#include <cstdlib>
+#include <optional>
 
+namespace
+{
 
 constexpr double dbl_min = std::numeric_limits<double>::min();
 constexpr double dbl_max = std::numeric_limits<double>::max();
 
-// constexpr double epsilon()
-// {
-//     double e = 1.;
-//     while (1. != (1. + e)) {
-//         e /= 2;
-//     }
-//     return e;
-// }
-
+// The largest decimal exponent that fits in a double (~307)
 int vrange()
 {
     return (int)(log(dbl_max) / log(10)) - 1;
 }
 
-
-void factec(int* krep, const double pa, const int knbit, const long kdec, const int range, long* ke, long* knutil)
+// The binary scale factor and the largest encoded value for the range 'pa',
+// 'knbit' bits per value and the decimal scale factor 'kdec'
+struct FactecResult
 {
-    *krep = 0;
-    *ke = 0;
-    *knutil = 0;
+    long binaryScaleFactor;
+    long maxEncodedValue;
+};
 
+// std::nullopt if encoding 'pa' would overflow
+std::optional<FactecResult> factec(double pa, int knbit, long kdec, int range)
+{
     if (pa < dbl_min) {
-        *knutil = 1;
-        return;
+        return FactecResult{ 0, 1 };
     }
 
     if ((fabs(log10(fabs(pa)) + (double)kdec) >= range)) {
-        *krep = 1;
-        return;
+        return std::nullopt;
     }
 
     /* Binary scale factor associated to kdec */
-    *ke = floor(log2((pa * sp_power<double>(kdec, 10)) / (sp_power<double>(knbit, 2) - 0.5))) + 1;
+    long ke = floor(log2((pa * sp_power<double>(kdec, 10)) / (sp_power<double>(knbit, 2) - 0.5))) + 1;
     /* Encoded value for pa = max - min       */
-    *knutil = floor(0.5 + pa * sp_power<double>(kdec, 10) * sp_power<double>(-*ke, 2));
+    long knutil = floor(0.5 + pa * sp_power<double>(kdec, 10) * sp_power<double>(-ke, 2));
+    return FactecResult{ ke, knutil };
 }
+
+}  // anonymous namespace
 
 
 Parameters BinDecOptimizer::getParams(const double pmin, const double pmax)
@@ -60,10 +60,9 @@ Parameters BinDecOptimizer::getParams(const double pmin, const double pmax)
     int idecmax = 5;
     long inbint;
     double xtinyr4, xhuger4, xnbint;
-    long inumax, inutil;
-    long jdec, ie;
-    int irep;
-    int RANGE = vrange();
+    long inumax = 0;
+    long jdec;
+    const int RANGE = vrange();
     constexpr double EPSILON = std::numeric_limits<double>::epsilon();
     double pa = pmax - pmin;
 
@@ -77,16 +76,12 @@ Parameters BinDecOptimizer::getParams(const double pmin, const double pmax)
         return params;
     }
 
-    inumax = 0;
-
     if (fabs(pa) <= EPSILON) {
-        // *kdec   = 0;
         params.decimalScaleFactor(0);
         idecmin = 1;
         idecmax = 0;
     }
     else if (pmin != 0. && fabs(pmin) < EPSILON) {
-        // *kdec   = 0;
         params.decimalScaleFactor(0);
         idecmin = 1;
         idecmax = 0;
@@ -116,39 +111,33 @@ Parameters BinDecOptimizer::getParams(const double pmin, const double pmax)
         if (fabs(log10(fabs(pa)) + (double)jdec) >= (double)RANGE)
             continue;
 
-        factec(&irep, pa, knbit_, jdec, RANGE, &ie, &inutil);
+        auto fact = factec(pa, knbit_, jdec, RANGE);
 
-        if (irep != 0)
+        if (!fact)
             continue;
 
         /* Check it will be possible to decode the maximum value of the fields using 32bit floats */
         if (compat_32bit_)
-            if (pmin * sp_power<double>(jdec, 10) + xnbint * sp_power<double>(ie, 2) >= xhuger4)
+            if (pmin * sp_power<double>(jdec, 10) + xnbint * sp_power<double>(fact->binaryScaleFactor, 2) >= xhuger4)
                 continue;
 
         /* GRIB1 demands that the binary scale factor be encoded in a single byte */
         if (compat_gribex_)
-            if ((ie < -126) || (ie > 127))
+            if ((fact->binaryScaleFactor < -126) || (fact->binaryScaleFactor > 127))
                 continue;
 
-        if (inutil > inumax) {
-            inumax = inutil;
-            // *kdec  = jdec;
-            // *kbin  = ie;
+        if (fact->maxEncodedValue > inumax) {
+            inumax = fact->maxEncodedValue;
             params.decimalScaleFactor(jdec);
-            params.binaryScaleFactor(ie);
+            params.binaryScaleFactor(fact->binaryScaleFactor);
         }
     }
 
     if (inumax > 0) {
-        // double decimal = sp_power<double>(+*kdec, 10);
-        // double divisor = sp_power<double>(-*kbin, 2);
         double decimal = sp_power<double>(+params.decimalScaleFactor(), 10);
         double divisor = sp_power<double>(-params.binaryScaleFactor(), 2);
         double min = pmin * decimal;
-        [[maybe_unused]] double max = pmax * decimal;
         long vmin, vmax;
-        // if (grib_get_nearest_smaller_value(min, ref) != LIB_ECCODES_SUCCESS) {
         auto ref = nearest_smaller_value(min, referenceFloatType_);
         if (ref.has_value()) {
             params.referenceValue(ref.value());
@@ -157,8 +146,6 @@ Parameters BinDecOptimizer::getParams(const double pmin, const double pmax)
             throw std::runtime_error("unable to find nearest_smaller_value");
         }
 
-        // vmax = (((pmax * decimal) - *ref) * divisor) + 0.5;
-        // vmin = (((pmin * decimal) - *ref) * divisor) + 0.5;
         vmax = static_cast<long>((((pmax * decimal) - params.referenceValue()) * divisor) + 0.5);
         vmin = static_cast<long>((((pmin * decimal) - params.referenceValue()) * divisor) + 0.5);
 
@@ -178,11 +165,9 @@ Parameters BinDecOptimizer::getParams(const double pmin, const double pmax)
         double decimal = 1;
         int err;
 
-        // *kdec = 0;
         params.decimalScaleFactor(0);
 
         while (range < minrange) {
-            // *kdec += 1;
             params.decimalScaleFactor(params.decimalScaleFactor() + 1);
             decimal *= 10;
             min = pmin * decimal;
@@ -191,7 +176,6 @@ Parameters BinDecOptimizer::getParams(const double pmin, const double pmax)
         }
 
         while (range > maxrange) {
-            // *kdec -= 1;
             params.decimalScaleFactor(params.decimalScaleFactor() - 1);
             decimal /= 10;
             min = pmin * decimal;
@@ -199,25 +183,17 @@ Parameters BinDecOptimizer::getParams(const double pmin, const double pmax)
             range = max - min;
         }
 
-        // if (grib_get_nearest_smaller_value(min, ref) != LIB_ECCODES_SUCCESS) {
         auto ref = nearest_smaller_value(min, referenceFloatType_);
         if (ref.has_value()) {
             params.referenceValue(ref.value());
         }
         else {
-            // grib_context_log(gh->context, LIB_ECCODES_LOG_ERROR,
-            //"unable to find nearest_smaller_value of %g for %s", min, reference_value);
-            //  return LIB_ECCODES_INTERNAL_ERROR;
             throw std::runtime_error("unable to find nearest_smaller_value");
         }
 
-        // *kbin = get_binary_scale_factor(max, *ref, knbit, &err);
         params.binaryScaleFactor(get_binary_scale_factor(max, params.referenceValue(), knbit_, &err));
 
         if (err == SP_UNDERFLOW) {
-            // *kbin = 0;
-            // *kdec = 0;
-            // *ref  = 0;
             params.binaryScaleFactor(0);
             params.decimalScaleFactor(0);
             params.referenceValue(0.);
