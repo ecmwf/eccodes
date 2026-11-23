@@ -48,7 +48,6 @@ class SpAec
         {
         }
 
-        // template <typename, typename>
         MappedType operator()(ValueType value) const
         {
             ValueType mapped = ((value * decimal_) - referenceValue_) * binary_ + 0.5;
