@@ -12,6 +12,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <cmath>
 #include <optional>
 #include <string>
 #include <stdexcept>
@@ -98,14 +99,14 @@ std::pair<T, T> sp_minmax(const T* values, size_t n)
     if (n < 2 * lanes) {
         T mn = values[0];
         T mx = values[0];
-        T nonFinite = values[0] - values[0];
+        T nonFinite = values[0] - values[0];  // NOLINT(misc-redundant-expression)
         for (size_t i = 1; i < n; ++i) {
             const T v = values[i];
             mn = v < mn ? v : mn;
             mx = v > mx ? v : mx;
-            nonFinite += v - v;
+            nonFinite += v - v;  // NOLINT(misc-redundant-expression)
         }
-        if (nonFinite != nonFinite) {
+        if (std::isnan(nonFinite)) {
             return { std::numeric_limits<T>::quiet_NaN(), std::numeric_limits<T>::quiet_NaN() };
         }
         return { mn, mx };
@@ -117,7 +118,7 @@ std::pair<T, T> sp_minmax(const T* values, size_t n)
     for (size_t l = 0; l < lanes; ++l) {
         mn[l] = values[l];
         mx[l] = values[l];
-        nonFinite[l] = values[l] - values[l];
+        nonFinite[l] = values[l] - values[l];  // NOLINT(misc-redundant-expression)
     }
 
     size_t i = lanes;
@@ -126,7 +127,7 @@ std::pair<T, T> sp_minmax(const T* values, size_t n)
             const T v = values[i + l];
             mn[l] = v < mn[l] ? v : mn[l];
             mx[l] = v > mx[l] ? v : mx[l];
-            nonFinite[l] += v - v;
+            nonFinite[l] += v - v;  // NOLINT(misc-redundant-expression)
         }
     }
 
@@ -142,9 +143,9 @@ std::pair<T, T> sp_minmax(const T* values, size_t n)
         const T v = values[i];
         rmn = v < rmn ? v : rmn;
         rmx = v > rmx ? v : rmx;
-        rNonFinite += v - v;
+        rNonFinite += v - v;  // NOLINT(misc-redundant-expression)
     }
-    if (rNonFinite != rNonFinite) {  // a NaN or infinite value: make the range invalid
+    if (std::isnan(rNonFinite)) {  // a NaN or infinite value: make the range invalid
         return { std::numeric_limits<T>::quiet_NaN(), std::numeric_limits<T>::quiet_NaN() };
     }
     return { rmn, rmx };

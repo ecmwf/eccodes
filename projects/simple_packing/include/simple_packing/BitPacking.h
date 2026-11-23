@@ -78,8 +78,8 @@ T swap_bytes(const T& value)
 
 // Map a sequential big-endian byte index (0 = most significant) to the
 // corresponding index into the bytes array of a union/struct in memory.
-// On LE: bytes[0] is LSByte, so MSByte is at [size-1].
-// On BE: bytes[0] is MSByte, so MSByte is at [0].
+// On LE: bytes[0] is LSByte, so the MSByte is at [size-1].
+// On BE: bytes[0] is MSByte, so the MSByte is at [0].
 inline constexpr uint8_t be_byte(uint8_t i, uint8_t size)
 {
 #if defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
@@ -131,14 +131,14 @@ public:
         mask.value = ~mask.value;
 
         UIntPlus existing;
-        for (uint8_t i = 0; i < nBytesToRead; ++i) {
-            existing.bytes[be_byte(i, existing.size())] = ptr[i];
+        for (size_t i = 0; i < nBytesToRead; ++i) {
+            existing.bytes[be_byte(static_cast<uint8_t>(i), existing.size())] = ptr[i];
         }
 
         coded.value |= (existing.value & mask.value);
 
-        for (uint8_t i = 0; i < nBytesToRead; ++i) {
-            ptr[i] = coded.bytes[be_byte(i, coded.size())];
+        for (size_t i = 0; i < nBytesToRead; ++i) {
+            ptr[i] = coded.bytes[be_byte(static_cast<uint8_t>(i), coded.size())];
         }
     }
 
@@ -151,8 +151,8 @@ public:
         const uint8_t rshift = rshift_partial - static_cast<uint8_t>(bitOffset);
 
         UIntPlus coded;
-        for (uint8_t i = 0; i < nBytesToRead; ++i) {
-            coded.bytes[be_byte(i, coded.size())] = ptr[i];
+        for (size_t i = 0; i < nBytesToRead; ++i) {
+            coded.bytes[be_byte(static_cast<uint8_t>(i), coded.size())] = ptr[i];
         }
 
         coded.value = coded.value >> rshift;
@@ -190,8 +190,8 @@ public:
             }
             else {
                 const size_t nBytesToRead = (bitOffset + BPV + 7) / 8;
-                for (uint8_t i = 0; i < nBytesToRead; ++i) {
-                    ptr[i] = coded.bytes[be_byte(i, coded.size())];
+                for (size_t i = 0; i < nBytesToRead; ++i) {
+                    ptr[i] = coded.bytes[be_byte(static_cast<uint8_t>(i), coded.size())];
                 }
             }
         }
