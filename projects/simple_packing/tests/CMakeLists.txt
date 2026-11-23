@@ -55,3 +55,6 @@ add_test(NAME ${SP_TEST_PREFIX}field_range COMMAND sp_field_range)
 
 sp_add_test(optimizer_parameters)
 add_test(NAME ${SP_TEST_PREFIX}optimizer_parameters COMMAND sp_optimizer_parameters)
+
+sp_add_test(scale_factor_range)
+add_test(NAME ${SP_TEST_PREFIX}scale_factor_range COMMAND sp_scale_factor_range)
