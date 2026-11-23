@@ -18,7 +18,8 @@ permissions:
 
 jobs:
   resolve:
-    runs-on: arc-runner-normal
+    # runs-on: arc-runner-normal  # ARC runners off
+    runs-on: ubuntu-latest
     container:
       image: eccr.ecmwf.int/public-ci-images/ubuntu24.04-base:latest
     outputs:
