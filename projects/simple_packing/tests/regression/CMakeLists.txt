@@ -34,6 +34,9 @@ add_test(NAME ${SP_TEST_PREFIX}no_optimizer COMMAND sp_no_optimizer)
 sp_add_test(optimizer_direct_range)
 add_test(NAME ${SP_TEST_PREFIX}optimizer_direct_range COMMAND sp_optimizer_direct_range)
 
+sp_add_test(optimizer_scaling_overflow)
+add_test(NAME ${SP_TEST_PREFIX}optimizer_scaling_overflow COMMAND sp_optimizer_scaling_overflow)
+
 sp_add_test(dec64_optimizer)
 add_test(NAME ${SP_TEST_PREFIX}dec64_optimizer COMMAND sp_dec64_optimizer)
 
