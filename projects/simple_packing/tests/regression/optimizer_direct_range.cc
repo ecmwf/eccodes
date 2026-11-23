@@ -46,6 +46,37 @@ static void expectError(const std::string& what, F&& f)
     failures++;
 }
 
+// Runs f in a child process: it must return a reference value just below 'value' within 5 seconds
+template <typename F>
+static void expectConstant(const std::string& what, double value, F&& f)
+{
+    const pid_t pid = fork();
+    if (pid == 0) {
+        alarm(5);
+        try {
+            const Parameters params = f();
+            const bool ok = params.bitsPerValue() == 0 && params.referenceValue() < value
+                            && params.referenceValue() > 0.99 * value;
+            _exit(ok ? 0 : 2);
+        }
+        catch (const std::exception&) {
+            _exit(3);
+        }
+    }
+    int status = 0;
+    waitpid(pid, &status, 0);
+    if (WIFEXITED(status) && WEXITSTATUS(status) == 0) {
+        return;
+    }
+    std::cerr << "FAIL: " << what << ": "
+              << (WIFSIGNALED(status) && WTERMSIG(status) == SIGALRM ?
+                      "hangs" :
+                      WIFSIGNALED(status) ? "crashes" :
+                      WEXITSTATUS(status) == 2 ? "wrong parameters" : "threw")
+              << '\n';
+    failures++;
+}
+
 int main()
 {
     const double inf = std::numeric_limits<double>::infinity();
@@ -65,6 +96,17 @@ int main()
     });
     expectError("BPVOptimizer: infinity", [=] {
         BPVOptimizer(2).getParams(0.0, inf);
+    });
+
+    // A constant field: the reference value must represent the field, not a default
+    expectConstant("BinDecOptimizer: constant field", 5.0, [] {
+        return BinDecOptimizer(0, 1, 16).getParams(5.0, 5.0);
+    });
+    expectConstant("DecOptimizer: constant field", 5.0, [] {
+        return DecOptimizer(24, 127).getParams(5.0, 5.0);
+    });
+    expectConstant("BPVOptimizer: constant field", 5.0, [] {
+        return BPVOptimizer(2).getParams(5.0, 5.0);
     });
 
     if (failures == 0) {
