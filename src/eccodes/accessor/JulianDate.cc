@@ -312,7 +312,7 @@ int JulianDate::pack_expression(grib_expression* e)
         }
 
         case GRIB_TYPE_STRING: {
-            char tmp[1024];
+            char tmp[GRIB_STRING_LENGTH];
             len = sizeof(tmp);
             cval = e->evaluate_string(hand, tmp, &len, &ret);
             if (ret != GRIB_SUCCESS) {

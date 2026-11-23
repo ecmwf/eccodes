@@ -76,8 +76,8 @@ const char* IsInList::get_name() const
 int IsInList::evaluate_long(grib_handle* h, long* result) const
 {
     int err = 0;
-    char mybuf[1024] = { 0 };
-    size_t size = 1024;
+    char mybuf[GRIB_STRING_LENGTH] = { 0 };
+    size_t size = GRIB_STRING_LENGTH;
 
     grib_trie* list = load_list(h->context, &err);
 
@@ -111,8 +111,8 @@ int IsInList::evaluate_double(grib_handle* /*h*/, double* /*result*/) const
 
 const char* IsInList::evaluate_string(grib_handle* h, char* buf, size_t* size, int* err) const
 {
-    char mybuf[1024] = { 0 };
-    size_t sizebuf = 1024;
+    char mybuf[GRIB_STRING_LENGTH] = { 0 };
+    size_t sizebuf = GRIB_STRING_LENGTH;
     long result;
 
     grib_trie* list = load_list(h->context, err);

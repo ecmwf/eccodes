@@ -94,7 +94,7 @@ int Group::unpack_string(char* val, size_t* len)
 
 int Group::unpack_long(long* v, size_t* /*len*/)
 {
-    char val[1024] = { 0 };
+    char val[GRIB_STRING_LENGTH] = { 0 };
     size_t l = sizeof(val);
     size_t i = 0;
     char* last = NULL;
@@ -121,7 +121,7 @@ int Group::unpack_long(long* v, size_t* /*len*/)
 
 int Group::unpack_double(double* v, size_t* /*len*/)
 {
-    char val[1024];
+    char val[GRIB_STRING_LENGTH];
     size_t l = sizeof(val);
     char* last = NULL;
     unpack_string(val, &l);

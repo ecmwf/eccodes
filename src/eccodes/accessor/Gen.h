@@ -120,7 +120,7 @@ int Gen::unpack_helper(grib_accessor* a, T* v)
     }
 
     if (is_overridden_[UNPACK_STRING]) {
-        char val[1024];
+        char val[GRIB_STRING_LENGTH];
         size_t l = sizeof(val);
         char* last = NULL;
         a->unpack_string(val, &l);

@@ -286,7 +286,7 @@ int grib_accessors_list_print(grib_handle* h, grib_accessors_list* al, const cha
         case GRIB_TYPE_STRING:
             myseparator = separator ? (char*)separator : default_separator;
             if (size == 1) {
-                char sbuf[1024] = { 0 };
+                char sbuf[GRIB_STRING_LENGTH_MAX] = { 0 };
                 len = sizeof(sbuf);
                 ret = al->accessor->unpack_string(sbuf, &len);
                 if (grib_is_missing_string(al->accessor, (unsigned char*)sbuf, len)) {

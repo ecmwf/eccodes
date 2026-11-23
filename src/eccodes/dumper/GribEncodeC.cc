@@ -151,7 +151,7 @@ void GribEncodeC::dump_string(grib_accessor* a, const char* comment)
     if (a->length_ == 0)
         return;
 
-    char value[1024] = { 0 };
+    char value[GRIB_STRING_LENGTH_MAX] = { 0 };
     size_t size = sizeof(value);
     int err = a->unpack_string(value, &size);
 
