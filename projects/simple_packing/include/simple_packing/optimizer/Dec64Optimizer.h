@@ -1,6 +1,8 @@
 #pragma once
 
 #include <cmath>
+#include <stdexcept>
+#include <string>
 
 #include "simple_packing/Optimizer.h"
 #include "simple_packing/Parameters.h"
@@ -43,24 +45,38 @@ public:
 
         long decimalScaleFactor = 0;
 
+        // Scale the field by powers of ten until its range fits, so that the binary scale factor
+        // stays within +-last
         const ValueType f = pow(2.0, static_cast<double>(bitsPerValue_)) - 1;
         const ValueType minrange = pow(2.0, -last_ + 1) * f;
-        const ValueType maxrange = pow(2.0, last_) * f;
+        const ValueType maxrange = pow(2.0, last_ - 1) * f;
+        const ValueType unscaledMin = min;
+        const ValueType unscaledMax = max;
+        ValueType decimal = 1;
         ValueType range = max - min;
 
-        if (range < minrange) {
-            decimalScaleFactor = static_cast<long>(std::ceil(std::log10(range)));
-            min = min * pow(10.0, decimalScaleFactor);
-            max = max * pow(10.0, decimalScaleFactor);
+        auto checkRange = [&]() {
+            if (!(std::isfinite(range) && range > 0)) {
+                throw std::runtime_error("Simple packing: cannot scale the range [" + std::to_string(unscaledMin) + ", " + std::to_string(unscaledMax) + "]");
+            }
+        };
+        checkRange();
+        while (range < minrange) {
+            decimalScaleFactor++;
+            decimal *= 10;
+            min = unscaledMin * decimal;
+            max = unscaledMax * decimal;
+            range = max - min;
+            checkRange();
         }
-
-        if (range > maxrange) {
-            decimalScaleFactor = static_cast<long>(std::floor(std::log10(range)));
-            min = min * pow(10.0, decimalScaleFactor);
-            max = max * pow(10.0, decimalScaleFactor);
+        while (range > maxrange) {
+            decimalScaleFactor--;
+            decimal /= 10;
+            min = unscaledMin * decimal;
+            max = unscaledMax * decimal;
+            range = max - min;
+            checkRange();
         }
-
-        range = max - min;
 
         auto ref = nearest_smaller_value(min, referenceFloatType_);
         if (ref.has_value()) {
