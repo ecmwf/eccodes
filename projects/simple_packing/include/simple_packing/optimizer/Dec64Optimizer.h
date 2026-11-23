@@ -15,7 +15,11 @@ class Dec64Optimizer : public Optimizer
     using ValueType = double;
 
 public:
-    Dec64Optimizer(const long bitsPerValue, long last) : last_(last), bitsPerValue_(bitsPerValue) {}
+    Dec64Optimizer(const long bitsPerValue, long last) : last_(last), bitsPerValue_(bitsPerValue)
+    {
+        checkRange("bits per value", bitsPerValue, 1, maxEncodingBitsPerValue);
+        checkRange("exponent limit", last, 1, 1023);
+    }
     ~Dec64Optimizer() = default;
 
     Parameters getParams(double min, double max)

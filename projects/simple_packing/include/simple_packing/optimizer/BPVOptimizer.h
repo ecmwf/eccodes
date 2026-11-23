@@ -7,7 +7,10 @@
 class BPVOptimizer : public Optimizer
 {
 public:
-    BPVOptimizer(int decimalScaleFactor) : decimalScaleFactor_(decimalScaleFactor) {}
+    BPVOptimizer(int decimalScaleFactor) : decimalScaleFactor_(decimalScaleFactor)
+    {
+        checkRange("decimal scale factor", decimalScaleFactor, -maxScaleFactor, maxScaleFactor);
+    }
 
     Parameters getParams(double min, double max)
     {

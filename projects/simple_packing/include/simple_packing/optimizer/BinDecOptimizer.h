@@ -3,12 +3,16 @@
 #include <cstddef>
 #include "simple_packing/Parameters.h"
 #include "simple_packing/Optimizer.h"
+#include "simple_packing/Utils.h"
 
 
 class BinDecOptimizer : public Optimizer
 {
 public:
-    BinDecOptimizer(const int compat_gribex, const int compat_32bit, const int knbit) : compat_gribex_(compat_gribex), compat_32bit_(compat_32bit), knbit_(knbit) {}
+    BinDecOptimizer(const int compat_gribex, const int compat_32bit, const int knbit) : compat_gribex_(compat_gribex), compat_32bit_(compat_32bit), knbit_(knbit)
+    {
+        checkRange("bits per value", knbit, 1, maxEncodingBitsPerValue);
+    }
     ~BinDecOptimizer() = default;
     Parameters getParams(double min, double max);
 
@@ -18,6 +22,6 @@ private:
     int knbit_ = 0;
 };
 
-void factec(int* krep, const double pa, const int knbit, const long kdec, const int range, long* ke, int* knutil);
+void factec(int* krep, const double pa, const int knbit, const long kdec, const int range, long* ke, long* knutil);
 // constexpr double epsilon();
 int vrange();

@@ -12,6 +12,8 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <string>
+#include <stdexcept>
 #include <cassert>
 #include <cmath>
 #include <iostream>
@@ -60,6 +62,23 @@ constexpr T sp_power(long s, long n)
         s--;
     }
     return divisor;
+}
+
+
+// --- Parameter limits ---
+
+// Bits per value supported for encoding (2^bitsPerValue - 1 must fit into an unsigned long)
+constexpr long maxEncodingBitsPerValue = 63;
+// GRIB stores the scale factors with 16 bits (sign and magnitude)
+constexpr long maxScaleFactor = 32767;
+
+// Throws std::invalid_argument if value is not in [lo, hi]
+inline void checkRange(const char* what, long value, long lo, long hi)
+{
+    if (value < lo || value > hi) {
+        throw std::invalid_argument(std::string("Simple packing: ") + what + " " + std::to_string(value) + " is out of range (must be between " +
+                                    std::to_string(lo) + " and " + std::to_string(hi) + ")");
+    }
 }
 
 

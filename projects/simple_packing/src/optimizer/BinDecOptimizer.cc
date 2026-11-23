@@ -27,7 +27,7 @@ int vrange()
 }
 
 
-void factec(int* krep, const double pa, const int knbit, const long kdec, const int range, long* ke, int* knutil)
+void factec(int* krep, const double pa, const int knbit, const long kdec, const int range, long* ke, long* knutil)
 {
     *krep = 0;
     *ke = 0;
@@ -60,7 +60,7 @@ Parameters BinDecOptimizer::getParams(const double pmin, const double pmax)
     int idecmax = 5;
     long inbint;
     double xtinyr4, xhuger4, xnbint;
-    int inumax, inutil;
+    long inumax, inutil;
     long jdec, ie;
     int irep;
     int RANGE = vrange();
@@ -95,8 +95,9 @@ Parameters BinDecOptimizer::getParams(const double pmin, const double pmax)
     xtinyr4 = flt_min;
     xhuger4 = flt_max;
 
-    inbint = sp_power<double>(knbit_, 2) - 1;
-    xnbint = (double)inbint;
+    // 2^63 - 1 is not exactly representable as double: do not convert 2^63 to long
+    xnbint = sp_power<double>(knbit_, 2) - 1;
+    inbint = knbit_ >= 63 ? std::numeric_limits<long>::max() : static_cast<long>(xnbint);
 
     /* Test decimal scale factors; keep the most suitable */
     for (jdec = idecmin; jdec <= idecmax; jdec++) {

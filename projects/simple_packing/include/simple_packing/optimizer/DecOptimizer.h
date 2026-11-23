@@ -9,7 +9,11 @@ class DecOptimizer : public Optimizer
     using ValueType = double;
 
 public:
-    DecOptimizer(const long bitsPerValue, long last) : last_(last), bitsPerValue_(bitsPerValue) {}
+    DecOptimizer(const long bitsPerValue, long last) : last_(last), bitsPerValue_(bitsPerValue)
+    {
+        checkRange("bits per value", bitsPerValue, 1, maxEncodingBitsPerValue);
+        checkRange("exponent limit", last, 1, 1023);
+    }
     ~DecOptimizer() = default;
 
     Parameters getParams(double min, double max)
