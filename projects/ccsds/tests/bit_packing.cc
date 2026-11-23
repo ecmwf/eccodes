@@ -1,7 +1,11 @@
+#include <exception>
+#include <bitset>
 #include <cassert>
 #include <iostream>
-#include <bitset>
+#include <vector>
 
+#include <cstdint>
+#include "ccsds/Span.h"
 #include "ccsds/BitBuffer.h"
 
 
@@ -11,11 +15,9 @@ void testWriteReadBits()
     BitBuffer bitBuffer(data);
 
     bitBuffer.writeBits<uint16_t>(0b1100110011001100, 16);
-    auto bitPos = bitBuffer.bitPos();
-    assert(bitPos == 16);
+    assert(bitBuffer.bitPos() == 16);
     bitBuffer.resetBitPos();
-    auto result = bitBuffer.readBits<uint16_t>(16);
-    assert(result == 0b1100110011001100);
+    assert(bitBuffer.readBits<uint16_t>(16) == 0b1100110011001100);
 }
 
 void test235()
@@ -26,9 +28,8 @@ void test235()
     bitBuffer.writeBits<uint16_t>(0b1111, 4);
     bitBuffer.writeBits<uint16_t>(235, 16);
     bitBuffer.resetBitPos();
-    auto nai = bitBuffer.readBits<uint16_t>(4);
-    auto result = bitBuffer.readBits<uint16_t>(16);
-    assert(result == 235);
+    bitBuffer.readBits<uint16_t>(4);  // read past the leading bits
+    assert(bitBuffer.readBits<uint16_t>(16) == 235);
 }
 
 
@@ -102,14 +103,21 @@ void testReadWriteCodeword3()
 
 int main()
 {
-    std::vector<uint8_t> data(1000, 0);
-    BitBuffer bitBuffer(data);
+    try {
+        std::vector<uint8_t> data(1000, 0);
+        BitBuffer bitBuffer(data);
 
-    testReadWriteCodeword3();
-    testReadWriteCodeword2();
-    testReadWriteCodeword();
-    testWriteReadBits();
-    test235();
+        testReadWriteCodeword3();
+        testReadWriteCodeword2();
+        testReadWriteCodeword();
+        testWriteReadBits();
+        test235();
 
+        return 0;
+    }
+    catch (const std::exception& e) {
+        std::cerr << "FAIL: " << e.what() << '\n';
+        return 1;
+    }
     return 0;
 }

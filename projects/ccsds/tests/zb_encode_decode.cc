@@ -4,6 +4,9 @@
 #include <stdexcept>
 #include <vector>
 
+#include <exception>
+#include <cstddef>
+#include <cassert>
 #include "ccsds/CodeOption.h"
 #include "ccsds/Span.h"
 #include "ccsds/encoder/EncoderSeq.h"

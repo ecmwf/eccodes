@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 
+#include <exception>
+#include "ccsds/Span.h"
 #include "ccsds/BitBuffer.h"
 
 static int testCount = 0;
@@ -289,9 +291,6 @@ void test_skipCodewords()
         for (size_t l : lengths) {
             bb.writeCodeword(l);
         }
-        size_t totalBits = 0;
-        for (size_t l : lengths)
-            totalBits += l + 1;
 
         // Skip 3 codewords, verify position
         bb.bitPos(0);
@@ -592,73 +591,80 @@ void testPeekVsRead()
 
 int main()
 {
-    std::cout << "=== BitBuffer Exhaustive Test ===" << '\n';
+    try {
+        std::cout << "=== BitBuffer Exhaustive Test ===" << '\n';
 
-    std::cout << "\n--- writeBits/readBits round-trip (uint8_t) ---" << '\n';
-    test_writeBits_readBits_exhaustive<uint8_t>();
+        std::cout << "\n--- writeBits/readBits round-trip (uint8_t) ---" << '\n';
+        test_writeBits_readBits_exhaustive<uint8_t>();
 
-    std::cout << "\n--- writeBits/readBits round-trip (uint16_t) ---" << '\n';
-    test_writeBits_readBits_exhaustive<uint16_t>();
+        std::cout << "\n--- writeBits/readBits round-trip (uint16_t) ---" << '\n';
+        test_writeBits_readBits_exhaustive<uint16_t>();
 
-    std::cout << "\n--- writeBits/readBits round-trip (uint32_t) ---" << '\n';
-    test_writeBits_readBits_exhaustive<uint32_t>();
+        std::cout << "\n--- writeBits/readBits round-trip (uint32_t) ---" << '\n';
+        test_writeBits_readBits_exhaustive<uint32_t>();
 
-    std::cout << "\n--- Sequential writes ---" << '\n';
-    testSequentialWrites();
+        std::cout << "\n--- Sequential writes ---" << '\n';
+        testSequentialWrites();
 
-    std::cout << "\n--- Codeword round-trip ---" << '\n';
-    testCodewordRoundtrip();
+        std::cout << "\n--- Codeword round-trip ---" << '\n';
+        testCodewordRoundtrip();
 
-    std::cout << "\n--- Codeword at alignment ---" << '\n';
-    testCodewordAtAlignment();
+        std::cout << "\n--- Codeword at alignment ---" << '\n';
+        testCodewordAtAlignment();
 
-    std::cout << "\n--- Sequential codewords ---" << '\n';
-    testSequentialCodewords();
+        std::cout << "\n--- Sequential codewords ---" << '\n';
+        testSequentialCodewords();
 
-    std::cout << "\n--- Long codewords ---" << '\n';
-    testLongCodeword();
+        std::cout << "\n--- Long codewords ---" << '\n';
+        testLongCodeword();
 
-    std::cout << "\n--- peekBits ---" << '\n';
-    test_peekBits();
+        std::cout << "\n--- peekBits ---" << '\n';
+        test_peekBits();
 
-    std::cout << "\n--- skipBits ---" << '\n';
-    test_skipBits();
+        std::cout << "\n--- skipBits ---" << '\n';
+        test_skipBits();
 
-    std::cout << "\n--- skipCodewords ---" << '\n';
-    test_skipCodewords();
+        std::cout << "\n--- skipCodewords ---" << '\n';
+        test_skipCodewords();
 
-    std::cout << "\n--- writeId ---" << '\n';
-    test_writeId();
+        std::cout << "\n--- writeId ---" << '\n';
+        test_writeId();
 
-    std::cout << "\n--- Random round-trip ---" << '\n';
-    testRandomRoundtrip<uint8_t>();
-    testRandomRoundtrip<uint16_t>();
-    testRandomRoundtrip<uint32_t>();
+        std::cout << "\n--- Random round-trip ---" << '\n';
+        testRandomRoundtrip<uint8_t>();
+        testRandomRoundtrip<uint16_t>();
+        testRandomRoundtrip<uint32_t>();
 
-    std::cout << "\n--- Interleaved codewords + bits ---" << '\n';
-    testInterleavedCodewordBits();
+        std::cout << "\n--- Interleaved codewords + bits ---" << '\n';
+        testInterleavedCodewordBits();
 
-    std::cout << "\n--- Position tracking ---" << '\n';
-    testPositionTracking();
+        std::cout << "\n--- Position tracking ---" << '\n';
+        testPositionTracking();
 
-    std::cout << "\n--- Copy constructor ---" << '\n';
-    testCopyConstructor();
+        std::cout << "\n--- Copy constructor ---" << '\n';
+        testCopyConstructor();
 
-    std::cout << "\n--- Single bit ---" << '\n';
-    testSingleBit();
+        std::cout << "\n--- Single bit ---" << '\n';
+        testSingleBit();
 
-    std::cout << "\n--- Known byte patterns ---" << '\n';
-    testKnownBytePattern();
+        std::cout << "\n--- Known byte patterns ---" << '\n';
+        testKnownBytePattern();
 
-    std::cout << "\n--- Peek vs Read consistency ---" << '\n';
-    testPeekVsRead();
+        std::cout << "\n--- Peek vs Read consistency ---" << '\n';
+        testPeekVsRead();
 
-    std::cout << "\n=== Summary ===" << '\n';
-    std::cout << passCount << "/" << testCount << " passed";
-    if (failCount > 0) {
-        std::cout << ", " << failCount << " FAILED";
+        std::cout << "\n=== Summary ===" << '\n';
+        std::cout << passCount << "/" << testCount << " passed";
+        if (failCount > 0) {
+            std::cout << ", " << failCount << " FAILED";
+        }
+        std::cout << '\n';
+
+        return (failCount > 0) ? 1 : 0;
     }
-    std::cout << '\n';
-
-    return (failCount > 0) ? 1 : 0;
+    catch (const std::exception& e) {
+        std::cerr << "FAIL: " << e.what() << '\n';
+        return 1;
+    }
+    return 0;
 }

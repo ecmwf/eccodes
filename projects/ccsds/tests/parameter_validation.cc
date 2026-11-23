@@ -1,6 +1,8 @@
 // Unsupported coding parameters must be rejected with std::invalid_argument
 // (an odd block size used to overflow the encoder's buffers).
 
+#include <cstdint>
+#include <exception>
 #include <cmath>
 #include <cstdint>
 #include <iostream>
@@ -8,6 +10,9 @@
 #include <stdexcept>
 #include <string>
 
+#include "ccsds/CodeOption.h"
+#include "ccsds/decoder/DecoderSeq.h"
+#include "ccsds/encoder/EncoderSeq.h"
 #include "ccsds/SpAec.h"
 
 static int failures = 0;

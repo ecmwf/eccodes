@@ -1,11 +1,14 @@
+#include <cstddef>
 #include <cstdint>
 #include <cstdlib>
 #include <iostream>
-#include <numeric>
 #include <random>
 #include <string>
 #include <vector>
 
+#include <exception>
+#include "ccsds/CodeOption.h"
+#include "ccsds/Span.h"
 #include "ccsds/encoder/EncoderSeq.h"
 #include "ccsds/decoder/DecoderSeq.h"
 
@@ -128,20 +131,27 @@ void sweep(const std::string& typeName)
 
 int main()
 {
-    std::cout << "=== Encode/Decode Sweep Test ===" << '\n';
+    try {
+        std::cout << "=== Encode/Decode Sweep Test ===" << '\n';
 
-    std::cout << "\n--- uint8_t ---" << '\n';
-    sweep<uint8_t>("uint8");
+        std::cout << "\n--- uint8_t ---" << '\n';
+        sweep<uint8_t>("uint8");
 
-    std::cout << "\n--- uint16_t ---" << '\n';
-    sweep<uint16_t>("uint16");
+        std::cout << "\n--- uint16_t ---" << '\n';
+        sweep<uint16_t>("uint16");
 
-    std::cout << "\n--- Summary ---" << '\n';
-    std::cout << passCount << "/" << testCount << " passed";
-    if (failCount > 0) {
-        std::cout << ", " << failCount << " FAILED";
+        std::cout << "\n--- Summary ---" << '\n';
+        std::cout << passCount << "/" << testCount << " passed";
+        if (failCount > 0) {
+            std::cout << ", " << failCount << " FAILED";
+        }
+        std::cout << '\n';
+
+        return (failCount > 0) ? 1 : 0;
     }
-    std::cout << '\n';
-
-    return (failCount > 0) ? 1 : 0;
+    catch (const std::exception& e) {
+        std::cerr << "FAIL: " << e.what() << '\n';
+        return 1;
+    }
+    return 0;
 }

@@ -1,9 +1,14 @@
+#include <cstddef>
+#include <cstdint>
 #include <iostream>
 #include <vector>
 #include <assert.h>
-#include <random>
 #include <bitset>
 
+#include <exception>
+#include "ccsds/Utils.h"
+#include "ccsds/CodeOption.h"
+#include "ccsds/Span.h"
 #include "ccsds/BitBuffer.h"
 #include "ccsds/encoder/EncoderSeq.h"
 #include "ccsds/decoder/DecoderSeq.h"
@@ -109,15 +114,22 @@ void testNorefEncodeDecode(Span<ValueType> block)
 }
 
 
-int main(int argc, char* argv[])
+int main()
 {
-    {
-        std::vector<ValueType> vec = { 100, 2, 3, 1, 2, 3, 1, 2 };
-        testRefEncodeDecode(vec);
+    try {
+        {
+            std::vector<ValueType> vec = { 100, 2, 3, 1, 2, 3, 1, 2 };
+            testRefEncodeDecode(vec);
+        }
+        {
+            std::vector<ValueType> vec = { 1, 2, 3, 1, 2, 3, 1, 2 };
+            testNorefEncodeDecode(vec);
+        }
+        return 0;
     }
-    {
-        std::vector<ValueType> vec = { 1, 2, 3, 1, 2, 3, 1, 2 };
-        testNorefEncodeDecode(vec);
+    catch (const std::exception& e) {
+        std::cerr << "FAIL: " << e.what() << '\n';
+        return 1;
     }
     return 0;
 }

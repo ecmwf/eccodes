@@ -1,5 +1,9 @@
+#include <cstddef>
+#include <cstdint>
 #include <cassert>
+#include <iostream>
 
+#include <exception>
 #include "ccsds/CodeOption.h"
 
 
@@ -1067,35 +1071,42 @@ void testK14_29()
 
 int main()
 {
-    testK1<1>();
-    testK2_5<2>();
-    testK2_5<3>();
-    testK2_5<4>();
-    testK2_5<5>();
-    testK6_13<6>();
-    testK6_13<7>();
-    testK6_13<8>();
-    testK6_13<9>();
-    testK6_13<10>();
-    testK6_13<11>();
-    testK6_13<12>();
-    testK6_13<13>();
-    testK14_29<14>();
-    testK14_29<15>();
-    testK14_29<16>();
-    testK14_29<17>();
-    testK14_29<18>();
-    testK14_29<19>();
-    testK14_29<20>();
-    testK14_29<21>();
-    testK14_29<22>();
-    testK14_29<23>();
-    testK14_29<24>();
-    testK14_29<25>();
-    testK14_29<26>();
-    testK14_29<27>();
-    testK14_29<28>();
-    testK14_29<29>();
+    try {
+        testK1<1>();
+        testK2_5<2>();
+        testK2_5<3>();
+        testK2_5<4>();
+        testK2_5<5>();
+        testK6_13<6>();
+        testK6_13<7>();
+        testK6_13<8>();
+        testK6_13<9>();
+        testK6_13<10>();
+        testK6_13<11>();
+        testK6_13<12>();
+        testK6_13<13>();
+        testK14_29<14>();
+        testK14_29<15>();
+        testK14_29<16>();
+        testK14_29<17>();
+        testK14_29<18>();
+        testK14_29<19>();
+        testK14_29<20>();
+        testK14_29<21>();
+        testK14_29<22>();
+        testK14_29<23>();
+        testK14_29<24>();
+        testK14_29<25>();
+        testK14_29<26>();
+        testK14_29<27>();
+        testK14_29<28>();
+        testK14_29<29>();
 
+        return 0;
+    }
+    catch (const std::exception& e) {
+        std::cerr << "FAIL: " << e.what() << '\n';
+        return 1;
+    }
     return 0;
 }

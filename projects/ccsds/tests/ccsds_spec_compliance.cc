@@ -7,6 +7,10 @@
 #include <string>
 #include <type_traits>
 
+#include <exception>
+#include <cstdlib>
+#include <cstddef>
+#include "ccsds/Span.h"
 #include "ccsds/Preprocessor.h"
 #include "ccsds/encoder/EncoderSeq.h"
 #include "ccsds/decoder/DecoderSeq.h"
@@ -398,7 +402,7 @@ void testZeroBlockEncoding()
         std::vector<ValueType> vec(blockSize, 0);
         std::vector<uint8_t> encoded(vec.size() * sizeof(ValueType) * 2);
         encoder::EncoderSeq<ValueType, ValueType> encoder(BPV, blockSize, 128, CodeOptionSet::Basic);
-        size_t encodedSize = encoder.encode(Span<ValueType>(vec), encoded);
+        encoder.encode(Span<ValueType>(vec), encoded);
 
         std::vector<ValueType> decoded(vec.size());
         DecoderSeq<ValueType, ValueType> decoder(BPV, blockSize, 128, CodeOptionSet::Basic);
@@ -416,7 +420,7 @@ void testZeroBlockEncoding()
         std::vector<ValueType> vec(4 * blockSize, 0);
         std::vector<uint8_t> encoded(vec.size() * sizeof(ValueType) * 2);
         encoder::EncoderSeq<ValueType, ValueType> encoder(BPV, blockSize, 128, CodeOptionSet::Basic);
-        size_t encodedSize = encoder.encode(Span<ValueType>(vec), encoded);
+        encoder.encode(Span<ValueType>(vec), encoded);
 
         std::vector<ValueType> decoded(vec.size());
         DecoderSeq<ValueType, ValueType> decoder(BPV, blockSize, 128, CodeOptionSet::Basic);
@@ -435,7 +439,7 @@ void testZeroBlockEncoding()
         std::vector<ValueType> vec(blockSize, 42);
         std::vector<uint8_t> encoded(vec.size() * sizeof(ValueType) * 2);
         encoder::EncoderSeq<ValueType, ValueType> encoder(BPV, blockSize, 128, CodeOptionSet::Basic);
-        size_t encodedSize = encoder.encode(Span<ValueType>(vec), encoded);
+        encoder.encode(Span<ValueType>(vec), encoded);
 
         std::vector<ValueType> decoded(vec.size());
         DecoderSeq<ValueType, ValueType> decoder(BPV, blockSize, 128, CodeOptionSet::Basic);
@@ -453,7 +457,7 @@ void testZeroBlockEncoding()
         std::vector<ValueType> vec(8 * blockSize, 0);  // 8 zero blocks
         std::vector<uint8_t> encoded(vec.size() * sizeof(ValueType) * 2);
         encoder::EncoderSeq<ValueType, ValueType> encoder(BPV, blockSize, 128, CodeOptionSet::Basic);
-        size_t encodedSize = encoder.encode(Span<ValueType>(vec), encoded);
+        encoder.encode(Span<ValueType>(vec), encoded);
 
         std::vector<ValueType> decoded(vec.size());
         DecoderSeq<ValueType, ValueType> decoder(BPV, blockSize, 128, CodeOptionSet::Basic);
@@ -476,7 +480,7 @@ void testZeroBlockEncoding()
         }
         std::vector<uint8_t> encoded(vec.size() * sizeof(ValueType) * 2);
         encoder::EncoderSeq<ValueType, ValueType> encoder(BPV, blockSize, 128, CodeOptionSet::Basic);
-        size_t encodedSize = encoder.encode(Span<ValueType>(vec), encoded);
+        encoder.encode(Span<ValueType>(vec), encoded);
 
         std::vector<ValueType> decoded(vec.size());
         DecoderSeq<ValueType, ValueType> decoder(BPV, blockSize, 128, CodeOptionSet::Basic);
@@ -524,7 +528,7 @@ void testSecondExtension()
         std::vector<ValueType> vec = { 1000, 1001, 1000, 1001, 1000, 1001, 1000, 1001 };
         std::vector<uint8_t> encoded(vec.size() * sizeof(ValueType) * 2);
         encoder::EncoderSeq<ValueType, ValueType> encoder(BPV, blockSize, 128, CodeOptionSet::Basic);
-        size_t encodedSize = encoder.encode(Span<ValueType>(vec), encoded);
+        encoder.encode(Span<ValueType>(vec), encoded);
 
         std::vector<ValueType> decoded(vec.size());
         DecoderSeq<ValueType, ValueType> decoder(BPV, blockSize, 128, CodeOptionSet::Basic);
@@ -546,7 +550,7 @@ void testSecondExtension()
         std::vector<ValueType> vec = { 5000, 5001, 5000, 5001, 5000, 5001, 5000, 5001 };
         std::vector<uint8_t> encoded(vec.size() * sizeof(ValueType) * 2);
         encoder::EncoderSeq<ValueType, ValueType> encoder(BPV, blockSize, 128, CodeOptionSet::Basic);
-        size_t encodedSize = encoder.encode(Span<ValueType>(vec), encoded);
+        encoder.encode(Span<ValueType>(vec), encoded);
 
         std::vector<ValueType> decoded(vec.size());
         DecoderSeq<ValueType, ValueType> decoder(BPV, blockSize, 128, CodeOptionSet::Basic);
@@ -597,7 +601,7 @@ void test_block_sizes()
 
         std::vector<uint8_t> encoded(vec.size() * sizeof(ValueType) * 2);
         encoder::EncoderSeq<ValueType, ValueType> encoder(BPV, bs, rsiSize, CodeOptionSet::Basic);
-        size_t encodedSize = encoder.encode(Span<ValueType>(vec), encoded);
+        encoder.encode(Span<ValueType>(vec), encoded);
 
         std::vector<ValueType> decoded(vec.size());
         DecoderSeq<ValueType, ValueType> decoder(BPV, bs, rsiSize, CodeOptionSet::Basic);
@@ -631,7 +635,7 @@ void testDataPatterns()
     auto roundtrip = [](const std::vector<ValueType>& vec) {
         std::vector<uint8_t> encoded(vec.size() * sizeof(ValueType) * 2 + 256);
         encoder::EncoderSeq<ValueType, ValueType> encoder(BPV, blockSize, rsiSize, CodeOptionSet::Basic);
-        size_t encodedSize = encoder.encode(Span<ValueType>(const_cast<ValueType*>(vec.data()), vec.size()), encoded);
+        encoder.encode(Span<ValueType>(const_cast<ValueType*>(vec.data()), vec.size()), encoded);
 
         std::vector<ValueType> decoded(vec.size());
         DecoderSeq<ValueType, ValueType> decoder(BPV, blockSize, rsiSize, CodeOptionSet::Basic);
@@ -743,7 +747,7 @@ void testCodeOptionSets()
     auto roundtrip = [](CodeOptionSet cos, const std::vector<ValueType>& vec) {
         std::vector<uint8_t> encoded(vec.size() * sizeof(ValueType) * 2 + 256);
         encoder::EncoderSeq<ValueType, ValueType> encoder(BPV, blockSize, rsiSize, cos);
-        size_t encodedSize = encoder.encode(Span<ValueType>(const_cast<ValueType*>(vec.data()), vec.size()), encoded);
+        encoder.encode(Span<ValueType>(const_cast<ValueType*>(vec.data()), vec.size()), encoded);
 
         std::vector<ValueType> decoded(vec.size());
         DecoderSeq<ValueType, ValueType> decoder(BPV, blockSize, rsiSize, cos);
@@ -825,7 +829,7 @@ void testSplitSample()
 
         std::vector<uint8_t> encoded(vec.size() * sizeof(ValueType) * 2);
         encoder::EncoderSeq<ValueType, ValueType> encoder(BPV, blockSize, rsiSize, CodeOptionSet::Basic);
-        size_t encodedSize = encoder.encode(Span<ValueType>(vec), encoded);
+        encoder.encode(Span<ValueType>(vec), encoded);
 
         std::vector<ValueType> decoded(vec.size());
         DecoderSeq<ValueType, ValueType> decoder(BPV, blockSize, rsiSize, CodeOptionSet::Basic);
@@ -865,7 +869,7 @@ void testReferenceSampleIntervals()
 
         std::vector<uint8_t> encoded(vec.size() * sizeof(ValueType) * 2 + 1024);
         encoder::EncoderSeq<ValueType, ValueType> encoder(BPV, blockSize, rsi, CodeOptionSet::Basic);
-        size_t encodedSize = encoder.encode(Span<ValueType>(vec), encoded);
+        encoder.encode(Span<ValueType>(vec), encoded);
 
         std::vector<ValueType> decoded(vec.size());
         DecoderSeq<ValueType, ValueType> decoder(BPV, blockSize, rsi, CodeOptionSet::Basic);
@@ -908,7 +912,7 @@ void testNoCompression()
 
         std::vector<uint8_t> encoded(vec.size() * sizeof(ValueType) * 2);
         encoder::EncoderSeq<ValueType, ValueType> encoder(BPV, blockSize, rsiSize, CodeOptionSet::Basic);
-        size_t encodedSize = encoder.encode(Span<ValueType>(vec), encoded);
+        encoder.encode(Span<ValueType>(vec), encoded);
 
         std::vector<ValueType> decoded(vec.size());
         DecoderSeq<ValueType, ValueType> decoder(BPV, blockSize, rsiSize, CodeOptionSet::Basic);
@@ -940,8 +944,8 @@ void testCompressionEfficiency()
         std::vector<ValueType> vec(N, 1000);
         std::vector<uint8_t> encoded(vec.size() * sizeof(ValueType) * 2);
         encoder::EncoderSeq<ValueType, ValueType> encoder(BPV, blockSize, rsiSize, CodeOptionSet::Basic);
-        size_t encodedSize = encoder.encode(Span<ValueType>(vec), encoded);
-        size_t rawSize = N * sizeof(ValueType);
+        [[maybe_unused]] const size_t encodedSize = encoder.encode(Span<ValueType>(vec), encoded);
+        [[maybe_unused]] const size_t rawSize = N * sizeof(ValueType);
         assert(encodedSize < rawSize / 2);
         PASS();
     }
@@ -952,8 +956,8 @@ void testCompressionEfficiency()
         std::vector<ValueType> vec(N, 0);
         std::vector<uint8_t> encoded(vec.size() * sizeof(ValueType) * 2);
         encoder::EncoderSeq<ValueType, ValueType> encoder(BPV, blockSize, rsiSize, CodeOptionSet::Basic);
-        size_t encodedSize = encoder.encode(Span<ValueType>(vec), encoded);
-        size_t rawSize = N * sizeof(ValueType);
+        [[maybe_unused]] const size_t encodedSize = encoder.encode(Span<ValueType>(vec), encoded);
+        [[maybe_unused]] const size_t rawSize = N * sizeof(ValueType);
         // All zeros should compress extremely well
         assert(encodedSize < rawSize / 8);
         PASS();
@@ -970,8 +974,8 @@ void testCompressionEfficiency()
             v = dist(gen);
         std::vector<uint8_t> encoded(vec.size() * sizeof(ValueType) * 4);
         encoder::EncoderSeq<ValueType, ValueType> encoder(BPV, blockSize, rsiSize, CodeOptionSet::Basic);
-        size_t encodedSize = encoder.encode(Span<ValueType>(vec), encoded);
-        size_t rawSize = N * sizeof(ValueType);
+        [[maybe_unused]] const size_t encodedSize = encoder.encode(Span<ValueType>(vec), encoded);
+        [[maybe_unused]] const size_t rawSize = N * sizeof(ValueType);
         // Even worst case, should not expand much beyond raw + overhead
         assert(encodedSize <= rawSize * 2);
         PASS();
@@ -984,52 +988,59 @@ void testCompressionEfficiency()
 
 int main()
 {
-    std::cout << "CCSDS 121.0-B-3 Compliance Tests" << '\n';
-    std::cout << "=================================" << '\n'
-              << '\n';
+    try {
+        std::cout << "CCSDS 121.0-B-3 Compliance Tests" << '\n';
+        std::cout << "=================================" << '\n'
+                  << '\n';
 
-    // §4.4 Prediction Error Mapper (spec defines unsigned J-bit samples only)
-    testPreprocessorMapperSpecFormula<uint8_t>();
-    testPreprocessorMapperSpecFormula<uint16_t>();
+        // §4.4 Prediction Error Mapper (spec defines unsigned J-bit samples only)
+        testPreprocessorMapperSpecFormula<uint8_t>();
+        testPreprocessorMapperSpecFormula<uint16_t>();
 
-    // §3.2 Fundamental Sequence
-    testFundamentalSequenceCodewords();
+        // §3.2 Fundamental Sequence
+        testFundamentalSequenceCodewords();
 
-    // §5.2.1 Code Option IDs
-    testCodeOptionIds();
+        // §5.2.1 Code Option IDs
+        testCodeOptionIds();
 
-    // §3.5 Zero Block
-    testZeroBlockEncoding();
+        // §3.5 Zero Block
+        testZeroBlockEncoding();
 
-    // §3.4 Second Extension
-    testSecondExtension();
+        // §3.4 Second Extension
+        testSecondExtension();
 
-    // §3.3 Split Sample
-    testSplitSample();
+        // §3.3 Split Sample
+        testSplitSample();
 
-    // §3.6 No Compression
-    testNoCompression();
+        // §3.6 No Compression
+        testNoCompression();
 
-    // §3.1.6 Block Sizes
-    test_block_sizes<uint8_t>();
-    test_block_sizes<uint16_t>();
+        // §3.1.6 Block Sizes
+        test_block_sizes<uint8_t>();
+        test_block_sizes<uint16_t>();
 
-    // Data Patterns
-    testDataPatterns<uint8_t>();
-    testDataPatterns<uint16_t>();
+        // Data Patterns
+        testDataPatterns<uint8_t>();
+        testDataPatterns<uint16_t>();
 
-    // §5.2.1 Code Option Sets
-    testCodeOptionSets();
+        // §5.2.1 Code Option Sets
+        testCodeOptionSets();
 
-    // §4.3 RSI
-    testReferenceSampleIntervals();
+        // §4.3 RSI
+        testReferenceSampleIntervals();
 
-    // §3.7 Compression efficiency
-    testCompressionEfficiency();
+        // §3.7 Compression efficiency
+        testCompressionEfficiency();
 
-    std::cout << '\n';
-    std::cout << "=================================" << '\n';
-    std::cout << passCount << "/" << testCount << " tests passed." << '\n';
+        std::cout << '\n';
+        std::cout << "=================================" << '\n';
+        std::cout << passCount << "/" << testCount << " tests passed." << '\n';
 
-    return (passCount == testCount) ? 0 : 1;
+        return (passCount == testCount) ? 0 : 1;
+    }
+    catch (const std::exception& e) {
+        std::cerr << "FAIL: " << e.what() << '\n';
+        return 1;
+    }
+    return 0;
 }
