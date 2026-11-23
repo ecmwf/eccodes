@@ -561,6 +561,19 @@ bool is_set_by_template(const Grid& grid)
 }
 
 
+// The values as many as the points (zero, unless already as many); setting them can change the packing (e.g. of a
+// constant field), so it is for a template only (the values are the caller's otherwise)
+void set_values_size(codes_handle* h, size_t n)
+{
+    if (size_t size = 0; codes_get_size(h, "values", &size) == CODES_SUCCESS && size == n) {
+        return;
+    }
+
+    const std::vector<double> values(n, 0.);
+    CHECK_ERROR(codes_set_double_array(h, "values", values.data(), values.size()), "values");
+}
+
+
 void set_figure_and_values(codes_handle* h, const Grid& grid)
 {
     auto set_long = [h](const char* key, long value) { CHECK_ERROR(codes_set_long(h, key, value), key); };
@@ -579,8 +592,7 @@ void set_figure_and_values(codes_handle* h, const Grid& grid)
     set_long("numberOfDataPoints", n);
     set_long("numberOfValues", n);
 
-    const std::vector<double> values(static_cast<size_t>(n), 0.);
-    CHECK_ERROR(codes_set_double_array(h, "values", values.data(), values.size()), "values");
+    set_values_size(h, grid.size());
 }
 
 
