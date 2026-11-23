@@ -2,6 +2,7 @@
 
 #include "simple_packing/BitPacking.h"
 
+#include <cstddef>
 #include <cmath>
 #include <cstdint>
 #include <cstdio>

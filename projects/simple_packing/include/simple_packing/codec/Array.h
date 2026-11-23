@@ -1,8 +1,9 @@
 #pragma once
 
-#include <vector>
+#include <algorithm>
 #include <cstdint>
 #include <type_traits>
+#include <vector>
 
 
 template <typename ValueType, uint8_t BPV>
