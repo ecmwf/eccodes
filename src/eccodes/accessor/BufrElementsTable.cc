@@ -50,15 +50,15 @@ grib_trie* BufrElementsTable::load_bufr_elements_table(int* err)
 {
     char* filename = NULL;
     char line[1024] = { 0 };
-    char masterDir[1024] = { 0 };
-    char localDir[1024] = { 0 };
+    char masterDir[GRIB_STRING_LENGTH] = { 0 };
+    char localDir[GRIB_STRING_LENGTH] = { 0 };
     char dictName[1024] = { 0 };
     char masterRecomposed[1024] = { 0 };  // e.g. bufr/tables/0/wmo/36/element.table
     char localRecomposed[1024] = { 0 };   // e.g. bufr/tables/0/local/0/98/0/element.table
     char* localFilename = 0;
     char** list = 0;
     char** cached_list = 0;
-    size_t len = 1024;
+    size_t len = GRIB_STRING_LENGTH;
     grib_trie* dictionary = NULL;
     FILE* f = NULL;
     grib_handle* h = get_enclosing_handle();
@@ -66,10 +66,10 @@ grib_trie* BufrElementsTable::load_bufr_elements_table(int* err)
 
     *err = GRIB_SUCCESS;
 
-    len = 1024;
+    len = GRIB_STRING_LENGTH;
     if (masterDir_ != NULL)
         grib_get_string(h, masterDir_, masterDir, &len);
-    len = 1024;
+    len = GRIB_STRING_LENGTH;
     if (localDir_ != NULL)
         grib_get_string(h, localDir_, localDir, &len);
 

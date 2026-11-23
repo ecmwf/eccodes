@@ -183,7 +183,7 @@ void Codetable::init(const long len, grib_arguments* params)
             long l;
             int ret = 0;
             double d;
-            char tmp[1024];
+            char tmp[GRIB_STRING_LENGTH];
             grib_expression* expression = act->default_value_->get_expression(0);
             int type = expression->native_type(hand);
             switch (type) {
@@ -262,14 +262,14 @@ grib_codetable* Codetable::load_table()
     char recomposed[1024] = { 0 };
     char localRecomposed[1024] = { 0 };
     const char* localFilename = 0;
-    char masterDir[1024] = { 0 };
-    char localDir[1024] = { 0 };
-    size_t len = 1024;
+    char masterDir[GRIB_STRING_LENGTH] = { 0 };
+    char localDir[GRIB_STRING_LENGTH] = { 0 };
+    size_t len = GRIB_STRING_LENGTH;
 
     if (masterDir_ != NULL)
         grib_get_string(h, masterDir_, masterDir, &len);
 
-    len = 1024;
+    len = GRIB_STRING_LENGTH;
     if (localDir_ != NULL)
         grib_get_string(h, localDir_, localDir, &len);
 
@@ -653,7 +653,7 @@ int Codetable::pack_string(const char* buffer, size_t* len)
             long l = 0;
             int ret = 0;
             double d = 0;
-            char tmp[1024] = { 0 };
+            char tmp[GRIB_STRING_LENGTH] = { 0 };
             grib_expression* expression = act->default_value_->get_expression(0);
             int type = expression->native_type(get_enclosing_handle());
             switch (type) {
@@ -712,7 +712,7 @@ int Codetable::pack_expression(grib_expression* e)
         ret = pack_long(&lval, &len);
     }
     else {
-        char tmp[1024];
+        char tmp[GRIB_STRING_LENGTH];
         len = sizeof(tmp);
         cval = e->evaluate_string(hand, tmp, &len, &ret);
         if (ret != GRIB_SUCCESS) {

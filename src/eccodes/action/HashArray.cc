@@ -88,12 +88,12 @@ grib_hash_array_value* HashArray::get_hash_array_impl(grib_handle* h)
     char master[1024] = { 0 };
     char local[1024] = { 0 };
     char ecmf[1024] = { 0 };
-    char masterDir[1024] = { 0 };
-    size_t lenMasterDir = 1024;
-    char localDir[1024] = { 0 };
-    size_t lenLocalDir = 1024;
-    char ecmfDir[1024] = { 0 };
-    size_t lenEcmfDir = 1024;
+    char masterDir[GRIB_STRING_LENGTH] = { 0 };
+    size_t lenMasterDir = GRIB_STRING_LENGTH;
+    char localDir[GRIB_STRING_LENGTH] = { 0 };
+    size_t lenLocalDir = GRIB_STRING_LENGTH;
+    char ecmfDir[GRIB_STRING_LENGTH] = { 0 };
+    size_t lenEcmfDir = GRIB_STRING_LENGTH;
     char key[4096] = { 0 };
     char* full = 0;
     int id;

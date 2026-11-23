@@ -58,7 +58,7 @@ void Variable::init(const long length, grib_arguments* args)
                 break;
 
             default: {
-                char tmp[1024];
+                char tmp[GRIB_STRING_LENGTH_MAX];
                 len = sizeof(tmp);
                 p = expression->evaluate_string(hand, tmp, &len, &ret);
                 if (ret != GRIB_SUCCESS) {

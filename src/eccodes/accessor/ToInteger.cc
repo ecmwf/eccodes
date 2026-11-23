@@ -106,7 +106,7 @@ int ToInteger::pack_double(const double* /*v*/, size_t* /*len*/)
 
 int ToInteger::unpack_long(long* v, size_t* /*len*/)
 {
-    char val[1024] = { 0 };
+    char val[GRIB_STRING_LENGTH] = { 0 };
     size_t l = sizeof(val);
     char* last = NULL;
     int err = unpack_string(val, &l);

@@ -21,8 +21,8 @@ const char* Length::get_name() const
 int Length::evaluate_long(grib_handle* h, long* result) const
 {
     int err = 0;
-    char mybuf[1024] = { 0 };
-    size_t size = 1024;
+    char mybuf[GRIB_STRING_LENGTH_MAX] = { 0 };
+    size_t size = GRIB_STRING_LENGTH_MAX;
     if ((err = grib_get_string_internal(h, name_, mybuf, &size)) != GRIB_SUCCESS)
         return err;
 
@@ -32,8 +32,8 @@ int Length::evaluate_long(grib_handle* h, long* result) const
 
 int Length::evaluate_double(grib_handle* h, double* result) const
 {
-    char mybuf[1024] = { 0 };
-    size_t size = 1024;
+    char mybuf[GRIB_STRING_LENGTH_MAX] = { 0 };
+    size_t size = GRIB_STRING_LENGTH_MAX;
     int err = 0;
     if ((err = grib_get_string_internal(h, name_, mybuf, &size)) != GRIB_SUCCESS)
         return err;
@@ -44,7 +44,7 @@ int Length::evaluate_double(grib_handle* h, double* result) const
 
 const char* Length::evaluate_string(grib_handle* h, char* buf, size_t* size, int* err) const
 {
-    char mybuf[1024] = { 0 };
+    char mybuf[GRIB_STRING_LENGTH_MAX] = { 0 };
     ECCODES_ASSERT(buf);
     if ((*err = grib_get_string_internal(h, name_, mybuf, size)) != GRIB_SUCCESS)
         return NULL;
