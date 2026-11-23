@@ -15,6 +15,17 @@ namespace
 constexpr double dbl_min = std::numeric_limits<double>::min();
 constexpr double dbl_max = std::numeric_limits<double>::max();
 
+// static_cast<long> of a double outside the long range is undefined behaviour (and aborted
+// under UBSan): clamp it, the callers only compare against the encoded-value bounds
+long toLongClamped(double value)
+{
+    if (value >= 9223372036854775808.0)  // 2^63: the smallest double beyond LONG_MAX
+        return std::numeric_limits<long>::max();
+    if (value <= -9223372036854775808.0)  // -2^63 is exactly LONG_MIN, lower values are not
+        return std::numeric_limits<long>::min();
+    return static_cast<long>(value);
+}
+
 // The largest decimal exponent that fits in a double (~307)
 int vrange()
 {
@@ -158,8 +169,8 @@ Parameters BinDecOptimizer::getParams(const double pmin, const double pmax)
             throw std::runtime_error("unable to find nearest_smaller_value");
         }
 
-        vmax = static_cast<long>((((pmax * decimal) - params.referenceValue()) * divisor) + 0.5);
-        vmin = static_cast<long>((((pmin * decimal) - params.referenceValue()) * divisor) + 0.5);
+        vmax = toLongClamped((((pmax * decimal) - params.referenceValue()) * divisor) + 0.5);
+        vmin = toLongClamped((((pmin * decimal) - params.referenceValue()) * divisor) + 0.5);
 
         /* This may happen if pmin*decimal-*ref is too large */
         if ((vmin != 0) || (vmax > inbint))
