@@ -61,3 +61,17 @@ add_test(NAME ${SP_TEST_PREFIX}scale_factor_range COMMAND sp_scale_factor_range)
 
 sp_add_test(pack_value_range)
 add_test(NAME ${SP_TEST_PREFIX}pack_value_range COMMAND sp_pack_value_range)
+
+# Misaligned memory accesses are detected by the alignment sanitizer
+include(CheckCXXSourceCompiles)
+set(CMAKE_REQUIRED_FLAGS "-fsanitize=alignment")
+set(CMAKE_REQUIRED_LINK_OPTIONS "-fsanitize=alignment")
+check_cxx_source_compiles("int main() { return 0; }" SIMPLE_PACKING_HAVE_ALIGNMENT_SANITIZER)
+unset(CMAKE_REQUIRED_FLAGS)
+unset(CMAKE_REQUIRED_LINK_OPTIONS)
+if(SIMPLE_PACKING_HAVE_ALIGNMENT_SANITIZER)
+  sp_add_test(unaligned_access)
+  target_compile_options(sp_unaligned_access PRIVATE -fsanitize=alignment -fno-sanitize-recover=alignment)
+  target_link_options(sp_unaligned_access PRIVATE -fsanitize=alignment)
+  add_test(NAME ${SP_TEST_PREFIX}unaligned_access COMMAND sp_unaligned_access)
+endif()
