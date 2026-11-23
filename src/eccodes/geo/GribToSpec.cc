@@ -807,15 +807,28 @@ ProcessingT<double>* grid_increment(const char* inc_key, const char* incgiven_ke
 
             auto value_calculated = (x1 - x0) / static_cast<double>(sign != 0 ? (n - 1) : (1 - n));
 
+            double eps = 0.;
+            ASSERT(std::unique_ptr<ProcessingT<double>>(angular_precision())->eval(h, eps));
+
             // longitudes around the globe (to 3/2 the angular precision, of the first/last longitudes and the increment)
             // are periodic, so of the exact increment
             if (STR_EQUAL(n_key, "Ni")) {
-                double eps = 0.;
-                ASSERT(std::unique_ptr<ProcessingT<double>>(angular_precision())->eval(h, eps));
-
                 const auto inc = given ? value : value_calculated;
                 if (eckit::types::is_approximately_equal(std::abs(x1 - x0 + inc), 360., 1.5 * eps)) {
                     value = 360. / static_cast<double>(n) * (inc < 0. ? -1. : 1.);
+                    return true;
+                }
+            }
+
+            // an increment of a division of the globe (360/m degrees) is exact (e.g. 1/3 degree, given as 0.333333): the
+            // division nearest the increment calculated, if given to the angular precision, and its points are within the
+            // first/last points (each rounded outwards) by twice the precision at most, so the grid is of these points
+            if (given && value_calculated != 0.) {
+                const auto exact = 360. / std::round(360. / std::abs(value_calculated));
+                const auto shortfall = (std::abs(value_calculated) - exact) * static_cast<double>(n - 1);
+                if (eckit::types::is_approximately_equal(exact, std::abs(value), std::max(eps, 1e-6)) &&
+                    -1e-9 <= shortfall && shortfall <= 2. * std::max(eps, 1e-6)) {
+                    value = std::copysign(exact, value_calculated);
                     return true;
                 }
             }
