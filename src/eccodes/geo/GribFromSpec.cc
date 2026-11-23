@@ -156,22 +156,40 @@ private:
 };
 
 
+// The scanning mode of a grid's order: all of its flags, as the message can have those of another grid. Alternating
+// rows are GRIB2 only (GRIB1 has the flag, read-only 0), so that flag is set if alternating or to unset it.
 class ScanningMode
 {
 public:
-    explicit ScanningMode(const ::eckit::geo::grid::Regular& grid) :
-        iScansNegatively_(grid.x().a() < grid.x().b() ? 0L : 1L),
-        jScansPositively_(grid.y().a() < grid.y().b() ? 1L : 0L) {}
+    explicit ScanningMode(const std::string& order) :
+        scan_(order) {}
 
-    void fillGrib(grib_info& info) const
+    void fillGrib(grib_info& info, const codes_handle* h) const
     {
-        info.grid.iScansNegatively = iScansNegatively_;
-        info.grid.jScansPositively = jScansPositively_;
+        info.grid.iScansNegatively = iScansNegatively();
+        info.grid.jScansPositively = jScansPositively();
+        info.extra_set("jPointsAreConsecutive", jPointsAreConsecutive());
+        if (long alternating = 0; scan_.is_scan_alternating() ||
+                                  (codes_get_long(h, "alternativeRowScanning", &alternating) == CODES_SUCCESS && alternating != 0)) {
+            info.extra_set("alternativeRowScanning", alternativeRowScanning());
+        }
+    }
+
+    void set(codes_handle* h) const
+    {
+        CHECK_CALL(codes_set_long(h, "iScansNegatively", iScansNegatively()));
+        CHECK_CALL(codes_set_long(h, "jScansPositively", jScansPositively()));
+        CHECK_CALL(codes_set_long(h, "jPointsAreConsecutive", jPointsAreConsecutive()));
+        CHECK_CALL(codes_set_long(h, "alternativeRowScanning", alternativeRowScanning()));
     }
 
 private:
-    long iScansNegatively_;
-    long jScansPositively_;
+    long iScansNegatively() const { return scan_.is_scan_i_positive() ? 0L : 1L; }
+    long jScansPositively() const { return scan_.is_scan_j_positive() ? 1L : 0L; }
+    long jPointsAreConsecutive() const { return scan_.is_scan_i_then_j() ? 0L : 1L; }
+    long alternativeRowScanning() const { return scan_.is_scan_alternating() ? 1L : 0L; }
+
+    const ::eckit::geo::order::RegularScan scan_;
 };
 
 
@@ -250,7 +268,7 @@ private:
 };
 
 
-void set_grid_type_regular_ll(grib_info& info, const Grid& grid, const BasicAngle& basic_angle)
+void set_grid_type_regular_ll(grib_info& info, const codes_handle* h, const Grid& grid, const BasicAngle& basic_angle)
 {
     const auto rotated = grid.projection().type() == "rotation";
     info.grid.grid_type = rotated ? CODES_UTIL_GRID_SPEC_ROTATED_LL : CODES_UTIL_GRID_SPEC_REGULAR_LL;
@@ -258,14 +276,15 @@ void set_grid_type_regular_ll(grib_info& info, const Grid& grid, const BasicAngl
     const auto& g =
         dynamic_cast<const ::eckit::geo::grid::Regular&>(grid);
 
-    auto order = g.order();
+    ScanningMode(g.order()).fillGrib(info, h);
 
-    // ECC-2318
-    // For dx==0 and dy==0 use default values iScansNegatively=0, jScansPositively=0, respectively.
-    info.grid.iScansNegatively = is_approximately_equal(g.dx(), 0.) ? 0L : order.find("i-") != std::string::npos ? 1L
-                                                                                                                 : 0L;
-    info.grid.jScansPositively = is_approximately_equal(g.dy(), 0.) ? 0L : order.find("j+") != std::string::npos ? 1L
-                                                                                                                 : 0L;
+    // ECC-2318: a single column (dx=0) or row (dy=0) is of the default direction
+    if (is_approximately_equal(g.dx(), 0.)) {
+        info.grid.iScansNegatively = 0L;
+    }
+    if (is_approximately_equal(g.dy(), 0.)) {
+        info.grid.jScansPositively = 0L;
+    }
 
     ASSERT((g.dx() < 0) == (info.grid.iScansNegatively == 1L));
     ASSERT((0 < g.dy()) == (info.grid.jScansPositively == 1L));
@@ -297,7 +316,7 @@ void set_grid_type_regular_ll(grib_info& info, const Grid& grid, const BasicAngl
 }
 
 
-void set_grid_type_regular_gg(grib_info& info, const Grid& grid)
+void set_grid_type_regular_gg(grib_info& info, const codes_handle* h, const Grid& grid)
 {
     const auto rotated = grid.projection().type() == "rotation";
     info.grid.grid_type = rotated ? CODES_UTIL_GRID_SPEC_ROTATED_GG : CODES_UTIL_GRID_SPEC_REGULAR_GG;
@@ -308,9 +327,7 @@ void set_grid_type_regular_gg(grib_info& info, const Grid& grid)
     info.grid.N = static_cast<long>(g.N());
     info.grid.iDirectionIncrementInDegrees = 90. / static_cast<double>(g.N());
 
-    const auto order = g.order();
-    info.grid.iScansNegatively = order.find("i-") != std::string::npos ? 1L : 0L;
-    info.grid.jScansPositively = order.find("j+") != std::string::npos ? 1L : 0L;
+    ScanningMode(g.order()).fillGrib(info, h);
 
     info.grid.Ni = static_cast<long>(g.nx());
     info.grid.Nj = static_cast<long>(g.ny());
@@ -457,7 +474,7 @@ double grib_longitude(double lon, long edition)
 }
 
 
-void set_projected(grib_info& info, const ::eckit::geo::grid::Regular& grid, long edition)
+void set_projected(grib_info& info, const codes_handle* h, const ::eckit::geo::grid::Regular& grid, long edition)
 {
     const auto first = std::get<PointLonLat>(grid.first_point());
 
@@ -471,7 +488,7 @@ void set_projected(grib_info& info, const ::eckit::geo::grid::Regular& grid, lon
     info.extra_set("DxInMetres", std::abs(grid.dx()));
     info.extra_set("DyInMetres", std::abs(grid.dy()));
 
-    ScanningMode(grid).fillGrib(info);
+    ScanningMode(grid.order()).fillGrib(info, h);
 
     // GRIB1 figures (see encoding_edition), GRIB2 as other grids
     if (edition == 1) {
@@ -480,7 +497,7 @@ void set_projected(grib_info& info, const ::eckit::geo::grid::Regular& grid, lon
 }
 
 
-void set_grid_type_lambert_azimuthal_equal_area(grib_info& info, const Grid& grid, long edition)
+void set_grid_type_lambert_azimuthal_equal_area(grib_info& info, const codes_handle* h, const Grid& grid, long edition)
 {
     info.grid.grid_type = CODES_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA;
 
@@ -488,11 +505,11 @@ void set_grid_type_lambert_azimuthal_equal_area(grib_info& info, const Grid& gri
     info.extra_set("standardParallelInDegrees", projection.get_double("lat_0", 0.));
     info.extra_set("centralLongitudeInDegrees", grib_longitude(projection.get_double("lon_0", 0.), edition));
 
-    set_projected(info, dynamic_cast<const ::eckit::geo::grid::Regular&>(grid), edition);
+    set_projected(info, h, dynamic_cast<const ::eckit::geo::grid::Regular&>(grid), edition);
 }
 
 
-void set_grid_type_grid_type_lambert(grib_info& info, const Grid& grid, long edition)
+void set_grid_type_grid_type_lambert(grib_info& info, const codes_handle* h, const Grid& grid, long edition)
 {
     info.grid.grid_type = CODES_UTIL_GRID_SPEC_LAMBERT_CONFORMAL;
 
@@ -510,11 +527,11 @@ void set_grid_type_grid_type_lambert(grib_info& info, const Grid& grid, long edi
         info.extra_set("LaDInDegrees", projection.get_double("lat_0", 0.));
     }
 
-    set_projected(info, dynamic_cast<const ::eckit::geo::grid::Regular&>(grid), edition);
+    set_projected(info, h, dynamic_cast<const ::eckit::geo::grid::Regular&>(grid), edition);
 }
 
 
-void set_grid_type_polar_stereographic(grib_info& info, const Grid& grid, long edition)
+void set_grid_type_polar_stereographic(grib_info& info, const codes_handle* h, const Grid& grid, long edition)
 {
     info.grid.grid_type = CODES_UTIL_GRID_SPEC_POLAR_STEREOGRAPHIC;
 
@@ -529,7 +546,7 @@ void set_grid_type_polar_stereographic(grib_info& info, const Grid& grid, long e
         info.extra_set("LaDInDegrees", projection.get_double("lat_ts", lat_0));
     }
 
-    set_projected(info, dynamic_cast<const ::eckit::geo::grid::Regular&>(grid), edition);
+    set_projected(info, h, dynamic_cast<const ::eckit::geo::grid::Regular&>(grid), edition);
 }
 
 
@@ -571,8 +588,6 @@ void set_space_view(codes_handle* h, const Grid& grid)
 
     // as GribToSpec: the grid parameters as GRIB, the scanning mode as the order
     const auto& p = dynamic_cast<const ::eckit::geo::grid::regular::SpaceView&>(grid).parameters();
-    const ::eckit::geo::order::RegularScan scan(grid.order());
-
     set_long("edition", 2);
     set_long("gridDefinitionTemplateNumber", 90);
 
@@ -589,10 +604,7 @@ void set_space_view(codes_handle* h, const Grid& grid)
     set_long("orientationOfTheGrid", 0);
     set_long("Nr", std::lround(p.nr * 1e6));
 
-    set_long("iScansNegatively", scan.is_scan_i_positive() ? 0L : 1L);
-    set_long("jScansPositively", scan.is_scan_j_positive() ? 1L : 0L);
-    set_long("jPointsAreConsecutive", scan.is_scan_i_then_j() ? 0L : 1L);
-    set_long("alternativeRowScanning", scan.is_scan_alternating() ? 1L : 0L);
+    ScanningMode(grid.order()).set(h);
 
     set_figure_and_values(h, grid);
 }
@@ -657,8 +669,7 @@ void set_by_template(codes_handle* h, const Grid& grid)
         set_double("DyInMetres", std::abs(y[2]));
     }
 
-    set_long("iScansNegatively", x[1] < x[0] ? 1L : 0L);
-    set_long("jScansPositively", y[1] > y[0] ? 1L : 0L);
+    ScanningMode(grid.order()).set(h);
 
     set_figure_and_values(h, grid);
 }
@@ -746,22 +757,22 @@ codes_handle* GribFromSpec::set(const codes_handle* h, const Spec& spec, const s
     const bool has_figure = codes_is_defined(h, "shapeOfTheEarth") != 0;
 
     if (const auto g = grid->type(), p = grid->projection().type(); g == "regular_ll") {
-        set_grid_type_regular_ll(info, *grid, basic_angle);
+        set_grid_type_regular_ll(info, h, *grid, basic_angle);
     }
     else if (g == "regular_xy" && p == "laea") {
-        set_grid_type_lambert_azimuthal_equal_area(info, *grid, edition);
+        set_grid_type_lambert_azimuthal_equal_area(info, h, *grid, edition);
     }
     else if (g == "regular_xy" && p == "lcc") {
-        set_grid_type_grid_type_lambert(info, *grid, edition);
+        set_grid_type_grid_type_lambert(info, h, *grid, edition);
     }
     else if (g == "regular_xy" && p == "stere") {
-        set_grid_type_polar_stereographic(info, *grid, edition);
+        set_grid_type_polar_stereographic(info, h, *grid, edition);
     }
     else if (g == "reduced_ll") {
         set_grid_type_reduced_ll(info, *grid);
     }
     else if (g == "regular_gg") {
-        set_grid_type_regular_gg(info, *grid);
+        set_grid_type_regular_gg(info, h, *grid);
     }
     else if (g == "reduced_gg") {
         set_grid_type_reduced_gg(info, *grid);
