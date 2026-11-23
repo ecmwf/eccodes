@@ -552,12 +552,12 @@ void set_grid_type_polar_stereographic(grib_info& info, const codes_handle* h, c
 }
 
 
-// GRIB2 templates without a grib_util grid type, set directly: transverse_mercator (3.12), albers (3.31) and
-// space_view (3.90)
+// GRIB2 templates without a grib_util grid type, set directly: mercator (3.10), transverse_mercator (3.12), albers
+// (3.31) and space_view (3.90)
 bool is_set_by_template(const Grid& grid)
 {
     const auto p = grid.projection().type();
-    return (grid.type() == "regular_xy" && (p == "tmerc" || p == "aea")) || grid.type() == "space_view";
+    return (grid.type() == "regular_xy" && (p == "merc" || p == "tmerc" || p == "aea")) || grid.type() == "space_view";
 }
 
 
@@ -633,12 +633,31 @@ void set_by_template(codes_handle* h, const Grid& grid)
     const auto false_xy = spec.get_double_vector("false_xy", { 0., 0. });
     ASSERT(x.size() == 3 && y.size() == 3 && false_xy.size() == 2);
 
-    const auto tmerc = grid.projection().type() == "tmerc";
+    const auto type = grid.projection().type();
+    const auto tmerc = type == "tmerc";
 
     set_long("edition", 2);
-    set_long("gridDefinitionTemplateNumber", tmerc ? 12 : 31);
+    set_long("gridDefinitionTemplateNumber", type == "merc" ? 10 : tmerc ? 12
+                                                                         : 31);
 
-    if (tmerc) {
+    if (type == "merc") {
+        // as GribToSpec: the first point, and the latitude of true scale; the last point and the grid lengths [mm]
+        auto microdegrees = [](double degrees) { return std::lround(degrees * 1e6); };
+        const auto first = std::get<PointLonLat>(grid.first_point());
+        const auto last = std::get<PointLonLat>(grid.last_point());
+
+        set_long("Ni", static_cast<long>(g.nx()));
+        set_long("Nj", static_cast<long>(g.ny()));
+        set_long("latitudeOfFirstGridPoint", microdegrees(first.lat()));
+        set_long("longitudeOfFirstGridPoint", microdegrees(normalise_longitude(first.lon(), 0)));
+        set_long("latitudeOfLastGridPoint", microdegrees(last.lat()));
+        set_long("longitudeOfLastGridPoint", microdegrees(normalise_longitude(last.lon(), 0)));
+        set_long("LaD", microdegrees(projection.get_double("lat_ts", 0.)));
+        set_long("orientationOfTheGrid", 0);
+        set_long("Di", std::lround(std::abs(x[2]) * 1e3));
+        set_long("Dj", std::lround(std::abs(y[2]) * 1e3));
+    }
+    else if (tmerc) {
         // as GribToSpec: grid coordinates and false easting/northing [cm], reference point [microdegree]
         set_long("Ni", static_cast<long>(g.nx()));
         set_long("Nj", static_cast<long>(g.ny()));
