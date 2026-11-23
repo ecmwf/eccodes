@@ -1224,7 +1224,7 @@ GribToSpec::GribToSpec(codes_handle* h, bool rotated) :
             { "51ea7dcd62e71c9707157a2d15247593", { { "longitudeOfLastGridPointInDegrees", 359.859375 } } },
 
             // gridName=O2560, edition=1, experimentVersionNumber=h5xa/h5zi
-            { "8a6f6c4cc9ad3f64546773b87566bc72", { { "latitudeOfFirstGridPointInDegrees", 89.973 }, { "latitudeOfLastGridPointInDegrees", -89.973 } } },
+            { "8a6f6c4cc9ad3f64546773b87566bc72", { { "latitudeOfFirstGridPointInDegrees", 89.973091 }, { "latitudeOfLastGridPointInDegrees", -89.973091 } } },
 
             // gridName=O640, edition=1, experimentVersionNumber=h5wk/h6en/hc9k
             { "f5dc74ec36353f4c83f7de3bf46e1aef", { { "latitudeOfFirstGridPointInDegrees", 89.892396 }, { "latitudeOfLastGridPointInDegrees", -89.892396 } } },
