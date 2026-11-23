@@ -400,7 +400,14 @@ public:
     }
 
 public:
+    // Encodes source into the zeroed target and returns the number of bytes written
     size_t encode(const Span<ValueType> source, Span<uint8_t> target)
+    {
+        return (encodeBits(source, target) + 7) / 8;
+    }
+
+    // Encodes source into the zeroed target and returns the exact number of bits written
+    size_t encodeBits(const Span<ValueType> source, Span<uint8_t> target)
     {
         SplitBlock<ValueType> rsiBlocks(source, rsiSizeV_);
         BitBuffer buffer(target);
@@ -412,7 +419,7 @@ public:
             encodeRsi(rsiBlocks.part(), buffer);
         }
 
-        return (buffer.bitPos() + 7) / 8;
+        return buffer.bitPos();
     }
 
     EncoderSeq(uint8_t bpv, uint8_t block_size, uint16_t rsiSize, CodeOptionSet codeOptionSet) : EncoderBase<ValueType, DeltaType>(bpv, block_size, rsiSize, codeOptionSet),

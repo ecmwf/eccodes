@@ -10,6 +10,7 @@
 #include "ccsds/Span.h"
 #include "ccsds/Utils.h"
 #include "ccsds/encoder/EncoderSeq.h"
+#include "ccsds/encoder/EncoderPar.h"
 #include "ccsds/decoder/DecoderSeq.h"
 #include "ccsds/decoder/DecoderPar.h"
 #include "ccsds/Stats.h"
@@ -205,6 +206,11 @@ private:
             }
         }
 
+        // The parallel encoder produces the same bytes as the sequential one (see EncoderPar)
+        if (nThreads_ > 1) {
+            EncoderPar<DeltaType, DeltaType> encoder{ bpv_, blockSize_, rsiSize_, CodeOptionSet::Basic, nThreads_ };
+            return encoder.encode(Span<DeltaType>(mapped), target);
+        }
         EncoderSeq<DeltaType, DeltaType> encoder{ bpv_, blockSize_, rsiSize_, CodeOptionSet::Basic };
         return encoder.encode(Span<DeltaType>(mapped), target);
     }
