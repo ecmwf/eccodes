@@ -43,3 +43,6 @@ add_test(NAME ${SP_TEST_PREFIX}no_output COMMAND sp_no_output)
 
 sp_add_test(bits_per_value_range)
 add_test(NAME ${SP_TEST_PREFIX}bits_per_value_range COMMAND sp_bits_per_value_range)
+
+sp_add_test(zero_values)
+add_test(NAME ${SP_TEST_PREFIX}zero_values COMMAND sp_zero_values)
