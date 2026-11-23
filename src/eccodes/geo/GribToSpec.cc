@@ -313,7 +313,8 @@ const char* get_key(const std::string& name, codes_handle* h)
         { "west", "longitudeOfFirstGridPointInDegrees_fix_for_regular_gaussian_grids", is_regular_gaussian() },
         { "east", "longitudeOfLastGridPointInDegrees_fix_for_regular_gaussian_grids", is_regular_gaussian() },
         { "west", "longitudeOfFirstGridPointInDegrees" },
-        { "east", "longitudeOfLastGridPointInDegrees_fix_for_global_reduced_grids", is("gridType", "reduced_gg") },
+        { "east", "longitudeOfLastGridPointInDegrees_fix_for_global_reduced_grids",
+          _or(is("gridType", "reduced_gg"), is("gridType", "reduced_rotated_gg")) },
         { "east", "longitudeOfLastGridPointInDegrees" },
 
         { "north", "latitudeOfFirstGridPointInDegrees_fix_for_gaussian_grids",
