@@ -23,6 +23,9 @@ public:
     void decodeParallel(Span<uint8_t> source, Span<OutputType> target, UnmapFunc unmapper)
     {
         if (target.size() == 0) {
+            // Like the sequential decode of an empty target: no values, but the identity
+            // fields of the statistics are still set
+            Base::setStats(0, source.size());
             return;
         }
 
@@ -37,6 +40,10 @@ public:
         const BitBuffer scanBuf{ padded, 0 };
         std::vector<std::future<void>> futures;
         futures.reserve(nThreads);
+
+        // Per-chunk statistics: worker t writes chunkStats[t], the main thread merges them
+        // after waiting for all workers (the futures synchronize the accesses)
+        std::vector<SpAecStats> chunkStats(nThreads);
 
         // Waits for all started threads (they reference local variables) and rethrows the first error
         auto waitAll = [&futures]() {
@@ -69,7 +76,7 @@ public:
                 const size_t bitOffset = scanBuf.bitPos();
 
                 futures.push_back(threadPool_.enqueue(
-                    [&padded, &target, unmapper, bitOffset, startVal, chunkLen, this]() {
+                    [&padded, &target, unmapper, bitOffset, startVal, chunkLen, &chunkStats, t, this]() {
                         // Per-thread decoder to avoid shared mutable state (rsiBuf_, paddedSegmentBuf_)
                         DecoderSeq<ValueType, DeltaType, DecodeFunc> localDecoder{
                             bpv_, blockSizeV_, static_cast<uint16_t>(rsiSizeB_), codeOptionSet_
@@ -78,6 +85,7 @@ public:
                                                    [&](auto value, size_t idx) {
                                                        target[startVal + idx] = unmapper(value);
                                                    });
+                        chunkStats[t] = localDecoder.getStats();
                     }));
 
                 // Find the start of the next thread's first RSI (all RSIs before it are full)
@@ -98,7 +106,29 @@ public:
             }
             throw;
         }
+        const size_t nStarted = futures.size();
         waitAll();
+
+        // Merge the per-chunk statistics so that a parallel decode reports the same
+        // statistics as the sequential decode of the same stream
+        for (size_t t = 0; t < nStarted; ++t) {
+            const SpAecStats& chunk = chunkStats[t];
+            for (size_t k = 0; k < SpAecStats::kMax; ++k) {
+                Base::stats_.counter.ssNoRef[k] += chunk.counter.ssNoRef[k];
+                Base::stats_.counter.ssRef[k] += chunk.counter.ssRef[k];
+            }
+            Base::stats_.counter.seNoRef += chunk.counter.seNoRef;
+            Base::stats_.counter.seRef += chunk.counter.seRef;
+            Base::stats_.counter.ncNoRef += chunk.counter.ncNoRef;
+            Base::stats_.counter.ncRef += chunk.counter.ncRef;
+            for (size_t i = 0; i <= SpAecStats::segmentSize; ++i) {
+                Base::stats_.counter.zbNoRef[i] += chunk.counter.zbNoRef[i];
+                Base::stats_.counter.zbRef[i] += chunk.counter.zbRef[i];
+                Base::stats_.counter.zbRosNoRef[i] += chunk.counter.zbRosNoRef[i];
+                Base::stats_.counter.zbRosRef[i] += chunk.counter.zbRosRef[i];
+            }
+        }
+        Base::setStats(target.size(), source.size());
     }
 
     DecoderPar(uint8_t bpv, uint8_t block_size, uint16_t rsiSize, CodeOptionSet codeOptionSet, size_t nThreads = 3) :

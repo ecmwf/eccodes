@@ -229,6 +229,8 @@ private:
         if (nThreads_ > 1) {
             DecoderPar<DeltaType, DeltaType> decoder{ bpv_, blockSize_, rsiSize_, CodeOptionSet::Basic, nThreads_ };
             decoder.decodeParallel(source, target, unmapper);
+            // The parallel decoder merges the per-chunk statistics (see DecoderPar)
+            stats_ = decoder.getStats();
         }
         else {
             DecoderSeq<DeltaType, DeltaType> decoder{ bpv_, blockSize_, rsiSize_, CodeOptionSet::Basic };
