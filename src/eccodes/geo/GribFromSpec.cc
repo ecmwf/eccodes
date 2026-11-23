@@ -324,8 +324,10 @@ void set_grid_type_regular_gg(grib_info& info, const codes_handle* h, const Grid
     const auto& g =
         dynamic_cast<const ::eckit::geo::grid::regular::RegularGaussian&>(grid);
 
+    // the increment of the ni longitudes around the globe (4N by default)
+    const auto ni = g.ni() != 0 ? g.ni() : 4 * g.N();
     info.grid.N = static_cast<long>(g.N());
-    info.grid.iDirectionIncrementInDegrees = 90. / static_cast<double>(g.N());
+    info.grid.iDirectionIncrementInDegrees = 360. / static_cast<double>(ni);
 
     ScanningMode(g.order()).fillGrib(info, h);
 
