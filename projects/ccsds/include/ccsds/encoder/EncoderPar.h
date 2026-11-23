@@ -41,7 +41,7 @@ public:
     // bytes, like for EncoderSeq. Returns the number of bytes written.
     size_t encode(const Span<ValueType> source, Span<uint8_t> target)
     {
-        return (encodeBits(source, target) + 7) / 8;
+        return std::max<size_t>((encodeBits(source, target) + 7) / 8, 1);
     }
 
     // Same as encode(), but returns the exact number of bits written

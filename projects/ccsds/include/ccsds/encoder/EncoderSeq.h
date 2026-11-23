@@ -412,7 +412,8 @@ public:
     // Encodes source into the zeroed target and returns the number of bytes written
     size_t encode(const Span<ValueType> source, Span<uint8_t> target)
     {
-        return (encodeBits(source, target) + 7) / 8;
+        // Like libaec, an empty stream is one zero byte (the flushed, empty last byte)
+        return std::max<size_t>((encodeBits(source, target) + 7) / 8, 1);
     }
 
     // Encodes source into the zeroed target and returns the exact number of bits written
