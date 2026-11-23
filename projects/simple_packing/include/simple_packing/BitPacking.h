@@ -105,6 +105,22 @@ inline constexpr uint8_t be_byte(uint8_t i, uint8_t size)
 }
 
 
+// Unaligned load/store of a word (the coded data has no alignment); compiles to a plain move
+template <typename T>
+__attribute__((always_inline)) inline T load_word(const uint8_t* ptr) noexcept
+{
+    T value;
+    std::memcpy(&value, ptr, sizeof(T));
+    return value;
+}
+
+template <typename T>
+__attribute__((always_inline)) inline void store_word(uint8_t* ptr, const T& value) noexcept
+{
+    std::memcpy(ptr, &value, sizeof(T));
+}
+
+
 template <std::size_t BPV, Optimization Method = Optimization::None>
 class BitPacking
 {
@@ -185,7 +201,7 @@ public:
             coded.bytes[be_byte(0, coded.size())] |= ptr[0];
 
             if constexpr (Method == Optimization::Block) {
-                *reinterpret_cast<typename UIntPlus::ValueType*>(ptr) = swap_bytes<typename UIntPlus::ValueType>(coded.value);
+                store_word(ptr, swap_bytes<typename UIntPlus::ValueType>(coded.value));
             }
             else {
                 const size_t nBytesToRead = (bitOffset + BPV + 7) / 8;
@@ -204,7 +220,7 @@ public:
             constexpr size_t nBytesToRead = sizeof(typename UInt<BPV>::ValueType);
 
             if constexpr (Method == Optimization::Block) {
-                coded.value = swap_bytes<typename UInt<BPV>::ValueType>(*reinterpret_cast<const typename UInt<BPV>::ValueType*>(ptr));
+                coded.value = swap_bytes<typename UInt<BPV>::ValueType>(load_word<typename UInt<BPV>::ValueType>(ptr));
             }
             else {
                 for (uint8_t i = 0; i < nBytesToRead; ++i) {
@@ -219,7 +235,7 @@ public:
             UIntPlus coded;
 
             if constexpr (Method == Optimization::Block) {
-                coded.value = swap_bytes<typename UIntPlus::ValueType>(*reinterpret_cast<const typename UIntPlus::ValueType*>(ptr));
+                coded.value = swap_bytes<typename UIntPlus::ValueType>(load_word<typename UIntPlus::ValueType>(ptr));
             }
             else {
                 const uint8_t nBytesToRead = (bitOffset + BPV + 7) / 8;
