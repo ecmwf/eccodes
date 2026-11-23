@@ -7,7 +7,7 @@
 function(sp_add_fuzzer name)
   add_executable(${name} ${CMAKE_CURRENT_SOURCE_DIR}/${name}.cc)
   target_link_libraries(${name} PRIVATE simple_packing::simple_packing)
-  target_compile_options(${name} PRIVATE ${SIMPLE_PACKING_FUZZER_COMPILE_OPTIONS})
+  target_compile_options(${name} PRIVATE ${SIMPLE_PACKING_FUZZER_COMPILE_OPTIONS} -Wall -Wextra)
   target_link_options(${name} PRIVATE ${SIMPLE_PACKING_FUZZER_LINK_OPTIONS})
 endfunction()
 
