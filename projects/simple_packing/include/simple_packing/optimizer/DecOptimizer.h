@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cmath>
 #include <stdexcept>
 #include <string>
 
@@ -58,6 +59,13 @@ public:
             min = unscaled_min * decimal;
             max = unscaled_max * decimal;
             range = (max - min);
+        }
+
+        // Scaling by 10^decimalScaleFactor must keep the field within the range of a double,
+        // otherwise the reference value and the packed values cannot be computed
+        if (!(std::isfinite(min) && std::isfinite(max))) {
+            throw std::runtime_error("Simple packing: cannot scale the range [" + std::to_string(unscaled_min) +
+                                     ", " + std::to_string(unscaled_max) + "]");
         }
 
         params.decimalScaleFactor(decimalScaleFactor);

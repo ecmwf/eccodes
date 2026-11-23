@@ -27,8 +27,17 @@ public:
         Parameters params;
 
         auto decimal = sp_power<double>(decimalScaleFactor_, 10);
+        const double unscaledMin = min;
+        const double unscaledMax = max;
         min *= decimal;
         max *= decimal;
+
+        // Scaling by 10^decimalScaleFactor must keep the field within the range of a double,
+        // otherwise the number of bits per value cannot be computed
+        if (!(std::isfinite(min) && std::isfinite(max))) {
+            throw std::runtime_error("Simple packing: cannot scale the range [" + std::to_string(unscaledMin) +
+                                     ", " + std::to_string(unscaledMax) + "]");
+        }
 
         /* bits_per_value = ceil(log2(fabs(max - min))) (ceil: see GRIB-540) */
         auto bpv = number_of_bits((unsigned long)ceil(fabs(max - min)));
