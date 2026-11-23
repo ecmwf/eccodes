@@ -562,12 +562,13 @@ bool is_set_by_template(const Grid& grid)
 }
 
 
-// The values as many as the points (zero, unless already as many); setting them can change the packing (e.g. of a
-// constant field), so it is for a template only (the values are the caller's otherwise)
-void set_values_size(codes_handle* h, size_t n)
+// The values of another grid don't belong to this one (even if as many), so they are a constant field (without bitmap)
+// as many as the points, for the caller to replace; this can change the packing (e.g. second-order to simple), which is
+// the caller's to set again
+void set_constant_values(codes_handle* h, size_t n)
 {
-    if (size_t size = 0; codes_get_size(h, "values", &size) == CODES_SUCCESS && size == n) {
-        return;
+    if (codes_is_defined(h, "bitmapPresent") != 0) {
+        CHECK_ERROR(codes_set_long(h, "bitmapPresent", 0), "bitmapPresent");
     }
 
     const std::vector<double> values(n, 0.);
@@ -593,7 +594,7 @@ void set_figure_and_values(codes_handle* h, const Grid& grid)
     set_long("numberOfDataPoints", n);
     set_long("numberOfValues", n);
 
-    set_values_size(h, grid.size());
+    set_constant_values(h, grid.size());
 }
 
 
@@ -870,6 +871,10 @@ codes_handle* GribFromSpec::set(const codes_handle* h, const Spec& spec, const s
         grib_context_log(h->context, GRIB_LOG_ERROR, "GribFromSpec::set: %s", grib_get_error_message(err));
         return nullptr;
     }
+
+    // spherical harmonics: the real coefficients (two per complex coefficient)
+    const auto T = info.grid.truncation;
+    set_constant_values(result, info.grid.grid_type == CODES_UTIL_GRID_SPEC_SH ? static_cast<size_t>((T + 1) * (T + 2)) : grid->size());
 
     return result;
 }

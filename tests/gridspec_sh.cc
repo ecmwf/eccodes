@@ -45,20 +45,18 @@ CASE("gridSpec to GRIB and back")
 
 CASE("gridded on spectral messages")
 {
-    // gridded data is converted from spectral data (the values are for the caller to set, as many as the points)
+    // gridded data is converted from spectral data (the values a constant field as many as the points, for the caller to
+    // replace)
     EXPECT(gridspec::check_all<encode_t>({
         { "sh_ml_grib2", R"({"grid":"O32"})", "reduced_gg", { { "packingType", "grid_simple" }, { "numberOfDataPoints", 5248 } } },
         { "sh_ml_grib2", R"({"grid":"H2"})", "healpix", { { "packingType", "grid_simple" }, { "numberOfDataPoints", 48 } } },
     }));
 
-    // GRIB1 numberOfDataPoints is of the values, so the grid is described once these are set
+    // GRIB1 numberOfDataPoints is of the values, as many as the points
     for (const auto& [spec, n] : std::vector<std::pair<std::string, size_t>>{ { R"({"grid":"O32"})", 5248 }, { R"({"grid":[1,1]})", 65160 } }) {
         auto h = gridspec::sample("sh_ml_grib1");
         EXPECT(gridspec::set_gridspec(h.get(), spec) == CODES_SUCCESS);
         EXPECT(gridspec::mismatches(h.get(), { { "packingType", "grid_simple" } }).empty());
-
-        const std::vector<double> values(n, 0.);
-        EXPECT(codes_set_double_array(h.get(), "values", values.data(), n) == CODES_SUCCESS);
         EXPECT_EQUAL(gridspec::get_long(h.get(), "numberOfDataPoints"), static_cast<long>(n));
         EXPECT_EQUAL(gridspec::get_gridspec(h.get()), spec);
     }

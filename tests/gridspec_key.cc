@@ -132,7 +132,8 @@ CASE("set: other keys are kept")
 
 CASE("set: values")
 {
-    // the values are kept (and their packing), so as many as the points (e.g. the same grid) are as before
+    // the values of another grid don't belong to this one (even the same, or of as many points), so they are a constant
+    // field as many as the points, for the caller to replace
     for (const auto& [name, other] : std::vector<std::pair<const char*, const char*>>{
              { "GRIB1", R"({"grid":[1,1],"order":"i+j+"})" },        // 360x181 points
              { "GRIB2", R"({"area":[30,0,-30,60],"grid":[4,2]})" },  // 16x31 points
@@ -154,24 +155,32 @@ CASE("set: values")
             return v;
         };
 
-        // as packed
-        values = get_values();
-
         // the same grid, and another of as many points
+        const std::vector<double> zeros(n, 0.);
+
         EXPECT(gridspec::set_gridspec(h.get(), gridspec::get_gridspec(h.get())) == CODES_SUCCESS);
-        EXPECT(get_values() == values);
+        EXPECT(get_values() == zeros);
 
+        EXPECT(codes_set_double_array(h.get(), "values", values.data(), n) == CODES_SUCCESS);
         EXPECT(gridspec::set_gridspec(h.get(), other) == CODES_SUCCESS);
-        EXPECT(get_values() == values);
+        EXPECT(get_values() == zeros);
 
-        // of another number of points, the values are set (as many as the points)
+        // of another number of points
         EXPECT(gridspec::set_gridspec(h.get(), R"({"area":[10,0,0,10],"grid":[1,1]})") == CODES_SUCCESS);
         EXPECT_EQUAL(gridspec::get_long(h.get(), "numberOfDataPoints"), 121);
+        EXPECT(get_values() == std::vector<double>(121, 0.));
 
         const std::vector<double> ones(121, 1.);
         EXPECT(codes_set_double_array(h.get(), "values", ones.data(), ones.size()) == CODES_SUCCESS);
         EXPECT(get_values() == ones);
     }
+
+    // without bitmap, even if all missing before
+    auto h = gridspec::sample("GRIB2");
+    EXPECT(codes_set_long(h.get(), "bitmapPresent", 1) == CODES_SUCCESS);
+    EXPECT(gridspec::set_gridspec(h.get(), R"({"area":[10,0,0,10],"grid":[1,1]})") == CODES_SUCCESS);
+    EXPECT_EQUAL(gridspec::get_long(h.get(), "bitmapPresent"), 0);
+    EXPECT_EQUAL(gridspec::get_long(h.get(), "numberOfMissing"), 0);
 }
 
 
