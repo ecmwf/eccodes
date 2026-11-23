@@ -127,22 +127,30 @@ std::pair<T, T> sp_minmax(const T* values, size_t n)
     if (n == 0)
         return { T(0), T(0) };
 
+    // nonFinite accumulates v - v: it becomes NaN if any value is NaN or infinite
     if (n < 2 * lanes) {
         T mn = values[0];
         T mx = values[0];
+        T nonFinite = values[0] - values[0];
         for (size_t i = 1; i < n; ++i) {
             const T v = values[i];
             mn = v < mn ? v : mn;
             mx = v > mx ? v : mx;
+            nonFinite += v - v;
+        }
+        if (nonFinite != nonFinite) {
+            return { std::numeric_limits<T>::quiet_NaN(), std::numeric_limits<T>::quiet_NaN() };
         }
         return { mn, mx };
     }
 
     T mn[lanes];
     T mx[lanes];
+    T nonFinite[lanes];
     for (size_t l = 0; l < lanes; ++l) {
         mn[l] = values[l];
         mx[l] = values[l];
+        nonFinite[l] = values[l] - values[l];
     }
 
     size_t i = lanes;
@@ -151,19 +159,26 @@ std::pair<T, T> sp_minmax(const T* values, size_t n)
             const T v = values[i + l];
             mn[l] = v < mn[l] ? v : mn[l];
             mx[l] = v > mx[l] ? v : mx[l];
+            nonFinite[l] += v - v;
         }
     }
 
     T rmn = mn[0];
     T rmx = mx[0];
+    T rNonFinite = nonFinite[0];
     for (size_t l = 1; l < lanes; ++l) {
         rmn = mn[l] < rmn ? mn[l] : rmn;
         rmx = mx[l] > rmx ? mx[l] : rmx;
+        rNonFinite += nonFinite[l];
     }
     for (; i < n; ++i) {
         const T v = values[i];
         rmn = v < rmn ? v : rmn;
         rmx = v > rmx ? v : rmx;
+        rNonFinite += v - v;
+    }
+    if (rNonFinite != rNonFinite) {  // a NaN or infinite value: make the range invalid
+        return { std::numeric_limits<T>::quiet_NaN(), std::numeric_limits<T>::quiet_NaN() };
     }
     return { rmn, rmx };
 }

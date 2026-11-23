@@ -3,10 +3,11 @@
 #include "simple_packing/BitPacking.h"
 
 #include <vector>
+#include <cstdio>
+#include <stdexcept>
+#include <cmath>
 #include <cstdint>
-#include <algorithm>
 #include <cassert>
-#include <iostream>
 
 
 template <typename ValueType>
@@ -53,8 +54,15 @@ void Binary<ValueType, BPV>::packTo(const ValueType* values, size_t nVals, int d
     const ValueType decimal = sp_power<ValueType>(decimalScaleFactor, 10);
     const ValueType divisor = sp_power<ValueType>(-binaryScaleFactor, 2);
 
+    // Coded values must be in [0, 2^BPV): others (NaN, values below the reference value or beyond the
+    // range of BPV bits) are replaced by 0, and reported after the loop
+    const double limit = std::ldexp(1.0, BPV);
+    bool inRange = true;
     auto encode = [&](auto val) {
-        return ((val * decimal) - referenceValue) * divisor + 0.5;
+        const double coded = static_cast<double>(((val * decimal) - referenceValue) * divisor + 0.5);
+        const bool ok = (coded >= 0.0) & (coded < limit);
+        inRange &= ok;
+        return ok ? coded : 0.0;
     };
 
     // The block codec reads and writes whole words: it handles all values except the last block,
@@ -70,6 +78,20 @@ void Binary<ValueType, BPV>::packTo(const ValueType* values, size_t nVals, int d
     BitPacking<BPV> bv;
     for (; nval < nVals; nbit += BPV, ++nval) {
         bv.encode(&out[nbit / 8], nbit % 8, encode(values[nval]));
+    }
+
+    if (!inRange) {
+        for (size_t i = 0; i < nVals; ++i) {
+            const double coded = static_cast<double>(((values[i] * decimal) - referenceValue) * divisor + 0.5);
+            if (!(coded >= 0.0 && coded < limit)) {
+                char message[256];
+                std::snprintf(message, sizeof(message),
+                              "Simple packing: value %.10g at index %zu cannot be packed with %d bits per value "
+                              "(reference value %.10g, binary scale factor %d, decimal scale factor %d)",
+                              static_cast<double>(values[i]), i, static_cast<int>(BPV), static_cast<double>(referenceValue), binaryScaleFactor, decimalScaleFactor);
+                throw std::runtime_error(message);
+            }
+        }
     }
 }
 
