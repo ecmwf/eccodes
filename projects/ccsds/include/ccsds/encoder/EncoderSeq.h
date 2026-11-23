@@ -406,27 +406,9 @@ public:
     }
 
 
-    // RSI
-    void encodeRefFullRsi(const Span<ValueType> data, BitBuffer& buffer)
-    {
-        preprocessor_.encode(data, Span<DeltaType>(preprocessBuffer_.data(), data.size()));
-
-        SplitBlock<DeltaType> segmentBlocks(Span<DeltaType>(preprocessBuffer_.data(), data.size()), segmentSizeV_);
-        if (segmentBlocks.nFull() == 0 && segmentBlocks.nPart() == 1) {
-            encodeRefPartSegment(segmentBlocks.part(), buffer);
-        }
-        else {
-            encodeRefFullSegment(segmentBlocks.full(0), buffer);
-            for (size_t i = 1; i < segmentBlocks.nFull(); ++i) {
-                encodeAltFullSegment(segmentBlocks.full(i), buffer);
-            }
-            if (segmentBlocks.hasPart()) {
-                encodeAltPartSegment(segmentBlocks.part(), buffer);
-            }
-        }
-    }
-
-    void encodeRefPartRsi(const Span<ValueType> data, BitBuffer& buffer)
+    // RSI: preprocess the values and encode their segments (the first segment carries the
+    // reference, the rest are alternatives). A trailing partial RSI is encoded the same way.
+    void encodeRsi(const Span<ValueType> data, BitBuffer& buffer)
     {
         preprocessor_.encode(data, Span<DeltaType>(preprocessBuffer_.data(), data.size()));
 
@@ -452,10 +434,10 @@ public:
         BitBuffer buffer(target);
 
         for (size_t i = 0; i < rsiBlocks.nFull(); ++i) {
-            encodeRefFullRsi(rsiBlocks.full(i), buffer);
+            encodeRsi(rsiBlocks.full(i), buffer);
         }
         if (rsiBlocks.hasPart()) {
-            encodeRefPartRsi(rsiBlocks.part(), buffer);
+            encodeRsi(rsiBlocks.part(), buffer);
         }
 
         return (buffer.bitPos() + 7) / 8;
