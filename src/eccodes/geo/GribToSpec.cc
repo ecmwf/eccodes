@@ -53,6 +53,44 @@ namespace
 {
 
 
+// A message, of its keys of known wrongly encoded messages fixed (by md5GridSection, see GribToSpec::fixes_), so that
+// the processing of keys (e.g. snapping to a grid, or the scanning of projected grids) starts from the fixed values
+class Message
+{
+public:
+    Message(codes_handle* h, const GribToSpec::cache_type* fixes = nullptr) :
+        h_(h), fixes_(fixes) {}
+
+    operator codes_handle*() const { return h_; }
+
+    int get_double(const char* key, double* value) const
+    {
+        if (fixes_ != nullptr) {
+            if (auto it = fixes_->find(key); it != fixes_->end() && std::holds_alternative<double>(it->second)) {
+                *value = std::get<double>(it->second);
+                return CODES_SUCCESS;
+            }
+        }
+        return codes_get_double(h_, key, value);
+    }
+
+    int get_long(const char* key, long* value) const
+    {
+        if (fixes_ != nullptr) {
+            if (auto it = fixes_->find(key); it != fixes_->end() && std::holds_alternative<long>(it->second)) {
+                *value = std::get<long>(it->second);
+                return CODES_SUCCESS;
+            }
+        }
+        return codes_get_long(h_, key, value);
+    }
+
+private:
+    codes_handle* h_;
+    const GribToSpec::cache_type* fixes_;
+};
+
+
 struct Condition
 {
     Condition() = default;
@@ -429,18 +467,18 @@ const char* get_key(const std::string& name, codes_handle* h)
 }
 
 
-double get_double(codes_handle* h, const char* key)
+double get_double(const Message& h, const char* key)
 {
     double value = 0;
-    CHECK_CALL(codes_get_double(h, key, &value));
+    CHECK_CALL(h.get_double(key, &value));
     return value;
 }
 
 
-long get_long(codes_handle* h, const char* key)
+long get_long(const Message& h, const char* key)
 {
     long value = 0;
-    CHECK_CALL(codes_get_long(h, key, &value));
+    CHECK_CALL(h.get_long(key, &value));
     return value;
 }
 
@@ -465,40 +503,13 @@ std::string get_string(codes_handle* h, const char* key)
 }
 
 
-bool get_bool(codes_handle* h, const char* key)
+bool get_bool(const Message& h, const char* key)
 {
     long l = 0;
-    CHECK_CALL(codes_get_long(h, key, &l));
+    CHECK_CALL(h.get_long(key, &l));
 
     return l != 0;
 }
-
-
-// A message, of its keys of known wrongly encoded messages fixed (by md5GridSection, see GribToSpec::fixes_), so that
-// the processing of keys (e.g. snapping to a grid) starts from the fixed values
-class Message
-{
-public:
-    Message(codes_handle* h, const GribToSpec::cache_type* fixes = nullptr) :
-        h_(h), fixes_(fixes) {}
-
-    operator codes_handle*() const { return h_; }
-
-    int get_double(const char* key, double* value) const
-    {
-        if (fixes_ != nullptr) {
-            if (auto it = fixes_->find(key); it != fixes_->end() && std::holds_alternative<double>(it->second)) {
-                *value = std::get<double>(it->second);
-                return CODES_SUCCESS;
-            }
-        }
-        return codes_get_double(h_, key, value);
-    }
-
-private:
-    codes_handle* h_;
-    const GribToSpec::cache_type* fixes_;
-};
 
 
 template <typename T>
@@ -1086,7 +1097,7 @@ void set_figure(codes_handle* h, Custom& projection)
 
 /// Scanning order (eckit::geo::order::Scan) of the grid lengths dx, dy (directions) and the scanning mode, empty if as
 /// the directions (i then j, not alternating)
-std::string scanning_order(codes_handle* h, double dx, double dy)
+std::string scanning_order(const Message& h, double dx, double dy)
 {
     const auto alternating = get_long(h, "alternativeRowScanning") != 0;
     const auto j_first = get_long(h, "jPointsAreConsecutive") != 0;
@@ -1102,7 +1113,7 @@ std::string scanning_order(codes_handle* h, double dx, double dy)
 
 
 /// The grid on the projection plane; the false easting/northing places the first grid point at (0, 0), to millimetres
-Custom* make_projected_spec(codes_handle* h, const Projected& p)
+Custom* make_projected_spec(const Message& h, const Projected& p)
 {
     std::unique_ptr<Custom> projection(p.projection(h));
     set_figure(h, *projection);
@@ -1265,6 +1276,14 @@ GribToSpec::GribToSpec(codes_handle* h, bool rotated) :
             { "379bbee20b78c58b9e86e1377c14a3da", { { "longitudeOfLastGridPointInDegrees", 358.125 } } },                                                    // N96, U
             { "2e0f685a14d8ad3615dbc7252d5ebbb9", { { "longitudeOfLastGridPointInDegrees", 359.0625 } } },                                                   // N96, V
             { "fd45c3ec374370a77222de303aa00a23", { { "latitudeOfFirstGridPointInDegrees", -89.8125 }, { "latitudeOfLastGridPointInDegrees", 89.8125 } } },  // N320, T
+
+            // gridType=lambert, centre=lfpw (AROME, MIR-474): the first grid point encoded is the bottom-left, the values are
+            // from the top-left (jScansPositively=0, as encoded), so the first grid point is the top-left
+            { "6ae0076681a2541abe053ab52fa60f30", { { "latitudeOfFirstGridPointInDegrees", 53.032778126846 }, { "longitudeOfFirstGridPointInDegrees", -11.748097150445 } } },  // edition=1, t, with vertical coordinates (pv)
+            { "0b00a3731ad8fc6c1e56117856f30290", { { "latitudeOfFirstGridPointInDegrees", 53.032778126846 }, { "longitudeOfFirstGridPointInDegrees", -11.748097150445 } } },  // edition=1, t, without
+            { "bd6c2a9aaf0a867a8bb518bac54e492d", { { "latitudeOfFirstGridPointInDegrees", 53.006934365860 }, { "longitudeOfFirstGridPointInDegrees", -11.778095604516 } } },  // edition=1, orography, with vertical coordinates (pv)
+            { "7fd5f86fd008da485ab5c678f224513f", { { "latitudeOfFirstGridPointInDegrees", 53.006934365860 }, { "longitudeOfFirstGridPointInDegrees", -11.778095604516 } } },  // edition=1, orography, without
+            { "5597b074a13affb1dbd02b1462272dd6", { { "latitudeOfFirstGridPointInDegrees", 51.556562629092 }, { "longitudeOfFirstGridPointInDegrees", -8.398972389112 } } },   // edition=2, skt
         };
 
         char buffer[34];
@@ -1283,7 +1302,7 @@ GribToSpec::GribToSpec(codes_handle* h, bool rotated) :
 
     if (std::string type; get("gridType", type)) {
         if (const auto& p = projected().find(type); p != projected().end()) {
-            spec_.reset(make_projected_spec(h, p->second));
+            spec_.reset(make_projected_spec(Message(h, &fixes_), p->second));
             return;
         }
 
