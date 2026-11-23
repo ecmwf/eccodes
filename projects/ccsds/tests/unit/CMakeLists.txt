@@ -1,0 +1,15 @@
+# Unit tests of the SpAec components
+
+ccsds_add_test(code_option_no_compression)
+ccsds_add_test(code_option_second_extension)
+ccsds_add_test(code_option_zero_block)
+ccsds_add_test(code_option_split_sample)
+ccsds_add_test(predictive_preprocessor)
+ccsds_add_test(bit_packing)
+ccsds_add_test(zb_encode_decode)
+ccsds_add_test(se_encode_decode)
+ccsds_add_test(ccsds_spec_compliance)
+ccsds_add_test(encode_decode_sweep)
+ccsds_add_test(bitbuffer_test)
+
+ccsds_label_tests(unit)

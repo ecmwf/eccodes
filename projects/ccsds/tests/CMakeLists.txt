@@ -6,7 +6,7 @@ set(CCSDS_TEST_PREFIX "ccsds_")
 # Always compiled with -march=native -mtune=native -O3 (release mode).
 function(ccsds_add_test name)
   cmake_parse_arguments(ARG "" "" "SOURCES;LIBS" ${ARGN})
-  add_executable(${name} ${name}.cc ${ARG_SOURCES})
+  add_executable(${name} ${CMAKE_CURRENT_SOURCE_DIR}/${name}.cc ${ARG_SOURCES})
   target_link_libraries(${name} PRIVATE ccsds::spaec ${ARG_LIBS})
   target_compile_options(${name} PRIVATE -march=native -mtune=native -O3)
   target_compile_definitions(${name} PRIVATE NDEBUG)
@@ -15,32 +15,16 @@ endfunction()
 
 find_package(Threads REQUIRED)
 
-# --- Pure SpAec tests (no external dependencies) ---
+# ccsds_label_tests(<label>)
+# Labels all tests registered in the current directory with <label> and "ccsds"
+# (select them with ctest -L <label>).
+function(ccsds_label_tests label)
+  get_property(tests DIRECTORY PROPERTY TESTS)
+  if(tests)
+    set_tests_properties(${tests} PROPERTIES LABELS "${label};ccsds")
+  endif()
+endfunction()
 
-ccsds_add_test(code_option_no_compression)
-ccsds_add_test(code_option_second_extension)
-ccsds_add_test(code_option_zero_block)
-ccsds_add_test(code_option_split_sample)
-ccsds_add_test(predictive_preprocessor)
-ccsds_add_test(bit_packing)
-ccsds_add_test(zb_encode_decode)
-ccsds_add_test(se_encode_decode)
-ccsds_add_test(ccsds_spec_compliance)
-ccsds_add_test(encode_decode_sweep)
-ccsds_add_test(bitbuffer_test)
-ccsds_add_test(decode_zero_block_run)
-ccsds_add_test(decode_truncated)
-ccsds_add_test(parameter_validation)
-ccsds_add_test(encode_target_buffer)
-ccsds_add_test(encode_value_range)
-ccsds_add_test(encode_concurrent LIBS Threads::Threads)
-ccsds_add_test(decode_parallel LIBS Threads::Threads)
-ccsds_add_test(encode_parallel LIBS Threads::Threads)
-ccsds_add_test(stats_empty)
-
-# Out of range access must be detected in debug builds: compiled with assertions
-add_executable(span_bounds span_bounds.cc)
-target_link_libraries(span_bounds PRIVATE ccsds::spaec)
-target_compile_options(span_bounds PRIVATE -UNDEBUG)
-add_test(NAME ${CCSDS_TEST_PREFIX}span_bounds COMMAND span_bounds)
-
+# Unit tests of the components; regression tests for bugs that were found
+add_subdirectory(unit)
+add_subdirectory(regression)
