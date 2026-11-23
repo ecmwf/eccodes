@@ -19,7 +19,18 @@ else()
 endif()
 
 option(CCSDS_BUILD_TESTS "Build the ccsds tests" ${CCSDS_TOP_LEVEL})
+option(CCSDS_BUILD_FUZZERS "Build the ccsds libFuzzer fuzzers (requires Clang)" OFF)
 option(CCSDS_INSTALL "Install the ccsds headers and CMake package" ${CCSDS_TOP_LEVEL})
+
+# libFuzzer + ASan + UBSan instrumentation for the fuzzers and the code they exercise
+if(CCSDS_BUILD_FUZZERS)
+  if(NOT CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    message(FATAL_ERROR "CCSDS_BUILD_FUZZERS requires Clang (found ${CMAKE_CXX_COMPILER_ID})")
+  endif()
+  set(CCSDS_FUZZER_COMPILE_OPTIONS
+    -fsanitize=fuzzer,address,undefined -fno-sanitize-recover=undefined -g -O1)
+  set(CCSDS_FUZZER_LINK_OPTIONS -fsanitize=fuzzer,address,undefined)
+endif()
 
 if(CCSDS_TOP_LEVEL)
   set(CMAKE_CXX_STANDARD 20)
@@ -44,6 +55,12 @@ if(CCSDS_BUILD_TESTS)
     enable_testing()
   endif()
   add_subdirectory(tests)
+endif()
+
+# --- libFuzzer fuzzers (Clang only; see CCSDS_FUZZER_* options above) ---
+
+if(CCSDS_BUILD_FUZZERS)
+  add_subdirectory(tests/fuzz)
 endif()
 
 # --- Installation ---
