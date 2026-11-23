@@ -6,7 +6,6 @@
 #include <random>
 
 #include "simple_packing/BitPacking.h"
-#include "simple_packing/Utils.h"
 
 
 template <uint8_t BPV, typename ValueType = typename BitPacking<BPV>::ValueType>
