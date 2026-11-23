@@ -544,8 +544,8 @@ bool is_set_by_template(const Grid& grid)
 
 void set_figure_and_values(codes_handle* h, const Grid& grid)
 {
-    auto set_long = [h](const char* key, long value) { CODES_CHECK(codes_set_long(h, key, value), key); };
-    auto set_double = [h](const char* key, double value) { CODES_CHECK(codes_set_double(h, key, value), key); };
+    auto set_long = [h](const char* key, long value) { CHECK_ERROR(codes_set_long(h, key, value), key); };
+    auto set_double = [h](const char* key, double value) { CHECK_ERROR(codes_set_double(h, key, value), key); };
 
     // the figure, as other grids
     grib_info info;
@@ -561,13 +561,13 @@ void set_figure_and_values(codes_handle* h, const Grid& grid)
     set_long("numberOfValues", n);
 
     const std::vector<double> values(static_cast<size_t>(n), 0.);
-    CODES_CHECK(codes_set_double_array(h, "values", values.data(), values.size()), "values");
+    CHECK_ERROR(codes_set_double_array(h, "values", values.data(), values.size()), "values");
 }
 
 
 void set_space_view(codes_handle* h, const Grid& grid)
 {
-    auto set_long = [h](const char* key, long value) { CODES_CHECK(codes_set_long(h, key, value), key); };
+    auto set_long = [h](const char* key, long value) { CHECK_ERROR(codes_set_long(h, key, value), key); };
 
     // as GribToSpec: the grid parameters as GRIB, the scanning mode as the order
     const auto& p = dynamic_cast<const ::eckit::geo::grid::regular::SpaceView&>(grid).parameters();
@@ -607,8 +607,8 @@ void set_by_template(codes_handle* h, const Grid& grid)
         return;
     }
 
-    auto set_long = [h](const char* key, long value) { CODES_CHECK(codes_set_long(h, key, value), key); };
-    auto set_double = [h](const char* key, double value) { CODES_CHECK(codes_set_double(h, key, value), key); };
+    auto set_long = [h](const char* key, long value) { CHECK_ERROR(codes_set_long(h, key, value), key); };
+    auto set_double = [h](const char* key, double value) { CHECK_ERROR(codes_set_double(h, key, value), key); };
     auto centimetres = [](double metres) { return std::lround(metres * 100.); };
 
     const auto& g = dynamic_cast<const ::eckit::geo::grid::Regular&>(grid);
@@ -728,7 +728,7 @@ codes_handle* GribFromSpec::set(const codes_handle* h, const Spec& spec, const s
         set_by_template(result, *grid);
 
         for (const auto& [key, value] : extra) {
-            CODES_CHECK(codes_set_long(result, key.c_str(), value), key.c_str());
+            CHECK_ERROR(codes_set_long(result, key.c_str(), value), key.c_str());
         }
 
         return result;
@@ -738,9 +738,9 @@ codes_handle* GribFromSpec::set(const codes_handle* h, const Spec& spec, const s
 
     // converted first, so the keys (the figure too) are of that edition, as by a sample of it
     long edition = 0;
-    CODES_CHECK(codes_get_long(h, "edition", &edition), nullptr);
+    CHECK_CALL(codes_get_long(h, "edition", &edition));
     if (const auto e = encoding_edition(*grid, edition); e != edition) {
-        CODES_CHECK(codes_set_long(const_cast<codes_handle*>(h), "edition", e), nullptr);
+        CHECK_CALL(codes_set_long(const_cast<codes_handle*>(h), "edition", e));
         edition = e;
     }
     const bool has_figure = codes_is_defined(h, "shapeOfTheEarth") != 0;
@@ -811,22 +811,13 @@ codes_handle* GribFromSpec::set(const codes_handle* h, const Spec& spec, const s
         }
     }
 
-    try {
-        auto* result = const_cast<codes_handle*>(h);
-        if (auto err = grib_set_from_grid_spec(result, &info.grid, &info.packing); err != CODES_SUCCESS) {
-            grib_context_log(h->context, GRIB_LOG_ERROR, "GribFromSpec::set: %s", grib_get_error_message(err));
-            return nullptr;
-        }
-
-        // grib_handle_unique_ptr result(codes_grib_util_set_spec(const_cast<codes_handle*>(h), &info.grid, &info.packing, flags, nullptr, 0, &err));
-
-        return result;
-    }
-    catch (...) {
-        throw;
+    auto* result = const_cast<codes_handle*>(h);
+    if (auto err = grib_set_from_grid_spec(result, &info.grid, &info.packing); err != CODES_SUCCESS) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "GribFromSpec::set: %s", grib_get_error_message(err));
+        return nullptr;
     }
 
-    // never reached, but for completeness
+    return result;
 }
 
 
