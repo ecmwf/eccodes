@@ -11,7 +11,11 @@
 // The new implementation of the CCSDS packing: the packing parameters are computed with the
 // simple_packing library (projects/simple_packing) and the data are coded with SpAec
 // (projects/spaec). The parameters and the coded data are the same as those of the legacy
-// implementation (DataCcsdsPackingLegacy.cc).
+// implementation (DataCcsdsPackingLegacy.cc), with one intended exception: with 32 bits per value
+// and optimizeScaleFactor=1, legacy grib_optimize_decimal_factor stores the largest coded value in
+// an int, which overflows for values of 2^31 and more (those decimal scale factors are never
+// chosen); BinDecOptimizer uses long and can choose a decimal scale factor with more precision.
+// The selection: ECCODES_USE_SPAEC=1 (see DataCcsdsPacking.cc); ECCODES_USE_SP is not needed.
 
 #include "DataCcsdsPacking.h"
 
