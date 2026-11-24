@@ -18,5 +18,5 @@ jobs:
     steps:
       - uses: ecmwf/ci-infrastructure/actions/retry-scheduled-run@main
         with:
-          client-id: ${{ secrets.CI_DISPATCHER_APP_CLIENT_ID }}
+          client-id: ${{ vars.CI_DISPATCHER_APP_CLIENT_ID }}
           app-private-key: ${{ secrets.CI_DISPATCHER_APP_PRIVATE_KEY }}
