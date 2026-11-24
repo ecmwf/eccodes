@@ -1,0 +1,136 @@
+// Unit tests of the range checks of simple_packing derived from regression tests:
+// - pack_value_range: sp_minmax gives NaN, NaN if any value is NaN or infinite, at any position
+//   (every lane, the first value, the tail); it ignored NaN
+// - field_range: check_data_values_range rejects ranges the optimisers cannot handle (minimum >
+//   maximum, NaN, infinity, +-DBL_MAX)
+// - reference_value_range: nearest_smaller_value gives no value beyond the float range or for NaN,
+//   and exact values at the boundaries
+// - scale_factor_range: Parameters is fully initialised (the constructor with values ignored
+//   isConstantField)
+#include <cfloat>
+#include <cmath>
+#include <iostream>
+#include <cstring>
+#include <limits>
+#include <new>
+#include <stdexcept>
+#include <string>
+#include <vector>
+
+#include "simple_packing/Parameters.h"
+#include "simple_packing/Utils.h"
+
+static int failures = 0;
+
+static void check(bool ok, const std::string& what)
+{
+    if (!ok) {
+        std::cerr << "FAIL: " << what << '\n';
+        ++failures;
+    }
+}
+
+template <typename T>
+static void minmax()
+{
+    const T nan = std::numeric_limits<T>::quiet_NaN();
+    const T inf = std::numeric_limits<T>::infinity();
+    for (size_t n = 1; n <= 20; ++n) {
+        std::vector<T> values(n);
+        for (size_t i = 0; i < n; ++i) {
+            values[i] = static_cast<T>((i * 37) % 11) - T(5);
+        }
+        const auto [mn, mx] = sp_minmax(values.data(), n);
+        T emn = values[0], emx = values[0];
+        for (T v : values) {
+            emn = std::min(emn, v);
+            emx = std::max(emx, v);
+        }
+        check(mn == emn && mx == emx, "sp_minmax of " + std::to_string(n) + " values");
+        for (size_t pos = 0; pos < n; ++pos) {
+            for (T bad : { nan, inf, -inf }) {
+                std::vector<T> w = values;
+                w[pos] = bad;
+                const auto [a, b] = sp_minmax(w.data(), n);
+                check(std::isnan(a) && std::isnan(b), "sp_minmax with " + std::to_string(bad) + " at " + std::to_string(pos) + " of " + std::to_string(n) + ": " +
+                                                           std::to_string(a) + ", " + std::to_string(b));
+            }
+        }
+    }
+}
+
+static bool rangeRejected(double mn, double mx)
+{
+    try {
+        check_data_values_range(mn, mx);
+    }
+    catch (const std::exception&) {
+        return true;
+    }
+    return false;
+}
+
+static void dataRange()
+{
+    const double inf = std::numeric_limits<double>::infinity();
+    const double nan = std::numeric_limits<double>::quiet_NaN();
+    check(!rangeRejected(-1, 1) && !rangeRejected(0, 0) && !rangeRejected(-1e300, 1e300), "valid ranges must be accepted");
+    check(rangeRejected(1, -1), "minimum > maximum must be rejected");
+    check(rangeRejected(nan, 1) && rangeRejected(1, nan) && rangeRejected(nan, nan), "NaN must be rejected");
+    check(rangeRejected(-inf, 1) && rangeRejected(1, inf), "infinity must be rejected");
+    check(rangeRejected(-DBL_MAX, 0) && rangeRejected(0, DBL_MAX), "+-DBL_MAX must be rejected");
+}
+
+static void referenceValue()
+{
+    const double inf = std::numeric_limits<double>::infinity();
+    for (double v : { 1e39, -1e39, inf, -inf, std::nan(""), static_cast<double>(FLT_MAX) * 1.0000001 }) {
+        check(!nearest_smaller_value(v).has_value(), "nearest float <= " + std::to_string(v) + " must not exist");
+    }
+    struct Case
+    {
+        double value, expected;
+    };
+    // Like the legacy ecCodes table: no denormals (the smallest positive value is FLT_MIN)
+    const Case exact[] = { { FLT_MAX, FLT_MAX }, { -FLT_MAX, -FLT_MAX }, { 0.0, 0.0 }, { 1.5, 1.5 }, { -2.0, -2.0 }, { FLT_MIN, FLT_MIN }, { 0x1p-149, 0.0 } };
+    for (const auto& c : exact) {
+        const auto r = nearest_smaller_value(c.value);
+        check(r.has_value() && *r == c.expected, "nearest float <= " + std::to_string(c.value));
+    }
+    // 0.1 is not a float: the largest float below it
+    const auto r = nearest_smaller_value(0.1);
+    const float below = std::nextafter(0.1f, 0.0f);  // (float)0.1 is above 0.1
+    check(r.has_value() && *r == static_cast<double>(below), "nearest float <= 0.1");
+}
+
+static void parameters()
+{
+    // Constructed in memory that is not zero: members without an initialiser keep the 0xAB bytes
+    alignas(Parameters) unsigned char memory[sizeof(Parameters)];
+    std::memset(memory, 0xAB, sizeof(memory));
+    const Parameters& p = *new (memory) Parameters;
+    check(p.bitsPerValue() == 0 && p.decimalScaleFactor() == 0 && p.binaryScaleFactor() == 0 && p.referenceValue() == 0.0 && !p.isConstantField(),
+          "a default-constructed Parameters must be initialised");
+    // The constructor with values must take isConstantField (it ignored it and left it uninitialised)
+    for (bool constant : { false, true }) {
+        std::memset(memory, 0xAB, sizeof(memory));
+        const Parameters& q = *new (memory) Parameters(16, 2, -3, 1.5, constant);
+        check(q.bitsPerValue() == 16 && q.decimalScaleFactor() == 2 && q.binaryScaleFactor() == -3 && q.referenceValue() == 1.5 && q.isConstantField() == constant,
+              std::string("Parameters(16, 2, -3, 1.5, ") + (constant ? "true" : "false") + ")");
+    }
+}
+
+int main()
+{
+    minmax<double>();
+    minmax<float>();
+    dataRange();
+    referenceValue();
+    parameters();
+    if (failures != 0) {
+        std::cerr << failures << " checks failed\n";
+        return 1;
+    }
+    std::cout << "OK\n";
+    return 0;
+}
