@@ -625,5 +625,4 @@ protected:
     std::vector<ValueType> valuesBuf_;
     mutable std::vector<uint8_t> paddedSource_;
     size_t bitsDecoded_ = 0;
-
 };

@@ -21,7 +21,9 @@ namespace
 
 uint8_t blockSizeIndex(uint8_t blockSize)
 {
-    return blockSize == 8 ? 0 : blockSize == 16 ? 1 : blockSize == 32 ? 2 : 3;
+    return blockSize == 8 ? 0 : blockSize == 16 ? 1
+                          : blockSize == 32     ? 2
+                                                : 3;
 }
 
 void writeSeed(const std::string& dir, const std::string& name, uint8_t bpv, uint8_t blockSize,
@@ -103,8 +105,10 @@ int main(int argc, char** argv)
     {
         std::vector<uint32_t> values;
         for (int rep = 0; rep < 8; ++rep) {
-            for (int i = 0; i < 7 * 8; ++i) values.push_back(0);
-            for (int i = 0; i < 8; ++i) values.push_back(200 + static_cast<uint32_t>(rep));
+            for (int i = 0; i < 7 * 8; ++i)
+                values.push_back(0);
+            for (int i = 0; i < 8; ++i)
+                values.push_back(200 + static_cast<uint32_t>(rep));
         }
         writeSeed(dir, "zero_runs", 8, 8, 4096, static_cast<uint16_t>(values.size()), 4, values);
     }
@@ -116,7 +120,8 @@ int main(int argc, char** argv)
     // No compression only: alternating extreme values defeat FS and SE
     {
         std::vector<uint32_t> values(64);
-        for (size_t i = 0; i < values.size(); ++i) values[i] = (i % 2) ? 255u : 0u;
+        for (size_t i = 0; i < values.size(); ++i)
+            values[i] = (i % 2) ? 255u : 0u;
         writeSeed(dir, "nc_only", 8, 8, 2, 64, 2, values);
     }
 

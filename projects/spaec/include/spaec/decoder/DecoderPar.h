@@ -103,7 +103,6 @@ public:
             throw;
         }
         waitAll();
-
     }
 
     DecoderPar(uint8_t bpv, uint8_t block_size, uint16_t rsiSize, CodeOptionSet codeOptionSet, size_t nThreads = 3) :
