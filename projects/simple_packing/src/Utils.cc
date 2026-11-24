@@ -421,7 +421,10 @@ std::optional<long> get_binary_scale_factor(double max, double min, long bpval)
     if (scale < -last) {
         return std::nullopt;  // the range is too small even with the smallest binary scale factor
     }
-    assert(scale <= last);
+    if (scale > last) {  // ecCodes asserts this; an assert would be compiled out (NDEBUG)
+        throw std::range_error("Simple packing: the range of the values is too large (binary scale factor " + std::to_string(scale) +
+                               " beyond " + std::to_string(last) + ")");
+    }
     return scale;
 }
 
