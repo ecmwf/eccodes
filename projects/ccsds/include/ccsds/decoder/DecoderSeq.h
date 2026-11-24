@@ -557,6 +557,26 @@ public:
         setStats(nValues, source.size());
     }
 
+    // Decodes nValues values RSI by RSI and passes each decoded RSI to
+    // sink(const ValueType* values, size_t count, size_t offset): the caller can convert whole
+    // RSIs in (vectorizable) loops instead of one callback per value
+    template <typename SpanFunc>
+    void decodeSpans(Span<uint8_t> source, size_t nValues, SpanFunc&& sink)
+    {
+        const BitBuffer buffer = makeBuffer(source);
+        buffer.checkPos();
+        valuesBuf_.resize(std::min(nValues, rsiSizeV_));
+        for (size_t offset = 0; offset < nValues; offset += rsiSizeV_) {
+            const size_t count = std::min(rsiSizeV_, nValues - offset);
+            // A trailing partial RSI may end with a zero-block run beyond the requested values
+            const ValueType reference = decodeRsiRaw(buffer, count, count < rsiSizeV_ ? rsiSizeB_ : 0);
+            preprocessor_.decode(Span<DeltaType>(rsiBuf_.data(), count), reference, Span<ValueType>(valuesBuf_.data(), count));
+            sink(static_cast<const ValueType*>(valuesBuf_.data()), count, offset);
+        }
+        buffer.checkPos();
+        setStats(nValues, source.size());
+    }
+
     // Fused decode of nValues values starting at bitOffset (for parallel decoding).
     // paddedBuffer must be followed by BitBuffer::guardBytes readable bytes (see makeBuffer).
     template <typename OutputFunc>
@@ -619,6 +639,7 @@ protected:
 
     mutable std::vector<ValueType> rsiBuf_;
     mutable std::vector<ValueType> paddedSegmentBuf_;
+    std::vector<ValueType> valuesBuf_;
     mutable std::vector<uint8_t> paddedSource_;
     size_t bitsDecoded_ = 0;
 

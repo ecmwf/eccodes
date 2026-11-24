@@ -1,6 +1,8 @@
 #pragma once
 
+#include <algorithm>
 #include <cmath>
+#include <cstddef>
 #include <cstdint>
 #include <type_traits>
 
@@ -69,18 +71,73 @@ class PredictivePreprocessingDecodeFast : public Preprocessor<ValueType, DeltaTy
 public:
     explicit PredictivePreprocessingDecodeFast(uint8_t bpv) : Preprocessor<ValueType, DeltaType>(bpv) {}
 
+    // The mapped value m of a sample is the zigzag code of its difference to the previous sample
+    // whenever m <= 2 * theta, theta = min(previous - xMin, xMax - previous) (the common case);
+    // otherwise the difference depends on which limit is closer. decode() handles chunks of
+    // values first assuming the common case for all of them (a vectorizable zigzag decoding and
+    // a prefix sum without branches), then checks that assumption (vectorizable) and decodes a
+    // chunk where it does not hold again with the exact rule.
     void decode(Span<DeltaType> mapped_span, ValueType reference, Span<ValueType> data_span)
     {
         const DeltaType* __restrict__ mapped = mapped_span.data();
         ValueType* __restrict__ data = data_span.data();
         const size_t n = mapped_span.size();
-
+        if (n == 0) {
+            return;
+        }
         data[0] = reference;
 
+        if constexpr (std::is_same_v<DecodeFunc, Identity<DeltaType>> && std::is_same_v<ValueType, DeltaType>) {
+            const ValueTypePlus xMin = this->xMin_;
+            const ValueTypePlus xMax = this->xMax_;
+            constexpr size_t chunk = 64;
+            ValueTypePlus diff[chunk];
+            bool speculate = true;  // false after a chunk with uncommon values (likely more follow)
+            for (size_t start = 1; start < n; start += chunk) {
+                const size_t count = std::min(chunk, n - start);
+                if (!speculate) {
+                    speculate = decodeExact(mapped, data, start, start + count);
+                    continue;
+                }
+                const DeltaType* m = mapped + start;
+                ValueType* x = data + start;
+                for (size_t j = 0; j < count; ++j) {
+                    const ValueTypePlus mj = m[j];
+                    diff[j] = (mj >> 1) ^ -(mj & 1);
+                }
+                ValueTypePlus prev = x[-1];
+                for (size_t j = 0; j < count; ++j) {
+                    prev += diff[j];
+                    x[j] = static_cast<ValueType>(prev);
+                }
+                // The first value that does not follow the common case makes all later
+                // values of the chunk wrong: it is enough to find whether there is one
+                bool common = true;
+                for (size_t j = 0; j < count; ++j) {
+                    const ValueTypePlus p = x[static_cast<ptrdiff_t>(j) - 1];
+                    const ValueTypePlus theta = std::min(p - xMin, xMax - p);
+                    common &= static_cast<ValueTypePlus>(m[j]) <= 2 * theta;
+                }
+                if (!common) [[unlikely]] {
+                    speculate = decodeExact(mapped, data, start, start + count);
+                }
+            }
+        }
+        else {
+            decodeExact(mapped, data, 1, n);
+        }
+    }
+
+private:
+    // Decodes data[from, to) with the exact rule, given data[from - 1]. Returns true if all
+    // values followed the common case.
+    bool decodeExact(const DeltaType* __restrict__ mapped, ValueType* __restrict__ data, size_t from, size_t to)
+    {
+        bool common = true;
         const DeltaType xMin = this->xMin_;
         const DeltaType xMax = this->xMax_;
 
-        for (size_t i = 1; i < n; ++i) {
+        for (size_t i = from; i < to; ++i) {
             const DeltaType predicted = data[i - 1];
             const DeltaType m = mapped[i];
             const DeltaType theta = std::min(
@@ -94,6 +151,7 @@ public:
                 decoded = (half ^ -neg) + neg;
             }
             else {
+                common = false;
                 ValueTypePlus mag = static_cast<ValueTypePlus>(m - theta);
                 ValueTypePlus left_smaller = static_cast<ValueTypePlus>(
                     (predicted - xMin) < (xMax - predicted));
@@ -102,8 +160,10 @@ public:
             data[i] = decodeFunc_(static_cast<DeltaType>(
                 static_cast<ValueTypePlus>(predicted) + decoded));
         }
+        return common;
     }
 
+public:
     // Fused decode: applies preprocessor + output function in one pass
     // avoiding the intermediate output array write/read
     template <typename OutputFunc>

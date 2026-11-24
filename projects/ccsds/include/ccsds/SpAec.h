@@ -242,9 +242,13 @@ private:
         }
         else {
             DecoderSeq<DeltaType, DeltaType> decoder{ bpv_, blockSize_, rsiSize_, CodeOptionSet::Basic };
-            decoder.decodeFused(source, target.size(),
-                                [&](DeltaType value, size_t idx) {
-                                    target[idx] = unmapper(value);
+            ValueType* out = target.data();
+            decoder.decodeSpans(source, target.size(),
+                                [&](const DeltaType* values, size_t count, size_t offset) {
+                                    ValueType* __restrict__ o = out + offset;
+                                    for (size_t j = 0; j < count; ++j) {
+                                        o[j] = unmapper(values[j]);
+                                    }
                                 });
             stats_ = decoder.getStats();
         }
