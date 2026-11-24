@@ -14,5 +14,6 @@ ccsds_add_test(bitbuffer_test)
 ccsds_add_test(bitbuffer_bounds)
 ccsds_add_test(zero_block_decode)
 ccsds_add_test(encoder_options)
+ccsds_add_test(value_mapping)
 
 ccsds_label_tests(unit)
