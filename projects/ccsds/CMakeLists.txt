@@ -50,6 +50,12 @@ check_cxx_compiler_flag("-fno-trapping-math" CCSDS_HAVE_NO_TRAPPING_MATH)
 if(CCSDS_HAVE_NO_TRAPPING_MATH)
   list(APPEND CCSDS_OPT_FLAGS -fno-trapping-math)
 endif()
+# Every floating-point operation rounded separately: with fused multiply-adds (available with
+# -march=native) the encoded values would depend on the build machine
+check_cxx_compiler_flag("-ffp-contract=off" CCSDS_HAVE_FP_CONTRACT_OFF)
+if(CCSDS_HAVE_FP_CONTRACT_OFF)
+  list(APPEND CCSDS_OPT_FLAGS -ffp-contract=off)
+endif()
 if(CCSDS_NATIVE_ARCH AND NOT CMAKE_CROSSCOMPILING)
   check_cxx_compiler_flag("-march=native" CCSDS_HAVE_MARCH_NATIVE)
   if(CCSDS_HAVE_MARCH_NATIVE)
