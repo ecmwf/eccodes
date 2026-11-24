@@ -200,6 +200,7 @@ enum class Policy
     Spec,    // shortest option, ties as in 3.7.4
     Random,  // any option (decodable, not optimal)
     NoRos,   // as Spec, but no ROS codeword in segments smaller than 64 blocks (3.5 NOTE)
+    SecondExtension,  // the second extension for every block that is not a zero block
 };
 
 // Lengths of the single-block options of a block (deltas[0] unused if ref)
@@ -307,7 +308,10 @@ static std::vector<uint8_t> refEncode(const std::vector<uint64_t>& x, const Para
                 const OptionLengths l = optionLengths(p, bd, ref);
                 char kind = 'N';
                 int k = 0;
-                if (policy == Policy::Random) {
+                if (policy == Policy::SecondExtension) {
+                    kind = 'E';
+                }
+                else if (policy == Policy::Random) {
                     // Any option of reasonable length (FS codewords of up to a few times the
                     // no-compression length)
                     std::vector<std::pair<char, int>> options{ { 'N', 0 } };
@@ -680,6 +684,56 @@ static void encodeAndDecode(const std::vector<uint64_t>& x, const Params& p, std
     }
 }
 
+// 3.4.2: transformed symbols gamma >= 2^n (here up to about 2^24, beyond the float square root
+// of a decoder)
+static void largeGamma()
+{
+    std::mt19937_64 rng(3);
+    for (unsigned n : { 16u, 32u }) {
+        for (uint64_t sum : { 2046u, 2047u, 2048u, 2049u, 4000u, 5791u }) {
+            for (uint64_t b : { uint64_t{ 0 }, uint64_t{ 1 }, sum / 2, sum }) {
+                // Samples whose deltas are (ref, 0 | a, b | 0, 0 | 0, 1) with a + b = sum
+                const Params p{ n, 8, 1, false };
+                const std::vector<uint64_t> deltas{ 0, 0, sum - b, b, 0, 0, 0, 1 };
+                std::vector<uint64_t> x(deltas.size());
+                x[0] = 12345;
+                for (size_t i = 1; i < x.size(); ++i)
+                    x[i] = unmapError(deltas[i], x[i - 1], p.xmax());
+                ++checks;
+                for (size_t i = 1; i < x.size(); ++i)
+                    if (mapError(x[i], x[i - 1], p.xmax()) != deltas[i])
+                        fail("largeGamma: field");
+                const std::vector<uint8_t> stream = refEncode(x, p, Policy::SecondExtension, rng);
+                const std::string what = "second extension, gamma " + std::to_string(static_cast<uint64_t>(gammaOf(sum - b, b))) + " " + p.str();
+                auto run = [&](auto sample) {
+                    using T = decltype(sample);
+                    const std::vector<T> expected(x.begin(), x.end());
+                    std::vector<T> decoded(x.size());
+                    Span<uint8_t> in(const_cast<uint8_t*>(stream.data()), stream.size());
+                    try {
+                        DecoderSeq<T, T>(static_cast<uint8_t>(n), 8, 1, CodeOptionSet::Basic).decode(in, Span<T>(decoded));
+                        ++checks;
+                        if (decoded != expected)
+                            fail("DecoderSeq " + what + ": other values");
+                        std::fill(decoded.begin(), decoded.end(), T{ 0 });
+                        DecoderPar<T, T>(static_cast<uint8_t>(n), 8, 1, CodeOptionSet::Basic, 2).decodeParallel(in, Span<T>(decoded), [](T v) { return v; });
+                        ++checks;
+                        if (decoded != expected)
+                            fail("DecoderPar " + what + ": other values");
+                    }
+                    catch (const std::exception& e) {
+                        fail("decoders " + what + ": " + e.what());
+                    }
+                };
+                if (n == 16)
+                    run(uint16_t{});
+                else
+                    run(uint32_t{});
+            }
+        }
+    }
+}
+
 // Test fields: noise of a given number of bits, runs of constant values (zero blocks, also across
 // segment and RSI boundaries), extreme values (the mapper's theta branch), small differences
 // (ties between options)
@@ -746,6 +800,7 @@ int main()
 {
     fsCodewords();
     idTables();
+    largeGamma();
 
     std::mt19937_64 rng(121);
     long kTies = 0;
