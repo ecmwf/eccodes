@@ -184,22 +184,22 @@ static uint64_t unmapError(uint64_t delta, uint64_t pred, uint64_t xmax)
 // One coded data set (CDS), for the checks of the encoder's choices
 struct Cds
 {
-    char kind;            // 'Z' zero block, 'E' second extension, 'S' split sample (k), 'N' no compression
-    int k = 0;            // split sample: k (0 is FS)
-    uint64_t blocks = 1;  // zero block: number of blocks
-    bool ros = false;     // zero block: remainder-of-segment codeword
-    bool ref = false;     // with reference sample
-    size_t segBlock = 0;  // index of the first block in its segment
-    size_t segLen = 0;    // blocks in its segment
-    uint64_t bits = 0;    // length
+    char kind;                     // 'Z' zero block, 'E' second extension, 'S' split sample (k), 'N' no compression
+    int k = 0;                     // split sample: k (0 is FS)
+    uint64_t blocks = 1;           // zero block: number of blocks
+    bool ros = false;              // zero block: remainder-of-segment codeword
+    bool ref = false;              // with reference sample
+    size_t segBlock = 0;           // index of the first block in its segment
+    size_t segLen = 0;             // blocks in its segment
+    uint64_t bits = 0;             // length
     std::vector<uint64_t> deltas;  // preprocessed samples of the block (not for zero blocks)
 };
 
 enum class Policy
 {
-    Spec,    // shortest option, ties as in 3.7.4
-    Random,  // any option (decodable, not optimal)
-    NoRos,   // as Spec, but no ROS codeword in segments smaller than 64 blocks (3.5 NOTE)
+    Spec,             // shortest option, ties as in 3.7.4
+    Random,           // any option (decodable, not optimal)
+    NoRos,            // as Spec, but no ROS codeword in segments smaller than 64 blocks (3.5 NOTE)
     SecondExtension,  // the second extension for every block that is not a zero block
 };
 
@@ -486,7 +486,10 @@ static void idTables()
         { "k29", { "", "", "", "", "11110" } },
         { "NC", { "1", "11", "111", "1111", "11111" } },
     };
-    auto column = [](const Params& p) { return p.restricted && p.n <= 2 ? 0 : p.restricted && p.n <= 4 ? 1 : p.n <= 8 ? 2 : p.n <= 16 ? 3 : 4; };
+    auto column = [](const Params& p) { return p.restricted && p.n <= 2 ? 0 : p.restricted && p.n <= 4 ? 1
+                                                                        : p.n <= 8                     ? 2
+                                                                        : p.n <= 16                    ? 3
+                                                                                                       : 4; };
     for (unsigned n = 1; n <= 32; ++n) {
         for (bool restricted : { false, true }) {
             if (restricted && n > 8)
@@ -604,7 +607,8 @@ static bool verify(const std::vector<uint8_t>& stream, const std::vector<uint64_
                  std::to_string(static_cast<uint64_t>(best)));
             continue;
         }
-        const char expectedKind = l.nc == best ? 'N' : l.se == best ? 'E' : 'S';
+        const char expectedKind = l.nc == best ? 'N' : l.se == best ? 'E'
+                                                                    : 'S';
         if (c.kind != expectedKind)
             fail(what + ": CDS " + std::to_string(i) + " is " + c.kind + ", the tie rule of 3.7.4 selects " + expectedKind);
         else if (c.kind == 'S' && c.k != bestK)
@@ -644,7 +648,8 @@ static void encodeAndDecode(const std::vector<uint64_t>& x, const Params& p, std
 
     // The decoders on streams of the reference encoder (with the choices of other encoders)
     for (Policy policy : { Policy::Spec, Policy::Random, Policy::NoRos }) {
-        const char* pname = policy == Policy::Spec ? "spec" : policy == Policy::Random ? "random options" : "no ROS in small segments";
+        const char* pname = policy == Policy::Spec ? "spec" : policy == Policy::Random ? "random options"
+                                                                                       : "no ROS in small segments";
         const std::vector<uint8_t> stream = refEncode(x, p, policy, rng);
         ++checks;
         try {
@@ -786,10 +791,18 @@ static void streams(const Params& p, std::mt19937_64& rng, long& kTies, int nFie
         // Lengths: empty, one sample, partial blocks, partial RSIs, several segments and RSIs
         size_t N;
         switch (f % 6) {
-            case 0: N = f == 0 ? 0 : 1; break;
-            case 1: N = p.J - 1 + rng() % 2; break;
-            case 2: N = rsiSamples * (1 + rng() % 2) + rng() % 3; break;
-            default: N = 1 + rng() % std::min<size_t>(3 * rsiSamples + 2 * p.J, 6000); break;
+            case 0:
+                N = f == 0 ? 0 : 1;
+                break;
+            case 1:
+                N = p.J - 1 + rng() % 2;
+                break;
+            case 2:
+                N = rsiSamples * (1 + rng() % 2) + rng() % 3;
+                break;
+            default:
+                N = 1 + rng() % std::min<size_t>(3 * rsiSamples + 2 * p.J, 6000);
+                break;
         }
         const int kind = static_cast<int>(rng() % 5);
         encodeAndDecode<T>(field(p, N, kind, rng), p, rng, kTies, "field " + std::to_string(kind));
