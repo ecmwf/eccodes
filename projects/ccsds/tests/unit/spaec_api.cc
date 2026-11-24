@@ -18,6 +18,7 @@
 #include <vector>
 
 #include "ccsds/SpAec.h"
+#include "ccsds/encoder/EncoderSeq.h"
 
 static int failures = 0;
 
@@ -240,12 +241,59 @@ static void decodeVariants()
     }
 }
 
+// The restricted set of code options, like libaec: 1 to 4 bits per value (the stream of EncoderSeq
+// with the restricted set), rejected for 5 to 8 bits, the basic set for more bits (its IDs are the
+// same)
+static void restrictedSet()
+{
+    using S = encoder::SpAec<double>;
+    std::mt19937_64 rng(5);
+    for (unsigned bpv : { 1u, 2u, 3u, 4u, 12u }) {
+        for (unsigned blockSize : { 8u, 64u }) {
+            const unsigned rsi = 3;
+            const size_t n = 5000;
+            std::vector<uint16_t> samples(n);
+            uint16_t v = 0;
+            for (size_t i = 0; i < n; ++i) {
+                if (rng() % 3 == 0)
+                    v = static_cast<uint16_t>(rng() & ((1u << bpv) - 1));
+                samples[i] = v;
+            }
+            const auto cos = bpv <= 4 ? CodeOptionSet::Restricted : CodeOptionSet::Basic;
+            encoder::EncoderSeq<uint16_t, uint16_t> reference(static_cast<uint8_t>(bpv), static_cast<uint8_t>(blockSize), rsi, cos);
+            std::vector<uint8_t> expected(n * 3 + 64, 0);
+            expected.resize(reference.encode(Span<uint16_t>(samples), Span<uint8_t>(expected)));
+
+            const std::vector<double> input(samples.begin(), samples.end());
+            for (uint8_t threads : { 1, 3 }) {
+                const std::string what = "restricted set, " + std::to_string(bpv) + " bits, block size " + std::to_string(blockSize) + ", " + std::to_string(threads) + " threads";
+                try {
+                    S spaec(static_cast<uint8_t>(bpv), static_cast<uint8_t>(blockSize), rsi, CodeOptionSet::Restricted, 0.0, 0, 0, threads);
+                    std::vector<uint8_t> stream(spaec.maxEncodedSize(n), 0);
+                    stream.resize(spaec.encode(Span<double>(const_cast<double*>(input.data()), n), Span<uint8_t>(stream)));
+                    check(stream == expected, what + ": stream differs from EncoderSeq");
+                    std::vector<double> decoded(n);
+                    spaec.decode(Span<uint8_t>(stream), Span<double>(decoded));
+                    check(decoded == input, what + ": decoded values differ");
+                }
+                catch (const std::exception& e) {
+                    check(false, what + ": " + e.what());
+                }
+            }
+        }
+    }
+    for (uint8_t bpv = 5; bpv <= 8; ++bpv) {
+        check(throwsInvalid([bpv] { S(bpv, 32, 128, CodeOptionSet::Restricted, 0); }), "restricted set with " + std::to_string(bpv) + " bits must be rejected");
+    }
+}
+
 int main()
 {
     constructor();
     roundTrips();
     rejections();
     decodeVariants();
+    restrictedSet();
     if (failures != 0) {
         std::cerr << failures << " checks failed\n";
         return 1;

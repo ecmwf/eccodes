@@ -87,7 +87,7 @@ static void parameters()
 static void spaec()
 {
     using S = encoder::SpAec<double>;
-    expect<IA>("SpAec restricted", "code option set", [] { S(16, 32, 128, CodeOptionSet::Restricted, 0); });
+    expect<IA>("SpAec restricted with 6 bits", "restricted set of code options", [] { S(6, 32, 128, CodeOptionSet::Restricted, 0); });
     expect<IA>("SpAec 0 threads", "number of threads", [] { S(16, 32, 128, CodeOptionSet::Basic, 0, 0, 0, 0); });
     expect<IA>("SpAec binary scale factor", "binary scale factor 40000", [] { S(16, 32, 128, CodeOptionSet::Basic, 0, 40000, 0); });
     expect<IA>("SpAec decimal scale factor", "decimal scale factor -40000", [] { S(16, 32, 128, CodeOptionSet::Basic, 0, 0, -40000); });
