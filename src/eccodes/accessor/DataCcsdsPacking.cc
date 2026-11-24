@@ -37,13 +37,22 @@ static bool use_spaec()
 #endif
 }
 
-// SpAec implements the CCSDS options used by GRIB: preprocessed unsigned samples, basic code
-// options and no RSI padding. Messages with other options are handled by libaec (if available).
+// Values of AEC_DATA_SIGNED, AEC_DATA_PREPROCESS, AEC_RESTRICTED and AEC_PAD_RSI in libaec.h
+constexpr long aecSignedFlag = 1, aecPreprocessFlag = 8, aecRestrictedFlag = 16, aecPadRsiFlag = 32;
+
+// SpAec implements the CCSDS options used by GRIB: preprocessed unsigned samples, basic or
+// restricted code options and no RSI padding. Messages with other options are handled by libaec
+// (if available).
 static bool spaec_supports_flags(long flags)
 {
-    // Values of AEC_DATA_SIGNED, AEC_DATA_PREPROCESS, AEC_RESTRICTED and AEC_PAD_RSI in libaec.h
-    constexpr long signedFlag = 1, preprocessFlag = 8, restrictedFlag = 16, padRsiFlag = 32;
-    return (flags & preprocessFlag) && !(flags & (signedFlag | restrictedFlag | padRsiFlag));
+    return (flags & aecPreprocessFlag) && !(flags & (aecSignedFlag | aecPadRsiFlag));
+}
+
+// The code option set of the CCSDS flags (SpAec applies it like libaec: the restricted set for 1 to
+// 4 bits per value, an error for 5 to 8 bits, the basic set for more bits)
+static CodeOptionSet spaec_code_option_set(long flags)
+{
+    return (flags & aecRestrictedFlag) ? CodeOptionSet::Restricted : CodeOptionSet::Basic;
 }
 
 void DataCcsdsPacking::init(const long v, grib_arguments* args)
@@ -331,7 +340,7 @@ int DataCcsdsPacking::pack_double(const double* val, size_t* len)
                 static_cast<uint8_t>(bits_per_value),
                 static_cast<uint8_t>(ccsds_block_size),
                 static_cast<uint16_t>(ccsds_rsi),
-                CodeOptionSet::Basic,
+                spaec_code_option_set(ccsds_flags),
                 reference_value,
                 static_cast<int>(binary_scale_factor),
                 static_cast<int>(decimal_scale_factor));
@@ -545,6 +554,7 @@ int DataCcsdsPacking::unpack(T* val, size_t* len)
     }
 
     if (use_spaec() && spaec_supports_flags(ccsds_flags)) {
+        grib_context_log(context_, GRIB_LOG_DEBUG, "%s unpack: unpacking %s, %zu values (SpAec)", accessor_type().c_str(), name_, n_vals);
         if (hand->context->debug) {
             fprintf(stderr, "ECCODES DEBUG CCSDS unpack_* aec_stream.flags=%ld\n", ccsds_flags);
             fprintf(stderr, "ECCODES DEBUG CCSDS unpack_* aec_stream.bits_per_sample=%ld\n", bits_per_value);
@@ -556,7 +566,7 @@ int DataCcsdsPacking::unpack(T* val, size_t* len)
                 static_cast<uint8_t>(bits_per_value),
                 static_cast<uint8_t>(ccsds_block_size),
                 static_cast<uint16_t>(ccsds_rsi),
-                CodeOptionSet::Basic,
+                spaec_code_option_set(ccsds_flags),
                 static_cast<T>(reference_value),
                 static_cast<int>(binary_scale_factor),
                 static_cast<int>(decimal_scale_factor));
