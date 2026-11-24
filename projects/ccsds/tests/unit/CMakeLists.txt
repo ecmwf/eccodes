@@ -18,6 +18,7 @@ ccsds_add_test(value_mapping)
 ccsds_add_test(decoder_par LIBS Threads::Threads)
 ccsds_add_test(parameters_stats)
 ccsds_add_test(spaec_api LIBS Threads::Threads)
+ccsds_add_test(encoder_exhaustive LIBS Threads::Threads)
 
 ccsds_label_tests(unit)
 
