@@ -109,4 +109,22 @@ add_test(NAME ${SP_TEST_PREFIX}pack_fp_contraction COMMAND sp_pack_fp_contractio
 sp_add_test(bit_packing_reference)
 add_test(NAME ${SP_TEST_PREFIX}bit_packing_reference COMMAND sp_bit_packing_reference)
 
+# The validation of the values and parameters must also hold when the user compiles with
+# -ffast-math (CMAKE_CXX_FLAGS come before the project flags): copies of these tests that compile
+# the library sources with -ffast-math first. Not the tests of denormal values: linking with
+# -ffast-math makes the CPU flush them to zero, which a library cannot prevent.
+check_cxx_compiler_flag(-ffast-math SIMPLE_PACKING_HAVE_FAST_MATH)
+if(SIMPLE_PACKING_HAVE_FAST_MATH)
+  foreach(name field_range optimizer_direct_range reference_value_range optimizer_scaling_overflow pack_value_range)
+    add_executable(sp_${name}_fast_math ${CMAKE_CURRENT_SOURCE_DIR}/${name}.cc
+                   ${PROJECT_SOURCE_DIR}/src/Utils.cc ${PROJECT_SOURCE_DIR}/src/optimizer/BinDecOptimizer.cc)
+    target_link_libraries(sp_${name}_fast_math PRIVATE simple_packing::headers)
+    target_compile_options(sp_${name}_fast_math PRIVATE -ffast-math ${SIMPLE_PACKING_OPT_FLAGS})
+    target_compile_definitions(sp_${name}_fast_math PRIVATE NDEBUG)
+    target_link_options(sp_${name}_fast_math PRIVATE -ffast-math)
+    add_test(NAME ${SP_TEST_PREFIX}${name}_fast_math COMMAND sp_${name}_fast_math)
+    set_tests_properties(${SP_TEST_PREFIX}${name}_fast_math PROPERTIES TIMEOUT 120)
+  endforeach()
+endif()
+
 sp_label_tests(regression)
