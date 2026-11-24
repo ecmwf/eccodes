@@ -63,7 +63,23 @@ public:
         const size_t nChunks = std::min(nThreads_, nRsi);
         if (nChunks <= 1) {
             Encoder encoder{ bpv_, blockSize_, rsiSize_, codeOptionSet_ };
-            return encoder.encodeBits(source, target);
+            // The sequential encoder does not check the size of the target: give it one of the
+            // worst-case size (every block uncompressed, plus the 8 bytes it may touch after the
+            // data), and copy the result if the target is smaller
+            const uint64_t nBlocks = (source.size() + blockSize_ - 1) / blockSize_;
+            const uint64_t idLength = CodeOptionBase{ bpv_, codeOptionSet_ }.maxIdLength - 1u;
+            const uint64_t worstCase = (nBlocks * (idLength + uint64_t{ blockSize_ } * bpv_) + 7) / 8 + 8;
+            if (target.size() >= worstCase) {
+                return encoder.encodeBits(source, target);
+            }
+            std::vector<uint8_t> scratch(static_cast<size_t>(worstCase), 0);
+            const size_t bits = encoder.encodeBits(source, Span<uint8_t>(scratch));
+            const size_t bytes = (bits + 7) / 8;
+            if (target.size() < bytes) {
+                throw std::invalid_argument("CCSDS encoding: the output buffer is too small");
+            }
+            std::memcpy(target.data(), scratch.data(), bytes);
+            return bits;
         }
 
         // Balanced split of the RSIs: the first (nRsi % nChunks) chunks get one RSI more
