@@ -95,7 +95,7 @@ public:
             }
         }
 
-        size_t fixedOverhead = ssId_.length;
+        uint64_t fixedOverhead = ssId_.length;
         if constexpr (RType == ReferenceType::Ref) {
             fixedOverhead += bpv_;
         }
@@ -103,10 +103,10 @@ public:
         struct Result
         {
             uint8_t k;
-            size_t size;
+            uint64_t size;
             uint64_t blockSum;
         };
-        return Result{ static_cast<uint8_t>(kBest), fixedOverhead + static_cast<size_t>(lenMin), sum };
+        return Result{ static_cast<uint8_t>(kBest), fixedOverhead + lenMin, sum };
     }
 
     // Split-sample k state (see selectBestMethod). The parallel encoder sets it at chunk starts.

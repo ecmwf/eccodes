@@ -39,8 +39,9 @@ public:
     }
 
     // Second Extension
+    // Sizes in bits are computed in uint64_t: the codewords of large samples exceed 32 bits
     template <ReferenceType RefType>
-    size_t sePrepare(const Span<DeltaType> values)
+    uint64_t sePrepare(const Span<DeltaType> values)
     {
         assert(values.size() % 2 == 0 && "Deltas size must be even for second extension encoding");
 
@@ -60,9 +61,9 @@ public:
             seState_.encodedValues_[i / 2] = (d1 + d2) * (d1 + d2 + 1) / 2 + d2;
         }
 
-        size_t size = seId_.length + std::accumulate(seState_.encodedValues_.begin(), seState_.encodedValues_.end(), size_t(0), [](size_t sum, uint64_t v) {
-                          return sum + static_cast<size_t>(v) + 1;
-                      });
+        uint64_t size = seId_.length + std::accumulate(seState_.encodedValues_.begin(), seState_.encodedValues_.end(), uint64_t(0), [](uint64_t sum, uint64_t v) {
+                            return sum + v + 1;
+                        });
 
         if constexpr (RefType == ReferenceType::Ref) {
             size += bpv_;
@@ -147,21 +148,21 @@ public:
         assert(block.size() == blockSizeV_ && "Block size does not match encoder block size.");
 
         const auto [ssK, ssSize, blockSum] = this->template selectBestMethod<RType>(block);
-        size_t ncSize = ncId_.length + blockSizeV_ * bpv_;
+        const uint64_t ncSize = ncId_.length + uint64_t{ blockSizeV_ } * bpv_;
 
         // SE lower bound: each pair costs >= max(d1+d2, 1) bits.
         // Total SE cost >= seId_.length + nPairs + blockSum [+ bpv_ for Ref].
         // Skip expensive sePrepare when this lower bound exceeds cheaper option.
         constexpr size_t startIndex = (RType == ReferenceType::Ref) ? 1 : 0;
         const size_t nPairs = (blockSizeV_ - startIndex) / 2;
-        size_t seLowerBound = seId_.length + nPairs + blockSum;
+        uint64_t seLowerBound = seId_.length + nPairs + blockSum;
         if constexpr (RType == ReferenceType::Ref) {
             seLowerBound += bpv_;
         }
 
         // SE wins some ties (see below), so it must be evaluated when it can be equal
-        size_t cheapest = std::min(ssSize, ncSize);
-        size_t seSize;
+        const uint64_t cheapest = std::min<uint64_t>(ssSize, ncSize);
+        uint64_t seSize;
         if (seLowerBound <= cheapest) {
             seSize = sePrepare<RType>(block);
         }

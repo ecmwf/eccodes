@@ -50,6 +50,11 @@ public:
         throw std::runtime_error("CCSDS decoding failed: the compressed data is truncated or corrupt (needed data beyond its end: bit " + std::to_string(pos) + " of " + std::to_string(limitBits) + ")");
     }
 
+    [[noreturn]] __attribute__((cold, noinline)) static void throwWriteOverrun(uint64_t pos, size_t limitBits)
+    {
+        throw std::length_error("CCSDS encoding failed: the output buffer is too small (bit " + std::to_string(pos) + " of " + std::to_string(limitBits) + ")");
+    }
+
     // Throws if the read position is beyond the end of the compressed data
     void checkPos(size_t pos) const
     {
@@ -172,12 +177,16 @@ public:
         uint64_t acc = 0;
         constexpr uint64_t top = uint64_t(1) << 63;
         for (size_t i = 0; i < count; ++i) {
-            const size_t zeros = static_cast<size_t>(data[i] >> k);
+            const uint64_t zeros = static_cast<uint64_t>(data[i]) >> k;  // 64 bits also where size_t has 32
             if (fill + zeros >= 64) [[unlikely]] {
                 orBigEndian64(out + base / 8, acc);
-                const size_t onePos = base + fill + zeros;  // the terminating one bit
-                base = onePos & ~size_t(7);
-                fill = onePos - base;
+                const uint64_t onePos = base + fill + zeros;  // the terminating one bit
+                if (zeros >= limitBits_ || onePos >= limitBits_) {
+                    // Never write beyond the buffer, whatever the codeword lengths
+                    throwWriteOverrun(onePos, limitBits_);
+                }
+                base = static_cast<size_t>(onePos) & ~size_t(7);
+                fill = static_cast<size_t>(onePos) - base;
                 acc = 0;
             }
             else {
