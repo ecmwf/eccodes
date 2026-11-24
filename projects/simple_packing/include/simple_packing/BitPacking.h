@@ -21,10 +21,11 @@ inline UInt128 bswap128(UInt128 x)
 }
 
 
+// The unsigned integer type of BPV bits (UInt128 for 65..128 bits). A type only: values are
+// loaded and stored with memcpy (load_be/store_be), never read through another union member.
 template <uint8_t BPV>
-union UInt
+struct UInt
 {
-public:
     using ValueType =
         std::conditional_t<(BPV <= 8), std::uint8_t,
                            std::conditional_t<(BPV <= 16), std::uint16_t,
@@ -32,14 +33,6 @@ public:
                                                                  std::conditional_t<(BPV <= 64), std::uint64_t,
                                                                                     std::conditional_t<(BPV <= 128), UInt128,
                                                                                                        void>>>>>;
-
-    using Bytes = std::array<uint8_t, sizeof(ValueType)>;
-    // using Bytes = uint8_t[sizeof(ValueType)];
-
-    ValueType value = 0;
-    Bytes bytes;
-
-    uint8_t size() const noexcept { return sizeof(ValueType); }
 };
 
 
@@ -76,20 +69,6 @@ T swap_bytes(const T& value)
 #endif
 }
 
-// Map a sequential big-endian byte index (0 = most significant) to the
-// corresponding index into the bytes array of a union/struct in memory.
-// On LE: bytes[0] is LSByte, so the MSByte is at [size-1].
-// On BE: bytes[0] is MSByte, so the MSByte is at [0].
-inline constexpr uint8_t be_byte(uint8_t i, uint8_t size)
-{
-#if defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
-    return i;
-#else
-    return size - 1 - i;
-#endif
-}
-
-
 // Unaligned load/store of a word (the coded data has no alignment); compiles to a plain move
 template <typename T>
 __attribute__((always_inline)) inline T load_word(const uint8_t* ptr) noexcept
@@ -106,6 +85,41 @@ __attribute__((always_inline)) inline void store_word(uint8_t* ptr, const T& val
 }
 
 
+// Big-endian (most significant byte first) load of the first n <= sizeof(W) bytes of a word W; the
+// other bytes are 0. The bytes are copied and converted with swap_bytes (128-bit words as two 64-bit
+// halves): correct on every platform, no type punning.
+template <typename W>
+__attribute__((always_inline)) inline W load_be(const uint8_t* ptr, size_t n) noexcept
+{
+    uint8_t b[sizeof(W)] = {};
+    std::memcpy(b, ptr, n);
+    if constexpr (std::is_same_v<W, UInt128>) {
+        return UInt128(swap_bytes<uint64_t>(load_word<uint64_t>(b)), swap_bytes<uint64_t>(load_word<uint64_t>(b + 8)));
+    }
+    else {
+        return swap_bytes<W>(load_word<W>(b));
+    }
+}
+
+// Big-endian store of the first n <= sizeof(W) bytes of a word W
+template <typename W>
+__attribute__((always_inline)) inline void store_be(uint8_t* ptr, const W& value, size_t n) noexcept
+{
+    uint8_t b[sizeof(W)];
+    if constexpr (std::is_same_v<W, UInt128>) {
+        store_word(b, swap_bytes<uint64_t>(value.hi));
+        store_word(b + 8, swap_bytes<uint64_t>(value.lo));
+    }
+    else {
+        store_word(b, swap_bytes<W>(value));
+    }
+    std::memcpy(ptr, b, n);
+}
+
+
+// Packing of one value of BPV bits at a bit offset (0..7) of ptr, most significant bit first.
+// Optimization::Block reads and writes a whole word (sizeof(Word) bytes) instead of only the bytes
+// of the value: the caller must provide them.
 template <std::size_t BPV, Optimization Method = Optimization::None>
 class BitPacking
 {
@@ -114,128 +128,59 @@ class BitPacking
 public:
     using ValueType = typename UInt<BPV>::ValueType;
 
+private:
+    // A word that holds a value at any bit offset
+    using Word = typename UInt<BPV + 8>::ValueType;
+    static constexpr unsigned wordBits = 8 * sizeof(Word);
+
+    static Word mask() noexcept { return static_cast<Word>((Word(1) << BPV) - Word(1)); }
+    static unsigned shift(uint8_t bitOffset) noexcept { return wordBits - BPV - bitOffset; }
+    static size_t nBytes(uint8_t bitOffset) noexcept { return (bitOffset + BPV + 7) / 8; }
+
+public:
+    // Writes the value and keeps all other bits
     __attribute__((always_inline)) inline void encode_element(uint8_t* ptr, uint8_t bitOffset, const ValueType value) const noexcept
     {
-        using UIntPlus = UInt<BPV + 8>;
-
-        const size_t nBytesToRead = (bitOffset + BPV + 7) / 8;
-        constexpr uint8_t lshift_partial = sizeof(typename UIntPlus::ValueType) * 8 - BPV;
-        const uint8_t lshift = lshift_partial - static_cast<uint8_t>(bitOffset);
-
-        UIntPlus coded;
-        coded.value = value << lshift;
-
-        UIntPlus mask;
-        mask.value = (static_cast<typename UIntPlus::ValueType>(1) << BPV) - 1;
-        mask.value <<= lshift;
-        mask.value = ~mask.value;
-
-        UIntPlus existing;
-        for (size_t i = 0; i < nBytesToRead; ++i) {
-            existing.bytes[be_byte(static_cast<uint8_t>(i), existing.size())] = ptr[i];
-        }
-
-        coded.value |= (existing.value & mask.value);
-
-        for (size_t i = 0; i < nBytesToRead; ++i) {
-            ptr[i] = coded.bytes[be_byte(static_cast<uint8_t>(i), coded.size())];
-        }
+        const size_t n = nBytes(bitOffset);
+        const Word fieldMask = static_cast<Word>(mask() << shift(bitOffset));
+        const Word existing = load_be<Word>(ptr, n);
+        const Word coded = static_cast<Word>((static_cast<Word>(static_cast<Word>(value) << shift(bitOffset)) & fieldMask) | (existing & static_cast<Word>(~fieldMask)));
+        store_be(ptr, coded, n);
     }
 
     __attribute__((always_inline)) inline ValueType decode_element(const uint8_t* ptr, uint8_t bitOffset) const noexcept
     {
-        using UIntPlus = UInt<BPV + 8>;
-
-        const size_t nBytesToRead = (bitOffset + BPV + 7) / 8;
-        constexpr uint8_t rshift_partial = sizeof(typename UIntPlus::ValueType) * 8 - BPV;
-        const uint8_t rshift = rshift_partial - static_cast<uint8_t>(bitOffset);
-
-        UIntPlus coded;
-        for (size_t i = 0; i < nBytesToRead; ++i) {
-            coded.bytes[be_byte(static_cast<uint8_t>(i), coded.size())] = ptr[i];
-        }
-
-        coded.value = coded.value >> rshift;
-
-        constexpr typename UIntPlus::ValueType mask = (static_cast<typename UIntPlus::ValueType>(1) << BPV) - 1;
-
-        return static_cast<ValueType>(coded.value & mask);
+        const Word coded = load_be<Word>(ptr, nBytes(bitOffset));
+        return static_cast<ValueType>((coded >> shift(bitOffset)) & mask());
     }
 
+    // Writes the value; keeps the bits before it in the first byte, the bits after it must be 0
+    // (Block: the rest of the word is overwritten with 0)
     __attribute__((always_inline)) inline void encode(uint8_t* ptr, uint8_t bitOffset, const ValueType value) const noexcept
     {
         if constexpr (BPV == 8 || BPV == 16 || BPV == 32 || BPV == 64) {
-            UInt<BPV> coded;
-            const uint8_t nBytesToRead = sizeof(typename UInt<BPV>::ValueType);
-            coded.value = swap_bytes<typename UInt<BPV>::ValueType>(value);
-            for (uint8_t i = 0; i < nBytesToRead; ++i) {
-                ptr[i] = coded.bytes[i];
-            }
+            store_word(ptr, swap_bytes<ValueType>(value));  // byte-aligned: bitOffset is 0
         }
         else {
-            using UIntPlus = UInt<BPV + 8>;
-            UIntPlus coded;
-
-            constexpr uint8_t lshift_partial = sizeof(typename UIntPlus::ValueType) * 8 - BPV;
-            [[maybe_unused]] constexpr auto nBytes = sizeof(typename UIntPlus::ValueType);
-
-            coded.value = value;
-            const uint8_t lshift = lshift_partial - static_cast<uint8_t>(bitOffset);
-
-            coded.value <<= lshift;
-            coded.bytes[be_byte(0, coded.size())] |= ptr[0];
-
+            Word coded = static_cast<Word>(static_cast<Word>(value) << shift(bitOffset));
+            coded = static_cast<Word>(coded | static_cast<Word>(Word(ptr[0]) << (wordBits - 8)));
             if constexpr (Method == Optimization::Block) {
-                store_word(ptr, swap_bytes<typename UIntPlus::ValueType>(coded.value));
+                store_be(ptr, coded, sizeof(Word));
             }
             else {
-                const size_t nBytesToRead = (bitOffset + BPV + 7) / 8;
-                for (size_t i = 0; i < nBytesToRead; ++i) {
-                    ptr[i] = coded.bytes[be_byte(static_cast<uint8_t>(i), coded.size())];
-                }
+                store_be(ptr, coded, nBytes(bitOffset));
             }
         }
     }
 
     __attribute__((always_inline)) inline ValueType decode(const uint8_t* ptr, uint8_t bitOffset) const noexcept
     {
-        if constexpr (BPV == 16 || BPV == 32 || BPV == 64 || BPV == 128) {
-            UInt<BPV> coded;
-
-            constexpr size_t nBytesToRead = sizeof(typename UInt<BPV>::ValueType);
-
-            if constexpr (Method == Optimization::Block) {
-                coded.value = swap_bytes<typename UInt<BPV>::ValueType>(load_word<typename UInt<BPV>::ValueType>(ptr));
-            }
-            else {
-                for (uint8_t i = 0; i < nBytesToRead; ++i) {
-                    coded.bytes[i] = ptr[i];
-                }
-                coded.value = swap_bytes<typename UInt<BPV>::ValueType>(coded.value);
-            }
-            return coded.value;
+        if constexpr (BPV == 16 || BPV == 32 || BPV == 64) {
+            return swap_bytes<ValueType>(load_word<ValueType>(ptr));  // byte-aligned: bitOffset is 0
         }
         else {
-            using UIntPlus = UInt<BPV + 8>;
-            UIntPlus coded;
-
-            if constexpr (Method == Optimization::Block) {
-                coded.value = swap_bytes<typename UIntPlus::ValueType>(load_word<typename UIntPlus::ValueType>(ptr));
-            }
-            else {
-                const uint8_t nBytesToRead = (bitOffset + BPV + 7) / 8;
-                for (uint8_t i = 0; i < nBytesToRead; ++i) {
-                    coded.bytes[i] = ptr[i];
-                }
-                coded.value = swap_bytes<typename UIntPlus::ValueType>(coded.value);
-            }
-
-            constexpr uint8_t rshift_partial = sizeof(typename UIntPlus::ValueType) * 8 - BPV;
-            const uint8_t rshift = rshift_partial - static_cast<uint8_t>(bitOffset);
-
-            constexpr typename UIntPlus::ValueType mask = (static_cast<typename UIntPlus::ValueType>(1) << BPV) - 1;
-
-            return static_cast<ValueType>(coded.value >> rshift & mask);
+            const Word coded = load_be<Word>(ptr, Method == Optimization::Block ? sizeof(Word) : nBytes(bitOffset));
+            return static_cast<ValueType>((coded >> shift(bitOffset)) & mask());
         }
     }
 };
