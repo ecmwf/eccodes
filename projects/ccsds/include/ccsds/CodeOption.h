@@ -17,7 +17,11 @@ class CodeOptionBase
 public:
     CodeOptionBase(uint8_t bpv, CodeOptionSet optionSet)
     {
-        assert(bpv >= 1 && bpv <= 32 && "BPV must be between 1 and 32");
+        // An exception like the other code options (an assert aborted in debug builds, and the
+        // basic set accepted any bits per value in release builds)
+        if (bpv < 1 || bpv > 32) {
+            throw std::invalid_argument("Unsupported BPV or option set");
+        }
 
         maxIdLength = [&] {
             if (optionSet == CodeOptionSet::Basic) {
