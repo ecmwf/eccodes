@@ -158,6 +158,38 @@ public:
         currentBitPos_ += length + 1;
     }
 
+    // Writes count unary codewords like writeCodeword(data[i] >> k), with the bits collected in a
+    // 64-bit register: one memory access per 64 bits instead of one read-modify-write per
+    // codeword (and no reload of the position, which byte stores may alias). Like writeCodeword,
+    // it only sets the terminating one bits: the buffer must be zero after the current position.
+    template <typename T>
+        requires(std::is_integral<T>::value)
+    void writeCodewords(const T* data, size_t count, unsigned k = 0)
+    {
+        uint8_t* out = buffer_.data();
+        size_t base = currentBitPos_ & ~size_t(7);  // bit position of the register's first bit
+        size_t fill = currentBitPos_ - base;        // bits of the register in use
+        uint64_t acc = 0;
+        constexpr uint64_t top = uint64_t(1) << 63;
+        for (size_t i = 0; i < count; ++i) {
+            const size_t zeros = static_cast<size_t>(data[i] >> k);
+            if (fill + zeros >= 64) [[unlikely]] {
+                orBigEndian64(out + base / 8, acc);
+                const size_t onePos = base + fill + zeros;  // the terminating one bit
+                base = onePos & ~size_t(7);
+                fill = onePos - base;
+                acc = 0;
+            }
+            else {
+                fill += zeros;
+            }
+            acc |= top >> fill;
+            ++fill;
+        }
+        orBigEndian64(out + base / 8, acc);
+        currentBitPos_ = base + fill;
+    }
+
     template <typename T>
         requires(std::is_integral<T>::value)
     void writeBits(T value, size_t nBits)
@@ -340,6 +372,18 @@ public:
     }
 
 private:
+    // ORs the 64 bits of value (first bit = most significant) into the 8 bytes at ptr
+    static void orBigEndian64(uint8_t* ptr, uint64_t value)
+    {
+        if constexpr (isLittleEndian) {
+            value = bswap_64(value);
+        }
+        uint64_t old;
+        std::memcpy(&old, ptr, 8);
+        old |= value;
+        std::memcpy(ptr, &old, 8);
+    }
+
     Span<uint8_t> buffer_;
     mutable size_t currentBitPos_ = 0;
     size_t limitBits_ = 0;

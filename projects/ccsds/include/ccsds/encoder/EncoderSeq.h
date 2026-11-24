@@ -79,9 +79,7 @@ public:
             buffer.writeBits(seState_.reference_, bpv_);
         }
 
-        for (const auto& value : seState_.encodedValues_) {
-            buffer.writeCodeword(value);
-        }
+        buffer.writeCodewords(seState_.encodedValues_.data(), seState_.encodedValues_.size());
     }
 
     // Split Sample
@@ -99,9 +97,7 @@ public:
 
         constexpr size_t startIndex = (RType == ReferenceType::Ref) ? 1 : 0;
 
-        for (size_t i = startIndex; i < blockSizeV_; ++i) {
-            buffer.writeCodeword(values[i] >> k);
-        }
+        buffer.writeCodewords(values.data() + startIndex, blockSizeV_ - startIndex, k);
 
         buffer.writeBitsBatch(values.data() + startIndex, blockSizeV_ - startIndex, k);
     }
