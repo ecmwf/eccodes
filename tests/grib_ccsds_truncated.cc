@@ -54,8 +54,8 @@ int main(void)
             unsigned char* t = (unsigned char*)malloc(newlen);
             memcpy(t, msg, off7 + 5 + keeps[k]);
             memcpy(t + off7 + 5 + keeps[k], "7777", 4);
-            put_be(t + 8, newlen, 8);            /* total length (section 0) */
-            put_be(t + off7, 5 + keeps[k], 4);  /* section 7 length */
+            put_be(t + 8, newlen, 8);          /* total length (section 0) */
+            put_be(t + off7, 5 + keeps[k], 4); /* section 7 length */
 
             codes_handle* t_h = codes_handle_new_from_message(NULL, t, newlen);
             double* out = (double*)malloc(n * sizeof(double));

@@ -57,8 +57,8 @@ static int run(const char* packing)
         int err = 0;
         memcpy(t, msg, off6 + 6 + keep);
         memcpy(t + off6 + 6 + keep, (const unsigned char*)msg + off6 + len6, msglen - off6 - len6);
-        put_be(t + 8, newlen, 8);          /* total length (section 0) */
-        put_be(t + off6, 6 + keep, 4);     /* section 6 length */
+        put_be(t + 8, newlen, 8);      /* total length (section 0) */
+        put_be(t + off6, 6 + keep, 4); /* section 6 length */
 
         codes_handle* th = codes_handle_new_from_message(NULL, t, newlen);
         err = th ? codes_get_double_array(th, "values", out, &nout) : GRIB_INVALID_MESSAGE;

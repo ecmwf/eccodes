@@ -22,8 +22,7 @@
 int main(void)
 {
     const char* packings[] = { "grid_simple", "grid_ccsds" };
-    const double sets[][4] = { { 1e300, -1e300, 0, 0 }, { 1e100, 0, 0, 0 }, { -1e39, 1, 2, 3 }, { 3.5e38, 0, 0, 0 },
-                               { 1e38, -1e38, 0, 0 } };
+    const double sets[][4] = { { 1e300, -1e300, 0, 0 }, { 1e100, 0, 0, 0 }, { -1e39, 1, 2, 3 }, { 3.5e38, 0, 0, 0 }, { 1e38, -1e38, 0, 0 } };
     const long bpvs[] = { 1, 12, 24, 32 };
     int failures = 0;
     for (size_t p = 0; p < 2; p++) {

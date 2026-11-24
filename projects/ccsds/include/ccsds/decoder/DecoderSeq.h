@@ -442,8 +442,8 @@ public:
             if (segments.hasPart()) {
                 const size_t segmentBlocks = (segments.part().size() + blockSizeV_ - 1) / blockSizeV_;
                 const size_t maxBlocks = maxRunBlocks != 0
-                                                     ? maxRunBlocks - segments.nFull() * maxSegmentSizeB_
-                                                     : segmentBlocks;
+                                           ? maxRunBlocks - segments.nFull() * maxSegmentSizeB_
+                                           : segmentBlocks;
                 decodePartSegment<false>(buffer, segments.part(), maxBlocks);
             }
         }

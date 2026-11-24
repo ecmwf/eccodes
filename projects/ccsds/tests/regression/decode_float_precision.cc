@@ -26,8 +26,7 @@ int main()
             int decimalScale;
         };
         // From ecCodes messages whose float values were wrong, plus wider ranges
-        const Case cases[] = { { 30, -1040.0f, -19, -1 }, { 28, -35589.6f, -12, 0 }, { 32, -9.99999f, -27, -2 },
-                               { 32, -3.0e6f, -8, 3 }, { 25, 12.5f, -20, 1 }, { 16, -100.0f, -4, 2 } };
+        const Case cases[] = { { 30, -1040.0f, -19, -1 }, { 28, -35589.6f, -12, 0 }, { 32, -9.99999f, -27, -2 }, { 32, -3.0e6f, -8, 3 }, { 25, 12.5f, -20, 1 }, { 16, -100.0f, -4, 2 } };
         const unsigned seed = std::random_device{}();
         std::mt19937 rng(seed);
         size_t failures = 0;

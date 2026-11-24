@@ -37,8 +37,7 @@ int main()
         int decimalScale;
     };
     // From ecCodes messages whose float values were wrong, plus wider ranges
-    const Case cases[] = { { 30, -152.5, -22, 0 }, { 32, -9.9997, -27, 0 }, { 26, -4646.09, -13, 0 }, { 30, -10000.0, -15, 0 },
-                           { 32, -3.0e6, -8, 3 }, { 25, 12.5, -20, 1 }, { 16, -100.0, -4, 2 }, { 8, 1.0, 0, -2 } };
+    const Case cases[] = { { 30, -152.5, -22, 0 }, { 32, -9.9997, -27, 0 }, { 26, -4646.09, -13, 0 }, { 30, -10000.0, -15, 0 }, { 32, -3.0e6, -8, 3 }, { 25, 12.5, -20, 1 }, { 16, -100.0, -4, 2 }, { 8, 1.0, 0, -2 } };
     const unsigned seed = std::random_device{}();
     std::mt19937_64 rng(seed);
     size_t failures = 0;
