@@ -24,7 +24,7 @@ tempLog=temp.$label.log
 for bpv in 1 2 3 4 12; do
     ECCODES_DEBUG=1 ECCODES_USE_SPAEC=1 ${tools_dir}/grib_set -r -s ccsdsFlags=28,bitsPerValue=$bpv $infile $tempSpaec 2> $tempLog
     grep -q "packing codedValues.*(SpAec)" $tempLog
-    [ $(${tools_dir}/grib_get -p ccsdsFlags,bitsPerValue $tempSpaec) = "28 $bpv" ]
+    [ "$(${tools_dir}/grib_get -p ccsdsFlags,bitsPerValue $tempSpaec)" = "28 $bpv" ]
 
     ECCODES_DEBUG=1 ECCODES_USE_SPAEC=1 ${tools_dir}/grib_get -F%.6g -p max,min,avg $tempSpaec > $tempLog.values 2> $tempLog
     grep -q "unpacking codedValues.*(SpAec)" $tempLog
