@@ -161,11 +161,8 @@ public:
         else if (bpv_ <= 16) {
             return encodeImpl<uint16_t>(data, target);
         }
-        else if (bpv_ <= 32) {
+        else {  // the constructor has checked that bpv is 1..32
             return encodeImpl<uint32_t>(data, target);
-        }
-        else {
-            throw std::invalid_argument("Unsupported bpv for encoding. Supported bpv: 1-32.");
         }
     }
 
@@ -177,11 +174,8 @@ public:
         else if (bpv_ <= 16) {
             decodeImpl<uint16_t>(source, target);
         }
-        else if (bpv_ <= 32) {
+        else {  // the constructor has checked that bpv is 1..32
             decodeImpl<uint32_t>(source, target);
-        }
-        else {
-            throw std::invalid_argument("Unsupported bpv for decoding. Supported bpv: 1-32.");
         }
     }
 

@@ -1,10 +1,6 @@
 // Unit test: every error SpAec can report is triggered once, with the expected exception type and
-// message. Errors that cannot be triggered:
-// - ThreadPool::enqueue on a stopped pool: the pool is only stopped by its destructor
-// - SpAec::encode/decode "Unsupported bpv": the constructor rejects these bits per value before
-// - CodeOptionBase (maxIdLength) and NoCompressionCodeOption (restricted set) "Unsupported bpv or
-//   option set" at the end of their lambdas: every bits per value 1..32 returns before, and
-//   CodeOptionBase rejects the others first
+// message. Errors that cannot be triggered: ThreadPool::enqueue on a stopped pool (the pool is only
+// stopped by its destructor)
 #include <cmath>
 #include <cstdint>
 #include <future>

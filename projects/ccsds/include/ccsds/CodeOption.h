@@ -23,30 +23,15 @@ public:
             throw std::invalid_argument("Unsupported BPV or option set");
         }
 
+        // bpv is 1..32 here
         maxIdLength = [&] {
-            if (optionSet == CodeOptionSet::Basic) {
-                if (bpv > 16 && bpv <= 32)
-                    return 6;
-                else if (bpv > 8 && bpv <= 16)
-                    return 5;
-                else
-                    return 4;
-            }
-            else {
-                if (bpv > 16 && bpv <= 32)
-                    return 6;
-                else if (bpv > 8 && bpv <= 16)
-                    return 5;
-                else {
-                    if (bpv > 4 && bpv <= 8)
-                        return 4;
-                    else if (bpv == 3 || bpv == 4)
-                        return 3;
-                    else if (bpv == 1 || bpv == 2)
-                        return 2;
-                }
-            }
-            throw std::invalid_argument("Unsupported BPV or option set");
+            if (bpv > 16)
+                return 6;
+            if (bpv > 8)
+                return 5;
+            if (optionSet == CodeOptionSet::Basic || bpv > 4)
+                return 4;
+            return bpv >= 3 ? 3 : 2;  // restricted set
         }();
     }
 
@@ -242,28 +227,15 @@ public:
             throw std::invalid_argument("Unsupported bpv or option set");
         }();
 
+        // The length above has rejected unsupported bits per value: bpv is 1..32 here
         value = [&]() {
-            if (bpv > 16 && bpv <= 32) {
+            if (bpv > 16)
                 return 0b11111;
-            }
-            else if (bpv > 8 && bpv <= 16) {
+            if (bpv > 8)
                 return 0b1111;
-            }
-            else {
-                if (cos == CodeOptionSet::Basic) {
-                    if (bpv >= 1 && bpv <= 8)
-                        return 0b111;
-                }
-                else if (cos == CodeOptionSet::Restricted) {
-                    if (bpv > 4 && bpv <= 8)
-                        return 0b111;
-                    else if (bpv == 3 || bpv == 4)
-                        return 0b11;
-                    else if (bpv == 1 || bpv == 2)
-                        return 0b1;
-                }
-            }
-            throw std::invalid_argument("Unsupported bpv or option set");
+            if (cos == CodeOptionSet::Basic || bpv > 4)
+                return 0b111;
+            return bpv >= 3 ? 0b11 : 0b1;  // restricted set
         }();
 
         valueShifted = value << (sizeof(IdType) * 8 - length);
