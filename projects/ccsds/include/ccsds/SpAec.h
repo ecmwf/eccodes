@@ -40,6 +40,8 @@ namespace encoder
 template <typename ValueType>
 class SpAec
 {
+public:
+    // Mapping between the values and the coded integers (public for the unit tests)
     template <typename MappedType>
     class SimpleMapper
     {
