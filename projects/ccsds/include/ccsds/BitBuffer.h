@@ -7,11 +7,33 @@
 #include <cstring>
 #include <stdexcept>
 #include <string>
-#include <byteswap.h>
-
 #include "ccsds/Span.h"
 
 constexpr bool isLittleEndian = (std::endian::native == std::endian::little);
+
+// Conversion between the native byte order and the byte order of the bit stream (big-endian, most
+// significant bit first); the same function converts in both directions
+inline uint16_t bigEndian16(uint16_t v)
+{
+    if constexpr (isLittleEndian) {
+        return __builtin_bswap16(v);
+    }
+    return v;
+}
+inline uint32_t bigEndian32(uint32_t v)
+{
+    if constexpr (isLittleEndian) {
+        return __builtin_bswap32(v);
+    }
+    return v;
+}
+inline uint64_t bigEndian64(uint64_t v)
+{
+    if constexpr (isLittleEndian) {
+        return __builtin_bswap64(v);
+    }
+    return v;
+}
 
 class BitBuffer
 {
@@ -72,7 +94,7 @@ public:
         size_t bytePos = offset / 8;
         size_t bitOffset = offset % 8;
 
-        TPlus data = bswap_16(loadUnaligned<TPlus>(&buffer_[bytePos]));
+        TPlus data = bigEndian16(loadUnaligned<TPlus>(&buffer_[bytePos]));
         data >>= (sizeof(TPlus) * 8 - nBits - bitOffset);
 
         TPlus mask = ones >> (sizeof(TPlus) * 8 - nBits);
@@ -96,7 +118,7 @@ public:
             size_t bytepos = currentBitPos_ / 8;
             size_t bitpos = currentBitPos_ % 8;
 
-            uint64_t acc = bswap_64(loadUnaligned<uint64_t>(&buffer_[bytepos]));
+            uint64_t acc = bigEndian64(loadUnaligned<uint64_t>(&buffer_[bytepos]));
             acc <<= bitpos;
 
             while (acc != 0 && nCodewords > 0) {
@@ -127,7 +149,7 @@ public:
         size_t bytepos = pos / 8;
         size_t bitpos = pos % 8;
 
-        uint64_t acc = bswap_64(loadUnaligned<uint64_t>(&buffer_[bytepos]));
+        uint64_t acc = bigEndian64(loadUnaligned<uint64_t>(&buffer_[bytepos]));
         acc <<= bitpos;
 
         if (acc != 0) {
@@ -225,13 +247,13 @@ public:
         valuePlus = valuePlus << (nbitsInTplus - nBits - shift);
 
         if constexpr (sizeof(TPlus) == 2) {
-            valuePlus = bswap_16(valuePlus);
+            valuePlus = bigEndian16(valuePlus);
         }
         else if constexpr (sizeof(TPlus) == 4) {
-            valuePlus = bswap_32(valuePlus);
+            valuePlus = bigEndian32(valuePlus);
         }
         else if constexpr (sizeof(TPlus) == 8) {
-            valuePlus = bswap_64(valuePlus);
+            valuePlus = bigEndian64(valuePlus);
         }
         storeUnaligned<TPlus>(&buffer_[currentBitPos_ / 8], valuePlus);
         currentBitPos_ += nBits;
@@ -261,7 +283,7 @@ public:
             size_t bytePos = currentBitPos_ >> 3;
             size_t bitOffset = currentBitPos_ & 7;
             acc <<= (64 - totalBits - bitOffset);
-            acc = bswap_64(acc);
+            acc = bigEndian64(acc);
 
             uint64_t old;
             std::memcpy(&old, &buffer_[bytePos], 8);
@@ -296,7 +318,7 @@ public:
             size_t bytePos = pos >> 3;
             size_t bitOffset = pos & 7;
             acc <<= (64 - totalBits - bitOffset);
-            acc = bswap_64(acc);
+            acc = bigEndian64(acc);
 
             uint64_t old;
             std::memcpy(&old, &buffer_[bytePos], 8);
@@ -314,7 +336,7 @@ public:
     void writeId(IdType idShifted, uint8_t idLength)
     {
         idShifted >>= currentBitPos_ % 8;
-        storeUnaligned<IdType>(&buffer_[currentBitPos_ / 8], bswap_16(idShifted));
+        storeUnaligned<IdType>(&buffer_[currentBitPos_ / 8], bigEndian16(idShifted));
         currentBitPos_ += idLength;
     }
 
@@ -336,13 +358,13 @@ public:
 
         TPlus valuePlus = loadUnaligned<TPlus>(&buffer_[bytePos]);
         if constexpr (sizeof(TPlus) == 2) {
-            valuePlus = bswap_16(valuePlus);
+            valuePlus = bigEndian16(valuePlus);
         }
         else if constexpr (sizeof(TPlus) == 4) {
-            valuePlus = bswap_32(valuePlus);
+            valuePlus = bigEndian32(valuePlus);
         }
         else if constexpr (sizeof(TPlus) == 8) {
-            valuePlus = bswap_64(valuePlus);
+            valuePlus = bigEndian64(valuePlus);
         }
 
         valuePlus >>= sizeof(TPlus) * 8 - nBits - bitOffset;
@@ -384,9 +406,7 @@ private:
     // ORs the 64 bits of value (first bit = most significant) into the 8 bytes at ptr
     static void orBigEndian64(uint8_t* ptr, uint64_t value)
     {
-        if constexpr (isLittleEndian) {
-            value = bswap_64(value);
-        }
+        value = bigEndian64(value);
         uint64_t old;
         std::memcpy(&old, ptr, 8);
         old |= value;

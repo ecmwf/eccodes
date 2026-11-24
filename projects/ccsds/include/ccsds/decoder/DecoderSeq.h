@@ -11,7 +11,6 @@
 #include <string>
 #include <utility>
 #include <vector>
-#include <byteswap.h>
 
 #include "ccsds/Span.h"
 #include "ccsds/CodeOption.h"
@@ -48,7 +47,7 @@ private:
             pos(bitBuffer.bitPos())
         {
             const size_t bitpos = pos & 7;
-            acc = bswap_64(loadU64(&data[pos >> 3]));
+            acc = bigEndian64(loadU64(&data[pos >> 3]));
             acc <<= bitpos;
             consumed = bitpos;
         }
@@ -61,7 +60,7 @@ private:
                 buffer.checkPos(pos);
                 pos += (64 - consumed);
                 const size_t bitpos = pos & 7;
-                acc = bswap_64(loadU64(&data[pos >> 3]));
+                acc = bigEndian64(loadU64(&data[pos >> 3]));
                 acc <<= bitpos;
                 consumed = bitpos;
             }
@@ -71,7 +70,7 @@ private:
             consumed += lz + 1;
             if (consumed >= 64) [[unlikely]] {
                 const size_t bitpos = pos & 7;
-                acc = bswap_64(loadU64(&data[pos >> 3]));
+                acc = bigEndian64(loadU64(&data[pos >> 3]));
                 acc <<= bitpos;
                 consumed = bitpos;
             }
@@ -114,7 +113,7 @@ public:
         size_t pos = buffer.bitPos();
         size_t bytepos = pos >> 3;
         size_t bitpos = pos & 7;
-        uint64_t acc = bswap_64(loadU64(&data[bytepos]));
+        uint64_t acc = bigEndian64(loadU64(&data[bytepos]));
         acc <<= bitpos;
         int bitsAvail = 64 - static_cast<int>(bitpos);
 
@@ -122,7 +121,7 @@ public:
             if (bitsAvail < nBits) [[unlikely]] {
                 bytepos = pos >> 3;
                 bitpos = pos & 7;
-                acc = bswap_64(loadU64(&data[bytepos]));
+                acc = bigEndian64(loadU64(&data[bytepos]));
                 acc <<= bitpos;
                 bitsAvail = 64 - static_cast<int>(bitpos);
             }
@@ -183,7 +182,7 @@ public:
                 size_t pos = buffer.bitPos();
                 size_t bytepos = pos >> 3;
                 size_t bitpos = pos & 7;
-                uint64_t acc = bswap_64(loadU64(&data[bytepos]));
+                uint64_t acc = bigEndian64(loadU64(&data[bytepos]));
                 acc <<= bitpos;
                 int bitsAvail = 64 - static_cast<int>(bitpos);
 
@@ -191,7 +190,7 @@ public:
                     if (bitsAvail < k) [[unlikely]] {
                         bytepos = pos >> 3;
                         bitpos = pos & 7;
-                        acc = bswap_64(loadU64(&data[bytepos]));
+                        acc = bigEndian64(loadU64(&data[bytepos]));
                         acc <<= bitpos;
                         bitsAvail = 64 - static_cast<int>(bitpos);
                     }
