@@ -60,6 +60,7 @@ static void codeOptions()
         const auto b = static_cast<uint8_t>(bpv);
         const std::string n = " bpv " + std::to_string(bpv);
         expect<IA>("CodeOptionBase restricted" + n, "Unsupported", [&] { CodeOptionBase(b, CodeOptionSet::Restricted); });
+        expect<IA>("CodeOptionBase basic" + n, "Unsupported", [&] { CodeOptionBase(b, CodeOptionSet::Basic); });
         expect<IA>("ZeroBlockCodeOption" + n, "Unsupported", [&] { ZeroBlockCodeOption(b, CodeOptionSet::Basic); });
         expect<IA>("SecondExtensionCodeOption" + n, "Unsupported", [&] { SecondExtensionCodeOption(b, CodeOptionSet::Basic); });
         expect<IA>("SplitSampleLimits" + n, "Unsupported", [&] { SplitSampleLimits(b, CodeOptionSet::Basic); });
