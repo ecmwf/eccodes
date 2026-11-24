@@ -24,4 +24,7 @@ add_test(NAME ${SP_TEST_PREFIX}power COMMAND sp_power)
 sp_add_test(bit_packing_element)
 add_test(NAME ${SP_TEST_PREFIX}bit_packing_element COMMAND sp_bit_packing_element 10)
 
+sp_add_test(codec_binary)
+add_test(NAME ${SP_TEST_PREFIX}codec_binary COMMAND sp_codec_binary)
+
 sp_label_tests(unit)
