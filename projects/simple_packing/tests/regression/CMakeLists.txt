@@ -105,6 +105,13 @@ add_test(NAME ${SP_TEST_PREFIX}unpack_float_precision COMMAND sp_unpack_float_pr
 
 sp_add_test(pack_fp_contraction)
 add_test(NAME ${SP_TEST_PREFIX}pack_fp_contraction COMMAND sp_pack_fp_contraction)
+# The same test as a user of simple_packing::simple_packing builds it: without the project flags,
+# for the host CPU (fused multiply-add available), so that only the usage requirements apply
+check_cxx_compiler_flag(-march=native SIMPLE_PACKING_HAVE_MARCH_NATIVE)
+add_executable(sp_pack_fp_contraction_consumer ${CMAKE_CURRENT_SOURCE_DIR}/pack_fp_contraction.cc)
+target_link_libraries(sp_pack_fp_contraction_consumer PRIVATE simple_packing::simple_packing)
+target_compile_options(sp_pack_fp_contraction_consumer PRIVATE -O2 $<$<AND:$<BOOL:${SIMPLE_PACKING_HAVE_MARCH_NATIVE}>,$<NOT:$<BOOL:${CMAKE_CROSSCOMPILING}>>>:-march=native>)
+add_test(NAME ${SP_TEST_PREFIX}pack_fp_contraction_consumer COMMAND sp_pack_fp_contraction_consumer)
 
 sp_add_test(bit_packing_reference)
 add_test(NAME ${SP_TEST_PREFIX}bit_packing_reference COMMAND sp_bit_packing_reference)
