@@ -44,6 +44,12 @@ include(GNUInstallDirs)
 # Optimisation flags for the packing loops (also used for the tests)
 include(CheckCXXCompilerFlag)
 set(SIMPLE_PACKING_OPT_FLAGS -O3)
+# Every floating-point operation rounded separately: with fused multiply-adds (available with
+# -march=native) the packed values would depend on the build machine
+check_cxx_compiler_flag("-ffp-contract=off" SIMPLE_PACKING_HAVE_FP_CONTRACT_OFF)
+if(SIMPLE_PACKING_HAVE_FP_CONTRACT_OFF)
+  list(APPEND SIMPLE_PACKING_OPT_FLAGS -ffp-contract=off)
+endif()
 if(SIMPLE_PACKING_NATIVE_ARCH AND NOT CMAKE_CROSSCOMPILING)
   check_cxx_compiler_flag("-march=native" SIMPLE_PACKING_HAVE_MARCH_NATIVE)
   if(SIMPLE_PACKING_HAVE_MARCH_NATIVE)
