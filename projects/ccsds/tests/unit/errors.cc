@@ -113,7 +113,8 @@ static void spaec()
 static void encoderPar()
 {
     std::vector<uint16_t> samples(20000);
-    for (size_t i = 0; i < samples.size(); ++i) samples[i] = static_cast<uint16_t>((i * 2654435761u) >> 16);
+    for (size_t i = 0; i < samples.size(); ++i)
+        samples[i] = static_cast<uint16_t>((i * 2654435761u) >> 16);
     for (size_t threads : { 1, 4 }) {
         encoder::EncoderPar<uint16_t, uint16_t> par(16, 32, 64, CodeOptionSet::Basic, threads);
         std::vector<uint8_t> small(1000, 0);
