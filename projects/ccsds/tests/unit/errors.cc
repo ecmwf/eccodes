@@ -68,9 +68,7 @@ static void codeOptions()
     }
     // The restricted set has no split sample option for 1 and 2 bits
     for (uint8_t bpv : { 1, 2 }) {
-        expect<IA>("SplitSampleLimits restricted bpv " + std::to_string(bpv), "not supported for bpv 1 or 2", [&] { SplitSampleLimits(bpv, CodeOptionSet::Restricted); });
-        expect<IA>("SplitSampleIdLength restricted bpv " + std::to_string(bpv), "not supported for bpv 1 or 2", [&] { SplitSampleIdLength(bpv, CodeOptionSet::Restricted); });
-        expect<IA>("EncoderSeq restricted bpv " + std::to_string(bpv), "not supported for bpv 1 or 2", [&] { encoder::EncoderSeq<uint8_t, uint8_t>(bpv, 8, 1, CodeOptionSet::Restricted); });
+        expect<IA>("SplitSampleCodeOption restricted bpv " + std::to_string(bpv), "not supported for bpv 1 or 2", [&] { SplitSampleCodeOption(bpv, 0, CodeOptionSet::Restricted); });
     }
 }
 

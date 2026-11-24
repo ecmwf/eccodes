@@ -31,6 +31,22 @@ public:
         const uint64_t thisBs = blockSizeV_ - startIndex;
         const DeltaType* v = values.data() + startIndex;
 
+        struct Result
+        {
+            uint8_t k;
+            uint64_t size;
+            uint64_t blockSum;
+        };
+
+        // The restricted set for 1 and 2 bits has no split-sample options: only the sum
+        if (!limits_.available_) {
+            uint64_t sum = 0;
+            for (size_t j = 0; j < thisBs; ++j) {
+                sum += v[j];
+            }
+            return Result{ 0, UINT64_MAX, sum };
+        }
+
         auto fsLength = [&](unsigned k) {
             uint64_t fs = 0;
             for (size_t j = 0; j < thisBs; ++j) {
@@ -100,12 +116,6 @@ public:
             fixedOverhead += bpv_;
         }
 
-        struct Result
-        {
-            uint8_t k;
-            uint64_t size;
-            uint64_t blockSum;
-        };
         return Result{ static_cast<uint8_t>(kBest), fixedOverhead + lenMin, sum };
     }
 
@@ -125,7 +135,7 @@ public:
         seId_{ bpv_, codeOptionSet },
         limits_{ bpv_, codeOptionSet }
     {
-        for (uint8_t k = limits_.kMin_; k <= limits_.kMax_; ++k) {
+        for (uint8_t k = limits_.kMin_; limits_.available_ && k <= limits_.kMax_; ++k) {
             ssIdStore.emplace_back(bpv_, k, codeOptionSet_);
         }
     }

@@ -138,19 +138,21 @@ public:
                         return 5;
                     else if (bpv == 3 || bpv == 4)
                         return 1;
-                    else if (bpv == 1 || bpv == 2)
-                        throw std::invalid_argument("Split option not supported for bpv 1 or 2 in restricted option set");
+                    else if (bpv == 1 || bpv == 2) {
+                        // CCSDS 121.0-B-3, Table 5-1: no FS and no split-sample options
+                        available_ = false;
+                        return 0;
+                    }
                 }
             }
             throw std::invalid_argument("Unsupported bpv or option set");
         }();
     }
 
-    // static_assert(kMin_ <= kMax_, "Invalid K range calculation");
-
 public:
     uint8_t kMin_;
     uint8_t kMax_;
+    bool available_ = true;  // false: the option set has no FS and split-sample options
 };
 
 class SplitSampleIdLength
@@ -177,7 +179,7 @@ public:
                     else if (bpv == 3 || bpv == 4)
                         return 2;
                     else if (bpv == 1 || bpv == 2)
-                        throw std::invalid_argument("Split option not supported for bpv 1 or 2 in restricted option set");
+                        return 1;  // the ID length of the set (no compression is "1"), no split-sample IDs
                 }
             }
             throw std::invalid_argument("Unsupported bpv or option set");
@@ -192,6 +194,9 @@ class SplitSampleCodeOption : public SplitSampleIdLength
 public:
     SplitSampleCodeOption(uint8_t bpv, uint8_t k, CodeOptionSet cos) : SplitSampleIdLength(bpv, cos), value(k + 1)
     {
+        if (cos == CodeOptionSet::Restricted && bpv <= 2) {
+            throw std::invalid_argument("Split option not supported for bpv 1 or 2 in restricted option set");
+        }
         valueShifted = value << (sizeof(IdType) * 8 - length);
     }
     IdType value;
