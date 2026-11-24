@@ -140,18 +140,31 @@ public:
 
         UnaryCodewordReader codewords{ buffer };
         for (size_t i = 0; i < blockSizeV_ / 2; ++i) {
-            const ValueType tmp = static_cast<ValueType>(codewords.read());
+            // gamma = (d1 + d2)(d1 + d2 + 1) / 2 + d2 (CCSDS 121.0-B-3, 3.4.1) may be 2^n or larger
+            // (3.4.2): it is not truncated to the sample type
+            const uint64_t gamma = codewords.read();
 
-            // Fast integer sqrt: w = floor((sqrt(8*tmp+1) - 1) / 2)
-            const uint32_t val = 8u * static_cast<uint32_t>(tmp) + 1;
-            uint32_t s = static_cast<uint32_t>(std::sqrt(static_cast<float>(val)));
-            s -= (s * s > val);  // adjust down if needed
-            const ValueType w = static_cast<ValueType>((s - 1) >> 1);
-            const ValueType t = w * (w + 1) / 2;
-            const ValueType d2 = tmp - t;
-            const ValueType d1 = w - d2;
-            values[2 * i] = d1;
-            values[2 * i + 1] = d2;
+            // w = d1 + d2 = floor((sqrt(8*gamma+1) - 1) / 2)
+            uint64_t w;
+            if (gamma < (uint64_t{ 1 } << 21)) [[likely]] {
+                // Fast integer sqrt: 8*gamma+1 < 2^24 is exact in float
+                const uint32_t val = 8u * static_cast<uint32_t>(gamma) + 1;
+                uint32_t s = static_cast<uint32_t>(std::sqrt(static_cast<float>(val)));
+                s -= (s * s > val);  // adjust down if needed
+                w = (s - 1) >> 1;
+            }
+            else {
+                w = static_cast<uint64_t>((std::sqrt(8.0 * static_cast<double>(gamma) + 1.0) - 1.0) / 2.0);
+                while (w * (w + 1) / 2 > gamma) {
+                    --w;
+                }
+                while ((w + 1) * (w + 2) / 2 <= gamma) {
+                    ++w;
+                }
+            }
+            const uint64_t d2 = gamma - w * (w + 1) / 2;
+            values[2 * i] = static_cast<ValueType>(w - d2);
+            values[2 * i + 1] = static_cast<ValueType>(d2);
         }
         buffer.bitPos(codewords.pos);
     }
