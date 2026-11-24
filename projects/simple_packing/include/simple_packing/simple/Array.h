@@ -39,7 +39,11 @@ std::pair<Parameters, typename SimplePackingArray<ValueType>::CodedValues> Simpl
     auto [params, min, max] = this->getParameters(values);
 
     auto bitsPerValue = params.bitsPerValue();
-    if (bitsPerValue > 1 && bitsPerValue <= 8) {
+    // Constant field: no coded values (as SimplePackingBinary)
+    if (params.isConstantField() || bitsPerValue == 0) {
+        return { params, std::vector<uint8_t>{} };
+    }
+    if (bitsPerValue >= 1 && bitsPerValue <= 8) {
         return { params, codec8.pack(values, params.decimalScaleFactor(), params.binaryScaleFactor(), params.referenceValue(), min, max) };
     }
     else if (bitsPerValue > 8 && bitsPerValue <= 16) {
@@ -57,7 +61,10 @@ template <typename ValueType>
 typename SimplePackingArray<ValueType>::Values SimplePackingArray<ValueType>::unpack(const Parameters& params, const CodedValues& buffer, size_t nVals)
 {
     auto bitsPerValue = params.bitsPerValue();
-    if (bitsPerValue > 1 && bitsPerValue <= 8) {
+    if (params.isConstantField() || bitsPerValue == 0) {
+        return Values(nVals, static_cast<ValueType>(params.referenceValue()));
+    }
+    if (bitsPerValue >= 1 && bitsPerValue <= 8) {
         return codec8.unpack(std::get<std::vector<uint8_t>>(buffer), params.decimalScaleFactor(), params.binaryScaleFactor(), params.referenceValue(), nVals);
     }
     else if (bitsPerValue > 8 && bitsPerValue <= 16) {
