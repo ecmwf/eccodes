@@ -15,10 +15,6 @@ tempSample=temp.in.$label.tmpl
 tempBin=temp.$label.bin
 tempOutGrib=temp.out.$label.grib
 
-if [ $HAVE_AEC -eq 0 ]; then
-    exit 0
-fi
-
 sample_g2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 ${tools_dir}/grib_set -r -s packingType=grid_ccsds $sample_g2 $tempSample
 

@@ -18,12 +18,12 @@ infile=${data_dir}/ccsds.grib2
 tempGrib=temp.$label.grib2
 
 # Pack the data with libaec without preprocessing (ccsdsFlags=6)
-ECCODES_USE_LIBAEC=1 ${tools_dir}/grib_set -r -s ccsdsFlags=6 $infile $tempGrib
+${tools_dir}/grib_set -r -s ccsdsFlags=6 $infile $tempGrib
 [ $(${tools_dir}/grib_get -p ccsdsFlags $tempGrib) = 6 ]
 
-expected=$(ECCODES_USE_LIBAEC=1 ${tools_dir}/grib_get -F%.6g -p max,min,avg $tempGrib)
-result=$(${tools_dir}/grib_get -F%.6g -p max,min,avg $tempGrib)
-echo "libaec: $expected, default: $result"
+expected=$(${tools_dir}/grib_get -F%.6g -p max,min,avg $tempGrib)
+result=$(ECCODES_USE_SPAEC=1 ${tools_dir}/grib_get -F%.6g -p max,min,avg $tempGrib)
+echo "libaec: $expected, SpAec selected: $result"
 [ "$result" = "$expected" ]
 
 rm -f $tempGrib

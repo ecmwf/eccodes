@@ -14,27 +14,22 @@
 #include "grib_optimize_decimal_factor.h"
 #include "grib_bits_any_endian_simple.h"
 #include <float.h>
+#include <cstring>
 #include <type_traits>
 
-#ifdef HAVE_SIMPLE_PACKING_SP
-    #include "simple_packing/simple/Binary.h"
-    #include "simple_packing/Parameters.h"
-#endif
+#include "simple_packing/simple/Binary.h"
+#include "simple_packing/Parameters.h"
 
 namespace eccodes::accessor
 {
 
 bool DataSimplePacking::use_new_simple_packing()
 {
-#ifdef HAVE_SIMPLE_PACKING_SP
     static const bool useNew = [] {
-        const char* env = getenv("ECCODES_USE_LEGACY_SIMPLE_PACKING");
-        return env == nullptr || env[0] == '\0';
+        const char* env = getenv("ECCODES_USE_NEW_SIMPLE_PACKING");
+        return env != nullptr && env[0] != '\0' && strcmp(env, "0") != 0;
     }();
     return useNew;
-#else
-    return false;
-#endif
 }
 
 void DataSimplePacking::init(const long v, grib_arguments* args)
@@ -316,7 +311,6 @@ int DataSimplePacking::unpack(T* val, size_t* len)
                      "%s %s: calling outline function: bpv: %ld, rv: %g, bsf: %ld, dsf: %ld",
                      accessor_type().c_str(), __func__, bits_per_value, reference_value, binary_scale_factor, decimal_scale_factor);
 
-#ifdef HAVE_SIMPLE_PACKING_SP
     if (use_new_simple_packing() && bits_per_value >= 1 && bits_per_value <= 64) {
         grib_context_log(context_, GRIB_LOG_DEBUG,
                          "%s %s: using new Simple Packing (SP) for decode, %zu values", accessor_type().c_str(), __func__, n_vals);
@@ -339,9 +333,7 @@ int DataSimplePacking::unpack(T* val, size_t* len)
             return GRIB_DECODING_ERROR;
         }
     }
-    else
-#endif
-    {
+    else {
         grib_decode_array<T>(buf, &pos, bits_per_value, reference_value, s, d, n_vals, val);
     }
 
@@ -498,7 +490,6 @@ int DataSimplePacking::_unpack_double(double* val, size_t* len, unsigned char* b
                      "unpack_double: calling outline function : bpv %d, rv : %g, sf : %d, dsf : %d ",
                      bits_per_value, reference_value, binary_scale_factor, decimal_scale_factor);
 
-#ifdef HAVE_SIMPLE_PACKING_SP
     if (use_new_simple_packing() && bits_per_value >= 1 && bits_per_value <= 64) {
         try {
             SimplePackingBinary<double> sp(nullptr);
@@ -519,9 +510,7 @@ int DataSimplePacking::_unpack_double(double* val, size_t* len, unsigned char* b
             return GRIB_DECODING_ERROR;
         }
     }
-    else
-#endif
-    {
+    else {
         grib_decode_array<double>(buf, &pos, bits_per_value, reference_value, s, d, n_vals, val);
     }
 

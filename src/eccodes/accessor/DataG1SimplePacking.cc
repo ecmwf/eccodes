@@ -11,13 +11,11 @@
 #include "DataG1SimplePacking.h"
 #include "grib_scaling.h"
 
-#ifdef HAVE_SIMPLE_PACKING_SP
-    #include "simple_packing/simple/Binary.h"
-    #include "simple_packing/Parameters.h"
-    #include "simple_packing/optimizer/BPVOptimizer.h"
-    #include "simple_packing/optimizer/BinDecOptimizer.h"
-    #include "simple_packing/optimizer/DecOptimizer.h"
-#endif
+#include "simple_packing/simple/Binary.h"
+#include "simple_packing/Parameters.h"
+#include "simple_packing/optimizer/BPVOptimizer.h"
+#include "simple_packing/optimizer/BinDecOptimizer.h"
+#include "simple_packing/optimizer/DecOptimizer.h"
 
 namespace eccodes::accessor
 {
@@ -127,7 +125,6 @@ int DataG1SimplePacking::pack_double(const double* cval, size_t* len)
         }
     }
 
-#ifdef HAVE_SIMPLE_PACKING_SP
     if (use_new_simple_packing() && n_vals > 0) {
         const auto [min_val, max_val] = sp_minmax(val, n_vals);
 
@@ -230,7 +227,6 @@ int DataG1SimplePacking::pack_double(const double* cval, size_t* len)
             }
         }
     }
-#endif
 
     ret = DataSimplePacking::pack_double(val, len);
     switch (ret) {

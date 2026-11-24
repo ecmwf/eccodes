@@ -466,8 +466,8 @@ ecbuild_add_library(
         ${CMAKE_THREAD_LIBS_INIT}
         ${PNG_LIBRARIES}
         $<$<BOOL:${libaec_FOUND}>:libaec::aec>
-        $<$<BOOL:${HAVE_CCSDS_SPAEC}>:$<BUILD_INTERFACE:ccsds::spaec>>
-        $<$<BOOL:${HAVE_SIMPLE_PACKING_SP}>:$<BUILD_INTERFACE:simple_packing::headers>>
+        $<BUILD_INTERFACE:ccsds::spaec>
+        $<BUILD_INTERFACE:simple_packing::headers>
         $<$<BOOL:${HAVE_ECCODES_OMP_THREADS}>:OpenMP::OpenMP_CXX>
     PUBLIC_LIBS
         ${CMATH_LIBRARIES}
@@ -486,18 +486,13 @@ ecbuild_add_library(
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
 )
 
-# CCSDS SpAec: always compile with native arch and release optimization
-if(HAVE_CCSDS_SPAEC)
-    set_source_files_properties(accessor/DataCcsdsPacking.cc PROPERTIES
-        COMPILE_OPTIONS "-march=native;-mtune=native;-O3"
-        COMPILE_DEFINITIONS "NDEBUG"
-    )
-endif()
+# CCSDS SpAec: optimise the accessor that instantiates the header-only coder
+set_source_files_properties(accessor/DataCcsdsPacking.cc PROPERTIES
+    COMPILE_OPTIONS "${CCSDS_OPT_FLAGS}"
+    COMPILE_DEFINITIONS "NDEBUG")
 
 # Simple packing: embed the compiled sources of projects/simple_packing (works for static and
 # shared libraries) and optimise the accessors that use its packing loops
-if(HAVE_SIMPLE_PACKING_SP)
-    target_sources(eccodes PRIVATE $<TARGET_OBJECTS:simple_packing_objects>)
-    set_source_files_properties(accessor/DataSimplePacking.cc accessor/DataG1SimplePacking.cc accessor/DataG2SimplePacking.cc
-        PROPERTIES COMPILE_OPTIONS "${SIMPLE_PACKING_OPT_FLAGS}")
-endif()
+target_sources(eccodes PRIVATE $<TARGET_OBJECTS:simple_packing_objects>)
+set_source_files_properties(accessor/DataSimplePacking.cc accessor/DataG1SimplePacking.cc accessor/DataG2SimplePacking.cc
+    PROPERTIES COMPILE_OPTIONS "${SIMPLE_PACKING_OPT_FLAGS}")

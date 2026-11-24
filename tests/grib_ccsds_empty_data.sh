@@ -22,7 +22,7 @@ ${tools_dir}/grib_get -p min,max,average $input > $tempText
 grep -q "^273 273 273$" $tempText
 
 if [ $HAVE_AEC -eq 1 ]; then
-    ECCODES_USE_LIBAEC=1 ${tools_dir}/grib_get -p min,max,average $input > $tempText
+    ECCODES_USE_SPAEC=1 ${tools_dir}/grib_get -p min,max,average $input > $tempText
     grep -q "^273 273 273$" $tempText
 fi
 

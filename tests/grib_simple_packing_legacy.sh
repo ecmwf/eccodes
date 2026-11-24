@@ -11,7 +11,7 @@
 . ./include.ctest.sh
 
 # The simple_packing library must encode GRIB1 and GRIB2 simple packing exactly like the legacy
-# code (ECCODES_USE_LEGACY_SIMPLE_PACKING=1)
+# code (the default; ECCODES_USE_NEW_SIMPLE_PACKING=1 selects the library)
 
 label="grib_simple_packing_legacy_test"
 tempLib=temp.$label.lib.grib
@@ -29,8 +29,8 @@ settings="changeDecimalPrecision=0 changeDecimalPrecision=1 changeDecimalPrecisi
 
 for f in $files; do
     for s in $settings; do
-        ${tools_dir}/grib_set -r -s $s ${data_dir}/$f $tempLib
-        ECCODES_USE_LEGACY_SIMPLE_PACKING=1 ${tools_dir}/grib_set -r -s $s ${data_dir}/$f $tempLegacy
+        ECCODES_USE_NEW_SIMPLE_PACKING=1 ${tools_dir}/grib_set -r -s $s ${data_dir}/$f $tempLib
+        ${tools_dir}/grib_set -r -s $s ${data_dir}/$f $tempLegacy
         if ! cmp -s $tempLib $tempLegacy; then
             echo "Different encoding of $f with $s:"
             ${tools_dir}/grib_compare -b totalLength $tempLib $tempLegacy || true

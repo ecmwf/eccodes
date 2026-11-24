@@ -3,12 +3,12 @@ set(CCSDS_TEST_PREFIX "ccsds_")
 
 # ccsds_add_test(<name> [LIBS <libs...>])
 # Builds <name>.cc into an executable and registers it as test ccsds_<name>.
-# Always compiled with -march=native -mtune=native -O3 (release mode).
+# Always compiled with ${CCSDS_OPT_FLAGS} (release mode).
 function(ccsds_add_test name)
   cmake_parse_arguments(ARG "" "" "SOURCES;LIBS" ${ARGN})
   add_executable(${name} ${CMAKE_CURRENT_SOURCE_DIR}/${name}.cc ${ARG_SOURCES})
   target_link_libraries(${name} PRIVATE ccsds::spaec ${ARG_LIBS})
-  target_compile_options(${name} PRIVATE -march=native -mtune=native -O3)
+  target_compile_options(${name} PRIVATE ${CCSDS_OPT_FLAGS})
   target_compile_definitions(${name} PRIVATE NDEBUG)
   add_test(NAME ${CCSDS_TEST_PREFIX}${name} COMMAND ${name})
 endfunction()

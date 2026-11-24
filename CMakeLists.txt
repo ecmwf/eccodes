@@ -176,13 +176,10 @@ ecbuild_add_option( FEATURE AEC
     DEFAULT ON
     CONDITION libaec_FOUND )
 
-ecbuild_add_option( FEATURE CCSDS_SPAEC
-    DESCRIPTION "Use SpAec CCSDS compression (built-in, replaces libaec at runtime unless ECCODES_USE_LIBAEC is set)"
-    DEFAULT ON )
-
-ecbuild_add_option( FEATURE SIMPLE_PACKING_SP
-    DESCRIPTION "Use the simple_packing library for GRIB simple packing (the legacy code is used at runtime if ECCODES_USE_LEGACY_SIMPLE_PACKING is set)"
-    DEFAULT ON )
+# CCSDS: SpAec (projects/ccsds) is always built. Without AEC it is the only implementation;
+# with AEC libaec is the default and ECCODES_USE_SPAEC=1 selects SpAec at runtime.
+# Simple packing: the legacy code and the simple_packing library (projects/simple_packing) are
+# both built. The legacy code is the default; ECCODES_USE_NEW_SIMPLE_PACKING=1 selects the library.
 
 ecbuild_find_python( VERSION 3.6 NO_LIBS )
 # find_package( NumPy )
@@ -482,18 +479,13 @@ include_directories(
 
 add_subdirectory( definitions ) # must be before memfs
 add_subdirectory( memfs )
-if( HAVE_CCSDS_SPAEC )
-    # Standalone header-only library, also installable on its own (see projects/ccsds)
-    set( CCSDS_BUILD_TESTS ${ENABLE_TESTS} )
-    set( CCSDS_INSTALL OFF )
-    add_subdirectory( projects/ccsds )
-endif()
-if( HAVE_SIMPLE_PACKING_SP )
-    # Standalone library, also installable on its own (see projects/simple_packing)
-    set( SIMPLE_PACKING_BUILD_TESTS ${ENABLE_TESTS} )
-    set( SIMPLE_PACKING_INSTALL OFF )
-    add_subdirectory( projects/simple_packing )
-endif()
+# Standalone libraries, also buildable and installable on their own (see projects/*/CMakeLists.txt)
+set( CCSDS_BUILD_TESTS ${ENABLE_TESTS} )
+set( CCSDS_INSTALL OFF )
+add_subdirectory( projects/ccsds )
+set( SIMPLE_PACKING_BUILD_TESTS ${ENABLE_TESTS} )
+set( SIMPLE_PACKING_INSTALL OFF )
+add_subdirectory( projects/simple_packing )
 add_subdirectory( src )
 if( HAVE_BUILD_TOOLS )
     add_subdirectory( tools )

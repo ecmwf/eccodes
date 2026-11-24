@@ -648,7 +648,7 @@ if( HAVE_BUILD_TOOLS )
 
     ecbuild_add_test( TARGET eccodes_t_grib_simple_packing_legacy
                       TYPE SCRIPT
-                      CONDITION HAVE_SIMPLE_PACKING_SP AND ENABLE_EXTRA_TESTS
+                      CONDITION ENABLE_EXTRA_TESTS
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_simple_packing_legacy.sh
                       TEST_DEPENDS eccodes_download_gribs )
 
@@ -660,7 +660,7 @@ if( HAVE_BUILD_TOOLS )
 
     ecbuild_add_test( TARGET eccodes_t_grib_ccsds_flags
                       TYPE SCRIPT
-                      CONDITION HAVE_AEC AND HAVE_CCSDS_SPAEC AND ENABLE_EXTRA_TESTS
+                      CONDITION HAVE_AEC AND ENABLE_EXTRA_TESTS
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_ccsds_flags.sh
                       TEST_DEPENDS eccodes_download_gribs )
 

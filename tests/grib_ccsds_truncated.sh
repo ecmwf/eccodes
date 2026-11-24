@@ -10,8 +10,9 @@
 
 . ./include.ctest.sh
 
-# Decoding a truncated CCSDS data section must fail, with SpAec and with libaec
+# Decoding a truncated CCSDS data section must fail, with libaec and with SpAec
+# (without AEC the default is SpAec)
 ${test_dir}/grib_ccsds_truncated
 if [ $HAVE_AEC -eq 1 ]; then
-    ECCODES_USE_LIBAEC=1 ${test_dir}/grib_ccsds_truncated
+    ECCODES_USE_SPAEC=1 ${test_dir}/grib_ccsds_truncated
 fi

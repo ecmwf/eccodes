@@ -33,7 +33,7 @@ public:
 
 protected:
     // true: use the simple_packing library (projects/simple_packing), false: the legacy code.
-    // ECCODES_USE_LEGACY_SIMPLE_PACKING=1 selects the legacy code.
+    // The legacy code is the default; ECCODES_USE_NEW_SIMPLE_PACKING=1 selects the library.
     static bool use_new_simple_packing();
 
     int edition_ = 0;

@@ -21,7 +21,6 @@ tempText=temp.$label.txt
 sample=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
 for packing in grid_simple grid_ccsds; do
-    if [ $packing = grid_ccsds ] && [ $HAVE_AEC -eq 0 ]; then continue; fi
     ${tools_dir}/grib_set -r -s packingType=$packing,bitsPerValue=16 $sample $temp1
     offset=$( ${tools_dir}/grib_get -p offsetSection7 $temp1 )
     length=$( ${tools_dir}/grib_get -p section7Length $temp1 )

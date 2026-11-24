@@ -11,6 +11,7 @@
 #include "DataCcsdsPacking.h"
 
 #include <cmath>
+#include <cstring>
 
 #if defined(HAVE_LIBAEC) || defined(HAVE_AEC)
     #include <libaec.h>
@@ -19,22 +20,21 @@
     #endif
 #endif
 
-#ifdef HAVE_CCSDS_SPAEC
-    #include "ccsds/SpAec.h"
-#endif
+#include "ccsds/SpAec.h"
 
 namespace eccodes::accessor
 {
 
-#ifdef HAVE_CCSDS_SPAEC
+// SpAec is always built. With libaec (ENABLE_AEC=ON), libaec is the default and
+// ECCODES_USE_SPAEC=1 selects SpAec; without libaec, SpAec is always used.
 static bool use_spaec()
 {
-    static int cached = -1;
-    // if (cached == -1) {
-    const char* env = getenv("ECCODES_USE_LIBAEC");
-    cached = (env == nullptr || env[0] == '\0') ? 1 : 0;
-    // }
-    return cached == 1;
+#if defined(HAVE_LIBAEC) || defined(HAVE_AEC)
+    const char* env = getenv("ECCODES_USE_SPAEC");
+    return env != nullptr && env[0] != '\0' && strcmp(env, "0") != 0;
+#else
+    return true;
+#endif
 }
 
 // SpAec implements the CCSDS options used by GRIB: preprocessed unsigned samples, basic code
@@ -45,7 +45,6 @@ static bool spaec_supports_flags(long flags)
     constexpr long signedFlag = 1, preprocessFlag = 8, restrictedFlag = 16, padRsiFlag = 32;
     return (flags & preprocessFlag) && !(flags & (signedFlag | restrictedFlag | padRsiFlag));
 }
-#endif
 
 void DataCcsdsPacking::init(const long v, grib_arguments* args)
 {
@@ -71,9 +70,7 @@ int DataCcsdsPacking::value_count(long* count)
     return grib_get_long_internal(get_enclosing_handle(), number_of_values_, count);
 }
 
-#if defined(HAVE_LIBAEC) || defined(HAVE_AEC) || defined(HAVE_CCSDS_SPAEC)
-
-    #if defined(HAVE_LIBAEC) || defined(HAVE_AEC)
+#if defined(HAVE_LIBAEC) || defined(HAVE_AEC)
 static bool is_big_endian()
 {
     unsigned char is_big_endian = 0;
@@ -110,9 +107,9 @@ static void print_aec_stream_info(struct aec_stream* strm, const char* func)
     fprintf(stderr, "ECCODES DEBUG CCSDS %s aec_stream.avail_out=%lu\n", func, strm->avail_out);
     fprintf(stderr, "ECCODES DEBUG CCSDS %s aec_stream.avail_in=%lu\n", func, strm->avail_in);
 }
-    #endif /* HAVE_LIBAEC || HAVE_AEC */
+#endif /* HAVE_LIBAEC || HAVE_AEC */
 
-    #define MAX_BITS_PER_VALUE 32
+#define MAX_BITS_PER_VALUE 32
 int DataCcsdsPacking::pack_double(const double* val, size_t* len)
 {
     grib_handle* hand = get_enclosing_handle();
@@ -188,11 +185,11 @@ int DataCcsdsPacking::pack_double(const double* val, size_t* len)
     }
 
     if (is_constant_field) {
-    #ifdef DEBUG
+#ifdef DEBUG
         for (i = 1; i < n_vals; i++) {
             ECCODES_ASSERT(val[i] == val[0]);
         }
-    #endif
+#endif
         if (grib_get_nearest_smaller_value(hand, reference_value_, val[0], &reference_value) != GRIB_SUCCESS) {
             grib_context_log(context_, GRIB_LOG_ERROR,
                              "%s %s: Unable to find nearest_smaller_value of %g for %s", accessor_type().c_str(), __func__, min, reference_value_);
@@ -313,7 +310,6 @@ int DataCcsdsPacking::pack_double(const double* val, size_t* len)
     if ((err = grib_set_long_internal(hand, decimal_scale_factor_, decimal_scale_factor)) != GRIB_SUCCESS)
         return err;
 
-    #ifdef HAVE_CCSDS_SPAEC
     if (use_spaec() && spaec_supports_flags(ccsds_flags)) {
         if (bits_per_value < 1 || bits_per_value > MAX_BITS_PER_VALUE) {
             grib_context_log(context_, GRIB_LOG_ERROR, "%s pack_double: packing %s, bitsPerValue=%ld (max %d)",
@@ -368,9 +364,8 @@ int DataCcsdsPacking::pack_double(const double* val, size_t* len)
 
         return GRIB_SUCCESS;
     }
-    #endif
 
-    #if defined(HAVE_LIBAEC) || defined(HAVE_AEC)
+#if defined(HAVE_LIBAEC) || defined(HAVE_AEC)
     {
         struct aec_stream strm;
         modify_aec_flags(&ccsds_flags);
@@ -456,22 +451,14 @@ int DataCcsdsPacking::pack_double(const double* val, size_t* len)
 
         return err;
     }
-    #endif
-
-    #ifdef HAVE_CCSDS_SPAEC
-    if (!spaec_supports_flags(ccsds_flags)) {
-        grib_context_log(context_, GRIB_LOG_ERROR,
-                         "%s %s: ccsdsFlags=%ld (signed, restricted, RSI padded or not preprocessed data) are not supported by SpAec. "
-                         "Please rebuild with -DENABLE_AEC=ON",
-                         accessor_type().c_str(), __func__, ccsds_flags);
-        return GRIB_NOT_IMPLEMENTED;
-    }
-    #endif
-
+#else
+    // Without libaec, SpAec is the only implementation
     grib_context_log(context_, GRIB_LOG_ERROR,
-                     "CCSDS support not enabled. "
-                     "Please rebuild with -DENABLE_AEC=ON or -DENABLE_CCSDS_SPAEC=ON");
-    return GRIB_FUNCTIONALITY_NOT_ENABLED;
+                     "%s %s: ccsdsFlags=%ld (signed, restricted, RSI padded or not preprocessed data) are not supported by SpAec. "
+                     "Please rebuild with -DENABLE_AEC=ON",
+                     accessor_type().c_str(), __func__, ccsds_flags);
+    return GRIB_NOT_IMPLEMENTED;
+#endif
 }
 
 template <typename T>
@@ -557,7 +544,6 @@ int DataCcsdsPacking::unpack(T* val, size_t* len)
         return GRIB_SUCCESS;
     }
 
-    #ifdef HAVE_CCSDS_SPAEC
     if (use_spaec() && spaec_supports_flags(ccsds_flags)) {
         if (hand->context->debug) {
             fprintf(stderr, "ECCODES DEBUG CCSDS unpack_* aec_stream.flags=%ld\n", ccsds_flags);
@@ -587,9 +573,8 @@ int DataCcsdsPacking::unpack(T* val, size_t* len)
         *len = n_vals;
         return GRIB_SUCCESS;
     }
-    #endif
 
-    #if defined(HAVE_LIBAEC) || defined(HAVE_AEC)
+#if defined(HAVE_LIBAEC) || defined(HAVE_AEC)
     {
         struct aec_stream strm;
         unsigned char* decoded = NULL;
@@ -663,22 +648,14 @@ int DataCcsdsPacking::unpack(T* val, size_t* len)
         grib_context_buffer_free(context_, decoded);
         return GRIB_SUCCESS;
     }
-    #endif
-
-    #ifdef HAVE_CCSDS_SPAEC
-    if (!spaec_supports_flags(ccsds_flags)) {
-        grib_context_log(context_, GRIB_LOG_ERROR,
-                         "%s %s: ccsdsFlags=%ld (signed, restricted, RSI padded or not preprocessed data) are not supported by SpAec. "
-                         "Please rebuild with -DENABLE_AEC=ON",
-                         accessor_type().c_str(), __func__, ccsds_flags);
-        return GRIB_NOT_IMPLEMENTED;
-    }
-    #endif
-
+#else
+    // Without libaec, SpAec is the only implementation
     grib_context_log(context_, GRIB_LOG_ERROR,
-                     "CCSDS support not enabled. "
-                     "Please rebuild with -DENABLE_AEC=ON or -DENABLE_CCSDS_SPAEC=ON");
-    return GRIB_FUNCTIONALITY_NOT_ENABLED;
+                     "%s %s: ccsdsFlags=%ld (signed, restricted, RSI padded or not preprocessed data) are not supported by SpAec. "
+                     "Please rebuild with -DENABLE_AEC=ON",
+                     accessor_type().c_str(), __func__, ccsds_flags);
+    return GRIB_NOT_IMPLEMENTED;
+#endif
 }
 
 int DataCcsdsPacking::unpack_double(double* val, size_t* len)
@@ -795,46 +772,5 @@ int DataCcsdsPacking::pack_bytes(const unsigned char* val, size_t* len)
     const size_t length = *len;
     return grib_buffer_replace(this, val, length, 1, 1);
 }
-
-#else
-
-static void print_error_feature_not_enabled(grib_context* c)
-{
-    grib_context_log(c, GRIB_LOG_ERROR,
-                     "CCSDS support not enabled. "
-                     "Please rebuild with -DENABLE_AEC=ON or -DENABLE_CCSDS_SPAEC=ON");
-}
-int DataCcsdsPacking::pack_double(const double* /*val*/, size_t* /*len*/)
-{
-    print_error_feature_not_enabled(context_);
-    return GRIB_FUNCTIONALITY_NOT_ENABLED;
-}
-int DataCcsdsPacking::unpack_double(double* /*val*/, size_t* /*len*/)
-{
-    print_error_feature_not_enabled(context_);
-    return GRIB_FUNCTIONALITY_NOT_ENABLED;
-}
-int DataCcsdsPacking::unpack_float(float* /*val*/, size_t* /*len*/)
-{
-    print_error_feature_not_enabled(context_);
-    return GRIB_FUNCTIONALITY_NOT_ENABLED;
-}
-int DataCcsdsPacking::unpack_double_element(size_t /*idx*/, double* /*val*/)
-{
-    print_error_feature_not_enabled(context_);
-    return GRIB_FUNCTIONALITY_NOT_ENABLED;
-}
-int DataCcsdsPacking::unpack_double_element_set(const size_t* /*index_array*/, size_t /*len*/, double* /*val_array*/)
-{
-    print_error_feature_not_enabled(context_);
-    return GRIB_FUNCTIONALITY_NOT_ENABLED;
-}
-int DataCcsdsPacking::pack_bytes(const unsigned char* /*val*/, size_t* /*len*/)
-{
-    print_error_feature_not_enabled(context_);
-    return GRIB_FUNCTIONALITY_NOT_ENABLED;
-}
-
-#endif
 
 }  // namespace eccodes::accessor

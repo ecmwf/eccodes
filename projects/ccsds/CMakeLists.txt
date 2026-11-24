@@ -21,6 +21,7 @@ endif()
 option(CCSDS_BUILD_TESTS "Build the ccsds tests" ${CCSDS_TOP_LEVEL})
 option(CCSDS_BUILD_FUZZERS "Build the ccsds libFuzzer fuzzers (requires Clang)" OFF)
 option(CCSDS_INSTALL "Install the ccsds headers and CMake package" ${CCSDS_TOP_LEVEL})
+option(CCSDS_NATIVE_ARCH "Optimise for the host CPU (-march=native): faster, but not portable" ON)
 
 # libFuzzer + ASan + UBSan instrumentation for the fuzzers and the code they exercise
 if(CCSDS_BUILD_FUZZERS)
@@ -39,6 +40,19 @@ if(CCSDS_TOP_LEVEL)
 endif()
 
 include(GNUInstallDirs)
+
+# Optimisation flags for the coder (tests; ecCodes uses them for its CCSDS accessor)
+include(CheckCXXCompilerFlag)
+set(CCSDS_OPT_FLAGS -O3)
+if(CCSDS_NATIVE_ARCH AND NOT CMAKE_CROSSCOMPILING)
+  check_cxx_compiler_flag("-march=native" CCSDS_HAVE_MARCH_NATIVE)
+  if(CCSDS_HAVE_MARCH_NATIVE)
+    list(APPEND CCSDS_OPT_FLAGS -march=native -mtune=native)
+  endif()
+endif()
+if(NOT CCSDS_TOP_LEVEL)
+  set(CCSDS_OPT_FLAGS ${CCSDS_OPT_FLAGS} PARENT_SCOPE)
+endif()
 
 # --- ccsds::spaec: the header-only SpAec library ---
 

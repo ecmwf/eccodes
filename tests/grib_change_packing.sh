@@ -138,16 +138,9 @@ stats=`${tools_dir}/grib_get -F%.1f -p average,standardDeviation $temp`
 
 # ECC-1352: Check CCSDS
 # ----------------------------
-if [ $HAVE_AEC -eq 0 ]; then
-    # Check we get an error if we try to decode this packing
-    [ -f "${data_dir}/ccsds.grib2" ]
-    set +e
-    ${tools_dir}/grib_get -p min,max ${data_dir}/ccsds.grib2 2>$temp_err
-    status=$?
-    set -e
-    [ $status -ne 0 ]
-    grep -q "CCSDS support not enabled. Please rebuild with -DENABLE_AEC=ON" $temp_err
-fi
+# CCSDS is always supported: by libaec (ENABLE_AEC=ON) or by the built-in SpAec
+[ -f "${data_dir}/ccsds.grib2" ]
+${tools_dir}/grib_get -p min,max ${data_dir}/ccsds.grib2
 
 # grid_simple_log_preprocessing
 # -----------------------------
