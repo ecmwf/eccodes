@@ -5,6 +5,8 @@
 #include <type_traits>
 #include <vector>
 
+#include "simple_packing/Utils.h"  // sp_power
+
 
 template <typename ValueType, uint8_t BPV>
 class ArrayCodec
