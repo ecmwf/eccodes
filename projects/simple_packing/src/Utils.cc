@@ -387,7 +387,8 @@ std::optional<long> get_binary_scale_factor(double max, double min, long bpval)
         throw std::range_error("Simple packing: the maximum is smaller than the minimum");
     }
 
-    const unsigned long maxint = static_cast<unsigned long>(sp_power<double>(bpval, 2)) - 1;
+    // 64-bit integers: up to 63 bits per value also where long has 32 bits
+    const uint64_t maxint = static_cast<uint64_t>(sp_power<double>(bpval, 2)) - 1;
 
     assert(bpval >= 1);
     if (range == 0)
@@ -408,12 +409,12 @@ std::optional<long> get_binary_scale_factor(double max, double min, long bpval)
         zs /= 2;
     }
 
-    while ((unsigned long)(range * zs + 0.5) <= maxint) {
+    while (static_cast<uint64_t>(range * zs + 0.5) <= maxint) {
         scale--;
         zs *= 2;
     }
 
-    while ((unsigned long)(range * zs + 0.5) > maxint) {
+    while (static_cast<uint64_t>(range * zs + 0.5) > maxint) {
         scale++;
         zs /= 2;
     }

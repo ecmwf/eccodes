@@ -19,9 +19,11 @@ constexpr double dbl_max = std::numeric_limits<double>::max();
 // under UBSan): clamp it, the callers only compare against the encoded-value bounds
 long toLongClamped(double value)
 {
-    if (value >= 9223372036854775808.0)  // 2^63: the smallest double beyond LONG_MAX
+    // 2^63 (2^31 where long has 32 bits): the smallest double beyond LONG_MAX; -2^63 is exactly LONG_MIN
+    static const double limit = std::ldexp(1.0, std::numeric_limits<long>::digits);
+    if (value >= limit)
         return std::numeric_limits<long>::max();
-    if (value <= -9223372036854775808.0)  // -2^63 is exactly LONG_MIN, lower values are not
+    if (value <= -limit)
         return std::numeric_limits<long>::min();
     return static_cast<long>(value);
 }
@@ -54,7 +56,7 @@ std::optional<FactecResult> factec(double pa, int knbit, long kdec, int range)
     /* Binary scale factor associated to kdec */
     long ke = floor(log2((pa * sp_power<double>(kdec, 10)) / (sp_power<double>(knbit, 2) - 0.5))) + 1;
     /* Encoded value for pa = max - min       */
-    long knutil = floor(0.5 + pa * sp_power<double>(kdec, 10) * sp_power<double>(-ke, 2));
+    long knutil = toLongClamped(floor(0.5 + pa * sp_power<double>(kdec, 10) * sp_power<double>(-ke, 2)));
     return FactecResult{ ke, knutil };
 }
 
@@ -113,9 +115,10 @@ Parameters BinDecOptimizer::getParams(const double pmin, const double pmax)
     xtinyr4 = flt_min;
     xhuger4 = flt_max;
 
-    // 2^63 - 1 is not exactly representable as double: do not convert 2^63 to long
+    // 2^63 - 1 is not exactly representable as double: do not convert 2^63 to long (nor values
+    // beyond the range of a 32-bit long, where long has 32 bits)
     xnbint = sp_power<double>(knbit_, 2) - 1;
-    inbint = knbit_ >= 63 ? std::numeric_limits<long>::max() : static_cast<long>(xnbint);
+    inbint = knbit_ >= std::numeric_limits<long>::digits ? std::numeric_limits<long>::max() : static_cast<long>(xnbint);
 
     /* Test decimal scale factors; keep the most suitable */
     for (jdec = idecmin; jdec <= idecmax; jdec++) {
