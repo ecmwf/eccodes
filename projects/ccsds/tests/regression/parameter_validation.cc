@@ -62,7 +62,7 @@ int main()
     expectInvalid("decimal scale factor -40000", [&] { SpAec(16, 32, 64, basic, 0.0, 0, -40000); });
     expectInvalid("NaN reference value", [&] { SpAec(16, 32, 64, basic, std::nan("")); });
     expectInvalid("infinite reference value", [&] { SpAec(16, 32, 64, basic, std::numeric_limits<double>::infinity()); });
-    expectInvalid("restricted code options", [&] { SpAec(16, 32, 64, CodeOptionSet::Restricted, 0.0); });
+    expectInvalid("restricted code options with 6 bits per value", [&] { SpAec(6, 32, 64, CodeOptionSet::Restricted, 0.0); });
 
     // Low-level encoder and decoder
     expectInvalid("encoder with block size 9", [&] { encoder::EncoderSeq<uint8_t, uint8_t>(8, 9, 1, basic); });

@@ -106,12 +106,9 @@ public:
         referenceValue_(referenceValue),
         binaryScaleFactor_(binaryScaleFactor),
         decimalScaleFactor_(decimalScaleFactor),
-        codeOptionSet_(codeOptionSet)
+        codeOptionSet_(effectiveCodeOptionSet(codeOptionSet, bpv))
     {
         validateCcsdsParameters(bpv_, blockSize_, rsiSize_);
-        if (codeOptionSet_ != CodeOptionSet::Basic) {
-            throw std::invalid_argument("CCSDS: unsupported code option set (only CodeOptionSet::Basic is supported)");
-        }
         if (nThreads_ == 0) {
             throw std::invalid_argument("CCSDS: the number of threads must be at least 1");
         }
@@ -127,6 +124,21 @@ public:
         }
     }
 
+    // The code option set used for bpv bits per value, like libaec (and the C API): the restricted
+    // set for 1 to 4 bits, rejected for 5 to 8 bits, the basic set for more bits (CCSDS 121.0-B-3,
+    // Table 5-1: the same IDs)
+    static CodeOptionSet effectiveCodeOptionSet(CodeOptionSet codeOptionSet, uint8_t bpv)
+    {
+        if (codeOptionSet != CodeOptionSet::Restricted) {
+            return codeOptionSet;
+        }
+        if (bpv > 4 && bpv <= 8) {
+            throw std::invalid_argument("CCSDS: the restricted set of code options does not exist for " + std::to_string(bpv) +
+                                        " bits per value (only for 1 to 4 bits, and the basic set above 8 bits)");
+        }
+        return bpv <= 4 ? CodeOptionSet::Restricted : CodeOptionSet::Basic;
+    }
+
     // Largest possible size in bytes of the encoded data of nValues values (every block
     // uncompressed), including the 8 bytes the encoder may touch after the end of the data.
     // The target of encode() must be at least this large.
@@ -134,6 +146,7 @@ public:
     {
         validateCcsdsParameters(bpv, blockSize, 1);
         const size_t nBlocks = nValues / blockSize + (nValues % blockSize != 0);
+        // The basic set has the longest IDs: the bound also holds for the restricted set
         const size_t idLength = CodeOptionBase{ bpv, CodeOptionSet::Basic }.maxIdLength - 1u;
         const size_t bitsPerBlock = idLength + static_cast<size_t>(blockSize) * bpv;
         // ceil(nBlocks * bitsPerBlock / 8) + 8 without overflow: with nBlocks = 8 * a + b, it is
@@ -214,10 +227,10 @@ private:
 
         // The parallel encoder produces the same bytes as the sequential one (see EncoderPar)
         if (nThreads_ > 1) {
-            EncoderPar<DeltaType, DeltaType> encoder{ bpv_, blockSize_, rsiSize_, CodeOptionSet::Basic, nThreads_ };
+            EncoderPar<DeltaType, DeltaType> encoder{ bpv_, blockSize_, rsiSize_, codeOptionSet_, nThreads_ };
             return encoder.encode(Span<DeltaType>(mapped), target);
         }
-        EncoderSeq<DeltaType, DeltaType> encoder{ bpv_, blockSize_, rsiSize_, CodeOptionSet::Basic };
+        EncoderSeq<DeltaType, DeltaType> encoder{ bpv_, blockSize_, rsiSize_, codeOptionSet_ };
         return encoder.encode(Span<DeltaType>(mapped), target);
     }
 
@@ -233,11 +246,11 @@ private:
         SimpleUnmapper<DeltaType> unmapper{ referenceValue_, binaryScaleFactor_, decimalScaleFactor_ };
 
         if (nThreads_ > 1) {
-            DecoderPar<DeltaType, DeltaType> decoder{ bpv_, blockSize_, rsiSize_, CodeOptionSet::Basic, nThreads_ };
+            DecoderPar<DeltaType, DeltaType> decoder{ bpv_, blockSize_, rsiSize_, codeOptionSet_, nThreads_ };
             decoder.decodeParallel(source, target, unmapper);
         }
         else {
-            DecoderSeq<DeltaType, DeltaType> decoder{ bpv_, blockSize_, rsiSize_, CodeOptionSet::Basic };
+            DecoderSeq<DeltaType, DeltaType> decoder{ bpv_, blockSize_, rsiSize_, codeOptionSet_ };
             ValueType* out = target.data();
             decoder.decodeSpans(source, target.size(),
                                 [&](const DeltaType* values, size_t count, size_t offset) {
