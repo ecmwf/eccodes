@@ -178,8 +178,8 @@ static void decodeVariants()
     }
 
     // Fewer values than encoded, ending inside a run of 3 zero blocks (not "remainder of segment"):
-    // the run of the last RSI reaches beyond the requested values (allowed, like libaec, which stops
-    // when its output is full)
+    // the run of the last RSI reaches beyond the requested values (allowed: decoding stops when the
+    // output is full)
     {
         const size_t n = 4096 + 1000, runStart = 4096 + 256;
         std::vector<uint16_t> samples(n);
@@ -241,7 +241,7 @@ static void decodeVariants()
     }
 }
 
-// The restricted set of code options, like libaec: 1 to 4 bits per value (the stream of EncoderSeq
+// The restricted set of code options: 1 to 4 bits per value (the stream of EncoderSeq
 // with the restricted set), rejected for 5 to 8 bits, the basic set for more bits (its IDs are the
 // same)
 static void restrictedSet()

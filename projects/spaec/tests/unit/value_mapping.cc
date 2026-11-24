@@ -41,7 +41,7 @@ static void unmapperFloat()
     };
     for (const auto& c : cases) {
         encoder::SpAec<float>::SimpleUnmapper<uint32_t> unmapper(c.reference, c.binaryScale, c.decimalScale);
-        // ecCodes with libaec: powers in float, scaling in double, one rounding to float
+        // Legacy ecCodes: powers in float, scaling in double, one rounding to float
         const double bscale = grib_power<float>(c.binaryScale, 2);
         const double dscale = grib_power<float>(-c.decimalScale, 10);
         const float expected = static_cast<float>((static_cast<double>(c.mapped) * bscale + static_cast<double>(c.reference)) * dscale);

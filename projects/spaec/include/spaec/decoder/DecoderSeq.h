@@ -226,8 +226,8 @@ public:
     // ZB
     // maxBlocks caps the run length: the number of blocks still available at blockOffset,
     // in the segment or, for the last RSI of a shorter target, in the whole RSI (the run
-    // may legitimately cover blocks beyond the requested values, like libaec, which stops
-    // with success when its output is full)
+    // may legitimately cover blocks beyond the requested values: decoding stops with success when
+    // the output is full)
     template <ReferenceType RType>
     size_t zbDecode(const BitBuffer& buffer, Span<ValueType> segment, size_t blockOffset, size_t maxBlocks)
     {

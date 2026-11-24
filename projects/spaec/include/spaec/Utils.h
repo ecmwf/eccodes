@@ -12,10 +12,10 @@ enum class ReferenceType
 
 constexpr size_t rosLength = 5;
 
-// Largest reference sample interval (in blocks), the same limit as libaec
+// Largest reference sample interval (in blocks), CCSDS 121.0-B-3, 4.3
 constexpr size_t maxRsiSize = 4096;
 
-// Checks the coding parameters (CCSDS 121.0-B, as enforced by libaec) and throws
+// Checks the coding parameters (CCSDS 121.0-B-3, 3.1.6 and 4.3) and throws
 // std::invalid_argument with a helpful message if they are not supported.
 // maxBpv is the number of bits of the sample type used by the caller.
 inline void validateCcsdsParameters(size_t bpv, size_t blockSize, size_t rsiSize, size_t maxBpv = 32)

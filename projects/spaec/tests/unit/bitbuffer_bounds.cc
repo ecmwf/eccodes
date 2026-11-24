@@ -1,7 +1,7 @@
 // Unit tests of BitBuffer derived from regression tests:
 // - decode_truncated: reads beyond the end of the data (limitBits) must throw, not read on
 // - encode_large_samples: writeCodewords must not write beyond the buffer (std::length_error)
-// - capi_wide_samples: writeBits writes only the low nBits bits of a wider value
+// - writeBits writes only the low nBits bits of a wider value
 // - encode_byte_order: the stream is most significant bit first: exact bytes for every writer,
 //   readers return the values of given bytes (fails on big-endian machines if a writer or reader
 //   swaps bytes unconditionally)

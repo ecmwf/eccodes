@@ -1,6 +1,6 @@
 // A zero-block run of a valid stream may reach beyond the values that were asked for
-// (the last RSI of a shorter target): like libaec, which stops with success when its
-// output buffer is full, decoding fewer values than encoded must succeed. The run used
+// (the last RSI of a shorter target): decoding stops with success when the output is full,
+// so decoding fewer values than encoded must succeed. The run used
 // to be reported as corrupt data. Runs beyond the blocks of the RSI itself remain
 // corrupt and are still rejected.
 
@@ -58,9 +58,8 @@ int main()
     try {
         // bpv=8, block size 8, RSI 2: every RSI is two zero blocks, encoded as one zero-block
         // run of 2 with a reference sample. Asking for the values of the first block only
-        // (16 of 32, 8 of 16, ...) cuts the run at the requested values, which is what libaec
-        // does when its output buffer is full (used to throw "run of 2 zero blocks, but only
-        // 1 blocks remain")
+        // (16 of 32, 8 of 16, ...) cuts the run at the requested values (used to throw "run of 2
+        // zero blocks, but only 1 blocks remain")
         {
             std::vector<double> data(320, 0.0);  // 20 RSIs
             encoder::SpAec<double> spaec{ 8, 8, 2, CodeOptionSet::Basic, 0.0 };

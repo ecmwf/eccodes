@@ -2,8 +2,8 @@
 // - decode_zero_block_run: a zero-block run longer than the blocks that remain (maxBlocks) must
 //   throw (it overflowed the segment buffer)
 // - decode_prefix: a run may reach beyond the segment if it fits in the RSI (maxBlocks larger
-//   than the segment): it is cut at the end of the segment, like libaec stops when its output
-//   is full
+//   than the segment): it is cut at the end of the segment, decoding stops when the output is
+//   full
 #include <cstdint>
 #include <iostream>
 #include <stdexcept>

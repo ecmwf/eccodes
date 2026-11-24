@@ -1,13 +1,12 @@
 // Unit tests of the code option selection of EncoderSeq derived from regression tests:
 // - encode_large_samples: sePrepare must return the exact size (64 bits, it wrapped around in a
 //   32-bit size_t) and encodeFullBlock must not choose the second extension for large samples
-// - encode_parallel_identity: the streams must be identical to libaec's: the split-sample k is
-//   searched like libaec, a block that is zero after its reference sample is a zero block, an
-//   empty stream is one zero byte; ties are broken like libaec (split sample only if strictly
-//   smaller than both other options, otherwise no compression if not larger than the second
-//   extension)
-// - encode_zero_blocks_libaec: zbEncodeROS uses the "remainder of segment" codeword only for runs
-//   of at least 5 blocks, shorter runs at the end of a segment are written as normal runs
+// - reference streams: the split-sample k is searched from the k of the previous block, a block
+//   that is zero after its reference sample is a zero block, an empty stream is one zero byte;
+//   ties are broken as split sample only if strictly smaller than both other options, otherwise
+//   no compression if not larger than the second extension
+// - zbEncodeROS uses the "remainder of segment" codeword only for runs of at least 5 blocks,
+//   shorter runs at the end of a segment are written as normal runs
 #include <cstdint>
 #include <iostream>
 #include <string>
@@ -106,8 +105,8 @@ static void zeroBlockRuns()
     }
 }
 
-// Streams whose encoding depends on details of libaec's option selection (expected: libaec's bytes)
-static void likeLibaec()
+// Streams whose encoding depends on details of the option selection (expected: reference streams)
+static void referenceStreams()
 {
     struct Case
     {
@@ -132,13 +131,13 @@ static void likeLibaec()
         std::vector<uint8_t> out(64, 0);
         const size_t length = encoder.encode(Span<uint8_t>(values), Span<uint8_t>(out));
         out.resize(length);
-        check(out == c.expected, std::string(c.what) + ": stream differs from libaec");
+        check(out == c.expected, std::string(c.what) + ": stream differs from the reference stream");
     }
 }
 
 int main()
 {
-    likeLibaec();
+    referenceStreams();
     tieBreaking();
     largeSamples();
     zeroBlockRuns();

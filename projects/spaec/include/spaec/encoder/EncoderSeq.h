@@ -121,7 +121,7 @@ public:
         buffer.writeCodeword(cwLength - 1);
     }
 
-    // Zero blocks up to the end of a segment or RSI: like libaec (and CCSDS 121.0-B), use the
+    // Zero blocks up to the end of a segment or RSI: as CCSDS 121.0-B-3, 3.5.3, use the
     // "remainder of segment" codeword only for runs of at least rosLength blocks
     template <ReferenceType RType>
     void zbEncodeROS(BitBuffer& buffer, DeltaType reference, size_t nBlocks)
@@ -170,9 +170,8 @@ public:
             seSize = cheapest + 1;  // SE cannot win
         }
 
-        // Selection and tie-breaking of libaec (m_select_code_option), for identical streams:
-        // split sample if strictly smaller than both other options, otherwise SE or NC (NC wins
-        // a tie with SE)
+        // Selection and tie-breaking (CCSDS 121.0-B-3, 3.7): split sample if strictly smaller than
+        // both other options, otherwise SE or NC (NC wins a tie with SE)
         if (ssSize < ncSize) {
             if (ssSize < seSize) {
                 ssEncode<RType>(ssK, block, bitBuffer);
@@ -226,8 +225,7 @@ public:
             }
         };
 
-        // REF: the reference sample is not part of the zero test (as in libaec, where the first
-        // preprocessed sample of an RSI is 0)
+        // REF: the reference sample is not part of the zero test (CCSDS 121.0-B-3, 3.5.1)
         if (isZeroBlock(segmentBlocks.full(0).drop(1))) {
             nZeroBlocks++;
             isRefZeroBlock = true;
@@ -409,7 +407,7 @@ public:
     // Encodes source into the zeroed target and returns the number of bytes written
     size_t encode(const Span<ValueType> source, Span<uint8_t> target)
     {
-        // Like libaec, an empty stream is one zero byte (the flushed, empty last byte)
+        // An empty stream is one zero byte (the flushed, empty last byte)
         return std::max<size_t>((encodeBits(source, target) + 7) / 8, 1);
     }
 
@@ -418,7 +416,7 @@ public:
     {
         SplitBlock<ValueType> rsiBlocks(source, rsiSizeV_);
         BitBuffer buffer(target);
-        this->splitK(0);  // the split-sample k state starts at 0 in every stream, like in libaec
+        this->splitK(0);  // the split-sample k state starts at 0 in every stream
 
         for (size_t i = 0; i < rsiBlocks.nFull(); ++i) {
             encodeRsi(rsiBlocks.full(i), buffer);

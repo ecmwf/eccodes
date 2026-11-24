@@ -2,7 +2,7 @@
 // checked against a reference encoder and decoder written from the text of the standard only.
 // Requirements and where they are checked:
 //   3.1.6      J = 8, 16, 32, 64; n = 1..32 (unsigned samples; signed samples are not supported
-//              by SpAec, like the C API rejects AEC_DATA_SIGNED)                 -> all configurations
+//              by SpAec)                                                         -> all configurations
 //   3.2, T3-1  FS codeword: m zeros and a one                                    -> fsCodewords, streams
 //   3.3        split sample k: FS of the n-k MSBs, all FS codewords first, then the k LSBs -> streams
 //   3.4        second extension: gamma = (a+b)(a+b+1)/2 + b, delta1 = 0 in a reference block,
@@ -23,10 +23,10 @@
 //   5.2.2-5.2.6 CDS formats with and without reference sample                    -> streams
 //   5.3.1      the stream ends on a byte boundary, the fill bits are zero        -> verify
 //   any valid stream (other option choices, larger k, SE with large gamma) decodes -> random policy
-// Not implemented by SpAec (as libaec): packets and the compression identification packet
+// Not implemented by SpAec: packets and the compression identification packet
 // (5.3, 6), the file header (7), the bypass predictor and coding without preprocessor (4.2.3),
 // signed samples (3.1.6, 4.4).
-// SpAec writes one zero byte for an empty input (as libaec); the reference writes nothing.
+// SpAec writes one zero byte for an empty input; the reference writes nothing.
 #include <algorithm>
 #include <cstdint>
 #include <cstdio>
@@ -555,7 +555,7 @@ static bool verify(const std::vector<uint8_t>& stream, const std::vector<uint64_
 {
     if (x.empty()) {
         ++checks;
-        if (!(stream.size() == 1 && stream[0] == 0))  // as libaec
+        if (!(stream.size() == 1 && stream[0] == 0))
             fail(what + ": empty input is not one zero byte");
         return true;
     }

@@ -1,4 +1,4 @@
-// Decoding into float must compute like ecCodes does with libaec: the scaling is done in double
+// Decoding into float must compute like legacy ecCodes: the scaling is done in double
 // (with the powers of 2 and 10 computed in float) and the result is rounded to float once.
 // Computing in float loses the low bits of samples with more than 24 bits, and values near zero
 // that result from a large negative reference value came out completely wrong (0 instead of
@@ -41,7 +41,7 @@ int main()
             encoder::EncoderSeq<uint32_t, uint32_t> enc{ c.bpv, 32, 128, CodeOptionSet::Basic };
             const size_t size = enc.encode(Span<uint32_t>(samples), Span<uint8_t>(stream));
 
-            // ecCodes with libaec: double arithmetic, powers computed in float, one rounding to float
+            // Legacy ecCodes: double arithmetic, powers computed in float, one rounding to float
             const double bscale = grib_power<float>(c.binaryScale, 2);
             const double dscale = grib_power<float>(-c.decimalScale, 10);
             for (uint8_t threads : { 1, 4 }) {

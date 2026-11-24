@@ -17,12 +17,12 @@
 namespace encoder
 {
 
-// Multi-threaded encoder whose output is bit-identical to EncoderSeq (and therefore to libaec).
+// Multi-threaded encoder whose output is bit-identical to EncoderSeq.
 //
-// RSIs are packed back to back without padding (no AEC_PAD_RSI), the preprocessor restarts at the
+// RSIs are packed back to back without padding, the preprocessor restarts at the
 // first sample of each RSI, and zero-block runs end at the end of a segment or RSI. The only state
 // carried from one RSI to the next is the split-sample k at which the search of the next block
-// starts (see EncoderBase::selectBestMethod, it reproduces libaec).
+// starts (see EncoderBase::selectBestMethod).
 //
 // Phase 1 (parallel): the input is split into contiguous chunks of whole RSIs (only the last chunk
 // holds the trailing partial RSI). Each chunk is encoded by its own EncoderSeq into a zeroed scratch
@@ -49,7 +49,7 @@ public:
 
     // Encodes source into the zeroed target, which must hold at least scratchSize(source.size())
     // bytes, like for EncoderSeq. Returns the number of bytes written (an empty stream is one zero
-    // byte, like in EncoderSeq and libaec).
+    // byte, like in EncoderSeq).
     size_t encode(const Span<ValueType> source, Span<uint8_t> target)
     {
         return std::max<size_t>((encodeBits(source, target) + 7) / 8, 1);

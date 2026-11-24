@@ -19,4 +19,3 @@ spaec_add_fuzzer(fuzz_spaec_decode LIBS Threads::Threads)
 # Seed corpus generator (a normal executable, not instrumented)
 add_executable(spaec_fuzz_seeds ${CMAKE_CURRENT_SOURCE_DIR}/generate_seeds.cc)
 target_link_libraries(spaec_fuzz_seeds PRIVATE spaec::spaec)
-

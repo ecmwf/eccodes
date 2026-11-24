@@ -75,7 +75,7 @@ public:
     class SimpleUnmapper
     {
     public:
-        // Like ecCodes with libaec: the powers are computed in ValueType, the scaling in double, and
+        // Like legacy ecCodes: the powers are computed in ValueType, the scaling in double, and
         // the result is rounded to ValueType once. Scaling in float would lose the low bits of
         // samples with more than 24 bits and cancel catastrophically near zero.
         SimpleUnmapper(ValueType referenceValue, int binaryScaleFactor, int decimalScaleFactor) :
@@ -124,9 +124,8 @@ public:
         }
     }
 
-    // The code option set used for bpv bits per value, like libaec (and the C API): the restricted
-    // set for 1 to 4 bits, rejected for 5 to 8 bits, the basic set for more bits (CCSDS 121.0-B-3,
-    // Table 5-1: the same IDs)
+    // The code option set used for bpv bits per value: the restricted set for 1 to 4 bits, rejected
+    // for 5 to 8 bits, the basic set for more bits (CCSDS 121.0-B-3, Table 5-1: the same IDs)
     static CodeOptionSet effectiveCodeOptionSet(CodeOptionSet codeOptionSet, uint8_t bpv)
     {
         if (codeOptionSet != CodeOptionSet::Restricted) {

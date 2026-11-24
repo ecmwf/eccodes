@@ -17,12 +17,11 @@ template <typename ValueType, typename DeltaType>
 class EncoderBase
 {
 public:
-    // Selects the split-sample parameter k exactly like libaec (assess_splitting_option), so that
-    // the encoded streams are identical. The size of a split-sample block as a function of k has a
+    // Selects the split-sample parameter k. The size of a split-sample block as a function of k has a
     // single minimum (Kiely, "Selecting the Golomb Parameter in Rice Coding", 2004). The search
     // starts at the k of the previous split-sample assessment (splitK_, carried across blocks and
     // RSIs, 0 at the start of a stream) and moves up, then down, while the size strictly decreases.
-    // When two k give the same size, the result therefore depends on the previous k, like in libaec.
+    // When two k give the same size, the result therefore depends on the previous k.
     // Returns k, the total block size (ID, reference and data bits) and the sum of the values.
     template <ReferenceType RType>
     auto selectBestMethod(Span<DeltaType> values)

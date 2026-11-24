@@ -1,7 +1,7 @@
 // The CCSDS bit stream is big-endian (most significant bit first) on every platform. SpAec stored
 // and loaded words with an unconditional byte swap, which is only right on little-endian
 // machines: on big-endian ones (s390x, POWER) the encoded bytes were reordered and correct
-// streams were decoded to wrong values without an error. The expected bytes are libaec's.
+// streams were decoded to wrong values without an error. The expected bytes are reference streams.
 #include <cstdint>
 #include <iostream>
 #include <vector>
@@ -34,7 +34,7 @@ static std::vector<uint32_t> input(unsigned bpv)
 struct Expected
 {
     unsigned bpv;
-    std::vector<uint8_t> bytes;  // libaec, block size 16, reference sample interval 8, preprocessed
+    std::vector<uint8_t> bytes;  // block size 16, reference sample interval 8, preprocessed
 };
 
 template <typename T>
@@ -52,7 +52,7 @@ static int check(const Expected& e)
         size_t i = 0;
         while (i < length && i < e.bytes.size() && encoded[i] == e.bytes[i])
             ++i;
-        std::cerr << "bpv " << e.bpv << ": encoded bytes differ from libaec at byte " << i << " (length " << length << ", libaec " << e.bytes.size() << ")\n";
+        std::cerr << "bpv " << e.bpv << ": encoded bytes differ from the reference stream at byte " << i << " (length " << length << ", reference " << e.bytes.size() << ")\n";
         ++failures;
     }
 
@@ -62,12 +62,12 @@ static int check(const Expected& e)
     try {
         decoder.decode(Span<uint8_t>(stream), Span<T>(decoded));
         if (decoded != values) {
-            std::cerr << "bpv " << e.bpv << ": libaec stream decoded to wrong values\n";
+            std::cerr << "bpv " << e.bpv << ": reference stream decoded to wrong values\n";
             ++failures;
         }
     }
     catch (const std::exception& ex) {
-        std::cerr << "bpv " << e.bpv << ": decoding the libaec stream failed: " << ex.what() << '\n';
+        std::cerr << "bpv " << e.bpv << ": decoding the reference stream failed: " << ex.what() << '\n';
         ++failures;
     }
     return failures;
