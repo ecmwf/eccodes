@@ -2,15 +2,11 @@
 // - parameter_validation: validateCcsdsParameters rejects unsupported bits per value, block sizes
 //   and reference sample intervals with std::invalid_argument (an odd block size overflowed the
 //   encoder's buffers)
-// - stats_empty: SpAecStats of an empty field (no blocks) can be printed (it divided by the number
-//   of blocks, which is 0)
 #include <cstddef>
 #include <iostream>
-#include <sstream>
 #include <stdexcept>
 #include <string>
 
-#include "ccsds/Stats.h"
 #include "ccsds/Utils.h"
 
 static int failures = 0;
@@ -53,27 +49,9 @@ static void parameters()
     check(rejected(16, 32, 128, 8), "16 bits per value with samples of 8 bits must be rejected");
 }
 
-static void emptyStatistics()
-{
-    SpAecStats stats;  // no blocks, no values
-    std::ostringstream out;
-    std::streambuf* old = std::cout.rdbuf(out.rdbuf());
-    try {
-        stats.print();
-        stats.printMetrics();
-    }
-    catch (const std::exception& e) {
-        check(false, std::string("printing empty statistics: ") + e.what());
-    }
-    std::cout.rdbuf(old);
-    const std::string text = out.str();
-    check(text.find("nan") == std::string::npos && text.find("inf") == std::string::npos, "empty statistics must not contain nan or inf");
-}
-
 int main()
 {
     parameters();
-    emptyStatistics();
     if (failures != 0) {
         std::cerr << failures << " checks failed\n";
         return 1;

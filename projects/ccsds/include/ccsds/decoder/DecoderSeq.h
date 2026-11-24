@@ -17,7 +17,6 @@
 #include "ccsds/Preprocessor.h"
 #include "ccsds/BitBuffer.h"
 #include "ccsds/Utils.h"
-#include "ccsds/Stats.h"
 
 template <typename ValueType, typename DeltaType, typename DecodeFunc = Identity<DeltaType>>
 class DecoderSeq
@@ -244,12 +243,6 @@ public:
             size_t start = blockOffset * blockSizeV_;
             std::memset(&segment[start], 0, (segment.size() - start) * sizeof(ValueType));
             blocksWritten = segment.size() / blockSizeV_ - blockOffset;
-            if constexpr (RType == ReferenceType::Ref) {
-                stats_.counter.zbRosRef[blocksWritten]++;
-            }
-            else {
-                stats_.counter.zbRosNoRef[blocksWritten]++;
-            }
         }
         else {  // First n blocks are zeros
             if (length > rosLength) {
@@ -265,13 +258,6 @@ public:
 
             size_t start = blockOffset * blockSizeV_;
             std::memset(&segment[start], 0, blocksWritten * blockSizeV_ * sizeof(ValueType));
-
-            if constexpr (RType == ReferenceType::Ref) {
-                stats_.counter.zbRef[blocksWritten]++;
-            }
-            else {
-                stats_.counter.zbNoRef[blocksWritten]++;
-            }
         }
         return blocksWritten;
     }
@@ -286,7 +272,6 @@ public:
             buffer.skipBits(maxIdLength);
             reference = buffer.readBits<ValueType>(bpv_);
             seDecode(buffer, block);
-            stats_.counter.seRef++;
         }
         else {
             id >>= 1;
@@ -295,11 +280,9 @@ public:
 
             if (id == noCompressionId_) {
                 ncDecode<ReferenceType::Ref>(buffer, block);
-                stats_.counter.ncRef++;
             }
             else {
                 ssDecode<ReferenceType::Ref>(buffer, id - 1, block);
-                stats_.counter.ssRef[id - 1]++;
             }
         }
         return reference;
@@ -311,7 +294,6 @@ public:
         if (id == 1) {
             buffer.skipBits(maxIdLength);
             seDecode(buffer, block);
-            stats_.counter.seNoRef++;
         }
         else {
             id >>= 1;
@@ -319,11 +301,9 @@ public:
 
             if (id == noCompressionId_) {
                 ncDecode<ReferenceType::NoRef>(buffer, block);
-                stats_.counter.ncNoRef++;
             }
             else {
                 ssDecode<ReferenceType::NoRef>(buffer, id - 1, block);
-                stats_.counter.ssNoRef[id - 1]++;
             }
         }
     };
@@ -554,8 +534,6 @@ public:
         }
         buffer.checkPos();
         bitsDecoded_ = buffer.bitPos();
-
-        setStats(target.size(), source.size());
     }
 
     // Number of bits of the source used by the last decode(source, target)
@@ -566,7 +544,6 @@ public:
     void decodeFused(Span<uint8_t> source, size_t nValues, OutputFunc&& outputFunc)
     {
         decodeFusedAt(makeBuffer(source), 0, nValues, std::forward<OutputFunc>(outputFunc));
-        setStats(nValues, source.size());
     }
 
     // Decodes nValues values RSI by RSI and passes each decoded RSI to
@@ -586,7 +563,6 @@ public:
             sink(static_cast<const ValueType*>(valuesBuf_.data()), count, offset);
         }
         buffer.checkPos();
-        setStats(nValues, source.size());
     }
 
     // Fused decode of nValues values starting at bitOffset (for parallel decoding).
@@ -627,11 +603,6 @@ public:
         noCompressionId_ = (1u << (maxIdLength - 1)) - 1;
     }
 
-    SpAecStats getStats() const
-    {
-        return stats_;
-    }
-
 protected:
     const uint8_t bpv_;
     const uint8_t blockSizeV_;
@@ -655,16 +626,4 @@ protected:
     mutable std::vector<uint8_t> paddedSource_;
     size_t bitsDecoded_ = 0;
 
-    SpAecStats stats_;
-
-    void setStats(size_t nValues, size_t compressedSize)
-    {
-        stats_.nBlocks = (nValues + blockSizeV_ - 1) / blockSizeV_;
-        stats_.nValues = nValues;
-        stats_.bpv = bpv_;
-        stats_.blockSize = blockSizeV_;
-        stats_.rsiSize = rsiSizeB_;
-        stats_.codeOptionSet = codeOptionSet_;
-        stats_.compressedSize = compressedSize;
-    }
 };

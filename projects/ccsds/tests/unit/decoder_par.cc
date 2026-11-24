@@ -2,8 +2,6 @@
 // - decode_parallel: DecoderPar must decode inputs smaller than one RSI and a trailing partial RSI
 //   like DecoderSeq (they were not decoded), and ThreadPool must pass an exception of a task to
 //   the caller
-// - decode_parallel_stats: DecoderPar::getStats must equal the statistics of DecoderSeq (they stayed
-//   at their defaults)
 #include <cstdint>
 #include <future>
 #include <iostream>
@@ -24,16 +22,6 @@ static void check(bool ok, const std::string& what)
         std::cerr << "FAIL: " << what << '\n';
         ++failures;
     }
-}
-
-static bool sameStats(const SpAecStats& a, const SpAecStats& b)
-{
-    const auto& x = a.counter;
-    const auto& y = b.counter;
-    return a.nBlocks == b.nBlocks && a.nValues == b.nValues && a.compressedSize == b.compressedSize && a.bpv == b.bpv &&
-           a.blockSize == b.blockSize && a.rsiSize == b.rsiSize && x.ssNoRef == y.ssNoRef && x.ssRef == y.ssRef && x.seNoRef == y.seNoRef &&
-           x.seRef == y.seRef && x.ncNoRef == y.ncNoRef && x.ncRef == y.ncRef && x.zbNoRef == y.zbNoRef && x.zbRef == y.zbRef &&
-           x.zbRosNoRef == y.zbRosNoRef && x.zbRosRef == y.zbRosRef;
 }
 
 // bpv 16, block size 32, RSI 4 blocks (128 values): a random walk with zero runs
@@ -60,7 +48,6 @@ static void parallelLikeSequential(size_t n, size_t nThreads)
     try {
         parallel.decodeParallel(Span<uint8_t>(stream), Span<uint16_t>(decoded), [](uint16_t v) { return v; });
         check(decoded == values && expected == values, name + ": values differ");
-        check(sameStats(parallel.getStats(), sequential.getStats()), name + ": statistics differ from the sequential decoder");
     }
     catch (const std::exception& e) {
         check(false, name + ": " + e.what());

@@ -14,7 +14,6 @@
 #include "ccsds/encoder/EncoderPar.h"
 #include "ccsds/decoder/DecoderSeq.h"
 #include "ccsds/decoder/DecoderPar.h"
-#include "ccsds/Stats.h"
 
 template <typename T>
 T grib_power(int s, int n)
@@ -179,11 +178,6 @@ public:
         }
     }
 
-    SpAecStats getStats() const
-    {
-        return stats_;
-    }
-
 private:
     template <typename DeltaType>
     size_t encodeImpl(const Span<ValueType> data, Span<uint8_t> target)
@@ -241,8 +235,6 @@ private:
         if (nThreads_ > 1) {
             DecoderPar<DeltaType, DeltaType> decoder{ bpv_, blockSize_, rsiSize_, CodeOptionSet::Basic, nThreads_ };
             decoder.decodeParallel(source, target, unmapper);
-            // The parallel decoder merges the per-chunk statistics (see DecoderPar)
-            stats_ = decoder.getStats();
         }
         else {
             DecoderSeq<DeltaType, DeltaType> decoder{ bpv_, blockSize_, rsiSize_, CodeOptionSet::Basic };
@@ -254,7 +246,6 @@ private:
                                         o[j] = unmapper(values[j]);
                                     }
                                 });
-            stats_ = decoder.getStats();
         }
     }
 
@@ -269,8 +260,6 @@ private:
     int binaryScaleFactor_;
     int decimalScaleFactor_;
     CodeOptionSet codeOptionSet_;
-
-    SpAecStats stats_;
 };
 
 }  // namespace encoder

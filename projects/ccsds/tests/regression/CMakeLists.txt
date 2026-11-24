@@ -36,10 +36,8 @@ if(CCSDS_HAVE_FAST_MATH)
 endif()
 ccsds_add_test(encode_concurrent LIBS Threads::Threads)
 ccsds_add_test(decode_parallel LIBS Threads::Threads)
-ccsds_add_test(decode_parallel_stats LIBS Threads::Threads)
 ccsds_add_test(decode_thread_pool LIBS Threads::Threads)
 ccsds_add_test(encode_parallel LIBS Threads::Threads)
-ccsds_add_test(stats_empty)
 ccsds_add_test(decode_float_precision LIBS Threads::Threads)
 
 # Out of range access must be detected in debug builds: compiled with assertions
