@@ -17,7 +17,7 @@ ${tools_dir}/grib_check_gaussian_grid -V
 
 # Check all sample GRIBs with a Gaussian grid
 samples_dir=$ECCODES_SAMPLES_PATH
-for gg in ${samples_dir}/reduced_gg_* ${samples_dir}/regular_gg_*; do
+for gg in ${samples_dir}/reduced_gg_* ${samples_dir}/regular_gg_* ${proj_dir}/ifs_samples/*/gg_*.tmpl; do
    ${tools_dir}/grib_check_gaussian_grid $gg >/dev/null
    grib_check_key_equals $gg "global" 1
 done
@@ -70,6 +70,21 @@ status=$?
 set -e
 [ $status -ne 0 ]
 grep -q "First latitude must be = last latitude but opposite in sign" $tempText
+
+
+# Latitudes at a lower precision than the encoding (GRIB1 millidegrees in edition 2). Should fail
+input=$samples_dir/reduced_gg_pl_48_grib2.tmpl
+${tools_dir}/grib_set -s latitudeOfFirstGridPoint=88572000,latitudeOfLastGridPoint=-88572000 $input $tempGrib
+set +e
+${tools_dir}/grib_check_gaussian_grid -v $tempGrib 2> $tempText
+status=$?
+set -e
+[ $status -eq 1 ]
+grep -q "Error: latitudeOfFirstGridPointInDegrees=88.572000 but should be 88.572169" $tempText
+
+# Latitudes at the encoding precision, rounded inwards (88.5721685...). Should pass: the rounding direction isn't checked
+${tools_dir}/grib_set -s latitudeOfFirstGridPoint=88572168,latitudeOfLastGridPoint=-88572168 $input $tempGrib
+${tools_dir}/grib_check_gaussian_grid $tempGrib
 
 
 # Set wrong numberOfDataPoints. Should fail
