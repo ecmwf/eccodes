@@ -75,6 +75,9 @@ target_include_directories(simple_packing_headers INTERFACE
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 target_compile_features(simple_packing_headers INTERFACE cxx_std_20)
+# Users get the results of the project's own builds: no fused multiply-adds in the header code they
+# instantiate (they round differently, so the encoded data would depend on the CPU)
+target_compile_options(simple_packing_headers INTERFACE $<$<COMPILE_LANG_AND_ID:CXX,GNU,Clang,AppleClang,IntelLLVM>:-ffp-contract=off>)
 
 # --- Compiled sources: an object library, so that ecCodes can embed them ---
 

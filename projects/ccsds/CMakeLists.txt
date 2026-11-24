@@ -81,6 +81,9 @@ target_include_directories(ccsds_spaec INTERFACE
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 target_compile_features(ccsds_spaec INTERFACE cxx_std_20)
+# Users get the results of the project's own builds: no fused multiply-adds in the header code they
+# instantiate (they round differently, so the encoded data would depend on the CPU)
+target_compile_options(ccsds_spaec INTERFACE $<$<COMPILE_LANG_AND_ID:CXX,GNU,Clang,AppleClang,IntelLLVM>:-ffp-contract=off>)
 
 if(CCSDS_BUILD_TESTS)
   if(CCSDS_TOP_LEVEL)

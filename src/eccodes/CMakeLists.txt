@@ -466,8 +466,6 @@ ecbuild_add_library(
         ${CMAKE_THREAD_LIBS_INIT}
         ${PNG_LIBRARIES}
         $<$<BOOL:${libaec_FOUND}>:libaec::aec>
-        $<BUILD_INTERFACE:ccsds::spaec>
-        $<BUILD_INTERFACE:simple_packing::headers>
         $<$<BOOL:${HAVE_ECCODES_OMP_THREADS}>:OpenMP::OpenMP_CXX>
     PUBLIC_LIBS
         ${CMATH_LIBRARIES}
@@ -485,6 +483,13 @@ ecbuild_add_library(
         $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/src>
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
 )
+
+# SpAec and simple_packing headers: only their include directories, not the usage requirements of
+# the targets (-ffp-contract=off would apply to the whole library); the accessors that use them get
+# the project flags below
+target_include_directories(eccodes PRIVATE
+    $<TARGET_PROPERTY:ccsds_spaec,INTERFACE_INCLUDE_DIRECTORIES>
+    $<TARGET_PROPERTY:simple_packing_headers,INTERFACE_INCLUDE_DIRECTORIES>)
 
 # CCSDS SpAec: optimise the accessor that instantiates the header-only coder
 set_source_files_properties(accessor/DataCcsdsPacking.cc PROPERTIES
