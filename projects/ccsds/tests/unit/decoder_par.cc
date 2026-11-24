@@ -92,6 +92,35 @@ static void threadPool()
     check(thrown, "ThreadPool with 0 threads must throw");
 }
 
+// Truncated streams: DecoderPar must report the error like DecoderSeq, whether it is found while
+// the calling thread looks for the start of the next thread's RSIs (half of the stream) or by a
+// thread decoding its RSIs (only the end missing), and must wait for the started threads
+static void truncated()
+{
+    std::vector<uint16_t> values(40000);
+    for (size_t i = 0; i < values.size(); ++i) {
+        values[i] = static_cast<uint16_t>((i * 2654435761u) >> 20);
+    }
+    encoder::EncoderSeq<uint16_t, uint16_t> encoder(16, 16, 8, CodeOptionSet::Basic);
+    std::vector<uint8_t> stream(values.size() * 3 + 64, 0);
+    stream.resize(encoder.encode(Span<uint16_t>(values), Span<uint8_t>(stream)));
+    for (double keep : { 0.5, 0.999 }) {
+        std::vector<uint8_t> part(stream.begin(), stream.begin() + static_cast<std::ptrdiff_t>(static_cast<double>(stream.size()) * keep));
+        for (size_t nThreads : { 2, 4 }) {
+            DecoderPar<uint16_t, uint16_t> decoder(16, 16, 8, CodeOptionSet::Basic, static_cast<uint8_t>(nThreads));
+            std::vector<uint16_t> decoded(values.size());
+            const std::string what = std::to_string(keep) + " of the stream, " + std::to_string(nThreads) + " threads";
+            try {
+                decoder.decodeParallel(Span<uint8_t>(part), Span<uint16_t>(decoded), [](uint16_t v) { return v; });
+                check(false, what + ": no error");
+            }
+            catch (const std::runtime_error& e) {
+                check(std::string(e.what()).find("truncated or corrupt") != std::string::npos, what + ": " + e.what());
+            }
+        }
+    }
+}
+
 int main()
 {
     for (size_t nThreads : { 1, 2, 3, 8 }) {
@@ -100,6 +129,7 @@ int main()
         }
     }
     threadPool();
+    truncated();
     if (failures != 0) {
         std::cerr << failures << " checks failed\n";
         return 1;
