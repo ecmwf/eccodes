@@ -44,6 +44,12 @@ include(GNUInstallDirs)
 # Optimisation flags for the coder (tests; ecCodes uses them for its CCSDS accessor)
 include(CheckCXXCompilerFlag)
 set(CCSDS_OPT_FLAGS -O3)
+# Lets GCC vectorize loops with floating-point comparisons (e.g. the range check of the values
+# to encode); SpAec does not rely on floating-point exception flags
+check_cxx_compiler_flag("-fno-trapping-math" CCSDS_HAVE_NO_TRAPPING_MATH)
+if(CCSDS_HAVE_NO_TRAPPING_MATH)
+  list(APPEND CCSDS_OPT_FLAGS -fno-trapping-math)
+endif()
 if(CCSDS_NATIVE_ARCH AND NOT CMAKE_CROSSCOMPILING)
   check_cxx_compiler_flag("-march=native" CCSDS_HAVE_MARCH_NATIVE)
   if(CCSDS_HAVE_MARCH_NATIVE)

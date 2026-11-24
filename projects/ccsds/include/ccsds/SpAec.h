@@ -194,11 +194,16 @@ private:
         SimpleMapper<DeltaType> mapper{ referenceValue_, binaryScaleFactor_, decimalScaleFactor_ };
         const double maxMapped = std::ldexp(1.0, bpv_);  // values must map to [0, 2^bpv)
         std::vector<DeltaType> mapped(data.size());
+        // No dependency between iterations (vectorizable): the range check is a reduction and
+        // out-of-range values (never converted: undefined behaviour) are replaced by 0
         bool inRange = true;
+        const ValueType* in = data.data();
+        DeltaType* out = mapped.data();
         for (size_t i = 0; i < data.size(); ++i) {
-            const double m = mapper.mapped(data[i]);
-            inRange &= (m >= 0.0) & (m < maxMapped);  // false for NaN
-            mapped[i] = inRange ? static_cast<DeltaType>(m) : 0;
+            const double m = mapper.mapped(in[i]);
+            const bool ok = (m >= 0.0) & (m < maxMapped);  // false for NaN
+            inRange &= ok;
+            out[i] = static_cast<DeltaType>(ok ? m : 0.0);
         }
         if (!inRange) {
             for (size_t i = 0; i < data.size(); ++i) {
