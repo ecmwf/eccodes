@@ -39,6 +39,9 @@ add_test(NAME ${SP_TEST_PREFIX}optimizers COMMAND sp_optimizers)
 sp_add_test(float_formats)
 add_test(NAME ${SP_TEST_PREFIX}float_formats COMMAND sp_float_formats)
 
+sp_add_test(errors)
+add_test(NAME ${SP_TEST_PREFIX}errors COMMAND sp_errors)
+
 sp_add_test(u128_reference)
 add_test(NAME ${SP_TEST_PREFIX}u128_reference COMMAND sp_u128_reference)
 
