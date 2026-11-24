@@ -15,6 +15,7 @@
 
 #include "simple_packing/optimizer/BPVOptimizer.h"
 #include "simple_packing/optimizer/BinDecOptimizer.h"
+#include "simple_packing/optimizer/BinOptimizer.h"
 #include "simple_packing/optimizer/Dec64Optimizer.h"
 #include "simple_packing/optimizer/DecOptimizer.h"
 #include "simple_packing/simple/Array.h"
@@ -87,6 +88,16 @@ static void optimizers()
         for (long bpv : { 8L, 16L, 24L }) {
             checkOptimizer("Dec64Optimizer(" + std::to_string(bpv) + ")", std::make_unique<Dec64Optimizer>(bpv, 127), r[0], r[1]);
         }
+        // BinOptimizer: decimal scale factor and bits per value given (the scaled range must fit
+        // a binary scale factor within +-127 for these fields)
+        for (int d : { -2, 0, 3 }) {
+            for (long bpv : { 1L, 12L, 24L }) {
+                if (r[0] != r[1] && (r[1] - r[0]) * sp_power<double>(d, 10) < 1e-20) {
+                    continue;  // too small for any binary scale factor
+                }
+                checkOptimizer("BinOptimizer(" + std::to_string(d) + ", " + std::to_string(bpv) + ")", std::make_unique<BinOptimizer>(d, bpv), r[0], r[1], false, 32767);
+            }
+        }
         // Decimal precision: the scaled range must be below 2^31 (like ecCodes, larger ones are rejected)
         for (int d : { 0, 2 }) {
             if ((r[1] - r[0]) * sp_power<double>(d, 10) < 2147483647.0 && r[1] - r[0] >= 1e-3) {
@@ -107,6 +118,7 @@ static void constantFields()
         optimizers.emplace_back("Dec64Optimizer", std::make_unique<Dec64Optimizer>(16, 127));
         optimizers.emplace_back("BinDecOptimizer", std::make_unique<BinDecOptimizer>(0, 0, 16));
         optimizers.emplace_back("BPVOptimizer", std::make_unique<BPVOptimizer>(2));
+        optimizers.emplace_back("BinOptimizer", std::make_unique<BinOptimizer>(2, 16));
         for (auto& [name, o] : optimizers) {
             o->referenceFloatType(type);
             for (double v : { 0.0, -273.15, 101325.0, 1e-30 }) {
@@ -196,6 +208,32 @@ static void arrayPacking()
     }
 }
 
+// BinOptimizer keeps the given decimal scale factor and bits per value; the reference value is the
+// nearest float not above the scaled minimum and the binary scale factor that of
+// get_binary_scale_factor for the scaled maximum
+static void binOptimizer()
+{
+    const double ranges[][2] = { { 0, 1 }, { -1, 1 }, { 250.15, 320.7 }, { -5e3, 7e7 }, { 101325, 101400 } };
+    for (const auto& r : ranges) {
+        for (int d : { -3, 0, 2, 5 }) {
+            for (long bpv : { 1L, 8L, 16L, 32L, 63L }) {
+                const std::string what = "BinOptimizer(" + std::to_string(d) + ", " + std::to_string(bpv) + ") [" + std::to_string(r[0]) + ", " + std::to_string(r[1]) + "]";
+                try {
+                    const Parameters p = BinOptimizer(d, bpv).getParams(r[0], r[1]);
+                    const double decimal = sp_power<double>(d, 10);
+                    const auto ref = nearest_smaller_value(r[0] * decimal, FloatType::IEEE32);
+                    const auto scale = get_binary_scale_factor(r[1] * decimal, *ref, bpv);
+                    check(p.decimalScaleFactor() == d && p.bitsPerValue() == bpv && p.referenceValue() == *ref && scale && p.binaryScaleFactor() == *scale && !p.isConstantField(),
+                          what + ": parameters");
+                }
+                catch (const std::exception& e) {
+                    check(false, what + ": " + e.what());
+                }
+            }
+        }
+    }
+}
+
 static void numberOfBits()
 {
     // The bits of x: 0 for 0, k for 2^(k-1) <= x < 2^k
@@ -218,6 +256,7 @@ int main()
     constantFields();
     constantFieldPackTo();
     binDecModes();
+    binOptimizer();
     arrayPacking();
     numberOfBits();
     if (failures != 0) {

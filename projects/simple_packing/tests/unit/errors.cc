@@ -21,6 +21,7 @@
 #include "simple_packing/Utils.h"
 #include "simple_packing/optimizer/BPVOptimizer.h"
 #include "simple_packing/optimizer/BinDecOptimizer.h"
+#include "simple_packing/optimizer/BinOptimizer.h"
 #include "simple_packing/optimizer/Dec64Optimizer.h"
 #include "simple_packing/optimizer/DecOptimizer.h"
 #include "simple_packing/simple/Array.h"
@@ -165,6 +166,19 @@ static void binDecOptimizer()
     expect<RE>("BinDecOptimizer GRIBEX range scaled to infinity", "cannot scale the range", [] { BinDecOptimizer(1, 0, 61).getParams(-1e-320, 1e-320); });
 }
 
+static void binOptimizer()
+{
+    expect<IA>("BinOptimizer decimal scale factor 32768", "decimal scale factor 32768", [] { BinOptimizer(32768, 16); });
+    expect<IA>("BinOptimizer 0 bits", "bits per value 0 is out of range", [] { BinOptimizer(0, 0); });
+    expect<IA>("BinOptimizer 64 bits", "bits per value 64 is out of range", [] { BinOptimizer(0, 64); });
+    expect<RE>("BinOptimizer NaN", "Values out of range", [] { BinOptimizer(0, 16).getParams(NAN, NAN); });
+    expect<RE>("BinOptimizer constant field without reference value", "unable to find nearest_smaller_value", [] { BinOptimizer(0, 16).getParams(1e300, 1e300); });
+    expect<RE>("BinOptimizer range scaled to infinity", "cannot scale the range", [] { BinOptimizer(10, 16).getParams(0, 1e300); });
+    expect<RE>("BinOptimizer reference value out of range", "unable to find nearest_smaller_value of", [] { BinOptimizer(0, 16).getParams(-1e300, 0); });
+    expect<RE>("BinOptimizer range too small", "unable to compute binary_scale_factor", [] { BinOptimizer(0, 16).getParams(0, 1e-100); });
+    expect<RangeE>("BinOptimizer binary scale factor > 127", "too large (binary scale factor", [] { BinOptimizer(0, 1).getParams(0, 3e38); });
+}
+
 static void simplePacking()
 {
     SimplePackingBinary<double> decodeOnly(nullptr);
@@ -264,6 +278,7 @@ int main()
     dec64Optimizer();
     bpvOptimizer();
     binDecOptimizer();
+    binOptimizer();
     simplePacking();
     binary();
     array();
