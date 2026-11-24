@@ -20,7 +20,7 @@
     #endif
 #endif
 
-#include "ccsds/SpAec.h"
+#include "spaec/SpAec.h"
 
 namespace eccodes::accessor
 {

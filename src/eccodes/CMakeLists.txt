@@ -488,12 +488,12 @@ ecbuild_add_library(
 # the targets (-ffp-contract=off would apply to the whole library); the accessors that use them get
 # the project flags below
 target_include_directories(eccodes PRIVATE
-    $<TARGET_PROPERTY:ccsds_spaec,INTERFACE_INCLUDE_DIRECTORIES>
+    $<TARGET_PROPERTY:spaec,INTERFACE_INCLUDE_DIRECTORIES>
     $<TARGET_PROPERTY:simple_packing_headers,INTERFACE_INCLUDE_DIRECTORIES>)
 
 # CCSDS SpAec: optimise the accessor that instantiates the header-only coder
 set_source_files_properties(accessor/DataCcsdsPacking.cc PROPERTIES
-    COMPILE_OPTIONS "${CCSDS_OPT_FLAGS}"
+    COMPILE_OPTIONS "${SPAEC_OPT_FLAGS}"
     COMPILE_DEFINITIONS "NDEBUG")
 
 # Simple packing: embed the compiled sources of projects/simple_packing (works for static and

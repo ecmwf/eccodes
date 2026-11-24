@@ -176,7 +176,7 @@ ecbuild_add_option( FEATURE AEC
     DEFAULT ON
     CONDITION libaec_FOUND )
 
-# CCSDS: SpAec (projects/ccsds) is always built. Without AEC it is the only implementation;
+# CCSDS: SpAec (projects/spaec) is always built. Without AEC it is the only implementation;
 # with AEC libaec is the default and ECCODES_USE_SPAEC=1 selects SpAec at runtime.
 # Simple packing: the legacy code and the simple_packing library (projects/simple_packing) are
 # both built. The legacy code is the default; ECCODES_USE_SP=1 selects the library.
@@ -480,9 +480,9 @@ include_directories(
 add_subdirectory( definitions ) # must be before memfs
 add_subdirectory( memfs )
 # Standalone libraries, also buildable and installable on their own (see projects/*/CMakeLists.txt)
-set( CCSDS_BUILD_TESTS ${ENABLE_TESTS} )
-set( CCSDS_INSTALL OFF )
-add_subdirectory( projects/ccsds )
+set( SPAEC_BUILD_TESTS ${ENABLE_TESTS} )
+set( SPAEC_INSTALL OFF )
+add_subdirectory( projects/spaec )
 set( SIMPLE_PACKING_BUILD_TESTS ${ENABLE_TESTS} )
 set( SIMPLE_PACKING_INSTALL OFF )
 add_subdirectory( projects/simple_packing )

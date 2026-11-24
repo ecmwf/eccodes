@@ -1,0 +1,629 @@
+#pragma once
+
+#include <algorithm>
+#include <bit>
+#include <cassert>
+#include <cstddef>
+#include <cstdint>
+#include <cstring>
+#include <cmath>
+#include <stdexcept>
+#include <string>
+#include <utility>
+#include <vector>
+
+#include "spaec/Span.h"
+#include "spaec/CodeOption.h"
+#include "spaec/Preprocessor.h"
+#include "spaec/BitBuffer.h"
+#include "spaec/Utils.h"
+
+template <typename ValueType, typename DeltaType, typename DecodeFunc = Identity<DeltaType>>
+class DecoderSeq
+{
+private:
+    static uint64_t loadU64(const uint8_t* ptr)
+    {
+        uint64_t val;
+        std::memcpy(&val, ptr, sizeof(uint64_t));
+        return val;
+    }
+
+    // Reads unary codewords (zero bits terminated by a one bit) from a 64-bit accumulator.
+    // The shared inner loop of the SE and SS decoders: all three call sites decode one
+    // codeword per iteration from the same (data, pos, acc, consumed) state.
+    struct UnaryCodewordReader
+    {
+        const uint8_t* data;
+        const BitBuffer& buffer;
+        size_t pos;
+        uint64_t acc;
+        size_t consumed;
+
+        explicit UnaryCodewordReader(const BitBuffer& bitBuffer) :
+            data(bitBuffer.getBuffer().data()),
+            buffer(bitBuffer),
+            pos(bitBuffer.bitPos())
+        {
+            const size_t bitpos = pos & 7;
+            acc = bigEndian64(loadU64(&data[pos >> 3]));
+            acc <<= bitpos;
+            consumed = bitpos;
+        }
+
+        // Returns the number of zeros before the terminating one bit and advances the state.
+        size_t read()
+        {
+            const size_t cw_start = pos;
+            while (acc == 0) [[unlikely]] {
+                buffer.checkPos(pos);
+                pos += (64 - consumed);
+                const size_t bitpos = pos & 7;
+                acc = bigEndian64(loadU64(&data[pos >> 3]));
+                acc <<= bitpos;
+                consumed = bitpos;
+            }
+            const size_t lz = std::countl_zero(acc);
+            const size_t total_zeros = (pos - cw_start) + lz;
+            pos += lz + 1;
+            consumed += lz + 1;
+            if (consumed >= 64) [[unlikely]] {
+                const size_t bitpos = pos & 7;
+                acc = bigEndian64(loadU64(&data[pos >> 3]));
+                acc <<= bitpos;
+                consumed = bitpos;
+            }
+            else {
+                acc <<= (lz + 1);
+            }
+            return total_zeros;
+        }
+    };
+
+protected:
+    [[noreturn]] [[gnu::cold, gnu::noinline]] static void throwCorrupt(const std::string& what)
+    {
+        throw std::runtime_error("CCSDS decoding failed: the compressed data is corrupt (" + what + ")");
+    }
+
+    // The readers may load bytes beyond the end of the compressed data (see BitBuffer::guardBytes):
+    // decode from a copy of the source followed by zero bytes.
+    BitBuffer makeBuffer(Span<uint8_t> source) const
+    {
+        paddedSource_.assign(source.size() + BitBuffer::guardBytes, 0);
+        if (source.size() > 0) {
+            std::memcpy(paddedSource_.data(), source.data(), source.size());
+        }
+        return BitBuffer{ Span<uint8_t>(paddedSource_), 0, source.size() * 8 };
+    }
+
+public:
+    // NC - batched readBits using accumulator
+    template <ReferenceType RType>
+    void ncDecode(const BitBuffer& buffer, Span<ValueType> values)
+    {
+        if constexpr (RType == ReferenceType::Ref) {
+            values[0] = 0;
+        }
+        constexpr uint8_t startIndex = (RType == ReferenceType::Ref) ? 1 : 0;
+        const uint8_t* data = buffer.getBuffer().data();
+        const uint8_t nBits = bpv_;
+
+        size_t pos = buffer.bitPos();
+        size_t bytepos = pos >> 3;
+        size_t bitpos = pos & 7;
+        uint64_t acc = bigEndian64(loadU64(&data[bytepos]));
+        acc <<= bitpos;
+        int bitsAvail = 64 - static_cast<int>(bitpos);
+
+        for (size_t i = startIndex; i < blockSizeV_; ++i) {
+            if (bitsAvail < nBits) [[unlikely]] {
+                bytepos = pos >> 3;
+                bitpos = pos & 7;
+                acc = bigEndian64(loadU64(&data[bytepos]));
+                acc <<= bitpos;
+                bitsAvail = 64 - static_cast<int>(bitpos);
+            }
+            values[i] = static_cast<ValueType>(acc >> (64 - nBits));
+            acc <<= nBits;
+            bitsAvail -= nBits;
+            pos += nBits;
+        }
+        buffer.bitPos(pos);
+    }
+
+    // SE - integer sqrt + batched codeword reading
+    void seDecode(const BitBuffer& buffer, Span<ValueType> values) const
+    {
+        assert(values.size() == blockSizeV_ && "Decoded values size mismatch");
+
+        UnaryCodewordReader codewords{ buffer };
+        for (size_t i = 0; i < blockSizeV_ / 2; ++i) {
+            // gamma = (d1 + d2)(d1 + d2 + 1) / 2 + d2 (CCSDS 121.0-B-3, 3.4.1) may be 2^n or larger
+            // (3.4.2): it is not truncated to the sample type
+            const uint64_t gamma = codewords.read();
+
+            // w = d1 + d2 = floor((sqrt(8*gamma+1) - 1) / 2)
+            uint64_t w;
+            if (gamma < (uint64_t{ 1 } << 21)) [[likely]] {
+                // Fast integer sqrt: 8*gamma+1 < 2^24 is exact in float
+                const uint32_t val = 8u * static_cast<uint32_t>(gamma) + 1;
+                uint32_t s = static_cast<uint32_t>(std::sqrt(static_cast<float>(val)));
+                s -= (s * s > val);  // adjust down if needed
+                w = (s - 1) >> 1;
+            }
+            else {
+                w = static_cast<uint64_t>((std::sqrt(8.0 * static_cast<double>(gamma) + 1.0) - 1.0) / 2.0);
+                while (w * (w + 1) / 2 > gamma) {
+                    --w;
+                }
+                while ((w + 1) * (w + 2) / 2 <= gamma) {
+                    ++w;
+                }
+            }
+            const uint64_t d2 = gamma - w * (w + 1) / 2;
+            values[2 * i] = static_cast<ValueType>(w - d2);
+            values[2 * i + 1] = static_cast<ValueType>(d2);
+        }
+        buffer.bitPos(codewords.pos);
+    }
+
+    // SS
+    template <ReferenceType RType>
+    void ssDecode(const BitBuffer& buffer, uint8_t k, Span<ValueType> values) const
+    {
+        if constexpr (RType == ReferenceType::Ref) {
+            values[0] = 0;
+        }
+
+        constexpr size_t startIndex = (RType == ReferenceType::Ref) ? 1 : 0;
+        const uint8_t* data = buffer.getBuffer().data();  // also used by the phase 2 reader
+
+        if (k != 0) {
+            // Phase 1: Read codewords using batched accumulator
+            {
+                UnaryCodewordReader codewords{ buffer };
+                for (size_t i = startIndex; i < blockSizeV_; ++i) {
+                    values[i] = static_cast<ValueType>(static_cast<uint64_t>(codewords.read()) << k);
+                }
+                buffer.bitPos(codewords.pos);
+            }
+
+            // Phase 2: Read k-bit LSBs using batched accumulator
+            {
+                size_t pos = buffer.bitPos();
+                size_t bytepos = pos >> 3;
+                size_t bitpos = pos & 7;
+                uint64_t acc = bigEndian64(loadU64(&data[bytepos]));
+                acc <<= bitpos;
+                int bitsAvail = 64 - static_cast<int>(bitpos);
+
+                for (size_t i = startIndex; i < blockSizeV_; ++i) {
+                    if (bitsAvail < k) [[unlikely]] {
+                        bytepos = pos >> 3;
+                        bitpos = pos & 7;
+                        acc = bigEndian64(loadU64(&data[bytepos]));
+                        acc <<= bitpos;
+                        bitsAvail = 64 - static_cast<int>(bitpos);
+                    }
+                    values[i] |= static_cast<ValueType>(acc >> (64 - k));
+                    acc <<= k;
+                    bitsAvail -= k;
+                    pos += k;
+                }
+                buffer.bitPos(pos);
+            }
+        }
+        else {  // FS - batched codeword reading
+            UnaryCodewordReader codewords{ buffer };
+            for (size_t i = startIndex; i < blockSizeV_; ++i) {
+                values[i] = static_cast<ValueType>(codewords.read());
+            }
+            buffer.bitPos(codewords.pos);
+        }
+    }
+
+    // ZB
+    // maxBlocks caps the run length: the number of blocks still available at blockOffset,
+    // in the segment or, for the last RSI of a shorter target, in the whole RSI (the run
+    // may legitimately cover blocks beyond the requested values, like libaec, which stops
+    // with success when its output is full)
+    template <ReferenceType RType>
+    size_t zbDecode(const BitBuffer& buffer, Span<ValueType> segment, size_t blockOffset, size_t maxBlocks)
+    {
+        size_t length = buffer.readCodeword();
+        assert(segment.size() % blockSizeV_ == 0 && "Segment size must be multiple of block size.");
+        size_t blocksWritten = 0;
+        const size_t nBlocksInSegment = segment.size() / blockSizeV_;
+        if (blockOffset >= nBlocksInSegment) {
+            throwCorrupt("zero block at block " + std::to_string(blockOffset) + " of a segment of " + std::to_string(nBlocksInSegment) + " blocks");
+        }
+
+        if (length == rosLength) {  // All zeros segment
+            size_t start = blockOffset * blockSizeV_;
+            std::memset(&segment[start], 0, (segment.size() - start) * sizeof(ValueType));
+            blocksWritten = segment.size() / blockSizeV_ - blockOffset;
+        }
+        else {  // First n blocks are zeros
+            if (length > rosLength) {
+                length--;
+            }
+            if (length > maxBlocks - blockOffset) {
+                throwCorrupt("run of " + std::to_string(length) + " zero blocks, but only " + std::to_string(maxBlocks - blockOffset) + " blocks remain");
+            }
+
+            // A run may reach beyond the segment if it still fits in the RSI: the requested
+            // values are then exhausted, so the run is cut at the end of the segment
+            blocksWritten = std::min(length, nBlocksInSegment - blockOffset);
+
+            size_t start = blockOffset * blockSizeV_;
+            std::memset(&segment[start], 0, blocksWritten * blockSizeV_ * sizeof(ValueType));
+        }
+        return blocksWritten;
+    }
+
+
+    // BLOCK
+
+    ValueType handleRefBlock(const BitBuffer& buffer, size_t id, Span<ValueType> block)
+    {
+        ValueType reference = 0;
+        if (id == 1) {
+            buffer.skipBits(maxIdLength);
+            reference = buffer.readBits<ValueType>(bpv_);
+            seDecode(buffer, block);
+        }
+        else {
+            id >>= 1;
+            buffer.skipBits(maxIdLength - 1);
+            reference = buffer.readBits<ValueType>(bpv_);
+
+            if (id == noCompressionId_) {
+                ncDecode<ReferenceType::Ref>(buffer, block);
+            }
+            else {
+                ssDecode<ReferenceType::Ref>(buffer, id - 1, block);
+            }
+        }
+        return reference;
+    };
+
+
+    void handleBlock(const BitBuffer& buffer, size_t id, Span<ValueType> block)
+    {
+        if (id == 1) {
+            buffer.skipBits(maxIdLength);
+            seDecode(buffer, block);
+        }
+        else {
+            id >>= 1;
+            buffer.skipBits(maxIdLength - 1);
+
+            if (id == noCompressionId_) {
+                ncDecode<ReferenceType::NoRef>(buffer, block);
+            }
+            else {
+                ssDecode<ReferenceType::NoRef>(buffer, id - 1, block);
+            }
+        }
+    };
+
+
+    // SEGMENT
+    // maxBlocks is the zero-block run limit handed to zbDecode (see there)
+    ValueType decodeRefFullSegment(const BitBuffer& buffer, Span<ValueType> segment, size_t maxBlocks)
+    {
+        assert(segment.size() % blockSizeV_ == 0 && "Segment size must be multiple of block size.");
+
+        SplitBlock<ValueType> blocks(segment, blockSizeV_);
+        size_t pos = 0;
+
+        // First Block containing a reference
+        buffer.checkPos();
+        auto id = buffer.peekBits(maxIdLength);
+        ValueType reference = 0;
+
+        if (id == 0) {
+            buffer.skipBits(maxIdLength);
+            reference = buffer.template readBits<ValueType>(bpv_);
+            pos += zbDecode<ReferenceType::Ref>(buffer, segment, pos, maxBlocks);
+        }
+        else {
+            reference = handleRefBlock(buffer, id, blocks.full(0));
+            pos++;
+        }
+
+        // Remaining Blocks
+        for (; pos < blocks.nFull();) {
+            buffer.checkPos();
+            const auto nextId = buffer.peekBits(maxIdLength);
+            if (nextId == 0) {
+                buffer.skipBits(maxIdLength);
+                pos += zbDecode<ReferenceType::NoRef>(buffer, segment, pos, maxBlocks);
+            }
+            else {
+                handleBlock(buffer, nextId, blocks.full(pos));
+                pos++;
+            }
+            assert(pos <= segment.size() / blockSizeV_ && "Decoded blocks exceed segment size.");
+        }
+
+        assert(pos == segment.size() / blockSizeV_ && "Decoded blocks do not match segment size.");
+
+        return reference;
+    }
+
+    void decodeAltFullSegment(const BitBuffer& buffer, Span<ValueType> segment, size_t maxBlocks)
+    {
+        assert(segment.size() % blockSizeV_ == 0 && "Segment size must be multiple of block size.");
+        SplitBlock<ValueType> blocks(segment, blockSizeV_);
+
+        // All Blocks
+        for (size_t pos = 0; pos < blocks.nFull();) {
+            buffer.checkPos();
+            auto id = buffer.peekBits(maxIdLength);
+            if (id == 0) {
+                assert(pos < segment.size() / blockSizeV_ && "Position exceeds number of blocks in segment.");
+
+                buffer.skipBits(maxIdLength);
+                pos += zbDecode<ReferenceType::NoRef>(buffer, segment, pos, maxBlocks);
+            }
+            else {
+                handleBlock(buffer, id, blocks.full(pos));
+                pos++;
+            }
+
+            assert(pos <= segment.size() / blockSizeV_ && "Decoded blocks exceed segment size.");
+        }
+    }
+
+    // Decodes a trailing partial segment: decode a zero-padded full segment and copy back.
+    // maxBlocks is the zero-block run limit handed to the segment decoders (see zbDecode).
+    template <bool HasReference>
+    auto decodePartSegment(const BitBuffer& buffer, Span<ValueType> segment, size_t maxBlocks)
+    {
+        size_t newSize = (segment.size() + blockSizeV_ - 1) / blockSizeV_ * blockSizeV_;
+        paddedSegmentBuf_.resize(newSize);
+        std::memset(paddedSegmentBuf_.data(), 0, newSize * sizeof(ValueType));
+        Span<ValueType> paddedSpan{ paddedSegmentBuf_.data(), paddedSegmentBuf_.size() };
+        if constexpr (HasReference) {
+            ValueType reference = decodeRefFullSegment(buffer, paddedSpan, maxBlocks);
+            copyBackPartSegment(segment);
+            return reference;
+        }
+        else {
+            decodeAltFullSegment(buffer, paddedSpan, maxBlocks);
+            copyBackPartSegment(segment);
+            return ValueType(0);
+        }
+    }
+
+    void copyBackPartSegment(Span<ValueType> segment)
+    {
+        for (size_t i = 0; i < segment.size(); ++i) {
+            segment[i] = paddedSegmentBuf_[i];
+        }
+    }
+
+    // RSI
+    // maxRunBlocks is the number of blocks the zero-block runs of this RSI may cover: 0
+    // limits them to the blocks of their segment, the block count of the RSI as encoded
+    // (rsiSizeB_) allows them to reach beyond the requested values of a shorter target
+    // (see zbDecode)
+    ValueType decodeRsiRaw(const BitBuffer& buffer, size_t rsiSize, size_t maxRunBlocks)
+    {
+        rsiBuf_.resize(rsiSize);
+        Span<ValueType> rsiBufSpan(rsiBuf_);
+
+        SplitBlock<ValueType> segments(rsiBufSpan, maxSegmentSizeV_);
+        ValueType reference = 0;
+
+        if (rsiSize < maxSegmentSizeV_) {
+            // The whole RSI is one (padded) segment: its own blocks are the strict limit
+            const size_t segmentBlocks = (rsiSize + blockSizeV_ - 1) / blockSizeV_;
+            reference = decodePartSegment<true>(buffer, segments.part(),
+                                                maxRunBlocks != 0 ? maxRunBlocks : segmentBlocks);
+        }
+        else {
+            reference = decodeRefFullSegment(buffer, segments.full(0), maxSegmentSizeB_);
+
+            for (size_t i = 1; i < segments.nFull(); ++i) {
+                decodeAltFullSegment(buffer, segments.full(i), maxSegmentSizeB_);
+            }
+
+            if (segments.hasPart()) {
+                const size_t segmentBlocks = (segments.part().size() + blockSizeV_ - 1) / blockSizeV_;
+                const size_t maxBlocks = maxRunBlocks != 0
+                                           ? maxRunBlocks - segments.nFull() * maxSegmentSizeB_
+                                           : segmentBlocks;
+                decodePartSegment<false>(buffer, segments.part(), maxBlocks);
+            }
+        }
+
+        return reference;
+    }
+
+    void decodeRefFullRsi(const BitBuffer& buffer, Span<ValueType> rsi, size_t maxRunBlocks)
+    {
+        ValueType reference = decodeRsiRaw(buffer, rsi.size(), maxRunBlocks);
+        preprocessor_.decode(Span<DeltaType>(rsiBuf_), reference, rsi);
+    }
+
+    // Skip one full RSI in the bitstream without decoding (for offset scanning)
+    void skipFullRsi(const BitBuffer& buffer) const
+    {
+        const size_t nFullSegments = rsiSizeV_ / maxSegmentSizeV_;
+
+        auto skipOneBlock = [&](bool withRef) -> std::pair<bool, size_t> {
+            buffer.checkPos();
+            auto id = buffer.peekBits(maxIdLength);
+            bool isRos = false;
+            size_t nBlocks = 1;
+
+            if (id == 0) {
+                buffer.skipBits(maxIdLength);
+                if (withRef) buffer.skipBits(bpv_);
+                nBlocks = buffer.readCodeword();
+                if (nBlocks == rosLength) {
+                    isRos = true;
+                }
+                else if (nBlocks > rosLength) {
+                    nBlocks--;
+                }
+            }
+            else if (id == 1) {
+                buffer.skipBits(maxIdLength);
+                if (withRef) buffer.skipBits(bpv_);
+                buffer.skipCodewords(blockSizeV_ / 2);
+            }
+            else {
+                id >>= 1;
+                buffer.skipBits(maxIdLength - 1);
+                if (id == noCompressionId_) {
+                    buffer.skipBits(blockSizeV_ * bpv_);
+                }
+                else {
+                    if (withRef) buffer.skipBits(bpv_);
+                    uint8_t k = static_cast<uint8_t>(id - 1);
+                    size_t startIndex = withRef ? 1 : 0;
+                    buffer.skipCodewords(blockSizeV_ - startIndex);
+                    buffer.skipBits(k * (blockSizeV_ - startIndex));
+                }
+            }
+            return { isRos, nBlocks };
+        };
+
+        auto skipSegment = [&](bool isRef, size_t nBlocksInSeg) {
+            size_t pos = 0;
+            auto [isRos, nBlocks] = skipOneBlock(isRef);
+            if (isRos) return;
+            pos += nBlocks;
+            for (; pos < nBlocksInSeg;) {
+                auto [isRos2, nBlocks2] = skipOneBlock(false);
+                if (isRos2) return;
+                pos += nBlocks2;
+            }
+        };
+
+        if (rsiSizeV_ < maxSegmentSizeV_) {
+            skipSegment(true, rsiSizeB_);
+        }
+        else {
+            skipSegment(true, maxSegmentSizeB_);
+            for (size_t u = 1; u < nFullSegments; ++u) {
+                skipSegment(false, maxSegmentSizeB_);
+            }
+            size_t lastSegBlocks = rsiSizeB_ % maxSegmentSizeB_;
+            if (lastSegBlocks > 0) {
+                skipSegment(false, lastSegBlocks);
+            }
+        }
+    }
+
+
+public:
+    void decode(Span<uint8_t> source, Span<ValueType> target)
+    {
+        const BitBuffer buffer = makeBuffer(source);
+        SplitBlock<ValueType> chunks(target, rsiSizeV_);
+        for (size_t i = 0; i < chunks.nFull(); ++i) {
+            decodeRefFullRsi(buffer, chunks.full(i), 0);
+        }
+        if (chunks.hasPart()) {
+            decodeRefFullRsi(buffer, chunks.part(), rsiSizeB_);
+        }
+        buffer.checkPos();
+        bitsDecoded_ = buffer.bitPos();
+    }
+
+    // Number of bits of the source used by the last decode(source, target)
+    size_t bitsDecoded() const { return bitsDecoded_; }
+
+    // Fused decode: preprocessor + output callback in one pass (no intermediate buffer)
+    template <typename OutputFunc>
+    void decodeFused(Span<uint8_t> source, size_t nValues, OutputFunc&& outputFunc)
+    {
+        decodeFusedAt(makeBuffer(source), 0, nValues, std::forward<OutputFunc>(outputFunc));
+    }
+
+    // Decodes nValues values RSI by RSI and passes each decoded RSI to
+    // sink(const ValueType* values, size_t count, size_t offset): the caller can convert whole
+    // RSIs in (vectorizable) loops instead of one callback per value
+    template <typename SpanFunc>
+    void decodeSpans(Span<uint8_t> source, size_t nValues, SpanFunc&& sink)
+    {
+        const BitBuffer buffer = makeBuffer(source);
+        buffer.checkPos();
+        valuesBuf_.resize(std::min(nValues, rsiSizeV_));
+        for (size_t offset = 0; offset < nValues; offset += rsiSizeV_) {
+            const size_t count = std::min(rsiSizeV_, nValues - offset);
+            // A trailing partial RSI may end with a zero-block run beyond the requested values
+            const ValueType reference = decodeRsiRaw(buffer, count, count < rsiSizeV_ ? rsiSizeB_ : 0);
+            preprocessor_.decode(Span<DeltaType>(rsiBuf_.data(), count), reference, Span<ValueType>(valuesBuf_.data(), count));
+            sink(static_cast<const ValueType*>(valuesBuf_.data()), count, offset);
+        }
+        buffer.checkPos();
+    }
+
+    // Fused decode of nValues values starting at bitOffset (for parallel decoding).
+    // paddedBuffer must be followed by BitBuffer::guardBytes readable bytes (see makeBuffer).
+    template <typename OutputFunc>
+    void decodeFusedAt(const BitBuffer& paddedBuffer, size_t bitOffset, size_t nValues, OutputFunc&& outputFunc)
+    {
+        const BitBuffer buffer{ paddedBuffer, bitOffset };
+        buffer.checkPos();
+
+        size_t nFull = nValues / rsiSizeV_;
+        size_t remainder = nValues % rsiSizeV_;
+
+        for (size_t i = 0; i < nFull; ++i) {
+            ValueType reference = decodeRsiRaw(buffer, rsiSizeV_, 0);
+            preprocessor_.decodeFused(
+                rsiBuf_.data(), rsiSizeV_,
+                reference, i * rsiSizeV_, outputFunc);
+        }
+
+        if (remainder > 0) {
+            ValueType reference = decodeRsiRaw(buffer, remainder, rsiSizeB_);
+            preprocessor_.decodeFused(
+                rsiBuf_.data(), remainder,
+                reference, nFull * rsiSizeV_, outputFunc);
+        }
+        buffer.checkPos();
+    }
+
+    DecoderSeq(uint8_t bpv, uint8_t block_size, uint16_t rsiSize, CodeOptionSet codeOptionSet) :
+        bpv_((validateCcsdsParameters(bpv, block_size, rsiSize, 8 * std::min(sizeof(ValueType), sizeof(DeltaType))), bpv)),
+        blockSizeV_(block_size),
+        rsiSizeB_(rsiSize),
+        rsiSizeV_(rsiSize * block_size),
+        codeOptionSet_(codeOptionSet),
+        preprocessor_(bpv)
+    {
+        noCompressionId_ = (1u << (maxIdLength - 1)) - 1;
+    }
+
+protected:
+    const uint8_t bpv_;
+    const uint8_t blockSizeV_;
+
+    constexpr static size_t maxSegmentSizeB_ = 64;
+    const size_t maxSegmentSizeV_ = maxSegmentSizeB_ * blockSizeV_;
+    const size_t rsiSizeB_;
+    const size_t rsiSizeV_;
+
+    const CodeOptionSet codeOptionSet_;
+    PredictivePreprocessingDecodeFast<ValueType, DeltaType, DecodeFunc> preprocessor_;
+
+    CodeOptionBase codeOptionBase_{ bpv_, codeOptionSet_ };
+    const uint8_t maxIdLength = codeOptionBase_.maxIdLength;
+
+    IdType noCompressionId_;
+
+    mutable std::vector<ValueType> rsiBuf_;
+    mutable std::vector<ValueType> paddedSegmentBuf_;
+    std::vector<ValueType> valuesBuf_;
+    mutable std::vector<uint8_t> paddedSource_;
+    size_t bitsDecoded_ = 0;
+
+};
