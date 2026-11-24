@@ -49,11 +49,13 @@ static void check(uint64_t& rng)
             continue;
         }
         for (int round = 0; round < 50; ++round) {
-            const uint64_t value = round == 0 ? mask : round == 1 ? 0 : next(rng) & mask;
+            const uint64_t value = round == 0 ? mask : round == 1 ? 0
+                                                                  : next(rng) & mask;
 
             // decode / decode_element: arbitrary bytes, 32 bytes of slack for the block codec
             std::vector<uint8_t> buf(48);
-            for (auto& b : buf) b = static_cast<uint8_t>(next(rng));
+            for (auto& b : buf)
+                b = static_cast<uint8_t>(next(rng));
             const uint64_t field = readBits(buf, offset, BPV);
             if (static_cast<uint64_t>(packing.decode(buf.data(), static_cast<uint8_t>(offset))) != field) {
                 fail(Method == Optimization::Block ? "decode (block)" : "decode", BPV, offset, field, static_cast<uint64_t>(packing.decode(buf.data(), static_cast<uint8_t>(offset))));

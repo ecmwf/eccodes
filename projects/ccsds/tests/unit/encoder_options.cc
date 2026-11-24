@@ -75,7 +75,7 @@ static void largeSamples()
         block[i] = static_cast<uint32_t>((i % 2) ? m : 0);
     }
     encoder::EncoderSeq<uint32_t, uint32_t> encoder(24, 16, 1, CodeOptionSet::Basic);
-    const uint64_t pair = m * (m + 1) / 2 + m;  // codeword of the pair (0, m)
+    const uint64_t pair = m * (m + 1) / 2 + m;                                           // codeword of the pair (0, m)
     const uint64_t seIdLength = CodeOptionBase{ 24, CodeOptionSet::Basic }.maxIdLength;  // the longest ID: second extension
     const uint64_t expected = seIdLength + 8 * (pair + 1);
     const uint64_t size = encoder.sePrepare<ReferenceType::NoRef>(Span<uint32_t>(block));

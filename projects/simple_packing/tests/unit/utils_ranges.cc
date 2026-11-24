@@ -53,7 +53,7 @@ static void minmax()
                 w[pos] = bad;
                 const auto [a, b] = sp_minmax(w.data(), n);
                 check(std::isnan(a) && std::isnan(b), "sp_minmax with " + std::to_string(bad) + " at " + std::to_string(pos) + " of " + std::to_string(n) + ": " +
-                                                           std::to_string(a) + ", " + std::to_string(b));
+                                                          std::to_string(a) + ", " + std::to_string(b));
             }
         }
     }
