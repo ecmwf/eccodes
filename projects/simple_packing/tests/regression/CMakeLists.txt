@@ -106,4 +106,7 @@ add_test(NAME ${SP_TEST_PREFIX}unpack_float_precision COMMAND sp_unpack_float_pr
 sp_add_test(pack_fp_contraction)
 add_test(NAME ${SP_TEST_PREFIX}pack_fp_contraction COMMAND sp_pack_fp_contraction)
 
+sp_add_test(bit_packing_reference)
+add_test(NAME ${SP_TEST_PREFIX}bit_packing_reference COMMAND sp_bit_packing_reference)
+
 sp_label_tests(regression)
