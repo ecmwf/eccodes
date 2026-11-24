@@ -101,4 +101,7 @@ endif()
 sp_add_test(unpack_float_precision)
 add_test(NAME ${SP_TEST_PREFIX}unpack_float_precision COMMAND sp_unpack_float_precision)
 
+sp_add_test(pack_fp_contraction)
+add_test(NAME ${SP_TEST_PREFIX}pack_fp_contraction COMMAND sp_pack_fp_contraction)
+
 sp_label_tests(regression)
