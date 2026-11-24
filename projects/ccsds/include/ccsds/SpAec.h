@@ -3,6 +3,7 @@
 #include <cmath>
 #include <cstdint>
 #include <cstring>
+#include <limits>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -131,10 +132,17 @@ public:
     static size_t maxEncodedSize(size_t nValues, uint8_t bpv, uint8_t blockSize)
     {
         validateCcsdsParameters(bpv, blockSize, 1);
-        const size_t nBlocks = (nValues + blockSize - 1) / blockSize;
+        const size_t nBlocks = nValues / blockSize + (nValues % blockSize != 0);
         const size_t idLength = CodeOptionBase{ bpv, CodeOptionSet::Basic }.maxIdLength - 1u;
         const size_t bitsPerBlock = idLength + static_cast<size_t>(blockSize) * bpv;
-        return (nBlocks * bitsPerBlock + 7) / 8 + 8;
+        // ceil(nBlocks * bitsPerBlock / 8) + 8 without overflow: with nBlocks = 8 * a + b, it is
+        // a * bitsPerBlock + ceil(b * bitsPerBlock / 8) + 8, where only the first product can overflow
+        const size_t a = nBlocks / 8;
+        const size_t tail = ((nBlocks % 8) * bitsPerBlock + 7) / 8 + 8;
+        if (a > (std::numeric_limits<size_t>::max() - tail) / bitsPerBlock) {
+            throw std::length_error("CCSDS encoding: the encoded size of " + std::to_string(nValues) + " values does not fit in size_t");
+        }
+        return a * bitsPerBlock + tail;
     }
 
     size_t maxEncodedSize(size_t nValues) const
