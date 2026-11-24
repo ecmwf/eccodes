@@ -11,7 +11,7 @@ include "grib2/templates/template.3.shape_of_the_earth.def"
 constant isGridded = true;
 
 # Number of horizontal points
-unsigned[5] numberOfHorizontalPoints : dump ;
+unsigned[4] numberOfHorizontalPoints : dump ;
 
 # Basic angle of the initial production domain
 unsigned[4] basicAngleOfTheInitialProductionDomain = 0 : dump ;
