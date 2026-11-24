@@ -28,3 +28,4 @@ endfunction()
 # Unit tests of the components; regression tests for bugs that were found
 add_subdirectory(unit)
 add_subdirectory(regression)
+
