@@ -44,7 +44,7 @@ newLength=$((off7 + 5 + 4))
 ref=$(${tools_dir}/grib_get -p referenceValue $tempGrib)
 for impl in default new; do
     if [ $impl = new ]; then
-        export ECCODES_USE_NEW_SIMPLE_PACKING=1
+        export ECCODES_USE_SP=1
     fi
     # Empty data section: all values are the reference value
     stats=$(${tools_dir}/grib_get -F%.6g -p min,max $tempGrib)
@@ -65,7 +65,7 @@ for impl in default new; do
     set -e
     [ $status -ne 0 ]
     grep -q "Data section size mismatch" $tempLog
-    unset ECCODES_USE_NEW_SIMPLE_PACKING
+    unset ECCODES_USE_SP
 done
 
 rm -f $tempGrib $tempGrib.short $tempLog

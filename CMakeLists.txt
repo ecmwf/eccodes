@@ -179,7 +179,7 @@ ecbuild_add_option( FEATURE AEC
 # CCSDS: SpAec (projects/ccsds) is always built. Without AEC it is the only implementation;
 # with AEC libaec is the default and ECCODES_USE_SPAEC=1 selects SpAec at runtime.
 # Simple packing: the legacy code and the simple_packing library (projects/simple_packing) are
-# both built. The legacy code is the default; ECCODES_USE_NEW_SIMPLE_PACKING=1 selects the library.
+# both built. The legacy code is the default; ECCODES_USE_SP=1 selects the library.
 
 ecbuild_find_python( VERSION 3.6 NO_LIBS )
 # find_package( NumPy )

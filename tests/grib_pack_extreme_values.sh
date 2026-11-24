@@ -13,4 +13,4 @@
 # Packing values whose reference value does not fit into an IEEE float must fail, not abort.
 # Run with the default implementations and with SpAec / the new simple packing.
 ${test_dir}/grib_pack_extreme_values
-ECCODES_USE_SPAEC=1 ECCODES_USE_NEW_SIMPLE_PACKING=1 ${test_dir}/grib_pack_extreme_values
+ECCODES_USE_SPAEC=1 ECCODES_USE_SP=1 ${test_dir}/grib_pack_extreme_values

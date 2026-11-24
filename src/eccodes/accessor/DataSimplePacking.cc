@@ -26,7 +26,7 @@ namespace eccodes::accessor
 bool DataSimplePacking::use_new_simple_packing()
 {
     static const bool useNew = [] {
-        const char* env = getenv("ECCODES_USE_NEW_SIMPLE_PACKING");
+        const char* env = getenv("ECCODES_USE_SP");
         return env != nullptr && env[0] != '\0' && strcmp(env, "0") != 0;
     }();
     return useNew;
