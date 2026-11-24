@@ -6,6 +6,7 @@
 // - the reference value is not above the scaled minimum and is a float (stored as IEEE float)
 // - |decoded - value| <= 2^E * 10^-D (one quantisation step)
 // and number_of_bits (the bits of a value) exhaustively for small values and at every power of 2
+#include <algorithm>
 #include <cmath>
 #include <iostream>
 #include <memory>
@@ -125,6 +126,21 @@ static void constantFields()
     }
 }
 
+// SimplePackingBinary::packTo and unpackTo of a constant field: no bytes are written, all values
+// are the reference value
+static void constantFieldPackTo()
+{
+    SimplePackingBinary<double> sp(nullptr);
+    const Parameters params(0, 0, 0, 273.25, true);
+    const std::vector<double> values(10, 273.25);
+    std::vector<unsigned char> out(16, 0xA5);
+    sp.packTo(params, values.data(), values.size(), out.data());
+    check(std::all_of(out.begin(), out.end(), [](unsigned char c) { return c == 0xA5; }), "packTo of a constant field must not write");
+    std::vector<double> decoded(values.size(), -1);
+    sp.unpackTo(params, out.data(), 0, decoded.size(), decoded.data());
+    check(decoded == values, "unpackTo of a constant field");
+}
+
 // BinDecOptimizer in every mode (GRIBEX compatibility: binary scale factor in one byte, decimal
 // scale factors with too small scaled ranges skipped; 32-bit floats: reference and maximum
 // decodable as float) and with IEEE and IBM reference values, also for ranges near the limits
@@ -200,6 +216,7 @@ int main()
 {
     optimizers();
     constantFields();
+    constantFieldPackTo();
     binDecModes();
     arrayPacking();
     numberOfBits();
