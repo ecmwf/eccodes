@@ -44,6 +44,12 @@ include(GNUInstallDirs)
 # Optimisation flags for the packing loops (also used for the tests)
 include(CheckCXXCompilerFlag)
 set(SIMPLE_PACKING_OPT_FLAGS -O3)
+# Undo a -ffast-math of the user (CMAKE_CXX_FLAGS come first): it removes the checks for NaN and
+# infinite values (std::isfinite is assumed true), which then pass invalid data or loop forever
+check_cxx_compiler_flag("-fno-fast-math" SIMPLE_PACKING_HAVE_NO_FAST_MATH)
+if(SIMPLE_PACKING_HAVE_NO_FAST_MATH)
+  list(PREPEND SIMPLE_PACKING_OPT_FLAGS -fno-fast-math)
+endif()
 # Every floating-point operation rounded separately: with fused multiply-adds (available with
 # -march=native) the packed values would depend on the build machine
 check_cxx_compiler_flag("-ffp-contract=off" SIMPLE_PACKING_HAVE_FP_CONTRACT_OFF)
