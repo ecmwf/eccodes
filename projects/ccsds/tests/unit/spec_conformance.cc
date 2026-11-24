@@ -203,17 +203,21 @@ enum class Policy
     SecondExtension,  // the second extension for every block that is not a zero block
 };
 
+// 128-bit lengths (a second-extension symbol of two n = 32 bit samples has up to 65 bits);
+// __extension__: no -Wpedantic warning
+__extension__ using u128 = unsigned __int128;
+
 // Lengths of the single-block options of a block (deltas[0] unused if ref)
 struct OptionLengths
 {
     uint64_t nc;
-    unsigned __int128 se;
+    u128 se;
     std::vector<uint64_t> ss;  // index k
 };
 
-static unsigned __int128 gammaOf(uint64_t a, uint64_t b)
+static u128 gammaOf(uint64_t a, uint64_t b)
 {
-    const unsigned __int128 s = static_cast<unsigned __int128>(a) + b;
+    const u128 s = static_cast<u128>(a) + b;
     return s * (s + 1) / 2 + b;
 }
 
@@ -325,7 +329,7 @@ static std::vector<uint8_t> refEncode(const std::vector<uint64_t>& x, const Para
                     k = o.second;
                 }
                 else {
-                    unsigned __int128 best = l.nc;
+                    u128 best = l.nc;
                     if (l.se < best) {
                         best = l.se;
                         kind = 'E';
@@ -595,7 +599,7 @@ static bool verify(const std::vector<uint8_t>& stream, const std::vector<uint64_
         // 3.7.1, 3.7.3, 3.7.4: the shortest option; ties: no compression, second extension,
         // the smallest k
         const OptionLengths l = optionLengths(p, c.deltas, c.ref);
-        unsigned __int128 best = std::min<unsigned __int128>(l.nc, l.se);
+        u128 best = std::min<u128>(l.nc, l.se);
         int bestK = -1;
         for (size_t k = 0; k < l.ss.size(); ++k)
             if (l.ss[k] < best) {

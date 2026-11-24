@@ -11,7 +11,7 @@
 
 // Wide enough for the exact size of any size_t count
 #if defined(__SIZEOF_INT128__)
-using Wide = unsigned __int128;
+__extension__ using Wide = unsigned __int128;  // __extension__: no -Wpedantic warning
 #else
 using Wide = uint64_t;  // 32-bit size_t
 static_assert(sizeof(size_t) <= 4, "no integer type wide enough for the test");
