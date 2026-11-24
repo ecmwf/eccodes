@@ -95,57 +95,43 @@ std::pair<T, T> sp_minmax(const T* values, size_t n)
     if (n == 0)
         return { T(0), T(0) };
 
-    // nonFinite accumulates v - v: it becomes NaN if any value is NaN or infinite
-    if (n < 2 * lanes) {
-        T mn = values[0];
-        T mx = values[0];
-        T nonFinite = values[0] - values[0];  // NOLINT(misc-redundant-expression)
-        for (size_t i = 1; i < n; ++i) {
-            const T v = values[i];
-            mn = v < mn ? v : mn;
-            mx = v > mx ? v : mx;
-            nonFinite += v - v;  // NOLINT(misc-redundant-expression)
-        }
-        if (std::isnan(nonFinite)) {
-            return { std::numeric_limits<T>::quiet_NaN(), std::numeric_limits<T>::quiet_NaN() };
-        }
-        return { mn, mx };
-    }
-
+    // NaN values are detected with a quiet unordered comparison and infinite values by the
+    // result (a floating-point addition per value, as in v - v, would lengthen the dependency
+    // chains of the lanes and is not vectorised as well)
     T mn[lanes];
     T mx[lanes];
-    T nonFinite[lanes];
+    bool nan[lanes];
     for (size_t l = 0; l < lanes; ++l) {
-        mn[l] = values[l];
-        mx[l] = values[l];
-        nonFinite[l] = values[l] - values[l];  // NOLINT(misc-redundant-expression)
+        mn[l] = values[0];
+        mx[l] = values[0];
+        nan[l] = false;
     }
 
-    size_t i = lanes;
+    size_t i = 0;
     for (; i + lanes <= n; i += lanes) {
         for (size_t l = 0; l < lanes; ++l) {
             const T v = values[i + l];
             mn[l] = v < mn[l] ? v : mn[l];
             mx[l] = v > mx[l] ? v : mx[l];
-            nonFinite[l] += v - v;  // NOLINT(misc-redundant-expression)
+            nan[l] |= __builtin_isunordered(v, v);
         }
     }
 
     T rmn = mn[0];
     T rmx = mx[0];
-    T rNonFinite = nonFinite[0];
+    bool rNan = nan[0];
     for (size_t l = 1; l < lanes; ++l) {
         rmn = mn[l] < rmn ? mn[l] : rmn;
         rmx = mx[l] > rmx ? mx[l] : rmx;
-        rNonFinite += nonFinite[l];
+        rNan |= nan[l];
     }
     for (; i < n; ++i) {
         const T v = values[i];
         rmn = v < rmn ? v : rmn;
         rmx = v > rmx ? v : rmx;
-        rNonFinite += v - v;  // NOLINT(misc-redundant-expression)
+        rNan |= __builtin_isunordered(v, v);
     }
-    if (std::isnan(rNonFinite)) {  // a NaN or infinite value: make the range invalid
+    if (rNan || !std::isfinite(rmn) || !std::isfinite(rmx)) {  // a NaN or infinite value: make the range invalid
         return { std::numeric_limits<T>::quiet_NaN(), std::numeric_limits<T>::quiet_NaN() };
     }
     return { rmn, rmx };
