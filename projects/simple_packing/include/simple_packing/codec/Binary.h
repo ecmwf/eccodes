@@ -163,6 +163,11 @@ void Binary<ValueType, BPV>::packTo(const ValueType* values, size_t nVals, int d
         }
     }
     else {
+        // The codecs below OR each value into the first byte it uses: start from zero bytes, the
+        // output must not depend on the previous content of the buffer
+        if (nVals > 0) {
+            std::memset(out, 0, (BPV * nVals + 7) / 8);
+        }
         auto encode = [&](auto val) {
             const double coded = static_cast<double>(((val * decimal) - referenceValue) * divisor + 0.5);
             const bool ok = (coded >= 0.0) & (coded < limit);
