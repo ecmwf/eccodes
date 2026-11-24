@@ -46,6 +46,16 @@ private:
     template <typename T>
     int unpack(T* val, size_t* len);
 
+    // The implementations (DataCcsdsPacking.cc selects one):
+    // - DataCcsdsPackingLegacy.cc: packing parameters as in legacy ecCodes, coding with libaec
+    // - DataCcsdsPackingNew.cc: packing parameters with the simple_packing library, coding with SpAec
+    int pack_double_legacy(const double* val, size_t* len);
+    int pack_double_new(const double* val, size_t* len);
+    template <typename T>
+    int unpack_legacy(T* val, size_t* len);
+    template <typename T>
+    int unpack_new(T* val, size_t* len);
+
 public:
     static constexpr AccessorType accessor_type_{ "data_ccsds_packing" };
 };

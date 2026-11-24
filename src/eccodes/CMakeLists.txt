@@ -218,6 +218,8 @@ list( APPEND eccodes_src_files
     accessor/DataJpeg2000Packing.cc
     accessor/DataPngPacking.cc
     accessor/DataCcsdsPacking.cc
+    accessor/DataCcsdsPackingLegacy.cc
+    accessor/DataCcsdsPackingNew.cc
     accessor/DataRawPacking.cc
     accessor/DataComplexPacking.cc
     accessor/DataG1ComplexPacking.cc
@@ -412,7 +414,9 @@ set( eccodes_accessor_registrations "" )
 foreach( _src ${eccodes_src_files} )
     if( _src MATCHES "^accessor/([A-Z][A-Za-z0-9]*)\\.cc$" )
         set( _class ${CMAKE_MATCH_1} )
-        if( NOT _class STREQUAL "Accessor" ) # the base class
+        # Not the base class, nor implementation files of an accessor (no header of their own,
+        # e.g. DataCcsdsPackingLegacy.cc)
+        if( NOT _class STREQUAL "Accessor" AND EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/accessor/${_class}.h )
             string( APPEND eccodes_accessor_includes "#include \"accessor/${_class}.h\"\n" )
             string( APPEND eccodes_accessor_registrations "    add<accessor::${_class}>();\n" )
         endif()
@@ -491,8 +495,9 @@ target_include_directories(eccodes PRIVATE
     $<TARGET_PROPERTY:spaec,INTERFACE_INCLUDE_DIRECTORIES>
     $<TARGET_PROPERTY:simple_packing_headers,INTERFACE_INCLUDE_DIRECTORIES>)
 
-# CCSDS SpAec: optimise the accessor that instantiates the header-only coder
-set_source_files_properties(accessor/DataCcsdsPacking.cc PROPERTIES
+# CCSDS: optimise the new implementation, which instantiates the header-only SpAec coder and
+# simple_packing optimisers
+set_source_files_properties(accessor/DataCcsdsPackingNew.cc PROPERTIES
     COMPILE_OPTIONS "${SPAEC_OPT_FLAGS}"
     COMPILE_DEFINITIONS "NDEBUG")
 
