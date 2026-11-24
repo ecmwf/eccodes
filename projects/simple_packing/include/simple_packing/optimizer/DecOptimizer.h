@@ -69,7 +69,9 @@ public:
             range = (max - min);
         }
 
-        while (range > maxrange) {
+        // An infinite range from scaling up (a denormal range with values of both signs) cannot
+        // be scaled down again: decimal stays infinite (the check below reports it)
+        while (range > maxrange && std::isfinite(decimal)) {
             decimalScaleFactor -= 1;
             decimal /= 10;
             min = unscaled_min * decimal;

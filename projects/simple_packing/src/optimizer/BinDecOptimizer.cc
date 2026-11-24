@@ -6,6 +6,7 @@
 #include "simple_packing/Utils.h"
 
 #include <cmath>
+#include <string>
 #include <limits>
 #include <optional>
 
@@ -200,12 +201,18 @@ Parameters BinDecOptimizer::getParams(const double pmin, const double pmax)
             range = max - min;
         }
 
-        while (range > maxrange) {
+        // An infinite range from scaling up (a denormal range with values of both signs) cannot
+        // be scaled down again: decimal stays infinite
+        while (range > maxrange && std::isfinite(decimal)) {
             params.decimalScaleFactor(params.decimalScaleFactor() - 1);
             decimal /= 10;
             min = pmin * decimal;
             max = pmax * decimal;
             range = max - min;
+        }
+
+        if (!(std::isfinite(min) && std::isfinite(max))) {
+            throw std::runtime_error("Simple packing: cannot scale the range [" + std::to_string(pmin) + ", " + std::to_string(pmax) + "]");
         }
 
         auto ref = nearest_smaller_value(min, referenceFloatType_);
