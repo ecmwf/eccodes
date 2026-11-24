@@ -105,18 +105,12 @@ unsigned long ieee_to_long(double x)
         return (s << 31);
     }
 
-    if (x > t.vmax) {
-        return 0;  // not reached: the callers check the range
-    }
+    assert(x <= t.vmax);  // the callers check the range
 
     binary_search(t.v.data(), 254, x, &e);
 
     x /= t.e[e];
-
-    while (x < mmin) {
-        x *= 2;
-        e--;
-    }
+    assert(x >= mmin);  // v[e] = mmin * e[e] <= x
 
     while (x > rmmax) {
         x /= 2;
@@ -141,15 +135,12 @@ double long_to_ieee(unsigned long x)
 
     double val;
 
-    if (c == 0 && m == 0)
+    // Only the bits of zero and of normal values are produced (no denormals)
+    assert(c != 0 || m == 0);
+    if (c == 0)
         return 0;
 
-    if (c == 0) {
-        m |= 0x800000;
-        c = 1;
-    }
-    else
-        m |= 0x800000;
+    m |= 0x800000;
 
     val = m * ieee_table().e[c];
     if (s)
@@ -183,12 +174,9 @@ unsigned long ieee_nearest_smaller_to_long(double x)
             m = (l & 0x007fffff) | 0x800000;
             s = l & 0x80000000;
 
-            if (m == mmin) {
-                e = s ? e : e - 1;
-                if (e < 1)
-                    e = 1;
-                if (e > 254)
-                    e = 254;
+            if (m == mmin && !s) {
+                assert(e > 1);  // x >= FLT_MIN here
+                e = e - 1;
             }
 
             double eps = t.e[e];
@@ -242,8 +230,8 @@ const IbmTable& ibm_table()
     return table;
 }
 
-// Returns false if |x| is too large
-bool ibm_to_long(double x, unsigned long& result)
+// |x| must not be larger than the largest IBM value (the callers check the range)
+unsigned long ibm_to_long(double x)
 {
     const IbmTable& t = ibm_table();
     const unsigned long mmax = 0xffffff;
@@ -257,12 +245,9 @@ bool ibm_to_long(double x, unsigned long& result)
         x = -x;
     }
     if (x < t.vmin) {
-        result = s << 31;
-        return true;
+        return s << 31;
     }
-    if (x > t.vmax) {
-        return false;
-    }
+    assert(x <= t.vmax);
 
     binary_search(t.v.data(), 127, x, &e);
     x /= t.e[e];
@@ -279,8 +264,7 @@ bool ibm_to_long(double x, unsigned long& result)
         e++;
         m = 0x800000;
     }
-    result = (s << 31) | (e << 24) | m;
-    return true;
+    return (s << 31) | (e << 24) | m;
 }
 
 double long_to_ibm(unsigned long x)
@@ -306,10 +290,7 @@ std::optional<double> nearest_smaller_ibm_float(double a)
         return 0.0;
     }
 
-    unsigned long l = 0;
-    if (!ibm_to_long(a, l)) {
-        return std::nullopt;
-    }
+    unsigned long l = ibm_to_long(a);
     const double y = long_to_ibm(l);
     double eps = 0;
     if (a < y) {
@@ -320,23 +301,18 @@ std::optional<double> nearest_smaller_ibm_float(double a)
             unsigned long e = (l & 0x7f000000) >> 24;
             const unsigned long m = (l & 0x00ffffff);
             const unsigned long s = l & 0x80000000;
-            if (m == 0x100000) {
-                e = s ? e : e - 1;
-                if (e > 127) {
-                    e = 127;
-                }
+            if (m == 0x100000 && !s) {
+                assert(e > 0);  // a >= vmin here
+                e = e - 1;
             }
             eps = t.e[e];
-            if (!ibm_to_long(y - eps, l)) {
-                return std::nullopt;
-            }
+            l = ibm_to_long(y - eps);
         }
     }
     if (a < long_to_ibm(l)) {
-        if (!ibm_to_long(a - eps, l) || a < long_to_ibm(l)) {
-            return std::nullopt;
-        }
+        l = ibm_to_long(a - eps);
     }
+    assert(a >= long_to_ibm(l));
     return long_to_ibm(l);
 }
 

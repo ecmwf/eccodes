@@ -5,6 +5,7 @@
 #include "simple_packing/optimizer/BinDecOptimizer.h"
 #include "simple_packing/Utils.h"
 
+#include <cassert>
 #include <cmath>
 #include <string>
 #include <limits>
@@ -13,19 +14,18 @@
 namespace
 {
 
-constexpr double dbl_min = std::numeric_limits<double>::min();
 constexpr double dbl_max = std::numeric_limits<double>::max();
 
-// static_cast<long> of a double outside the long range is undefined behaviour (and aborted
-// under UBSan): clamp it, the callers only compare against the encoded-value bounds
+// static_cast<long> of a double beyond LONG_MAX is undefined behaviour (and aborted under
+// UBSan): clamp it, the callers only compare against the encoded-value bounds. The values are
+// encoded values, never negative.
 long toLongClamped(double value)
 {
-    // 2^63 (2^31 where long has 32 bits): the smallest double beyond LONG_MAX; -2^63 is exactly LONG_MIN
+    assert(value >= 0);
+    // 2^63 (2^31 where long has 32 bits): the smallest double beyond LONG_MAX
     static const double limit = std::ldexp(1.0, std::numeric_limits<long>::digits);
     if (value >= limit)
         return std::numeric_limits<long>::max();
-    if (value <= -limit)
-        return std::numeric_limits<long>::min();
     return static_cast<long>(value);
 }
 
@@ -43,17 +43,9 @@ struct FactecResult
     long maxEncodedValue;
 };
 
-// std::nullopt if encoding 'pa' would overflow
-std::optional<FactecResult> factec(double pa, int knbit, long kdec, int range)
+// The caller ensures that pa > DBL_EPSILON and that encoding it does not overflow
+FactecResult factec(double pa, int knbit, long kdec)
 {
-    if (pa < dbl_min) {
-        return FactecResult{ 0, 1 };
-    }
-
-    if ((fabs(log10(fabs(pa)) + (double)kdec) >= range)) {
-        return std::nullopt;
-    }
-
     /* Binary scale factor associated to kdec */
     long ke = floor(log2((pa * sp_power<double>(kdec, 10)) / (sp_power<double>(knbit, 2) - 0.5))) + 1;
     /* Encoded value for pa = max - min       */
@@ -71,14 +63,13 @@ Parameters BinDecOptimizer::getParams(const double pmin, const double pmax)
     // convert NaN to integers.
     check_data_values_range(pmin, pmax);
 
-    constexpr double flt_min = std::numeric_limits<float>::min();
     constexpr double flt_max = std::numeric_limits<float>::max();
 
     // grib_handle* gh = grib_handle_of_accessor(a);
     int idecmin = -15;
     int idecmax = 5;
     long inbint;
-    double xtinyr4, xhuger4, xnbint;
+    double xhuger4, xnbint;
     long inumax = 0;
     long jdec;
     const int RANGE = vrange();
@@ -113,7 +104,6 @@ Parameters BinDecOptimizer::getParams(const double pmin, const double pmax)
         idecmax = 0;
     }
 
-    xtinyr4 = flt_min;
     xhuger4 = flt_max;
 
     // 2^63 - 1 is not exactly representable as double: do not convert 2^63 to long (nor values
@@ -128,35 +118,29 @@ Parameters BinDecOptimizer::getParams(const double pmin, const double pmax)
             if (pa * sp_power<double>(jdec, 10) <= 1.E-12)
                 continue;
 
-        /* Check it will be possible to decode reference value with 32bit floats */
-        if (compat_32bit_)
-            if (fabs(pmin) > dbl_min)
-                if (log10(fabs(pmin)) + (double)jdec <= log10(xtinyr4))
-                    continue;
+        // (Legacy ecCodes also skips jdec if 32-bit floats cannot decode pmin * 10^jdec: never
+        // the case here, the search only runs for pmin = 0 or |pmin| >= DBL_EPSILON, jdec >= -15)
 
         /* Check if encoding will not cause an overflow */
         if (fabs(log10(fabs(pa)) + (double)jdec) >= (double)RANGE)
             continue;
 
-        auto fact = factec(pa, knbit_, jdec, RANGE);
-
-        if (!fact)
-            continue;
+        const FactecResult fact = factec(pa, knbit_, jdec);
 
         /* Check it will be possible to decode the maximum value of the fields using 32bit floats */
         if (compat_32bit_)
-            if (pmin * sp_power<double>(jdec, 10) + xnbint * sp_power<double>(fact->binaryScaleFactor, 2) >= xhuger4)
+            if (pmin * sp_power<double>(jdec, 10) + xnbint * sp_power<double>(fact.binaryScaleFactor, 2) >= xhuger4)
                 continue;
 
         /* GRIB1 demands that the binary scale factor be encoded in a single byte */
         if (compat_gribex_)
-            if ((fact->binaryScaleFactor < -126) || (fact->binaryScaleFactor > 127))
+            if ((fact.binaryScaleFactor < -126) || (fact.binaryScaleFactor > 127))
                 continue;
 
-        if (fact->maxEncodedValue > inumax) {
-            inumax = fact->maxEncodedValue;
+        if (fact.maxEncodedValue > inumax) {
+            inumax = fact.maxEncodedValue;
             params.decimalScaleFactor(jdec);
-            params.binaryScaleFactor(fact->binaryScaleFactor);
+            params.binaryScaleFactor(fact.binaryScaleFactor);
         }
     }
 
@@ -223,17 +207,9 @@ Parameters BinDecOptimizer::getParams(const double pmin, const double pmax)
             throw std::runtime_error("unable to find nearest_smaller_value");
         }
 
-        auto scale = get_binary_scale_factor(max, params.referenceValue(), knbit_);
-        if (scale) {
-            params.binaryScaleFactor(*scale);
-        }
-        else {
-            // The range is too small even with the smallest binary scale factor:
-            // fall back to no scaling
-            params.binaryScaleFactor(0);
-            params.decimalScaleFactor(0);
-            params.referenceValue(0.);
-        }
+        // The scaling by powers of ten above makes the range large enough for a binary scale
+        // factor of at least -last
+        params.binaryScaleFactor(get_binary_scale_factor(max, params.referenceValue(), knbit_).value());
     }
 
     params.bitsPerValue(knbit_);
