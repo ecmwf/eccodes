@@ -113,6 +113,9 @@ target_link_libraries(sp_pack_fp_contraction_consumer PRIVATE simple_packing::si
 target_compile_options(sp_pack_fp_contraction_consumer PRIVATE -O2 $<$<AND:$<BOOL:${SIMPLE_PACKING_HAVE_MARCH_NATIVE}>,$<NOT:$<BOOL:${CMAKE_CROSSCOMPILING}>>>:-march=native>)
 add_test(NAME ${SP_TEST_PREFIX}pack_fp_contraction_consumer COMMAND sp_pack_fp_contraction_consumer)
 
+sp_add_test(binary_scale_large_range)
+add_test(NAME ${SP_TEST_PREFIX}binary_scale_large_range COMMAND sp_binary_scale_large_range)
+
 sp_add_test(bit_packing_reference)
 add_test(NAME ${SP_TEST_PREFIX}bit_packing_reference COMMAND sp_bit_packing_reference)
 
