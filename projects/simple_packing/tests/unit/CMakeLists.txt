@@ -31,3 +31,16 @@ sp_add_test(utils_ranges)
 add_test(NAME ${SP_TEST_PREFIX}utils_ranges COMMAND sp_utils_ranges)
 
 sp_label_tests(unit)
+
+# The unit tests check with assert(): compile them without NDEBUG (the test functions add it, and
+# the Release flags contain -DNDEBUG), so that the assertions of the tests and of the header code
+# they instantiate are active
+get_property(unit_test_targets DIRECTORY PROPERTY BUILDSYSTEM_TARGETS)
+foreach(target IN LISTS unit_test_targets)
+  get_target_property(definitions ${target} COMPILE_DEFINITIONS)
+  if(definitions)
+    list(REMOVE_ITEM definitions NDEBUG)
+    set_target_properties(${target} PROPERTIES COMPILE_DEFINITIONS "${definitions}")
+  endif()
+  target_compile_options(${target} PRIVATE -UNDEBUG)
+endforeach()
