@@ -33,6 +33,9 @@ add_test(NAME ${SP_TEST_PREFIX}utils_ranges COMMAND sp_utils_ranges)
 sp_add_test(binary_exhaustive)
 add_test(NAME ${SP_TEST_PREFIX}binary_exhaustive COMMAND sp_binary_exhaustive)
 
+sp_add_test(optimizers)
+add_test(NAME ${SP_TEST_PREFIX}optimizers COMMAND sp_optimizers)
+
 sp_label_tests(unit)
 
 # The unit tests check with assert(): compile them without NDEBUG (the test functions add it, and
