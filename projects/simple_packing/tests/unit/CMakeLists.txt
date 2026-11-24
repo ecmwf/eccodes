@@ -36,6 +36,9 @@ add_test(NAME ${SP_TEST_PREFIX}binary_exhaustive COMMAND sp_binary_exhaustive)
 sp_add_test(optimizers)
 add_test(NAME ${SP_TEST_PREFIX}optimizers COMMAND sp_optimizers)
 
+sp_add_test(float_formats)
+add_test(NAME ${SP_TEST_PREFIX}float_formats COMMAND sp_float_formats)
+
 sp_label_tests(unit)
 
 # The unit tests check with assert(): compile them without NDEBUG (the test functions add it, and
