@@ -108,7 +108,8 @@ static void chunks(unsigned bpv)
     for (size_t n = 1; n <= 130; ++n) {  // every length up to two chunks
         roundTrip(smooth(n), bpv, b + std::to_string(n) + " smooth values");
         std::vector<T> limits(n);
-        for (auto& e : limits) e = static_cast<T>(rng() % 2 ? xMax : 0);
+        for (auto& e : limits)
+            e = static_cast<T>(rng() % 2 ? xMax : 0);
         roundTrip(limits, bpv, b + std::to_string(n) + " values at the limits");
     }
 }

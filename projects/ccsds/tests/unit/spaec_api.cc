@@ -137,7 +137,8 @@ static void rejections()
     // Truncated data: every prefix of a stream of noise must fail to decode 100 values
     std::mt19937_64 rng(2);
     std::vector<double> noise(100);
-    for (auto& x : noise) x = 10.0 + static_cast<double>(rng() % 256);
+    for (auto& x : noise)
+        x = 10.0 + static_cast<double>(rng() % 256);
     std::vector<uint8_t> stream(spaec.maxEncodedSize(noise.size()));
     stream.resize(spaec.encode(Span<double>(noise), Span<uint8_t>(stream)));
     for (size_t length = 0; length + 1 < stream.size(); ++length) {
@@ -159,7 +160,8 @@ static void decodeVariants()
     std::mt19937_64 rng(3);
     for (size_t n : { size_t{ 1 }, size_t{ 100 }, size_t{ 4096 }, size_t{ 5000 } }) {
         std::vector<uint16_t> samples(n);
-        for (size_t i = 0; i < n; ++i) samples[i] = static_cast<uint16_t>((i % 300 < 40) ? 0 : rng() & 0xFFF);
+        for (size_t i = 0; i < n; ++i)
+            samples[i] = static_cast<uint16_t>((i % 300 < 40) ? 0 : rng() & 0xFFF);
         encoder::EncoderSeq<uint16_t, uint16_t> encoder(12, 32, 128, CodeOptionSet::Basic);
         std::vector<uint8_t> stream(n * 3 + 64, 0);
         stream.resize(encoder.encode(Span<uint16_t>(samples), Span<uint8_t>(stream)));
@@ -168,7 +170,8 @@ static void decodeVariants()
         decoder.decode(Span<uint8_t>(stream), Span<uint16_t>(a));
         decoder.decodeFused(Span<uint8_t>(stream), n, [&](uint16_t v, size_t i) { b[i] = v; });
         decoder.decodeSpans(Span<uint8_t>(stream), n, [&](const uint16_t* v, size_t count, size_t offset) {
-            for (size_t i = 0; i < count; ++i) c[offset + i] = v[i];
+            for (size_t i = 0; i < count; ++i)
+                c[offset + i] = v[i];
         });
         check(a == samples && b == samples && c == samples, "decode, decodeFused and decodeSpans of " + std::to_string(n) + " values");
     }
@@ -179,8 +182,10 @@ static void decodeVariants()
     {
         const size_t n = 4096 + 1000, runStart = 4096 + 256;
         std::vector<uint16_t> samples(n);
-        for (size_t i = 0; i < n; ++i) samples[i] = static_cast<uint16_t>(1 + rng() % 4000);
-        for (size_t i = runStart; i < runStart + 96; ++i) samples[i] = samples[runStart - 1];  // preprocessed: 0
+        for (size_t i = 0; i < n; ++i)
+            samples[i] = static_cast<uint16_t>(1 + rng() % 4000);
+        for (size_t i = runStart; i < runStart + 96; ++i)
+            samples[i] = samples[runStart - 1];  // preprocessed: 0
         encoder::EncoderSeq<uint16_t, uint16_t> encoder(12, 32, 128, CodeOptionSet::Basic);
         std::vector<uint8_t> stream(n * 3 + 64, 0);
         stream.resize(encoder.encode(Span<uint16_t>(samples), Span<uint8_t>(stream)));
@@ -193,7 +198,8 @@ static void decodeVariants()
                 decoder.decode(Span<uint8_t>(stream), Span<uint16_t>(a));
                 decoder.decodeFused(Span<uint8_t>(stream), m, [&](uint16_t v, size_t i) { b[i] = v; });
                 decoder.decodeSpans(Span<uint8_t>(stream), m, [&](const uint16_t* v, size_t count, size_t offset) {
-                    for (size_t i = 0; i < count; ++i) c[offset + i] = v[i];
+                    for (size_t i = 0; i < count; ++i)
+                        c[offset + i] = v[i];
                 });
                 const std::vector<uint16_t> expected(samples.begin(), samples.begin() + static_cast<std::ptrdiff_t>(m));
                 check(a == expected && b == expected && c == expected, name);
@@ -207,7 +213,8 @@ static void decodeVariants()
     // Fewer values than encoded, the field ending in zeros ("remainder of segment")
     for (size_t n : { size_t{ 300 }, size_t{ 4096 + 900 }, size_t{ 3 * 4096 } }) {
         std::vector<uint16_t> samples(n, 0);
-        for (size_t i = 0; i + 300 < n; ++i) samples[i] = static_cast<uint16_t>(rng() & 0xFFF);
+        for (size_t i = 0; i + 300 < n; ++i)
+            samples[i] = static_cast<uint16_t>(rng() & 0xFFF);
         encoder::EncoderSeq<uint16_t, uint16_t> encoder(12, 32, 128, CodeOptionSet::Basic);
         std::vector<uint8_t> stream(n * 3 + 64, 0);
         stream.resize(encoder.encode(Span<uint16_t>(samples), Span<uint8_t>(stream)));
@@ -220,7 +227,8 @@ static void decodeVariants()
                 decoder.decode(Span<uint8_t>(stream), Span<uint16_t>(a));
                 decoder.decodeFused(Span<uint8_t>(stream), m, [&](uint16_t v, size_t i) { b[i] = v; });
                 decoder.decodeSpans(Span<uint8_t>(stream), m, [&](const uint16_t* v, size_t count, size_t offset) {
-                    for (size_t i = 0; i < count; ++i) c[offset + i] = v[i];
+                    for (size_t i = 0; i < count; ++i)
+                        c[offset + i] = v[i];
                 });
                 const std::vector<uint16_t> expected(samples.begin(), samples.begin() + static_cast<std::ptrdiff_t>(m));
                 check(a == expected && b == expected && c == expected, name);

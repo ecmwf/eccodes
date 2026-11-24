@@ -29,7 +29,8 @@ static void splitBlock()
     for (size_t block : { 1, 8, 32, 64 }) {
         for (size_t n = 0; n <= 300; ++n) {
             std::vector<int> v(n);
-            for (size_t i = 0; i < n; ++i) v[i] = static_cast<int>(i);
+            for (size_t i = 0; i < n; ++i)
+                v[i] = static_cast<int>(i);
             SplitBlock<int> s(Span<int>(v), block);
             const std::string name = "SplitBlock(" + std::to_string(n) + ", " + std::to_string(block) + ")";
             check(s.nFull() == n / block, name + ": nFull");
@@ -51,7 +52,8 @@ static void span()
     std::vector<int> v = { 1, 2, 3, 4, 5 };
     Span<int> s(v);
     int sum = 0;
-    for (int x : s) sum += x;
+    for (int x : s)
+        sum += x;
     check(s.size() == 5 && s.data() == v.data() && sum == 15 && s.end() - s.begin() == 5, "Span over 5 values");
     Span<int> d = s.drop(2);
     check(d.size() == 3 && d[0] == 3 && d.data() == v.data() + 2, "Span::drop(2)");
@@ -65,7 +67,9 @@ static void statistics()
     std::vector<uint16_t> samples(n);
     for (size_t i = 0; i < n; ++i) {  // zero runs, small values, noise of different widths
         const size_t part = (i / 500) % 4;
-        samples[i] = static_cast<uint16_t>(part == 0 ? 7 : part == 1 ? 7 + rng() % 3 : part == 2 ? rng() & 0xFF : rng() & 0xFFFF);
+        samples[i] = static_cast<uint16_t>(part == 0 ? 7 : part == 1 ? 7 + rng() % 3
+                                                       : part == 2   ? rng() & 0xFF
+                                                                     : rng() & 0xFFFF);
     }
     encoder::EncoderSeq<uint16_t, uint16_t> encoder(16, 32, 64, CodeOptionSet::Basic);
     std::vector<uint8_t> stream(n * 3 + 64, 0);
@@ -79,8 +83,10 @@ static void statistics()
     // Every block is counted once: zero-block runs count their blocks
     const auto& c = stats.counter;
     size_t blocks = c.seNoRef + c.seRef + c.ncNoRef + c.ncRef;
-    for (size_t k = 0; k < c.ssNoRef.size(); ++k) blocks += c.ssNoRef[k] + c.ssRef[k];
-    for (size_t len = 0; len < c.zbNoRef.size(); ++len) blocks += len * (c.zbNoRef[len] + c.zbRef[len] + c.zbRosNoRef[len] + c.zbRosRef[len]);
+    for (size_t k = 0; k < c.ssNoRef.size(); ++k)
+        blocks += c.ssNoRef[k] + c.ssRef[k];
+    for (size_t len = 0; len < c.zbNoRef.size(); ++len)
+        blocks += len * (c.zbNoRef[len] + c.zbRef[len] + c.zbRosNoRef[len] + c.zbRosRef[len]);
     check(blocks == stats.nBlocks, "statistics: the counters add up to " + std::to_string(blocks) + " blocks instead of " + std::to_string(stats.nBlocks));
 
     SpAecStats copy = stats;

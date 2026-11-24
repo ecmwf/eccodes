@@ -62,7 +62,7 @@ template <uint8_t BPV, typename Coded>
 inline void sp_pack_bits(const Coded* coded, size_t count, unsigned char* out)
 {
     uint64_t acc = 0;
-    unsigned nb = 0;  // number of pending bits: the low nb bits of acc
+    unsigned nb = 0;                              // number of pending bits: the low nb bits of acc
     auto push = [&](uint64_t bits, unsigned n) {  // n <= 32 and bits < 2^n
         acc = (acc << n) | bits;
         nb += n;

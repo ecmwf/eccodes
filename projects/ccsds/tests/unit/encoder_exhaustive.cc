@@ -51,8 +51,7 @@ static void allBlocks(unsigned bpv)
     const unsigned nBlocks = 1u << (8 * bpv);
     const uint8_t maxv = static_cast<uint8_t>((1u << bpv) - 1);
     // First blocks: constant (zero block after preprocessing), small steps, limits
-    const std::vector<std::vector<uint8_t>> firsts = { std::vector<uint8_t>(8, 0), std::vector<uint8_t>(8, maxv), { 0, 1, 0, 1, 0, 1, 0, 1 },
-                                                       { 0, maxv, 0, maxv, 0, maxv, 0, maxv } };
+    const std::vector<std::vector<uint8_t>> firsts = { std::vector<uint8_t>(8, 0), std::vector<uint8_t>(8, maxv), { 0, 1, 0, 1, 0, 1, 0, 1 }, { 0, maxv, 0, maxv, 0, maxv, 0, maxv } };
     for (unsigned b = 0; b < nBlocks; ++b) {
         std::vector<uint8_t> block(8);
         for (unsigned i = 0; i < 8; ++i) {
@@ -76,9 +75,11 @@ static void zeroBlockRuns()
     for (unsigned start = 0; start < rsi; ++start) {
         for (unsigned length = 1; start + length <= rsi; ++length) {
             std::vector<uint8_t> samples(rsi * 8);
-            for (auto& s : samples) s = static_cast<uint8_t>(rng());
+            for (auto& s : samples)
+                s = static_cast<uint8_t>(rng());
             const uint8_t constant = start == 0 ? 0 : samples[start * 8 - 1];
-            for (unsigned i = start * 8; i < (start + length) * 8; ++i) samples[i] = constant;
+            for (unsigned i = start * 8; i < (start + length) * 8; ++i)
+                samples[i] = constant;
             if (!roundTrip(samples, 8, 8, rsi)) {
                 check(false, "zero blocks " + std::to_string(start) + " .. " + std::to_string(start + length - 1));
             }
@@ -99,7 +100,8 @@ static void parallelEncoder()
             for (unsigned rsi : { 1, 7, 64 }) {
                 for (size_t n : { size_t{ 0 }, size_t{ 1 }, size_t{ 9 }, size_t{ 1000 }, size_t{ 30000 } }) {
                     std::vector<uint16_t> samples(n);
-                    for (size_t i = 0; i < n; ++i) samples[i] = static_cast<uint16_t>((i % 400 < 100) ? 3 : rng() & ((1u << bpv) - 1));
+                    for (size_t i = 0; i < n; ++i)
+                        samples[i] = static_cast<uint16_t>((i % 400 < 100) ? 3 : rng() & ((1u << bpv) - 1));
                     encoder::EncoderSeq<uint16_t, uint16_t> seq(static_cast<uint8_t>(bpv), static_cast<uint8_t>(blockSize), static_cast<uint16_t>(rsi), CodeOptionSet::Basic);
                     std::vector<uint8_t> expected(n * 3 + 64, 0);
                     expected.resize(seq.encode(Span<uint16_t>(samples), Span<uint8_t>(expected)));

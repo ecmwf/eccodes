@@ -52,22 +52,31 @@ static void codec(std::mt19937_64& rng)
         std::vector<uint64_t> coded(n);
         for (size_t i = 0; i < n; ++i) {
             switch (i % 5) {
-                case 0: coded[i] = 0; break;
-                case 1: coded[i] = maxExact; break;
-                case 2: coded[i] = BPV >= 32 && BPV <= 52 ? (uint64_t{ 1 } << 31) + (rng() % 1000) : (rng() & (maxExact >> 1)) & ~((uint64_t{ 1 } << shift) - 1); break;
-                default: coded[i] = (rng() & ((uint64_t{ 1 } << exactBits) - 1)) << shift;
+                case 0:
+                    coded[i] = 0;
+                    break;
+                case 1:
+                    coded[i] = maxExact;
+                    break;
+                case 2:
+                    coded[i] = BPV >= 32 && BPV <= 52 ? (uint64_t{ 1 } << 31) + (rng() % 1000) : (rng() & (maxExact >> 1)) & ~((uint64_t{ 1 } << shift) - 1);
+                    break;
+                default:
+                    coded[i] = (rng() & ((uint64_t{ 1 } << exactBits) - 1)) << shift;
             }
             coded[i] &= maxExact;
         }
         std::vector<T> values(n);
-        for (size_t i = 0; i < n; ++i) values[i] = static_cast<T>(coded[i]);  // reference 0, no scaling
+        for (size_t i = 0; i < n; ++i)
+            values[i] = static_cast<T>(coded[i]);  // reference 0, no scaling
 
         const std::vector<unsigned char> expected = referencePack(coded, BPV);
         std::vector<unsigned char> out(expected.size() + 16, 0xAB);
         binary.packTo(values.data(), n, 0, 0, T(0), out.data());
         bool same = std::equal(expected.begin(), expected.end(), out.begin());
         bool after = true;
-        for (size_t i = expected.size(); i < out.size(); ++i) after = after && out[i] == 0xAB;
+        for (size_t i = expected.size(); i < out.size(); ++i)
+            after = after && out[i] == 0xAB;
         check(same, name + ", " + std::to_string(n) + " values: packed bytes differ from the reference");
         check(after, name + ", " + std::to_string(n) + " values: bytes after the packed data were written");
 

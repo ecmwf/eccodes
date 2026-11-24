@@ -70,8 +70,7 @@ static void checkOptimizer(const std::string& name, std::unique_ptr<Optimizer> o
 
 static void optimizers()
 {
-    const double ranges[][2] = { { 0, 1 }, { -1, 1 }, { 250.15, 320.7 }, { 0, 1e-4 }, { -1e10, 1e10 }, { 1e-30, 3e-30 }, { -5e3, 7e7 },
-                                 { 101325, 101325 }, { 0, 0 }, { -273.15, -273.15 }, { 0.001, 1000 }, { 1e20, 1.0001e20 } };
+    const double ranges[][2] = { { 0, 1 }, { -1, 1 }, { 250.15, 320.7 }, { 0, 1e-4 }, { -1e10, 1e10 }, { 1e-30, 3e-30 }, { -5e3, 7e7 }, { 101325, 101325 }, { 0, 0 }, { -273.15, -273.15 }, { 0.001, 1000 }, { 1e20, 1.0001e20 } };
     for (const auto& r : ranges) {
         for (long bpv : { 1L, 8L, 12L, 16L, 24L, 32L }) {
             checkOptimizer("DecOptimizer(" + std::to_string(bpv) + ")", std::make_unique<DecOptimizer>(bpv, 127), r[0], r[1]);

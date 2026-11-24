@@ -41,14 +41,16 @@ static double ibmReference(double x)
     }
     const double a = std::fabs(x);
     int e = static_cast<int>(std::floor(std::log(a) / std::log(16.0)));
-    while (std::ldexp(1.0, 4 * e) > a) --e;  // 16^e <= a < 16^(e + 1)
-    while (std::ldexp(1.0, 4 * (e + 1)) <= a) ++e;
+    while (std::ldexp(1.0, 4 * e) > a)
+        --e;  // 16^e <= a < 16^(e + 1)
+    while (std::ldexp(1.0, 4 * (e + 1)) <= a)
+        ++e;
     const double ulp = std::ldexp(1.0, 4 * (e - 5));
     if (x > 0) {
         return std::floor(a / ulp) * ulp;
     }
     const double m = std::ceil(a / ulp);  // a larger magnitude: the next value below x
-    return -(m * ulp);                     // m = 2^24 is 16^(e + 1), also representable
+    return -(m * ulp);                    // m = 2^24 is 16^(e + 1), also representable
 }
 
 static void ieee()
@@ -85,7 +87,9 @@ static void ibm()
     std::uniform_real_distribution<double> mant(1.0, 16.0);
     for (int e = -60; e <= 60; ++e) {
         for (int i = 0; i < 300; ++i) {
-            const double a = (i == 0 ? 1.0 : i == 1 ? 16.0 - 0x1p-40 : mant(rng)) * std::ldexp(1.0, 4 * e);
+            const double a = (i == 0 ? 1.0 : i == 1 ? 16.0 - 0x1p-40
+                                                    : mant(rng)) *
+                             std::ldexp(1.0, 4 * e);
             for (double x : { a, -a, std::ldexp(std::floor(std::ldexp(a, 20 - 4 * e)), 4 * e - 20) /* an IBM value */ }) {
                 const auto r = nearest_smaller_value(x, FloatType::IBM32);
                 const double expected = ibmReference(x);
