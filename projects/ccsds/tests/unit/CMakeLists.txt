@@ -16,5 +16,6 @@ ccsds_add_test(zero_block_decode)
 ccsds_add_test(encoder_options)
 ccsds_add_test(value_mapping)
 ccsds_add_test(decoder_par LIBS Threads::Threads)
+ccsds_add_test(parameters_stats)
 
 ccsds_label_tests(unit)
