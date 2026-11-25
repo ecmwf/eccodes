@@ -9,7 +9,7 @@
 #include <stdexcept>
 #include <string>
 
-namespace spaec
+namespace spaec::detail
 {
 
 enum class ReferenceType
@@ -67,4 +67,4 @@ inline void validateCcsdsParameters(size_t bpv, size_t blockSize, size_t rsiSize
     }
 }
 
-}  // namespace spaec
+}  // namespace spaec::detail

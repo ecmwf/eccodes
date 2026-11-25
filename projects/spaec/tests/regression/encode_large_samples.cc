@@ -11,9 +11,9 @@
 #include <string>
 #include <vector>
 
-#include "spaec/SpAec.h"
+#include "spaec/detail/SpAec.h"
 
-using namespace spaec;
+using namespace spaec::detail;
 
 template <typename T>
 static int check(unsigned bpv, unsigned blockSize, unsigned rsi, size_t n)

@@ -11,14 +11,14 @@
 #include <exception>
 #include <vector>
 
-#include "spaec/Span.h"
-#include "spaec/CodeOption.h"
-#include "spaec/Preprocessor.h"
-#include "spaec/BitBuffer.h"
-#include "spaec/ThreadPool.h"
-#include "spaec/decoder/DecoderSeq.h"
+#include "spaec/detail/Span.h"
+#include "spaec/detail/CodeOption.h"
+#include "spaec/detail/Preprocessor.h"
+#include "spaec/detail/BitBuffer.h"
+#include "spaec/detail/ThreadPool.h"
+#include "spaec/detail/decoder/DecoderSeq.h"
 
-namespace spaec
+namespace spaec::detail
 {
 
 template <typename ValueType, typename DeltaType, typename DecodeFunc = Identity<DeltaType>>
@@ -133,4 +133,4 @@ private:
     using Base::rsiSizeV_;
 };
 
-}  // namespace spaec
+}  // namespace spaec::detail

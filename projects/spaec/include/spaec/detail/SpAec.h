@@ -15,15 +15,15 @@
 #include <string>
 #include <type_traits>
 #include <vector>
-#include "spaec/CodeOption.h"
-#include "spaec/Span.h"
-#include "spaec/Utils.h"
-#include "spaec/encoder/EncoderSeq.h"
-#include "spaec/encoder/EncoderPar.h"
-#include "spaec/decoder/DecoderSeq.h"
-#include "spaec/decoder/DecoderPar.h"
+#include "spaec/detail/CodeOption.h"
+#include "spaec/detail/Span.h"
+#include "spaec/detail/Utils.h"
+#include "spaec/detail/encoder/EncoderSeq.h"
+#include "spaec/detail/encoder/EncoderPar.h"
+#include "spaec/detail/decoder/DecoderSeq.h"
+#include "spaec/detail/decoder/DecoderPar.h"
 
-namespace spaec
+namespace spaec::detail
 {
 
 template <typename T>
@@ -314,4 +314,4 @@ private:
 
 }  // namespace encoder
 
-}  // namespace spaec
+}  // namespace spaec::detail

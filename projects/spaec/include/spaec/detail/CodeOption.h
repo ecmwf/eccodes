@@ -9,7 +9,7 @@
 #include <stdexcept>
 #include <cassert>
 
-namespace spaec
+namespace spaec::detail
 {
 
 enum class CodeOptionSet
@@ -259,4 +259,4 @@ public:
     IdType valueShifted;
 };
 
-}  // namespace spaec
+}  // namespace spaec::detail

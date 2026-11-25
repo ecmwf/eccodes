@@ -15,10 +15,10 @@
     #include <immintrin.h>
 #endif
 
-#include "spaec/Compat.h"
-#include "spaec/Span.h"
+#include "spaec/detail/Compat.h"
+#include "spaec/detail/Span.h"
 
-namespace spaec
+namespace spaec::detail
 {
 
 // Conversion between the native byte order and the byte order of the bit stream (big-endian, most
@@ -511,4 +511,4 @@ private:
     size_t limitBits_ = 0;
 };
 
-}  // namespace spaec
+}  // namespace spaec::detail

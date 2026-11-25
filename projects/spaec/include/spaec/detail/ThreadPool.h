@@ -18,7 +18,7 @@
 #include <type_traits>
 #include <vector>
 
-namespace spaec
+namespace spaec::detail
 {
 
 class ThreadPool
@@ -104,4 +104,4 @@ auto ThreadPool::enqueue(F&& f, Args&&... args) -> std::future<std::invoke_resul
     return res;
 }
 
-}  // namespace spaec
+}  // namespace spaec::detail

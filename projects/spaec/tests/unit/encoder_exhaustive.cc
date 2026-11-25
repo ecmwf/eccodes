@@ -14,11 +14,11 @@
 #include <string>
 #include <vector>
 
-#include "spaec/decoder/DecoderSeq.h"
-#include "spaec/encoder/EncoderPar.h"
-#include "spaec/encoder/EncoderSeq.h"
+#include "spaec/detail/decoder/DecoderSeq.h"
+#include "spaec/detail/encoder/EncoderPar.h"
+#include "spaec/detail/encoder/EncoderSeq.h"
 
-using namespace spaec;
+using namespace spaec::detail;
 
 static int failures = 0;
 

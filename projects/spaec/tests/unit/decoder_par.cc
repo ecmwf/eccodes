@@ -12,12 +12,12 @@
 #include <string>
 #include <vector>
 
-#include "spaec/ThreadPool.h"
-#include "spaec/decoder/DecoderPar.h"
-#include "spaec/decoder/DecoderSeq.h"
-#include "spaec/encoder/EncoderSeq.h"
+#include "spaec/detail/ThreadPool.h"
+#include "spaec/detail/decoder/DecoderPar.h"
+#include "spaec/detail/decoder/DecoderSeq.h"
+#include "spaec/detail/encoder/EncoderSeq.h"
 
-using namespace spaec;
+using namespace spaec::detail;
 
 static int failures = 0;
 

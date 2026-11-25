@@ -41,13 +41,13 @@
 #include <string>
 #include <vector>
 
-#include "spaec/CodeOption.h"
-#include "spaec/decoder/DecoderPar.h"
-#include "spaec/decoder/DecoderSeq.h"
-#include "spaec/encoder/EncoderPar.h"
-#include "spaec/encoder/EncoderSeq.h"
+#include "spaec/detail/CodeOption.h"
+#include "spaec/detail/decoder/DecoderPar.h"
+#include "spaec/detail/decoder/DecoderSeq.h"
+#include "spaec/detail/encoder/EncoderPar.h"
+#include "spaec/detail/encoder/EncoderSeq.h"
 
-using namespace spaec;
+using namespace spaec::detail;
 
 static int failures = 0;
 static long checks = 0;

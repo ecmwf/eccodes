@@ -12,7 +12,7 @@
 #include <climits>
 #include <type_traits>
 
-namespace spaec
+namespace spaec::detail
 {
 
 #if defined(__GNUC__) || defined(__clang__)
@@ -49,4 +49,4 @@ inline int countlZero(T x)
     }
 }
 
-}  // namespace spaec
+}  // namespace spaec::detail

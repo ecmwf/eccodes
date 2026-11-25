@@ -9,14 +9,14 @@
 #include <bitset>
 
 #include <exception>
-#include "spaec/Utils.h"
-#include "spaec/CodeOption.h"
-#include "spaec/Span.h"
-#include "spaec/BitBuffer.h"
-#include "spaec/encoder/EncoderSeq.h"
-#include "spaec/decoder/DecoderSeq.h"
+#include "spaec/detail/Utils.h"
+#include "spaec/detail/CodeOption.h"
+#include "spaec/detail/Span.h"
+#include "spaec/detail/BitBuffer.h"
+#include "spaec/detail/encoder/EncoderSeq.h"
+#include "spaec/detail/decoder/DecoderSeq.h"
 
-using namespace spaec;
+using namespace spaec::detail;
 
 using ValueType = uint16_t;
 constexpr size_t BPV = 16;

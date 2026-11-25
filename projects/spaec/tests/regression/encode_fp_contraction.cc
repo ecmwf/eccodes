@@ -11,9 +11,9 @@
 #include <random>
 #include <vector>
 
-#include "spaec/SpAec.h"
+#include "spaec/detail/SpAec.h"
 
-using namespace spaec;
+using namespace spaec::detail;
 
 // The mapped value with every operation rounded separately (volatile prevents contraction)
 static uint32_t expectedMapped(double value, int decimalScale, int binaryScale, double reference)

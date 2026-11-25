@@ -14,11 +14,11 @@
     #include <immintrin.h>
 #endif
 
-#include "spaec/Utils.h"
-#include "spaec/CodeOption.h"
-#include "spaec/Span.h"
+#include "spaec/detail/Utils.h"
+#include "spaec/detail/CodeOption.h"
+#include "spaec/detail/Span.h"
 
-namespace spaec
+namespace spaec::detail
 {
 
 
@@ -222,4 +222,4 @@ private:
 
 }  // namespace encoder
 
-}  // namespace spaec
+}  // namespace spaec::detail

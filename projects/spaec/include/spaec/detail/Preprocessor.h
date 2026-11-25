@@ -11,10 +11,10 @@
 #include <cstdint>
 #include <type_traits>
 
-#include "spaec/Compat.h"
-#include "spaec/Span.h"
+#include "spaec/detail/Compat.h"
+#include "spaec/detail/Span.h"
 
-namespace spaec
+namespace spaec::detail
 {
 
 template <typename MappedType>
@@ -215,4 +215,4 @@ private:
     using ValueTypePlus = typename PreprocessorBase::ValueTypePlus;
 };
 
-}  // namespace spaec
+}  // namespace spaec::detail

@@ -7,9 +7,9 @@
 #include <iostream>
 
 #include <exception>
-#include "spaec/CodeOption.h"
+#include "spaec/detail/CodeOption.h"
 
-using namespace spaec;
+using namespace spaec::detail;
 
 template <size_t K>
 void testK1()

@@ -10,9 +10,9 @@
 #include <stdexcept>
 #include <string>
 
-#include "spaec/SpAec.h"
+#include "spaec/detail/SpAec.h"
 
-using namespace spaec;
+using namespace spaec::detail;
 
 // Wide enough for the exact size of any size_t count
 #if defined(__SIZEOF_INT128__)

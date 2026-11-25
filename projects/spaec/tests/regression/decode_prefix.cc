@@ -14,11 +14,11 @@
 #include <vector>
 
 #include <exception>
-#include "spaec/CodeOption.h"
-#include "spaec/Span.h"
-#include "spaec/SpAec.h"
+#include "spaec/detail/CodeOption.h"
+#include "spaec/detail/Span.h"
+#include "spaec/detail/SpAec.h"
 
-using namespace spaec;
+using namespace spaec::detail;
 
 static int failures = 0;
 

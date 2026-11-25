@@ -9,7 +9,7 @@
 #include <cassert>
 #include <vector>
 
-namespace spaec
+namespace spaec::detail
 {
 
 template <typename ValueType>
@@ -96,4 +96,4 @@ private:
     const size_t nPartB_ = (data_.size() % splitSizeV_ == 0) ? 0 : 1;
 };
 
-}  // namespace spaec
+}  // namespace spaec::detail

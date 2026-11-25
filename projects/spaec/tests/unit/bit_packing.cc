@@ -8,10 +8,10 @@
 #include <vector>
 
 #include <cstdint>
-#include "spaec/Span.h"
-#include "spaec/BitBuffer.h"
+#include "spaec/detail/Span.h"
+#include "spaec/detail/BitBuffer.h"
 
-using namespace spaec;
+using namespace spaec::detail;
 
 
 void testWriteReadBits()

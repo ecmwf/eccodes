@@ -13,11 +13,11 @@
 #include <string>
 #include <vector>
 
-#include "spaec/BitBuffer.h"
-#include "spaec/Span.h"
-#include "spaec/decoder/DecoderSeq.h"
+#include "spaec/detail/BitBuffer.h"
+#include "spaec/detail/Span.h"
+#include "spaec/detail/decoder/DecoderSeq.h"
 
-using namespace spaec;
+using namespace spaec::detail;
 
 static int failures = 0;
 

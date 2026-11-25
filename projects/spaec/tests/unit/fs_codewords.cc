@@ -16,9 +16,9 @@
 #include <string>
 #include <vector>
 
-#include "spaec/decoder/DecoderSeq.h"
+#include "spaec/detail/decoder/DecoderSeq.h"
 
-using namespace spaec;
+using namespace spaec::detail;
 
 static int failures = 0;
 

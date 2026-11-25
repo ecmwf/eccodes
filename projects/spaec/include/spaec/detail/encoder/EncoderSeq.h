@@ -14,14 +14,14 @@
 #include <type_traits>
 #include <vector>
 
-#include "spaec/encoder/EncoderBase.h"
-#include "spaec/CodeOption.h"
-#include "spaec/BitBuffer.h"
-#include "spaec/Preprocessor.h"
-#include "spaec/Span.h"
-#include "spaec/Utils.h"
+#include "spaec/detail/encoder/EncoderBase.h"
+#include "spaec/detail/CodeOption.h"
+#include "spaec/detail/BitBuffer.h"
+#include "spaec/detail/Preprocessor.h"
+#include "spaec/detail/Span.h"
+#include "spaec/detail/Utils.h"
 
-namespace spaec
+namespace spaec::detail
 {
 
 namespace encoder
@@ -551,4 +551,4 @@ private:
 
 }  // namespace encoder
 
-}  // namespace spaec
+}  // namespace spaec::detail

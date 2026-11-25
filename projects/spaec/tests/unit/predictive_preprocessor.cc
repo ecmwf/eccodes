@@ -15,10 +15,10 @@
 #include <string>
 #include <vector>
 
-#include "spaec/Preprocessor.h"
-#include "spaec/Span.h"
+#include "spaec/detail/Preprocessor.h"
+#include "spaec/detail/Span.h"
 
-using namespace spaec;
+using namespace spaec::detail;
 
 static int failures = 0;
 

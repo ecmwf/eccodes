@@ -9,10 +9,10 @@
 #include <iostream>
 #include <vector>
 
-#include "spaec/encoder/EncoderSeq.h"
-#include "spaec/decoder/DecoderSeq.h"
+#include "spaec/detail/encoder/EncoderSeq.h"
+#include "spaec/detail/decoder/DecoderSeq.h"
 
-using namespace spaec;
+using namespace spaec::detail;
 
 // Zero blocks, small values (second extension, split sample with small k), values around the
 // middle of the range (split sample), pseudo-random values (no compression), a partial block

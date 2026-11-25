@@ -30,7 +30,7 @@
 #include "simple_packing/optimizer/BinOptimizer.h"
 #include "simple_packing/optimizer/DecOptimizer.h"
 #include "simple_packing/simple/Binary.h"
-#include "spaec/SpAec.h"
+#include "spaec/detail/SpAec.h"
 
 namespace eccodes::accessor
 {
@@ -45,15 +45,15 @@ constexpr long aecPreprocessFlag = 8, aecRestrictedFlag = 16;
 
 // The code option set of the CCSDS flags (SpAec applies it like libaec: the restricted set for 1 to
 // 4 bits per value, an error for 5 to 8 bits, the basic set for more bits)
-spaec::CodeOptionSet code_option_set(long flags)
+spaec::detail::CodeOptionSet code_option_set(long flags)
 {
-    return (flags & aecRestrictedFlag) ? spaec::CodeOptionSet::Restricted : spaec::CodeOptionSet::Basic;
+    return (flags & aecRestrictedFlag) ? spaec::detail::CodeOptionSet::Restricted : spaec::detail::CodeOptionSet::Basic;
 }
 
 // The preprocessing of the CCSDS flags: the unit-delay predictor, or no preprocessor
-spaec::Prediction prediction(long flags)
+spaec::detail::Prediction prediction(long flags)
 {
-    return (flags & aecPreprocessFlag) ? spaec::Prediction::UnitDelay : spaec::Prediction::None;
+    return (flags & aecPreprocessFlag) ? spaec::detail::Prediction::UnitDelay : spaec::detail::Prediction::None;
 }
 
 void print_spaec_info(const char* func, long flags, long bits_per_value, long block_size, long rsi)
@@ -191,7 +191,7 @@ int DataCcsdsPacking::pack_double_new(const double* val, size_t* len)
     unsigned char* buf = nullptr;
     size_t buflen = 0;
     try {
-        spaec::encoder::SpAec<double> coder(
+        spaec::detail::encoder::SpAec<double> coder(
             static_cast<uint8_t>(bits_per_value),
             static_cast<uint8_t>(ccsds_block_size),
             static_cast<uint16_t>(ccsds_rsi),
@@ -209,8 +209,8 @@ int DataCcsdsPacking::pack_double_new(const double* val, size_t* len)
             return GRIB_OUT_OF_MEMORY;
         }
 
-        spaec::Span<double> input(const_cast<double*>(val), n_vals);
-        spaec::Span<uint8_t> output(buf, buflen);
+        spaec::detail::Span<double> input(const_cast<double*>(val), n_vals);
+        spaec::detail::Span<uint8_t> output(buf, buflen);
         buflen = coder.encode(input, output);
     }
     catch (const std::exception& e) {
@@ -304,7 +304,7 @@ int DataCcsdsPacking::unpack_new(T* val, size_t* len)
         print_spaec_info("unpack_*", ccsds_flags, bits_per_value, ccsds_block_size, ccsds_rsi);
 
     try {
-        spaec::encoder::SpAec<T> coder(
+        spaec::detail::encoder::SpAec<T> coder(
             static_cast<uint8_t>(bits_per_value),
             static_cast<uint8_t>(ccsds_block_size),
             static_cast<uint16_t>(ccsds_rsi),
@@ -315,8 +315,8 @@ int DataCcsdsPacking::unpack_new(T* val, size_t* len)
             1,
             prediction(ccsds_flags));
 
-        spaec::Span<uint8_t> source(buf, buflen);
-        spaec::Span<T> target(val, n_vals);
+        spaec::detail::Span<uint8_t> source(buf, buflen);
+        spaec::detail::Span<T> target(val, n_vals);
         coder.decode(source, target);
     }
     catch (const std::exception& e) {

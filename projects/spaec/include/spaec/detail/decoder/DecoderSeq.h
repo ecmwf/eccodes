@@ -17,14 +17,14 @@
 #include <utility>
 #include <vector>
 
-#include "spaec/Compat.h"
-#include "spaec/Span.h"
-#include "spaec/CodeOption.h"
-#include "spaec/Preprocessor.h"
-#include "spaec/BitBuffer.h"
-#include "spaec/Utils.h"
+#include "spaec/detail/Compat.h"
+#include "spaec/detail/Span.h"
+#include "spaec/detail/CodeOption.h"
+#include "spaec/detail/Preprocessor.h"
+#include "spaec/detail/BitBuffer.h"
+#include "spaec/detail/Utils.h"
 
-namespace spaec
+namespace spaec::detail
 {
 
 namespace detail
@@ -839,4 +839,4 @@ protected:
     const Preprocessing preprocessing_;
 };
 
-}  // namespace spaec
+}  // namespace spaec::detail

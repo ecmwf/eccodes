@@ -10,10 +10,10 @@
 #include <vector>
 
 #include <exception>
-#include "spaec/Span.h"
-#include "spaec/BitBuffer.h"
+#include "spaec/detail/Span.h"
+#include "spaec/detail/BitBuffer.h"
 
-using namespace spaec;
+using namespace spaec::detail;
 
 static int testCount = 0;
 static int passCount = 0;

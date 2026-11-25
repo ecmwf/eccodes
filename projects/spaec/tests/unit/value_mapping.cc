@@ -13,9 +13,9 @@
 #include <random>
 #include <string>
 
-#include "spaec/SpAec.h"
+#include "spaec/detail/SpAec.h"
 
-using namespace spaec;
+using namespace spaec::detail;
 
 static int failures = 0;
 

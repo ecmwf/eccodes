@@ -13,13 +13,13 @@
 #include <stdexcept>
 #include <vector>
 
-#include "spaec/BitBuffer.h"
-#include "spaec/CodeOption.h"
-#include "spaec/Span.h"
-#include "spaec/ThreadPool.h"
-#include "spaec/encoder/EncoderSeq.h"
+#include "spaec/detail/BitBuffer.h"
+#include "spaec/detail/CodeOption.h"
+#include "spaec/detail/Span.h"
+#include "spaec/detail/ThreadPool.h"
+#include "spaec/detail/encoder/EncoderSeq.h"
 
-namespace spaec
+namespace spaec::detail
 {
 
 namespace encoder
@@ -307,4 +307,4 @@ private:
 
 }  // namespace encoder
 
-}  // namespace spaec
+}  // namespace spaec::detail

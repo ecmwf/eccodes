@@ -14,9 +14,9 @@
     #error "span_bounds must be compiled with assertions enabled"
 #endif
 
-#include "spaec/Span.h"
+#include "spaec/detail/Span.h"
 
-using namespace spaec;
+using namespace spaec::detail;
 
 static void onAbort(int)
 {

@@ -10,9 +10,9 @@
 #include <stdexcept>
 #include <string>
 
-#include "spaec/Utils.h"
+#include "spaec/detail/Utils.h"
 
-using namespace spaec;
+using namespace spaec::detail;
 
 static int failures = 0;
 
