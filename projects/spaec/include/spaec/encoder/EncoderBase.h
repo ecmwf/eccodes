@@ -30,6 +30,9 @@ public:
     // starts at the k of the previous split-sample assessment (splitK_, carried across blocks and
     // RSIs, 0 at the start of a stream) and moves up, then down, while the size strictly decreases.
     // When two k give the same size, the result therefore depends on the previous k.
+    // One pass over the block computes the sum and the sizes for the previous k and its neighbours
+    // (CCSDS 120.0-G-4, 5.5: by convexity, the signs of the differences of neighbouring sizes
+    // identify the minimum); further passes are needed only when the minimum is farther away.
     // Returns k, the total block size (ID, reference and data bits) and the sum of the values.
     template <ReferenceType RType>
     auto selectBestMethod(Span<DeltaType> values)
@@ -54,7 +57,22 @@ public:
             return Result{ 0, UINT64_MAX, sum };
         }
 
+        const unsigned k0 = splitK_;
+        const unsigned kUp = k0 < kMax ? k0 + 1 : k0;
+        const unsigned kDown = k0 > 0 ? k0 - 1 : k0;
+        uint64_t sum = 0, fsAt = 0, fsUp = 0, fsDown = 0;
+        for (size_t j = 0; j < thisBs; ++j) {
+            const uint64_t x = static_cast<uint64_t>(v[j]);
+            sum += x;
+            fsAt += x >> k0;
+            fsUp += x >> kUp;
+            fsDown += x >> kDown;
+        }
+
         auto fsLength = [&](unsigned k) {
+            if (k == k0) return fsAt;
+            if (k == kUp) return fsUp;
+            if (k == kDown) return fsDown;
             uint64_t fs = 0;
             for (size_t j = 0; j < thisBs; ++j) {
                 fs += static_cast<uint64_t>(v[j] >> k);
@@ -62,17 +80,13 @@ public:
             return fs;
         };
 
-        uint64_t sum = 0;
         uint64_t lenMin = UINT64_MAX;
-        unsigned k = splitK_;
+        unsigned k = k0;
         unsigned kBest = k;
         bool noTurn = (k == 0);  // do not reverse the direction
         bool up = true;
         for (;;) {
             const uint64_t fs = fsLength(k);
-            if (k == 0) {
-                sum = fs;
-            }
             const uint64_t len = fs + thisBs * (k + 1);
             if (len < lenMin) {
                 if (lenMin < UINT64_MAX) {
@@ -110,13 +124,6 @@ public:
             }
         }
         splitK_ = static_cast<uint8_t>(kBest);
-
-        if (kBest != 0) {
-            sum = 0;
-            for (size_t j = 0; j < thisBs; ++j) {
-                sum += v[j];
-            }
-        }
 
         uint64_t fixedOverhead = ssId_.length;
         if constexpr (RType == ReferenceType::Ref) {
