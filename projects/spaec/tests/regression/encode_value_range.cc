@@ -15,6 +15,8 @@
 #include "spaec/Span.h"
 #include "spaec/SpAec.h"
 
+using namespace spaec;
+
 int main()
 {
     try {

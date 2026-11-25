@@ -12,6 +12,8 @@
 #include "spaec/encoder/EncoderSeq.h"
 #include "spaec/decoder/DecoderSeq.h"
 
+using namespace spaec;
+
 using ValueType = uint16_t;
 constexpr uint8_t BPV = 16;
 constexpr CodeOptionSet COS = CodeOptionSet::Basic;

@@ -10,6 +10,8 @@
 #include "spaec/Span.h"
 #include "spaec/BitBuffer.h"
 
+using namespace spaec;
+
 static int testCount = 0;
 static int passCount = 0;
 static int failCount = 0;

@@ -9,6 +9,9 @@
 #include "spaec/CodeOption.h"
 #include "spaec/Span.h"
 
+namespace spaec
+{
+
 
 namespace encoder
 {
@@ -168,3 +171,5 @@ private:
 };
 
 }  // namespace encoder
+
+}  // namespace spaec

@@ -14,6 +14,9 @@
 #include "spaec/Span.h"
 #include "spaec/Utils.h"
 
+namespace spaec
+{
+
 namespace encoder
 {
 
@@ -460,3 +463,5 @@ private:
 };
 
 }  // namespace encoder
+
+}  // namespace spaec

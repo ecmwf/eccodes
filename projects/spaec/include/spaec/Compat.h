@@ -7,6 +7,9 @@
 #include <climits>
 #include <type_traits>
 
+namespace spaec
+{
+
 #if defined(__GNUC__) || defined(__clang__)
     #define SPAEC_LIKELY(x)   __builtin_expect(!!(x), 1)
     #define SPAEC_UNLIKELY(x) __builtin_expect(!!(x), 0)
@@ -40,3 +43,5 @@ inline int countlZero(T x)
         return __builtin_clzll(static_cast<unsigned long long>(x)) - (static_cast<int>(sizeof(unsigned long long) * CHAR_BIT) - digits);
     }
 }
+
+}  // namespace spaec

@@ -15,6 +15,8 @@
 #include "spaec/encoder/EncoderPar.h"
 #include "spaec/encoder/EncoderSeq.h"
 
+using namespace spaec;
+
 static int failures = 0;
 
 static void check(bool ok, const std::string& what)

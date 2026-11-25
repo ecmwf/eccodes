@@ -4,6 +4,9 @@
 #include <stdexcept>
 #include <cassert>
 
+namespace spaec
+{
+
 enum class CodeOptionSet
 {
     Basic,
@@ -250,3 +253,5 @@ public:
     IdType value;
     IdType valueShifted;
 };
+
+}  // namespace spaec

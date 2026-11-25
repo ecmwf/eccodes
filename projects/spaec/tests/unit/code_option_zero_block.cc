@@ -4,6 +4,8 @@
 #include <exception>
 #include "spaec/CodeOption.h"
 
+using namespace spaec;
+
 
 int main()
 {

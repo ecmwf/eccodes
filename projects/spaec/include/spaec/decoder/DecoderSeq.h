@@ -18,6 +18,9 @@
 #include "spaec/BitBuffer.h"
 #include "spaec/Utils.h"
 
+namespace spaec
+{
+
 template <typename ValueType, typename DeltaType, typename DecodeFunc = Identity<DeltaType>>
 class DecoderSeq
 {
@@ -646,3 +649,5 @@ protected:
     mutable std::vector<uint8_t> paddedSource_;
     size_t bitsDecoded_ = 0;
 };
+
+}  // namespace spaec

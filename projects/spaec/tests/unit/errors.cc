@@ -19,6 +19,8 @@
 #include "spaec/encoder/EncoderPar.h"
 #include "spaec/encoder/EncoderSeq.h"
 
+using namespace spaec;
+
 static int failures = 0;
 static int cases = 0;
 
@@ -84,7 +86,7 @@ static void parameters()
     expect<IA>("DecoderSeq<uint16_t> bpv 17", "bits per value", [] { DecoderSeq<uint16_t, uint16_t>(17, 8, 1, CodeOptionSet::Basic); });
 }
 
-static void spaec()
+static void spaecErrors()
 {
     using S = encoder::SpAec<double>;
     expect<IA>("SpAec restricted with 6 bits", "restricted set of code options", [] { S(6, 32, 128, CodeOptionSet::Restricted, 0); });
@@ -154,7 +156,7 @@ int main()
     threadPool();
     codeOptions();
     parameters();
-    spaec();
+    spaecErrors();
     encoderPar();
     bitBuffer();
     decoder();

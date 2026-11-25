@@ -4,6 +4,9 @@
 #include <cassert>
 #include <vector>
 
+namespace spaec
+{
+
 template <typename ValueType>
 class Span
 {
@@ -87,3 +90,5 @@ private:
     const size_t nFullB_ = data_.size() / splitSizeV_;
     const size_t nPartB_ = (data_.size() % splitSizeV_ == 0) ? 0 : 1;
 };
+
+}  // namespace spaec

@@ -17,6 +17,8 @@
 #include "spaec/Span.h"
 #include "spaec/SpAec.h"
 
+using namespace spaec;
+
 static int failures = 0;
 
 // Peak number of threads of this process while the watcher runs

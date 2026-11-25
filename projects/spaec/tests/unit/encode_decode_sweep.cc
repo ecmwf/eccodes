@@ -12,6 +12,8 @@
 #include "spaec/encoder/EncoderSeq.h"
 #include "spaec/decoder/DecoderSeq.h"
 
+using namespace spaec;
+
 static int testCount = 0;
 static int passCount = 0;
 static int failCount = 0;

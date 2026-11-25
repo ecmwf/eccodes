@@ -16,6 +16,9 @@
 #include "spaec/decoder/DecoderSeq.h"
 #include "spaec/decoder/DecoderPar.h"
 
+namespace spaec
+{
+
 template <typename T>
 T grib_power(int s, int n)
 {
@@ -279,3 +282,5 @@ private:
 };
 
 }  // namespace encoder
+
+}  // namespace spaec

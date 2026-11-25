@@ -13,6 +13,9 @@
 #include "spaec/ThreadPool.h"
 #include "spaec/decoder/DecoderSeq.h"
 
+namespace spaec
+{
+
 template <typename ValueType, typename DeltaType, typename DecodeFunc = Identity<DeltaType>>
 class DecoderPar : public DecoderSeq<ValueType, DeltaType, DecodeFunc>
 {
@@ -123,3 +126,5 @@ private:
     using Base::rsiSizeB_;
     using Base::rsiSizeV_;
 };
+
+}  // namespace spaec

@@ -12,6 +12,8 @@
 
 #include "spaec/SpAec.h"
 
+using namespace spaec;
+
 static int failures = 0;
 
 static void check(bool ok, const std::string& what)

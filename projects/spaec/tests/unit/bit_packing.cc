@@ -8,6 +8,8 @@
 #include "spaec/Span.h"
 #include "spaec/BitBuffer.h"
 
+using namespace spaec;
+
 
 void testWriteReadBits()
 {

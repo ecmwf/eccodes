@@ -14,6 +14,8 @@
 #include "spaec/Span.h"
 #include "spaec/encoder/EncoderSeq.h"
 
+using namespace spaec;
+
 int main()
 {
     try {

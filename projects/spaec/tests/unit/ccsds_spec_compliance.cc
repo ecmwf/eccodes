@@ -17,6 +17,8 @@
 #include "spaec/BitBuffer.h"
 #include "spaec/CodeOption.h"
 
+using namespace spaec;
+
 static int testCount = 0;
 static int passCount = 0;
 

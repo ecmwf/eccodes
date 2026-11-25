@@ -15,6 +15,8 @@
 #include "spaec/encoder/EncoderSeq.h"
 #include "spaec/SpAec.h"
 
+using namespace spaec;
+
 static int failures = 0;
 
 template <typename F>

@@ -15,6 +15,8 @@
 #include "spaec/Span.h"
 #include "spaec/SpAec.h"
 
+using namespace spaec;
+
 static int failures = 0;
 
 // Decodes n values of the stream and expects success with the given values

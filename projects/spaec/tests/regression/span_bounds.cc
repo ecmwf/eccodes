@@ -13,6 +13,8 @@
 
 #include "spaec/Span.h"
 
+using namespace spaec;
+
 static void onAbort(int)
 {
     _exit(0);  // the out of range access was detected

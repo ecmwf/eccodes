@@ -13,6 +13,8 @@
 #include "spaec/encoder/EncoderSeq.h"
 #include "spaec/decoder/DecoderSeq.h"
 
+using namespace spaec;
+
 using ValueType = uint16_t;
 constexpr size_t BPV = 16;
 

@@ -10,6 +10,8 @@
 
 #include "spaec/SpAec.h"
 
+using namespace spaec;
+
 // The mapped value with every operation rounded separately (volatile prevents contraction)
 static uint32_t expectedMapped(double value, int decimalScale, int binaryScale, double reference)
 {

@@ -16,6 +16,8 @@
 #include "spaec/SpAec.h"
 #include "spaec/encoder/EncoderSeq.h"
 
+using namespace spaec;
+
 namespace
 {
 

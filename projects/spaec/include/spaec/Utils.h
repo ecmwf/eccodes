@@ -4,6 +4,9 @@
 #include <stdexcept>
 #include <string>
 
+namespace spaec
+{
+
 enum class ReferenceType
 {
     Ref,
@@ -30,3 +33,5 @@ inline void validateCcsdsParameters(size_t bpv, size_t blockSize, size_t rsiSize
         throw std::invalid_argument("CCSDS: unsupported reference sample interval " + std::to_string(rsiSize) + " (must be between 1 and " + std::to_string(maxRsiSize) + " blocks)");
     }
 }
+
+}  // namespace spaec

@@ -9,6 +9,8 @@
 
 #include "spaec/SpAec.h"
 
+using namespace spaec;
+
 // Wide enough for the exact size of any size_t count
 #if defined(__SIZEOF_INT128__)
 __extension__ using Wide = unsigned __int128;  // __extension__: no -Wpedantic warning

@@ -44,9 +44,9 @@ constexpr long aecRestrictedFlag = 16;
 
 // The code option set of the CCSDS flags (SpAec applies it like libaec: the restricted set for 1 to
 // 4 bits per value, an error for 5 to 8 bits, the basic set for more bits)
-CodeOptionSet code_option_set(long flags)
+spaec::CodeOptionSet code_option_set(long flags)
 {
-    return (flags & aecRestrictedFlag) ? CodeOptionSet::Restricted : CodeOptionSet::Basic;
+    return (flags & aecRestrictedFlag) ? spaec::CodeOptionSet::Restricted : spaec::CodeOptionSet::Basic;
 }
 
 void print_spaec_info(const char* func, long flags, long bits_per_value, long block_size, long rsi)
@@ -184,7 +184,7 @@ int DataCcsdsPacking::pack_double_new(const double* val, size_t* len)
     unsigned char* buf = nullptr;
     size_t buflen = 0;
     try {
-        encoder::SpAec<double> spaec(
+        spaec::encoder::SpAec<double> coder(
             static_cast<uint8_t>(bits_per_value),
             static_cast<uint8_t>(ccsds_block_size),
             static_cast<uint16_t>(ccsds_rsi),
@@ -194,15 +194,15 @@ int DataCcsdsPacking::pack_double_new(const double* val, size_t* len)
             static_cast<int>(decimal_scale_factor));
 
         // Worst-case output buffer
-        buflen = spaec.maxEncodedSize(n_vals);
+        buflen = coder.maxEncodedSize(n_vals);
         buf = (unsigned char*)grib_context_buffer_malloc_clear(context_, buflen);
         if (!buf) {
             return GRIB_OUT_OF_MEMORY;
         }
 
-        Span<double> input(const_cast<double*>(val), n_vals);
-        Span<uint8_t> output(buf, buflen);
-        buflen = spaec.encode(input, output);
+        spaec::Span<double> input(const_cast<double*>(val), n_vals);
+        spaec::Span<uint8_t> output(buf, buflen);
+        buflen = coder.encode(input, output);
     }
     catch (const std::exception& e) {
         grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: SpAec encode error: %s",
@@ -295,7 +295,7 @@ int DataCcsdsPacking::unpack_new(T* val, size_t* len)
         print_spaec_info("unpack_*", ccsds_flags, bits_per_value, ccsds_block_size, ccsds_rsi);
 
     try {
-        encoder::SpAec<T> spaec(
+        spaec::encoder::SpAec<T> coder(
             static_cast<uint8_t>(bits_per_value),
             static_cast<uint8_t>(ccsds_block_size),
             static_cast<uint16_t>(ccsds_rsi),
@@ -304,9 +304,9 @@ int DataCcsdsPacking::unpack_new(T* val, size_t* len)
             static_cast<int>(binary_scale_factor),
             static_cast<int>(decimal_scale_factor));
 
-        Span<uint8_t> source(buf, buflen);
-        Span<T> target(val, n_vals);
-        spaec.decode(source, target);
+        spaec::Span<uint8_t> source(buf, buflen);
+        spaec::Span<T> target(val, n_vals);
+        coder.decode(source, target);
     }
     catch (const std::exception& e) {
         grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: SpAec decode error: %s",

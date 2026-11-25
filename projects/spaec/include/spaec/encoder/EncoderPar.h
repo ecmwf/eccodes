@@ -14,6 +14,9 @@
 #include "spaec/ThreadPool.h"
 #include "spaec/encoder/EncoderSeq.h"
 
+namespace spaec
+{
+
 namespace encoder
 {
 
@@ -297,3 +300,5 @@ private:
 };
 
 }  // namespace encoder
+
+}  // namespace spaec

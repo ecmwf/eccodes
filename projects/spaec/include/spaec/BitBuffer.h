@@ -9,6 +9,9 @@
 #include "spaec/Compat.h"
 #include "spaec/Span.h"
 
+namespace spaec
+{
+
 // Conversion between the native byte order and the byte order of the bit stream (big-endian, most
 // significant bit first); the same function converts in both directions
 inline uint16_t bigEndian16(uint16_t v)
@@ -414,3 +417,5 @@ private:
     mutable size_t currentBitPos_ = 0;
     size_t limitBits_ = 0;
 };
+
+}  // namespace spaec

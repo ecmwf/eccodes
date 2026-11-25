@@ -10,6 +10,8 @@
 
 #include "spaec/SpAec.h"
 
+using namespace spaec;
+
 template <typename T>
 static int check(unsigned bpv, unsigned blockSize, unsigned rsi, size_t n)
 {

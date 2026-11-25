@@ -6,6 +6,8 @@
 #include <exception>
 #include "spaec/CodeOption.h"
 
+using namespace spaec;
+
 template <size_t K>
 void testK1()
 {

@@ -9,6 +9,9 @@
 #include "spaec/Compat.h"
 #include "spaec/Span.h"
 
+namespace spaec
+{
+
 template <typename MappedType>
 struct Identity
 {
@@ -206,3 +209,5 @@ private:
     using PreprocessorBase = Preprocessor<ValueType, DeltaType>;
     using ValueTypePlus = typename PreprocessorBase::ValueTypePlus;
 };
+
+}  // namespace spaec
