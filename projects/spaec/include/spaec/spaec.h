@@ -121,11 +121,14 @@ constexpr bool isSample = std::is_integral<T>::value && !std::is_same<T, bool>::
 
 // Runs encode(target) with a target of the worst-case size: the output itself if it is large
 // enough, else a temporary buffer whose content must fit the output
+// (zeroed if the encoder needs that: zero)
 template <typename Encode>
-size_t encodeInto(uint8_t* output, size_t capacity, size_t worstCase, Encode&& encode)
+size_t encodeInto(uint8_t* output, size_t capacity, size_t worstCase, bool zero, Encode&& encode)
 {
     if (capacity >= worstCase) {
-        std::memset(output, 0, worstCase);  // the encoders write into a zeroed buffer
+        if (zero) {
+            std::memset(output, 0, worstCase);
+        }
         return encode(Span<uint8_t>(output, worstCase));
     }
     std::vector<uint8_t> scratch(worstCase, 0);
@@ -177,7 +180,7 @@ size_t compress(const Sample* samples, size_t count, const Options& options, uin
     const detail::Config c = detail::configOf(options);
     const detail::Span<U> input(const_cast<U*>(reinterpret_cast<const U*>(samples)), count);
     const size_t worstCase = detail::encoder::SpAec<double>::maxEncodedSize(count, c.bitsPerSample, c.blockSize);
-    return detail::encodeInto(output, capacity, worstCase, [&](detail::Span<uint8_t> target) {
+    return detail::encodeInto(output, capacity, worstCase, true, [&](detail::Span<uint8_t> target) {
         if (c.threads > 1) {
             detail::encoder::EncoderPar<U, U> encoder(c.bitsPerSample, c.blockSize, c.referenceInterval, c.codeOptionSet, c.threads, c.preprocessing);
             return encoder.encode(input, target);
@@ -237,7 +240,8 @@ size_t compress(const Value* values, size_t count, const Scaling& scaling, const
     detail::encoder::SpAec<Value> coder(c.bitsPerSample, c.blockSize, c.referenceInterval, c.codeOptionSet, static_cast<Value>(scaling.referenceValue),
                                         scaling.binaryScaleFactor, scaling.decimalScaleFactor, c.threads, c.preprocessing.prediction);
     const detail::Span<Value> input(const_cast<Value*>(values), count);
-    return detail::encodeInto(output, capacity, coder.maxEncodedSize(count), [&](detail::Span<uint8_t> target) { return coder.encode(input, target); });
+    // SpAec::encode zeroes its target itself
+    return detail::encodeInto(output, capacity, coder.maxEncodedSize(count), false, [&](detail::Span<uint8_t> target) { return coder.encode(input, target); });
 }
 
 template <typename Value, std::enable_if_t<std::is_floating_point<Value>::value, int> = 0>

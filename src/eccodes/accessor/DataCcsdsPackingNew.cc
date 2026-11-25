@@ -24,13 +24,8 @@
 #include <cstring>
 #include <memory>
 
-#include "simple_packing/detail/Parameters.h"
-#include "simple_packing/detail/Utils.h"
-#include "simple_packing/detail/optimizer/BinDecOptimizer.h"
-#include "simple_packing/detail/optimizer/BinOptimizer.h"
-#include "simple_packing/detail/optimizer/DecOptimizer.h"
-#include "simple_packing/detail/simple/Binary.h"
-#include "spaec/detail/SpAec.h"
+#include "simple_packing/simple_packing.h"
+#include "spaec/spaec.h"
 
 namespace eccodes::accessor
 {
@@ -43,17 +38,18 @@ constexpr long maxBitsPerValue = 32;
 // Values of AEC_DATA_PREPROCESS and AEC_RESTRICTED in libaec.h
 constexpr long aecPreprocessFlag = 8, aecRestrictedFlag = 16;
 
-// The code option set of the CCSDS flags (SpAec applies it like libaec: the restricted set for 1 to
-// 4 bits per value, an error for 5 to 8 bits, the basic set for more bits)
-spaec::detail::CodeOptionSet code_option_set(long flags)
+// The options of SpAec for the CCSDS keys. The code options are applied like libaec does: the
+// restricted set for 1 to 4 bits per value, an error for 5 to 8 bits, the basic set for more bits.
+// Without AEC_DATA_PREPROCESS the samples are coded without preprocessor.
+spaec::Options spaec_options(long flags, long bits_per_value, long block_size, long rsi)
 {
-    return (flags & aecRestrictedFlag) ? spaec::detail::CodeOptionSet::Restricted : spaec::detail::CodeOptionSet::Basic;
-}
-
-// The preprocessing of the CCSDS flags: the unit-delay predictor, or no preprocessor
-spaec::detail::Prediction prediction(long flags)
-{
-    return (flags & aecPreprocessFlag) ? spaec::detail::Prediction::UnitDelay : spaec::detail::Prediction::None;
+    spaec::Options options;
+    options.bitsPerSample = static_cast<unsigned>(bits_per_value);
+    options.blockSize = static_cast<unsigned>(block_size);
+    options.referenceInterval = static_cast<unsigned>(rsi);
+    options.codeOptions = (flags & aecRestrictedFlag) ? spaec::CodeOptions::Restricted : spaec::CodeOptions::Basic;
+    options.preprocessor = (flags & aecPreprocessFlag) ? spaec::Preprocessor::UnitDelay : spaec::Preprocessor::None;
+    return options;
 }
 
 void print_spaec_info(const char* func, long flags, long bits_per_value, long block_size, long rsi)
@@ -103,20 +99,25 @@ int DataCcsdsPacking::pack_double_new(const double* val, size_t* len)
         return GRIB_SUCCESS;
     }
 
-    const auto [min, max] = sp::detail::sp_minmax(val, n_vals);
+    const sp::Range<double> range = sp::range(val, n_vals);
+    const double min = range.min, max = range.max;
     if ((err = grib_check_data_values_minmax(hand, min, max)) != GRIB_SUCCESS) {
         return err;
     }
 
     // Constant field: no data, the reference value is the value (the decimal scale factor is kept)
     if (min == max) {
-        const auto reference = sp::detail::nearest_smaller_value(min, sp::detail::FloatType::IEEE32);
-        if (!reference) {
+        // The scaling of a constant field: its reference value is the nearest float not above the value
+        double reference = 0;
+        try {
+            reference = sp::scaling(min, max, sp::Method::bits(16)).referenceValue;
+        }
+        catch (const std::exception&) {
             grib_context_log(context_, GRIB_LOG_ERROR,
                              "%s %s: Unable to find nearest_smaller_value of %g for %s", accessor_type().c_str(), __func__, min, reference_value_);
             return GRIB_INTERNAL_ERROR;
         }
-        if ((err = grib_set_double_internal(hand, reference_value_, *reference)) != GRIB_SUCCESS)
+        if ((err = grib_set_double_internal(hand, reference_value_, reference)) != GRIB_SUCCESS)
             return err;
         if ((err = grib_set_long_internal(hand, number_of_values_, n_vals)) != GRIB_SUCCESS)
             return err;
@@ -136,30 +137,24 @@ int DataCcsdsPacking::pack_double_new(const double* val, size_t* len)
     }
 
     // The packing parameters (the reference value is stored as IEEE float in GRIB edition 2)
-    sp::detail::Parameters params;
+    sp::Scaling scaling;
     try {
-        std::unique_ptr<sp::detail::Optimizer> optimizer;
-        if (binary_scale_factor == 0 && decimal_scale_factor != 0) {
-            // The decimal scale factor and the bits per value are given
-            optimizer = std::make_unique<sp::detail::BinOptimizer>(static_cast<int>(decimal_scale_factor), bits_per_value);
-        }
-        else if (optimize_scaling_factor) {
-            optimizer = std::make_unique<sp::detail::BinDecOptimizer>(0, 1, static_cast<int>(bits_per_value));
-        }
-        else {
-            optimizer = std::make_unique<sp::detail::DecOptimizer>(bits_per_value, 127);
-        }
-        optimizer->referenceFloatType(sp::detail::FloatType::IEEE32);
-        params = optimizer->getParams(min, max);
+        const int bits = static_cast<int>(bits_per_value);
+        // Given: the decimal scale factor and the bits per value, or the bits per value alone
+        // (optimizeScaleFactor: with the decimal scale factor that uses them best)
+        const sp::Method method = (binary_scale_factor == 0 && decimal_scale_factor != 0) ? sp::Method::bitsAndDecimals(bits, static_cast<int>(decimal_scale_factor))
+                                : optimize_scaling_factor                                 ? sp::Method::bestPrecision(bits)
+                                                                                          : sp::Method::bits(bits);
+        scaling = sp::scaling(min, max, method);
     }
     catch (const std::exception& e) {
         grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: unable to compute the packing parameters: %s",
                          accessor_type().c_str(), __func__, e.what());
         return GRIB_ENCODING_ERROR;
     }
-    const double reference_value = params.referenceValue();
-    binary_scale_factor = params.binaryScaleFactor();
-    decimal_scale_factor = params.decimalScaleFactor();
+    const double reference_value = scaling.referenceValue;
+    binary_scale_factor = scaling.binaryScaleFactor;
+    decimal_scale_factor = scaling.decimalScaleFactor;
 
     if ((err = grib_set_double_internal(hand, reference_value_, reference_value)) != GRIB_SUCCESS)
         return err;
@@ -191,27 +186,16 @@ int DataCcsdsPacking::pack_double_new(const double* val, size_t* len)
     unsigned char* buf = nullptr;
     size_t buflen = 0;
     try {
-        spaec::detail::encoder::SpAec<double> coder(
-            static_cast<uint8_t>(bits_per_value),
-            static_cast<uint8_t>(ccsds_block_size),
-            static_cast<uint16_t>(ccsds_rsi),
-            code_option_set(ccsds_flags),
-            reference_value,
-            static_cast<int>(binary_scale_factor),
-            static_cast<int>(decimal_scale_factor),
-            1,
-            prediction(ccsds_flags));
+        const spaec::Options options = spaec_options(ccsds_flags, bits_per_value, ccsds_block_size, ccsds_rsi);
+        const spaec::Scaling sampleScaling{ reference_value, static_cast<int>(binary_scale_factor), static_cast<int>(decimal_scale_factor) };
 
-        // Worst-case output buffer, not cleared: SpAec::encode zeroes it
-        buflen = coder.maxEncodedSize(n_vals);
+        // Worst-case output buffer
+        buflen = spaec::maxCompressedSize(n_vals, options);
         buf = (unsigned char*)grib_context_buffer_malloc(context_, buflen);
         if (!buf) {
             return GRIB_OUT_OF_MEMORY;
         }
-
-        spaec::detail::Span<double> input(const_cast<double*>(val), n_vals);
-        spaec::detail::Span<uint8_t> output(buf, buflen);
-        buflen = coder.encode(input, output);
+        buflen = spaec::compress(val, n_vals, sampleScaling, options, buf, buflen);
     }
     catch (const std::exception& e) {
         grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: SpAec encode error: %s",
@@ -304,20 +288,9 @@ int DataCcsdsPacking::unpack_new(T* val, size_t* len)
         print_spaec_info("unpack_*", ccsds_flags, bits_per_value, ccsds_block_size, ccsds_rsi);
 
     try {
-        spaec::detail::encoder::SpAec<T> coder(
-            static_cast<uint8_t>(bits_per_value),
-            static_cast<uint8_t>(ccsds_block_size),
-            static_cast<uint16_t>(ccsds_rsi),
-            code_option_set(ccsds_flags),
-            static_cast<T>(reference_value),
-            static_cast<int>(binary_scale_factor),
-            static_cast<int>(decimal_scale_factor),
-            1,
-            prediction(ccsds_flags));
-
-        spaec::detail::Span<uint8_t> source(buf, buflen);
-        spaec::detail::Span<T> target(val, n_vals);
-        coder.decode(source, target);
+        const spaec::Options options = spaec_options(ccsds_flags, bits_per_value, ccsds_block_size, ccsds_rsi);
+        const spaec::Scaling sampleScaling{ reference_value, static_cast<int>(binary_scale_factor), static_cast<int>(decimal_scale_factor) };
+        spaec::decompress(buf, buflen, sampleScaling, options, val, n_vals);
     }
     catch (const std::exception& e) {
         grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: SpAec decode error: %s",
