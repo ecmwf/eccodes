@@ -71,31 +71,34 @@ int grib_decode_array(const unsigned char* p, long* bitp, long bitsPerValue,
         /* number of useful bits in current byte */
         int usefulBitsInByte = 8 - (*bitp & 7);
         for (i = 0; i < n_vals; i++) {
-            /* value read as long */
-            long bitsToRead = 0;
-            lvalue = 0;
-            bitsToRead = bitsPerValue;
-            /* read one byte after the other to lvalue until >= bitsPerValue are read */
-            while (bitsToRead > 0) {
-                lvalue <<= 8;
-                lvalue += p[pi];
-                pi++;
-                bitsToRead -= usefulBitsInByte;
-                usefulBitsInByte = 8;
-            }
-            *bitp += bitsPerValue;
-            /* bitsToRead is now <= 0, remove the last bits */
-            lvalue >>= -1 * bitsToRead;
-            /* set leading bits to 0 - removing bits used for previous number */
-            lvalue &= mask;
-
-            usefulBitsInByte = -1 * bitsToRead; /* prepare for next round */
-            if (usefulBitsInByte > 0) {
-                pi--; /* reread the current byte */
+            /* Read exactly bitsPerValue bits: the useful bits of the current byte, then whole
+               bytes, then the leading bits of the last byte. Reading whole bytes and removing the
+               surplus bits afterwards needs up to bitsPerValue + 7 bits, which lost the high bits
+               of values of 58 bits and more in the 64-bit lvalue. */
+            long bitsToRead = bitsPerValue - usefulBitsInByte;
+            lvalue = p[pi] & ((1u << usefulBitsInByte) - 1);
+            if (bitsToRead < 0) {
+                /* the value ends inside the current byte */
+                lvalue >>= -bitsToRead;
+                usefulBitsInByte = -bitsToRead;
             }
             else {
-                usefulBitsInByte = 8; /* start with next full byte */
+                pi++;
+                while (bitsToRead >= 8) {
+                    lvalue = (lvalue << 8) | p[pi];
+                    pi++;
+                    bitsToRead -= 8;
+                }
+                if (bitsToRead > 0) {
+                    lvalue = (lvalue << bitsToRead) | (p[pi] >> (8 - bitsToRead));
+                    usefulBitsInByte = 8 - bitsToRead; /* the rest of this byte is the next value's */
+                }
+                else {
+                    usefulBitsInByte = 8; /* start with the next full byte */
+                }
             }
+            *bitp += bitsPerValue;
+            lvalue &= mask;
             /* scaling and move value to output */
             x = ((lvalue * s) + reference_value) * d;
             val[i] = x;
