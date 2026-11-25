@@ -5,10 +5,12 @@
 
 #pragma once
 
+#include <algorithm>
 #include <cmath>
 #include <cstdint>
 #include <cstring>
 #include <limits>
+#include <memory>
 #include <stdexcept>
 #include <string>
 #include <type_traits>
@@ -217,36 +219,55 @@ private:
         // The encoder ORs bits into the output: it must start zeroed
         std::memset(target.data(), 0, needed);
 
+        // The parallel encoder produces the same bytes as the sequential one (see EncoderPar)
+        if (nThreads_ > 1) {
+            std::unique_ptr<DeltaType[]> mapped(new DeltaType[data.size()]);  // not value-initialised
+            mapValues(data.data(), data.size(), mapped.get(), 0);
+            EncoderPar<DeltaType, DeltaType> encoder{ bpv_, blockSize_, rsiSize_, codeOptionSet_, nThreads_, preprocessing_ };
+            return encoder.encode(Span<DeltaType>(mapped.get(), data.size()), target);
+        }
+
+        // Sequential: the values are mapped RSI by RSI into a buffer of one RSI, which stays in the
+        // cache, instead of into an array of the whole field. Same stream as EncoderSeq::encode:
+        // the split-sample state starts at 0 and the RSIs are encoded in order.
+        EncoderSeq<DeltaType, DeltaType> encoder{ bpv_, blockSize_, rsiSize_, codeOptionSet_, preprocessing_ };
+        const size_t rsiValues = static_cast<size_t>(rsiSize_) * blockSize_;
+        std::unique_ptr<DeltaType[]> mapped(new DeltaType[std::min(rsiValues, data.size())]);
+        BitBuffer buffer(target);
+        encoder.splitK(0);
+        for (size_t offset = 0; offset < data.size(); offset += rsiValues) {
+            const size_t count = std::min(rsiValues, data.size() - offset);
+            mapValues(data.data() + offset, count, mapped.get(), offset);
+            encoder.encodeRsi(Span<DeltaType>(mapped.get(), count), buffer);
+        }
+        // An empty stream is one zero byte (the flushed, empty last byte), as in EncoderSeq::encode
+        return std::max<size_t>((buffer.bitPos() + 7) / 8, 1);
+    }
+
+    // Maps count values to the coded integers; throws for a value outside [0, 2^bpv) after
+    // scaling (first index + offset). No dependency between iterations (vectorizable): the range
+    // check is a reduction and out-of-range values (never converted: undefined behaviour) are
+    // replaced by 0.
+    template <typename DeltaType>
+    void mapValues(const ValueType* in, size_t count, DeltaType* out, size_t offset) const
+    {
         SimpleMapper<DeltaType> mapper{ referenceValue_, binaryScaleFactor_, decimalScaleFactor_ };
         const double maxMapped = std::ldexp(1.0, bpv_);  // values must map to [0, 2^bpv)
-        std::vector<DeltaType> mapped(data.size());
-        // No dependency between iterations (vectorizable): the range check is a reduction and
-        // out-of-range values (never converted: undefined behaviour) are replaced by 0
         bool inRange = true;
-        const ValueType* in = data.data();
-        DeltaType* out = mapped.data();
-        for (size_t i = 0; i < data.size(); ++i) {
+        for (size_t i = 0; i < count; ++i) {
             const double m = mapper.mapped(in[i]);
             const bool ok = (m >= 0.0) & (m < maxMapped);  // false for NaN
             inRange &= ok;
             out[i] = static_cast<DeltaType>(ok ? m : 0.0);
         }
         if (!inRange) {
-            for (size_t i = 0; i < data.size(); ++i) {
-                const double m = mapper.mapped(data[i]);
+            for (size_t i = 0; i < count; ++i) {
+                const double m = mapper.mapped(in[i]);
                 if (!(m >= 0.0 && m < maxMapped)) {
-                    throwValueOutOfRange(i, static_cast<double>(data[i]));
+                    throwValueOutOfRange(offset + i, static_cast<double>(in[i]));
                 }
             }
         }
-
-        // The parallel encoder produces the same bytes as the sequential one (see EncoderPar)
-        if (nThreads_ > 1) {
-            EncoderPar<DeltaType, DeltaType> encoder{ bpv_, blockSize_, rsiSize_, codeOptionSet_, nThreads_, preprocessing_ };
-            return encoder.encode(Span<DeltaType>(mapped), target);
-        }
-        EncoderSeq<DeltaType, DeltaType> encoder{ bpv_, blockSize_, rsiSize_, codeOptionSet_, preprocessing_ };
-        return encoder.encode(Span<DeltaType>(mapped), target);
     }
 
     [[noreturn]] __attribute__((cold, noinline)) void throwValueOutOfRange(size_t index, double value) const

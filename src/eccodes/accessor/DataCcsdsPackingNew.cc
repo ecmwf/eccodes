@@ -202,9 +202,9 @@ int DataCcsdsPacking::pack_double_new(const double* val, size_t* len)
             1,
             prediction(ccsds_flags));
 
-        // Worst-case output buffer
+        // Worst-case output buffer, not cleared: SpAec::encode zeroes it
         buflen = coder.maxEncodedSize(n_vals);
-        buf = (unsigned char*)grib_context_buffer_malloc_clear(context_, buflen);
+        buf = (unsigned char*)grib_context_buffer_malloc(context_, buflen);
         if (!buf) {
             return GRIB_OUT_OF_MEMORY;
         }
