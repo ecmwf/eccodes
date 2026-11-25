@@ -17,6 +17,7 @@ list(APPEND test_c_bins
     grib_bpv_limit
     grib_double_cmp
     grib_element_index_range
+    grib_jpeg_element_index
     grib_pack_extreme_values
     grib_ccsds_truncated
     grib_simple_element
@@ -639,6 +640,11 @@ if( HAVE_BUILD_TOOLS )
                       CONDITION HAVE_JPEG AND ENABLE_EXTRA_TESTS
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_jpeg.sh
                       TEST_DEPENDS eccodes_download_gribs )
+
+    ecbuild_add_test( TARGET eccodes_t_grib_jpeg_element_index
+                      TYPE SCRIPT
+                      CONDITION HAVE_JPEG AND ENABLE_EXTRA_TESTS
+                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_jpeg_element_index.sh )
 
     ecbuild_add_test( TARGET eccodes_t_grib_png
                       TYPE SCRIPT
