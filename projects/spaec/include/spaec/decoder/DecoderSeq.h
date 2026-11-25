@@ -138,6 +138,7 @@ public:
         assert(values.size() == blockSizeV_ && "Decoded values size mismatch");
 
         UnaryCodewordReader codewords{ buffer };
+        uint64_t all = 0;  // all samples ORed: larger than maxSample_ iff a sample is (it is 2^n - 1)
         for (size_t i = 0; i < blockSizeV_ / 2; ++i) {
             // gamma = (d1 + d2)(d1 + d2 + 1) / 2 + d2 (CCSDS 121.0-B-3, 3.4.1) may be 2^n or larger
             // (3.4.2): it is not truncated to the sample type
@@ -162,8 +163,12 @@ public:
                 }
             }
             const uint64_t d2 = gamma - w * (w + 1) / 2;
+            all |= (w - d2) | d2;
             values[2 * i] = static_cast<ValueType>(w - d2);
             values[2 * i + 1] = static_cast<ValueType>(d2);
+        }
+        if (SPAEC_UNLIKELY(all > maxSample_)) {
+            throwCorrupt("second-extension sample beyond 2^" + std::to_string(bpv_) + " - 1");
         }
         buffer.bitPos(codewords.pos);
     }
@@ -183,8 +188,14 @@ public:
             // Phase 1: Read codewords using batched accumulator
             {
                 UnaryCodewordReader codewords{ buffer };
+                uint64_t all = 0;  // the FS codewords ORed: beyond 2^(n-k) - 1 iff one of them is
                 for (size_t i = startIndex; i < blockSizeV_; ++i) {
-                    values[i] = static_cast<ValueType>(static_cast<uint64_t>(codewords.read()) << k);
+                    const uint64_t high = codewords.read();
+                    all |= high;
+                    values[i] = static_cast<ValueType>(high << k);
+                }
+                if (SPAEC_UNLIKELY(all > (maxSample_ >> k))) {
+                    throwCorrupt("split-sample sample beyond 2^" + std::to_string(bpv_) + " - 1");
                 }
                 buffer.bitPos(codewords.pos);
             }
@@ -216,8 +227,14 @@ public:
         }
         else {  // FS - batched codeword reading
             UnaryCodewordReader codewords{ buffer };
+            uint64_t all = 0;
             for (size_t i = startIndex; i < blockSizeV_; ++i) {
-                values[i] = static_cast<ValueType>(codewords.read());
+                const uint64_t value = codewords.read();
+                all |= value;
+                values[i] = static_cast<ValueType>(value);
+            }
+            if (SPAEC_UNLIKELY(all > maxSample_)) {
+                throwCorrupt("FS sample beyond 2^" + std::to_string(bpv_) + " - 1");
             }
             buffer.bitPos(codewords.pos);
         }
@@ -617,6 +634,9 @@ protected:
 
     CodeOptionBase codeOptionBase_{ bpv_, codeOptionSet_ };
     const uint8_t maxIdLength = codeOptionBase_.maxIdLength;
+
+    // The largest preprocessed sample, 2^n - 1 (CCSDS 121.0-B-3, 4.4: they are n-bit values)
+    const uint64_t maxSample_ = (uint64_t{ 1 } << bpv_) - 1;
 
     IdType noCompressionId_;
 
