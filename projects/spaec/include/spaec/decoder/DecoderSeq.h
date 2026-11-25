@@ -209,27 +209,20 @@ public:
                 buffer.bitPos(codewords.pos);
             }
 
-            // Phase 2: Read k-bit LSBs using batched accumulator
+            // Phase 2: the k-bit LSBs, in groups of 57 / k values: one 64-bit load (at least 57
+            // valid bits after the bit offset of up to 7) per group, and each value of the group
+            // extracted with its own shift (no branch and no dependency between the values)
             {
                 size_t pos = buffer.bitPos();
-                size_t bytepos = pos >> 3;
-                size_t bitpos = pos & 7;
-                uint64_t acc = bigEndian64(loadU64(&data[bytepos]));
-                acc <<= bitpos;
-                int bitsAvail = 64 - static_cast<int>(bitpos);
-
-                for (size_t i = startIndex; i < blockSizeV_; ++i) {
-                    if (SPAEC_UNLIKELY(bitsAvail < k)) {
-                        bytepos = pos >> 3;
-                        bitpos = pos & 7;
-                        acc = bigEndian64(loadU64(&data[bytepos]));
-                        acc <<= bitpos;
-                        bitsAvail = 64 - static_cast<int>(bitpos);
+                const size_t perGroup = 57 / k;
+                const uint64_t mask = (uint64_t{ 1 } << k) - 1;
+                for (size_t i = startIndex; i < blockSizeV_; i += perGroup) {
+                    const size_t count = std::min(perGroup, blockSizeV_ - i);
+                    const uint64_t word = bigEndian64(loadU64(&data[pos >> 3])) << (pos & 7);
+                    for (size_t j = 0; j < count; ++j) {
+                        values[i + j] |= static_cast<ValueType>((word >> (64 - (j + 1) * k)) & mask);
                     }
-                    values[i] |= static_cast<ValueType>(acc >> (64 - k));
-                    acc <<= k;
-                    bitsAvail -= k;
-                    pos += k;
+                    pos += count * k;
                 }
                 buffer.bitPos(pos);
             }
