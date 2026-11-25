@@ -21,6 +21,7 @@ list(APPEND test_c_bins
     grib_subnormal_range
     grib_number_too_large
     grib_precision_too_large
+    grib_precision_no_values
     grib_pack_extreme_values
     grib_ccsds_truncated
     grib_simple_element
@@ -231,6 +232,7 @@ if( HAVE_BUILD_TOOLS )
         grib_subnormal_range
         grib_number_too_large
         grib_precision_too_large
+        grib_precision_no_values
     )
 
     # These tests require data downloads
