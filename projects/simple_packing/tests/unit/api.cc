@@ -17,6 +17,7 @@
 #include <random>
 #include <stdexcept>
 #include <string>
+#include <type_traits>
 #include <vector>
 
 #include "simple_packing/simple_packing.h"
@@ -208,6 +209,25 @@ int main()
             }
         }
         check(unusable == 0, std::to_string(unusable) + " of " + std::to_string(cases) + " scalings cannot be packed");
+    }
+
+    // The Method setters return a Method, not a reference into a temporary
+    {
+        check(!std::is_reference<decltype(sp::Method::bits(16).gribex())>::value, "Method::gribex returns a Method");
+        check(!std::is_reference<decltype(sp::Method::bits(16).referenceFormat(sp::ReferenceFormat::IBM32))>::value,
+              "Method::referenceFormat returns a Method");
+        const sp::Method chained = sp::Method::bits(16).referenceFormat(sp::ReferenceFormat::IBM32).gribex();
+        const sp::Scaling viaChain = sp::scaling(values, chained);
+        const sp::Scaling direct = sp::scaling(values, sp::Method::bits(16).referenceFormat(sp::ReferenceFormat::IBM32).gribex());
+        check(viaChain.referenceValue == direct.referenceValue && viaChain.binaryScaleFactor == direct.binaryScaleFactor, "a stored chained Method");
+    }
+
+    // A Scaling that is not filled in is an error, not a constant field that discards the values
+    {
+        const sp::Scaling unset;
+        expect<std::invalid_argument>("pack with a default Scaling", [&] { sp::pack(values, unset); });
+        expect<std::invalid_argument>("unpack with a default Scaling", [&] { sp::unpack<double>(std::vector<uint8_t>(10), 10, unset); });
+        expect<std::invalid_argument>("packedSize of a default Scaling", [&] { sp::packedSize(10, unset); });
     }
 
     // Errors
