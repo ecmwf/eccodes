@@ -49,4 +49,11 @@ target_link_libraries(span_bounds PRIVATE spaec::spaec)
 target_compile_options(span_bounds PRIVATE -UNDEBUG)
 add_test(NAME ${SPAEC_TEST_PREFIX}span_bounds COMMAND span_bounds)
 
+
+# A user's code compiled with -ffast-math keeps the checks of the library (usage requirements)
+add_executable(consumer_flags ${CMAKE_CURRENT_SOURCE_DIR}/consumer_flags.cc)
+target_link_libraries(consumer_flags PRIVATE spaec::spaec)
+target_compile_options(consumer_flags PRIVATE $<$<COMPILE_LANG_AND_ID:CXX,GNU,Clang,AppleClang>:-ffast-math>)
+add_test(NAME ${SPAEC_TEST_PREFIX}consumer_flags COMMAND consumer_flags)
+
 spaec_label_tests(regression)

@@ -138,4 +138,11 @@ if(SIMPLE_PACKING_HAVE_FAST_MATH)
   endforeach()
 endif()
 
+
+# A user's code compiled with -ffast-math keeps the checks of the library (usage requirements)
+add_executable(sp_consumer_flags ${CMAKE_CURRENT_SOURCE_DIR}/consumer_flags.cc)
+target_link_libraries(sp_consumer_flags PRIVATE simple_packing::simple_packing)
+target_compile_options(sp_consumer_flags PRIVATE $<$<COMPILE_LANG_AND_ID:CXX,GNU,Clang,AppleClang>:-ffast-math>)
+add_test(NAME ${SP_TEST_PREFIX}consumer_flags COMMAND sp_consumer_flags)
+
 sp_label_tests(regression)
