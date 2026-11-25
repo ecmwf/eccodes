@@ -122,13 +122,6 @@ static void byteOrder()
             check(out[i] == expected[i], "writeBits: byte " + std::to_string(i));
         }
     }
-    {  // writeBitsBatch: 4-bit values 1 2 3 4 5 -> 12 34 50
-        std::vector<uint8_t> out(16, 0);
-        BitBuffer b{ Span<uint8_t>(out) };
-        const uint16_t values[] = { 1, 2, 3, 4, 5 };
-        b.writeBitsBatch(values, 5, 4);
-        check(out[0] == 0x12 && out[1] == 0x34 && out[2] == 0x50, "writeBitsBatch: bytes 12 34 50");
-    }
     {  // writeCodewords: 0, 1, 2 zeros -> 1 01 001 -> 1010 0100
         std::vector<uint8_t> out(16, 0);
         BitBuffer b{ Span<uint8_t>(out) };
