@@ -21,6 +21,7 @@ list(APPEND test_c_bins
     grib_ccsds_truncated
     grib_simple_element
     grib_repack_failure
+    grib_simple_packing_multi_field
     grib_bitmap_truncated
     read_any
     julian
@@ -251,6 +252,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ccsds_truncated
         grib_simple_element
         grib_repack_failure
+        grib_simple_packing_multi_field
         grib_reference_value_not_finite
         grib_bitmap_truncated
         grib2_section_length_corrupt
