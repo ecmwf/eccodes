@@ -184,6 +184,7 @@ public:
 
     size_t encode(const Span<ValueType> data, Span<uint8_t> target)
     {
+        checkDecodable();
         if (bpv_ <= 8) {
             return encodeImpl<uint8_t>(data, target);
         }
@@ -267,6 +268,24 @@ private:
                     throwValueOutOfRange(offset + i, static_cast<double>(in[i]));
                 }
             }
+        }
+    }
+
+    // The smallest and the largest sample must decode to finite values of ValueType, else the
+    // encoder would accept values that the decoder returns as infinity or NaN (as the decoder
+    // computes them: SimpleUnmapper). Checked by encode only: data are decoded as they are.
+    void checkDecodable() const
+    {
+        const double bscale = grib_power<ValueType>(binaryScaleFactor_, 2);
+        const double dscale = grib_power<ValueType>(-decimalScaleFactor_, 10);
+        const double reference = static_cast<double>(referenceValue_);
+        const double limit = static_cast<double>(std::numeric_limits<ValueType>::max());
+        const double smallest = (0.0 * bscale + reference) * dscale;  // NaN if 2^E overflows
+        const double largest = ((std::ldexp(1.0, bpv_) - 1.0) * bscale + reference) * dscale;
+        if (!(std::fabs(smallest) <= limit && std::fabs(largest) <= limit)) {  // false for NaN
+            throw std::invalid_argument("CCSDS encoding: the samples cannot be decoded to finite values with this scaling (" + std::to_string(bpv_) +
+                                        " bits per value, reference value " + std::to_string(reference) + ", binary scale factor " +
+                                        std::to_string(binaryScaleFactor_) + ", decimal scale factor " + std::to_string(decimalScaleFactor_) + ")");
         }
     }
 

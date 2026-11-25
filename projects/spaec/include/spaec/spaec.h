@@ -119,6 +119,55 @@ inline Config configOf(const Options& o)
 template <typename T>
 constexpr bool isSample = std::is_integral<T>::value && !std::is_same<T, bool>::value && sizeof(T) <= 4;
 
+template <typename Sample>
+[[noreturn]] void throwSampleDoesNotFit(const Sample* samples, size_t count, unsigned bits, bool isSigned, bool (*fits)(Sample, unsigned))
+{
+    size_t i = 0;
+    while (i < count && fits(samples[i], bits)) {
+        ++i;
+    }
+    throw std::invalid_argument("CCSDS: sample " + std::to_string(+samples[i]) + " at index " + std::to_string(i) + " does not fit in " +
+                                std::to_string(bits) + (isSigned ? " bits (signed samples)" : " bits (unsigned samples)"));
+}
+
+// Throws std::invalid_argument if a sample does not fit bits: unsigned samples must be below
+// 2^bits, signed samples (the bit pattern of Sample read as two's complement) between -2^(bits-1)
+// and 2^(bits-1) - 1. One pass that the compiler vectorises; the index is searched only on error.
+template <typename Sample>
+void checkSamples(const Sample* samples, size_t count, unsigned bits, bool isSigned)
+{
+    using U = std::make_unsigned_t<Sample>;
+    using S = std::make_signed_t<Sample>;
+    if (bits >= 8 * sizeof(Sample)) {
+        return;  // every value of Sample fits
+    }
+    if (!isSigned) {
+        U any = 0;
+        for (size_t i = 0; i < count; ++i) {
+            any |= static_cast<U>(samples[i]);
+        }
+        if ((any >> bits) != 0) {
+            throwSampleDoesNotFit<Sample>(samples, count, bits, false, [](Sample v, unsigned b) { return (static_cast<U>(v) >> b) == 0; });
+        }
+        return;
+    }
+    const S high = static_cast<S>((S(1) << (bits - 1)) - 1);
+    const S low = static_cast<S>(-high - 1);
+    S mn = 0, mx = 0;
+    for (size_t i = 0; i < count; ++i) {
+        const S v = static_cast<S>(samples[i]);
+        mn = v < mn ? v : mn;
+        mx = v > mx ? v : mx;
+    }
+    if (mn < low || mx > high) {
+        throwSampleDoesNotFit<Sample>(samples, count, bits, true, [](Sample v, unsigned b) {
+            const S h = static_cast<S>((S(1) << (b - 1)) - 1);
+            const S s = static_cast<S>(v);
+            return s >= static_cast<S>(-h - 1) && s <= h;
+        });
+    }
+}
+
 // Runs encode(target) with a target of the worst-case size: the output itself if it is large
 // enough, else a temporary buffer whose content must fit the output
 // (zeroed if the encoder needs that: zero)
@@ -170,7 +219,9 @@ inline size_t maxCompressedSize(size_t count, const Options& options)
 
 // ---------------------------------------------------------------------------------------------
 // Integer samples: uint8_t, uint16_t or uint32_t (int8_t, int16_t, int32_t for signed samples), of
-// at least bitsPerSample bits. The type with the fewest bits is the fastest.
+// at least bitsPerSample bits. The type with the fewest bits is the fastest. Every sample must fit
+// bitsPerSample bits (unsigned: 0 to 2^n - 1, signed: -2^(n-1) to 2^(n-1) - 1), else compress
+// throws std::invalid_argument.
 
 // Compresses count samples into output and returns the number of bytes written
 template <typename Sample, std::enable_if_t<detail::isSample<Sample>, int> = 0>
@@ -178,6 +229,7 @@ size_t compress(const Sample* samples, size_t count, const Options& options, uin
 {
     using U = std::make_unsigned_t<Sample>;
     const detail::Config c = detail::configOf(options);
+    detail::checkSamples(samples, count, c.bitsPerSample, c.preprocessing.signedSamples);
     const detail::Span<U> input(const_cast<U*>(reinterpret_cast<const U*>(samples)), count);
     const size_t worstCase = detail::encoder::SpAec<double>::maxEncodedSize(count, c.bitsPerSample, c.blockSize);
     return detail::encodeInto(output, capacity, worstCase, true, [&](detail::Span<uint8_t> target) {
@@ -228,7 +280,8 @@ std::vector<Sample> decompress(const std::vector<uint8_t>& data, size_t count, c
 
 // ---------------------------------------------------------------------------------------------
 // Floating-point values (float, double): scaled to unsigned samples of bitsPerSample bits and
-// compressed in one pass. A value outside the range of the samples is an error (std::invalid_argument).
+// compressed in one pass. A value outside the range of the samples is an error (std::invalid_argument),
+// and so is a scaling whose smallest or largest sample does not decode to a finite Value.
 
 template <typename Value, std::enable_if_t<std::is_floating_point<Value>::value, int> = 0>
 size_t compress(const Value* values, size_t count, const Scaling& scaling, const Options& options, uint8_t* output, size_t capacity)
