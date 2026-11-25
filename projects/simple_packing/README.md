@@ -10,27 +10,45 @@ values into `bitsPerValue`-bit integers, `X = (Y * 10^D - R) / 2^E`.
 
 ## Features
 
+- One header, `simple_packing/simple_packing.h`: `sp::scaling`, `sp::pack` and `sp::unpack` with a
+  `sp::Scaling` struct (reference value, binary and decimal scale factor, bits per value)
 - Packing of 1 to 63 and unpacking of 1 to 64 bits per value, for `float` and `double`
-- Optimisers for the packing parameters, compatible with ecCodes:
-  - `DecOptimizer`: bits per value given (`optimizeScaleFactor=0`)
-  - `BinDecOptimizer`: best use of the bits (`optimizeScaleFactor=1`)
-  - `BPVOptimizer`: decimal precision given
-  - `BinOptimizer`: decimal scale factor and bits per value given (CCSDS packing)
+- Four methods to choose the scaling, compatible with ecCodes:
+  - `sp::Method::bits(n)`: bits per value given (`optimizeScaleFactor=0`)
+  - `sp::Method::bestPrecision(n)`: best use of the bits (`optimizeScaleFactor=1`)
+  - `sp::Method::decimals(d)`: decimal precision given, the bits follow
+  - `sp::Method::bitsAndDecimals(n, d)`: both given (CCSDS packing)
 - Reference values as IEEE or IBM 32-bit floats (GRIB2, GRIB1)
-- Packed data byte-identical to legacy ecCodes, invalid input reported as exceptions
+- Packed data byte-identical to legacy ecCodes; errors as exceptions (`std::invalid_argument`,
+  `std::runtime_error`, `std::length_error`)
 
 ## Usage
 
 ```cpp
-#include "simple_packing/simple/Binary.h"
-#include "simple_packing/optimizer/DecOptimizer.h"
+#include "simple_packing/simple_packing.h"
 
-sp::SimplePackingBinary<double> packer(std::make_unique<sp::DecOptimizer>(16, 127));
-auto [params, buffer] = packer.pack(values);
-std::vector<double> restored = packer.unpack(params, buffer, values.size());
+std::vector<double> values = ...;
+sp::Scaling scaling = sp::scaling(values, sp::Method::bits(16));
+std::vector<uint8_t> packed = sp::pack(values, scaling);
+std::vector<double> back = sp::unpack<double>(packed, values.size(), scaling);
 ```
 
-`packTo`/`unpackTo` work on caller-provided buffers.
+The packed data hold no parameters: `unpack` needs the scaling and the number of values. A
+constant field has `bitsPerValue == 0` and no packed data.
+
+With your own buffers, and the range computed once:
+
+```cpp
+sp::Range<double> r = sp::range(values, count);  // NaN if a value is NaN or infinite
+sp::Scaling scaling = sp::scaling(r.min, r.max, sp::Method::bestPrecision(24));
+sp::pack(values, count, scaling, output, sp::packedSize(count, scaling));
+sp::unpack(packed, size, scaling, values, count);
+```
+
+For GRIB edition 1: `sp::Method::bits(16).referenceFormat(sp::ReferenceFormat::IBM32).gribex()`.
+
+The implementation is in `simple_packing/detail` (namespace `sp::detail`) and is not part of the
+interface.
 
 ## Build and test
 
