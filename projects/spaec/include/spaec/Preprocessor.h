@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <type_traits>
 
+#include "spaec/Compat.h"
 #include "spaec/Span.h"
 
 template <typename MappedType>
@@ -118,7 +119,7 @@ public:
                     const ValueTypePlus theta = std::min(p - xMin, xMax - p);
                     common &= static_cast<ValueTypePlus>(m[j]) <= 2 * theta;
                 }
-                if (!common) [[unlikely]] {
+                if (SPAEC_UNLIKELY(!common)) {
                     speculate = decodeExact(mapped, data, start, start + count);
                 }
             }

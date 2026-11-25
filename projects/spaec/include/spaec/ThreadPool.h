@@ -9,6 +9,7 @@
 #include <queue>
 #include <stdexcept>
 #include <thread>
+#include <tuple>
 #include <type_traits>
 #include <vector>
 
@@ -77,10 +78,10 @@ auto ThreadPool::enqueue(F&& f, Args&&... args) -> std::future<std::invoke_resul
 {
     using returnType = std::invoke_result_t<F, Args...>;
 
-    // auto task = std::make_shared<std::packaged_task<returnType()>>(std::bind(std::forward<F>(f), std::forward<Args>(args)...));
+    // The arguments are stored in a tuple and passed as lvalues, like the captured copies of a lambda
     auto task = std::make_shared<std::packaged_task<returnType()>>(
-        [f = std::forward<F>(f), ... args = std::forward<Args>(args)]() mutable {
-            return f(args...);
+        [f = std::forward<F>(f), args = std::make_tuple(std::forward<Args>(args)...)]() mutable {
+            return std::apply(f, args);
         });
 
     std::future<returnType> res = task->get_future();

@@ -1,15 +1,13 @@
 #pragma once
 
-#include <bit>
 #include <cassert>
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
 #include <stdexcept>
 #include <string>
+#include "spaec/Compat.h"
 #include "spaec/Span.h"
-
-constexpr bool isLittleEndian = (std::endian::native == std::endian::little);
 
 // Conversion between the native byte order and the byte order of the bit stream (big-endian, most
 // significant bit first); the same function converts in both directions
@@ -80,7 +78,7 @@ public:
     // Throws if the read position is beyond the end of the compressed data
     void checkPos(size_t pos) const
     {
-        if (pos > limitBits_) [[unlikely]] {
+        if (SPAEC_UNLIKELY(pos > limitBits_)) {
             throwOverrun(pos, limitBits_);
         }
     }
@@ -123,7 +121,7 @@ public:
 
             while (acc != 0 && nCodewords > 0) {
                 // Find the next 1-bit (codeword terminator)
-                size_t lz = std::countl_zero(acc);
+                size_t lz = countlZero(acc);
                 size_t cwBits = lz + 1;  // zeros + terminating 1
                 currentBitPos_ += cwBits;
                 nCodewords--;
@@ -153,7 +151,7 @@ public:
         acc <<= bitpos;
 
         if (acc != 0) {
-            return std::countl_zero(acc) + 1;
+            return countlZero(acc) + 1;
         }
 
         // Codeword spans more than 56 bits: fall back to byte scanning.
@@ -165,7 +163,7 @@ public:
             bytepos++;
             checkPos(bytepos * 8);
         }
-        zeros += std::countl_zero(static_cast<unsigned>(buffer_[bytepos])) - 24;
+        zeros += countlZero(static_cast<unsigned>(buffer_[bytepos])) - 24;
         return zeros + 1;
     }
 
@@ -190,9 +188,9 @@ public:
     // codeword (and no reload of the position, which byte stores may alias). Like writeCodeword,
     // it only sets the terminating one bits: the buffer must be zero after the current position.
     template <typename T>
-        requires(std::is_integral<T>::value)
     void writeCodewords(const T* data, size_t count, unsigned k = 0)
     {
+        static_assert(std::is_integral<T>::value, "integral type required");
         uint8_t* out = buffer_.data();
         size_t base = currentBitPos_ & ~size_t(7);  // bit position of the register's first bit
         size_t fill = currentBitPos_ - base;        // bits of the register in use
@@ -200,7 +198,7 @@ public:
         constexpr uint64_t top = uint64_t(1) << 63;
         for (size_t i = 0; i < count; ++i) {
             const uint64_t zeros = static_cast<uint64_t>(data[i]) >> k;  // 64 bits also where size_t has 32
-            if (fill + zeros >= 64) [[unlikely]] {
+            if (SPAEC_UNLIKELY(fill + zeros >= 64)) {
                 orBigEndian64(out + base / 8, acc);
                 const uint64_t onePos = base + fill + zeros;  // the terminating one bit
                 if (zeros >= limitBits_ || onePos >= limitBits_) {
@@ -222,9 +220,9 @@ public:
     }
 
     template <typename T>
-        requires(std::is_integral<T>::value)
     void writeBits(T value, size_t nBits)
     {
+        static_assert(std::is_integral<T>::value, "integral type required");
         using TPlus =
             typename std::conditional_t<sizeof(T) <= 1, uint16_t,
                                         typename std::conditional_t<sizeof(T) <= 2, uint32_t,
@@ -261,9 +259,9 @@ public:
     // Batch write: packs k-bit values from an array using 64-bit accumulator.
     // Reduces memory operations by ~8x compared to per-value writeBits.
     template <typename T>
-        requires(std::is_integral<T>::value)
     void writeBitsBatch(const T* data, size_t count, uint8_t k)
     {
+        static_assert(std::is_integral<T>::value, "integral type required");
         if (k == 0 || count == 0) return;
 
         const uint64_t mask = (static_cast<uint64_t>(1) << k) - 1;
@@ -296,9 +294,9 @@ public:
 
     // Position-based batch write for parallel encoding (no currentBitPos_ dependency).
     template <typename T>
-        requires(std::is_integral<T>::value)
     void writeBitsBatch(const T* data, size_t count, uint8_t k, size_t pos)
     {
+        static_assert(std::is_integral<T>::value, "integral type required");
         if (k == 0 || count == 0) return;
 
         const uint64_t mask = (static_cast<uint64_t>(1) << k) - 1;
@@ -331,9 +329,9 @@ public:
 
 
     template <typename IdType>
-        requires(std::is_integral<IdType>::value && std::is_unsigned<IdType>::value)
     void writeId(IdType idShifted, uint8_t idLength)
     {
+        static_assert(std::is_integral<IdType>::value && std::is_unsigned<IdType>::value, "unsigned integral type required");
         idShifted >>= currentBitPos_ % 8;
         storeUnaligned<IdType>(&buffer_[currentBitPos_ / 8], bigEndian16(idShifted));
         currentBitPos_ += idLength;
@@ -341,9 +339,9 @@ public:
 
 
     template <typename T>
-        requires(std::is_integral<T>::value)
     T readBits(const size_t nBits, size_t bitPos) const
     {
+        static_assert(std::is_integral<T>::value, "integral type required");
         using TPlus =
             typename std::conditional_t<sizeof(T) <= 1, uint16_t,
                                         typename std::conditional_t<sizeof(T) <= 2, uint32_t,
@@ -373,9 +371,9 @@ public:
     }
 
     template <typename T>
-        requires(std::is_integral<T>::value)
     T readBits(const size_t nBits) const
     {
+        static_assert(std::is_integral<T>::value, "integral type required");
         size_t oldBitPos = currentBitPos_;
         currentBitPos_ += nBits;
         return readBits<T>(nBits, oldBitPos);

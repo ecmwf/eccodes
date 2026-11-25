@@ -1,7 +1,6 @@
 #pragma once
 
 #include <algorithm>
-#include <bit>
 #include <cassert>
 #include <cstddef>
 #include <cstdint>
@@ -12,6 +11,7 @@
 #include <utility>
 #include <vector>
 
+#include "spaec/Compat.h"
 #include "spaec/Span.h"
 #include "spaec/CodeOption.h"
 #include "spaec/Preprocessor.h"
@@ -55,7 +55,7 @@ private:
         size_t read()
         {
             const size_t cw_start = pos;
-            while (acc == 0) [[unlikely]] {
+            while (SPAEC_UNLIKELY(acc == 0)) {
                 buffer.checkPos(pos);
                 pos += (64 - consumed);
                 const size_t bitpos = pos & 7;
@@ -63,11 +63,11 @@ private:
                 acc <<= bitpos;
                 consumed = bitpos;
             }
-            const size_t lz = std::countl_zero(acc);
+            const size_t lz = countlZero(acc);
             const size_t total_zeros = (pos - cw_start) + lz;
             pos += lz + 1;
             consumed += lz + 1;
-            if (consumed >= 64) [[unlikely]] {
+            if (SPAEC_UNLIKELY(consumed >= 64)) {
                 const size_t bitpos = pos & 7;
                 acc = bigEndian64(loadU64(&data[pos >> 3]));
                 acc <<= bitpos;
@@ -117,7 +117,7 @@ public:
         int bitsAvail = 64 - static_cast<int>(bitpos);
 
         for (size_t i = startIndex; i < blockSizeV_; ++i) {
-            if (bitsAvail < nBits) [[unlikely]] {
+            if (SPAEC_UNLIKELY(bitsAvail < nBits)) {
                 bytepos = pos >> 3;
                 bitpos = pos & 7;
                 acc = bigEndian64(loadU64(&data[bytepos]));
@@ -145,7 +145,7 @@ public:
 
             // w = d1 + d2 = floor((sqrt(8*gamma+1) - 1) / 2)
             uint64_t w;
-            if (gamma < (uint64_t{ 1 } << 21)) [[likely]] {
+            if (SPAEC_LIKELY(gamma < (uint64_t{ 1 } << 21))) {
                 // Fast integer sqrt: 8*gamma+1 < 2^24 is exact in float
                 const uint32_t val = 8u * static_cast<uint32_t>(gamma) + 1;
                 uint32_t s = static_cast<uint32_t>(std::sqrt(static_cast<float>(val)));
@@ -199,7 +199,7 @@ public:
                 int bitsAvail = 64 - static_cast<int>(bitpos);
 
                 for (size_t i = startIndex; i < blockSizeV_; ++i) {
-                    if (bitsAvail < k) [[unlikely]] {
+                    if (SPAEC_UNLIKELY(bitsAvail < k)) {
                         bytepos = pos >> 3;
                         bitpos = pos & 7;
                         acc = bigEndian64(loadU64(&data[bytepos]));
