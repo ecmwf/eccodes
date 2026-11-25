@@ -10,6 +10,8 @@
 #include <cstddef>
 #include <cstdint>
 #include <numeric>
+#include <stdexcept>
+#include <type_traits>
 #include <vector>
 
 #include "spaec/encoder/EncoderBase.h"
@@ -201,7 +203,11 @@ public:
     void encodePartBlock(const Span<DeltaType> partBlock, BitBuffer& buffer)
     {
         std::vector<DeltaType>& fullBlock = partBlockBuf_;  // not static: encoders may run concurrently
-        fullBlock.assign(blockSizeV_, 0);
+        // The block is completed with copies of the last sample (as libaec does; CCSDS 121.0-B-3
+        // leaves the fill samples to the user): with the unit-delay predictor their preprocessed
+        // samples are 0, without reference sample they are the preprocessed last sample
+        const DeltaType fill = preprocessing_.prediction != Prediction::UnitDelay && partBlock.size() > 0 ? partBlock[partBlock.size() - 1] : DeltaType{ 0 };
+        fullBlock.assign(blockSizeV_, fill);
         std::copy(partBlock.begin(), partBlock.end(), fullBlock.begin());
         encodeFullBlock<RType>(Span<DeltaType>(fullBlock.data(), blockSizeV_), buffer);
     }
@@ -393,11 +399,78 @@ public:
 
     // RSI: preprocess the values and encode their segments (the first segment carries the
     // reference, the rest are alternatives). A trailing partial RSI is encoded the same way.
+    // Without reference sample (bypass predictor, no preprocessor), every segment is coded like the
+    // alternative segments (CCSDS 121.0-B-3, 4.2.6 and 5.2.2).
     void encodeRsi(const Span<ValueType> data, BitBuffer& buffer)
     {
-        preprocessor_.encode(data, Span<DeltaType>(preprocessBuffer_.data(), data.size()));
+        const Span<DeltaType> mapped(preprocessBuffer_.data(), data.size());
+        if (SPAEC_UNLIKELY(!preprocessing_.isDefault())) {
+            encodeRsiOther(data, mapped, buffer);
+            return;
+        }
+        preprocessor_.encode(data, mapped);
+        encodeRefSegments(mapped, buffer);
+    }
 
-        SplitBlock<DeltaType> segmentBlocks(Span<DeltaType>(preprocessBuffer_.data(), data.size()), segmentSizeV_);
+    // encodeRsi for a preprocessing other than the unit-delay predictor for unsigned samples (out
+    // of line: the default path stays unchanged)
+    __attribute__((noinline)) void encodeRsiOther(const Span<ValueType> data, Span<DeltaType> mapped, BitBuffer& buffer)
+    {
+        preprocessOther(data, mapped);
+        if (preprocessing_.prediction == Prediction::UnitDelay) {
+            encodeRefSegments(mapped, buffer);
+        }
+        else {
+            SplitBlock<DeltaType> segmentBlocks(mapped, segmentSizeV_);
+            for (size_t i = 0; i < segmentBlocks.nFull(); ++i) {
+                encodeAltSegment(segmentBlocks.full(i), buffer);
+            }
+            if (segmentBlocks.hasPart()) {
+                encodeAltSegment(segmentBlocks.part(), buffer);
+            }
+        }
+    }
+
+    // Preprocessing other than the unit-delay predictor for unsigned samples (CCSDS 121.0-B-3, 4)
+    void preprocessOther(const Span<ValueType> data, Span<DeltaType> mapped)
+    {
+        const uint64_t mask = (uint64_t{ 1 } << bpv_) - 1;
+        const uint64_t top = uint64_t{ 1 } << (bpv_ - 1);
+        const size_t n = data.size();
+        if (preprocessing_.prediction == Prediction::UnitDelay) {
+            // Signed samples: with xmin = -2^(n-1), the prediction errors and theta (4.4) are those
+            // of the unsigned samples x + 2^(n-1) (offset binary: the top bit inverted), so the
+            // mapper for unsigned samples applies to them. The reference sample stays the n-bit
+            // two's complement sample (4.2.6).
+            offsetBuffer_.resize(n);
+            for (size_t i = 0; i < n; ++i) {
+                offsetBuffer_[i] = static_cast<ValueType>((static_cast<uint64_t>(data[i]) ^ top) & mask);
+            }
+            preprocessor_.encode(Span<ValueType>(offsetBuffer_.data(), n), mapped);
+            if (n > 0) {
+                mapped[0] = static_cast<DeltaType>(static_cast<uint64_t>(data[0]) & mask);
+            }
+        }
+        else if (preprocessing_.signedSamples) {
+            // Bypass predictor, signed samples: with the predicted value 0, theta = 2^(n-1) - 1 and
+            // the mapper gives 2x for x >= 0 and 2|x| - 1 for x < 0 (also for x = -2^(n-1): theta + |x|)
+            for (size_t i = 0; i < n; ++i) {
+                const uint64_t v = static_cast<uint64_t>(data[i]) & mask;
+                mapped[i] = static_cast<DeltaType>((v & top) ? 2 * ((mask - v) + 1) - 1 : 2 * v);
+            }
+        }
+        else {
+            // No preprocessor, or the bypass predictor for unsigned samples (theta = 0: the samples)
+            for (size_t i = 0; i < n; ++i) {
+                mapped[i] = static_cast<DeltaType>(data[i]);
+            }
+        }
+    }
+
+    // The segments of an RSI with a reference sample
+    void encodeRefSegments(const Span<DeltaType> mapped, BitBuffer& buffer)
+    {
+        SplitBlock<DeltaType> segmentBlocks(mapped, segmentSizeV_);
         if (segmentBlocks.nFull() == 0 && segmentBlocks.nPart() == 1) {
             encodeRefPartSegment(segmentBlocks.part(), buffer);
         }
@@ -443,6 +516,10 @@ public:
         preprocessBuffer_(rsiSize * block_size),
         preprocessing_((validatePreprocessing(preprocessing), preprocessing))
     {
+        static_assert(std::is_unsigned<ValueType>::value && std::is_unsigned<DeltaType>::value, "the samples are passed in unsigned types");
+        if (!preprocessing_.isDefault() && !std::is_same<EncoderFunc, Identity<DeltaType>>::value) {
+            throw std::invalid_argument("CCSDS: this preprocessing needs the identity sample function");
+        }
         seState_.encodedValues_.resize(blockSizeV_ / 2);
     }
 
@@ -468,6 +545,7 @@ private:
     PredictivePreprocessingEncodeFast<ValueType, DeltaType, EncoderFunc> preprocessor_;
     std::vector<DeltaType> preprocessBuffer_;
     std::vector<DeltaType> partBlockBuf_;
+    std::vector<ValueType> offsetBuffer_;  // signed samples in offset binary (see preprocessOther)
     const Preprocessing preprocessing_;
 };
 

@@ -13,6 +13,7 @@
 #include <cmath>
 #include <stdexcept>
 #include <string>
+#include <type_traits>
 #include <utility>
 #include <vector>
 
@@ -435,6 +436,9 @@ public:
     // limits them to the blocks of their segment, the block count of the RSI as encoded
     // (rsiSizeB_) allows them to reach beyond the requested values of a shorter target
     // (see zbDecode)
+    // Without reference sample (HasReference false: bypass predictor, no preprocessor), all segments
+    // are decoded like the alternative segments and the result is 0.
+    template <bool HasReference = true>
     ValueType decodeRsiRaw(const BitBuffer& buffer, size_t rsiSize, size_t maxRunBlocks)
     {
         rsiBuf_.resize(rsiSize);
@@ -446,11 +450,16 @@ public:
         if (rsiSize < maxSegmentSizeV_) {
             // The whole RSI is one (padded) segment: its own blocks are the strict limit
             const size_t segmentBlocks = (rsiSize + blockSizeV_ - 1) / blockSizeV_;
-            reference = decodePartSegment<true>(buffer, segments.part(),
-                                                maxRunBlocks != 0 ? maxRunBlocks : segmentBlocks);
+            reference = decodePartSegment<HasReference>(buffer, segments.part(),
+                                                        maxRunBlocks != 0 ? maxRunBlocks : segmentBlocks);
         }
         else {
-            reference = decodeRefFullSegment(buffer, segments.full(0), maxSegmentSizeB_);
+            if constexpr (HasReference) {
+                reference = decodeRefFullSegment(buffer, segments.full(0), maxSegmentSizeB_);
+            }
+            else {
+                decodeAltFullSegment(buffer, segments.full(0), maxSegmentSizeB_);
+            }
 
             for (size_t i = 1; i < segments.nFull(); ++i) {
                 decodeAltFullSegment(buffer, segments.full(i), maxSegmentSizeB_);
@@ -474,10 +483,41 @@ public:
         preprocessor_.decode(Span<DeltaType>(rsiBuf_), reference, rsi);
     }
 
+    // Decodes one RSI with a preprocessing other than the unit-delay predictor for unsigned samples
+    // (the inverse of EncoderSeq::preprocessOther). Signed samples are returned sign-extended.
+    __attribute__((noinline)) void decodeRsiOther(const BitBuffer& buffer, Span<ValueType> rsi, size_t maxRunBlocks)
+    {
+        const size_t n = rsi.size();
+        const uint64_t mask = maxSample_;
+        const uint64_t top = uint64_t{ 1 } << (bpv_ - 1);
+        if (preprocessing_.prediction == Prediction::UnitDelay) {
+            // Signed samples in offset binary (the top bit inverted), the reference sample in two's
+            // complement
+            const ValueType reference = decodeRsiRaw<true>(buffer, n, maxRunBlocks);
+            preprocessor_.decode(Span<DeltaType>(rsiBuf_.data(), n), static_cast<ValueType>((static_cast<uint64_t>(reference) ^ top) & mask), rsi);
+            for (size_t i = 0; i < n; ++i) {
+                rsi[i] = static_cast<ValueType>(static_cast<int64_t>(rsi[i]) - static_cast<int64_t>(top));
+            }
+            return;
+        }
+        decodeRsiRaw<false>(buffer, n, maxRunBlocks);
+        if (preprocessing_.signedSamples) {
+            // Bypass predictor: 2x for x >= 0, 2|x| - 1 for x < 0
+            for (size_t i = 0; i < n; ++i) {
+                const uint64_t d = rsiBuf_[i];
+                rsi[i] = static_cast<ValueType>(static_cast<int64_t>(d >> 1) ^ -static_cast<int64_t>(d & 1));
+            }
+        }
+        else {
+            std::copy(rsiBuf_.begin(), rsiBuf_.begin() + static_cast<ptrdiff_t>(n), rsi.begin());
+        }
+    }
+
     // Skip one full RSI in the bitstream without decoding (for offset scanning)
     void skipFullRsi(const BitBuffer& buffer) const
     {
         const size_t nFullSegments = rsiSizeV_ / maxSegmentSizeV_;
+        const bool hasReference = preprocessing_.prediction == Prediction::UnitDelay;
 
         auto skipOneBlock = [&](bool withRef) -> std::pair<bool, size_t> {
             buffer.checkPos();
@@ -531,10 +571,10 @@ public:
         };
 
         if (rsiSizeV_ < maxSegmentSizeV_) {
-            skipSegment(true, rsiSizeB_);
+            skipSegment(hasReference, rsiSizeB_);
         }
         else {
-            skipSegment(true, maxSegmentSizeB_);
+            skipSegment(hasReference, maxSegmentSizeB_);
             for (size_t u = 1; u < nFullSegments; ++u) {
                 skipSegment(false, maxSegmentSizeB_);
             }
@@ -551,11 +591,21 @@ public:
     {
         const BitBuffer buffer = makeBuffer(source);
         SplitBlock<ValueType> chunks(target, rsiSizeV_);
-        for (size_t i = 0; i < chunks.nFull(); ++i) {
-            decodeRefFullRsi(buffer, chunks.full(i), 0);
+        if (SPAEC_LIKELY(preprocessing_.isDefault())) {
+            for (size_t i = 0; i < chunks.nFull(); ++i) {
+                decodeRefFullRsi(buffer, chunks.full(i), 0);
+            }
+            if (chunks.hasPart()) {
+                decodeRefFullRsi(buffer, chunks.part(), rsiSizeB_);
+            }
         }
-        if (chunks.hasPart()) {
-            decodeRefFullRsi(buffer, chunks.part(), rsiSizeB_);
+        else {
+            for (size_t i = 0; i < chunks.nFull(); ++i) {
+                decodeRsiOther(buffer, chunks.full(i), 0);
+            }
+            if (chunks.hasPart()) {
+                decodeRsiOther(buffer, chunks.part(), rsiSizeB_);
+            }
         }
         buffer.checkPos();
         bitsDecoded_ = buffer.bitPos();
@@ -580,12 +630,30 @@ public:
         const BitBuffer buffer = makeBuffer(source);
         buffer.checkPos();
         valuesBuf_.resize(std::min(nValues, rsiSizeV_));
+        if (SPAEC_UNLIKELY(!preprocessing_.isDefault())) {
+            decodeOther(buffer, nValues, [&](size_t count, size_t offset) { sink(static_cast<const ValueType*>(valuesBuf_.data()), count, offset); });
+            return;
+        }
         for (size_t offset = 0; offset < nValues; offset += rsiSizeV_) {
             const size_t count = std::min(rsiSizeV_, nValues - offset);
             // A trailing partial RSI may end with a zero-block run beyond the requested values
             const ValueType reference = decodeRsiRaw(buffer, count, count < rsiSizeV_ ? rsiSizeB_ : 0);
             preprocessor_.decode(Span<DeltaType>(rsiBuf_.data(), count), reference, Span<ValueType>(valuesBuf_.data(), count));
             sink(static_cast<const ValueType*>(valuesBuf_.data()), count, offset);
+        }
+        buffer.checkPos();
+    }
+
+    // decodeSpans and decodeFusedAt for a preprocessing other than the unit-delay predictor for
+    // unsigned samples: decodes nValues values RSI by RSI into valuesBuf_ (sized for one RSI) and
+    // calls done(count, offset) after each RSI. Out of line: the default paths stay unchanged.
+    template <typename Done>
+    __attribute__((noinline)) void decodeOther(const BitBuffer& buffer, size_t nValues, Done&& done)
+    {
+        for (size_t offset = 0; offset < nValues; offset += rsiSizeV_) {
+            const size_t count = std::min(rsiSizeV_, nValues - offset);
+            decodeRsiOther(buffer, Span<ValueType>(valuesBuf_.data(), count), count < rsiSizeV_ ? rsiSizeB_ : 0);
+            done(count, offset);
         }
         buffer.checkPos();
     }
@@ -597,6 +665,16 @@ public:
     {
         const BitBuffer buffer{ paddedBuffer, bitOffset };
         buffer.checkPos();
+
+        if (SPAEC_UNLIKELY(!preprocessing_.isDefault())) {
+            valuesBuf_.resize(std::min(nValues, rsiSizeV_));
+            decodeOther(buffer, nValues, [&](size_t count, size_t offset) {
+                for (size_t j = 0; j < count; ++j) {
+                    outputFunc(valuesBuf_[j], offset + j);
+                }
+            });
+            return;
+        }
 
         size_t nFull = nValues / rsiSizeV_;
         size_t remainder = nValues % rsiSizeV_;
@@ -626,6 +704,10 @@ public:
         preprocessor_(bpv),
         preprocessing_((validatePreprocessing(preprocessing), preprocessing))
     {
+        static_assert(std::is_unsigned<ValueType>::value && std::is_unsigned<DeltaType>::value, "the samples are passed in unsigned types");
+        if (!preprocessing_.isDefault() && !std::is_same<DecodeFunc, Identity<DeltaType>>::value) {
+            throw std::invalid_argument("CCSDS: this preprocessing needs the identity sample function");
+        }
         noCompressionId_ = (1u << (maxIdLength - 1)) - 1;
     }
 

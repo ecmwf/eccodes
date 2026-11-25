@@ -42,16 +42,17 @@ bool use_new_implementation()
 #endif
 }
 
-// Values of AEC_DATA_SIGNED, AEC_DATA_PREPROCESS and AEC_PAD_RSI in libaec.h
-constexpr long aecSignedFlag = 1, aecPreprocessFlag = 8, aecPadRsiFlag = 32;
+// Values of AEC_DATA_SIGNED and AEC_PAD_RSI in libaec.h
+constexpr long aecSignedFlag = 1, aecPadRsiFlag = 32;
 
-// SpAec implements the CCSDS options used by GRIB: preprocessed unsigned samples, basic or
-// restricted code options, no RSI padding and the block sizes of the standard (8, 16, 32, 64;
-// libaec accepts other even block sizes with AEC_NOT_ENFORCE)
+// SpAec implements the CCSDS options used by GRIB: unsigned samples with or without preprocessor,
+// basic or restricted code options, no RSI padding and the block sizes of the standard (8, 16, 32,
+// 64; libaec accepts other even block sizes with AEC_NOT_ENFORCE). Signed samples are left to
+// libaec: ecCodes reads its decoded samples as unsigned.
 bool spaec_supports(long flags, long block_size)
 {
     const bool standardBlockSize = block_size == 8 || block_size == 16 || block_size == 32 || block_size == 64;
-    return (flags & aecPreprocessFlag) && !(flags & (aecSignedFlag | aecPadRsiFlag)) && standardBlockSize;
+    return !(flags & (aecSignedFlag | aecPadRsiFlag)) && standardBlockSize;
 }
 
 }  // namespace

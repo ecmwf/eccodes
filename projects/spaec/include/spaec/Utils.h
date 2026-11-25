@@ -49,9 +49,6 @@ inline void validatePreprocessing(const Preprocessing& preprocessing)
     if (preprocessing.prediction == Prediction::None && preprocessing.signedSamples) {
         throw std::invalid_argument("CCSDS: signed samples need a preprocessor (CCSDS 121.0-B-3, 6.3.3.5.2: without preprocessor the data sense is positive)");
     }
-    if (!preprocessing.isDefault()) {
-        throw std::invalid_argument("CCSDS: this preprocessing is not implemented yet");
-    }
 }
 
 // Checks the coding parameters (CCSDS 121.0-B-3, 3.1.6 and 4.3) and throws

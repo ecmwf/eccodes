@@ -40,14 +40,20 @@ namespace
 
 constexpr long maxBitsPerValue = 32;
 
-// Value of AEC_RESTRICTED in libaec.h
-constexpr long aecRestrictedFlag = 16;
+// Values of AEC_DATA_PREPROCESS and AEC_RESTRICTED in libaec.h
+constexpr long aecPreprocessFlag = 8, aecRestrictedFlag = 16;
 
 // The code option set of the CCSDS flags (SpAec applies it like libaec: the restricted set for 1 to
 // 4 bits per value, an error for 5 to 8 bits, the basic set for more bits)
 spaec::CodeOptionSet code_option_set(long flags)
 {
     return (flags & aecRestrictedFlag) ? spaec::CodeOptionSet::Restricted : spaec::CodeOptionSet::Basic;
+}
+
+// The preprocessing of the CCSDS flags: the unit-delay predictor, or no preprocessor
+spaec::Prediction prediction(long flags)
+{
+    return (flags & aecPreprocessFlag) ? spaec::Prediction::UnitDelay : spaec::Prediction::None;
 }
 
 void print_spaec_info(const char* func, long flags, long bits_per_value, long block_size, long rsi)
@@ -192,7 +198,9 @@ int DataCcsdsPacking::pack_double_new(const double* val, size_t* len)
             code_option_set(ccsds_flags),
             reference_value,
             static_cast<int>(binary_scale_factor),
-            static_cast<int>(decimal_scale_factor));
+            static_cast<int>(decimal_scale_factor),
+            1,
+            prediction(ccsds_flags));
 
         // Worst-case output buffer
         buflen = coder.maxEncodedSize(n_vals);
@@ -303,7 +311,9 @@ int DataCcsdsPacking::unpack_new(T* val, size_t* len)
             code_option_set(ccsds_flags),
             static_cast<T>(reference_value),
             static_cast<int>(binary_scale_factor),
-            static_cast<int>(decimal_scale_factor));
+            static_cast<int>(decimal_scale_factor),
+            1,
+            prediction(ccsds_flags));
 
         spaec::Span<uint8_t> source(buf, buflen);
         spaec::Span<T> target(val, n_vals);
