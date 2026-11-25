@@ -164,17 +164,20 @@ int DataG2SimplePacking::pack_double(const double* cval, size_t* len)
                 // Encode straight into the section buffer: no intermediate
                 // copy of the field nor of the coded bytes.
                 buflen = (((scaling.bitsPerValue * n_vals) + 7) / 8) * sizeof(unsigned char);
+                // Like the legacy code, the result of updating the message is not returned: it can
+                // fail for a field of a multi-field message although the data are replaced
                 if (buflen == 0) {
-                    return grib_buffer_replace(this, NULL, 0, 1, 1);
+                    grib_buffer_replace(this, NULL, 0, 1, 1);
+                    return GRIB_SUCCESS;
                 }
                 buf = (unsigned char*)grib_context_buffer_malloc_clear(context_, buflen);
                 if (!buf) return GRIB_OUT_OF_MEMORY;
 
                 sp::pack(val, n_vals, scaling, buf, buflen);
 
-                ret = grib_buffer_replace(this, buf, buflen, 1, 1);
+                grib_buffer_replace(this, buf, buflen, 1, 1);
                 grib_context_buffer_free(context_, buf);
-                return ret;
+                return GRIB_SUCCESS;
             }
             catch (const std::exception& e) {
                 grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: SP encode error: %s",
