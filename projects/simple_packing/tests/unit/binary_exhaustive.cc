@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // Exhaustive unit test of the codec Binary<T, BPV> for every BPV (1..64) and every length up to 20
 // and around the group (8 values) and chunk (512 values) boundaries of packTo/unpackTo:
 // - packTo writes exactly the bytes of a bit-by-bit reference packer (most significant bit first)

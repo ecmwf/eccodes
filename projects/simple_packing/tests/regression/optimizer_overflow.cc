@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // The optimiser converted an out-of-range double to long (undefined behaviour, aborts under
 // -fsanitize=float-cast-overflow): the encoded value for the maximum could exceed the long
 // range when the reference value (a float32, rounded down) does not absorb pmin*10^D exactly

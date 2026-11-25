@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // Truncated or unterminated compressed data must be reported as an error: the decoder used to
 // read beyond the end of its input.
 

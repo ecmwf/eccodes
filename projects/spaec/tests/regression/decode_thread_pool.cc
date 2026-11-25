@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // The thread pool of the parallel decoder must have one thread per chunk (never more than
 // there are RSIs): an oversized pool (nThreads up to 255) used to be created for the whole
 // decoder, and many concurrent decodes could exhaust the process/thread limit of the

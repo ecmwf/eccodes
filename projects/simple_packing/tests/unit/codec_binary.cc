@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // Unit tests of the codecs Binary<T, BPV> and ArrayCodec<T, BPV> derived from regression tests
 // (those go through SimplePackingBinary):
 // - pack_value_range: packTo rejects values that cannot be coded (below the reference value,

@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+# SPDX-License-Identifier: Apache-2.0
 
 import random
 
@@ -70,5 +72,7 @@ if __name__ == "__main__":
         all_output += output
 
 
+    header = ("// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)\n"
+              "// SPDX-License-Identifier: Apache-2.0\n\n")
     with open("bit_packing_data.cc", "w") as f:
-        f.write(all_output)
+        f.write(header + all_output)

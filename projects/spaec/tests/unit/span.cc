@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // Unit tests of Span and SplitBlock:
 // - SplitBlock splits n values into full blocks and a part for every n up to 300 and every block size
 // - Span: begin/end/data/size/drop

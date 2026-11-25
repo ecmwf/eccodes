@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // Values that cannot be packed with the given parameters (below the reference value, above the
 // range of bits per value, NaN, infinity) must be rejected: their conversion to integers wrapped
 // around silently. A NaN in a field must also be detected when the parameters are computed (the

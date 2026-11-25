@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // Exhaustive unit tests of the encoder and decoder:
 // - every block of 8 samples with 1 and 2 bits per value, as the second block of a stream (no
 //   reference sample) after blocks of different kinds, round trip through EncoderSeq/DecoderSeq,

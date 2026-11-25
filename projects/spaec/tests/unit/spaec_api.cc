@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // Unit test of the SpAec class (the interface used by ecCodes) and of the decode variants of
 // DecoderSeq it uses:
 // - the constructor rejects invalid parameters (bits per value, block size, RSI, thread count,

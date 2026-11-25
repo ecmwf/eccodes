@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // BitPacking must store and load values most significant bit first on every platform and with
 // every compiler. It wrote bytes into one member of a union and read another (type punning):
 // icpx removed the byte stores (decoded values were 0), and on big-endian platforms the 128-bit

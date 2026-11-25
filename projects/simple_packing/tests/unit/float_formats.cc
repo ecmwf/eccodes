@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // Unit test of nearest_smaller_value (the reference value is stored as an IEEE or IBM single
 // precision float, rounded down): the result must be the largest value of the format that is not
 // larger than x, compared with references built from the definitions of the formats:

@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // Unit tests of the value mappers of SpAec derived from regression tests:
 // - decode_float_precision: SimpleUnmapper for float scales in double (powers computed in float)
 //   and rounds to float once; computing in float lost the low bits of samples with more than 24

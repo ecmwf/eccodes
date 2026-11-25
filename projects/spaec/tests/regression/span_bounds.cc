@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // Span::operator[] must check the index in debug builds (the assert came after the return and
 // was never executed). This test accesses an element past the end: the assertion must abort.
 

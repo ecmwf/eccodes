@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // Unit test of the predictive preprocessing (CCSDS 121.0-B, 4.3: unit-delay predictor, unsigned
 // samples):
 // - exhaustively for 1 to 10 bits per value: every pair (previous sample, sample) is mapped like

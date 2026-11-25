@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+# SPDX-License-Identifier: Apache-2.0
+
 # simple_packing: GRIB simple packing (fixed-width bit packing of scaled values) with
 # optimisers that choose the packing parameters (bits per value, binary and decimal scale
 # factors, reference value).

@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // The CCSDS bit stream is big-endian (most significant bit first) on every platform. SpAec stored
 // and loaded words with an unconditional byte swap, which is only right on little-endian
 // machines: on big-endian ones (s390x, POWER) the encoded bytes were reordered and correct

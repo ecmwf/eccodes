@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // maxEncodedSize() must not wrap around: callers allocate the output buffer of the encoder with
 // it. The product of the number of blocks and the bits per block overflowed size_t for large
 // fields on 32-bit platforms (and for huge counts on 64-bit ones), giving a buffer far too small.

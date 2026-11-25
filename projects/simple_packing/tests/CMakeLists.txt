@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+# SPDX-License-Identifier: Apache-2.0
+
 # Test names are prefixed to avoid collisions when built as part of ecCodes
 set(SP_TEST_PREFIX "simple_packing_")
 

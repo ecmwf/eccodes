@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+# SPDX-License-Identifier: Apache-2.0
+
 # libFuzzer fuzzers for SpAec (SPAEC_BUILD_FUZZERS, Clang only).
 # Each fuzzer is linked with the same sanitizer instrumentation as the library code
 # (see SPAEC_FUZZER_* options in the top-level CMakeLists.txt).

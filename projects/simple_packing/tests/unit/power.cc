@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // sp_power(s, n) = n^s by repeated multiplication or division (like the legacy ecCodes code).
 // Powers of 2 are exact over the whole range (including denormals) and must equal std::ldexp,
 // powers of 10 are exact as far as they are representable (10^22 in double, 10^10 in float).

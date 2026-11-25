@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // The codecs must not load or store words at misaligned addresses (undefined behaviour, a crash
 // on strict-alignment CPUs). This test is compiled with -fsanitize=alignment, which aborts at the
 // first misaligned access.

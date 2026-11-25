@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // Values that cannot be packed with the given bits per value, reference value and scale factors
 // (NaN, infinity, below the reference value, too large) must be rejected: the conversion used
 // to be undefined behaviour and produced wrong data silently.

@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // Fuzzer: encoder::SpAec<double>::decode — the sequential decoder (nThreads=1) and the
 // parallel decoder (nThreads>1) must agree on every input: equal values, or both must
 // report an error. The first bytes choose the coding parameters, the rest is the

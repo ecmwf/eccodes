@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // Unpacking into float must compute like the legacy ecCodes code: the scaling is done in double
 // (with the powers of 2 and 10 computed in float) and the result is rounded to float once.
 // Computing in float loses the low bits of values with more than 24 bits and values near zero

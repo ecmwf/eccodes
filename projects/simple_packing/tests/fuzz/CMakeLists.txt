@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+# SPDX-License-Identifier: Apache-2.0
+
 # libFuzzer fuzzers for simple packing (SIMPLE_PACKING_BUILD_FUZZERS, Clang only).
 # Built standalone: the library objects are instrumented with the same sanitizers as the
 # fuzzers (see SIMPLE_PACKING_FUZZER_* options in the top-level CMakeLists.txt), so this

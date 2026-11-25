@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // Field ranges the optimisers cannot handle (minimum > maximum, non-finite or overflowing range,
 // NaN, values beyond the float range) must be rejected with an exception: several of them made
 // the parameter search loop forever. Each case runs in a child process with a time limit.

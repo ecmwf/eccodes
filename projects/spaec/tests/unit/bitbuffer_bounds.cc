@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // Unit tests of BitBuffer derived from regression tests:
 // - decode_truncated: reads beyond the end of the data (limitBits) must throw, not read on
 // - encode_large_samples: writeCodewords must not write beyond the buffer (std::length_error)

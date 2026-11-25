@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // Unit test of the optimisers (DecOptimizer, Dec64Optimizer, BinDecOptimizer, BPVOptimizer) and
 // of SimplePackingBinary::pack/unpack: for fields of many ranges, the chosen parameters must be
 // valid and the field must be restored within one quantisation step:

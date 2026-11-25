@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // Decoding with several threads must give the same values as decoding with one thread
 // (the trailing partial reference sample interval was not decoded, and inputs smaller than
 // one interval were not decoded at all) and must report errors in the compressed data.

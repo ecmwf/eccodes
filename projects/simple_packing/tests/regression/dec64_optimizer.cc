@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // Dec64Optimizer must choose the decimal scale factor so that the binary scale factor stays within
 // +-last (it scaled small ranges down instead of up, e.g. binary scale factor -288 for last 127),
 // the packed values must keep the precision of bitsPerValue, and ranges it cannot handle must be

@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // The encoder must reject an output buffer that is too small (it used to write past its end)
 // and must not depend on the previous content of the output buffer.
 

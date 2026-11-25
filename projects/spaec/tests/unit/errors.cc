@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // Unit test: every error SpAec can report is triggered once, with the expected exception type and
 // message. Errors that cannot be triggered: ThreadPool::enqueue on a stopped pool (the pool is only
 // stopped by its destructor)

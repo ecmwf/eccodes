@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // The library must not print anything: errors are reported with exceptions. It wrote
 // diagnostics to stdout/stderr, which corrupts the output of the tools that use it.
 

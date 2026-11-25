@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // Fields the decimal scale factor search cannot scale without overflowing the double range
 // (values near +-DBL_MAX scaled by 10^D, or a decimal scale factor so large that value * 10^D
 // overflows) must be rejected with a clear error: the search overflowed to inf/NaN and then

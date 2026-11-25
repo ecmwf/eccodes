@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // Packing and unpacking 0 values must do nothing: the number of blocks minus one wrapped around
 // and the codecs ran off the end of their buffers.
 

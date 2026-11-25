@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // Unit tests of the parallel decoder derived from regression tests:
 // - decode_parallel: DecoderPar must decode inputs smaller than one RSI and a trailing partial RSI
 //   like DecoderSeq (they were not decoded), and ThreadPool must pass an exception of a task to

@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // Scale factors outside the GRIB range (+-32767) must be rejected with std::invalid_argument when
 // packing and unpacking: they took seconds per call, INT_MIN overflowed when negated, and values
 // beyond the range of int were silently truncated. The constructor of Parameters must

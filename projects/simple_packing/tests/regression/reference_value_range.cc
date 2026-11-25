@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // Reference values that cannot be stored (beyond the float range, NaN, infinity) must be rejected:
 // negative values below -FLT_MAX used to be "rounded" to garbage and packed as a constant field.
 

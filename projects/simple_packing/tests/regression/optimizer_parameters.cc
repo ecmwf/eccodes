@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // Optimiser parameters outside their range must be rejected with std::invalid_argument when the
 // optimiser is created: negative or huge bits per value and scale factors made the parameter
 // search loop forever or for a very long time.

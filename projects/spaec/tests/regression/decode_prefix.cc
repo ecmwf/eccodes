@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // A zero-block run of a valid stream may reach beyond the values that were asked for
 // (the last RSI of a shorter target): decoding stops with success when the output is full,
 // so decoding fewer values than encoded must succeed. The run used

@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // Computing packing parameters without an optimiser (decode-only instance) must throw
 // std::logic_error instead of dereferencing a null pointer.
 

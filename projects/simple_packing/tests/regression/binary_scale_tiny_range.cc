@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // get_binary_scale_factor() with a range so small that scaling it up overflows the double
 // range hung forever (the scale search multiplied zs until it became inf and then kept
 // halving inf). It must report the range as too small instead. Each case runs in a child

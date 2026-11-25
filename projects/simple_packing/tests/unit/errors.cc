@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // Unit test: every error simple_packing can report is triggered once, with the expected exception
 // type and message. A case that does not return within 10 s fails the test (an infinite loop
 // instead of an error). Inputs found by a random search over the optimiser parameters and fields.

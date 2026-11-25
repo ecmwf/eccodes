@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+# SPDX-License-Identifier: Apache-2.0
+
 # Regression tests: bugs found by robustness testing (invalid parameters and values, buffer
 # sizes, hangs, undefined behaviour, data races)
 

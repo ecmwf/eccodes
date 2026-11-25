@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // Seed corpus generator for the spaec fuzzers: writes valid CCSDS streams (encoded with
 // EncoderSeq) prefixed with the parameter header parsed by the fuzz harnesses:
 //   [0] bits per value 1..32, [1] block size 8/16/32/64, [2..3] rsi 1..4096 (LE16 + 1),

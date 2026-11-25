@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // Encoding blocks of large samples (here: alternating 0 and the largest value) must choose the
 // code option from the exact sizes. On 32-bit platforms the option sizes were computed in size_t:
 // the sum of the second-extension codewords (about 2^63 for 31-bit samples) wrapped around, the

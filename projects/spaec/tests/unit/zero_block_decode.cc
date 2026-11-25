@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // Unit tests of DecoderSeq::zbDecode derived from regression tests:
 // - decode_zero_block_run: a zero-block run longer than the blocks that remain (maxBlocks) must
 //   throw (it overflowed the segment buffer)

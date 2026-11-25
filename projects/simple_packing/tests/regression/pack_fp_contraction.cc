@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // Packing must round every operation of ((value * 10^D) - R) * 2^-E + 0.5 separately, like the
 // legacy ecCodes code built without -march=native. With -march=native (the default of
 // SIMPLE_PACKING_NATIVE_ARCH), GCC contracted value * 10^D - R into a fused multiply-add, which

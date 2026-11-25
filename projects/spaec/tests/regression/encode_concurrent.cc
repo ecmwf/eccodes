@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // Encoders running at the same time in different threads must not share state
 // (the encoder used a function-local static buffer for partial blocks).
 

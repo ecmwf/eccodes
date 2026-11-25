@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // Unit tests of the range checks of simple_packing derived from regression tests:
 // - pack_value_range: sp_minmax gives NaN, NaN if any value is NaN or infinite, at any position
 //   (every lane, the first value, the tail); it ignored NaN

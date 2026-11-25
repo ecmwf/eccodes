@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // Unsupported coding parameters must be rejected with std::invalid_argument
 // (an odd block size used to overflow the encoder's buffers).
 

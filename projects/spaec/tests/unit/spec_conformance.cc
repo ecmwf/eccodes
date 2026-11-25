@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // Conformance of SpAec to CCSDS 121.0-B-3 (Lossless Data Compression, Blue Book, August 2020),
 // checked against a reference encoder and decoder written from the text of the standard only.
 // Requirements and where they are checked:

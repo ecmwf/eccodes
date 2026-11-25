@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // A zero-block run longer than the rest of the segment must be reported as an error
 // (it used to overflow the decoder's segment buffer).
 

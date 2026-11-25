@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // Encoding with several threads must produce a valid stream, identical to the one produced
 // with one thread (the parallel encoder lost zero-block runs and read past partial blocks).
 

@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // get_binary_scale_factor() must not return a binary scale factor beyond 127 (GRIB stores it in
 // 15 bits plus sign, ecCodes allows -127..127): for ranges too large even with E = 127 it only
 // asserted the limit, so release builds (NDEBUG) returned factors such as 1014, whose powers of

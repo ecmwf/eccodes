@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // Bits per value outside 1..64 must be rejected with std::invalid_argument (they were used as
 // an index into the table of codecs), and constant fields (0 bits per value) must decode to the
 // reference value (decoding them crashed).

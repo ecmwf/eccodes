@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // Fuzzer for GRIB simple packing: unpack with fuzzed parameters (bits per value, scale
 // factors, reference value, number of values) and a fuzzed buffer must not crash (errors
 // are exceptions), and pack -> unpack of fuzzed doubles must give the values back within

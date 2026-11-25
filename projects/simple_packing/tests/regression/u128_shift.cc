@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // Shifting a 128-bit integer by 128 bits or more must give 0: the shift count was reduced
 // modulo 128, so x << 128 returned x.
 

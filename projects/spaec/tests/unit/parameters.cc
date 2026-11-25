@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // Unit tests derived from regression tests:
 // - parameter_validation: validateCcsdsParameters rejects unsupported bits per value, block sizes
 //   and reference sample intervals with std::invalid_argument (an odd block size overflowed the

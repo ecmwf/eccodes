@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // The lookup table for IEEE floats must be initialised safely when the first calls come from
 // several threads at once (a global flag was checked and set without synchronisation). This test
 // is compiled with -fsanitize=thread together with Utils.cc, and fails on a data race.

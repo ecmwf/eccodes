@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // SpAec must map the values to encode with every operation of ((value * 10^D) - R) * 2^-E + 0.5
 // rounded separately, like ecCodes built without -march=native. With -march=native, GCC
 // contracted value * 10^D - R into a fused multiply-add, which rounds once: values close to a

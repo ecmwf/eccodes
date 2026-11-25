@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // Unit tests of the code option selection of EncoderSeq derived from regression tests:
 // - encode_large_samples: sePrepare must return the exact size (64 bits, it wrapped around in a
 //   32-bit size_t) and encodeFullBlock must not choose the second extension for large samples

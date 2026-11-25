@@ -1,3 +1,8 @@
+/*
+ * SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 #pragma once
 
 // C++17 replacements for the C++20 features SpAec used: std::endian, std::countl_zero and the

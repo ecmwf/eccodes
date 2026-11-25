@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // Decoding must check the size of the coded buffer: it read ceil(bitsPerValue * nVals / 8) bytes
 // whatever the size of the buffer was.
 

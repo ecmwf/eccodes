@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+# SPDX-License-Identifier: Apache-2.0
+
 # spaec: SpAec, a header-only C++ implementation of CCSDS 121.0-B (Adaptive
 # Entropy Coding).
 #

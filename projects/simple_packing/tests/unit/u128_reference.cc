@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // Differential unit test of UInt128 against the compiler's unsigned __int128: every operator for
 // edge values (0, 1, 2^63, 2^64 - 1, 2^64, 2^127, the maximum and their neighbours) and random
 // values, shifts by every count 0..200 (counts of 128 or more give 0), comparisons and the

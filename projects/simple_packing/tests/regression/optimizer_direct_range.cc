@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+// SPDX-License-Identifier: Apache-2.0
+
 // Calling an optimiser's getParams() directly with an out-of-range field (minimum > maximum,
 // non-finite values) must be rejected with an exception: the parameter search looped forever
 // for minimum > maximum and converted NaN or infinity to integers (undefined behaviour)
