@@ -227,6 +227,61 @@ public:
         currentBitPos_ = base + fill;
     }
 
+    // Writes the coded data of a split-sample block in one pass over the samples (CCSDS 120.0-G-4,
+    // 5.5: J iterations instead of 2 J): the FS codewords of data[i] >> k at the current position
+    // and, fsBits bits further (fsBits: the length of the codewords), the k low bits of every
+    // sample. Both parts are ORed into the buffer, which must be zero after the current position.
+    template <typename T>
+    void writeSplitSample(const T* data, size_t count, unsigned k, uint64_t fsBits)
+    {
+        static_assert(std::is_integral<T>::value, "integral type required");
+        if (k == 0) {
+            writeCodewords(data, count, 0);
+            return;
+        }
+        const uint64_t end = currentBitPos_ + fsBits + uint64_t{ count } * k;
+        if (fsBits > limitBits_ || end > limitBits_) {
+            throwWriteOverrun(end, limitBits_);  // never write beyond the buffer
+        }
+
+        uint8_t* out = buffer_.data();
+        size_t base = currentBitPos_ & ~size_t(7);  // FS part: bit position of the register's first bit
+        size_t fill = currentBitPos_ - base;        // bits of the register in use
+        uint64_t acc = 0;
+        constexpr uint64_t top = uint64_t(1) << 63;
+        size_t splitPos = currentBitPos_ + static_cast<size_t>(fsBits);  // split part
+        const uint64_t mask = (uint64_t{ 1 } << k) - 1;
+        const size_t perChunk = 56 / k;
+
+        for (size_t idx = 0; idx < count; idx += perChunk) {
+            const size_t chunk = std::min(perChunk, count - idx);
+            uint64_t split = 0;
+            for (size_t j = 0; j < chunk; ++j) {
+                const uint64_t v = static_cast<uint64_t>(data[idx + j]);
+                const uint64_t zeros = v >> k;
+                if (SPAEC_UNLIKELY(fill + zeros >= 64)) {
+                    orBigEndian64(out + base / 8, acc);
+                    const uint64_t onePos = base + fill + zeros;
+                    base = static_cast<size_t>(onePos) & ~size_t(7);
+                    fill = static_cast<size_t>(onePos) - base;
+                    acc = 0;
+                }
+                else {
+                    fill += zeros;
+                }
+                acc |= top >> fill;
+                ++fill;
+                split = (split << k) | (v & mask);
+            }
+            const size_t bits = chunk * k;
+            orBigEndian64(out + splitPos / 8, split << (64 - bits - splitPos % 8));
+            splitPos += bits;
+        }
+        orBigEndian64(out + base / 8, acc);
+        assert(base + fill == currentBitPos_ + fsBits && "fsBits is not the length of the codewords");
+        currentBitPos_ = splitPos;
+    }
+
     template <typename T>
     void writeBits(T value, size_t nBits)
     {

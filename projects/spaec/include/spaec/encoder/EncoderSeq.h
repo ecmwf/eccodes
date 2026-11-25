@@ -93,7 +93,7 @@ public:
 
     // Split Sample
     template <ReferenceType RType>
-    void ssEncode(const IdType k, const Span<DeltaType> values, BitBuffer& buffer)
+    void ssEncode(const IdType k, const Span<DeltaType> values, BitBuffer& buffer, uint64_t size)
     {
         const auto& ssId_ = ssIdStore[k];
         const IdType valueShifted = ssId_.valueShifted;
@@ -106,9 +106,10 @@ public:
 
         constexpr size_t startIndex = (RType == ReferenceType::Ref) ? 1 : 0;
 
-        buffer.writeCodewords(values.data() + startIndex, blockSizeV_ - startIndex, k);
-
-        buffer.writeBitsBatch(values.data() + startIndex, blockSizeV_ - startIndex, k);
+        // size (from selectBestMethod) = ID + reference + codewords + (J - startIndex) k split bits
+        const uint64_t nValues = blockSizeV_ - startIndex;
+        const uint64_t fsBits = size - Base::ssId_.length - (RType == ReferenceType::Ref ? bpv_ : 0) - nValues * k;
+        buffer.writeSplitSample(values.data() + startIndex, nValues, k, fsBits);
     }
 
     // Zero Block
@@ -182,7 +183,7 @@ public:
         // both other options, otherwise SE or NC (NC wins a tie with SE)
         if (ssSize < ncSize) {
             if (ssSize < seSize) {
-                ssEncode<RType>(ssK, block, bitBuffer);
+                ssEncode<RType>(ssK, block, bitBuffer, ssSize);
             }
             else {
                 seEncode<RType>(bitBuffer);
