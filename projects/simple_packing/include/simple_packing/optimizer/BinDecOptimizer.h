@@ -7,7 +7,13 @@
 namespace sp
 {
 
-
+// Chooses the decimal and binary scale factors that use the bits per value best, like ecCodes'
+// grib_optimize_decimal_factor (optimizeScaleFactor=1), with one intended difference: legacy
+// stores the largest coded value in an int. From 32 bits per value on it always overflows, so
+// legacy never finds a best decimal scale factor and falls back to the parameters of
+// optimizeScaleFactor=0 (at 31 bits this happens when the value rounds up to 2^31). This class
+// uses long and optimises for every number of bits: the decoding error is never larger than with
+// legacy on general fields, but the coded messages differ from 31 bits on.
 class BinDecOptimizer : public Optimizer
 {
 public:
