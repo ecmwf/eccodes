@@ -10,6 +10,10 @@
 #include <cstdint>
 #include <vector>
 
+#if defined(__AVX2__)
+    #include <immintrin.h>
+#endif
+
 #include "spaec/Utils.h"
 #include "spaec/CodeOption.h"
 #include "spaec/Span.h"
@@ -61,12 +65,46 @@ public:
         const unsigned kUp = k0 < kMax ? k0 + 1 : k0;
         const unsigned kDown = k0 > 0 ? k0 - 1 : k0;
         uint64_t sum = 0, fsAt = 0, fsUp = 0, fsDown = 0;
-        for (size_t j = 0; j < thisBs; ++j) {
-            const uint64_t x = static_cast<uint64_t>(v[j]);
-            sum += x;
-            fsAt += x >> k0;
-            fsUp += x >> kUp;
-            fsDown += x >> kDown;
+        bool summed = false;
+#if defined(__AVX2__)
+        if constexpr (sizeof(DeltaType) == 2) {
+            if (thisBs % 16 == 0) {
+                // 16 samples per step, the sums in 32-bit lanes (at most 64 samples of 16 bits)
+                const __m256i zero = _mm256_setzero_si256();
+                const __m128i shiftAt = _mm_cvtsi32_si128(static_cast<int>(k0));
+                const __m128i shiftUp = _mm_cvtsi32_si128(static_cast<int>(kUp));
+                const __m128i shiftDown = _mm_cvtsi32_si128(static_cast<int>(kDown));
+                __m256i aSum = zero, aAt = zero, aUp = zero, aDown = zero;
+                const auto widen = [&zero](__m256i w) { return _mm256_add_epi32(_mm256_unpacklo_epi16(w, zero), _mm256_unpackhi_epi16(w, zero)); };
+                for (size_t j = 0; j < thisBs; j += 16) {
+                    const __m256i x = _mm256_loadu_si256(reinterpret_cast<const __m256i*>(v + j));
+                    aSum = _mm256_add_epi32(aSum, widen(x));
+                    aAt = _mm256_add_epi32(aAt, widen(_mm256_srl_epi16(x, shiftAt)));
+                    aUp = _mm256_add_epi32(aUp, widen(_mm256_srl_epi16(x, shiftUp)));
+                    aDown = _mm256_add_epi32(aDown, widen(_mm256_srl_epi16(x, shiftDown)));
+                }
+                const auto total = [](__m256i a) {
+                    __m128i t = _mm_add_epi32(_mm256_castsi256_si128(a), _mm256_extracti128_si256(a, 1));
+                    t = _mm_add_epi32(t, _mm_shuffle_epi32(t, 0x4E));
+                    t = _mm_add_epi32(t, _mm_shuffle_epi32(t, 0xB1));
+                    return static_cast<uint64_t>(static_cast<uint32_t>(_mm_cvtsi128_si32(t)));
+                };
+                sum = total(aSum);
+                fsAt = total(aAt);
+                fsUp = total(aUp);
+                fsDown = total(aDown);
+                summed = true;
+            }
+        }
+#endif
+        if (!summed) {
+            for (size_t j = 0; j < thisBs; ++j) {
+                const uint64_t x = static_cast<uint64_t>(v[j]);
+                sum += x;
+                fsAt += x >> k0;
+                fsUp += x >> kUp;
+                fsDown += x >> kDown;
+            }
         }
 
         auto fsLength = [&](unsigned k) {
