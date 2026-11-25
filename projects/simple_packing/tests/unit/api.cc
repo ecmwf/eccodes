@@ -45,6 +45,18 @@ static void expect(const std::string& what, F&& f)
     }
 }
 
+// pack accepts the scaling for these values
+static bool packs(const std::vector<double>& values, const sp::Scaling& s)
+{
+    try {
+        sp::pack(values, s);
+        return true;
+    }
+    catch (const std::exception&) {
+        return false;
+    }
+}
+
 template <typename Value>
 static std::vector<Value> field(size_t count, double base, double spread, unsigned seed)
 {
@@ -153,6 +165,49 @@ int main()
             check(std::isnan(rb.min) && std::isnan(rb.max), "range with a NaN or infinite value");
             expect<std::runtime_error>("scaling of a field with a NaN or infinite value", [&] { sp::scaling(w, sp::Method::bits(16)); });
         }
+    }
+
+    // Every scaling that sp::scaling returns can be packed (attack 3: decimals chose its bits from
+    // max - min, but the reference value is rounded down to a float afterwards; bestPrecision
+    // computed 2^bits - 1 in double, which is 2^bits from 54 bits on)
+    {
+        const std::vector<double> e9{ 1e9 + 1, 1e9 + 2 };
+        const sp::Scaling d0 = sp::scaling(e9, sp::Method::decimals(0));
+        check(packs(e9, d0) && d0.bitsPerValue == 2, "decimals(0) of {1e9+1, 1e9+2}: 2 bits (the reference value is 1e9)");
+        const std::vector<double> e8{ 1e8 + 1, 1e8 + 2 };
+        check(packs(e8, sp::scaling(e8, sp::Method::decimals(0))), "decimals(0) of {1e8+1, 1e8+2}");
+        const std::vector<double> e7{ 1e7 + 1, 1e7 + 2 };
+        const sp::Scaling d7 = sp::scaling(e7, sp::Method::decimals(0));
+        check(packs(e7, d7) && d7.bitsPerValue == 1, "decimals(0) of {1e7+1, 1e7+2}: still 1 bit (exact reference value)");
+        std::vector<double> quarter(5);
+        for (size_t i = 0; i < quarter.size(); ++i)
+            quarter[i] = 0.25 + std::ldexp(static_cast<double>(i), -53);
+        for (int bits : { 54, 55, 60, 63 }) {
+            check(packs(quarter, sp::scaling(quarter, sp::Method::bestPrecision(bits))), "bestPrecision(" + std::to_string(bits) + ") of 0.25 + i * 2^-53");
+        }
+        long unusable = 0, cases = 0;
+        std::vector<double> v(16);
+        for (int expo = -60; expo <= 60; expo += 3) {
+            for (int spread = -60; spread <= 20; spread += 7) {
+                for (size_t i = 0; i < v.size(); ++i)
+                    v[i] = std::ldexp(1.0, expo) + std::ldexp(static_cast<double>(i), spread);
+                for (int bits = 1; bits <= 63; bits += 2) {
+                    for (const sp::Method& m : { sp::Method::bits(bits), sp::Method::bestPrecision(bits), sp::Method::bitsAndDecimals(bits, bits % 9 - 4),
+                                                 sp::Method::decimals(bits % 9 - 4) }) {
+                        sp::Scaling s;
+                        try {
+                            s = sp::scaling(v, m);
+                        }
+                        catch (const std::exception&) {
+                            continue;  // refusing a field is allowed
+                        }
+                        ++cases;
+                        unusable += !packs(v, s);
+                    }
+                }
+            }
+        }
+        check(unusable == 0, std::to_string(unusable) + " of " + std::to_string(cases) + " scalings cannot be packed");
     }
 
     // Errors
