@@ -10,6 +10,7 @@
 #include <exception>
 #include <iostream>
 #include <limits>
+#include <optional>
 #include <string>
 #include <sys/wait.h>
 #include <unistd.h>
@@ -41,11 +42,10 @@ static void expectTooSmall(const std::string& what, F&& f)
         return;
     }
     std::cerr << "FAIL: " << what << ": "
-              << (WIFSIGNALED(status) && WTERMSIG(status) == SIGALRM ?
-                      "hangs" :
-                      WIFSIGNALED(status) ? "crashes" :
-                      WEXITSTATUS(status) == 2 ? "no nullopt" :
-                      WEXITSTATUS(status) == 3 ? "threw" : "unknown")
+              << (WIFSIGNALED(status) && WTERMSIG(status) == SIGALRM ? "hangs" : WIFSIGNALED(status)    ? "crashes"
+                                                                             : WEXITSTATUS(status) == 2 ? "no nullopt"
+                                                                             : WEXITSTATUS(status) == 3 ? "threw"
+                                                                                                        : "unknown")
               << '\n';
     failures++;
 }
@@ -71,10 +71,9 @@ static void expectScale(const std::string& what, long expected, F&& f)
         return;
     }
     std::cerr << "FAIL: " << what << ": "
-              << (WIFSIGNALED(status) && WTERMSIG(status) == SIGALRM ?
-                      "hangs" :
-                      WIFSIGNALED(status) ? "crashes" :
-                      WEXITSTATUS(status) == 2 ? "wrong scale factor" : "threw")
+              << (WIFSIGNALED(status) && WTERMSIG(status) == SIGALRM ? "hangs" : WIFSIGNALED(status)    ? "crashes"
+                                                                             : WEXITSTATUS(status) == 2 ? "wrong scale factor"
+                                                                                                        : "threw")
               << '\n';
     failures++;
 }
@@ -95,6 +94,25 @@ int main()
     });
     expectTooSmall("1e-280 range, 63 bits (too small without overflow)", [] {
         return get_binary_scale_factor(1e-280, 0.0, 63);
+    });
+
+    // These hung too (attack 3): the first search stopped with zs just below the overflow
+    // guard, the rounding search doubled it to inf (undefined conversion of inf to an integer)
+    // and the last search then kept halving inf
+    expectTooSmall("0x0.ap-1022 range, 1 bit", [] {
+        return get_binary_scale_factor(std::ldexp(0.625, -1022), 0.0, 1);
+    });
+    expectTooSmall("ranges 2^-1074 to 2^-1000, 1 to 63 bits", [] {
+        std::optional<long> any;
+        for (long bpv = 1; bpv < 64; ++bpv) {
+            for (int e = -1074; e <= -1000; ++e) {
+                for (double m : { 1.0, 1.25, 1.5, 1.625, 1.75 }) {
+                    const auto scale = get_binary_scale_factor(std::ldexp(m, e), 0.0, bpv);
+                    any = scale ? scale : any;
+                }
+            }
+        }
+        return any;
     });
 
     // The boundaries of the search must keep their results
