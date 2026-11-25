@@ -11,6 +11,10 @@
 #include <cstring>
 #include <stdexcept>
 #include <string>
+#if defined(__AVX2__)
+    #include <immintrin.h>
+#endif
+
 #include "spaec/Compat.h"
 #include "spaec/Span.h"
 
@@ -244,6 +248,18 @@ public:
             throwWriteOverrun(end, limitBits_);  // never write beyond the buffer
         }
 
+#if defined(__AVX2__)
+        if constexpr (sizeof(T) == 2) {
+            // 16 bytes are stored at the start of the block and 8 at its end: not at the end of the buffer
+            const uint64_t limitBytes = limitBits_ / 8;
+            if (SPAEC_LIKELY(count % 16 == 0 && k <= 13 && (currentBitPos_ & 7) + fsBits <= 128 && currentBitPos_ / 8 + 16 <= limitBytes &&
+                             end / 8 + 8 <= limitBytes)) {
+                writeSplitSampleAvx2(reinterpret_cast<const uint16_t*>(data), count, k, static_cast<size_t>(fsBits));
+                return;
+            }
+        }
+#endif
+
         uint8_t* out = buffer_.data();
         size_t base = currentBitPos_ & ~size_t(7);  // FS part: bit position of the register's first bit
         size_t fill = currentBitPos_ - base;        // bits of the register in use
@@ -281,6 +297,88 @@ public:
         assert(base + fill == currentBitPos_ + fsBits && "fsBits is not the length of the codewords");
         currentBitPos_ = splitPos;
     }
+
+#if defined(__AVX2__)
+    // writeSplitSample for 16-bit samples with AVX2: count is a multiple of 16, 1 <= k <= 13, and the
+    // FS codewords end within 128 bits of the byte of the current position (fsBits is their exact
+    // length). 16 samples per step:
+    // - FS codewords: the positions of their terminating one bits are a prefix sum of their
+    //   lengths; the bits are set in two 64-bit words with variable shifts (a shift count of 64
+    //   or more gives 0: a position selects its word without a comparison)
+    // - split bits: a multiply-add joins two k-bit fields, a shift two such pairs: 4 samples per
+    //   64-bit word, appended to the stream through a carry register with plain stores
+    void writeSplitSampleAvx2(const uint16_t* data, size_t count, unsigned k, size_t fsBits)
+    {
+        uint8_t* out = buffer_.data();
+        const size_t pos = currentBitPos_;
+        uint8_t* base = out + pos / 8;
+        const __m128i shiftK = _mm_cvtsi32_si128(static_cast<int>(k));
+        const __m128i shift2K = _mm_cvtsi32_si128(static_cast<int>(2 * k));
+        const __m256i one = _mm256_set1_epi16(1);
+        const __m256i top = _mm256_set1_epi64x(static_cast<long long>(uint64_t{ 1 } << 63));
+        const __m256i c64 = _mm256_set1_epi64x(64);
+        const __m256i mask = _mm256_set1_epi16(static_cast<short>((1u << k) - 1));
+        const __m256i mul = _mm256_set1_epi32(static_cast<int>((1u << 16) | (1u << k)));  // (2^k, 1) per pair
+        const __m256i low32 = _mm256_set1_epi64x(0xFFFFFFFFll);
+        __m256i w0 = _mm256_setzero_si256();
+        __m256i w1 = _mm256_setzero_si256();
+        unsigned next = static_cast<unsigned>(pos & 7);  // position of the next codeword in the two words
+        alignas(32) uint64_t lows[16];                   // count <= 64: 4 samples each
+        for (size_t i = 0; i < count; i += 16) {
+            const __m256i x = _mm256_loadu_si256(reinterpret_cast<const __m256i*>(data + i));
+
+            const __m256i pairs = _mm256_madd_epi16(_mm256_and_si256(x, mask), mul);
+            const __m256i quads = _mm256_or_si256(_mm256_sll_epi64(_mm256_and_si256(pairs, low32), shift2K), _mm256_srli_epi64(pairs, 32));
+            _mm256_store_si256(reinterpret_cast<__m256i*>(lows + i / 4), quads);
+
+            __m256i p = _mm256_add_epi16(_mm256_srl_epi16(x, shiftK), one);  // lengths
+            p = _mm256_add_epi16(p, _mm256_slli_si256(p, 2));
+            p = _mm256_add_epi16(p, _mm256_slli_si256(p, 4));
+            p = _mm256_add_epi16(p, _mm256_slli_si256(p, 8));  // prefix sums in each half
+            __m256i lower = _mm256_permute2x128_si256(p, p, 0x08);
+            lower = _mm256_shuffle_epi32(_mm256_shufflehi_epi16(lower, 0xFF), 0xFF);  // the sum of the lower half
+            p = _mm256_add_epi16(_mm256_add_epi16(p, lower), _mm256_set1_epi16(static_cast<short>(next - 1)));
+            next = static_cast<unsigned>(_mm256_extract_epi16(p, 15)) + 1;
+
+            const __m128i pl = _mm256_castsi256_si128(p);
+            const __m128i ph = _mm256_extracti128_si256(p, 1);
+            const __m256i e0 = _mm256_cvtepu16_epi64(pl);
+            const __m256i e1 = _mm256_cvtepu16_epi64(_mm_srli_si128(pl, 8));
+            const __m256i e2 = _mm256_cvtepu16_epi64(ph);
+            const __m256i e3 = _mm256_cvtepu16_epi64(_mm_srli_si128(ph, 8));
+            w0 = _mm256_or_si256(w0, _mm256_or_si256(_mm256_or_si256(_mm256_srlv_epi64(top, e0), _mm256_srlv_epi64(top, e1)),
+                                                     _mm256_or_si256(_mm256_srlv_epi64(top, e2), _mm256_srlv_epi64(top, e3))));
+            w1 = _mm256_or_si256(w1, _mm256_or_si256(_mm256_or_si256(_mm256_srlv_epi64(top, _mm256_sub_epi64(e0, c64)),
+                                                                     _mm256_srlv_epi64(top, _mm256_sub_epi64(e1, c64))),
+                                                     _mm256_or_si256(_mm256_srlv_epi64(top, _mm256_sub_epi64(e2, c64)),
+                                                                     _mm256_srlv_epi64(top, _mm256_sub_epi64(e3, c64)))));
+        }
+        assert(next == (pos & 7) + fsBits && "fsBits is not the length of the codewords");
+        const __m128i a0 = _mm_or_si128(_mm256_castsi256_si128(w0), _mm256_extracti128_si256(w0, 1));
+        const __m128i a1 = _mm_or_si128(_mm256_castsi256_si128(w1), _mm256_extracti128_si256(w1, 1));
+        const uint64_t f0 = static_cast<uint64_t>(_mm_cvtsi128_si64(a0)) | static_cast<uint64_t>(_mm_extract_epi64(a0, 1));
+        const uint64_t f1 = static_cast<uint64_t>(_mm_cvtsi128_si64(a1)) | static_cast<uint64_t>(_mm_extract_epi64(a1, 1));
+        // The bits before the block (in its first byte) are kept; the buffer is zero after the block
+        storeBigEndian64(base, f0 | (static_cast<uint64_t>(*base) << 56));
+        storeBigEndian64(base + 8, f1);
+
+        const size_t splitPos = pos + fsBits;
+        uint8_t* q = out + splitPos / 8;
+        unsigned fill = static_cast<unsigned>(splitPos & 7);
+        uint64_t acc = static_cast<uint64_t>(*q) << 56;  // the last bits of the codewords
+        const unsigned bits = 4 * k;
+        for (size_t i = 0; i < count / 4; ++i) {
+            acc |= lows[i] << (64 - bits - fill);
+            storeBigEndian64(q, acc);
+            const unsigned bytes = (fill + bits) >> 3;
+            q += bytes;
+            acc = (acc << (bytes * 4)) << (bytes * 4);  // by up to 64 bits
+            fill = (fill + bits) & 7;
+        }
+        storeBigEndian64(q, acc);
+        currentBitPos_ = splitPos + count * k;
+    }
+#endif
 
     template <typename T>
     void writeBits(T value, size_t nBits)
@@ -393,6 +491,12 @@ public:
 
 private:
     // ORs the 64 bits of value (first bit = most significant) into the 8 bytes at ptr
+    static void storeBigEndian64(uint8_t* ptr, uint64_t value)
+    {
+        value = bigEndian64(value);
+        std::memcpy(ptr, &value, 8);
+    }
+
     static void orBigEndian64(uint8_t* ptr, uint64_t value)
     {
         value = bigEndian64(value);
