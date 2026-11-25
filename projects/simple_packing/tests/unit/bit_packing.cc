@@ -2,6 +2,7 @@
 #include <bitset>
 #include <iostream>
 #include <algorithm>
+#include <utility>
 #include <vector>
 #include <unordered_map>
 
@@ -53,6 +54,13 @@ void test_bpv(const std::vector<ValueType>& expected_values, const std::vector<u
 }
 
 
+// Calls f(std::integral_constant<std::size_t, I>{}) for every I in Is (a template lambda in C++20)
+template <typename F, std::size_t... Is>
+static void dispatchAll(const F& f, std::index_sequence<Is...>)
+{
+    (f(std::integral_constant<std::size_t, Is>{}), ...);
+}
+
 void run_test(uint8_t bpv)
 {
     std::unordered_map<uint8_t, std::vector<std::pair<std::vector<uint64_t>, std::vector<uint8_t>>>> test_data = {
@@ -69,7 +77,7 @@ void run_test(uint8_t bpv)
             }
         }
     };
-    [&]<std::size_t... Is>(std::index_sequence<Is...>) { (dispatch(std::integral_constant<std::size_t, Is>{}), ...); }(std::make_index_sequence<64>{});
+    dispatchAll(dispatch, std::make_index_sequence<64>{});
 
     if (bpv < 1 || bpv > 64) {
         throw std::runtime_error("Unsupported BPV in test data");

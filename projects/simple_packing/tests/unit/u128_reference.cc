@@ -11,7 +11,7 @@
 #include "simple_packing/U128.h"
 
 #if defined(__SIZEOF_INT128__)
-using Ref = unsigned __int128;
+__extension__ using Ref = unsigned __int128;
 
 static int failures = 0;
 

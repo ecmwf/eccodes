@@ -3,7 +3,7 @@
 #include "simple_packing/BitPacking.h"
 
 #include <algorithm>
-#include <bit>
+#include <cstring>
 #include <utility>
 
 #include <cstddef>
@@ -114,13 +114,28 @@ inline void sp_unpack_group(const unsigned char* p, Coded* out, std::index_seque
     ((out[G] = static_cast<Coded>(static_cast<Word>(swap_bytes<Word>(load_word<Word>(p + G * BPV / 8)) << (G * BPV % 8)) >> (wordBits - BPV))), ...);
 }
 
+// The bits of a double as an integer and back (std::bit_cast of C++20)
+inline uint64_t sp_bits(double v)
+{
+    uint64_t u;
+    std::memcpy(&u, &v, sizeof u);
+    return u;
+}
+
+inline double sp_double(uint64_t u)
+{
+    double v;
+    std::memcpy(&v, &u, sizeof v);
+    return v;
+}
+
 // Converts a coded value of up to 32 bits (< 2^32) to an unsigned integer with signed 32-bit
 // conversions, which are vectorizable (64-bit ones are not with AVX2): values from 2^31 on are
 // first reduced by 2^31 (exactly) and get the bit back afterwards
 inline uint32_t sp_to_uint32(double v)
 {
     const uint64_t high = std::isgreaterequal(v, 2147483648.0);
-    const double reduced = v - std::bit_cast<double>(std::bit_cast<uint64_t>(2147483648.0) & (uint64_t{ 0 } - high));
+    const double reduced = v - sp_double(sp_bits(2147483648.0) & (uint64_t{ 0 } - high));
     return static_cast<uint32_t>(static_cast<int32_t>(reduced)) + static_cast<uint32_t>(high << 31);
 }
 
@@ -150,7 +165,7 @@ void Binary<ValueType, BPV>::packTo(const ValueType* values, size_t nVals, int d
                 // floating-point selection, which GCC does not vectorize (trapping math)
                 const int o = std::isgreaterequal(c, 0.0) & std::isless(c, limit);
                 ok &= o;
-                const double valid = std::bit_cast<double>(std::bit_cast<uint64_t>(c) & (uint64_t{ 0 } - static_cast<uint64_t>(o)));
+                const double valid = sp_double(sp_bits(c) & (uint64_t{ 0 } - static_cast<uint64_t>(o)));
                 if constexpr (BPV <= 31) {
                     coded[j] = static_cast<uint32_t>(static_cast<int32_t>(valid));
                 }
