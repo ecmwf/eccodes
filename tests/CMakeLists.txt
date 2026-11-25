@@ -19,6 +19,7 @@ list(APPEND test_c_bins
     grib_element_index_range
     grib_pack_extreme_values
     grib_ccsds_truncated
+    grib_simple_element
     grib_bitmap_truncated
     read_any
     julian
@@ -247,6 +248,7 @@ if( HAVE_BUILD_TOOLS )
         grib_pack_extreme_values
         grib_ccsds_empty_data
         grib_ccsds_truncated
+        grib_simple_element
         grib_reference_value_not_finite
         grib_bitmap_truncated
         grib2_section_length_corrupt
