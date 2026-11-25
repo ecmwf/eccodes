@@ -25,6 +25,9 @@ spaec_add_test(encoder_exhaustive LIBS Threads::Threads)
 spaec_add_test(span)
 spaec_add_test(errors LIBS Threads::Threads)
 spaec_add_test(spec_conformance LIBS Threads::Threads)
+spaec_add_test(rsi_offsets)
+spaec_add_test(code_option_selection)
+spaec_add_test(corrupt_input)
 
 spaec_label_tests(unit)
 
