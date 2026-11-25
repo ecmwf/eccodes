@@ -15,8 +15,9 @@
 //   with libaec
 // With libaec (ENABLE_AEC=ON) the legacy implementation is the default and ECCODES_USE_SPAEC=1
 // selects the new one; without libaec the new implementation is always used. Data with options
-// SpAec does not implement (signed samples, no preprocessing, RSI padding) always use the legacy
-// implementation (which reports them as not implemented without libaec).
+// SpAec does not implement (signed samples, no preprocessing, RSI padding, block sizes other than
+// 8, 16, 32 and 64 with AEC_NOT_ENFORCE) always use the legacy implementation (which reports them
+// as not implemented without libaec).
 
 #include "DataCcsdsPacking.h"
 
@@ -45,10 +46,12 @@ bool use_new_implementation()
 constexpr long aecSignedFlag = 1, aecPreprocessFlag = 8, aecPadRsiFlag = 32;
 
 // SpAec implements the CCSDS options used by GRIB: preprocessed unsigned samples, basic or
-// restricted code options and no RSI padding
-bool spaec_supports_flags(long flags)
+// restricted code options, no RSI padding and the block sizes of the standard (8, 16, 32, 64;
+// libaec accepts other even block sizes with AEC_NOT_ENFORCE)
+bool spaec_supports(long flags, long block_size)
 {
-    return (flags & aecPreprocessFlag) && !(flags & (aecSignedFlag | aecPadRsiFlag));
+    const bool standardBlockSize = block_size == 8 || block_size == 16 || block_size == 32 || block_size == 64;
+    return (flags & aecPreprocessFlag) && !(flags & (aecSignedFlag | aecPadRsiFlag)) && standardBlockSize;
 }
 
 }  // namespace
@@ -79,11 +82,13 @@ int DataCcsdsPacking::value_count(long* count)
 
 int DataCcsdsPacking::pack_double(const double* val, size_t* len)
 {
-    long ccsds_flags = 0;
+    long ccsds_flags = 0, ccsds_block_size = 0;
     int err = grib_get_long_internal(get_enclosing_handle(), ccsds_flags_, &ccsds_flags);
     if (err != GRIB_SUCCESS)
         return err;
-    if (use_new_implementation() && spaec_supports_flags(ccsds_flags))
+    if ((err = grib_get_long_internal(get_enclosing_handle(), ccsds_block_size_, &ccsds_block_size)) != GRIB_SUCCESS)
+        return err;
+    if (use_new_implementation() && spaec_supports(ccsds_flags, ccsds_block_size))
         return pack_double_new(val, len);
     return pack_double_legacy(val, len);
 }
@@ -92,11 +97,13 @@ template <typename T>
 int DataCcsdsPacking::unpack(T* val, size_t* len)
 {
     // ECC-477: Don't call grib_get_long_internal to suppress error message being output
-    long ccsds_flags = 0;
+    long ccsds_flags = 0, ccsds_block_size = 0;
     int err = grib_get_long(get_enclosing_handle(), ccsds_flags_, &ccsds_flags);
     if (err != GRIB_SUCCESS)
         return err;
-    if (use_new_implementation() && spaec_supports_flags(ccsds_flags))
+    if ((err = grib_get_long_internal(get_enclosing_handle(), ccsds_block_size_, &ccsds_block_size)) != GRIB_SUCCESS)
+        return err;
+    if (use_new_implementation() && spaec_supports(ccsds_flags, ccsds_block_size))
         return unpack_new<T>(val, len);
     return unpack_legacy<T>(val, len);
 }

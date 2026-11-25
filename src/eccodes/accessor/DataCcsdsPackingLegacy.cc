@@ -357,9 +357,10 @@ int DataCcsdsPacking::pack_double_legacy(const double* val, size_t* len)
 #else
     // Without libaec, SpAec is the only implementation
     grib_context_log(context_, GRIB_LOG_ERROR,
-                     "%s %s: ccsdsFlags=%ld (signed, RSI padded or not preprocessed data) are not supported by SpAec. "
+                     "%s %s: ccsdsFlags=%ld, ccsdsBlockSize=%ld (signed, RSI padded or not preprocessed data, or block sizes "
+                     "other than 8, 16, 32 and 64) are not supported by SpAec. "
                      "Please rebuild with -DENABLE_AEC=ON",
-                     accessor_type().c_str(), __func__, ccsds_flags);
+                     accessor_type().c_str(), __func__, ccsds_flags, ccsds_block_size);
     return GRIB_NOT_IMPLEMENTED;
 #endif
 }
@@ -524,9 +525,10 @@ int DataCcsdsPacking::unpack_legacy(T* val, size_t* len)
 #else
     // Without libaec, SpAec is the only implementation
     grib_context_log(context_, GRIB_LOG_ERROR,
-                     "%s %s: ccsdsFlags=%ld (signed, RSI padded or not preprocessed data) are not supported by SpAec. "
+                     "%s %s: ccsdsFlags=%ld, ccsdsBlockSize=%ld (signed, RSI padded or not preprocessed data, or block sizes "
+                     "other than 8, 16, 32 and 64) are not supported by SpAec. "
                      "Please rebuild with -DENABLE_AEC=ON",
-                     accessor_type().c_str(), __func__, ccsds_flags);
+                     accessor_type().c_str(), __func__, ccsds_flags, ccsds_block_size);
     return GRIB_NOT_IMPLEMENTED;
 #endif
 }
