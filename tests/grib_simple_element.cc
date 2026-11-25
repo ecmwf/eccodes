@@ -38,11 +38,11 @@ static void allBitsPerValue(const char* sample)
         codes_handle* h = codes_grib_handle_new_from_samples(NULL, sample);
         size_t n = 0;
         CODES_CHECK(codes_get_size(h, "values", &n), 0);
-        double* values  = (double*)malloc(n * sizeof(double));
+        double* values = (double*)malloc(n * sizeof(double));
         double* decoded = (double*)malloc(n * sizeof(double));
         unsigned long long x = 12345;
         for (size_t i = 0; i < n; ++i) {
-            x         = x * 6364136223846793005ULL + 1442695040888963407ULL;
+            x = x * 6364136223846793005ULL + 1442695040888963407ULL;
             values[i] = (double)(x >> 11) / 9007199254740992.0; /* [0, 1) */
         }
         CODES_CHECK(codes_set_long(h, "bitsPerValue", bpv), 0);
