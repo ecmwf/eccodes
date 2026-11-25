@@ -110,7 +110,9 @@ public:
 
 
 public:
-    SpAec(uint8_t bpv, uint8_t blockSize, uint16_t rsiSize, CodeOptionSet codeOptionSet, ValueType referenceValue, int binaryScaleFactor = 0, int decimalScaleFactor = 0, uint8_t nThreads = 1) :
+    // prediction: the preprocessing of the coded integers (CCSDS 121.0-B-3, 4); they are unsigned
+    SpAec(uint8_t bpv, uint8_t blockSize, uint16_t rsiSize, CodeOptionSet codeOptionSet, ValueType referenceValue, int binaryScaleFactor = 0, int decimalScaleFactor = 0, uint8_t nThreads = 1,
+          Prediction prediction = Prediction::UnitDelay) :
         bpv_(bpv),
         blockSize_(blockSize),
         rsiSize_(rsiSize),
@@ -118,8 +120,10 @@ public:
         referenceValue_(referenceValue),
         binaryScaleFactor_(binaryScaleFactor),
         decimalScaleFactor_(decimalScaleFactor),
-        codeOptionSet_(effectiveCodeOptionSet(codeOptionSet, bpv))
+        codeOptionSet_(effectiveCodeOptionSet(codeOptionSet, bpv)),
+        preprocessing_{ prediction, false }
     {
+        validatePreprocessing(preprocessing_);
         validateCcsdsParameters(bpv_, blockSize_, rsiSize_);
         if (nThreads_ == 0) {
             throw std::invalid_argument("CCSDS: the number of threads must be at least 1");
@@ -238,10 +242,10 @@ private:
 
         // The parallel encoder produces the same bytes as the sequential one (see EncoderPar)
         if (nThreads_ > 1) {
-            EncoderPar<DeltaType, DeltaType> encoder{ bpv_, blockSize_, rsiSize_, codeOptionSet_, nThreads_ };
+            EncoderPar<DeltaType, DeltaType> encoder{ bpv_, blockSize_, rsiSize_, codeOptionSet_, nThreads_, preprocessing_ };
             return encoder.encode(Span<DeltaType>(mapped), target);
         }
-        EncoderSeq<DeltaType, DeltaType> encoder{ bpv_, blockSize_, rsiSize_, codeOptionSet_ };
+        EncoderSeq<DeltaType, DeltaType> encoder{ bpv_, blockSize_, rsiSize_, codeOptionSet_, preprocessing_ };
         return encoder.encode(Span<DeltaType>(mapped), target);
     }
 
@@ -257,11 +261,11 @@ private:
         SimpleUnmapper<DeltaType> unmapper{ referenceValue_, binaryScaleFactor_, decimalScaleFactor_ };
 
         if (nThreads_ > 1) {
-            DecoderPar<DeltaType, DeltaType> decoder{ bpv_, blockSize_, rsiSize_, codeOptionSet_, nThreads_ };
+            DecoderPar<DeltaType, DeltaType> decoder{ bpv_, blockSize_, rsiSize_, codeOptionSet_, nThreads_, preprocessing_ };
             decoder.decodeParallel(source, target, unmapper);
         }
         else {
-            DecoderSeq<DeltaType, DeltaType> decoder{ bpv_, blockSize_, rsiSize_, codeOptionSet_ };
+            DecoderSeq<DeltaType, DeltaType> decoder{ bpv_, blockSize_, rsiSize_, codeOptionSet_, preprocessing_ };
             ValueType* out = target.data();
             decoder.decodeSpans(source, target.size(),
                                 [&](const DeltaType* values, size_t count, size_t offset) {
@@ -284,6 +288,7 @@ private:
     int binaryScaleFactor_;
     int decimalScaleFactor_;
     CodeOptionSet codeOptionSet_;
+    Preprocessing preprocessing_;
 };
 
 }  // namespace encoder

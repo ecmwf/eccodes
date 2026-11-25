@@ -50,8 +50,8 @@ template <typename ValueType, typename DeltaType, typename EncoderFunc = Identit
 class EncoderPar
 {
 public:
-    EncoderPar(uint8_t bpv, uint8_t blockSize, uint16_t rsiSize, CodeOptionSet codeOptionSet, size_t nThreads) :
-        bpv_(bpv), blockSize_(blockSize), rsiSize_(rsiSize), codeOptionSet_(codeOptionSet), nThreads_(std::max<size_t>(nThreads, 1))
+    EncoderPar(uint8_t bpv, uint8_t blockSize, uint16_t rsiSize, CodeOptionSet codeOptionSet, size_t nThreads, Preprocessing preprocessing = {}) :
+        bpv_(bpv), blockSize_(blockSize), rsiSize_(rsiSize), codeOptionSet_(codeOptionSet), nThreads_(std::max<size_t>(nThreads, 1)), preprocessing_((validatePreprocessing(preprocessing), preprocessing))
     {
     }
 
@@ -70,7 +70,7 @@ public:
         const size_t nRsi = (source.size() + rsiValues - 1) / rsiValues;
         const size_t nChunks = std::min(nThreads_, nRsi);
         if (nChunks <= 1) {
-            Encoder encoder{ bpv_, blockSize_, rsiSize_, codeOptionSet_ };
+            Encoder encoder{ bpv_, blockSize_, rsiSize_, codeOptionSet_, preprocessing_ };
             // The sequential encoder does not check the size of the target: give it one of the
             // worst-case size (every block uncompressed, plus the 8 bytes it may touch after the
             // data), and copy the result if the target is smaller
@@ -107,7 +107,7 @@ public:
             c.scratch.assign(scratchSize(rsiRangeValues(source.size(), first, nR)), 0);
             c.kIn.resize(nR);
             c.rsiEnd.resize(nR);
-            Encoder encoder{ bpv_, blockSize_, rsiSize_, codeOptionSet_ };
+            Encoder encoder{ bpv_, blockSize_, rsiSize_, codeOptionSet_, preprocessing_ };
             encoder.splitK(0);
             BitBuffer buffer(Span<uint8_t>(c.scratch.data(), c.scratch.size()));
             for (size_t r = 0; r < nR; ++r) {
@@ -134,7 +134,7 @@ public:
             bool converged = false;
             size_t prefixBits = 0;
             for (size_t limit = std::min<size_t>(nR, 4);; limit = nR) {
-                Encoder encoder{ bpv_, blockSize_, rsiSize_, codeOptionSet_ };
+                Encoder encoder{ bpv_, blockSize_, rsiSize_, codeOptionSet_, preprocessing_ };
                 encoder.splitK(kReal);
                 c.prefix.assign(scratchSize(rsiRangeValues(source.size(), first, limit)), 0);
                 BitBuffer buffer(Span<uint8_t>(c.prefix.data(), c.prefix.size()));
@@ -302,6 +302,7 @@ private:
     uint16_t rsiSize_;
     CodeOptionSet codeOptionSet_;
     size_t nThreads_;
+    Preprocessing preprocessing_;
 };
 
 }  // namespace encoder

@@ -437,9 +437,11 @@ public:
         return buffer.bitPos();
     }
 
-    EncoderSeq(uint8_t bpv, uint8_t block_size, uint16_t rsiSize, CodeOptionSet codeOptionSet) : EncoderBase<ValueType, DeltaType>(bpv, block_size, rsiSize, codeOptionSet),
-                                                                                                 preprocessor_(bpv),
-                                                                                                 preprocessBuffer_(rsiSize * block_size)
+    EncoderSeq(uint8_t bpv, uint8_t block_size, uint16_t rsiSize, CodeOptionSet codeOptionSet, Preprocessing preprocessing = {}) :
+        EncoderBase<ValueType, DeltaType>(bpv, block_size, rsiSize, codeOptionSet),
+        preprocessor_(bpv),
+        preprocessBuffer_(rsiSize * block_size),
+        preprocessing_((validatePreprocessing(preprocessing), preprocessing))
     {
         seState_.encodedValues_.resize(blockSizeV_ / 2);
     }
@@ -466,6 +468,7 @@ private:
     PredictivePreprocessingEncodeFast<ValueType, DeltaType, EncoderFunc> preprocessor_;
     std::vector<DeltaType> preprocessBuffer_;
     std::vector<DeltaType> partBlockBuf_;
+    const Preprocessing preprocessing_;
 };
 
 }  // namespace encoder

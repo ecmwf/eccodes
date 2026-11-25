@@ -81,14 +81,18 @@ static std::vector<T> values(size_t n, unsigned bpv, std::mt19937_64& rng)
 }
 
 template <typename T>
-static void roundTrip(unsigned bpv, unsigned blockSize, unsigned rsi, size_t n, std::mt19937_64& rng)
+static void roundTrip(unsigned bpv, unsigned blockSize, unsigned rsi, size_t n, std::mt19937_64& rng, Prediction prediction = Prediction::UnitDelay,
+                      std::vector<uint8_t>* streamOut = nullptr)
 {
     const std::vector<T> input = values<T>(n, bpv, rng);
+    const char* pred = prediction == Prediction::UnitDelay ? "" : prediction == Prediction::Bypass ? " bypass"
+                                                                                                   : " no preprocessor";
     const std::string name = std::string(sizeof(T) == 4 ? "float" : "double") + " bpv=" + std::to_string(bpv) + " bs=" + std::to_string(blockSize) +
-                             " rsi=" + std::to_string(rsi) + " n=" + std::to_string(n);
+                             " rsi=" + std::to_string(rsi) + " n=" + std::to_string(n) + pred;
     std::vector<uint8_t> first;
     for (uint8_t threads : { 1, 4 }) {
-        encoder::SpAec<T> spaec(static_cast<uint8_t>(bpv), static_cast<uint8_t>(blockSize), static_cast<uint16_t>(rsi), CodeOptionSet::Basic, T(-100), -2, 0, threads);
+        encoder::SpAec<T> spaec(static_cast<uint8_t>(bpv), static_cast<uint8_t>(blockSize), static_cast<uint16_t>(rsi), CodeOptionSet::Basic, T(-100), -2, 0, threads,
+                                prediction);
         std::vector<T> data = input;
         std::vector<uint8_t> stream(spaec.maxEncodedSize(n));
         const size_t length = spaec.encode(Span<T>(data), Span<uint8_t>(stream));
@@ -102,6 +106,9 @@ static void roundTrip(unsigned bpv, unsigned blockSize, unsigned rsi, size_t n, 
         std::vector<T> decoded(n);
         spaec.decode(Span<uint8_t>(stream), Span<T>(decoded));
         check(decoded == input, name + ", " + std::to_string(threads) + " threads: decoded values differ");
+    }
+    if (streamOut) {
+        *streamOut = first;
     }
 }
 
@@ -120,6 +127,19 @@ static void roundTrips()
     }
     for (unsigned bpv : { 24, 25, 31, 32 }) {  // beyond the float mantissa: double only
         roundTrip<double>(bpv, 32, 128, 5000, rng);
+    }
+    // Without preprocessor and with the bypass predictor (the coded integers are unsigned: the
+    // same stream, CCSDS 121.0-B-3, 4.2.3 and 4.4)
+    for (unsigned bpv : { 1, 8, 13, 16, 24, 32 }) {
+        for (unsigned rsi : { 1, 3, 64 }) {
+            for (size_t n : { size_t{ 0 }, size_t{ 7 }, size_t{ 1000 } }) {
+                std::mt19937_64 rngNone(bpv * 1000 + rsi), rngBypass(bpv * 1000 + rsi);
+                std::vector<uint8_t> none, bypass;
+                roundTrip<double>(bpv, 16, rsi, n, rngNone, Prediction::None, &none);
+                roundTrip<double>(bpv, 16, rsi, n, rngBypass, Prediction::Bypass, &bypass);
+                check(none == bypass, "bpv=" + std::to_string(bpv) + " rsi=" + std::to_string(rsi) + ": the bypass predictor codes unlike no preprocessor");
+            }
+        }
     }
 }
 

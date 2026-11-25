@@ -4,8 +4,7 @@
 // Conformance of SpAec to CCSDS 121.0-B-3 (Lossless Data Compression, Blue Book, August 2020),
 // checked against a reference encoder and decoder written from the text of the standard only.
 // Requirements and where they are checked:
-//   3.1.6      J = 8, 16, 32, 64; n = 1..32 (unsigned samples; signed samples are not supported
-//              by SpAec)                                                         -> all configurations
+//   3.1.6      J = 8, 16, 32, 64; n = 1..32, unsigned and signed samples          -> all configurations
 //   3.2, T3-1  FS codeword: m zeros and a one                                    -> fsCodewords, streams
 //   3.3        split sample k: FS of the n-k MSBs, all FS codewords first, then the k LSBs -> streams
 //   3.4        second extension: gamma = (a+b)(a+b+1)/2 + b, delta1 = 0 in a reference block,
@@ -17,18 +16,21 @@
 //   3.6        no compression: the J (J-1) preprocessed samples, n bits each      -> streams
 //   3.7        selection: the shortest option; zero blocks always as zero block; ties: no
 //              compression, then second extension, then the smallest k           -> verify
+//   4.1.1/4.2.3 no preprocessor (the samples are coded as they are) and the bypass predictor
+//              (predicted values 0, the mapper remains); no reference samples    -> streams
 //   4.2.5/4.2.6 unit-delay predictor, the first sample of an RSI is the reference sample, coded
 //              uncoded after the option ID                                       -> streams
 //   4.3        r = 1..4096 blocks                                                -> configurations
-//   4.4        prediction error mapper with theta = min(x^ - xmin, xmax - x^)    -> streams
+//   4.4        prediction error mapper with theta = min(x^ - xmin, xmax - x^), xmin = 0 and
+//              xmax = 2^n - 1 for unsigned, xmin = -2^(n-1) and xmax = 2^(n-1) - 1 for signed
+//              samples (n-bit two's complement, also the reference sample)       -> streams
 //   5.2.1, T5-1 option IDs of the basic and restricted sets (restricted for n <= 4; for 4 < n <= 8
 //              the IDs equal the basic set)                                      -> idTable, streams
 //   5.2.2-5.2.6 CDS formats with and without reference sample                    -> streams
 //   5.3.1      the stream ends on a byte boundary, the fill bits are zero        -> verify
 //   any valid stream (other option choices, larger k, SE with large gamma) decodes -> random policy
 // Not implemented by SpAec: packets and the compression identification packet
-// (5.3, 6), the file header (7), the bypass predictor and coding without preprocessor (4.2.3),
-// signed samples (3.1.6, 4.4).
+// (5.3, 6), the file header (7), application-specific predictors and mappers (4.2.4).
 // SpAec writes one zero byte for an empty input; the reference writes nothing.
 #include <algorithm>
 #include <cstdint>
@@ -66,12 +68,28 @@ struct Params
     unsigned J;       // block size
     unsigned r;       // reference sample interval in blocks
     bool restricted;  // restricted set of code options
+    // 4: preprocessor with the unit-delay predictor (4.2.5), with the bypass predictor (4.2.3), or
+    // none (4.1.1); samples are unsigned or n-bit two's complement (4.4)
+    Prediction prediction = Prediction::UnitDelay;
+    bool signedSamples = false;
 
     std::string str() const
     {
-        return "n=" + std::to_string(n) + " J=" + std::to_string(J) + " r=" + std::to_string(r) + (restricted ? " restricted" : " basic");
+        const char* pred = prediction == Prediction::UnitDelay ? "" : prediction == Prediction::Bypass ? " bypass"
+                                                                                                       : " no preprocessor";
+        return "n=" + std::to_string(n) + " J=" + std::to_string(J) + " r=" + std::to_string(r) + (restricted ? " restricted" : " basic") + pred +
+               (signedSamples ? " signed" : "");
     }
-    uint64_t xmax() const { return n == 64 ? ~uint64_t{ 0 } : (uint64_t{ 1 } << n) - 1; }
+    uint64_t xmax() const { return n == 64 ? ~uint64_t{ 0 } : (uint64_t{ 1 } << n) - 1; }  // largest n-bit pattern
+    bool hasReference() const { return prediction == Prediction::UnitDelay; }              // 4.2.6, 5.2.2
+    // The value of an n-bit sample pattern, and the range of the values (4.4)
+    int64_t value(uint64_t pattern) const
+    {
+        return signedSamples && n < 64 && (pattern >> (n - 1)) ? static_cast<int64_t>(pattern) - (int64_t{ 1 } << n) : static_cast<int64_t>(pattern);
+    }
+    uint64_t pattern(int64_t v) const { return static_cast<uint64_t>(v) & xmax(); }
+    int64_t vmin() const { return signedSamples ? -(int64_t{ 1 } << (n - 1)) : 0; }
+    int64_t vmax() const { return signedSamples ? (int64_t{ 1 } << (n - 1)) - 1 : static_cast<int64_t>(xmax()); }
 };
 
 // Table 5-1: length of the ID of FS, split sample and no compression (the zero block and second
@@ -186,6 +204,49 @@ static uint64_t unmapError(uint64_t delta, uint64_t pred, uint64_t xmax)
     return theta == pred ? pred + (delta - theta) : pred - (delta - theta);
 }
 
+// 4.4: prediction error mapper for samples in [xmin, xmax] (unsigned or signed), and its inverse
+static uint64_t mapErrorRange(int64_t x, int64_t pred, int64_t xmin, int64_t xmax)
+{
+    const int64_t delta = x - pred;
+    const int64_t theta = std::min(pred - xmin, xmax - pred);
+    if (delta >= 0 && delta <= theta)
+        return static_cast<uint64_t>(2 * delta);
+    if (delta < 0 && -delta <= theta)
+        return static_cast<uint64_t>(-2 * delta - 1);
+    return static_cast<uint64_t>(theta + (delta < 0 ? -delta : delta));
+}
+
+static int64_t unmapErrorRange(uint64_t delta, int64_t pred, int64_t xmin, int64_t xmax)
+{
+    const int64_t theta = std::min(pred - xmin, xmax - pred);
+    const int64_t d = static_cast<int64_t>(delta);
+    if (d <= 2 * theta)
+        return d % 2 == 0 ? pred + d / 2 : pred - (d + 1) / 2;
+    return theta == pred - xmin ? pred + (d - theta) : pred - (d - theta);
+}
+
+// The preprocessed sample of sample i (4): unit-delay predictor (the preceding sample), bypass
+// predictor (predicted value 0), or no preprocessor (the sample itself)
+static uint64_t preprocess(const Params& p, uint64_t x, uint64_t previous)
+{
+    if (p.prediction == Prediction::None)
+        return x;
+    if (!p.signedSamples && p.prediction == Prediction::UnitDelay)
+        return mapError(x, previous, p.xmax());
+    const int64_t pred = p.prediction == Prediction::UnitDelay ? p.value(previous) : 0;
+    return mapErrorRange(p.value(x), pred, p.vmin(), p.vmax());
+}
+
+static uint64_t postprocess(const Params& p, uint64_t delta, uint64_t previous)
+{
+    if (p.prediction == Prediction::None)
+        return delta;
+    if (!p.signedSamples && p.prediction == Prediction::UnitDelay)
+        return unmapError(delta, previous, p.xmax());
+    const int64_t pred = p.prediction == Prediction::UnitDelay ? p.value(previous) : 0;
+    return p.pattern(unmapErrorRange(delta, pred, p.vmin(), p.vmax()));
+}
+
 // One coded data set (CDS), for the checks of the encoder's choices
 struct Cds
 {
@@ -282,14 +343,15 @@ static std::vector<uint8_t> refEncode(const std::vector<uint64_t>& x, const Para
     const size_t nBlocks = (N + p.J - 1) / p.J;
     for (size_t b0 = 0; b0 < nBlocks; b0 += p.r) {
         const size_t nb = std::min<size_t>(p.r, nBlocks - b0);
-        // Preprocessing of the RSI; a partial last block is completed with zero deltas
+        // Preprocessing of the RSI; a partial last block is completed with zero deltas. Only the
+        // unit-delay predictor has a reference sample (4.2.6, 5.2.2)
         std::vector<uint64_t> d(nb * p.J, 0);
         const uint64_t reference = x[b0 * p.J];
-        for (size_t i = 1; i < nb * p.J && b0 * p.J + i < N; ++i)
-            d[i] = mapError(x[b0 * p.J + i], x[b0 * p.J + i - 1], p.xmax());
+        for (size_t i = p.hasReference() ? 1 : 0; i < nb * p.J && b0 * p.J + i < N; ++i)
+            d[i] = preprocess(p, x[b0 * p.J + i], i > 0 ? x[b0 * p.J + i - 1] : 0);
         auto blockDeltas = [&](size_t b) { return std::vector<uint64_t>(d.begin() + b * p.J, d.begin() + (b + 1) * p.J); };
         auto isZero = [&](size_t b) {
-            for (size_t i = (b == 0 ? 1 : 0); i < p.J; ++i)
+            for (size_t i = (b == 0 && p.hasReference() ? 1 : 0); i < p.J; ++i)
                 if (d[b * p.J + i] != 0)
                     return false;
             return true;
@@ -306,13 +368,13 @@ static std::vector<uint8_t> refEncode(const std::vector<uint64_t>& x, const Para
                     const bool useRos = toEnd && m >= 5 && (policy != Policy::NoRos || segLen == 64);
                     w.bits(0, idTable(p).len);
                     w.bit(0);
-                    if (b == 0)
+                    if (b == 0 && p.hasReference())
                         w.bits(reference, p.n);
                     w.fs(useRos ? 4 : (m <= 4 ? m - 1 : m));  // Table 3-2
                     j += m;
                     continue;
                 }
-                const bool ref = b == 0;
+                const bool ref = b == 0 && p.hasReference();
                 const std::vector<uint64_t> bd = blockDeltas(b);
                 const OptionLengths l = optionLengths(p, bd, ref);
                 char kind = 'N';
@@ -369,7 +431,7 @@ static std::vector<uint64_t> refDecode(const std::vector<uint8_t>& stream, size_
             const size_t segLen = std::min<size_t>(64, nb - s0);
             for (size_t j = 0; j < segLen;) {
                 const size_t b = s0 + j;
-                const bool ref = b == 0;
+                const bool ref = b == 0 && p.hasReference();
                 const uint64_t start = in.pos();
                 Cds c;
                 c.ref = ref;
@@ -440,9 +502,10 @@ static std::vector<uint64_t> refDecode(const std::vector<uint8_t>& stream, size_
             }
         }
         // Inverse preprocessing (4.2.5, 4.4)
-        x[b0 * p.J] = reference;
-        for (size_t i = 1; i < nb * p.J && b0 * p.J + i < N; ++i)
-            x[b0 * p.J + i] = unmapError(d[i], x[b0 * p.J + i - 1], p.xmax());
+        if (p.hasReference())
+            x[b0 * p.J] = reference;
+        for (size_t i = p.hasReference() ? 1 : 0; i < nb * p.J && b0 * p.J + i < N; ++i)
+            x[b0 * p.J + i] = postprocess(p, d[i], i > 0 ? x[b0 * p.J + i - 1] : 0);
     }
     // 5.3.1: the stream ends on the byte boundary after the last CDS, the fill bits are zero
     if ((in.pos() + 7) / 8 != in.size())
@@ -634,16 +697,20 @@ static void encodeAndDecode(const std::vector<uint64_t>& x, const Params& p, std
     const auto J8 = static_cast<uint8_t>(p.J);
     const auto r16 = static_cast<uint16_t>(p.r);
     const std::string what = name + " " + p.str() + " N=" + std::to_string(x.size());
-    std::vector<T> samples(x.begin(), x.end());
+    const Preprocessing pre{ p.prediction, p.signedSamples };
+    // The coders take and return signed samples sign-extended to T (the encoder codes the n low bits)
+    std::vector<T> samples(x.size());
+    for (size_t i = 0; i < x.size(); ++i)
+        samples[i] = static_cast<T>(p.value(x[i]));
 
     // The encoder against the standard
     try {
-        encoder::EncoderSeq<T, T> encoder(n8, J8, r16, cos);
+        encoder::EncoderSeq<T, T> encoder(n8, J8, r16, cos, pre);
         std::vector<uint8_t> stream(x.size() * 5 + 4096, 0);
         stream.resize(encoder.encode(Span<T>(samples), Span<uint8_t>(stream)));
         verify(stream, x, p, "EncoderSeq " + what, kTies);
         if (x.size() > 2000 && p.r <= 8) {
-            encoder::EncoderPar<T, T> par(n8, J8, r16, cos, 3);
+            encoder::EncoderPar<T, T> par(n8, J8, r16, cos, 3, pre);
             std::vector<uint8_t> pstream(x.size() * 5 + 4096, 0);
             pstream.resize(par.encode(Span<T>(samples), Span<uint8_t>(pstream)));
             ++checks;
@@ -674,18 +741,25 @@ static void encodeAndDecode(const std::vector<uint64_t>& x, const Params& p, std
         if (x.empty())
             continue;
         try {
-            DecoderSeq<T, T> decoder(n8, J8, r16, cos);
+            DecoderSeq<T, T> decoder(n8, J8, r16, cos, pre);
             std::vector<T> decoded(x.size());
             decoder.decode(Span<uint8_t>(const_cast<uint8_t*>(stream.data()), stream.size()), Span<T>(decoded));
             ++checks;
             if (!std::equal(decoded.begin(), decoded.end(), samples.begin()))
                 fail("DecoderSeq " + what + " (" + pname + "): other values");
+            // decodeSpans (used by SpAec): RSI by RSI
+            std::vector<T> spans(x.size());
+            decoder.decodeSpans(Span<uint8_t>(const_cast<uint8_t*>(stream.data()), stream.size()), x.size(),
+                                [&](const T* v, size_t count, size_t offset) { std::copy(v, v + count, spans.begin() + offset); });
+            ++checks;
+            if (spans != decoded)
+                fail("DecoderSeq::decodeSpans " + what + " (" + pname + "): other values");
         }
         catch (const std::exception& e) {
             fail("DecoderSeq " + what + " (" + pname + "): " + e.what());
         }
         try {
-            DecoderPar<T, T> decoder(n8, J8, r16, cos, 3);
+            DecoderPar<T, T> decoder(n8, J8, r16, cos, 3, pre);
             std::vector<T> decoded(x.size());
             decoder.decodeParallel(Span<uint8_t>(const_cast<uint8_t*>(stream.data()), stream.size()), Span<T>(decoded), [](T v) { return v; });
             ++checks;
@@ -828,10 +902,14 @@ static std::vector<uint64_t> field(const Params& p, size_t N, int kind, std::mt1
                 if (rng() % 97 == 0)
                     v = (v + 1) & xmax;
                 break;
-            case 3:  // extremes: near 0 and near xmax
+            case 3:  // extremes: near 0 and near xmax, and for signed samples near -2^(n-1) and 2^(n-1) - 1
             {
                 const uint64_t e = std::min<uint64_t>(rng() & 3, xmax);
-                v = rng() % 2 ? e : xmax - e;
+                const uint64_t half = (xmax >> 1) + 1;  // pattern of -2^(n-1)
+                const unsigned c = static_cast<unsigned>(rng() % (p.signedSamples ? 4 : 2));
+                v = c == 0 ? e : c == 1 ? xmax - e
+                           : c == 2     ? std::min(xmax, half + e)
+                                        : half - 1 - std::min(e, half - 1);
                 break;
             }
             default:  // small differences (0, +-1, +-2)
@@ -882,29 +960,34 @@ int main()
     std::mt19937_64 rng(121);
     long kTies = 0;
     const unsigned blockSizes[] = { 8, 16, 32, 64 };
-    for (unsigned n = 1; n <= 32; ++n) {
-        for (unsigned J : blockSizes) {
-            for (unsigned r : { 1u, 2u, 3u, 7u, 64u, 65u, 100u, 128u }) {
-                for (bool restricted : { false, true }) {
-                    if (restricted && n > 8)
-                        continue;
-                    // Fewer fields for the long RSIs and the large block sizes
-                    const int nFields = (r >= 64 ? 2 : 6) + (J <= 16 ? 2 : 0);
-                    const Params p{ n, J, r, restricted };
-                    if (n <= 8)
-                        streams<uint8_t>(p, rng, kTies, nFields);
-                    else if (n <= 16)
-                        streams<uint16_t>(p, rng, kTies, nFields);
-                    else
-                        streams<uint32_t>(p, rng, kTies, nFields);
+    // The preprocessing (4): the unit-delay predictor, the bypass predictor and no preprocessor,
+    // for unsigned and signed samples (signed samples need a preprocessor, 6.3.3.5.2)
+    const std::pair<Prediction, bool> preprocessings[] = { { Prediction::UnitDelay, false }, { Prediction::UnitDelay, true }, { Prediction::Bypass, false }, { Prediction::Bypass, true }, { Prediction::None, false } };
+    for (const auto& pre : preprocessings) {
+        for (unsigned n = 1; n <= 32; ++n) {
+            for (unsigned J : blockSizes) {
+                for (unsigned r : { 1u, 2u, 3u, 7u, 64u, 65u, 100u, 128u }) {
+                    for (bool restricted : { false, true }) {
+                        if (restricted && n > 8)
+                            continue;
+                        // Fewer fields for the long RSIs and the large block sizes
+                        const int nFields = (r >= 64 ? 2 : 6) + (J <= 16 ? 2 : 0);
+                        const Params p{ n, J, r, restricted, pre.first, pre.second };
+                        if (n <= 8)
+                            streams<uint8_t>(p, rng, kTies, nFields);
+                        else if (n <= 16)
+                            streams<uint16_t>(p, rng, kTies, nFields);
+                        else
+                            streams<uint32_t>(p, rng, kTies, nFields);
+                    }
                 }
             }
         }
-    }
-    // The largest reference sample interval (4.3)
-    for (unsigned J : blockSizes) {
-        const Params p{ 12, J, 4096, false };
-        encodeAndDecode<uint16_t>(field(p, size_t{ 4096 } * J + 5, 2, rng), p, rng, kTies, "r=4096");
+        // The largest reference sample interval (4.3)
+        for (unsigned J : blockSizes) {
+            const Params p{ 12, J, 4096, false, pre.first, pre.second };
+            encodeAndDecode<uint16_t>(field(p, size_t{ 4096 } * J + 5, 2, rng), p, rng, kTies, "r=4096");
+        }
     }
 
     std::cout << checks << " checks, " << kTies << " split-sample blocks with another k of the same length than the smallest (3.7.4 c)\n";

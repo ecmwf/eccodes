@@ -87,6 +87,12 @@ static void parameters()
     // More bits per value than the sample type has
     expect<IA>("EncoderSeq<uint8_t> bpv 9", "bits per value", [] { encoder::EncoderSeq<uint8_t, uint8_t>(9, 8, 1, CodeOptionSet::Basic); });
     expect<IA>("DecoderSeq<uint16_t> bpv 17", "bits per value", [] { DecoderSeq<uint16_t, uint16_t>(17, 8, 1, CodeOptionSet::Basic); });
+    // Signed samples need a preprocessor (CCSDS 121.0-B-3, 6.3.3.5.2)
+    const Preprocessing signedWithout{ Prediction::None, true };
+    expect<IA>("EncoderSeq signed samples without preprocessor", "need a preprocessor", [&] { encoder::EncoderSeq<uint16_t, uint16_t>(16, 8, 1, CodeOptionSet::Basic, signedWithout); });
+    expect<IA>("DecoderSeq signed samples without preprocessor", "need a preprocessor", [&] { DecoderSeq<uint16_t, uint16_t>(16, 8, 1, CodeOptionSet::Basic, signedWithout); });
+    expect<IA>("EncoderPar signed samples without preprocessor", "need a preprocessor", [&] { encoder::EncoderPar<uint16_t, uint16_t>(16, 8, 1, CodeOptionSet::Basic, 3, signedWithout); });
+    expect<IA>("DecoderPar signed samples without preprocessor", "need a preprocessor", [&] { DecoderPar<uint16_t, uint16_t>(16, 8, 1, CodeOptionSet::Basic, 3, signedWithout); });
 }
 
 static void spaecErrors()

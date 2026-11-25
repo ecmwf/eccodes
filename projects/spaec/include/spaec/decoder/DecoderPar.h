@@ -84,7 +84,7 @@ public:
                     [&padded, &target, unmapper, bitOffset, startVal, chunkLen, this]() {
                         // Per-thread decoder to avoid shared mutable state (rsiBuf_, paddedSegmentBuf_)
                         DecoderSeq<ValueType, DeltaType, DecodeFunc> localDecoder{
-                            bpv_, blockSizeV_, static_cast<uint16_t>(rsiSizeB_), codeOptionSet_
+                            bpv_, blockSizeV_, static_cast<uint16_t>(rsiSizeB_), codeOptionSet_, preprocessing_
                         };
                         localDecoder.decodeFusedAt(padded, bitOffset, chunkLen,
                                                    [&](auto value, size_t idx) {
@@ -113,8 +113,8 @@ public:
         waitAll();
     }
 
-    DecoderPar(uint8_t bpv, uint8_t block_size, uint16_t rsiSize, CodeOptionSet codeOptionSet, size_t nThreads = 3) :
-        DecoderSeq<ValueType, DeltaType, DecodeFunc>(bpv, block_size, rsiSize, codeOptionSet),
+    DecoderPar(uint8_t bpv, uint8_t block_size, uint16_t rsiSize, CodeOptionSet codeOptionSet, size_t nThreads = 3, Preprocessing preprocessing = {}) :
+        DecoderSeq<ValueType, DeltaType, DecodeFunc>(bpv, block_size, rsiSize, codeOptionSet, preprocessing),
         nThreads_(nThreads)
     {
     }
@@ -128,6 +128,7 @@ private:
     using Base::blockSizeV_;
     using Base::bpv_;
     using Base::codeOptionSet_;
+    using Base::preprocessing_;
     using Base::rsiSizeB_;
     using Base::rsiSizeV_;
 };

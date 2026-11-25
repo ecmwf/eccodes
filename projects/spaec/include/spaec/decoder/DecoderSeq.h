@@ -617,13 +617,14 @@ public:
         buffer.checkPos();
     }
 
-    DecoderSeq(uint8_t bpv, uint8_t block_size, uint16_t rsiSize, CodeOptionSet codeOptionSet) :
+    DecoderSeq(uint8_t bpv, uint8_t block_size, uint16_t rsiSize, CodeOptionSet codeOptionSet, Preprocessing preprocessing = {}) :
         bpv_((validateCcsdsParameters(bpv, block_size, rsiSize, 8 * std::min(sizeof(ValueType), sizeof(DeltaType))), bpv)),
         blockSizeV_(block_size),
         rsiSizeB_(rsiSize),
         rsiSizeV_(rsiSize * block_size),
         codeOptionSet_(codeOptionSet),
-        preprocessor_(bpv)
+        preprocessor_(bpv),
+        preprocessing_((validatePreprocessing(preprocessing), preprocessing))
     {
         noCompressionId_ = (1u << (maxIdLength - 1)) - 1;
     }
@@ -653,6 +654,9 @@ protected:
     std::vector<ValueType> valuesBuf_;
     mutable std::vector<uint8_t> paddedSource_;
     size_t bitsDecoded_ = 0;
+
+protected:
+    const Preprocessing preprocessing_;
 };
 
 }  // namespace spaec

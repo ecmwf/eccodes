@@ -23,6 +23,37 @@ constexpr size_t rosLength = 5;
 // Largest reference sample interval (in blocks), CCSDS 121.0-B-3, 4.3
 constexpr size_t maxRsiSize = 4096;
 
+// The preprocessing of the samples (CCSDS 121.0-B-3, 4)
+enum class Prediction
+{
+    UnitDelay,  // preprocessor with the unit-delay predictor (4.2.5) and reference samples (4.2.6)
+    Bypass,     // preprocessor with the bypass predictor (4.2.3): predicted values are 0, the mapper
+                // remains; no reference samples
+    None        // no preprocessor (4.1.1): the samples are coded as they are; no reference samples
+};
+
+struct Preprocessing
+{
+    Prediction prediction = Prediction::UnitDelay;
+    // The samples are n-bit two's complement numbers (4.4: xmin = -2^(n-1), xmax = 2^(n-1) - 1).
+    // They are passed in the unsigned sample type of the coder: the encoder codes their n low bits,
+    // the decoder returns them sign-extended to the sample type.
+    bool signedSamples = false;
+
+    bool isDefault() const { return prediction == Prediction::UnitDelay && !signedSamples; }
+};
+
+// Checks the preprocessing and throws std::invalid_argument if it is not supported
+inline void validatePreprocessing(const Preprocessing& preprocessing)
+{
+    if (preprocessing.prediction == Prediction::None && preprocessing.signedSamples) {
+        throw std::invalid_argument("CCSDS: signed samples need a preprocessor (CCSDS 121.0-B-3, 6.3.3.5.2: without preprocessor the data sense is positive)");
+    }
+    if (!preprocessing.isDefault()) {
+        throw std::invalid_argument("CCSDS: this preprocessing is not implemented yet");
+    }
+}
+
 // Checks the coding parameters (CCSDS 121.0-B-3, 3.1.6 and 4.3) and throws
 // std::invalid_argument with a helpful message if they are not supported.
 // maxBpv is the number of bits of the sample type used by the caller.

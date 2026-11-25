@@ -1332,6 +1332,117 @@ void testGreenBookOptionSelection(uint8_t n)
     PASS();
 }
 
+// §4.1.1, §4.2.3, §4.4, §5.2.2: the bypass predictor, coding without preprocessor, signed samples
+template <typename T>
+static std::vector<uint8_t> encodeWith(const std::vector<T>& x, uint8_t n, uint8_t J, uint16_t r, Preprocessing pre, size_t& bits)
+{
+    encoder::EncoderSeq<T, T> enc(n, J, r, CodeOptionSet::Basic, pre);
+    std::vector<uint8_t> out(x.size() * 8 + 64, 0);
+    std::vector<T> in(x);
+    bits = enc.encodeBits(Span<T>(in), Span<uint8_t>(out));
+    out.resize((bits + 7) / 8);
+    return out;
+}
+
+template <typename T>
+static std::vector<T> decodeWith(std::vector<uint8_t> stream, size_t count, uint8_t n, uint8_t J, uint16_t r, Preprocessing pre)
+{
+    DecoderSeq<T, T> dec(n, J, r, CodeOptionSet::Basic, pre);
+    std::vector<T> out(count);
+    dec.decode(Span<uint8_t>(stream), Span<T>(out));
+    return out;
+}
+
+void testPreprocessingModes()
+{
+    std::cout << "§4.1.1/§4.2.3/§4.4/§5.2.2 Preprocessing modes:" << '\n';
+
+    {
+        TEST("§5.2.2 no preprocessor: 255 0 255 0 ... (n = 8) → no-compression block without reference sample");
+        const std::vector<uint8_t> x = { 255, 0, 255, 0, 255, 0, 255, 0 };
+        size_t bits = 0;
+        const auto stream = encodeWith(x, 8, 8, 1, Preprocessing{ Prediction::None }, bits);
+        greenbook::BitWriter expected;
+        expected.put(7, 3);  // no-compression ID for n = 8
+        for (uint8_t v : x)
+            expected.put(v, 8);
+        ASSERT_EQ(bits, expected.pos);
+        ASSERT_TRUE(stream == expected.bytes);
+        ASSERT_TRUE(decodeWith<uint8_t>(stream, x.size(), 8, 8, 1, Preprocessing{ Prediction::None }) == x);
+        PASS();
+    }
+
+    {
+        TEST("§4.2.3 bypass predictor, signed n = 4: x = 0 -1 1 -2 ... -8 → δ = 0 1 2 ... 15 (no reference sample)");
+        // Predicted value 0 (θ = min(0 + 8, 7 - 0) = 7): δ = 2x for x ≥ 0, 2|x| - 1 for x < 0; x = -8: θ + 8 = 15
+        std::vector<uint8_t> x;
+        for (int i = 0; i < 16; ++i) {
+            const int v = i % 2 == 0 ? i / 2 : -(i + 1) / 2;
+            x.push_back(static_cast<uint8_t>(v));  // two's complement, sign-extended to 8 bits
+        }
+        const Preprocessing bypassSigned{ Prediction::Bypass, true };
+        size_t bits = 0;
+        const auto stream = encodeWith(x, 4, 16, 1, bypassSigned, bits);
+        greenbook::BitWriter expected;
+        expected.put(7, 3);  // no compression: the 16 preprocessed samples 0..15
+        for (unsigned d = 0; d < 16; ++d)
+            expected.put(d, 4);
+        ASSERT_EQ(bits, expected.pos);
+        ASSERT_TRUE(stream == expected.bytes);
+        ASSERT_TRUE(decodeWith<uint8_t>(stream, x.size(), 4, 16, 1, bypassSigned) == x);
+        PASS();
+    }
+
+    {
+        TEST("§4.4 unit-delay predictor, signed n = 8: 8 × (-3) → zero block, reference 11111101");
+        const std::vector<uint8_t> x(8, static_cast<uint8_t>(-3));
+        const Preprocessing unitDelaySigned{ Prediction::UnitDelay, true };
+        size_t bits = 0;
+        const auto stream = encodeWith(x, 8, 8, 1, unitDelaySigned, bits);
+        greenbook::BitWriter expected;
+        expected.put(0, 4);     // zero-block ID
+        expected.put(0xFD, 8);  // the reference sample: -3 in 8-bit two's complement
+        expected.fs(0);         // one zero block
+        ASSERT_EQ(bits, expected.pos);
+        ASSERT_TRUE(stream == expected.bytes);
+        ASSERT_TRUE(decodeWith<uint8_t>(stream, x.size(), 8, 8, 1, unitDelaySigned) == x);
+        PASS();
+    }
+
+    {
+        TEST("decoded signed samples are sign-extended to the sample type (n = 12 in 16 bits)");
+        std::vector<uint16_t> x = { 0, 1, static_cast<uint16_t>(-1), 2047, static_cast<uint16_t>(-2048), 5, static_cast<uint16_t>(-7), 100 };
+        for (Prediction pred : { Prediction::UnitDelay, Prediction::Bypass }) {
+            const Preprocessing pre{ pred, true };
+            size_t bits = 0;
+            const auto stream = encodeWith(x, 12, 8, 1, pre, bits);
+            ASSERT_TRUE(decodeWith<uint16_t>(stream, x.size(), 12, 8, 1, pre) == x);
+            // only the 12 low bits are coded: the samples given as 12-bit patterns code alike
+            std::vector<uint16_t> patterns(x);
+            for (auto& v : patterns)
+                v &= 0xFFF;
+            size_t bits2 = 0;
+            ASSERT_TRUE(encodeWith(patterns, 12, 8, 1, pre, bits2) == stream);
+        }
+        PASS();
+    }
+
+    {
+        TEST("§4.2.3 bypass predictor with unsigned samples codes the samples unchanged, like no preprocessor");
+        std::mt19937 rng(42);
+        for (uint8_t n : { 1, 7, 13, 24, 32 }) {
+            std::vector<uint32_t> x(1000);
+            for (auto& v : x)
+                v = static_cast<uint32_t>(rng()) & static_cast<uint32_t>((uint64_t{ 1 } << n) - 1);
+            for (size_t i = 0; i < x.size(); i += 97)
+                x[i] = 0;
+            size_t b1 = 0, b2 = 0;
+            ASSERT_TRUE(encodeWith(x, n, 16, 3, Preprocessing{ Prediction::Bypass }, b1) == encodeWith(x, n, 16, 3, Preprocessing{ Prediction::None }, b2));
+        }
+        PASS();
+    }
+}
+
 int main()
 {
     try {
@@ -1387,6 +1498,9 @@ int main()
         testGreenBookOptionSelection<uint16_t>(16);
         testGreenBookOptionSelection<uint32_t>(24);
         testGreenBookOptionSelection<uint32_t>(32);
+
+        // §4.1.1, §4.2.3, §4.4, §5.2.2 preprocessing modes
+        testPreprocessingModes();
 
         std::cout << '\n';
         std::cout << "=================================" << '\n';
