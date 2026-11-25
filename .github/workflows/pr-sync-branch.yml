@@ -16,5 +16,5 @@ jobs:
     steps:
       - uses: ecmwf/ci-infrastructure/actions/sync-branch-prs@main
         with:
-          client-id: ${{ secrets.CI_SYNCED_PR_LINKS_APP_CLIENT_ID }}
+          client-id: ${{ vars.CI_SYNCED_PR_LINKS_APP_CLIENT_ID }}
           app-private-key: ${{ secrets.CI_SYNCED_PR_LINKS_APP_PRIVATE_KEY }}
