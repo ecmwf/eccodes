@@ -30,7 +30,7 @@ void writeSeed(const std::string& dir, const std::string& name, uint8_t bpv, uin
                uint16_t rsi, uint16_t nValues, uint8_t nThreads, std::vector<uint32_t> values)
 {
     encoder::EncoderSeq<uint32_t, uint32_t> streamEncoder{ bpv, blockSize, rsi, CodeOptionSet::Basic };
-    std::vector<uint8_t> target(encoder::SpAec<uint32_t>::maxEncodedSize(values.size(), bpv, blockSize), 0);
+    std::vector<uint8_t> target(encoder::SpAec<double>::maxEncodedSize(values.size(), bpv, blockSize), 0);
     const size_t size = streamEncoder.encode(Span<uint32_t>(values), Span<uint8_t>(target));
 
     std::vector<uint8_t> file(7 + size, 0);

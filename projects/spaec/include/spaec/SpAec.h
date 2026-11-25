@@ -6,6 +6,7 @@
 #include <limits>
 #include <stdexcept>
 #include <string>
+#include <type_traits>
 #include <vector>
 #include "spaec/CodeOption.h"
 #include "spaec/Span.h"
@@ -39,6 +40,9 @@ namespace encoder
 template <typename ValueType>
 class SpAec
 {
+    // The values are scaled with powers of 2 and 10 (an integer type would truncate 10^-D to 0)
+    static_assert(std::is_floating_point<ValueType>::value, "SpAec requires a floating-point value type");
+
 public:
     // Mapping between the values and the coded integers (public for the unit tests)
     template <typename MappedType>
