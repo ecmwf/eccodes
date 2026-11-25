@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
 // SPDX-License-Identifier: Apache-2.0
 
+#include <algorithm>
 #include <iostream>
 #include <vector>
 #include <cassert>
@@ -991,6 +992,346 @@ void testCompressionEfficiency()
 // Main
 // ============================================================================
 
+// ============================================================================
+// CCSDS 120.0-G-4 (Green Book, November 2021): worked examples, tables and properties that the
+// Blue Book does not state
+// ============================================================================
+
+namespace greenbook
+{
+
+// Bits written MSB first, as in the coded data
+struct BitWriter
+{
+    std::vector<uint8_t> bytes;
+    size_t pos = 0;
+
+    void put(uint64_t value, size_t n)
+    {
+        while (n--) {
+            if (bytes.size() <= pos / 8) bytes.push_back(0);
+            if ((value >> n) & 1) bytes[pos / 8] |= static_cast<uint8_t>(0x80 >> (pos % 8));
+            ++pos;
+        }
+    }
+    void fs(uint64_t zeros)
+    {
+        for (uint64_t i = 0; i < zeros; ++i)
+            put(0, 1);
+        put(1, 1);
+    }
+};
+
+static unsigned bitAt(const std::vector<uint8_t>& bytes, size_t i)
+{
+    return (bytes[i / 8] >> (7 - i % 8)) & 1;
+}
+
+// Codes one block without reference sample and returns its length in bits and its first byte
+template <typename T>
+static std::pair<size_t, uint8_t> encodeBlock(encoder::EncoderSeq<T, T>& enc, std::vector<T> block, uint8_t bpv)
+{
+    std::vector<uint8_t> out(block.size() * (bpv + 8) / 8 + 64, 0);
+    BitBuffer buffer{ Span<uint8_t>(out) };
+    enc.template encodeFullBlock<ReferenceType::NoRef>(Span<T>(block), buffer);
+    return { buffer.bitPos(), out[0] };
+}
+
+}  // namespace greenbook
+
+// §3.3.3: the example of the prediction error mapper for 8-bit samples (x̂ = previous sample)
+void testGreenBookMapperExample()
+{
+    std::cout << "Green Book §3.3.3 Prediction Error Mapper example:" << '\n';
+    TEST("x = 101 101 100 101 99 101 223 100 → δ = 0 1 2 3 4 223 155");
+    std::vector<uint8_t> x = { 101, 101, 100, 101, 99, 101, 223, 100 };
+    std::vector<uint8_t> delta(x.size()), restored(x.size());
+    PredictivePreprocessingEncodeFast<uint8_t> pre(8);
+    pre.encode(x, delta);
+    const std::vector<uint8_t> expected = { 101, 0, 1, 2, 3, 4, 223, 155 };  // the first sample is the reference
+    for (size_t i = 0; i < x.size(); ++i) {
+        ASSERT_EQ(delta[i], expected[i]);
+    }
+    PredictivePreprocessingDecodeFast<uint8_t> post(8);
+    post.decode(delta, x[0], restored);
+    for (size_t i = 0; i < x.size(); ++i) {
+        ASSERT_EQ(restored[i], x[i]);
+    }
+    PASS();
+}
+
+// §3.2.3.3, table 3-1 and figure 3-4: zero-block codewords and the 200-block example
+void testGreenBookZeroBlock()
+{
+    std::cout << "Green Book §3.2.3.3 Zero-Block option:" << '\n';
+    using T = uint8_t;
+    constexpr uint8_t n = 8;
+    constexpr uint8_t J = 8;
+
+    {
+        TEST("table 3-1: m all-zeros blocks → m-1 zeros and a 1 (m ≤ 4), m zeros and a 1 (5 ≤ m ≤ 63), ROS");
+        for (size_t m = 1; m <= 64; ++m) {
+            // m blocks of a constant (the first carries the reference), then blocks that are not all zeros
+            std::vector<T> x(64 * J, 77);
+            for (size_t i = m * J; i < x.size(); ++i)
+                x[i] = static_cast<T>((i * 37) % 251);
+            std::vector<uint8_t> out(x.size() * 2 + 64, 0);
+            encoder::EncoderSeq<T, T> enc(n, J, 64, CodeOptionSet::Basic);
+            enc.encode(Span<T>(x), Span<uint8_t>(out));
+
+            // zero-block ID (4 bits for n = 8: 000 and 0), reference (8 bits), then the FS codeword
+            for (size_t i = 0; i < 4; ++i)
+                ASSERT_EQ(greenbook::bitAt(out, i), 0u);
+            size_t zeros = 0;
+            while (greenbook::bitAt(out, 12 + zeros) == 0)
+                ++zeros;
+            const size_t expectedZeros = m == 64 ? 4 : (m <= 4 ? m - 1 : m);  // the segment ends: ROS
+            ASSERT_EQ(zeros, expectedZeros);
+
+            std::vector<T> decoded(x.size());
+            DecoderSeq<T, T> dec(n, J, 64, CodeOptionSet::Basic);
+            dec.decode(Span<uint8_t>(out), Span<T>(decoded));
+            ASSERT_TRUE(decoded == x);
+        }
+        PASS();
+    }
+
+    {
+        TEST("ROS only for 5 or more all-zeros blocks at the end of a segment, else the count");
+        for (size_t m = 1; m <= 62; ++m) {
+            // 64 - m blocks that are not all zeros, then m blocks repeating the last sample
+            std::vector<T> x(64 * J);
+            for (size_t i = 0; i < x.size(); ++i)
+                x[i] = static_cast<T>(i < (64 - m) * J ? (i * 37) % 251 : ((64 - m) * J - 1) * 37 % 251);
+            std::vector<uint8_t> all(x.size() * 2 + 64, 0), prefix(x.size() * 2 + 64, 0);
+            encoder::EncoderSeq<T, T> encAll(n, J, 64, CodeOptionSet::Basic), encPrefix(n, J, 64, CodeOptionSet::Basic);
+            const size_t bitsAll = encAll.encodeBits(Span<T>(x), Span<uint8_t>(all));
+            const size_t bitsPrefix = encPrefix.encodeBits(Span<T>(x.data(), (64 - m) * J), Span<uint8_t>(prefix));
+
+            // the run is coded after the other blocks: zero-block ID (4 bits), then the codeword
+            const size_t codeword = m <= 4 ? m : 5;  // m - 1 zeros and a 1, or ROS (4 zeros and a 1)
+            ASSERT_EQ(bitsAll, bitsPrefix + 4 + codeword);
+            for (size_t i = 0; i < 4 + codeword - 1; ++i)
+                ASSERT_EQ(greenbook::bitAt(all, bitsPrefix + i), 0u);
+            ASSERT_EQ(greenbook::bitAt(all, bitsAll - 1), 1u);
+
+            std::vector<T> decoded(x.size());
+            DecoderSeq<T, T> dec(n, J, 64, CodeOptionSet::Basic);
+            dec.decode(Span<uint8_t>(all.data(), (bitsAll + 7) / 8), Span<T>(decoded));
+            ASSERT_TRUE(decoded == x);
+        }
+        PASS();
+    }
+
+    {
+        TEST("figure 3-4: 200 equal blocks → segments of 64, 64, 64, 8 blocks, each ID and ROS");
+        std::vector<T> x(200 * J, 77);
+        encoder::EncoderSeq<T, T> enc(n, J, 200, CodeOptionSet::Basic);
+        std::vector<uint8_t> out(64, 0);
+        const size_t bits = enc.encodeBits(Span<T>(x), Span<uint8_t>(out));
+
+        greenbook::BitWriter expected;
+        expected.put(0, 4);   // zero-block ID
+        expected.put(77, 8);  // reference
+        expected.fs(4);       // ROS
+        for (int s = 0; s < 3; ++s) {
+            expected.put(0, 4);
+            expected.fs(4);  // ROS, also for the last 8 blocks
+        }
+        ASSERT_EQ(bits, expected.pos);
+        for (size_t i = 0; i < expected.bytes.size(); ++i) {
+            ASSERT_EQ(out[i], expected.bytes[i]);
+        }
+
+        std::vector<T> decoded(x.size());
+        DecoderSeq<T, T> dec(n, J, 200, CodeOptionSet::Basic);
+        dec.decode(Span<uint8_t>(out.data(), (bits + 7) / 8), Span<T>(decoded));
+        ASSERT_TRUE(decoded == x);
+        PASS();
+    }
+}
+
+// §5.4, table 5-1: decoding of the second extension, γ → (β, ms), δ2 = γ - ms, δ1 = β - δ2
+void testGreenBookSecondExtensionTable()
+{
+    std::cout << "Green Book §5.4 Second-Extension decoding (table 5-1):" << '\n';
+
+    // The rows (first γ, β, ms) of table 5-1 and their extension: β_i = β_{i-1} + 1,
+    // ms_i = ms_{i-1} + β_i, first γ_i = last γ_{i-1} + 1, last γ_i = last γ_{i-1} + β_i + 1
+    struct Row
+    {
+        uint64_t first, last, beta, ms;
+    };
+    std::vector<Row> rows{ { 0, 0, 0, 0 } };
+    while (rows.size() < 256) {
+        const Row& p = rows.back();
+        rows.push_back({ p.last + 1, p.last + p.beta + 2, p.beta + 1, p.ms + p.beta + 1 });
+    }
+
+    {
+        TEST("table 5-1 as printed: γ 0 | 1,2 | 3..5 | 6..9 | 10..14 | 15..20 | 21..27 | 28..35 | 36..44");
+        const uint64_t printed[9][4] = { { 0, 0, 0, 0 }, { 1, 2, 1, 1 }, { 3, 5, 2, 3 }, { 6, 9, 3, 6 }, { 10, 14, 4, 10 }, { 15, 20, 5, 15 }, { 21, 27, 6, 21 }, { 28, 35, 7, 28 }, { 36, 44, 8, 36 } };
+        for (size_t i = 0; i < 9; ++i) {
+            ASSERT_EQ(rows[i].first, printed[i][0]);
+            ASSERT_EQ(rows[i].last, printed[i][1]);
+            ASSERT_EQ(rows[i].beta, printed[i][2]);
+            ASSERT_EQ(rows[i].ms, printed[i][3]);
+        }
+        PASS();
+    }
+
+    {
+        TEST("decoder follows table 5-1 for every γ with β ≤ 255");
+        constexpr uint8_t J = 8;
+        DecoderSeq<uint16_t, uint16_t> dec(16, J, 1, CodeOptionSet::Basic);
+        std::vector<uint64_t> gammas;
+        for (const Row& r : rows) {
+            for (uint64_t g = r.first; g <= r.last; ++g)
+                gammas.push_back(g);
+        }
+        while (gammas.size() % (J / 2))
+            gammas.push_back(0);
+
+        greenbook::BitWriter w;
+        for (uint64_t g : gammas)
+            w.fs(g);
+        const size_t limitBits = w.pos;
+        w.bytes.resize(w.bytes.size() + BitBuffer::guardBytes, 0);
+        const BitBuffer buffer{ Span<uint8_t>(w.bytes), 0, limitBits };
+
+        // the row of every γ
+        std::vector<const Row*> rowOf(rows.back().last + 1);
+        for (const Row& r : rows) {
+            for (uint64_t g = r.first; g <= r.last; ++g)
+                rowOf[g] = &r;
+        }
+
+        std::vector<uint16_t> delta(J);
+        for (size_t i = 0; i < gammas.size(); i += J / 2) {
+            dec.seDecode(buffer, Span<uint16_t>(delta));
+            for (size_t j = 0; j < J / 2; ++j) {
+                const Row& r = *rowOf[gammas[i + j]];
+                const uint64_t d2 = gammas[i + j] - r.ms;
+                ASSERT_EQ(uint64_t{ delta[2 * j + 1] }, d2);
+                ASSERT_EQ(uint64_t{ delta[2 * j] }, r.beta - d2);
+            }
+        }
+        ASSERT_EQ(buffer.bitPos(), limitBits);
+        PASS();
+    }
+}
+
+// §5.4: the second extension is chosen only for low entropy: β ≤ 4 for J = 16 and β ≤ 8 for J = 64.
+// It is a consequence of option selection: a pair with sum β costs β(β+1)/2 + β2 + 1 bits instead of
+// β + 2 (FS, k = 0), every other pair saves at most 1 bit, and the SE ID is 1 bit longer.
+void testGreenBookSecondExtensionBeta()
+{
+    std::cout << "Green Book §5.4 Second Extension only for low entropy:" << '\n';
+    constexpr uint8_t n = 8;
+    for (const auto& jBound : { std::pair<uint8_t, uint64_t>{ 16, 4 }, std::pair<uint8_t, uint64_t>{ 64, 8 } }) {
+        const uint8_t J = jBound.first;
+        const uint64_t bound = jBound.second;
+        TEST("J = " + std::to_string(J) + ": second extension chosen ⇒ β ≤ " + std::to_string(bound));
+        encoder::EncoderSeq<uint8_t, uint8_t> enc(n, J, 1, CodeOptionSet::Basic);
+        std::mt19937 rng(J);
+        size_t seChosen = 0;
+        auto check = [&](const std::vector<uint8_t>& block) {
+            const auto [bits, first] = greenbook::encodeBlock(enc, block, n);
+            (void)bits;
+            if ((first >> 4) != 1) return;  // SE ID for n = 8: 0001
+            ++seChosen;
+            for (size_t i = 0; i < block.size(); i += 2) {
+                ASSERT_TRUE(uint64_t{ block[i] } + block[i + 1] <= bound);
+            }
+        };
+        // one pair with sum β, all others zero: SE must not be chosen beyond the bound
+        for (uint64_t beta = 0; beta <= bound + 4; ++beta) {
+            for (uint64_t d2 = 0; d2 <= beta; ++d2) {
+                std::vector<uint8_t> block(J, 0);
+                block[0] = static_cast<uint8_t>(beta - d2);
+                block[1] = static_cast<uint8_t>(d2);
+                check(block);
+            }
+        }
+        // random low-entropy blocks: mostly 0, some 1, rare larger values
+        for (int t = 0; t < 200000; ++t) {
+            std::vector<uint8_t> block(J);
+            for (auto& v : block) {
+                const unsigned r = rng() % 64;
+                v = static_cast<uint8_t>(r < 48 ? 0 : r < 60 ? 1
+                                                  : r < 63   ? 2
+                                                             : rng() % 12);
+            }
+            check(block);
+        }
+        ASSERT_TRUE(seChosen > 0);
+        PASS();
+    }
+}
+
+// §5.5: a coded block is never longer than the no-compression option (ID + J·n bits), and the
+// option selected has the fewest bits (§3.2.5); the split-sample length L_k is convex in k, so the
+// first k with L_k - L_{k+1} < 0 minimises it (reference [16], Kiely)
+template <typename T>
+void testGreenBookOptionSelection(uint8_t n)
+{
+    std::cout << "Green Book §3.2.5/§5.5 option selection (n = " << +n << "):" << '\n';
+    TEST("block ≤ no-compression length, = min over options, L_k convex");
+    std::mt19937_64 rng(n);
+    for (uint8_t J : { 8, 16, 32, 64 }) {
+        encoder::EncoderSeq<T, T> enc(n, J, 1, CodeOptionSet::Basic);
+        const NoCompressionCodeOption ncId(n, CodeOptionSet::Basic);
+        const SplitSampleIdLength ssId(n, CodeOptionSet::Basic);
+        const SecondExtensionCodeOption seId(n, CodeOptionSet::Basic);
+        const SplitSampleLimits limits(n, CodeOptionSet::Basic);
+        const uint64_t ncLength = ncId.length + uint64_t{ J } * n;
+        for (int t = 0; t < 20000; ++t) {
+            // geometric-like samples of a random scale, sometimes the full range
+            const unsigned scale = static_cast<unsigned>(rng() % (n + 1));
+            std::vector<T> block(J);
+            for (auto& v : block) {
+                const uint64_t r = rng();
+                v = static_cast<T>(scale == 0 ? 0 : scale == n ? r & ((uint64_t{ 1 } << n) - 1)
+                                                               : (r >> (64 - scale)) >> (r % 3));
+            }
+            if (std::all_of(block.begin(), block.end(), [](T v) { return v == 0; })) continue;
+
+            const auto [bits, first] = greenbook::encodeBlock(enc, block, n);
+            (void)first;
+            ASSERT_TRUE(bits <= ncLength);
+
+            // split-sample lengths, convexity, and the first-negative-difference rule
+            std::vector<uint64_t> L;
+            for (size_t k = limits.kMin_; k <= limits.kMax_; ++k) {
+                uint64_t len = ssId.length + uint64_t{ J } * (k + 1);
+                for (T v : block)
+                    len += uint64_t{ v } >> k;
+                L.push_back(len);
+            }
+            auto diff = [&L](size_t k) { return static_cast<int64_t>(L[k]) - static_cast<int64_t>(L[k + 1]); };
+            for (size_t k = 0; k + 2 < L.size(); ++k) {
+                ASSERT_TRUE(diff(k + 1) <= diff(k));  // convex
+            }
+            size_t kStar = L.size() - 1;
+            for (size_t k = 0; k + 1 < L.size(); ++k) {
+                if (diff(k) < 0) {
+                    kStar = k;
+                    break;
+                }
+            }
+            ASSERT_EQ(L[kStar], *std::min_element(L.begin(), L.end()));
+
+            uint64_t se = seId.length;  // pairs beyond 2^20 make SE far too long (and overflow)
+            for (size_t i = 0; i < J && se < UINT64_MAX; i += 2) {
+                const uint64_t d1 = block[i], d2 = block[i + 1];
+                se = d1 + d2 >= (uint64_t{ 1 } << 20) ? UINT64_MAX : se + (d1 + d2) * (d1 + d2 + 1) / 2 + d2 + 1;
+            }
+            ASSERT_EQ(uint64_t{ bits }, std::min({ L[kStar], se, ncLength }));
+        }
+    }
+    PASS();
+}
+
 int main()
 {
     try {
@@ -1036,6 +1377,16 @@ int main()
 
         // §3.7 Compression efficiency
         testCompressionEfficiency();
+
+        // CCSDS 120.0-G-4 (Green Book)
+        testGreenBookMapperExample();
+        testGreenBookZeroBlock();
+        testGreenBookSecondExtensionTable();
+        testGreenBookSecondExtensionBeta();
+        testGreenBookOptionSelection<uint16_t>(8);
+        testGreenBookOptionSelection<uint16_t>(16);
+        testGreenBookOptionSelection<uint32_t>(24);
+        testGreenBookOptionSelection<uint32_t>(32);
 
         std::cout << '\n';
         std::cout << "=================================" << '\n';
