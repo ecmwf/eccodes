@@ -197,6 +197,49 @@ int main()
         }
     }
 
+    // Samples that do not fit bitsPerSample are an error (not a stream that cannot be decoded)
+    {
+        using IA = std::invalid_argument;
+        spaec::Options options;
+        options.bitsPerSample = 8;
+        for (auto pre : { spaec::Preprocessor::UnitDelay, spaec::Preprocessor::None }) {
+            options.preprocessor = pre;
+            expect<IA>("uint16_t sample 256 with 8 bits", "does not fit", [&] { spaec::compress(std::vector<uint16_t>{ 0, 256 }, options); });
+            expect<IA>("uint32_t sample 2^31 with 8 bits", "does not fit", [&] { spaec::compress(std::vector<uint32_t>{ 1, 2, 0x80000000u }, options); });
+        }
+        options.preprocessor = spaec::Preprocessor::UnitDelay;
+        options.signedSamples = true;
+        expect<IA>("int16_t sample 128 with 8 signed bits", "does not fit", [&] { spaec::compress(std::vector<int16_t>{ 0, 128 }, options); });
+        expect<IA>("int16_t sample -129 with 8 signed bits", "does not fit", [&] { spaec::compress(std::vector<int16_t>{ -129, 0 }, options); });
+        expect<IA>("int32_t sample -2^31 with 31 signed bits", "does not fit", [&] {
+            spaec::Options o = options;
+            o.bitsPerSample = 31;
+            spaec::compress(std::vector<int32_t>{ 5, INT32_MIN }, o);
+        });
+        // The limits themselves fit
+        const std::vector<int16_t> limits{ -128, 127, 0, -1, 1 };
+        check(spaec::decompress<int16_t>(spaec::compress(limits, options), limits.size(), options) == limits, "signed 8-bit limits in int16_t");
+        options.signedSamples = false;
+        const std::vector<uint16_t> ulimits{ 0, 255, 1, 254 };
+        check(spaec::decompress<uint16_t>(spaec::compress(ulimits, options), ulimits.size(), options) == ulimits, "unsigned 8-bit limits in uint16_t");
+    }
+
+    // A scaling whose codes do not decode to finite values is an error
+    {
+        spaec::Options options;
+        options.bitsPerSample = 27;
+        const std::vector<double> zeros(8, 0.0);
+        expect<std::invalid_argument>("reference value decodes to inf", "cannot be decoded",
+                                      [&] { spaec::compress(zeros, spaec::Scaling{ 1.9156194260825784e+53, 268, -256 }, options); });
+        options.bitsPerSample = 16;
+        const std::vector<float> fzeros(8, 0.0f);
+        expect<std::invalid_argument>("largest code beyond FLT_MAX", "cannot be decoded",
+                                      [&] { spaec::compress(fzeros, spaec::Scaling{ 0.0, 120, 0 }, options); });
+        const std::vector<float> ok{ 0.0f, 1.0f, 2.0f };
+        check(spaec::decompress<float>(spaec::compress(ok, spaec::Scaling{ 0.0, 0, 0 }, options), ok.size(), spaec::Scaling{ 0.0, 0, 0 }, options) == ok,
+              "an ordinary float scaling");
+    }
+
     if (failures) {
         std::cerr << failures << " failure(s)\n";
         return 1;
