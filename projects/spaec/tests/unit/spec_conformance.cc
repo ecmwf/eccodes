@@ -695,6 +695,60 @@ static void encodeAndDecode(const std::vector<uint64_t>& x, const Params& p, std
 
 // 3.4.2: transformed symbols gamma >= 2^n (here up to about 2^24, beyond the float square root
 // of a decoder)
+// 4.4: the preprocessed samples are n-bit values. A stream with a larger one (an FS or split-sample
+// codeword or a second-extension pair beyond 2^n - 1) is invalid and must be rejected, not decoded
+// to wrapped values. A second-extension symbol of 2^n or more is valid if its pair is in range.
+static void outOfRangeSamples()
+{
+    const unsigned n = 8, J = 8;
+    const Params p{ n, J, 2, false };  // two blocks: a reference block (no compression), the test block
+    struct Case
+    {
+        const char* what;
+        char kind;
+        int k;
+        std::vector<uint64_t> deltas;
+        bool valid;
+    };
+    const Case cases[] = {
+        { "FS codeword 300", 'S', 0, { 300, 0, 0, 0, 0, 0, 0, 0 }, false },
+        { "split sample k=2, sample 1023", 'S', 2, { 1023, 0, 0, 0, 0, 0, 0, 0 }, false },
+        { "second extension, pair (300, 1)", 'E', 0, { 300, 1, 0, 0, 0, 0, 0, 0 }, false },
+        { "second extension, pair (0, 256)", 'E', 0, { 0, 0, 0, 256, 0, 0, 0, 0 }, false },
+        { "second extension, pair (255, 255)", 'E', 0, { 255, 255, 0, 0, 0, 0, 0, 0 }, true },
+        { "FS codeword 255", 'S', 0, { 255, 0, 0, 0, 0, 0, 0, 0 }, true },
+    };
+    for (const auto& c : cases) {
+        BitWriter w;
+        writeBlock(w, p, { 0, 1, 2, 3, 4, 5, 6, 7 }, true, 100, 'N', 0);
+        writeBlock(w, p, c.deltas, false, 0, c.kind, c.k);
+        std::vector<uint8_t> stream = w.bytes();
+        auto run = [&](const std::string& name, auto&& decode) {
+            ++checks;
+            try {
+                decode();
+                if (!c.valid)
+                    fail(name + ", " + c.what + ": the invalid stream was decoded");
+            }
+            catch (const std::runtime_error& e) {
+                if (c.valid)
+                    fail(name + ", " + c.what + ": the valid stream was rejected: " + e.what());
+            }
+        };
+        std::vector<uint8_t> out(2 * J);
+        run("DecoderSeq", [&] { DecoderSeq<uint8_t, uint8_t>(n, J, 2, CodeOptionSet::Basic).decode(Span<uint8_t>(stream), Span<uint8_t>(out)); });
+        run("DecoderPar", [&] {
+            DecoderPar<uint8_t, uint8_t>(n, J, 2, CodeOptionSet::Basic, 2).decodeParallel(Span<uint8_t>(stream), Span<uint8_t>(out), [](uint8_t v) { return v; });
+        });
+        if (c.valid) {
+            ++checks;
+            const std::vector<uint64_t> expected = refDecode(stream, 2 * J, p);
+            if (!std::equal(expected.begin(), expected.end(), out.begin()))
+                fail(std::string("DecoderPar, ") + c.what + ": other values");
+        }
+    }
+}
+
 static void largeGamma()
 {
     std::mt19937_64 rng(3);
@@ -818,6 +872,7 @@ int main()
     fsCodewords();
     idTables();
     largeGamma();
+    outOfRangeSamples();
 
     std::mt19937_64 rng(121);
     long kTies = 0;
