@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "simple_packing/BitPacking.h"
+#include "simple_packing/detail/BitPacking.h"
 
 #include <algorithm>
 #include <cstring>
@@ -18,7 +18,7 @@
 #include <stdexcept>
 #include <vector>
 
-namespace sp
+namespace sp::detail
 {
 
 
@@ -315,4 +315,4 @@ typename Binary<ValueType, BPV>::Values Binary<ValueType, BPV>::unpack(const Buf
     return values;
 }
 
-}  // namespace sp
+}  // namespace sp::detail

@@ -8,11 +8,11 @@
 #include <cmath>
 #include <stdexcept>
 
-#include "simple_packing/Parameters.h"
-#include "simple_packing/Optimizer.h"
-#include "simple_packing/Utils.h"
+#include "simple_packing/detail/Parameters.h"
+#include "simple_packing/detail/Optimizer.h"
+#include "simple_packing/detail/Utils.h"
 
-namespace sp
+namespace sp::detail
 {
 
 class BPVOptimizer : public Optimizer
@@ -79,4 +79,4 @@ private:
     int decimalScaleFactor_ = 0;
 };
 
-}  // namespace sp
+}  // namespace sp::detail

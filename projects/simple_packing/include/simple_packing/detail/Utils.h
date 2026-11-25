@@ -15,7 +15,7 @@
 #include <limits>
 #include <utility>
 
-namespace sp
+namespace sp::detail
 {
 
 // --- Power function ---
@@ -179,7 +179,7 @@ std::optional<long> get_binary_scale_factor(double max, double min, long bpval);
 // than the maximum
 void check_data_values_range(double min_val, double max_val);
 
-}  // namespace sp
+}  // namespace sp::detail
 
 
 // --- Byte swap macros ---

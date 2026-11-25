@@ -8,9 +8,9 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "simple_packing/Utils.h"
+#include "simple_packing/detail/Utils.h"
 
-using namespace sp;
+using namespace sp::detail;
 
 int main()
 {

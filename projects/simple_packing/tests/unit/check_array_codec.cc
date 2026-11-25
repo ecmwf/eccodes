@@ -7,11 +7,11 @@
 #include <algorithm>
 
 
-#include "simple_packing/optimizer/DecOptimizer.h"
-#include "simple_packing/optimizer/BPVOptimizer.h"
-#include "simple_packing/simple/Array.h"
+#include "simple_packing/detail/optimizer/DecOptimizer.h"
+#include "simple_packing/detail/optimizer/BPVOptimizer.h"
+#include "simple_packing/detail/simple/Array.h"
 
-using namespace sp;
+using namespace sp::detail;
 
 
 template <typename ValueType>

@@ -9,11 +9,11 @@
 #include <stdexcept>
 #include <string>
 
-#include "simple_packing/Optimizer.h"
-#include "simple_packing/Parameters.h"
-#include "simple_packing/Utils.h"
+#include "simple_packing/detail/Optimizer.h"
+#include "simple_packing/detail/Parameters.h"
+#include "simple_packing/detail/Utils.h"
 
-namespace sp
+namespace sp::detail
 {
 
 class DecOptimizer : public Optimizer
@@ -117,4 +117,4 @@ private:
     long bitsPerValue_;
 };
 
-}  // namespace sp
+}  // namespace sp::detail

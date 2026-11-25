@@ -1,11 +1,11 @@
 // SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
 // SPDX-License-Identifier: Apache-2.0
 
-#include "simple_packing/U128.h"
+#include "simple_packing/detail/U128.h"
 
 #include <cassert>
 
-using namespace sp;
+using namespace sp::detail;
 
 
 void test_subtraction()

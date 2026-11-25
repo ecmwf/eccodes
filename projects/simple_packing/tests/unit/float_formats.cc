@@ -16,9 +16,9 @@
 #include <random>
 #include <string>
 
-#include "simple_packing/Utils.h"
+#include "simple_packing/detail/Utils.h"
 
-using namespace sp;
+using namespace sp::detail;
 
 static int failures = 0;
 

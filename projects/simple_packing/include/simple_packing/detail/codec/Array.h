@@ -10,9 +10,9 @@
 #include <type_traits>
 #include <vector>
 
-#include "simple_packing/Utils.h"  // sp_power
+#include "simple_packing/detail/Utils.h"  // sp_power
 
-namespace sp
+namespace sp::detail
 {
 
 
@@ -80,4 +80,4 @@ typename ArrayCodec<ValueType, BPV>::Values ArrayCodec<ValueType, BPV>::unpack(c
     return values;
 }
 
-}  // namespace sp
+}  // namespace sp::detail

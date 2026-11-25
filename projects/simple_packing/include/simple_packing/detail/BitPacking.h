@@ -11,11 +11,11 @@
 #include <cstring>
 #include <type_traits>
 
-#include "simple_packing/Utils.h"
+#include "simple_packing/detail/Utils.h"
 
-#include "simple_packing/U128.h"
+#include "simple_packing/detail/U128.h"
 
-namespace sp
+namespace sp::detail
 {
 
 // Byte swap for 128 bit unsigned integer
@@ -193,4 +193,4 @@ public:
     }
 };
 
-}  // namespace sp
+}  // namespace sp::detail

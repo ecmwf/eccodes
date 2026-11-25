@@ -8,7 +8,7 @@
 #include <cstdint>
 #include <type_traits>
 
-namespace sp
+namespace sp::detail
 {
 
 struct UInt128
@@ -106,4 +106,4 @@ struct UInt128
     }
 };
 
-}  // namespace sp
+}  // namespace sp::detail

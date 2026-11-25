@@ -24,12 +24,12 @@
 #include <cstring>
 #include <memory>
 
-#include "simple_packing/Parameters.h"
-#include "simple_packing/Utils.h"
-#include "simple_packing/optimizer/BinDecOptimizer.h"
-#include "simple_packing/optimizer/BinOptimizer.h"
-#include "simple_packing/optimizer/DecOptimizer.h"
-#include "simple_packing/simple/Binary.h"
+#include "simple_packing/detail/Parameters.h"
+#include "simple_packing/detail/Utils.h"
+#include "simple_packing/detail/optimizer/BinDecOptimizer.h"
+#include "simple_packing/detail/optimizer/BinOptimizer.h"
+#include "simple_packing/detail/optimizer/DecOptimizer.h"
+#include "simple_packing/detail/simple/Binary.h"
 #include "spaec/detail/SpAec.h"
 
 namespace eccodes::accessor
@@ -103,14 +103,14 @@ int DataCcsdsPacking::pack_double_new(const double* val, size_t* len)
         return GRIB_SUCCESS;
     }
 
-    const auto [min, max] = sp::sp_minmax(val, n_vals);
+    const auto [min, max] = sp::detail::sp_minmax(val, n_vals);
     if ((err = grib_check_data_values_minmax(hand, min, max)) != GRIB_SUCCESS) {
         return err;
     }
 
     // Constant field: no data, the reference value is the value (the decimal scale factor is kept)
     if (min == max) {
-        const auto reference = sp::nearest_smaller_value(min, sp::FloatType::IEEE32);
+        const auto reference = sp::detail::nearest_smaller_value(min, sp::detail::FloatType::IEEE32);
         if (!reference) {
             grib_context_log(context_, GRIB_LOG_ERROR,
                              "%s %s: Unable to find nearest_smaller_value of %g for %s", accessor_type().c_str(), __func__, min, reference_value_);
@@ -136,20 +136,20 @@ int DataCcsdsPacking::pack_double_new(const double* val, size_t* len)
     }
 
     // The packing parameters (the reference value is stored as IEEE float in GRIB edition 2)
-    sp::Parameters params;
+    sp::detail::Parameters params;
     try {
-        std::unique_ptr<sp::Optimizer> optimizer;
+        std::unique_ptr<sp::detail::Optimizer> optimizer;
         if (binary_scale_factor == 0 && decimal_scale_factor != 0) {
             // The decimal scale factor and the bits per value are given
-            optimizer = std::make_unique<sp::BinOptimizer>(static_cast<int>(decimal_scale_factor), bits_per_value);
+            optimizer = std::make_unique<sp::detail::BinOptimizer>(static_cast<int>(decimal_scale_factor), bits_per_value);
         }
         else if (optimize_scaling_factor) {
-            optimizer = std::make_unique<sp::BinDecOptimizer>(0, 1, static_cast<int>(bits_per_value));
+            optimizer = std::make_unique<sp::detail::BinDecOptimizer>(0, 1, static_cast<int>(bits_per_value));
         }
         else {
-            optimizer = std::make_unique<sp::DecOptimizer>(bits_per_value, 127);
+            optimizer = std::make_unique<sp::detail::DecOptimizer>(bits_per_value, 127);
         }
-        optimizer->referenceFloatType(sp::FloatType::IEEE32);
+        optimizer->referenceFloatType(sp::detail::FloatType::IEEE32);
         params = optimizer->getParams(min, max);
     }
     catch (const std::exception& e) {

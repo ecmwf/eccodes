@@ -10,10 +10,10 @@
 #include <variant>
 #include <vector>
 
-#include "simple_packing/SimplePacking.h"
-#include "simple_packing/codec/Array.h"
+#include "simple_packing/detail/SimplePacking.h"
+#include "simple_packing/detail/codec/Array.h"
 
-namespace sp
+namespace sp::detail
 {
 
 template <typename ValueType>
@@ -86,4 +86,4 @@ typename SimplePackingArray<ValueType>::Values SimplePackingArray<ValueType>::un
     }
 }
 
-}  // namespace sp
+}  // namespace sp::detail

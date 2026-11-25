@@ -8,9 +8,9 @@
 #include <unordered_map>
 #include <random>
 
-#include "simple_packing/BitPacking.h"
+#include "simple_packing/detail/BitPacking.h"
 
-using namespace sp;
+using namespace sp::detail;
 
 
 template <uint8_t BPV, typename ValueType = typename BitPacking<BPV>::ValueType>

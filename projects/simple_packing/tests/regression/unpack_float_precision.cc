@@ -12,10 +12,10 @@
 #include <random>
 #include <vector>
 
-#include "simple_packing/Utils.h"
-#include "simple_packing/simple/Binary.h"
+#include "simple_packing/detail/Utils.h"
+#include "simple_packing/detail/simple/Binary.h"
 
-using namespace sp;
+using namespace sp::detail;
 
 // Packs the values MSB first with bpv bits each, like GRIB simple packing
 static std::vector<unsigned char> packBits(const std::vector<uint64_t>& values, int bpv)

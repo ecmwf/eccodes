@@ -11,9 +11,9 @@
 #include <string>
 #include <vector>
 
-#include "simple_packing/U128.h"
+#include "simple_packing/detail/U128.h"
 
-using namespace sp;
+using namespace sp::detail;
 
 #if defined(__SIZEOF_INT128__)
 __extension__ using Ref = unsigned __int128;

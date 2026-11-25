@@ -15,12 +15,12 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-#include "simple_packing/optimizer/BPVOptimizer.h"
-#include "simple_packing/optimizer/BinDecOptimizer.h"
-#include "simple_packing/optimizer/DecOptimizer.h"
-#include "simple_packing/simple/Binary.h"
+#include "simple_packing/detail/optimizer/BPVOptimizer.h"
+#include "simple_packing/detail/optimizer/BinDecOptimizer.h"
+#include "simple_packing/detail/optimizer/DecOptimizer.h"
+#include "simple_packing/detail/simple/Binary.h"
 
-using namespace sp;
+using namespace sp::detail;
 
 static int failures = 0;
 

@@ -6,9 +6,9 @@
 
 #include <iostream>
 
-#include "simple_packing/U128.h"
+#include "simple_packing/detail/U128.h"
 
-using namespace sp;
+using namespace sp::detail;
 
 int main()
 {

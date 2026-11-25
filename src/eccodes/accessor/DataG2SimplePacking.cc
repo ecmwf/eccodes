@@ -11,11 +11,11 @@
 #include "DataG2SimplePacking.h"
 #include "grib_scaling.h"
 
-#include "simple_packing/simple/Binary.h"
-#include "simple_packing/Parameters.h"
-#include "simple_packing/optimizer/BPVOptimizer.h"
-#include "simple_packing/optimizer/BinDecOptimizer.h"
-#include "simple_packing/optimizer/DecOptimizer.h"
+#include "simple_packing/detail/simple/Binary.h"
+#include "simple_packing/detail/Parameters.h"
+#include "simple_packing/detail/optimizer/BPVOptimizer.h"
+#include "simple_packing/detail/optimizer/BinDecOptimizer.h"
+#include "simple_packing/detail/optimizer/DecOptimizer.h"
 
 namespace eccodes::accessor
 {
@@ -110,7 +110,7 @@ int DataG2SimplePacking::pack_double(const double* cval, size_t* len)
     }
 
     if (use_new_simple_packing() && n_vals > 0) {
-        const auto [min_val, max_val] = sp::sp_minmax(val, n_vals);
+        const auto [min_val, max_val] = sp::detail::sp_minmax(val, n_vals);
 
         if (min_val != max_val) {
             grib_context_log(context_, GRIB_LOG_DEBUG,
@@ -143,26 +143,26 @@ int DataG2SimplePacking::pack_double(const double* cval, size_t* len)
                     bpv_l = 24;
                 }
 
-                std::unique_ptr<sp::Optimizer> optimizer;
+                std::unique_ptr<sp::detail::Optimizer> optimizer;
                 if (bpv_l == 0 || (bsf_l == 0 && dsf_get != 0)) {
-                    optimizer = std::make_unique<sp::BPVOptimizer>(static_cast<int>(dsf_get));
+                    optimizer = std::make_unique<sp::detail::BPVOptimizer>(static_cast<int>(dsf_get));
                 }
                 else if (osf_l) {
                     int compat_gribex = c->gribex_mode_on && edition_ == 1;
-                    optimizer = std::make_unique<sp::BinDecOptimizer>(compat_gribex, 1, static_cast<int>(bpv_l));
+                    optimizer = std::make_unique<sp::detail::BinDecOptimizer>(compat_gribex, 1, static_cast<int>(bpv_l));
                 }
                 else {
                     int last = 127;
                     if (c->gribex_mode_on && edition_ == 1) last = 99;
-                    optimizer = std::make_unique<sp::DecOptimizer>(bpv_l, last);
+                    optimizer = std::make_unique<sp::detail::DecOptimizer>(bpv_l, last);
                 }
 
                 // The reference value is stored as IBM float in GRIB edition 1, as IEEE float in edition 2
-                optimizer->referenceFloatType(sp::FloatType::IEEE32);
+                optimizer->referenceFloatType(sp::detail::FloatType::IEEE32);
 
-                sp::SimplePackingBinary<double> packer(std::move(optimizer));
+                sp::detail::SimplePackingBinary<double> packer(std::move(optimizer));
                 // min_val/max_val have already been computed above; do not rescan.
-                sp::Parameters params = std::get<0>(packer.getParameters(min_val, max_val));
+                sp::detail::Parameters params = std::get<0>(packer.getParameters(min_val, max_val));
 
                 if ((ret = grib_set_double_internal(gh, reference_value_, params.referenceValue())) != GRIB_SUCCESS) return ret;
                 // Pack against the reference value as it is coded in the message (like the legacy code)

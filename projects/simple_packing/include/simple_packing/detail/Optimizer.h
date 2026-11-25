@@ -5,10 +5,10 @@
 
 #pragma once
 
-#include "simple_packing/Parameters.h"
-#include "simple_packing/Utils.h"
+#include "simple_packing/detail/Parameters.h"
+#include "simple_packing/detail/Utils.h"
 
-namespace sp
+namespace sp::detail
 {
 
 class Optimizer
@@ -25,4 +25,4 @@ protected:
     FloatType referenceFloatType_ = FloatType::IEEE32;
 };
 
-}  // namespace sp
+}  // namespace sp::detail

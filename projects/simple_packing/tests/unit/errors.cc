@@ -21,15 +21,15 @@
 #include <variant>
 #include <vector>
 
-#include "simple_packing/Utils.h"
-#include "simple_packing/optimizer/BPVOptimizer.h"
-#include "simple_packing/optimizer/BinDecOptimizer.h"
-#include "simple_packing/optimizer/BinOptimizer.h"
-#include "simple_packing/optimizer/DecOptimizer.h"
-#include "simple_packing/simple/Array.h"
-#include "simple_packing/simple/Binary.h"
+#include "simple_packing/detail/Utils.h"
+#include "simple_packing/detail/optimizer/BPVOptimizer.h"
+#include "simple_packing/detail/optimizer/BinDecOptimizer.h"
+#include "simple_packing/detail/optimizer/BinOptimizer.h"
+#include "simple_packing/detail/optimizer/DecOptimizer.h"
+#include "simple_packing/detail/simple/Array.h"
+#include "simple_packing/detail/simple/Binary.h"
 
-using namespace sp;
+using namespace sp::detail;
 
 static int failures = 0;
 static int cases = 0;

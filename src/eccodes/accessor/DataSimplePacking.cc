@@ -18,8 +18,8 @@
 #include <numeric>
 #include <type_traits>
 
-#include "simple_packing/simple/Binary.h"
-#include "simple_packing/Parameters.h"
+#include "simple_packing/detail/simple/Binary.h"
+#include "simple_packing/detail/Parameters.h"
 
 namespace eccodes::accessor
 {
@@ -171,8 +171,8 @@ int DataSimplePacking::unpack_double_element(size_t idx, double* val)
         const size_t count = idx - first + 1;
         const unsigned char* start = buf + first * bits_per_value / 8;
         try {
-            sp::SimplePackingBinary<double> packer(nullptr);
-            sp::Parameters params;
+            sp::detail::SimplePackingBinary<double> packer(nullptr);
+            sp::detail::Parameters params;
             params.bitsPerValue(bits_per_value);
             params.binaryScaleFactor(binary_scale_factor);
             params.decimalScaleFactor(decimal_scale_factor);
@@ -366,8 +366,8 @@ int DataSimplePacking::unpack(T* val, size_t* len)
         grib_context_log(context_, GRIB_LOG_DEBUG,
                          "%s %s: using new Simple Packing (SP) for decode, %zu values", accessor_type().c_str(), __func__, n_vals);
         try {
-            sp::SimplePackingBinary<T> packer(nullptr);
-            sp::Parameters params;
+            sp::detail::SimplePackingBinary<T> packer(nullptr);
+            sp::detail::Parameters params;
             params.bitsPerValue(bits_per_value);
             params.binaryScaleFactor(binary_scale_factor);
             params.decimalScaleFactor(decimal_scale_factor);
@@ -543,8 +543,8 @@ int DataSimplePacking::_unpack_double(double* val, size_t* len, unsigned char* b
 
     if (use_new_simple_packing() && bits_per_value >= 1 && bits_per_value <= 64) {
         try {
-            sp::SimplePackingBinary<double> packer(nullptr);
-            sp::Parameters params;
+            sp::detail::SimplePackingBinary<double> packer(nullptr);
+            sp::detail::Parameters params;
             params.bitsPerValue(bits_per_value);
             params.binaryScaleFactor(binary_scale_factor);
             params.decimalScaleFactor(decimal_scale_factor);

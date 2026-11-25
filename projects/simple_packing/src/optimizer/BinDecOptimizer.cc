@@ -5,8 +5,8 @@
 // Philippe Marguineaud
 
 
-#include "simple_packing/optimizer/BinDecOptimizer.h"
-#include "simple_packing/Utils.h"
+#include "simple_packing/detail/optimizer/BinDecOptimizer.h"
+#include "simple_packing/detail/Utils.h"
 
 #include <cassert>
 #include <cmath>
@@ -14,7 +14,7 @@
 #include <limits>
 #include <optional>
 
-namespace sp
+namespace sp::detail
 {
 
 namespace
@@ -223,4 +223,4 @@ Parameters BinDecOptimizer::getParams(const double pmin, const double pmax)
     return params;
 }
 
-}  // namespace sp
+}  // namespace sp::detail

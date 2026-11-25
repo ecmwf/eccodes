@@ -18,10 +18,10 @@
 #include <utility>
 #include <vector>
 
-#include "simple_packing/codec/Array.h"
-#include "simple_packing/codec/Binary.h"
+#include "simple_packing/detail/codec/Array.h"
+#include "simple_packing/detail/codec/Binary.h"
 
-using namespace sp;
+using namespace sp::detail;
 
 static int failures = 0;
 

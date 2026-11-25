@@ -21,10 +21,10 @@
 #include <string>
 #include <vector>
 
-#include "simple_packing/Parameters.h"
-#include "simple_packing/Utils.h"
+#include "simple_packing/detail/Parameters.h"
+#include "simple_packing/detail/Utils.h"
 
-using namespace sp;
+using namespace sp::detail;
 
 static int failures = 0;
 

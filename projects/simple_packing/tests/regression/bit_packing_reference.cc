@@ -11,9 +11,9 @@
 #include <utility>
 #include <vector>
 
-#include "simple_packing/BitPacking.h"
+#include "simple_packing/detail/BitPacking.h"
 
-using namespace sp;
+using namespace sp::detail;
 
 static uint64_t next(uint64_t& s)  // splitmix64
 {

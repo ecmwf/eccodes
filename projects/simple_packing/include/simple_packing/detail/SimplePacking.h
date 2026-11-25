@@ -12,11 +12,11 @@
 #include <utility>
 #include <vector>
 
-#include "simple_packing/Parameters.h"
-#include "simple_packing/Optimizer.h"
-#include "simple_packing/Utils.h"
+#include "simple_packing/detail/Parameters.h"
+#include "simple_packing/detail/Optimizer.h"
+#include "simple_packing/detail/Utils.h"
 
-namespace sp
+namespace sp::detail
 {
 
 
@@ -73,4 +73,4 @@ private:
     std::unique_ptr<Optimizer> optimizer_;
 };
 
-}  // namespace sp
+}  // namespace sp::detail

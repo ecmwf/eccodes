@@ -1,14 +1,14 @@
 // SPDX-FileCopyrightText: 2023 European Centre for Medium-Range Weather Forecasts (ECMWF)
 // SPDX-License-Identifier: Apache-2.0
 
-#include "simple_packing/Utils.h"
+#include "simple_packing/detail/Utils.h"
 
 #include <array>
 #include <cassert>
 #include <cmath>
 #include <limits>
 
-namespace sp
+namespace sp::detail
 {
 
 
@@ -410,4 +410,4 @@ void check_data_values_range(double min_val, double max_val)
     }
 }
 
-}  // namespace sp
+}  // namespace sp::detail

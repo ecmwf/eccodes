@@ -16,10 +16,10 @@
 #include <type_traits>
 #include <utility>
 
-#include "simple_packing/codec/Binary.h"
-#include "simple_packing/SimplePacking.h"
+#include "simple_packing/detail/codec/Binary.h"
+#include "simple_packing/detail/SimplePacking.h"
 
-namespace sp
+namespace sp::detail
 {
 
 
@@ -139,4 +139,4 @@ void SimplePackingBinary<ValueType>::unpackTo(const Parameters& params, const un
     codec.unpackTo(buf, params.decimalScaleFactor(), params.binaryScaleFactor(), params.referenceValue(), nVals, out);
 }
 
-}  // namespace sp
+}  // namespace sp::detail

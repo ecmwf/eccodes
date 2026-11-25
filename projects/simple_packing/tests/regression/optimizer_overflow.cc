@@ -14,10 +14,10 @@
 #include <memory>
 #include <vector>
 
-#include "simple_packing/optimizer/BinDecOptimizer.h"
-#include "simple_packing/simple/Binary.h"
+#include "simple_packing/detail/optimizer/BinDecOptimizer.h"
+#include "simple_packing/detail/simple/Binary.h"
 
-using namespace sp;
+using namespace sp::detail;
 
 int main()
 {

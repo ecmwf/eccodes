@@ -5,7 +5,7 @@
 
 #pragma once
 
-namespace sp
+namespace sp::detail
 {
 
 // The packing parameters of GRIB simple packing: bits per value, binary and
@@ -37,4 +37,4 @@ private:
     bool isConstantField_;
 };
 
-}  // namespace sp
+}  // namespace sp::detail

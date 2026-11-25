@@ -13,10 +13,10 @@
 #include <random>
 #include <vector>
 
-#include "simple_packing/simple/Binary.h"
-#include "simple_packing/optimizer/BinDecOptimizer.h"
+#include "simple_packing/detail/simple/Binary.h"
+#include "simple_packing/detail/optimizer/BinDecOptimizer.h"
 
-using namespace sp;
+using namespace sp::detail;
 
 // The coded value with every operation rounded separately (volatile prevents contraction)
 static uint64_t expectedCoded(double value, int decimalScale, int binaryScale, double reference)

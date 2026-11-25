@@ -5,11 +5,11 @@
 
 #pragma once
 
-#include "simple_packing/Parameters.h"
-#include "simple_packing/Optimizer.h"
-#include "simple_packing/Utils.h"
+#include "simple_packing/detail/Parameters.h"
+#include "simple_packing/detail/Optimizer.h"
+#include "simple_packing/detail/Utils.h"
 
-namespace sp
+namespace sp::detail
 {
 
 // Chooses the decimal and binary scale factors that use the bits per value best, like ecCodes'
@@ -35,4 +35,4 @@ private:
     int knbit_ = 0;
 };
 
-}  // namespace sp
+}  // namespace sp::detail
