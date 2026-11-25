@@ -7,6 +7,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <cstring>
 #include <cmath>
 #include <optional>
 #include <string>
@@ -80,32 +81,68 @@ std::optional<double> nearest_smaller_value(double val, FloatType type = FloatTy
  * values are needed here.
  *
  * The naive reduction (mn = v < mn ? v : mn) is branchless but serialises on
- * the latency of vminsd/vmaxsd - roughly 4 cycles per element. Reducing into
- * a fixed number of independent lanes breaks that dependency chain and lets
- * gcc/clang SLP-vectorise the inner loop into vminpd/vmaxpd, which makes the
- * scan memory-bandwidth bound instead of latency bound.
+ * the latency of vminsd/vmaxsd - roughly 4 cycles per element. The values are
+ * therefore reduced in independent lanes. GCC, Clang and icpx do not vectorise
+ * these lanes as scalar code (with the NaN test, about 1 ns per value), so they
+ * are written with vector types (GCC vector extensions, portable to all
+ * targets): 4 vectors of 32 bytes, which makes the scan as fast as reading the
+ * values (3 to 4x faster). Other compilers use the scalar lanes.
  */
 template <typename T>
 std::pair<T, T> sp_minmax(const T* values, size_t n)
 {
-    constexpr size_t lanes = 8;
-
     if (n == 0)
         return { T(0), T(0) };
 
-    // NaN values are detected with a quiet unordered comparison and infinite values by the
-    // result (a floating-point addition per value, as in v - v, would lengthen the dependency
-    // chains of the lanes and is not vectorised as well)
+    T rmn = values[0];
+    T rmx = values[0];
+    bool rNan = false;
+    size_t i = 0;
+
+#if defined(__GNUC__) || defined(__clang__)
+    // v < m ? v : m per element keeps m for a NaN v, like the scalar ternary; NaN values are
+    // recorded in a mask (v != v), infinite values are found in the result
+    typedef T V __attribute__((vector_size(32)));
+    using Mask = decltype(V{} != V{});
+    constexpr size_t width = sizeof(V) / sizeof(T);
+    constexpr size_t nVectors = 4;
+    V mn[nVectors];
+    V mx[nVectors];
+    Mask nan = {};
+    for (size_t k = 0; k < nVectors; ++k) {
+        for (size_t l = 0; l < width; ++l) {
+            mn[k][l] = rmn;
+            mx[k][l] = rmx;
+        }
+    }
+    for (; i + nVectors * width <= n; i += nVectors * width) {
+        for (size_t k = 0; k < nVectors; ++k) {
+            V v;
+            std::memcpy(&v, values + i + k * width, sizeof v);  // unaligned load
+            mn[k] = v < mn[k] ? v : mn[k];
+            mx[k] = v > mx[k] ? v : mx[k];
+            nan |= v != v;  // NaN test (the vector types have no isunordered)
+        }
+    }
+    for (size_t k = 0; k < nVectors; ++k) {
+        for (size_t l = 0; l < width; ++l) {
+            rmn = mn[k][l] < rmn ? mn[k][l] : rmn;
+            rmx = mx[k][l] > rmx ? mx[k][l] : rmx;
+        }
+    }
+    for (size_t l = 0; l < width; ++l) {
+        rNan |= nan[l] != 0;
+    }
+#else
+    constexpr size_t lanes = 8;
     T mn[lanes];
     T mx[lanes];
     bool nan[lanes];
     for (size_t l = 0; l < lanes; ++l) {
-        mn[l] = values[0];
-        mx[l] = values[0];
+        mn[l] = rmn;
+        mx[l] = rmx;
         nan[l] = false;
     }
-
-    size_t i = 0;
     for (; i + lanes <= n; i += lanes) {
         for (size_t l = 0; l < lanes; ++l) {
             const T v = values[i + l];
@@ -114,15 +151,13 @@ std::pair<T, T> sp_minmax(const T* values, size_t n)
             nan[l] |= __builtin_isunordered(v, v);
         }
     }
-
-    T rmn = mn[0];
-    T rmx = mx[0];
-    bool rNan = nan[0];
-    for (size_t l = 1; l < lanes; ++l) {
+    for (size_t l = 0; l < lanes; ++l) {
         rmn = mn[l] < rmn ? mn[l] : rmn;
         rmx = mx[l] > rmx ? mx[l] : rmx;
         rNan |= nan[l];
     }
+#endif
+
     for (; i < n; ++i) {
         const T v = values[i];
         rmn = v < rmn ? v : rmn;
