@@ -27,25 +27,29 @@ values into `bitsPerValue`-bit integers, `X = (Y * 10^D - R) / 2^E`.
 ```cpp
 #include "simple_packing/simple_packing.h"
 
-std::vector<double> values = ...;
+std::vector<double> values{ 273.15, 280.4, 291.07, 265.9 };
 sp::Scaling scaling = sp::scaling(values, sp::Method::bits(16));
 std::vector<uint8_t> packed = sp::pack(values, scaling);
 std::vector<double> back = sp::unpack<double>(packed, values.size(), scaling);
 ```
 
-The packed data hold no parameters: `unpack` needs the scaling and the number of values. A
-constant field has `bitsPerValue == 0` and no packed data.
+The packed data hold no parameters: `unpack` needs the scaling and the number of values. The
+values are restored within one step `2^E * 10^-D`. A constant field has `bitsPerValue == 0` and no
+packed data; a `Scaling` that is not filled in (`bitsPerValue == -1`) is an error.
 
 With your own buffers, and the range computed once:
 
 ```cpp
-sp::Range<double> r = sp::range(values, count);  // NaN if a value is NaN or infinite
+sp::Range<double> r = sp::range(values.data(), values.size());
+if (std::isnan(r.min)) { /* a value is NaN or infinite: cannot be packed */ }
 sp::Scaling scaling = sp::scaling(r.min, r.max, sp::Method::bestPrecision(24));
-sp::pack(values, count, scaling, output, sp::packedSize(count, scaling));
-sp::unpack(packed, size, scaling, values, count);
+std::vector<uint8_t> buffer(sp::packedSize(values.size(), scaling));
+sp::pack(values.data(), values.size(), scaling, buffer.data(), buffer.size());
+sp::unpack(buffer.data(), buffer.size(), scaling, back.data(), back.size());
 ```
 
-For GRIB edition 1: `sp::Method::bits(16).referenceFormat(sp::ReferenceFormat::IBM32).gribex()`.
+For GRIB edition 1: `sp::Method::bits(16).referenceFormat(sp::ReferenceFormat::IBM32).gribex()`
+(the setters return a modified copy).
 
 The implementation is in `simple_packing/detail` (namespace `sp::detail`) and is not part of the
 interface.

@@ -19,9 +19,10 @@
 //     std::vector<uint8_t> data = spaec::compress(values, scaling, options);
 //     std::vector<double> back = spaec::decompress<double>(data, values.size(), scaling, options);
 //
-// Errors are reported by exceptions: std::invalid_argument for options and values that cannot be
-// coded, std::length_error for an output buffer that is too small, spaec::DataError for compressed
-// data that are corrupt or too short. Everything in spaec/detail is the implementation.
+// Errors are reported by exceptions: std::invalid_argument for options, samples and values that
+// cannot be coded, std::length_error for an output buffer that is too small, spaec::DataError for
+// compressed data that cannot be decoded (corrupt or too short; the data have no checksum, so
+// corruption is not always detected). Everything in spaec/detail is the implementation.
 
 #pragma once
 
@@ -56,17 +57,18 @@ enum class Preprocessor
 
 struct Options
 {
-    unsigned bitsPerSample = 16;       // n: 1 to 32
+    unsigned bitsPerSample = 16;       // n: 1 to 32, at most the bits of the sample type
     unsigned blockSize = 32;           // J: 8, 16, 32 or 64 samples
     unsigned referenceInterval = 128;  // r: blocks between two reference samples, 1 to 4096
     CodeOptions codeOptions = CodeOptions::Basic;
     Preprocessor preprocessor = Preprocessor::UnitDelay;
-    bool signedSamples = false;  // samples are two's complement numbers of bitsPerSample bits
+    bool signedSamples = false;  // samples are two's complement numbers of bitsPerSample bits (needs a preprocessor)
     unsigned threads = 1;        // 1 to 255; the compressed data do not depend on it
 };
 
 // The scaling of floating-point values to samples, as in GRIB:
 // value * 10^decimalScaleFactor = referenceValue + sample * 2^binaryScaleFactor
+// The scale factors are between -32767 and 32767, the reference value is finite.
 struct Scaling
 {
     double referenceValue = 0;
@@ -209,8 +211,8 @@ inline void validate(const Options& options)
     detail::configOf(options);
 }
 
-// The largest size in bytes of count compressed samples: an output buffer of this size is always
-// large enough
+// An upper bound of the size in bytes of count compressed samples (with a few bytes of slack): an
+// output buffer of this size is always large enough
 inline size_t maxCompressedSize(size_t count, const Options& options)
 {
     const detail::Config c = detail::configOf(options);
@@ -279,8 +281,8 @@ std::vector<Sample> decompress(const std::vector<uint8_t>& data, size_t count, c
 }
 
 // ---------------------------------------------------------------------------------------------
-// Floating-point values (float, double): scaled to unsigned samples of bitsPerSample bits and
-// compressed in one pass. A value outside the range of the samples is an error (std::invalid_argument),
+// Floating-point values (float, double): scaled to unsigned samples of bitsPerSample bits (rounded:
+// a value is restored within half a step 2^E * 10^-D) and compressed in one pass. A value outside the range of the samples is an error (std::invalid_argument),
 // and so is a scaling whose smallest or largest sample does not decode to a finite Value.
 
 template <typename Value, std::enable_if_t<std::is_floating_point<Value>::value, int> = 0>
