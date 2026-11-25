@@ -34,7 +34,7 @@ if(SIMPLE_PACKING_BUILD_FUZZERS)
 endif()
 
 if(SIMPLE_PACKING_TOP_LEVEL)
-  set(CMAKE_CXX_STANDARD 20)
+  set(CMAKE_CXX_STANDARD 17)
   set(CMAKE_CXX_STANDARD_REQUIRED ON)
   set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 endif()
@@ -74,7 +74,7 @@ set_target_properties(simple_packing_headers PROPERTIES EXPORT_NAME headers)
 target_include_directories(simple_packing_headers INTERFACE
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-target_compile_features(simple_packing_headers INTERFACE cxx_std_20)
+target_compile_features(simple_packing_headers INTERFACE cxx_std_17)
 # Users get the results of the project's own builds: no fused multiply-adds in the header code they
 # instantiate (they round differently, so the encoded data would depend on the CPU)
 target_compile_options(simple_packing_headers INTERFACE $<$<COMPILE_LANG_AND_ID:CXX,GNU,Clang,AppleClang,IntelLLVM>:-ffp-contract=off>)

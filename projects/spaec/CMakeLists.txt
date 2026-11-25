@@ -34,7 +34,7 @@ if(SPAEC_BUILD_FUZZERS)
 endif()
 
 if(SPAEC_TOP_LEVEL)
-  set(CMAKE_CXX_STANDARD 20)
+  set(CMAKE_CXX_STANDARD 17)
   set(CMAKE_CXX_STANDARD_REQUIRED ON)
   set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 endif()
@@ -80,7 +80,7 @@ set_target_properties(spaec PROPERTIES EXPORT_NAME spaec)
 target_include_directories(spaec INTERFACE
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-target_compile_features(spaec INTERFACE cxx_std_20)
+target_compile_features(spaec INTERFACE cxx_std_17)
 # Users get the results of the project's own builds: no fused multiply-adds in the header code they
 # instantiate (they round differently, so the encoded data would depend on the CPU)
 target_compile_options(spaec INTERFACE $<$<COMPILE_LANG_AND_ID:CXX,GNU,Clang,AppleClang,IntelLLVM>:-ffp-contract=off>)
