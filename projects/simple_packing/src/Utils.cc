@@ -381,7 +381,12 @@ std::optional<long> get_binary_scale_factor(double max, double min, long bpval)
         zs /= 2;
     }
 
+    // Rounding can allow one more doubling: it must not overflow zs either (inf cannot be
+    // converted to an integer, and the search below could never halve it back)
     while (static_cast<uint64_t>(range * zs + 0.5) <= maxint) {
+        if (zs > (std::numeric_limits<double>::max() / 2)) {
+            return std::nullopt;
+        }
         scale--;
         zs *= 2;
     }
