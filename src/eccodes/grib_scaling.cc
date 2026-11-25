@@ -10,6 +10,7 @@
 
 #include "grib_scaling.h"
 #include "grib_api_internal.h"
+#include <float.h>
 #include <math.h>
 
 // Unfortunately, metkit uses grib_power() (illegal usage of private API)
@@ -56,7 +57,13 @@ long grib_get_binary_scale_fact(double max, double min, long bpval, int* error)
         return 0;
 
     /* range -= 1e-10; */
+    /* Scaling up must not overflow zs to infinity: an infinite zs can never be halved back
+       (inf / 2 == inf), and the range is too small for any binary scale factor >= -last */
     while ((range * zs) <= dmaxint) {
+        if (zs > DBL_MAX / 2) {
+            *error = GRIB_UNDERFLOW;
+            return -last;
+        }
         scale--;
         zs *= 2;
     }
@@ -66,7 +73,12 @@ long grib_get_binary_scale_fact(double max, double min, long bpval, int* error)
         zs /= 2;
     }
 
+    /* Rounding can allow one more doubling: it must not overflow zs either (see above) */
     while ((unsigned long)(range * zs + 0.5) <= maxint) {
+        if (zs > DBL_MAX / 2) {
+            *error = GRIB_UNDERFLOW;
+            return -last;
+        }
         scale--;
         zs *= 2;
     }
