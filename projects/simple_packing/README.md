@@ -107,6 +107,44 @@ Your own code that includes the headers gets `-ffp-contract=off` and `-fno-fast-
 CMake targets, also when you compile with `-ffast-math`. If a test fails because an option is
 missing, it says which one.
 
+## Performance
+
+Legacy simple packing in ecCodes against simple_packing, through the ecCodes API. The numbers give
+an overview; they are not exact.
+
+- Hardware: AMD Ryzen Threadripper PRO 5995WX (Zen 3, AVX2), one thread.
+- Compilers: GCC 16.2.1, Clang 22.1.8 and Intel icx 2026.2 (`-fp-model=precise`). ecCodes is a
+  Release build with `-O3 -march=native`.
+- Data: 191 GRIB2 messages without missing values, 206 million values in total. 187 fields are ECMWF
+  open data (IFS, 0.25°, forecast of 26 November 2026, 00 UTC, step 24 h); 4 fields come from the
+  ecCodes test data. All are packed with `grid_simple`, with 7 to 24 bits per value (most have 9 to
+  12).
+- Method: all messages in one file, held in memory. Each call runs over all messages three times;
+  the fastest run counts.
+- Program: `tests/benchmarks/packing_api.cc` of ecCodes. `tests/benchmarks/packing_api.py
+  --program <build>/tests/packing_api --ccsds <file> --simple <file>` prints these tables.
+- MiB/s counts the array passed to ecCodes: 8 bytes per double, 4 per float.
+- Legacy: `ECCODES_USE_SP=0`. New: `ECCODES_USE_SP=1`.
+
+| Call | Compiler | Legacy MiB/s | Legacy Mvalues/s | New MiB/s | New Mvalues/s | Speed-up |
+|---|---|---|---|---|---|---|
+| `codes_get_double_array` | GCC | 4,385 | 575 | 15,648 | 2,051 | 3.6× |
+| `codes_get_double_array` | Clang | 5,189 | 680 | 23,387 | 3,065 | 4.5× |
+| `codes_get_double_array` | Intel | 3,583 | 470 | 21,256 | 2,786 | 5.9× |
+| `codes_get_float_array` | GCC | 2,202 | 577 | 6,819 | 1,788 | 3.1× |
+| `codes_get_float_array` | Clang | 2,645 | 693 | 12,083 | 3,168 | 4.6× |
+| `codes_get_float_array` | Intel | 1,852 | 485 | 10,600 | 2,779 | 5.7× |
+| `codes_set_double_array` | GCC | 252 | 33 | 6,726 | 882 | 26.7× |
+| `codes_set_double_array` | Clang | 326 | 43 | 4,678 | 613 | 14.3× |
+| `codes_set_double_array` | Intel | 343 | 45 | 6,603 | 865 | 19.3× |
+| `codes_set_float_array` | GCC | 124 | 33 | 3,409 | 894 | 27.5× |
+| `codes_set_float_array` | Clang | 161 | 42 | 2,292 | 601 | 14.2× |
+| `codes_set_float_array` | Intel | 168 | 44 | 3,541 | 928 | 21.1× |
+
+Legacy and new write byte-identical messages. Legacy encodes 8, 16 and 24 bits per value byte by
+byte, but all other widths bit by bit, which is about ten times slower. Most of these fields have 9
+to 12 bits.
+
 ## In ecCodes
 
 - `ECCODES_USE_SP=1` selects simple_packing for GRIB simple packing.

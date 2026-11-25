@@ -146,6 +146,44 @@ Your own code that includes the headers gets `-ffp-contract=off` and `-fno-fast-
 CMake target `spaec::spaec`, also when you compile with `-ffast-math`. If a test fails because an
 option is missing, it says which one.
 
+## Performance
+
+Legacy CCSDS packing in ecCodes (libaec) against SpAec, through the ecCodes API. The numbers give an
+overview; they are not exact.
+
+- Hardware: AMD Ryzen Threadripper PRO 5995WX (Zen 3, AVX2), one thread.
+- Compilers: GCC 16.2.1, Clang 22.1.8 and Intel icx 2026.2 (`-fp-model=precise`). ecCodes and
+  libaec 1.1.8 are Release builds with `-O3 -march=native`.
+- Data: 191 GRIB2 messages without missing values, 206 million values in total. 187 fields are ECMWF
+  open data (IFS, 0.25°, forecast of 26 November 2026, 00 UTC, step 24 h); 4 fields come from the
+  ecCodes test data. They have 7 to 24 bits per value (most have 9 to 12). CCSDS settings as in the
+  ECMWF data: block size 32, reference sample interval 128, preprocessor.
+- Method: all messages in one file, held in memory. Each call runs over all messages three times;
+  the fastest run counts.
+- Program: `tests/benchmarks/packing_api.cc` of ecCodes. `tests/benchmarks/packing_api.py
+  --program <build>/tests/packing_api --ccsds <file> --simple <file>` prints these tables.
+- MiB/s counts the array passed to ecCodes: 8 bytes per double, 4 per float.
+- Legacy: `ECCODES_USE_SPAEC=0`. New: `ECCODES_USE_SPAEC=1` with `ECCODES_SPAEC_SELECTOR=search`
+  (default) or `estimate`. The selector only affects encoding.
+
+| Call | Compiler | Legacy MiB/s | Legacy Mvalues/s | Search MiB/s | Search Mvalues/s | Speed-up | Estimate MiB/s | Estimate Mvalues/s | Speed-up |
+|---|---|---|---|---|---|---|---|---|---|
+| `codes_get_double_array` | GCC | 1,336 | 175 | 3,282 | 430 | 2.5× | — | — | — |
+| `codes_get_double_array` | Clang | 1,393 | 183 | 4,101 | 537 | 2.9× | — | — | — |
+| `codes_get_double_array` | Intel | 1,253 | 164 | 3,975 | 521 | 3.2× | — | — | — |
+| `codes_get_float_array` | GCC | 662 | 174 | 1,607 | 421 | 2.4× | — | — | — |
+| `codes_get_float_array` | Clang | 700 | 183 | 2,009 | 527 | 2.9× | — | — | — |
+| `codes_get_float_array` | Intel | 632 | 166 | 2,024 | 531 | 3.2× | — | — | — |
+| `codes_set_double_array` | GCC | 1,661 | 218 | 2,728 | 358 | 1.6× | 3,126 | 410 | 1.9× |
+| `codes_set_double_array` | Clang | 1,824 | 239 | 2,936 | 385 | 1.6× | 3,357 | 440 | 1.8× |
+| `codes_set_double_array` | Intel | 1,861 | 244 | 3,058 | 401 | 1.6× | 3,236 | 424 | 1.7× |
+| `codes_set_float_array` | GCC | 784 | 206 | 1,406 | 369 | 1.8× | 1,594 | 418 | 2.0× |
+| `codes_set_float_array` | Clang | 840 | 220 | 1,533 | 402 | 1.8× | 1,779 | 466 | 2.1× |
+| `codes_set_float_array` | Intel | 919 | 241 | 1,595 | 418 | 1.7× | 1,760 | 461 | 1.9× |
+
+Legacy and `search` write byte-identical messages. `estimate` writes 0.07 % more bytes, with the same
+values, and encodes 6 to 16 % faster than `search`.
+
 ## In ecCodes
 
 - `ECCODES_USE_SPAEC=1` selects SpAec for GRIB CCSDS packing. Without libaec, ecCodes always uses
