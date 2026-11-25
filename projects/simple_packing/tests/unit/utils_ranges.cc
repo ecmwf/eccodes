@@ -10,6 +10,7 @@
 //   and exact values at the boundaries
 // - scale_factor_range: Parameters is fully initialised (the constructor with values ignored
 //   isConstantField)
+#include <algorithm>
 #include <cfloat>
 #include <cmath>
 #include <iostream>
@@ -40,7 +41,8 @@ static void minmax()
 {
     const T nan = std::numeric_limits<T>::quiet_NaN();
     const T inf = std::numeric_limits<T>::infinity();
-    for (size_t n = 1; n <= 20; ++n) {
+    // Up to 80 values: several steps of a vectorised loop (16 doubles or 32 floats) and every tail
+    for (size_t n = 1; n <= 80; ++n) {
         std::vector<T> values(n);
         for (size_t i = 0; i < n; ++i) {
             values[i] = static_cast<T>((i * 37) % 11) - T(5);
@@ -52,6 +54,17 @@ static void minmax()
             emx = std::max(emx, v);
         }
         check(mn == emn && mx == emx, "sp_minmax of " + std::to_string(n) + " values");
+        // The minimum and the maximum at every position (in every lane of a vectorised loop)
+        for (size_t pos = 0; pos < n; ++pos) {
+            for (T extreme : { T(-1000), T(1000) }) {
+                std::vector<T> w = values;
+                w[pos] = extreme;
+                const auto [a, b] = sp_minmax(w.data(), n);
+                const T wmn = *std::min_element(w.begin(), w.end()), wmx = *std::max_element(w.begin(), w.end());
+                check(a == wmn && b == wmx && (extreme < 0 ? a : b) == extreme,
+                      "sp_minmax with " + std::to_string(extreme) + " at " + std::to_string(pos) + " of " + std::to_string(n));
+            }
+        }
         for (size_t pos = 0; pos < n; ++pos) {
             for (T bad : { nan, inf, -inf }) {
                 std::vector<T> w = values;
