@@ -19,6 +19,7 @@ list(APPEND test_c_bins
     grib_element_index_range
     grib_jpeg_element_index
     grib_subnormal_range
+    grib_number_too_large
     grib_pack_extreme_values
     grib_ccsds_truncated
     grib_simple_element
@@ -227,6 +228,7 @@ if( HAVE_BUILD_TOOLS )
         grib_shape_of_the_earth
         grib_ecc-2359
         grib_subnormal_range
+        grib_number_too_large
     )
 
     # These tests require data downloads
