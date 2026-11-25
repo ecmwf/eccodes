@@ -2,6 +2,8 @@
 
 #include <cassert>
 
+using namespace sp;
+
 
 void test_subtraction()
 {

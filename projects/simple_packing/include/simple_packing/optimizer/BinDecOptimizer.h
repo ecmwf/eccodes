@@ -4,6 +4,9 @@
 #include "simple_packing/Optimizer.h"
 #include "simple_packing/Utils.h"
 
+namespace sp
+{
+
 
 class BinDecOptimizer : public Optimizer
 {
@@ -20,3 +23,5 @@ private:
     int compat_32bit_ = 0;
     int knbit_ = 0;
 };
+
+}  // namespace sp

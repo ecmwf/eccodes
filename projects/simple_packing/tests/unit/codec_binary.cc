@@ -18,6 +18,8 @@
 #include "simple_packing/codec/Array.h"
 #include "simple_packing/codec/Binary.h"
 
+using namespace sp;
+
 static int failures = 0;
 
 static void check(bool ok, const std::string& what)

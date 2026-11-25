@@ -10,6 +10,8 @@
 
 #include "simple_packing/BitPacking.h"
 
+using namespace sp;
+
 static uint64_t next(uint64_t& s)  // splitmix64
 {
     uint64_t z = (s += 0x9E3779B97F4A7C15ull);

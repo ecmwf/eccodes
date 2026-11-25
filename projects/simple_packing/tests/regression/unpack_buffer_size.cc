@@ -9,6 +9,8 @@
 
 #include "simple_packing/simple/Binary.h"
 
+using namespace sp;
+
 static int failures = 0;
 
 static void expectInvalid(const char* what, long bpv, size_t bufferSize, size_t nVals)

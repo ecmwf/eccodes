@@ -11,6 +11,9 @@
 #include <limits>
 #include <optional>
 
+namespace sp
+{
+
 namespace
 {
 
@@ -216,3 +219,5 @@ Parameters BinDecOptimizer::getParams(const double pmin, const double pmax)
 
     return params;
 }
+
+}  // namespace sp

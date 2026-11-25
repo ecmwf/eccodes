@@ -15,6 +15,8 @@
 #include "simple_packing/optimizer/Dec64Optimizer.h"
 #include "simple_packing/optimizer/DecOptimizer.h"
 
+using namespace sp;
+
 static int failures = 0;
 
 // Runs f in a child process: it must throw std::invalid_argument within 5 seconds

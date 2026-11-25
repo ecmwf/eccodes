@@ -7,6 +7,8 @@
 
 #include "simple_packing/Utils.h"
 
+using namespace sp;
+
 int main()
 {
     int failures = 0;

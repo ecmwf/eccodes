@@ -10,6 +10,9 @@
 
 #include "simple_packing/U128.h"
 
+namespace sp
+{
+
 // Byte swap for 128 bit unsigned integer
 inline UInt128 bswap128(UInt128 x)
 {
@@ -184,3 +187,5 @@ public:
         }
     }
 };
+
+}  // namespace sp

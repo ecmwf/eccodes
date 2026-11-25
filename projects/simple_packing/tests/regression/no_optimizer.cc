@@ -7,6 +7,8 @@
 
 #include "simple_packing/simple/Binary.h"
 
+using namespace sp;
+
 int main()
 {
     SimplePackingBinary<double> sp(nullptr);

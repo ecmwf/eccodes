@@ -11,6 +11,8 @@
 #include "simple_packing/optimizer/DecOptimizer.h"
 #include "simple_packing/simple/Binary.h"
 
+using namespace sp;
+
 static int failures = 0;
 
 template <typename F>

@@ -13,6 +13,8 @@
 
 #include "simple_packing/Utils.h"
 
+using namespace sp;
+
 static int failures = 0;
 
 // Runs f in a child process: it must return nullopt within 5 seconds

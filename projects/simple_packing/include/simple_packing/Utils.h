@@ -19,6 +19,9 @@
 #include <limits>
 #include <utility>
 
+namespace sp
+{
+
 // --- Power function ---
 
 /* Return n to the power of s */
@@ -145,6 +148,8 @@ std::optional<long> get_binary_scale_factor(double max, double min, long bpval);
 // Throws std::runtime_error unless both values are finite and the minimum is not larger
 // than the maximum
 void check_data_values_range(double min_val, double max_val);
+
+}  // namespace sp
 
 
 // --- Byte swap macros ---

@@ -3,6 +3,9 @@
 #include "simple_packing/Parameters.h"
 #include "simple_packing/Utils.h"
 
+namespace sp
+{
+
 class Optimizer
 {
 public:
@@ -16,3 +19,5 @@ public:
 protected:
     FloatType referenceFloatType_ = FloatType::IEEE32;
 };
+
+}  // namespace sp

@@ -27,6 +27,8 @@
 #include "simple_packing/simple/Array.h"
 #include "simple_packing/simple/Binary.h"
 
+using namespace sp;
+
 static int failures = 0;
 static int cases = 0;
 static std::atomic<long> finished{ 0 };

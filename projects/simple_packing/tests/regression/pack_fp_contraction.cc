@@ -13,6 +13,8 @@
 #include "simple_packing/simple/Binary.h"
 #include "simple_packing/optimizer/BinDecOptimizer.h"
 
+using namespace sp;
+
 // The coded value with every operation rounded separately (volatile prevents contraction)
 static uint64_t expectedCoded(double value, int decimalScale, int binaryScale, double reference)
 {

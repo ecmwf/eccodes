@@ -8,6 +8,8 @@
 
 #include "simple_packing/Utils.h"
 
+using namespace sp;
+
 static int failures = 0;
 
 static void check(bool ok, const std::string& what)

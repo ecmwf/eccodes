@@ -171,15 +171,15 @@ int DataSimplePacking::unpack_double_element(size_t idx, double* val)
         const size_t count = idx - first + 1;
         const unsigned char* start = buf + first * bits_per_value / 8;
         try {
-            SimplePackingBinary<double> sp(nullptr);
-            Parameters params;
+            sp::SimplePackingBinary<double> packer(nullptr);
+            sp::Parameters params;
             params.bitsPerValue(bits_per_value);
             params.binaryScaleFactor(binary_scale_factor);
             params.decimalScaleFactor(decimal_scale_factor);
             params.referenceValue(reference_value);
             double decoded[8];
             const size_t available = (gh->buffer->data + gh->buffer->ulength) - start;
-            sp.unpackTo(params, start, available, count, decoded);
+            packer.unpackTo(params, start, available, count, decoded);
             *val = decoded[count - 1];
         }
         catch (const std::exception& e) {
@@ -366,8 +366,8 @@ int DataSimplePacking::unpack(T* val, size_t* len)
         grib_context_log(context_, GRIB_LOG_DEBUG,
                          "%s %s: using new Simple Packing (SP) for decode, %zu values", accessor_type().c_str(), __func__, n_vals);
         try {
-            SimplePackingBinary<T> sp(nullptr);
-            Parameters params;
+            sp::SimplePackingBinary<T> packer(nullptr);
+            sp::Parameters params;
             params.bitsPerValue(bits_per_value);
             params.binaryScaleFactor(binary_scale_factor);
             params.decimalScaleFactor(decimal_scale_factor);
@@ -376,7 +376,7 @@ int DataSimplePacking::unpack(T* val, size_t* len)
             // Decode straight into the caller's array: no intermediate copy
             // of either the coded bytes or the decoded field.
             const size_t available = (gh->buffer->data + gh->buffer->ulength) - buf;  // bytes from buf to the end of the message
-            sp.unpackTo(params, buf, available, n_vals, val);
+            packer.unpackTo(params, buf, available, n_vals, val);
         }
         catch (const std::exception& e) {
             grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: SP decode error: %s",
@@ -543,8 +543,8 @@ int DataSimplePacking::_unpack_double(double* val, size_t* len, unsigned char* b
 
     if (use_new_simple_packing() && bits_per_value >= 1 && bits_per_value <= 64) {
         try {
-            SimplePackingBinary<double> sp(nullptr);
-            Parameters params;
+            sp::SimplePackingBinary<double> packer(nullptr);
+            sp::Parameters params;
             params.bitsPerValue(bits_per_value);
             params.binaryScaleFactor(binary_scale_factor);
             params.decimalScaleFactor(decimal_scale_factor);
@@ -553,7 +553,7 @@ int DataSimplePacking::_unpack_double(double* val, size_t* len, unsigned char* b
             // Decode straight into the caller's array: no intermediate copy
             // of either the coded bytes or the decoded field.
             const size_t available = (gh->buffer->data + gh->buffer->ulength) - buf;  // bytes from buf to the end of the message
-            sp.unpackTo(params, buf, available, n_vals, val);
+            packer.unpackTo(params, buf, available, n_vals, val);
         }
         catch (const std::exception& e) {
             grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: SP decode error: %s",

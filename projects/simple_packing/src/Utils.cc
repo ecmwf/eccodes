@@ -15,6 +15,9 @@
 #include <cmath>
 #include <limits>
 
+namespace sp
+{
+
 
 // --- Internal helpers ---
 
@@ -413,3 +416,5 @@ void check_data_values_range(double min_val, double max_val)
                                  "): values must be finite and the minimum must not be larger than the maximum");
     }
 }
+
+}  // namespace sp

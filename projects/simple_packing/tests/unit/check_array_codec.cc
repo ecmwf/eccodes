@@ -8,6 +8,8 @@
 #include "simple_packing/optimizer/BPVOptimizer.h"
 #include "simple_packing/simple/Array.h"
 
+using namespace sp;
+
 
 template <typename ValueType>
 void encode_decode(size_t nVals, size_t bpv)

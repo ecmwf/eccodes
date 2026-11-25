@@ -13,6 +13,9 @@
 #include <stdexcept>
 #include <vector>
 
+namespace sp
+{
+
 
 template <typename ValueType>
 class BinaryInterface
@@ -306,3 +309,5 @@ typename Binary<ValueType, BPV>::Values Binary<ValueType, BPV>::unpack(const Buf
     unpackTo(codedBuf.data(), decimalScaleFactor, binaryScaleFactor, referenceValue, nVals, values.data());
     return values;
 }
+
+}  // namespace sp

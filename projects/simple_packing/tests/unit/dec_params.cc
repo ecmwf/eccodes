@@ -7,6 +7,8 @@
 #include "simple_packing/optimizer/Dec64Optimizer.h"
 #include "simple_packing/optimizer/DecOptimizer.h"
 
+using namespace sp;
+
 
 void compare_dec_optimizers_single(size_t bpv, double min, double max, int last)
 {

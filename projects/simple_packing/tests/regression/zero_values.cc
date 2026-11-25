@@ -6,6 +6,8 @@
 
 #include "simple_packing/simple/Binary.h"
 
+using namespace sp;
+
 int main()
 {
     for (long bpv : { 1L, 7L, 12L, 16L, 24L, 64L }) {

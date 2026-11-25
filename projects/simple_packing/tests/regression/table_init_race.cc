@@ -9,6 +9,8 @@
 
 #include "simple_packing/Utils.h"
 
+using namespace sp;
+
 int main()
 {
     std::atomic<bool> start{ false };

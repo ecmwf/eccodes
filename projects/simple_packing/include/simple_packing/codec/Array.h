@@ -7,6 +7,9 @@
 
 #include "simple_packing/Utils.h"  // sp_power
 
+namespace sp
+{
+
 
 template <typename ValueType, uint8_t BPV>
 class ArrayCodec
@@ -71,3 +74,5 @@ typename ArrayCodec<ValueType, BPV>::Values ArrayCodec<ValueType, BPV>::unpack(c
 
     return values;
 }
+
+}  // namespace sp

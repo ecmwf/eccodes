@@ -13,6 +13,8 @@
 
 #include "simple_packing/optimizer/BPVOptimizer.h"
 
+using namespace sp;
+
 static int failures = 0;
 
 // Runs f in a child process: it must throw an error about the unscaled range within 5 seconds

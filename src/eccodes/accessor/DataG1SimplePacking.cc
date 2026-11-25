@@ -126,7 +126,7 @@ int DataG1SimplePacking::pack_double(const double* cval, size_t* len)
     }
 
     if (use_new_simple_packing() && n_vals > 0) {
-        const auto [min_val, max_val] = sp_minmax(val, n_vals);
+        const auto [min_val, max_val] = sp::sp_minmax(val, n_vals);
 
         if (min_val != max_val) {
             grib_context_log(context_, GRIB_LOG_DEBUG,
@@ -158,26 +158,26 @@ int DataG1SimplePacking::pack_double(const double* cval, size_t* len)
                     bpv_l = 24;
                 }
 
-                std::unique_ptr<Optimizer> optimizer;
+                std::unique_ptr<sp::Optimizer> optimizer;
                 if (bpv_l == 0 || (bsf_l == 0 && dsf_get != 0)) {
-                    optimizer = std::make_unique<BPVOptimizer>(static_cast<int>(dsf_get));
+                    optimizer = std::make_unique<sp::BPVOptimizer>(static_cast<int>(dsf_get));
                 }
                 else if (osf_l) {
                     int compat_gribex = c->gribex_mode_on && edition_ == 1;
-                    optimizer = std::make_unique<BinDecOptimizer>(compat_gribex, 1, static_cast<int>(bpv_l));
+                    optimizer = std::make_unique<sp::BinDecOptimizer>(compat_gribex, 1, static_cast<int>(bpv_l));
                 }
                 else {
                     int last = 127;
                     if (c->gribex_mode_on && edition_ == 1) last = 99;
-                    optimizer = std::make_unique<DecOptimizer>(bpv_l, last);
+                    optimizer = std::make_unique<sp::DecOptimizer>(bpv_l, last);
                 }
 
                 // The reference value is stored as IBM float in GRIB edition 1, as IEEE float in edition 2
-                optimizer->referenceFloatType(FloatType::IBM32);
+                optimizer->referenceFloatType(sp::FloatType::IBM32);
 
-                SimplePackingBinary<double> sp(std::move(optimizer));
+                sp::SimplePackingBinary<double> packer(std::move(optimizer));
                 // min_val/max_val have already been computed above; do not rescan.
-                Parameters params = std::get<0>(sp.getParameters(min_val, max_val));
+                sp::Parameters params = std::get<0>(packer.getParameters(min_val, max_val));
 
                 if ((ret = grib_set_double_internal(h, reference_value_, params.referenceValue())) != GRIB_SUCCESS) return ret;
                 // Pack against the reference value as it is coded in the message (like the legacy code)
@@ -211,7 +211,7 @@ int DataG1SimplePacking::pack_double(const double* cval, size_t* len)
                 // padding), so no intermediate copies are needed.
                 buf = (unsigned char*)grib_context_buffer_malloc_clear(context_, buflen);
                 if (!buf) return GRIB_OUT_OF_MEMORY;
-                sp.packTo(params, val, n_vals, buf);
+                packer.packTo(params, val, n_vals, buf);
 
                 grib_context_log(context_, GRIB_LOG_DEBUG,
                                  "DataG1simplePacking : pack_double : packing %s, %zu values", name_, n_vals);

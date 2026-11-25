@@ -5,6 +5,8 @@
 #include <stdexcept>
 #include <vector>
 
+using namespace sp;
+
 void test_left_shifts()
 {
     std::vector<UInt128> left_shifts_reference = {

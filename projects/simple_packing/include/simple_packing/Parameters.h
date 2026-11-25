@@ -1,5 +1,8 @@
 #pragma once
 
+namespace sp
+{
+
 // The packing parameters of GRIB simple packing: bits per value, binary and
 // decimal scale factors, reference value, and whether the field is constant.
 
@@ -28,3 +31,5 @@ private:
     double referenceValue_;
     bool isConstantField_;
 };
+
+}  // namespace sp

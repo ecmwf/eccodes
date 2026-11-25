@@ -12,6 +12,8 @@
 
 #include "simple_packing/simple/Binary.h"
 
+using namespace sp;
+
 static int failures = 0;
 
 int main()

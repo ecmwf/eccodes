@@ -5,6 +5,8 @@
 
 #include "simple_packing/U128.h"
 
+using namespace sp;
+
 int main()
 {
     int failures = 0;

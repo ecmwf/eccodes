@@ -4,6 +4,9 @@
 #include <cstdint>
 #include <type_traits>
 
+namespace sp
+{
+
 struct UInt128
 {
     using u64 = std::uint64_t;
@@ -98,3 +101,5 @@ struct UInt128
         return static_cast<T>(lo);
     }
 };
+
+}  // namespace sp

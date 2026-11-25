@@ -10,6 +10,8 @@
 
 #include "simple_packing/U128.h"
 
+using namespace sp;
+
 #if defined(__SIZEOF_INT128__)
 __extension__ using Ref = unsigned __int128;
 

@@ -8,6 +8,9 @@
 #include "simple_packing/Parameters.h"
 #include "simple_packing/Utils.h"
 
+namespace sp
+{
+
 
 // last = 127 is the "exponent zero" in single precision IEEE floating point numbers
 // last = 63 is the "exponent zero" in single precision IBM floating point numbers
@@ -98,3 +101,5 @@ private:
     long last_;
     long bitsPerValue_;
 };
+
+}  // namespace sp

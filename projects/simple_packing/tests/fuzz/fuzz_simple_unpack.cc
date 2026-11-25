@@ -14,6 +14,8 @@
 #include "simple_packing/optimizer/BinDecOptimizer.h"
 #include "simple_packing/simple/Binary.h"
 
+using namespace sp;
+
 namespace
 {
 

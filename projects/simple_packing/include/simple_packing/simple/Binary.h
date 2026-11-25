@@ -14,6 +14,9 @@
 #include "simple_packing/codec/Binary.h"
 #include "simple_packing/SimplePacking.h"
 
+namespace sp
+{
+
 
 template <typename T>
 class SimplePackingBinary : public SimplePacking<T>
@@ -130,3 +133,5 @@ void SimplePackingBinary<ValueType>::unpackTo(const Parameters& params, const un
     }
     codec.unpackTo(buf, params.decimalScaleFactor(), params.binaryScaleFactor(), params.referenceValue(), nVals, out);
 }
+
+}  // namespace sp

@@ -8,6 +8,9 @@
 #include "simple_packing/SimplePacking.h"
 #include "simple_packing/codec/Array.h"
 
+namespace sp
+{
+
 template <typename ValueType>
 class SimplePackingArray : public SimplePacking<ValueType>
 {
@@ -77,3 +80,5 @@ typename SimplePackingArray<ValueType>::Values SimplePackingArray<ValueType>::un
         throw std::runtime_error("Unsupported bitsPerValue for Array output format: " + std::to_string(bitsPerValue));
     }
 }
+
+}  // namespace sp

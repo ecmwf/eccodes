@@ -21,6 +21,9 @@
 #include "simple_packing/Optimizer.h"
 #include "simple_packing/Utils.h"
 
+namespace sp
+{
+
 
 template <typename ValueType>
 class SimplePacking
@@ -74,3 +77,5 @@ public:
 private:
     std::unique_ptr<Optimizer> optimizer_;
 };
+
+}  // namespace sp

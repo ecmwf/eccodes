@@ -11,6 +11,8 @@
 #include "simple_packing/optimizer/DecOptimizer.h"
 #include "simple_packing/simple/Binary.h"
 
+using namespace sp;
+
 int main()
 {
     // Redirect stdout and stderr to a file

@@ -8,6 +8,8 @@
 
 #include "simple_packing/simple/Binary.h"
 
+using namespace sp;
+
 int main()
 {
     for (long bpv = 1; bpv <= 64; ++bpv) {

@@ -7,6 +7,9 @@
 #include "simple_packing/Optimizer.h"
 #include "simple_packing/Utils.h"
 
+namespace sp
+{
+
 class BPVOptimizer : public Optimizer
 {
 public:
@@ -70,3 +73,5 @@ public:
 private:
     int decimalScaleFactor_ = 0;
 };
+
+}  // namespace sp

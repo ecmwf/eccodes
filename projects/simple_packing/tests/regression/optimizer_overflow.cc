@@ -14,6 +14,8 @@
 #include "simple_packing/optimizer/BinDecOptimizer.h"
 #include "simple_packing/simple/Binary.h"
 
+using namespace sp;
+
 int main()
 {
     // pmin is not a float32-exact multiple of any decimal scaling (residue up to the float32

@@ -16,6 +16,8 @@
 #include "simple_packing/optimizer/BinDecOptimizer.h"
 #include "simple_packing/optimizer/DecOptimizer.h"
 
+using namespace sp;
+
 static int failures = 0;
 
 // Runs f in a child process: it must throw within 5 seconds

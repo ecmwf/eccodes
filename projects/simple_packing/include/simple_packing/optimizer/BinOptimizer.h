@@ -8,6 +8,9 @@
 #include "simple_packing/Parameters.h"
 #include "simple_packing/Utils.h"
 
+namespace sp
+{
+
 // The decimal scale factor and the bits per value are given, the binary scale factor is computed
 // (ecCodes CCSDS packing with binaryScaleFactor = 0 and decimalScaleFactor != 0): the field is
 // scaled by 10^D, the reference value is the nearest float not above the scaled minimum, and the
@@ -67,3 +70,5 @@ private:
     int decimalScaleFactor_;
     long bitsPerValue_;
 };
+
+}  // namespace sp

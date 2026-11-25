@@ -8,6 +8,8 @@
 
 #include "simple_packing/BitPacking.h"
 
+using namespace sp;
+
 
 template <uint8_t BPV, typename ValueType = typename BitPacking<BPV>::ValueType>
 void test_bpv(const std::vector<ValueType>& expected_values, const std::vector<uint8_t>& expected_data)

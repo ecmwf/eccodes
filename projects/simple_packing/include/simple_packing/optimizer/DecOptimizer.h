@@ -8,6 +8,9 @@
 #include "simple_packing/Parameters.h"
 #include "simple_packing/Utils.h"
 
+namespace sp
+{
+
 class DecOptimizer : public Optimizer
 {
     using ValueType = double;
@@ -108,3 +111,5 @@ private:
     long last_;
     long bitsPerValue_;
 };
+
+}  // namespace sp

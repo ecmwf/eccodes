@@ -7,6 +7,8 @@
 
 #include "simple_packing/BitPacking.h"
 
+using namespace sp;
+
 
 template <uint8_t BPV, typename ValueType = typename BitPacking<BPV>::ValueType>
 void run_test()

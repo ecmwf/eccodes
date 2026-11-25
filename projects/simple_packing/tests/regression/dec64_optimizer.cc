@@ -13,6 +13,8 @@
 #include "simple_packing/optimizer/Dec64Optimizer.h"
 #include "simple_packing/simple/Binary.h"
 
+using namespace sp;
+
 static int failures = 0;
 
 static void check(double min, double max, long bpv, long last)
