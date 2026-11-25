@@ -21,7 +21,8 @@
 // The packed data hold no parameters: unpack needs the Scaling and the number of values.
 // Errors are reported by exceptions: std::invalid_argument for invalid parameters and packed data
 // that are too short, std::runtime_error for values that cannot be packed (NaN, infinite, a range
-// too large for the method), std::length_error for an output buffer that is too small.
+// too large for the method; std::underflow_error for a range too small for any binary scale
+// factor), std::length_error for an output buffer that is too small.
 // Everything in simple_packing/detail is the implementation.
 
 #pragma once

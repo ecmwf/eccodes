@@ -106,7 +106,9 @@ public:
 
         auto scale = get_binary_scale_factor(max, params.referenceValue(), params.bitsPerValue());
         if (!scale) {
-            throw std::runtime_error("unable to compute binary_scale_factor");
+            // std::underflow_error: callers can tell it from other errors (ecCodes: GRIB_UNDERFLOW)
+            throw std::underflow_error("unable to compute binary_scale_factor: the range of the values is too small for " +
+                                       std::to_string(params.bitsPerValue()) + " bits per value");
         }
         params.binaryScaleFactor(*scale);
         return params;

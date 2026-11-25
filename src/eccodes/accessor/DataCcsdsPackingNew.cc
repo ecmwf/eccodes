@@ -22,7 +22,7 @@
 
 #include <cmath>
 #include <cstring>
-#include <memory>
+#include <stdexcept>
 
 #include "simple_packing/simple_packing.h"
 #include "spaec/spaec.h"
@@ -147,10 +147,17 @@ int DataCcsdsPacking::pack_double_new(const double* val, size_t* len)
                                                                                           : sp::Method::bits(bits);
         scaling = sp::scaling(min, max, method);
     }
+    // The error codes of the legacy code (grib_get_binary_scale_fact)
+    catch (const std::underflow_error& e) {
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: unable to compute the packing parameters: %s",
+                         accessor_type().c_str(), __func__, e.what());
+        return GRIB_UNDERFLOW;
+    }
     catch (const std::exception& e) {
         grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: unable to compute the packing parameters: %s",
                          accessor_type().c_str(), __func__, e.what());
-        return GRIB_ENCODING_ERROR;
+        const bool outOfRange = dynamic_cast<const std::invalid_argument*>(&e) || dynamic_cast<const std::range_error*>(&e);
+        return outOfRange ? GRIB_OUT_OF_RANGE : GRIB_ENCODING_ERROR;
     }
     const double reference_value = scaling.referenceValue;
     binary_scale_factor = scaling.binaryScaleFactor;
