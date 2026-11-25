@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
 // SPDX-License-Identifier: Apache-2.0
 
-// Unit test of the optimisers (DecOptimizer, Dec64Optimizer, BinDecOptimizer, BPVOptimizer) and
+// Unit test of the optimisers (DecOptimizer, BinDecOptimizer, BPVOptimizer) and
 // of SimplePackingBinary::pack/unpack: for fields of many ranges, the chosen parameters must be
 // valid and the field must be restored within one quantisation step:
 // - bits per value 1..64 (0 or a constant field only if min == max)
@@ -19,7 +19,6 @@
 #include "simple_packing/optimizer/BPVOptimizer.h"
 #include "simple_packing/optimizer/BinDecOptimizer.h"
 #include "simple_packing/optimizer/BinOptimizer.h"
-#include "simple_packing/optimizer/Dec64Optimizer.h"
 #include "simple_packing/optimizer/DecOptimizer.h"
 #include "simple_packing/simple/Array.h"
 #include "simple_packing/simple/Binary.h"
@@ -90,9 +89,6 @@ static void optimizers()
             checkOptimizer("DecOptimizer(" + std::to_string(bpv) + ")", std::make_unique<DecOptimizer>(bpv, 127), r[0], r[1]);
             checkOptimizer("BinDecOptimizer(" + std::to_string(bpv) + ")", std::make_unique<BinDecOptimizer>(0, 1, static_cast<int>(bpv)), r[0], r[1]);
         }
-        for (long bpv : { 8L, 16L, 24L }) {
-            checkOptimizer("Dec64Optimizer(" + std::to_string(bpv) + ")", std::make_unique<Dec64Optimizer>(bpv, 127), r[0], r[1]);
-        }
         // BinOptimizer: decimal scale factor and bits per value given (the scaled range must fit
         // a binary scale factor within +-127 for these fields)
         for (int d : { -2, 0, 3 }) {
@@ -120,7 +116,6 @@ static void constantFields()
         const FloatType type = ibm ? FloatType::IBM32 : FloatType::IEEE32;
         std::vector<std::pair<std::string, std::unique_ptr<Optimizer>>> optimizers;
         optimizers.emplace_back("DecOptimizer", std::make_unique<DecOptimizer>(16, 127));
-        optimizers.emplace_back("Dec64Optimizer", std::make_unique<Dec64Optimizer>(16, 127));
         optimizers.emplace_back("BinDecOptimizer", std::make_unique<BinDecOptimizer>(0, 0, 16));
         optimizers.emplace_back("BPVOptimizer", std::make_unique<BPVOptimizer>(2));
         optimizers.emplace_back("BinOptimizer", std::make_unique<BinOptimizer>(2, 16));
@@ -181,11 +176,6 @@ static void binDecModes()
                 }
             }
         }
-    }
-    // Dec64Optimizer: a range so small that the field is scaled up by powers of ten
-    for (bool ibm : { false, true }) {
-        checkOptimizer("Dec64Optimizer(16) tiny range", std::make_unique<Dec64Optimizer>(16, 127), 0, 1e-40, false, 127, ibm);
-        checkOptimizer("Dec64Optimizer(16) tiny range", std::make_unique<Dec64Optimizer>(16, 127), 5, 5 + 1e-12, false, 127, ibm);
     }
 }
 

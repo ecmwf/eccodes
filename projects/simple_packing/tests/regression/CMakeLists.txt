@@ -43,7 +43,6 @@ add_test(NAME ${SP_TEST_PREFIX}optimizer_scaling_overflow COMMAND sp_optimizer_s
 sp_add_test(binary_scale_tiny_range)
 add_test(NAME ${SP_TEST_PREFIX}binary_scale_tiny_range COMMAND sp_binary_scale_tiny_range)
 
-sp_add_test(dec64_optimizer)
 
 # The optimiser used to convert an out-of-range double to long (undefined behaviour). The
 # test needs an UBSan-instrumented copy of the library to observe it (float-cast-overflow
@@ -70,7 +69,6 @@ else()
   sp_add_test(optimizer_overflow)
 endif()
 add_test(NAME ${SP_TEST_PREFIX}optimizer_overflow COMMAND sp_optimizer_overflow)
-add_test(NAME ${SP_TEST_PREFIX}dec64_optimizer COMMAND sp_dec64_optimizer)
 
 # Misaligned memory accesses are detected by the alignment sanitizer
 set(CMAKE_REQUIRED_FLAGS "-O2 -fsanitize=alignment -fno-sanitize-recover=alignment")

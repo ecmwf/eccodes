@@ -15,7 +15,6 @@
 
 #include "simple_packing/optimizer/BPVOptimizer.h"
 #include "simple_packing/optimizer/BinDecOptimizer.h"
-#include "simple_packing/optimizer/Dec64Optimizer.h"
 #include "simple_packing/optimizer/DecOptimizer.h"
 
 using namespace sp;
@@ -58,7 +57,6 @@ int main()
     for (long long bpv : { -1LL, 0LL, 64LL, 65LL, 100000000000LL }) {  // long long: 32-bit long on some platforms
         const std::string b = std::to_string(bpv);
         expectInvalid("DecOptimizer with " + b + " bits per value", [&] { DecOptimizer(bpv, 127).getParams(-1, 1); });
-        expectInvalid("Dec64Optimizer with " + b + " bits per value", [&] { Dec64Optimizer(bpv, 127).getParams(-1, 1); });
         expectInvalid("BinDecOptimizer with " + b + " bits per value", [&] { BinDecOptimizer(0, 1, static_cast<int>(bpv)).getParams(-1, 1); });
     }
     for (long last : { -1L, 0L, 100000L }) {

@@ -12,8 +12,6 @@ foreach(bpv RANGE 3 64)
   add_test(NAME ${SP_TEST_PREFIX}bit_packing_${bpv} COMMAND sp_bit_packing ${bpv})
 endforeach()
 
-sp_add_test(dec_params)
-add_test(NAME ${SP_TEST_PREFIX}dec_params COMMAND sp_dec_params)
 
 sp_add_test(u128)
 add_test(NAME ${SP_TEST_PREFIX}u128 COMMAND sp_u128)

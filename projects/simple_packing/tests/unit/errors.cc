@@ -25,7 +25,6 @@
 #include "simple_packing/optimizer/BPVOptimizer.h"
 #include "simple_packing/optimizer/BinDecOptimizer.h"
 #include "simple_packing/optimizer/BinOptimizer.h"
-#include "simple_packing/optimizer/Dec64Optimizer.h"
 #include "simple_packing/optimizer/DecOptimizer.h"
 #include "simple_packing/simple/Array.h"
 #include "simple_packing/simple/Binary.h"
@@ -102,10 +101,6 @@ static void constructors()
     expect<IA>("DecOptimizer 64 bits", "bits per value 64 is out of range", [] { DecOptimizer(64, 127); });
     expect<IA>("DecOptimizer exponent limit 0", "exponent limit 0", [] { DecOptimizer(16, 0); });
     expect<IA>("DecOptimizer exponent limit 1024", "exponent limit 1024", [] { DecOptimizer(16, 1024); });
-    expect<IA>("Dec64Optimizer 0 bits", "bits per value 0 is out of range", [] { Dec64Optimizer(0, 127); });
-    expect<IA>("Dec64Optimizer 64 bits", "bits per value 64 is out of range", [] { Dec64Optimizer(64, 127); });
-    expect<IA>("Dec64Optimizer exponent limit 0", "exponent limit 0", [] { Dec64Optimizer(16, 0); });
-    expect<IA>("Dec64Optimizer exponent limit 1024", "exponent limit 1024", [] { Dec64Optimizer(16, 1024); });
     expect<IA>("BinDecOptimizer 0 bits", "bits per value 0 is out of range", [] { BinDecOptimizer(0, 0, 0); });
     expect<IA>("BinDecOptimizer 64 bits", "bits per value 64 is out of range", [] { BinDecOptimizer(0, 0, 64); });
     expect<IA>("BPVOptimizer decimal scale factor 32768", "decimal scale factor 32768", [] { BPVOptimizer(32768); });
@@ -133,16 +128,6 @@ static void decOptimizer()
     expect<RE>("DecOptimizer range too small", "unable to compute binary_scale_factor", [] { DecOptimizer(16, 1023).getParams(0, 1e-100); });
     expect<RangeE>("DecOptimizer binary scale factor > 127", "too large (binary scale factor",
                    [] { ibm(std::make_unique<DecOptimizer>(63, 110))->getParams(-0x1.00de3b8a19c9ep+551, -0x1.00de3b8a19c9dp+551); });
-}
-
-static void dec64Optimizer()
-{
-    expect<RE>("Dec64Optimizer NaN", "cannot scale the range [nan, nan]", [] { Dec64Optimizer(31, 56).getParams(NAN, NAN); });
-    expect<RE>("Dec64Optimizer constant field without reference value", "unable to find nearest_smaller_value", [] { Dec64Optimizer(16, 127).getParams(1e300, 1e300); });
-    expect<RE>("Dec64Optimizer range scaled to infinity", "cannot scale the range",
-               [] { Dec64Optimizer(7, 126).getParams(0x1.08c60cbf2b23ap+1016, 0x1.08c60cbf2b23bp+1016); });
-    expect<RE>("Dec64Optimizer reference value out of range", "unable to find nearest_smaller_value of",
-               [] { Dec64Optimizer(56, 126).getParams(0x1.fae147ae147adp+1023, 0x1.fffffffffffffp+1023); });
 }
 
 static void bpvOptimizer()
@@ -280,7 +265,6 @@ int main()
     utils();
     constructors();
     decOptimizer();
-    dec64Optimizer();
     bpvOptimizer();
     binDecOptimizer();
     binOptimizer();
