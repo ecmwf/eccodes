@@ -15,6 +15,7 @@
 #include "grib_bits_any_endian_simple.h"
 #include <float.h>
 #include <cstring>
+#include <numeric>
 #include <type_traits>
 
 #include "simple_packing/simple/Binary.h"
@@ -136,8 +137,58 @@ int DataSimplePacking::unpack_double_element(size_t idx, double* val)
                      "%s: %s: creating %s, %ld values (idx=%zu)",
                      accessor_type().c_str(), __func__, name_, n_vals, idx);
 
-    buf += byte_offset();
+    const long offsetBeforeData = byte_offset();
+    buf += offsetBeforeData;
     /*ECCODES_ASSERT(((bits_per_value*n_vals)/8) < (1<<29));*/ /* See GRIB-787 */
+
+    /* ECC-941, as in unpack(): an empty data section is a constant field, and the coded values
+       must fit in the data section (the coded value was read beyond the message) */
+    if (!context_->ieee_packing) {
+        long offsetAfterData = 0;
+        err = grib_get_long(gh, "offsetAfterData", &offsetAfterData);
+        if (!err && offsetAfterData == offsetBeforeData) {
+            *val = reference_value;
+            return GRIB_SUCCESS;
+        }
+        if (!err && offsetAfterData > offsetBeforeData) {
+            const long valuesSize = (bits_per_value * n_vals + 7) / 8; /* in bytes */
+            if (offsetBeforeData + valuesSize > offsetAfterData) {
+                grib_context_log(context_, GRIB_LOG_ERROR,
+                                 "%s: Data section size mismatch: "
+                                 "offset before data=%ld, offset after data=%ld (num values=%ld, bits per value=%ld)",
+                                 accessor_type().c_str(), offsetBeforeData, offsetAfterData, n_vals, bits_per_value);
+                return GRIB_DECODING_ERROR;
+            }
+        }
+        err = 0;
+    }
+
+    if (use_new_simple_packing() && bits_per_value >= 1 && bits_per_value <= 64) {
+        /* Like unpack(): decode with the new simple packing, from the last value before idx whose
+           bits start at a byte boundary (every 8 / gcd(bits_per_value, 8) values) up to idx */
+        const size_t period = 8 / std::gcd(static_cast<size_t>(bits_per_value), size_t{ 8 });
+        const size_t first = idx - idx % period;
+        const size_t count = idx - first + 1;
+        const unsigned char* start = buf + first * bits_per_value / 8;
+        try {
+            SimplePackingBinary<double> sp(nullptr);
+            Parameters params;
+            params.bitsPerValue(bits_per_value);
+            params.binaryScaleFactor(binary_scale_factor);
+            params.decimalScaleFactor(decimal_scale_factor);
+            params.referenceValue(reference_value);
+            double decoded[8];
+            const size_t available = (gh->buffer->data + gh->buffer->ulength) - start;
+            sp.unpackTo(params, start, available, count, decoded);
+            *val = decoded[count - 1];
+        }
+        catch (const std::exception& e) {
+            grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: SP decode error: %s",
+                             accessor_type().c_str(), __func__, e.what());
+            return GRIB_DECODING_ERROR;
+        }
+        return GRIB_SUCCESS;
+    }
 
     if (bits_per_value % 8) {
         grib_context_log(context_, GRIB_LOG_DEBUG,
