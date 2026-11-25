@@ -69,6 +69,21 @@ public:
         else {
             throw std::runtime_error("unable to find nearest_smaller_value");
         }
+
+        // The reference value is rounded down to a 32-bit float: for large values the largest code,
+        // max - referenceValue rounded, can need one more bit than the range (legacy ecCodes then
+        // writes wrong values). Rounded as when packing.
+        const double maxCode = std::floor((max - params.referenceValue()) + 0.5);
+        if (!(maxCode <= 9.223372036854775808e18)) {
+            throw std::runtime_error("Range of values too large. Try a smaller value for decimal precision");
+        }
+        const auto codeBits = number_of_bits(static_cast<unsigned long>(maxCode));
+        if (!codeBits.has_value()) {
+            throw std::runtime_error("Range of values too large. Try a smaller value for decimal precision");
+        }
+        if (codeBits.value() > params.bitsPerValue()) {
+            params.bitsPerValue(codeBits.value());
+        }
         params.binaryScaleFactor(0);
         params.decimalScaleFactor(decimalScaleFactor_);
 

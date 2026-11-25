@@ -115,7 +115,9 @@ Parameters BinDecOptimizer::getParams(const double pmin, const double pmax)
     // 2^63 - 1 is not exactly representable as double: do not convert 2^63 to long (nor values
     // beyond the range of a 32-bit long, where long has 32 bits)
     xnbint = sp_power<double>(knbit_, 2) - 1;
-    inbint = knbit_ >= std::numeric_limits<long>::digits ? std::numeric_limits<long>::max() : static_cast<long>(xnbint);
+    // 2^knbit - 1 in integers: in double it is 2^knbit from 54 bits on, which accepted a largest
+    // code of 2^knbit that does not fit
+    inbint = knbit_ >= std::numeric_limits<long>::digits ? std::numeric_limits<long>::max() : static_cast<long>((uint64_t{ 1 } << knbit_) - 1);
 
     /* Test decimal scale factors; keep the most suitable */
     for (jdec = idecmin; jdec <= idecmax; jdec++) {
@@ -163,11 +165,15 @@ Parameters BinDecOptimizer::getParams(const double pmin, const double pmax)
             throw std::runtime_error("unable to find nearest_smaller_value");
         }
 
-        vmax = toLongClamped((((pmax * decimal) - params.referenceValue()) * divisor) + 0.5);
+        // The largest code is checked as pack checks it, in double: clamped to a long, a code of
+        // 2^63 would pass as 2^63 - 1
+        const double codedMax = (((pmax * decimal) - params.referenceValue()) * divisor) + 0.5;
+        const bool maxFits = codedMax < sp_power<double>(knbit_, 2);
+        vmax = toLongClamped(codedMax);
         vmin = toLongClamped((((pmin * decimal) - params.referenceValue()) * divisor) + 0.5);
 
         /* This may happen if pmin*decimal-*ref is too large */
-        if ((vmin != 0) || (vmax > inbint))
+        if ((vmin != 0) || (vmax > inbint) || !maxFits)
             inumax = 0;
     }
 
