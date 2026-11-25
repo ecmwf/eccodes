@@ -161,7 +161,7 @@ int DataG1SimplePacking::pack_double(const double* cval, size_t* len)
                                   : osf_l                                        ? sp::Method::bestPrecision(static_cast<int>(bpv_l))
                                                                                  : sp::Method::bits(static_cast<int>(bpv_l));
                 // The reference value is stored as IBM float in GRIB edition 1, as IEEE float in edition 2
-                method.referenceFormat(sp::ReferenceFormat::IBM32).gribex(c->gribex_mode_on && edition_ == 1);
+                method = method.referenceFormat(sp::ReferenceFormat::IBM32).gribex(c->gribex_mode_on && edition_ == 1);
 
                 // min_val/max_val have already been computed above; do not rescan.
                 sp::Scaling scaling = sp::scaling(min_val, max_val, method);

@@ -44,14 +44,15 @@
 namespace sp
 {
 
-// The packing parameters. bitsPerValue 0 is a constant field: every value is the reference value
-// and there are no packed data.
+// The packing parameters, usually from sp::scaling. bitsPerValue 0 is a constant field: every value
+// is the reference value and there are no packed data. A Scaling whose bitsPerValue is not set
+// (-1) is rejected by pack, unpack and packedSize.
 struct Scaling
 {
     double referenceValue = 0;
     int binaryScaleFactor = 0;
     int decimalScaleFactor = 0;
-    int bitsPerValue = 0;
+    int bitsPerValue = -1;
 };
 
 // The format in which the reference value is stored: it is chosen exactly representable
@@ -70,18 +71,22 @@ public:
     static Method decimals(int decimalScaleFactor) { return Method(Kind::Decimals, 0, decimalScaleFactor); }
     static Method bitsAndDecimals(int bitsPerValue, int decimalScaleFactor) { return Method(Kind::BitsAndDecimals, bitsPerValue, decimalScaleFactor); }
 
-    // The format of the reference value (default: IEEE32)
-    Method& referenceFormat(ReferenceFormat format)
+    // The format of the reference value (default: IEEE32). Returns a modified copy.
+    Method referenceFormat(ReferenceFormat format) const
     {
-        referenceFormat_ = format;
-        return *this;
+        Method m = *this;
+        m.referenceFormat_ = format;
+        return m;
     }
 
-    // The limits of GRIBEX for GRIB edition 1 (binary scale factors of one byte)
-    Method& gribex(bool on = true)
+    // The limits of GRIBEX for GRIB edition 1: the binary scale factor is limited as in GRIBEX
+    // (magnitude 99 to 127, depending on the method); the decimal scale factor is not limited.
+    // Returns a modified copy.
+    Method gribex(bool on = true) const
     {
-        gribex_ = on;
-        return *this;
+        Method m = *this;
+        m.gribex_ = on;
+        return m;
     }
 
 private:
@@ -173,7 +178,8 @@ Scaling scaling(const std::vector<Value>& values, const Method& method)
 inline size_t packedSize(size_t count, const Scaling& scaling)
 {
     if (scaling.bitsPerValue < 0 || scaling.bitsPerValue > 64) {
-        throw std::invalid_argument("Simple packing: bits per value " + std::to_string(scaling.bitsPerValue) + " is out of range (0 to 64)");
+        throw std::invalid_argument("Simple packing: bits per value " + std::to_string(scaling.bitsPerValue) +
+                                    " is out of range (0 to 64; a Scaling must be filled in, e.g. by sp::scaling)");
     }
     const size_t bits = static_cast<size_t>(scaling.bitsPerValue);
     if (bits != 0 && count > (SIZE_MAX - 7) / bits) {
