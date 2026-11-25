@@ -27,6 +27,51 @@
 namespace spaec
 {
 
+namespace detail
+{
+
+// The FS codewords (zero bits terminated by a one bit, bits MSB first) that end in a byte, for
+// every byte value: the fast codeword reader of the decoder handles the stream byte by byte
+struct FsByte
+{
+    uint8_t zeros[8];  // zeros before each one bit (for the first: from the start of the byte)
+    uint8_t ones;      // number of one bits
+    uint8_t trail;     // zeros after the last one bit (8 without a one bit)
+    uint8_t pad[6];
+};
+
+struct FsTables
+{
+    FsByte bytes[256];
+    uint8_t end[256][8];  // end[b][r]: bits of b up to and including its (r + 1)-th one bit
+};
+
+constexpr FsTables makeFsTables()
+{
+    FsTables t{};
+    for (unsigned b = 0; b < 256; ++b) {
+        unsigned ones = 0, zeros = 0;
+        for (unsigned bit = 0; bit < 8; ++bit) {
+            if ((b >> (7 - bit)) & 1u) {
+                t.bytes[b].zeros[ones] = static_cast<uint8_t>(zeros);
+                t.end[b][ones] = static_cast<uint8_t>(bit + 1);
+                ++ones;
+                zeros = 0;
+            }
+            else {
+                ++zeros;
+            }
+        }
+        t.bytes[b].ones = static_cast<uint8_t>(ones);
+        t.bytes[b].trail = static_cast<uint8_t>(zeros);
+    }
+    return t;
+}
+
+inline constexpr FsTables fsTables = makeFsTables();
+
+}  // namespace detail
+
 template <typename ValueType, typename DeltaType, typename DecodeFunc = Identity<DeltaType>>
 class DecoderSeq
 {
@@ -88,6 +133,55 @@ private:
             return total_zeros;
         }
     };
+
+    // Fast reader of count FS codewords at the position of the buffer: stores their numbers of
+    // zeros in zeros[0, count) (room for count + 8 values is needed) and advances the buffer.
+    // Returns false, with the buffer unchanged, for a codeword of 240 or more zeros (also at the
+    // end of truncated data, which is followed by zero bytes): the caller then uses
+    // UnaryCodewordReader, which handles any length and checks the end of the data.
+    static bool readCodewordsFast(const BitBuffer& buffer, uint8_t* zeros, size_t count)
+    {
+        const uint8_t* data = buffer.getBuffer().data();
+        const size_t pos = buffer.bitPos();
+        size_t p = pos >> 3;
+        const unsigned bitOffset = static_cast<unsigned>(pos & 7);
+        // The bits before the position are cleared and their number is taken from the first codeword
+        int carry = -static_cast<int>(bitOffset);
+        unsigned byte = data[p] & (0xFFu >> bitOffset);
+        size_t n = 0;
+        for (;;) {
+            const detail::FsByte& e = detail::fsTables.bytes[byte];
+            std::memcpy(zeros + n, e.zeros, 8);
+            zeros[n] = static_cast<uint8_t>(e.zeros[0] + carry);
+            const size_t before = n;
+            n += e.ones;
+            if (n >= count) {
+                buffer.bitPos(p * 8 + detail::fsTables.end[byte][count - before - 1]);
+                return true;
+            }
+            carry = e.ones != 0 ? e.trail : carry + 8;
+            if (SPAEC_UNLIKELY(carry >= 240)) {
+                return false;
+            }
+            byte = data[++p];
+        }
+    }
+
+    // Reads the k low bits of count samples at bit position pos, G samples per 64-bit load
+    // (G * k <= 57: the valid bits after a bit offset of up to 7). The trip counts are constant:
+    // up to G - 1 samples more than count are written (lows has room for count + 8).
+    template <size_t G>
+    static void readLowBits(const uint8_t* data, size_t pos, unsigned k, ValueType* lows, size_t count)
+    {
+        const uint64_t mask = (uint64_t{ 1 } << k) - 1;
+        for (size_t i = 0; i < count; i += G) {
+            const uint64_t word = bigEndian64(loadU64(&data[pos >> 3])) << (pos & 7);
+            for (size_t j = 0; j < G; ++j) {
+                lows[i + j] = static_cast<ValueType>((word >> (64 - (j + 1) * k)) & mask);
+            }
+            pos += G * k;
+        }
+    }
 
 protected:
     [[noreturn]] [[gnu::cold, gnu::noinline]] static void throwCorrupt(const std::string& what)
@@ -192,53 +286,64 @@ public:
 
         constexpr size_t startIndex = (RType == ReferenceType::Ref) ? 1 : 0;
         const uint8_t* data = buffer.getBuffer().data();  // also used by the phase 2 reader
+        // At most 64 samples (the largest block size): bounds the local arrays for the compiler
+        const size_t count = std::min<size_t>(blockSizeV_ - startIndex, 64);
+        ValueType* out = values.data() + startIndex;
 
-        if (k != 0) {
-            // Phase 1: Read codewords using batched accumulator
-            {
-                UnaryCodewordReader codewords{ buffer };
-                uint64_t all = 0;  // the FS codewords ORed: beyond 2^(n-k) - 1 iff one of them is
-                for (size_t i = startIndex; i < blockSizeV_; ++i) {
-                    const uint64_t high = codewords.read();
-                    all |= high;
-                    values[i] = static_cast<ValueType>(high << k);
-                }
-                if (SPAEC_UNLIKELY(all > (maxSample_ >> k))) {
-                    throwCorrupt("split-sample sample beyond 2^" + std::to_string(bpv_) + " - 1");
-                }
-                buffer.bitPos(codewords.pos);
-            }
-
-            // Phase 2: the k-bit LSBs, in groups of 57 / k values: one 64-bit load (at least 57
-            // valid bits after the bit offset of up to 7) per group, and each value of the group
-            // extracted with its own shift (no branch and no dependency between the values)
-            {
-                size_t pos = buffer.bitPos();
-                const size_t perGroup = 57 / k;
-                const uint64_t mask = (uint64_t{ 1 } << k) - 1;
-                for (size_t i = startIndex; i < blockSizeV_; i += perGroup) {
-                    const size_t count = std::min(perGroup, blockSizeV_ - i);
-                    const uint64_t word = bigEndian64(loadU64(&data[pos >> 3])) << (pos & 7);
-                    for (size_t j = 0; j < count; ++j) {
-                        values[i + j] |= static_cast<ValueType>((word >> (64 - (j + 1) * k)) & mask);
-                    }
-                    pos += count * k;
-                }
-                buffer.bitPos(pos);
-            }
-        }
-        else {  // FS - batched codeword reading
+        // Phase 1: the FS codewords, with the fast reader (byte by byte) or, for long codewords
+        // and at the end of the data, one by one
+        uint8_t zeros[64 + 8];
+        const bool fast = readCodewordsFast(buffer, zeros, count);
+        if (SPAEC_UNLIKELY(!fast)) {
             UnaryCodewordReader codewords{ buffer };
-            uint64_t all = 0;
-            for (size_t i = startIndex; i < blockSizeV_; ++i) {
-                const uint64_t value = codewords.read();
-                all |= value;
-                values[i] = static_cast<ValueType>(value);
+            uint64_t all = 0;  // the FS codewords ORed: beyond 2^(n-k) - 1 iff one of them is
+            for (size_t i = 0; i < count; ++i) {
+                const uint64_t high = codewords.read();
+                all |= high;
+                out[i] = static_cast<ValueType>(high << k);
             }
-            if (SPAEC_UNLIKELY(all > maxSample_)) {
-                throwCorrupt("FS sample beyond 2^" + std::to_string(bpv_) + " - 1");
+            if (SPAEC_UNLIKELY(all > (maxSample_ >> k))) {
+                throwCorrupt((k != 0 ? "split-sample sample beyond 2^" : "FS sample beyond 2^") + std::to_string(bpv_) + " - 1");
             }
             buffer.bitPos(codewords.pos);
+        }
+
+        // Phase 2: the k low bits of the samples
+        ValueType lows[64 + 8];
+        if (k != 0) {
+            const size_t pos = buffer.bitPos();
+            if (k <= 7) {
+                readLowBits<8>(data, pos, k, lows, count);
+            }
+            else if (k <= 14) {
+                readLowBits<4>(data, pos, k, lows, count);
+            }
+            else if (k <= 28) {
+                readLowBits<2>(data, pos, k, lows, count);
+            }
+            else {
+                readLowBits<1>(data, pos, k, lows, count);
+            }
+            buffer.bitPos(pos + count * k);
+        }
+        else {
+            std::memset(lows, 0, count * sizeof(ValueType));
+        }
+
+        if (SPAEC_LIKELY(fast)) {
+            unsigned all = 0;
+            for (size_t i = 0; i < count; ++i) {
+                all |= zeros[i];
+                out[i] = static_cast<ValueType>((static_cast<uint64_t>(zeros[i]) << k) | lows[i]);
+            }
+            if (SPAEC_UNLIKELY(all > (maxSample_ >> k))) {
+                throwCorrupt((k != 0 ? "split-sample sample beyond 2^" : "FS sample beyond 2^") + std::to_string(bpv_) + " - 1");
+            }
+        }
+        else {
+            for (size_t i = 0; i < count; ++i) {
+                out[i] |= lows[i];
+            }
         }
     }
 
