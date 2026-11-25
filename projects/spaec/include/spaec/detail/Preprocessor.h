@@ -60,7 +60,8 @@ public:
             const DeltaType theta = std::min(predicted - this->xMin_, this->xMax_ - predicted);
             ValueTypePlus absDelta = delta >= 0 ? delta : -delta;
             DeltaType isNeg = static_cast<DeltaType>(delta < 0);
-            DeltaType inRange = static_cast<DeltaType>(2 * absDelta) - isNeg;
+            // 2|delta| - 1 for negative deltas; the wraparound of 0 - 1 is never selected (|delta| = 0 is not negative)
+            DeltaType inRange = static_cast<DeltaType>(static_cast<DeltaType>(2 * absDelta) - isNeg);
             DeltaType outer = static_cast<DeltaType>(static_cast<ValueTypePlus>(theta) + absDelta);
             mapped[i] = (absDelta <= static_cast<ValueTypePlus>(theta)) ? inRange : outer;
         }

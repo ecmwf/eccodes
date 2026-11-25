@@ -171,7 +171,7 @@ void Binary<ValueType, BPV>::packTo(const ValueType* values, size_t nVals, int d
                 const double c = static_cast<double>(((v[j] * decimal) - referenceValue) * divisor + 0.5);
                 // Quiet comparisons (false for NaN) and a selection through the bit pattern: no
                 // floating-point selection, which GCC does not vectorize (trapping math)
-                const int o = std::isgreaterequal(c, 0.0) & std::isless(c, limit);
+                const int o = static_cast<int>(std::isgreaterequal(c, 0.0)) & static_cast<int>(std::isless(c, limit));
                 ok &= o;
                 const double valid = sp_double(sp_bits(c) & (uint64_t{ 0 } - static_cast<uint64_t>(o)));
                 if constexpr (BPV <= 31) {
@@ -193,7 +193,7 @@ void Binary<ValueType, BPV>::packTo(const ValueType* values, size_t nVals, int d
         }
         auto encode = [&](auto val) {
             const double coded = static_cast<double>(((val * decimal) - referenceValue) * divisor + 0.5);
-            const bool ok = (coded >= 0.0) & (coded < limit);
+            const bool ok = static_cast<bool>(static_cast<int>(coded >= 0.0) & static_cast<int>(coded < limit));
             inRange &= ok;
             return ok ? coded : 0.0;
         };
@@ -205,12 +205,12 @@ void Binary<ValueType, BPV>::packTo(const ValueType* values, size_t nVals, int d
         BitPacking<BPV, Optimization::Block> bvf;
         size_t nval = 0, nbit = 0;
         for (; nval < nBlockVals; nbit += BPV, ++nval) {
-            bvf.encode(&out[nbit / 8], nbit % 8, encode(values[nval]));
+            bvf.encode(&out[nbit / 8], nbit % 8, static_cast<typename BitPacking<BPV, Optimization::Block>::ValueType>(encode(values[nval])));
         }
 
         BitPacking<BPV> bv;
         for (; nval < nVals; nbit += BPV, ++nval) {
-            bv.encode(&out[nbit / 8], nbit % 8, encode(values[nval]));
+            bv.encode(&out[nbit / 8], nbit % 8, static_cast<typename BitPacking<BPV>::ValueType>(encode(values[nval])));
         }
     }
 

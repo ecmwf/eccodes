@@ -47,7 +47,7 @@ struct Preprocessing
 inline void validatePreprocessing(const Preprocessing& preprocessing)
 {
     if (preprocessing.prediction == Prediction::None && preprocessing.signedSamples) {
-        throw std::invalid_argument("CCSDS: signed samples need a preprocessor (CCSDS 121.0-B-3, 6.3.3.5.2: without preprocessor the data sense is positive)");
+        throw std::invalid_argument("CCSDS: signed samples need a preprocessor: UnitDelay or Bypass (CCSDS 121.0-B-3, 6.3.3.5.2: without preprocessor the data sense is positive)");
     }
 }
 
@@ -57,7 +57,8 @@ inline void validatePreprocessing(const Preprocessing& preprocessing)
 inline void validateCcsdsParameters(size_t bpv, size_t blockSize, size_t rsiSize, size_t maxBpv = 32)
 {
     if (bpv == 0 || bpv > 32 || bpv > maxBpv) {
-        throw std::invalid_argument("CCSDS: unsupported number of bits per value " + std::to_string(bpv) + " (must be between 1 and " + std::to_string(maxBpv < 32 ? maxBpv : 32) + ")");
+        throw std::invalid_argument("CCSDS: unsupported number of bits per value " + std::to_string(bpv) + " (must be between 1 and " + std::to_string(maxBpv < 32 ? maxBpv : 32) +
+                                    (maxBpv < 32 ? " for samples of " + std::to_string(maxBpv) + " bits: use a wider sample type)" : ")"));
     }
     if (blockSize != 8 && blockSize != 16 && blockSize != 32 && blockSize != 64) {
         throw std::invalid_argument("CCSDS: unsupported block size " + std::to_string(blockSize) + " (must be 8, 16, 32 or 64)");
