@@ -80,7 +80,12 @@ target_include_directories(simple_packing_headers INTERFACE
 target_compile_features(simple_packing_headers INTERFACE cxx_std_17)
 # Users get the results of the project's own builds: no fused multiply-adds in the header code they
 # instantiate (they round differently, so the encoded data would depend on the CPU)
-target_compile_options(simple_packing_headers INTERFACE $<$<COMPILE_LANG_AND_ID:CXX,GNU,Clang,AppleClang,IntelLLVM>:-ffp-contract=off>)
+# Nor the unsafe floating-point optimisations of -ffast-math (they remove the checks for NaN and
+# infinity) or of the default floating-point model of icx/icpx
+target_compile_options(simple_packing_headers INTERFACE
+  $<$<COMPILE_LANG_AND_ID:CXX,GNU,Clang,AppleClang,IntelLLVM>:-fno-fast-math>
+  $<$<COMPILE_LANG_AND_ID:CXX,GNU,Clang,AppleClang,IntelLLVM>:-ffp-contract=off>
+  $<$<COMPILE_LANG_AND_ID:CXX,IntelLLVM>:-fp-model=precise>)
 
 # --- Compiled sources: an object library, so that ecCodes can embed them ---
 

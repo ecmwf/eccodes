@@ -86,7 +86,12 @@ target_include_directories(spaec INTERFACE
 target_compile_features(spaec INTERFACE cxx_std_17)
 # Users get the results of the project's own builds: no fused multiply-adds in the header code they
 # instantiate (they round differently, so the encoded data would depend on the CPU)
-target_compile_options(spaec INTERFACE $<$<COMPILE_LANG_AND_ID:CXX,GNU,Clang,AppleClang,IntelLLVM>:-ffp-contract=off>)
+# Nor the unsafe floating-point optimisations of -ffast-math (they remove the checks for NaN and
+# infinity) or of the default floating-point model of icx/icpx
+target_compile_options(spaec INTERFACE
+  $<$<COMPILE_LANG_AND_ID:CXX,GNU,Clang,AppleClang,IntelLLVM>:-fno-fast-math>
+  $<$<COMPILE_LANG_AND_ID:CXX,GNU,Clang,AppleClang,IntelLLVM>:-ffp-contract=off>
+  $<$<COMPILE_LANG_AND_ID:CXX,IntelLLVM>:-fp-model=precise>)
 
 if(SPAEC_BUILD_TESTS)
   if(SPAEC_TOP_LEVEL)
