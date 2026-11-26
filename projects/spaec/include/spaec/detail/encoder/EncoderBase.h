@@ -20,6 +20,7 @@
 #include "spaec/detail/CodeOption.h"
 #include "spaec/detail/Compat.h"
 #include "spaec/detail/Span.h"
+#include "spaec/detail/encoder/BlockSums.h"
 
 namespace spaec::detail
 {
@@ -214,46 +215,6 @@ public:
         return k;
     }
 
-    // The sum of the J samples of a block shifted right by k (k = 0: the sum). With AVX2 16 samples
-    // of 16 bits are summed per step in 32-bit lanes (at most 64 * (2^16 - 1)), and 8 samples of
-    // 32 bits in 64-bit lanes; otherwise a loop that the compilers vectorise (J is a constant).
-    template <size_t J>
-    static uint64_t shiftedSum(const DeltaType* v, unsigned k)
-    {
-#if defined(__AVX2__)
-        if constexpr (sizeof(DeltaType) == 2 && J % 16 == 0) {
-            const __m256i zero = _mm256_setzero_si256();
-            const __m128i shift = _mm_cvtsi32_si128(static_cast<int>(k));
-            __m256i acc = zero;
-            for (size_t j = 0; j < J; j += 16) {
-                const __m256i x = _mm256_srl_epi16(_mm256_loadu_si256(reinterpret_cast<const __m256i*>(v + j)), shift);
-                acc = _mm256_add_epi32(acc, _mm256_add_epi32(_mm256_unpacklo_epi16(x, zero), _mm256_unpackhi_epi16(x, zero)));
-            }
-            __m128i t = _mm_add_epi32(_mm256_castsi256_si128(acc), _mm256_extracti128_si256(acc, 1));
-            t = _mm_add_epi32(t, _mm_shuffle_epi32(t, 0x4E));
-            t = _mm_add_epi32(t, _mm_shuffle_epi32(t, 0xB1));
-            return static_cast<uint32_t>(_mm_cvtsi128_si32(t));
-        }
-        if constexpr (sizeof(DeltaType) == 4 && J % 8 == 0) {
-            const __m256i zero = _mm256_setzero_si256();
-            const __m128i shift = _mm_cvtsi32_si128(static_cast<int>(k));
-            __m256i acc = zero;
-            for (size_t j = 0; j < J; j += 8) {
-                const __m256i x = _mm256_srl_epi32(_mm256_loadu_si256(reinterpret_cast<const __m256i*>(v + j)), shift);
-                acc = _mm256_add_epi64(acc, _mm256_add_epi64(_mm256_unpacklo_epi32(x, zero), _mm256_unpackhi_epi32(x, zero)));
-            }
-            const __m128i t = _mm_add_epi64(_mm256_castsi256_si128(acc), _mm256_extracti128_si256(acc, 1));
-            return static_cast<uint64_t>(_mm_cvtsi128_si64(t)) + static_cast<uint64_t>(_mm_extract_epi64(t, 1));
-        }
-#endif
-        using Sum = std::conditional_t<(sizeof(DeltaType) <= 2), uint32_t, uint64_t>;
-        Sum s = 0;
-        for (size_t j = 0; j < J; ++j) {
-            s += static_cast<Sum>(v[j] >> k);
-        }
-        return s;
-    }
-
     // SplitSelector::Estimate: k from the sum of the block, then the exact size with this k (the
     // choice between split sample, second extension and no compression stays exact, and so does
     // the bound maxEncodedSize). Two passes over the block, no state across blocks.
@@ -279,13 +240,15 @@ public:
     {
         constexpr size_t startIndex = (RType == ReferenceType::Ref) ? 1 : 0;
         constexpr uint64_t n = J - startIndex;
-        const uint64_t sum = shiftedSum<J>(block, 0) - (startIndex ? static_cast<uint64_t>(block[0]) : 0);
+        // No state across blocks (a guess of k from the previous block would make every block wait
+        // for the previous one: measured 3 times slower)
+        const uint64_t sum = blockShiftedSum<J>(block, 0, bpv_) - (startIndex ? static_cast<uint64_t>(block[0]) : 0);
         // The restricted set for 1 and 2 bits has no split-sample options: only the sum
         if (!limits_.available_) {
             return Selection{ 0, UINT64_MAX, sum };
         }
         const unsigned k = std::min<unsigned>(estimateK(sum, n), static_cast<unsigned>(kMax));
-        const uint64_t fs = k == 0 ? sum : shiftedSum<J>(block, k) - (startIndex ? static_cast<uint64_t>(block[0] >> k) : 0);
+        const uint64_t fs = k == 0 ? sum : blockShiftedSum<J>(block, k, bpv_) - (startIndex ? static_cast<uint64_t>(block[0] >> k) : 0);
         uint64_t fixedOverhead = ssId_.length;
         if constexpr (RType == ReferenceType::Ref) {
             fixedOverhead += bpv_;
