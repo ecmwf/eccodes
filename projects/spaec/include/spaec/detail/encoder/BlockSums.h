@@ -7,6 +7,7 @@
 
 #include "spaec/detail/Isa.h"
 
+#include <cassert>
 #include <cstddef>
 #include <cstdint>
 #include <type_traits>
@@ -222,6 +223,14 @@ __attribute__((always_inline)) inline uint64_t blockShiftedSum(const T* v, unsig
 {
     static_assert(std::is_unsigned<T>::value && sizeof(T) <= 4, "samples of 8, 16 or 32 bits");
     static_assert(J == 8 || J == 16 || J == 32 || J == 64, "block size 8, 16, 32 or 64");
+    // The precondition of every variant (the SIMD variants count on it for their lane widths; the
+    // callers keep it: checked or mapped samples of at most bits bits, k below bits)
+    assert(bits >= 1 && bits <= 8 * sizeof(T) && k < bits);
+#ifndef NDEBUG
+    for (size_t j = 0; j < J; ++j) {
+        assert(bits == 8 * sizeof(T) || (static_cast<uint64_t>(v[j]) >> bits) == 0);
+    }
+#endif
 #if defined(__AVX2__)
     constexpr bool avx2 = hasAvx2Sum<J, T>;
 #else
