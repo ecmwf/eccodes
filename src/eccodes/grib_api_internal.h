@@ -172,7 +172,6 @@ extern int pthread_mutexattr_settype(pthread_mutexattr_t* attr, int type);
 #define CODES_NAMESPACE   10
 #define MAX_NAMESPACE_LEN 64
 
-#ifdef __cplusplus
 // Lengths of the strings of keys, by purpose: the default, of buffers of a key's own string (e.g. of keys of the
 // definitions), of gridSpec (of pl arrays, longer), and the longest, of buffers of the strings of any key (e.g.
 // evaluated, set, compared, printed or dumped)
@@ -180,7 +179,6 @@ constexpr size_t GRIB_STRING_LENGTH = 1024;
 constexpr size_t GRIB_STRING_LENGTH_GRIDSPEC = 10 * 1024;
 constexpr size_t GRIB_STRING_LENGTH_MAX =
     GRIB_STRING_LENGTH_GRIDSPEC > GRIB_STRING_LENGTH ? GRIB_STRING_LENGTH_GRIDSPEC : GRIB_STRING_LENGTH;
-#endif
 
 #define CODES_REAL_MODE8 8
 
