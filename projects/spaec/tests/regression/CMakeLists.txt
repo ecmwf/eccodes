@@ -38,8 +38,9 @@ if(SPAEC_HAVE_FAST_MATH)
   endforeach()
 endif()
 # A user who compiles and links with -ffast-math and only links spaec::spaec: the usage requirements
-# add -fno-fast-math after the user's flags (the default SPAEC_NO_FAST_MATH=ON; not with OFF)
-if(SPAEC_HAVE_FAST_MATH AND NOT SPAEC_NO_FAST_MATH STREQUAL "OFF")
+# add -fno-fast-math after the user's flags (the default SPAEC_NO_FAST_MATH=ON; AUTO only for the
+# compilers that need it, OFF never)
+if(SPAEC_HAVE_FAST_MATH AND "-fno-fast-math" IN_LIST SPAEC_FP_SAFETY_FLAGS)
   foreach(name parameter_validation encode_value_range)
     add_executable(${name}_user_fast_math ${CMAKE_CURRENT_SOURCE_DIR}/${name}.cc)
     target_link_libraries(${name}_user_fast_math PRIVATE spaec::spaec)

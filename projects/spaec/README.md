@@ -140,10 +140,12 @@ CMake target `spaec::spaec`. Options: `SPAEC_BUILD_TESTS`, `SPAEC_BUILD_FUZZERS`
 SpAec maps floating-point values to integer samples (GRIB CCSDS packing): the rounding must be
 exactly as written (bit-identical results on every compiler and CPU), and the checks for NaN and
 infinite values must hold. The integer coder does no floating-point arithmetic: the options do not
-affect it. The three options below make the compiler keep that arithmetic exactly as written. None
-of them is enabled by default: each is a CMake cache variable with the values `AUTO` (the default:
-enabled only for the compilers that need it), `ON` and `OFF`. The configure step prints the options
-it enabled and why (`spaec: floating-point options: ...`).
+affect it. The three options below make the compiler keep that arithmetic exactly as written. Each
+is a CMake cache variable with the values `ON` (the default: added for every compiler that accepts
+it), `AUTO` (only for the compilers that need it) and `OFF`. Where an option is not needed it
+restates the compiler's default and changes nothing (no measurable cost), so `ON` gives the same
+code as `AUTO` there, without depending on its probes and compiler lists. The configure step prints
+the options (`spaec: floating-point options: ...`).
 
 | Option | CMake variable | Needed for | `AUTO` enables it for | Measured impact |
 |---|---|---|---|---|
@@ -165,9 +167,10 @@ it enabled and why (`spaec: floating-point options: ...`).
   Clang do not use it by default; icx/icpx and icc do (their default floating-point model `fast`:
   1736 of 7103 cases of the compiler tests of these projects changed; of the spaec tests only
   `fp_environment` notices it, simple packing has 6 failing tests). `AUTO` enables `-fno-fast-math`
-  for them. A `-ffast-math` in your own `CMAKE_CXX_FLAGS` is not undone: configure warns, and the
-  tests fail (`api`, `spaec_api`, `errors`, `parameter_validation`, `encode_value_range`, `consumer_flags` and `fp_environment`). Set `SPAEC_NO_FAST_MATH=ON` (adds `-fno-fast-math` after your flags) or remove
-  `-ffast-math`. The option is also a link option: linking with `-ffast-math` (GCC and Clang link
+  for them. A `-ffast-math` in your own `CMAKE_CXX_FLAGS` is undone by the default `ON`
+  (`-fno-fast-math` comes after your flags); with `AUTO` (GCC, Clang) or `OFF` it is not: configure
+  warns, and the tests fail (`api`, `spaec_api`, `errors`, `parameter_validation`,
+  `encode_value_range`, `consumer_flags` and `fp_environment`). The option is also a link option: linking with `-ffast-math` (GCC and Clang link
   `crtfastmath.o`) or with icx/icpx sets the CPU to flush subnormal numbers to zero at program
   start, which `-fno-fast-math` at compile time does not undo.
 - **`-fno-trapping-math`**: tells the compiler that the code does not use floating-point exception
@@ -184,10 +187,12 @@ rounding boundary, which the tests construct.
 The test `spaec_fp_environment` checks the options of the test build alone.
 
 **Your own code** that includes the headers gets the options needed for correct results through the
-usage requirements of the CMake targets (as resolved when the project was configured). If you
-compile it with other flags than the project, e.g. for a CPU with fused multiply-add when the
-project was configured without, add `-ffp-contract=off` yourself; with `-ffast-math`, add
-`-fno-fast-math` after it (also to the link flags). Translation units of one program compiled for
+usage requirements of the CMake targets: with the default `ON`, `-fno-fast-math` and
+`-ffp-contract=off` after your target's own options (and `-fno-fast-math` as a link option), also
+when you compile with other flags than the project (`-ffast-math`, or for a CPU with fused
+multiply-add). With `AUTO` they hold what the project's compiler and flags needed: with other flags
+add `-ffp-contract=off` yourself, and `-fno-fast-math` after a `-ffast-math` (also to the link
+flags). With `OFF` your code gets none of them. Translation units of one program compiled for
 different instruction sets (e.g. one with `-mavx2`) use separate instances of the functions: they
 are in an inline namespace per instruction set (`spaec/detail/Isa.h`).
 

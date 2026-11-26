@@ -5,8 +5,11 @@
 #
 # Simple packing scales floating-point values to integers and computes the packing parameters: the
 # results must be rounded exactly as written (bit-identical on every compiler and CPU, and to the
-# legacy ecCodes code), and the checks for NaN and infinite values must not be optimised away. Each option is a cache variable with the values AUTO (the default), ON and OFF.
-# AUTO enables an option only for the compilers that need it.
+# legacy ecCodes code), and the checks for NaN and infinite values must not be optimised away.
+# Each option is a cache variable with the values ON (the default), AUTO and OFF.
+# ON adds the option for every compiler that accepts it: where it is not needed it restates the
+# default and changes nothing (measured: no cost), and the results do not depend on the probes and
+# compiler lists of AUTO. AUTO enables an option only for the compilers that need it; OFF never.
 #
 # Measured performance impact of each option alone (AMD Zen 3; GCC 16, Clang 22, icx 2026.2;
 # -O3, -march=native and -march=x86-64; 7 GRIB fields, 47.8 MiB, cold caches; differences within
@@ -46,13 +49,13 @@ include(CheckCXXSourceCompiles)
 include(CheckCXXSourceRuns)
 include(CheckLinkerFlag)
 
-set(SIMPLE_PACKING_NO_FAST_MATH AUTO CACHE STRING "Compile with -fno-fast-math: AUTO (icx/icpx, icc), ON or OFF")
-set(SIMPLE_PACKING_FP_CONTRACT_OFF AUTO CACHE STRING "Compile with -ffp-contract=off: AUTO (compilers that fuse multiply-adds), ON or OFF")
-set(SIMPLE_PACKING_NO_TRAPPING_MATH AUTO CACHE STRING "Compile with -fno-trapping-math: AUTO (GCC: faster), ON or OFF")
+set(SIMPLE_PACKING_NO_FAST_MATH ON CACHE STRING "Compile with -fno-fast-math: ON (default), AUTO (icx/icpx, icc) or OFF")
+set(SIMPLE_PACKING_FP_CONTRACT_OFF ON CACHE STRING "Compile with -ffp-contract=off: ON (default), AUTO (compilers that fuse multiply-adds) or OFF")
+set(SIMPLE_PACKING_NO_TRAPPING_MATH ON CACHE STRING "Compile with -fno-trapping-math: ON (default), AUTO (GCC: faster) or OFF")
 foreach(sp_option SIMPLE_PACKING_NO_FAST_MATH SIMPLE_PACKING_FP_CONTRACT_OFF SIMPLE_PACKING_NO_TRAPPING_MATH)
-  set_property(CACHE ${sp_option} PROPERTY STRINGS AUTO ON OFF)
+  set_property(CACHE ${sp_option} PROPERTY STRINGS ON AUTO OFF)
   if(NOT ${sp_option} MATCHES "^(AUTO|ON|OFF)$")
-    message(FATAL_ERROR "${sp_option} must be AUTO, ON or OFF (it is ${${sp_option}})")
+    message(FATAL_ERROR "${sp_option} must be ON, AUTO or OFF (it is ${${sp_option}})")
   endif()
 endforeach()
 
@@ -93,7 +96,7 @@ function(simple_packing_floating_point_flags)
   elseif(CMAKE_CXX_COMPILER_ID MATCHES "^(IntelLLVM|Intel)$" AND NOT CMAKE_CXX_FLAGS MATCHES "-fp-model|-fno-fast-math")
     message(WARNING "simple_packing: SIMPLE_PACKING_NO_FAST_MATH=OFF with ${CMAKE_CXX_COMPILER_ID}, whose default floating-point "
                     "model is fast (it defines no macro to check): the results may differ and the tests fail. "
-                    "Configure with -DSIMPLE_PACKING_NO_FAST_MATH=AUTO or ON.")
+                    "Configure with -DSIMPLE_PACKING_NO_FAST_MATH=ON (the default) or AUTO.")
   endif()
   if(enable)
     check_cxx_compiler_flag(-fno-fast-math SIMPLE_PACKING_HAVE_NO_FAST_MATH)
@@ -103,6 +106,8 @@ function(simple_packing_floating_point_flags)
       if(DEFINED reason)
         list(APPEND reasons "${reason}")
       endif()
+    else()
+      message(STATUS "simple_packing: the compiler does not accept -fno-fast-math: not added")
     endif()
     check_linker_flag(CXX -fno-fast-math SIMPLE_PACKING_LINKER_HAS_NO_FAST_MATH)
     if(SIMPLE_PACKING_LINKER_HAS_NO_FAST_MATH)
@@ -126,6 +131,8 @@ function(simple_packing_floating_point_flags)
       if(DEFINED reason)
         list(APPEND reasons "${reason}")
       endif()
+    else()
+      message(STATUS "simple_packing: the compiler does not accept -fno-trapping-math: not added")
     endif()
   endif()
 
@@ -177,6 +184,8 @@ function(simple_packing_floating_point_flags)
       if(DEFINED reason)
         list(APPEND reasons "${reason}")
       endif()
+    else()
+      message(STATUS "simple_packing: the compiler does not accept -ffp-contract=off: not added")
     endif()
   endif()
 
@@ -196,7 +205,7 @@ function(simple_packing_floating_point_flags)
       message(WARNING "simple_packing: the compiler flags (CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}; of the configuration: "
                       "${config_flag_set}) enable -ffast-math or -ffinite-math-only. Simple packing then cannot detect NaN "
                       "and infinite values and may round differently: the tests fail. Configure with "
-                      "-DSIMPLE_PACKING_NO_FAST_MATH=ON (adds -fno-fast-math) or remove the option.")
+                      "-DSIMPLE_PACKING_NO_FAST_MATH=ON (the default; adds -fno-fast-math) or remove the option.")
       break()
     endif()
   endforeach()

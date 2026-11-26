@@ -78,7 +78,7 @@ inline bool explain()
         head();
         std::cerr << "- The compiler fuses multiplications and additions into multiply-add instructions, which round\n"
                      "  once instead of twice: the packed values then depend on the compiler and the CPU.\n"
-                     "  Fix: compile with -ffp-contract=off. Configure with -DSIMPLE_PACKING_FP_CONTRACT_OFF=ON (AUTO enables it\n"
+                     "  Fix: compile with -ffp-contract=off. Configure with -DSIMPLE_PACKING_FP_CONTRACT_OFF=ON (the default; AUTO enables it\n"
                      "  when the probe at configure time sees the compiler fuse); in your own code that includes the\n"
                      "  simple_packing headers, add -ffp-contract=off (after -fno-fast-math).\n";
     }
@@ -101,8 +101,8 @@ inline bool explain()
         head();
         std::cerr << "- icx/icpx (and icc) use the floating-point model 'fast' by default, which allows unsafe\n"
                      "  optimisations.\n"
-                     "  Fix: compile with -fno-fast-math. Configure with -DSIMPLE_PACKING_NO_FAST_MATH=ON or AUTO (the default,\n"
-                     "  which enables it for these compilers).\n";
+                     "  Fix: compile with -fno-fast-math. Configure with -DSIMPLE_PACKING_NO_FAST_MATH=ON (the default) or AUTO\n"
+                     "  (which enables it for these compilers).\n";
     }
     if (!missing) {
         std::cerr << "(No missing floating-point compiler option detected; floating-point options of this test: " SIMPLE_PACKING_TEST_FP_FLAGS ")\n";

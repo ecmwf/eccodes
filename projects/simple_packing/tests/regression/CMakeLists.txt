@@ -141,8 +141,9 @@ endif()
 
 # A user who compiles and links with -ffast-math and only links simple_packing::simple_packing: the
 # usage requirements add -fno-fast-math after the user's flags (the default
-# SIMPLE_PACKING_NO_FAST_MATH=ON; not with OFF). The header functions check the values.
-if(SIMPLE_PACKING_HAVE_FAST_MATH AND NOT SIMPLE_PACKING_NO_FAST_MATH STREQUAL "OFF")
+# SIMPLE_PACKING_NO_FAST_MATH=ON; AUTO only for the compilers that need it, OFF never). The header
+# functions check the values.
+if(SIMPLE_PACKING_HAVE_FAST_MATH AND "-fno-fast-math" IN_LIST SIMPLE_PACKING_FP_SAFETY_FLAGS)
   foreach(name api errors utils_ranges)
     add_executable(sp_${name}_user_fast_math ${PROJECT_SOURCE_DIR}/tests/unit/${name}.cc)
     target_link_libraries(sp_${name}_user_fast_math PRIVATE simple_packing::simple_packing)

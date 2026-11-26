@@ -72,10 +72,12 @@ CMake targets `simple_packing::simple_packing` and `simple_packing::headers`. Op
 Simple packing scales floating-point values to integers and computes the packing parameters: the
 rounding must be exactly as written (bit-identical results on every compiler and CPU, and to legacy
 ecCodes), and the checks for NaN and infinite values must hold. The three options below make the
-compiler keep that arithmetic exactly as written. None of them is enabled by default: each is a
-CMake cache variable with the values `AUTO` (the default: enabled only for the compilers that need
-it), `ON` and `OFF`. The configure step prints the options it enabled and why (`simple_packing:
-floating-point options: ...`).
+compiler keep that arithmetic exactly as written. Each is a CMake cache variable with the values
+`ON` (the default: added for every compiler that accepts it), `AUTO` (only for the compilers that
+need it) and `OFF`. Where an option is not needed it restates the compiler's default and changes
+nothing (no measurable cost), so `ON` gives the same code as `AUTO` there, without depending on its
+probes and compiler lists. The configure step prints the options (`simple_packing: floating-point
+options: ...`).
 
 | Option | CMake variable | Needed for | `AUTO` enables it for | Measured impact |
 |---|---|---|---|---|
@@ -98,10 +100,10 @@ floating-point options: ...`).
   floating-point model `fast`: 1736 of 7103 cases of the compiler tests of these projects changed,
   and without `-fno-fast-math` 6 tests fail, among them the subnormal ranges of `utils_ranges` and
   `binary_scale_tiny_range`). `AUTO` enables `-fno-fast-math` for them. A `-ffast-math` in your own
-  `CMAKE_CXX_FLAGS` is not undone: configure warns, and the tests fail (14 tests, among them `api`,
-  `errors` and `field_range`; `binary_scale_large_range` and `consumer_flags`, which would hang,
-  check the options first). Set `SIMPLE_PACKING_NO_FAST_MATH=ON` (adds `-fno-fast-math` after your
-  flags) or remove `-ffast-math`. The option is also a link option: linking with `-ffast-math` (GCC
+  `CMAKE_CXX_FLAGS` is undone by the default `ON` (`-fno-fast-math` comes after your flags); with
+  `AUTO` (GCC, Clang) or `OFF` it is not: configure warns, and the tests fail (14 tests, among them
+  `api`, `errors` and `field_range`; `binary_scale_large_range` and `consumer_flags`, which would
+  hang, check the options first). The option is also a link option: linking with `-ffast-math` (GCC
   and Clang link `crtfastmath.o`) or with icx/icpx sets the CPU to flush subnormal numbers to zero
   at program start, which `-fno-fast-math` at compile time does not undo.
 - **`-fno-trapping-math`**: tells the compiler that the code does not use floating-point exception
@@ -119,11 +121,13 @@ rounding boundary, which the tests construct.
 the test build alone.
 
 **Your own code** that includes the headers gets the options needed for correct results through the
-usage requirements of the CMake targets (as resolved when the project was configured). If you
-compile it with other flags than the project, e.g. for a CPU with fused multiply-add when the
-project was configured without, add `-ffp-contract=off` yourself. With `-ffast-math` in your own
-flags, the header functions (`sp::range`, `sp::scaling`) no longer detect NaN and infinite values
-(`std::isfinite` is assumed true): add `-fno-fast-math` after it, also to the link flags.
+usage requirements of the CMake targets: with the default `ON`, `-fno-fast-math` and
+`-ffp-contract=off` after your target's own options (and `-fno-fast-math` as a link option), also
+when you compile with other flags than the project (`-ffast-math`, or for a CPU with fused
+multiply-add). With `AUTO` they hold what the project's compiler and flags needed: with other flags
+add `-ffp-contract=off` yourself, and `-fno-fast-math` after a `-ffast-math` (also to the link
+flags; with `-ffast-math` the header functions `sp::range` and `sp::scaling` no longer detect NaN
+and infinite values). With `OFF` your code gets none of them.
 
 ## In ecCodes
 
