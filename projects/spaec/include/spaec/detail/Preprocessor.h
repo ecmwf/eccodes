@@ -93,8 +93,8 @@ public:
     // chunk where it does not hold again with the exact rule.
     void decode(Span<DeltaType> mapped_span, ValueType reference, Span<ValueType> data_span)
     {
-        const DeltaType* __restrict__ mapped = mapped_span.data();
-        ValueType* __restrict__ data = data_span.data();
+        const DeltaType* SPAEC_RESTRICT mapped = mapped_span.data();
+        ValueType* SPAEC_RESTRICT data = data_span.data();
         const size_t n = mapped_span.size();
         if (n == 0) {
             return;
@@ -145,7 +145,7 @@ public:
 private:
     // Decodes data[from, to) with the exact rule, given data[from - 1]. Returns true if all
     // values followed the common case.
-    bool decodeExact(const DeltaType* __restrict__ mapped, ValueType* __restrict__ data, size_t from, size_t to)
+    bool decodeExact(const DeltaType* SPAEC_RESTRICT mapped, ValueType* SPAEC_RESTRICT data, size_t from, size_t to)
     {
         bool common = true;
         const DeltaType xMin = this->xMin_;
@@ -159,7 +159,7 @@ private:
                 static_cast<DeltaType>(xMax - predicted));
 
             ValueTypePlus decoded;
-            if (__builtin_expect(m <= 2 * static_cast<DeltaType>(theta), 1)) {
+            if (SPAEC_LIKELY(m <= 2 * static_cast<DeltaType>(theta))) {
                 ValueTypePlus half = static_cast<ValueTypePlus>((m + 1) >> 1);
                 ValueTypePlus neg = static_cast<ValueTypePlus>(m & 1);
                 decoded = (half ^ -neg) + neg;
@@ -181,7 +181,7 @@ public:
     // Fused decode: applies preprocessor + output function in one pass
     // avoiding the intermediate output array write/read
     template <typename OutputFunc>
-    void decodeFused(const DeltaType* __restrict__ mapped, size_t n,
+    void decodeFused(const DeltaType* SPAEC_RESTRICT mapped, size_t n,
                      ValueType reference, size_t offset, OutputFunc&& outputFunc)
     {
         const DeltaType xMin = this->xMin_;
@@ -197,7 +197,7 @@ public:
                 static_cast<DeltaType>(xMax - prev));
 
             ValueTypePlus decoded;
-            if (__builtin_expect(m <= 2 * static_cast<DeltaType>(theta), 1)) {
+            if (SPAEC_LIKELY(m <= 2 * static_cast<DeltaType>(theta))) {
                 ValueTypePlus half = static_cast<ValueTypePlus>((m + 1) >> 1);
                 ValueTypePlus neg = static_cast<ValueTypePlus>(m & 1);
                 decoded = (half ^ -neg) + neg;

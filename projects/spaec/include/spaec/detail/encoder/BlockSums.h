@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include "spaec/detail/Compat.h"
 #include "spaec/detail/Isa.h"
 
 #include <cassert>
@@ -12,7 +13,7 @@
 #include <cstdint>
 #include <type_traits>
 
-#if defined(__AVX2__) || defined(__SSE2__)
+#if defined(__AVX2__) || defined(SPAEC_HAVE_SSE2)
     #include <immintrin.h>
 #endif
 
@@ -66,7 +67,7 @@ inline __m256i widen16(__m256i x)  // 16 unsigned 16-bit lanes added pairwise in
 }
 #endif
 
-#if defined(__SSE2__)
+#if defined(SPAEC_HAVE_SSE2)
 inline int64_t total32(__m128i t)  // the sum of 4 signed 32-bit lanes
 {
     t = _mm_add_epi32(t, _mm_shuffle_epi32(t, 0x4E));
@@ -101,7 +102,7 @@ constexpr bool hasSse2Sum = true;
 
 #if defined(__AVX2__)
 template <size_t J, typename T>
-__attribute__((always_inline)) inline uint64_t avx2Sum(const T* v, unsigned k, [[maybe_unused]] unsigned bits)
+SPAEC_ALWAYS_INLINE uint64_t avx2Sum(const T* v, unsigned k, [[maybe_unused]] unsigned bits)
 {
     if constexpr (sizeof(T) == 1 && J % 32 == 0) {
         const __m256i zero = _mm256_setzero_si256();
@@ -150,9 +151,9 @@ template <size_t J, typename T>
 uint64_t avx2Sum(const T* v, unsigned k, unsigned bits);
 #endif
 
-#if defined(__SSE2__)
+#if defined(SPAEC_HAVE_SSE2)
 template <size_t J, typename T>
-__attribute__((always_inline)) inline uint64_t sse2Sum(const T* v, unsigned k, [[maybe_unused]] unsigned bits)
+SPAEC_ALWAYS_INLINE uint64_t sse2Sum(const T* v, unsigned k, [[maybe_unused]] unsigned bits)
 {
     if constexpr (sizeof(T) == 1 && J % 16 == 0) {
         const __m128i zero = _mm_setzero_si128();
@@ -219,7 +220,7 @@ uint64_t sse2Sum(const T* v, unsigned k, unsigned bits);
 
 // Always inlined: a few instructions per instance, called twice per block (GCC would call it)
 template <size_t J, typename T>
-__attribute__((always_inline)) inline uint64_t blockShiftedSum(const T* v, unsigned k, [[maybe_unused]] unsigned bits)
+SPAEC_ALWAYS_INLINE uint64_t blockShiftedSum(const T* v, unsigned k, [[maybe_unused]] unsigned bits)
 {
     static_assert(std::is_unsigned<T>::value && sizeof(T) <= 4, "samples of 8, 16 or 32 bits");
     static_assert(J == 8 || J == 16 || J == 32 || J == 64, "block size 8, 16, 32 or 64");
@@ -236,7 +237,7 @@ __attribute__((always_inline)) inline uint64_t blockShiftedSum(const T* v, unsig
 #else
     constexpr bool avx2 = false;
 #endif
-#if defined(__SSE2__)
+#if defined(SPAEC_HAVE_SSE2)
     constexpr bool sse2 = hasSse2Sum<J, T>;
 #else
     constexpr bool sse2 = false;

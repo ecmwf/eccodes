@@ -40,21 +40,21 @@ inline namespace SPAEC_ISA
 inline uint16_t bigEndian16(uint16_t v)
 {
     if constexpr (isLittleEndian) {
-        return __builtin_bswap16(v);
+        return byteSwap16(v);
     }
     return v;
 }
 inline uint32_t bigEndian32(uint32_t v)
 {
     if constexpr (isLittleEndian) {
-        return __builtin_bswap32(v);
+        return byteSwap32(v);
     }
     return v;
 }
 inline uint64_t bigEndian64(uint64_t v)
 {
     if constexpr (isLittleEndian) {
-        return __builtin_bswap64(v);
+        return byteSwap64(v);
     }
     return v;
 }
@@ -91,12 +91,12 @@ public:
     // data must contain at least guardBytes bytes after the first limitBits bits
     BitBuffer(Span<uint8_t> data, size_t bitPos, size_t limitBits) : buffer_{ data }, currentBitPos_{ bitPos }, limitBits_{ limitBits } {}
 
-    [[noreturn]] __attribute__((cold, noinline)) static void throwOverrun(size_t pos, size_t limitBits)
+    [[noreturn]] SPAEC_COLD static void throwOverrun(size_t pos, size_t limitBits)
     {
         throw std::runtime_error("CCSDS decoding failed: the compressed data is truncated or corrupt (needed data beyond its end: bit " + std::to_string(pos) + " of " + std::to_string(limitBits) + ")");
     }
 
-    [[noreturn]] __attribute__((cold, noinline)) static void throwWriteOverrun(uint64_t pos, size_t limitBits)
+    [[noreturn]] SPAEC_COLD static void throwWriteOverrun(uint64_t pos, size_t limitBits)
     {
         throw std::length_error("CCSDS encoding failed: the output buffer is too small (bit " + std::to_string(pos) + " of " + std::to_string(limitBits) + ")");
     }

@@ -15,6 +15,8 @@
 #include <limits>
 #include <utility>
 
+#include "simple_packing/detail/Compat.h"
+
 namespace sp::detail
 {
 
@@ -148,7 +150,7 @@ std::pair<T, T> sp_minmax(const T* values, size_t n)
             const T v = values[i + l];
             mn[l] = v < mn[l] ? v : mn[l];
             mx[l] = v > mx[l] ? v : mx[l];
-            nan[l] |= __builtin_isunordered(v, v);
+            nan[l] |= SIMPLE_PACKING_ISUNORDERED(v, v);
         }
     }
     for (size_t l = 0; l < lanes; ++l) {
@@ -162,7 +164,7 @@ std::pair<T, T> sp_minmax(const T* values, size_t n)
         const T v = values[i];
         rmn = v < rmn ? v : rmn;
         rmx = v > rmx ? v : rmx;
-        rNan |= __builtin_isunordered(v, v);
+        rNan |= SIMPLE_PACKING_ISUNORDERED(v, v);
     }
     if (rNan || !std::isfinite(rmn) || !std::isfinite(rmx)) {  // a NaN or infinite value: make the range invalid
         return { std::numeric_limits<T>::quiet_NaN(), std::numeric_limits<T>::quiet_NaN() };

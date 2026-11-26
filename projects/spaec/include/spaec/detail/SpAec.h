@@ -308,7 +308,7 @@ private:
         }
     }
 
-    [[noreturn]] __attribute__((cold, noinline)) void throwValueOutOfRange(size_t index, double value) const
+    [[noreturn]] SPAEC_COLD void throwValueOutOfRange(size_t index, double value) const
     {
         throw std::invalid_argument("CCSDS encoding: value " + std::to_string(value) + " at index " + std::to_string(index) + " cannot be packed with " + std::to_string(bpv_) + " bits per value (reference value " + std::to_string(static_cast<double>(referenceValue_)) + ", binary scale factor " + std::to_string(binaryScaleFactor_) + ", decimal scale factor " + std::to_string(decimalScaleFactor_) + ")");
     }
@@ -328,7 +328,7 @@ private:
             ValueType* out = target.data();
             decoder.decodeSpans(source, target.size(),
                                 [&](const DeltaType* values, size_t count, size_t offset) {
-                                    ValueType* __restrict__ o = out + offset;
+                                    ValueType* SPAEC_RESTRICT o = out + offset;
                                     for (size_t j = 0; j < count; ++j) {
                                         o[j] = unmapper(values[j]);
                                     }

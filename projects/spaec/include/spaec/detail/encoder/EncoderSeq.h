@@ -418,7 +418,7 @@ public:
 
     // encodeRsi for a preprocessing other than the unit-delay predictor for unsigned samples (out
     // of line: the default path stays unchanged)
-    __attribute__((noinline)) void encodeRsiOther(const Span<ValueType> data, Span<DeltaType> mapped, BitBuffer& buffer)
+    SPAEC_NOINLINE void encodeRsiOther(const Span<ValueType> data, Span<DeltaType> mapped, BitBuffer& buffer)
     {
         preprocessOther(data, mapped);
         if (preprocessing_.prediction == Prediction::UnitDelay) {

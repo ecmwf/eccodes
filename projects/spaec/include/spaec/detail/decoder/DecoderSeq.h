@@ -587,7 +587,7 @@ public:
 
     // Decodes one RSI with a preprocessing other than the unit-delay predictor for unsigned samples
     // (the inverse of EncoderSeq::preprocessOther). Signed samples are returned sign-extended.
-    __attribute__((noinline)) void decodeRsiOther(const BitBuffer& buffer, Span<ValueType> rsi, size_t maxRunBlocks)
+    SPAEC_NOINLINE void decodeRsiOther(const BitBuffer& buffer, Span<ValueType> rsi, size_t maxRunBlocks)
     {
         const size_t n = rsi.size();
         const uint64_t mask = maxSample_;
@@ -750,7 +750,7 @@ public:
     // unsigned samples: decodes nValues values RSI by RSI into valuesBuf_ (sized for one RSI) and
     // calls done(count, offset) after each RSI. Out of line: the default paths stay unchanged.
     template <typename Done>
-    __attribute__((noinline)) void decodeOther(const BitBuffer& buffer, size_t nValues, Done&& done)
+    SPAEC_NOINLINE void decodeOther(const BitBuffer& buffer, size_t nValues, Done&& done)
     {
         for (size_t offset = 0; offset < nValues; offset += rsiSizeV_) {
             const size_t count = std::min(rsiSizeV_, nValues - offset);

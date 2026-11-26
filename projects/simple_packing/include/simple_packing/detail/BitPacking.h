@@ -11,6 +11,8 @@
 #include <cstring>
 #include <type_traits>
 
+#include "simple_packing/detail/Compat.h"
+
 #include "simple_packing/detail/Utils.h"
 
 #include "simple_packing/detail/U128.h"
@@ -79,7 +81,7 @@ T swap_bytes(const T& value)
 
 // Unaligned load/store of a word (the coded data has no alignment); compiles to a plain move
 template <typename T>
-__attribute__((always_inline)) inline T load_word(const uint8_t* ptr) noexcept
+SIMPLE_PACKING_ALWAYS_INLINE T load_word(const uint8_t* ptr) noexcept
 {
     T value;
     std::memcpy(&value, ptr, sizeof(T));
@@ -87,7 +89,7 @@ __attribute__((always_inline)) inline T load_word(const uint8_t* ptr) noexcept
 }
 
 template <typename T>
-__attribute__((always_inline)) inline void store_word(uint8_t* ptr, const T& value) noexcept
+SIMPLE_PACKING_ALWAYS_INLINE void store_word(uint8_t* ptr, const T& value) noexcept
 {
     std::memcpy(ptr, &value, sizeof(T));
 }
@@ -97,7 +99,7 @@ __attribute__((always_inline)) inline void store_word(uint8_t* ptr, const T& val
 // other bytes are 0. The bytes are copied and converted with swap_bytes (128-bit words as two 64-bit
 // halves): correct on every platform, no type punning.
 template <typename W>
-__attribute__((always_inline)) inline W load_be(const uint8_t* ptr, size_t n) noexcept
+SIMPLE_PACKING_ALWAYS_INLINE W load_be(const uint8_t* ptr, size_t n) noexcept
 {
     uint8_t b[sizeof(W)] = {};
     std::memcpy(b, ptr, n);
@@ -111,7 +113,7 @@ __attribute__((always_inline)) inline W load_be(const uint8_t* ptr, size_t n) no
 
 // Big-endian store of the first n <= sizeof(W) bytes of a word W
 template <typename W>
-__attribute__((always_inline)) inline void store_be(uint8_t* ptr, const W& value, size_t n) noexcept
+SIMPLE_PACKING_ALWAYS_INLINE void store_be(uint8_t* ptr, const W& value, size_t n) noexcept
 {
     uint8_t b[sizeof(W)];
     if constexpr (std::is_same_v<W, UInt128>) {
@@ -147,7 +149,7 @@ private:
 
 public:
     // Writes the value and keeps all other bits
-    __attribute__((always_inline)) inline void encode_element(uint8_t* ptr, uint8_t bitOffset, const ValueType value) const noexcept
+    SIMPLE_PACKING_ALWAYS_INLINE void encode_element(uint8_t* ptr, uint8_t bitOffset, const ValueType value) const noexcept
     {
         const size_t n = nBytes(bitOffset);
         const Word fieldMask = static_cast<Word>(mask() << shift(bitOffset));
@@ -156,7 +158,7 @@ public:
         store_be(ptr, coded, n);
     }
 
-    __attribute__((always_inline)) inline ValueType decode_element(const uint8_t* ptr, uint8_t bitOffset) const noexcept
+    SIMPLE_PACKING_ALWAYS_INLINE ValueType decode_element(const uint8_t* ptr, uint8_t bitOffset) const noexcept
     {
         const Word coded = load_be<Word>(ptr, nBytes(bitOffset));
         return static_cast<ValueType>((coded >> shift(bitOffset)) & mask());
@@ -164,7 +166,7 @@ public:
 
     // Writes the value; keeps the bits before it in the first byte, the bits after it must be 0
     // (Block: the rest of the word is overwritten with 0)
-    __attribute__((always_inline)) inline void encode(uint8_t* ptr, uint8_t bitOffset, const ValueType value) const noexcept
+    SIMPLE_PACKING_ALWAYS_INLINE void encode(uint8_t* ptr, uint8_t bitOffset, const ValueType value) const noexcept
     {
         if constexpr (BPV == 8 || BPV == 16 || BPV == 32 || BPV == 64) {
             store_word(ptr, swap_bytes<ValueType>(value));  // byte-aligned: bitOffset is 0
@@ -181,7 +183,7 @@ public:
         }
     }
 
-    __attribute__((always_inline)) inline ValueType decode(const uint8_t* ptr, uint8_t bitOffset) const noexcept
+    SIMPLE_PACKING_ALWAYS_INLINE ValueType decode(const uint8_t* ptr, uint8_t bitOffset) const noexcept
     {
         if constexpr (BPV == 16 || BPV == 32 || BPV == 64) {
             return swap_bytes<ValueType>(load_word<ValueType>(ptr));  // byte-aligned: bitOffset is 0
