@@ -232,6 +232,18 @@ int main()
         expect<std::invalid_argument>("packedSize of a default Scaling", [&] { sp::packedSize(10, unset); });
     }
 
+    // A Scaling whose codes do not decode to finite values of the type is an error (attack 4: the
+    // code of FLT_MAX with 10 bits and E = 119 is 512, and 512 * 2^119 = 2^128 is infinite in float)
+    {
+        const sp::Scaling scaling{ 0.0, 119, 0, 10 };
+        const std::vector<float> big{ std::numeric_limits<float>::max(), 0.0f, 1e38f };
+        expect<std::invalid_argument>("float codes beyond FLT_MAX", [&] { sp::pack(big, scaling); });
+        // In double the same codes decode to finite values
+        const std::vector<double> bigDouble(big.begin(), big.end());
+        const std::vector<double> back = sp::unpack<double>(sp::pack(bigDouble, scaling), bigDouble.size(), scaling);
+        check(std::isfinite(back[0]) && std::fabs(back[0] - bigDouble[0]) <= std::ldexp(1.0, 118), "double codes near FLT_MAX");
+    }
+
     // Errors
     {
         const sp::Scaling s = sp::scaling(values, sp::Method::bits(16));
