@@ -121,7 +121,8 @@ public:
         });
 
         // Fix-up: re-encode the leading RSIs of a chunk whose real starting k differs from the guess
-        for (size_t t = 1; t < nChunks; ++t) {
+        // (not with SplitSelector::Estimate, which has no state across blocks)
+        for (size_t t = 1; Selector == SplitSelector::Search && t < nChunks; ++t) {
             Chunk& c = chunks[t];
             const uint8_t kReal = chunks[t - 1].kOut;
             if (kReal == c.kIn[0]) {

@@ -18,6 +18,16 @@
 #include "spaec/detail/Compat.h"
 #include "spaec/detail/Span.h"
 
+// GCC without AVX2: the scalar writeSplitSample is inlined into the encoder, as GCC did before the
+// encoders were instantiated for two split-sample selectors (since then GCC's limit on the growth
+// of a translation unit keeps it from inlining). The other compilers and AVX2 builds decide as
+// before (an inline keyword would change the decisions of Clang and icx).
+#if defined(__GNUC__) && !defined(__clang__) && !defined(__AVX2__)
+    #define SPAEC_SCALAR_INLINE __attribute__((always_inline)) inline
+#else
+    #define SPAEC_SCALAR_INLINE
+#endif
+
 namespace spaec::detail
 {
 
@@ -235,8 +245,10 @@ public:
     // 5.5: J iterations instead of 2 J): the FS codewords of data[i] >> k at the current position
     // and, fsBits bits further (fsBits: the length of the codewords), the k low bits of every
     // sample. Both parts are ORed into the buffer, which must be zero after the current position.
-    template <typename T>
-    void writeSplitSample(const T* data, size_t count, unsigned k, uint64_t fsBits)
+    // Instance: a separate instance per caller (the split-sample selector of the encoder), so that
+    // each has one caller, as before the second selector: GCC inlines functions called once
+    template <typename T, int Instance = 0>
+    SPAEC_SCALAR_INLINE void writeSplitSample(const T* data, size_t count, unsigned k, uint64_t fsBits)
     {
         static_assert(std::is_integral<T>::value, "integral type required");
         if (k == 0) {
@@ -254,7 +266,7 @@ public:
             const uint64_t limitBytes = limitBits_ / 8;
             if (SPAEC_LIKELY(count % 16 == 0 && k <= 13 && (currentBitPos_ & 7) + fsBits <= 128 && currentBitPos_ / 8 + 16 <= limitBytes &&
                              end / 8 + 8 <= limitBytes)) {
-                writeSplitSampleAvx2(reinterpret_cast<const uint16_t*>(data), count, k, static_cast<size_t>(fsBits));
+                writeSplitSampleAvx2<Instance>(reinterpret_cast<const uint16_t*>(data), count, k, static_cast<size_t>(fsBits));
                 return;
             }
         }
@@ -307,6 +319,7 @@ public:
     //   or more gives 0: a position selects its word without a comparison)
     // - split bits: a multiply-add joins two k-bit fields, a shift two such pairs: 4 samples per
     //   64-bit word, appended to the stream through a carry register with plain stores
+    template <int Instance>
     void writeSplitSampleAvx2(const uint16_t* data, size_t count, unsigned k, size_t fsBits)
     {
         uint8_t* out = buffer_.data();

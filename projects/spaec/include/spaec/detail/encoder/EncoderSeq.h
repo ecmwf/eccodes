@@ -111,7 +111,7 @@ public:
         // size (from selectBestMethod) = ID + reference + codewords + (J - startIndex) k split bits
         const uint64_t nValues = blockSizeV_ - startIndex;
         const uint64_t fsBits = size - Base::ssId_.length - (RType == ReferenceType::Ref ? bpv_ : 0) - nValues * k;
-        buffer.writeSplitSample(values.data() + startIndex, nValues, k, fsBits);
+        buffer.template writeSplitSample<DeltaType, static_cast<int>(Selector)>(values.data() + startIndex, nValues, k, fsBits);
     }
 
     // Zero Block
