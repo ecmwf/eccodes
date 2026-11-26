@@ -11,6 +11,8 @@
 #include "grib_api_internal.h"
 #include "grib_ibmfloat.h"
 
+#include <math.h>
+
 constexpr auto ibm_table = IbmTable{};
 
 static void binary_search(const double xx[], const unsigned long n, double x, unsigned long* j)
@@ -201,8 +203,9 @@ int grib_nearest_smaller_ibm_float(double a, double* ret)
 {
     unsigned long l = 0;
 
-    if (a > ibm_table.vmax)
-        return GRIB_INTERNAL_ERROR;
+    /* grib_ibm_to_long cannot code a number that is too large, and it asserts: check both signs */
+    if (fabs(a) > ibm_table.vmax)
+        return GRIB_OUT_OF_RANGE;
 
     l = grib_ibm_nearest_smaller_to_long(a);
     *ret = grib_long_to_ibm(l);

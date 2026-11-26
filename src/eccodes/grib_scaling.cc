@@ -92,7 +92,10 @@ long grib_get_binary_scale_fact(double max, double min, long bpval, int* error)
         *error = GRIB_UNDERFLOW;
         scale = -last;
     }
-    ECCODES_ASSERT(scale <= last);
+    if (scale > last) {
+        *error = GRIB_OUT_OF_RANGE; /* the range is too large for any binary scale factor <= last */
+        return last;
+    }
     return scale;
 }
 
