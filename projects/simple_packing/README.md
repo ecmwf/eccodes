@@ -77,7 +77,8 @@ platform.
 
 CMake targets: `simple_packing::simple_packing` and `simple_packing::headers`. Options:
 `SIMPLE_PACKING_BUILD_TESTS`, `SIMPLE_PACKING_BUILD_FUZZERS` (Clang), `SIMPLE_PACKING_INSTALL`,
-`SIMPLE_PACKING_NATIVE_ARCH` (`-march=native`, default on), and the floating-point options below.
+`SIMPLE_PACKING_NATIVE_ARCH` (`-march=native`, default off: the binaries would run only on CPUs like the
+build machine), and the floating-point options below.
 
 `-DSIMPLE_PACKING_BUILD_BENCHMARKS=ON` builds `benchmarks/sp_bench`, an overview of the speed of
 packing and unpacking (doubles, floats, several threads). It uses synthetic fields, or your own

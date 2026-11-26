@@ -32,7 +32,10 @@ option(SPAEC_BUILD_TESTS "Build the spaec tests" ${SPAEC_TOP_LEVEL})
 option(SPAEC_BUILD_BENCHMARKS "Build the spaec benchmarks (benchmarks/)" OFF)
 option(SPAEC_BUILD_FUZZERS "Build the spaec libFuzzer fuzzers (requires Clang)" OFF)
 option(SPAEC_INSTALL "Install the spaec headers and CMake package" ${SPAEC_TOP_LEVEL})
-option(SPAEC_NATIVE_ARCH "Optimise for the host CPU (-march=native): faster, but not portable" ON)
+# Off by default: the code then runs on every CPU of the architecture. With -march=native the
+# binaries run only on CPUs like the build machine: not for packages, nor with a compiler cache
+# shared between machines (sccache, ccache), which returns the objects of another CPU
+option(SPAEC_NATIVE_ARCH "Optimise for the host CPU (-march=native): faster, but the binaries run only on CPUs like the build machine" OFF)
 
 # libFuzzer + ASan + UBSan instrumentation for the fuzzers and the code they exercise
 if(SPAEC_BUILD_FUZZERS)

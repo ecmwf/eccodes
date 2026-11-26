@@ -33,7 +33,10 @@ option(SIMPLE_PACKING_BUILD_TESTS "Build the simple_packing tests" ${SIMPLE_PACK
 option(SIMPLE_PACKING_BUILD_BENCHMARKS "Build the simple_packing benchmarks (benchmarks/)" OFF)
 option(SIMPLE_PACKING_BUILD_FUZZERS "Build the simple_packing libFuzzer fuzzers (requires Clang)" OFF)
 option(SIMPLE_PACKING_INSTALL "Install the simple_packing library, headers and CMake package" ${SIMPLE_PACKING_TOP_LEVEL})
-option(SIMPLE_PACKING_NATIVE_ARCH "Optimise for the host CPU (-march=native): faster, but not portable" ON)
+# Off by default: the code then runs on every CPU of the architecture. With -march=native the
+# binaries run only on CPUs like the build machine: not for packages, nor with a compiler cache
+# shared between machines (sccache, ccache), which returns the objects of another CPU
+option(SIMPLE_PACKING_NATIVE_ARCH "Optimise for the host CPU (-march=native): faster, but the binaries run only on CPUs like the build machine" OFF)
 
 # libFuzzer + ASan + UBSan instrumentation for the fuzzers and the library code they exercise
 if(SIMPLE_PACKING_BUILD_FUZZERS)

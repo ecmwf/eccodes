@@ -116,8 +116,8 @@ integers have fixed widths (`int32_t`, `uint32_t`, `int64_t`, ...), so they are 
 platform.
 
 CMake target: `spaec::spaec`. Options: `SPAEC_BUILD_TESTS`, `SPAEC_BUILD_FUZZERS` (Clang),
-`SPAEC_INSTALL`, `SPAEC_NATIVE_ARCH` (`-march=native`, default on), and the floating-point options
-below.
+`SPAEC_INSTALL`, `SPAEC_NATIVE_ARCH` (`-march=native`, default off: the binaries would run only on
+CPUs like the build machine), and the floating-point options below.
 
 `-DSPAEC_BUILD_BENCHMARKS=ON` builds `benchmarks/spaec_bench`, an overview of the speed of
 compression and decompression (both selectors, several threads; with libaec for comparison if it is

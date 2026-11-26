@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 // Packing must round every operation of ((value * 10^D) - R) * 2^-E + 0.5 separately, like the
-// legacy ecCodes code built without -march=native. With -march=native (the default of
-// SIMPLE_PACKING_NATIVE_ARCH), GCC contracted value * 10^D - R into a fused multiply-add, which
+// legacy ecCodes code built without -march=native. With -march=native (SIMPLE_PACKING_NATIVE_ARCH,
+// or a CPU with fused multiply-add), GCC contracted value * 10^D - R into a fused multiply-add, which
 // rounds once: values close to a rounding boundary were packed differently (off by one), so the
 // GRIB data depended on the machine the library was built on.
 #include <cmath>
