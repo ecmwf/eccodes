@@ -19,4 +19,5 @@ First version.
 - Packed data byte-identical to legacy ecCodes.
 - Floating-point compiler options `ON` by default (`SIMPLE_PACKING_FP_CONTRACT_OFF`,
   `SIMPLE_PACKING_NO_FAST_MATH`, `SIMPLE_PACKING_NO_TRAPPING_MATH`).
+- Benchmark `benchmarks/sp_bench` (`SIMPLE_PACKING_BUILD_BENCHMARKS`), install test.
 - Tested on Linux (GCC, Clang, Intel icx; x86-64, AArch64, s390x) and on Windows with MinGW-w64.

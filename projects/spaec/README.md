@@ -118,6 +118,10 @@ CMake target: `spaec::spaec`. Options: `SPAEC_BUILD_TESTS`, `SPAEC_BUILD_FUZZERS
 `SPAEC_INSTALL`, `SPAEC_NATIVE_ARCH` (`-march=native`, default on), and the floating-point options
 below.
 
+`-DSPAEC_BUILD_BENCHMARKS=ON` builds `benchmarks/spaec_bench`, an overview of the speed of
+compression and decompression (both selectors, several threads; with libaec for comparison if it is
+found). It uses synthetic fields, or your own samples (see `spaec_bench.cc`).
+
 ## Floating-point compiler options
 
 SpAec must round floating-point values in exactly the same way on every compiler and CPU, and it

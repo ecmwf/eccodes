@@ -29,6 +29,7 @@ else()
 endif()
 
 option(SPAEC_BUILD_TESTS "Build the spaec tests" ${SPAEC_TOP_LEVEL})
+option(SPAEC_BUILD_BENCHMARKS "Build the spaec benchmarks (benchmarks/)" OFF)
 option(SPAEC_BUILD_FUZZERS "Build the spaec libFuzzer fuzzers (requires Clang)" OFF)
 option(SPAEC_INSTALL "Install the spaec headers and CMake package" ${SPAEC_TOP_LEVEL})
 option(SPAEC_NATIVE_ARCH "Optimise for the host CPU (-march=native): faster, but not portable" ON)
@@ -105,6 +106,12 @@ endif()
 
 if(SPAEC_BUILD_FUZZERS)
   add_subdirectory(tests/fuzz)
+endif()
+
+# --- Benchmarks (an overview of the speed; see benchmarks/) ---
+
+if(SPAEC_BUILD_BENCHMARKS)
+  add_subdirectory(benchmarks)
 endif()
 
 # --- Installation ---

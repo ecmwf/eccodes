@@ -30,6 +30,7 @@ else()
 endif()
 
 option(SIMPLE_PACKING_BUILD_TESTS "Build the simple_packing tests" ${SIMPLE_PACKING_TOP_LEVEL})
+option(SIMPLE_PACKING_BUILD_BENCHMARKS "Build the simple_packing benchmarks (benchmarks/)" OFF)
 option(SIMPLE_PACKING_BUILD_FUZZERS "Build the simple_packing libFuzzer fuzzers (requires Clang)" OFF)
 option(SIMPLE_PACKING_INSTALL "Install the simple_packing library, headers and CMake package" ${SIMPLE_PACKING_TOP_LEVEL})
 option(SIMPLE_PACKING_NATIVE_ARCH "Optimise for the host CPU (-march=native): faster, but not portable" ON)
@@ -127,6 +128,12 @@ endif()
 
 if(SIMPLE_PACKING_BUILD_FUZZERS)
   add_subdirectory(tests/fuzz)
+endif()
+
+# --- Benchmarks (an overview of the speed; see benchmarks/) ---
+
+if(SIMPLE_PACKING_BUILD_BENCHMARKS)
+  add_subdirectory(benchmarks)
 endif()
 
 # --- Installation ---

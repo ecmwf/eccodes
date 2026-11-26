@@ -21,4 +21,5 @@ First version.
 - One or more threads, with the same output (work in progress).
 - Floating-point compiler options `ON` by default (`SPAEC_FP_CONTRACT_OFF`,
   `SPAEC_NO_FAST_MATH`, `SPAEC_NO_TRAPPING_MATH`).
+- Benchmark `benchmarks/spaec_bench` (`SPAEC_BUILD_BENCHMARKS`), install test.
 - Tested on Linux (GCC, Clang, Intel icx; x86-64, AArch64, s390x) and on Windows with MinGW-w64.

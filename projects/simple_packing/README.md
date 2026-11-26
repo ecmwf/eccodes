@@ -78,6 +78,10 @@ CMake targets: `simple_packing::simple_packing` and `simple_packing::headers`. O
 `SIMPLE_PACKING_BUILD_TESTS`, `SIMPLE_PACKING_BUILD_FUZZERS` (Clang), `SIMPLE_PACKING_INSTALL`,
 `SIMPLE_PACKING_NATIVE_ARCH` (`-march=native`, default on), and the floating-point options below.
 
+`-DSIMPLE_PACKING_BUILD_BENCHMARKS=ON` builds `benchmarks/sp_bench`, an overview of the speed of
+packing and unpacking (doubles, floats, several threads). It uses synthetic fields, or your own
+values (see `sp_bench.cc`).
+
 ## Floating-point compiler options
 
 simple_packing must round floating-point values in exactly the same way on every compiler and CPU,
