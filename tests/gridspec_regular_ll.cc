@@ -180,6 +180,8 @@ CASE("rotated")
 
 CASE("GRIB keys to gridSpec")
 {
+    const std::string OFFSET_BY_A_FRACTION = R"({"area":[60.1666666666667,0.166666666666667,0.166666666666667,60.1666666666667],"grid":[0.333333333333333,0.333333333333333],"reference":[0.166666666666667,0.166666666666667]})";
+
     // the sample GRIB2 is regular_ll, area [60,0,0,30], increments 2/2 degrees
     EXPECT(gridspec::check_all<decode_t>({
         { "GRIB2", {}, R"({"area":[60,0,0,30],"grid":[2,2]})" },
@@ -197,10 +199,21 @@ CASE("GRIB keys to gridSpec")
         { "GRIB2", { { "Ni", 1080 }, { "Nj", 541 }, { "numberOfDataPoints", 1080 * 541 }, { "latitudeOfFirstGridPointInDegrees", 90. }, { "longitudeOfFirstGridPointInDegrees", 0. }, { "latitudeOfLastGridPointInDegrees", -90. }, { "longitudeOfLastGridPointInDegrees", 359.666667 }, { "iDirectionIncrementInDegrees", 0.333333 }, { "jDirectionIncrementInDegrees", 0.333333 } }, R"({"grid":[0.333333333333333,0.333333333333333]})" },
 
         // a division of the globe given to a millidegree (GRIB1, 1/3 degree as 0.333, of the sample's 360x181 points) is exact
+        // a grid offset by a fraction of a repeating fraction increment (1/6 of 1/3 degree), of the first/last points rounded
+        // (outwards) to the angular precision, is of that offset: the same, of either edition or of a basic angle (of the
+        // default precision, or exact)
+        { "GRIB1", { { "Ni", 181 }, { "Nj", 181 }, { "latitudeOfFirstGridPoint", 60167 }, { "longitudeOfFirstGridPoint", 166 }, { "latitudeOfLastGridPoint", 166 }, { "longitudeOfLastGridPoint", 60167 }, { "iDirectionIncrement", 333 }, { "jDirectionIncrement", 333 } }, OFFSET_BY_A_FRACTION },
+        { "GRIB2", { { "Ni", 181 }, { "Nj", 181 }, { "numberOfDataPoints", 181 * 181 }, { "latitudeOfFirstGridPoint", 60166667 }, { "longitudeOfFirstGridPoint", 166666 }, { "latitudeOfLastGridPoint", 166666 }, { "longitudeOfLastGridPoint", 60166667 }, { "iDirectionIncrement", 333333 }, { "jDirectionIncrement", 333333 } }, OFFSET_BY_A_FRACTION },
+        { "GRIB2", { { "basicAngleOfTheInitialProductionDomain", 1 }, { "subdivisionsOfBasicAngle", 1000000 }, { "Ni", 181 }, { "Nj", 181 }, { "numberOfDataPoints", 181 * 181 }, { "latitudeOfFirstGridPoint", 60166667 }, { "longitudeOfFirstGridPoint", 166666 }, { "latitudeOfLastGridPoint", 166666 }, { "longitudeOfLastGridPoint", 60166667 }, { "iDirectionIncrement", 333333 }, { "jDirectionIncrement", 333333 } }, OFFSET_BY_A_FRACTION },
+        { "GRIB2", { { "basicAngleOfTheInitialProductionDomain", 0 }, { "subdivisionsOfBasicAngle", 6 }, { "Ni", 181 }, { "Nj", 181 }, { "numberOfDataPoints", 181 * 181 }, { "latitudeOfFirstGridPoint", 361 }, { "longitudeOfFirstGridPoint", 1 }, { "latitudeOfLastGridPoint", 1 }, { "longitudeOfLastGridPoint", 361 }, { "iDirectionIncrement", 2 }, { "jDirectionIncrement", 2 } }, OFFSET_BY_A_FRACTION },
+
+        // ... but not if further than the precision (as encoded)
+        { "GRIB2", { { "Ni", 181 }, { "Nj", 181 }, { "numberOfDataPoints", 181 * 181 }, { "latitudeOfFirstGridPoint", 60166000 }, { "longitudeOfFirstGridPoint", 166000 }, { "latitudeOfLastGridPoint", 166000 }, { "longitudeOfLastGridPoint", 60166000 }, { "iDirectionIncrement", 333333 }, { "jDirectionIncrement", 333333 } }, R"({"area":[60.166,0.166,0.166,60.166],"grid":[0.333333333333333,0.333333333333333],"reference":[0.166,0.166]})" },
+
         { "GRIB1", { { "Ni", 360 }, { "Nj", 181 }, { "latitudeOfFirstGridPoint", 90000 }, { "longitudeOfFirstGridPoint", 0 }, { "latitudeOfLastGridPoint", 30000 }, { "longitudeOfLastGridPoint", 119667 }, { "iDirectionIncrement", 333 }, { "jDirectionIncrement", 333 } }, R"({"area":[90,0,30,119.666666666667],"grid":[0.333333333333333,0.333333333333333]})" },
 
         // an increment given exactly, of first/last points imprecise (by a few angular precisions), is the increment
-        { "GRIB2", { { "Ni", 2560 }, { "Nj", 1920 }, { "numberOfDataPoints", 2560 * 1920 }, { "jScansPositively", 1 }, { "latitudeOfFirstGridPoint", -89953128 }, { "longitudeOfFirstGridPoint", 70312 }, { "latitudeOfLastGridPoint", 89953128 }, { "longitudeOfLastGridPoint", 359929696 }, { "iDirectionIncrement", 140625 }, { "jDirectionIncrement", 93750 } }, R"({"grid":[0.140625,0.09375],"order":"i+j+","reference":[0.070312,0.0468681794286641]})" },
+        { "GRIB2", { { "Ni", 2560 }, { "Nj", 1920 }, { "numberOfDataPoints", 2560 * 1920 }, { "jScansPositively", 1 }, { "latitudeOfFirstGridPoint", -89953128 }, { "longitudeOfFirstGridPoint", 70312 }, { "latitudeOfLastGridPoint", 89953128 }, { "longitudeOfLastGridPoint", 359929696 }, { "iDirectionIncrement", 140625 }, { "jDirectionIncrement", 93750 } }, R"({"grid":[0.140625,0.09375],"order":"i+j+","reference":[0.0703125,0.046872]})" },
 
         // an increment given inconsistently with the first/last points (warning) is calculated from them
         { "GRIB2", { { "iDirectionIncrement", 3000000 } }, R"({"area":[60,0,0,30],"grid":[2,2]})" },
@@ -247,7 +260,7 @@ CASE("GRIB to gridSpec")
                                        R"({"grid":[2,2]})",
                                        R"({"grid":[2,2]})",
                                        R"({"area":[62.375,-12,48.042,13],"grid":[0.125,0.0833313953488372],"order":"j+i+","reference":[0,0.0431162790697674]})",
-                                       R"({"area":[62.333,-11.938,48,13.062],"grid":[0.125,0.0833313953488372],"order":"j+i+","reference":[0.062,0.00111627906976744]})",
+                                       R"({"area":[62.333,-11.9375,48,13.0625],"grid":[0.125,0.0833313953488372],"order":"j+i+","reference":[0.0625,0.00111627906976744]})",
                                        R"({"grid":[1.5,1.5]})",
                                        R"({"grid":[1.40625,0.462724935732648],"reference":[0,0.231362467866324]})",
                                        R"({"grid":[1.25,0.833333333333333],"order":"i+j+"})",
@@ -258,8 +271,8 @@ CASE("GRIB to gridSpec")
                                        R"({"area":[73,-27,33,45],"grid":[0.1,0.1]})",
                                        R"({"grid":[0.45,0.3],"order":"i+j+","reference":[0.225,0.15]})",
                                        R"({"grid":[0.45,0.3],"order":"i+j+"})",
-                                       R"({"area":[80.0390615702317,0.175781,-80.0390634297683,359.823707],"grid":[0.351562,0.234375],"order":"i+j+","reference":[0.175781,0.117186570231658]})",
-                                       R"({"area":[80.0390615702317,0,-80.0390634297683,360],"grid":[0.3515625,0.234375],"order":"i+j+","reference":[0.175781,0.117186570231658]})",
+                                       R"({"area":[80.0390625,0.175781,-80.0390625,359.823707],"grid":[0.351562,0.234375],"order":"i+j+","reference":[0.175781,0.1171875]})",
+                                       R"({"area":[80.0390625,0,-80.0390625,360],"grid":[0.3515625,0.234375],"order":"i+j+","reference":[0.17578125,0.1171875]})",
                                        R"({"area":[89.55,0,-90,360],"grid":[0.35,0.34931906614786],"reference":[0,0.12431906614786]})",
                                        R"({"area":[90,-179.875,-90,180.125],"grid":[0.25,0.25],"order":"i+j+","reference":[0.125,0.125]})",
                                        R"({"grid":[0.1,0.1],"reference":[0.05,0.05]})",
@@ -272,14 +285,11 @@ CASE("GRIB to gridSpec")
                                        R"({"grid":[1.875,1.25],"order":"i+j+","reference":[0.9375,0]})",
                                        R"({"grid":[1.25,0.833333333333333],"order":"i+j+","reference":[0.625,0.416666666666667]})",
                                        R"({"grid":[0.5625,0.375],"order":"i+j+","reference":[0.28125,0.1875]})",
-                                       R"({"grid":[0.140625,0.09375],"order":"i+j+","reference":[0.070312,0.0468681794286641]})",
+                                       R"({"grid":[0.140625,0.09375],"order":"i+j+","reference":[0.0703125,0.046872]})",
                                        R"({"area":[20,20,17,24],"grid":[1,1]})",
                                        R"({"area":[20,20,17,24],"grid":[1,1],"order":"i-j-"})",
                                        R"({"area":[20,20,17,24],"grid":[1,1],"order":"i+j+"})",
-                                   },
-                                   // the reference isn't encodable to the angular precision: of first/last points imprecise
-                                   // (single precision), or of a repeating fraction (not snapped by eckit::geo)
-                                   { 35, 36, 40, 47, 49 }));
+                                   }));
 
     EXPECT(gridspec::check_decoded("gridspec/gridType=rotated_ll.grib",
                                    {

@@ -342,6 +342,13 @@ const char* get_key(const std::string& name, codes_handle* h)
         { "west_east_increment", "iDirectionIncrementInDegrees" },
         { "south_north_increment", "jDirectionIncrementInDegrees" },
 
+        { "west", "west_fix_for_regular_ll", _or(is("gridType", "regular_ll"), is("gridType", "rotated_ll")) },
+        { "east", "east_fix_for_regular_ll", _or(is("gridType", "regular_ll"), is("gridType", "rotated_ll")) },
+        { "south", "south_fix_for_regular_ll", _or(is("gridType", "regular_ll"), is("gridType", "rotated_ll")) },
+        { "north", "north_fix_for_regular_ll", _or(is("gridType", "regular_ll"), is("gridType", "rotated_ll")) },
+        { "south", "south_fix_for_regular_ll", is("gridType", "reduced_ll") },
+        { "north", "north_fix_for_regular_ll", is("gridType", "reduced_ll") },
+
         { "west", "longitudeOfLastGridPointInDegrees_fix_for_regular_gaussian_grids",
           _and(is("iScansNegatively", 1L), is_regular_gaussian()) },
         { "east", "longitudeOfFirstGridPointInDegrees_fix_for_regular_gaussian_grids",
@@ -538,18 +545,33 @@ bool codes_is_well_defined(codes_handle* h, const char* key)
 ProcessingT<double>* angular_precision()
 {
     return new ProcessingT<double>([](codes_handle* h, double& value) {
-        // angles of a basic angle and its subdivisions are exact (0 stands for the default units, of the edition)
-        long basic = 0;
-        long subdivisions = 0;
-        if (codes_is_well_defined(h, "basicAngleOfTheInitialProductionDomain") &&
-            codes_is_well_defined(h, "subdivisionsOfBasicAngle") &&
-            codes_get_long(h, "basicAngleOfTheInitialProductionDomain", &basic) == CODES_SUCCESS &&
-            codes_get_long(h, "subdivisionsOfBasicAngle", &subdivisions) == CODES_SUCCESS && basic > 0 &&
-            subdivisions > 0) {
-            value = 0.;
-            return true;
+        // the unit of the angles, of a basic angle and its subdivisions (as the g2grid accessor: a basic angle 0 is 1, and
+        // subdivisions missing or 0 are of the edition, so basicAngle=1/subdivisions=1000000 is the GRIB2 default); angles
+        // are rounded to it (exact if it divides them)
+        if (codes_is_defined(h, "basicAngleOfTheInitialProductionDomain") != 0 &&
+            codes_is_defined(h, "subdivisionsOfBasicAngle") != 0) {
+            long basic = 0;
+            CHECK_CALL(codes_get_long(h, "basicAngleOfTheInitialProductionDomain", &basic));
+
+            long subdivisions = 0;
+            if (int err = 0; codes_is_missing(h, "subdivisionsOfBasicAngle", &err) == 0 && err == CODES_SUCCESS) {
+                CHECK_CALL(codes_get_long(h, "subdivisionsOfBasicAngle", &subdivisions));
+            }
+
+            if (subdivisions > 0) {
+                value = static_cast<double>(basic > 0 ? basic : 1) / static_cast<double>(subdivisions);
+                return true;
+            }
+
+            if (basic > 1) {
+                long angleSubdivisions = 0;
+                CHECK_CALL(codes_get_long(h, "angleSubdivisions", &angleSubdivisions));
+                value = angleSubdivisions > 0 ? static_cast<double>(basic) / static_cast<double>(angleSubdivisions) : 0.;
+                return true;
+            }
         }
 
+        // the unit of the edition (0 if unknown)
         long angleSubdivisions = 0;
         CHECK_CALL(codes_get_long(h, "angleSubdivisions", &angleSubdivisions));
 
@@ -859,20 +881,24 @@ ProcessingT<double>* grid_increment(const char* inc_key, const char* incgiven_ke
             }
 
             // an increment of a division of the globe (360/m degrees) is exact (e.g. 1/3 degree, given as 0.333333): the
-            // division nearest the increment calculated, if given to the angular precision, and its points are within the
-            // first/last points (each rounded outwards) by twice the precision at most, so the grid is of these points
-            if (given && value_calculated != 0.) {
+            // division nearest the increment calculated, if given (or calculated) to the angular precision, and its points
+            // are within the first/last points (each rounded outwards) by twice the precision at most, so the grid is of
+            // these points
+            if (value_calculated != 0.) {
                 const auto exact = 360. / std::round(360. / std::abs(value_calculated));
                 const auto shortfall = (std::abs(value_calculated) - exact) * static_cast<double>(n - 1);
-                if (eckit::types::is_approximately_equal(exact, std::abs(value), std::max(eps, 1e-6)) &&
+                if (eckit::types::is_approximately_equal(exact, std::abs(given ? value : value_calculated), std::max(eps, 1e-6)) &&
                     -1e-9 <= shortfall && shortfall <= 2. * std::max(eps, 1e-6)) {
                     value = std::copysign(exact, value_calculated);
                     return true;
                 }
             }
 
+            // an increment given is consistent with the first/last points (each rounded to the precision, either way) if
+            // their span is within twice the precision
             if (given) {
-                if (!eckit::types::is_approximately_equal(value, value_calculated, 1e-6)) {
+                if (const auto tolerance = std::max(1e-6, 2. * eps / static_cast<double>(n - 1));
+                    !eckit::types::is_approximately_equal(value, value_calculated, tolerance)) {
                     wrongly_encoded_grib(
                         "GribToSpec: inconsistent increment: '" + std::string{ inc_key } +
                         "'=" + std::to_string(value) + " ~= " + std::to_string(value_calculated) +
@@ -891,6 +917,85 @@ ProcessingT<double>* grid_increment(const char* inc_key, const char* incgiven_ke
         }
 
         return false;
+    });
+}
+
+
+// Bounds (first/last points) of regular lat/lon grids (and latitudes of reduced lat/lon grids), as of the grid: angles are
+// rounded to the angular precision, so a grid offset by a fraction of a repeating fraction increment isn't encoded
+// exactly (e.g. by half of 1/120 degree, 0.0041666... as 0.004166); the lower (west/south) bound is offset by the nearest
+// fraction k/m of the increment (of the first m, of the divisors of 120, the powers of 2 to 64, and 240; fractions closer
+// together than the precision aren't told apart, so aren't snapped to), and the upper (east/north) bound is the point
+// nearest it, if within twice the precision (angles rounded either way, e.g. outwards); only of the increment as encoded,
+// or of a division of the globe (e.g. 1/3 degree, given as 0.333333), as one calculated from the bounds is as imprecise as
+// they are
+ProcessingT<double>* bound_fix_for_regular_ll(bool longitude, bool upper)
+{
+    return new ProcessingT<double>([=](const Message& h, double& value) {
+        static const std::unique_ptr<ProcessingT<double>> dlon(grid_increment("iDirectionIncrementInDegrees", "iDirectionIncrementGiven", "longitudeOfFirstGridPointInDegrees", "longitudeOfLastGridPointInDegrees", "Ni", "iScansPositively"));
+        static const std::unique_ptr<ProcessingT<double>> dlat(grid_increment("jDirectionIncrementInDegrees", "jDirectionIncrementGiven", "latitudeOfFirstGridPointInDegrees", "latitudeOfLastGridPointInDegrees", "Nj", "jScansPositively"));
+        static constexpr long DENOMINATORS[]{ 1, 2, 3, 4, 5, 6, 8, 10, 12, 15, 16, 20, 24, 30, 32, 40, 60, 64, 120, 240 };
+
+        double first = 0.;
+        double last = 0.;
+        long scan = 0;
+        CHECK_CALL(h.get_double(longitude ? "longitudeOfFirstGridPointInDegrees" : "latitudeOfFirstGridPointInDegrees", &first));
+        CHECK_CALL(h.get_double(longitude ? "longitudeOfLastGridPointInDegrees" : "latitudeOfLastGridPointInDegrees", &last));
+        CHECK_CALL(h.get_long(longitude ? "iScansNegatively" : "jScansPositively", &scan));
+
+        const auto first_is_lower = longitude ? scan == 0 : scan != 0;
+        const auto lo = first_is_lower ? first : last;
+        const auto hi = first_is_lower ? last : first;
+        value = upper ? hi : lo;
+
+        double eps = 0.;
+        ASSERT(std::unique_ptr<ProcessingT<double>>(angular_precision())->eval(h, eps));
+
+        double inc = 0.;
+        if (!(eps > 0.) || !(longitude ? dlon : dlat)->eval(h, inc) || inc == 0.) {
+            return true;
+        }
+
+        inc = std::abs(inc);
+        if (!eckit::types::is_approximately_equal(std::round(360. / inc) * inc, 360., 1e-9)) {
+            const auto* inc_key = longitude ? "iDirectionIncrementInDegrees" : "jDirectionIncrementInDegrees";
+            long given = 0;
+            double encoded = 0.;
+            if (codes_get_long(h, longitude ? "iDirectionIncrementGiven" : "jDirectionIncrementGiven", &given) != CODES_SUCCESS ||
+                given == 0 || !codes_is_well_defined(h, inc_key) || h.get_double(inc_key, &encoded) != CODES_SUCCESS ||
+                inc != std::abs(encoded)) {
+                return true;
+            }
+        }
+
+        const auto tolerance = 2. * eps;
+
+        auto lower = lo;
+        const auto shift = lo - inc * std::floor(lo / inc);
+        for (const auto m : DENOMINATORS) {
+            if (inc / static_cast<double>(m) <= 2. * tolerance) {
+                break;
+            }
+            if (const auto offset = std::round(shift / inc * static_cast<double>(m)) * inc / static_cast<double>(m);
+                std::abs(offset - shift) <= tolerance) {
+                lower = lo - shift + offset;
+                break;
+            }
+        }
+
+        auto bound = lower;
+        if (upper) {
+            const auto span = hi - lower + (longitude && hi < lower ? 360. : 0.);
+            const auto diff = std::round(span / inc) * inc - span;
+            bound = std::abs(diff) <= tolerance ? hi + diff : hi;
+        }
+
+        // as encoded if the same (to a small tolerance), latitudes within the poles
+        if (!eckit::types::is_approximately_equal(bound, value, 1e-9)) {
+            value = longitude ? bound : std::clamp(bound, -90., 90.);
+        }
+
+        return true;
     });
 }
 
@@ -1594,6 +1699,10 @@ bool GribToSpec::get(const std::string& name, double& value) const
             { "angular_precision", angular_precision() },
             { "dlon", grid_increment("iDirectionIncrementInDegrees", "iDirectionIncrementGiven", "longitudeOfFirstGridPointInDegrees", "longitudeOfLastGridPointInDegrees", "Ni", "iScansPositively"), _or(is("gridType", "regular_ll"), is("gridType", "rotated_ll")) },
             { "dlat", grid_increment("jDirectionIncrementInDegrees", "jDirectionIncrementGiven", "latitudeOfFirstGridPointInDegrees", "latitudeOfLastGridPointInDegrees", "Nj", "jScansPositively"), _or(is("gridType", "regular_ll"), is("gridType", "rotated_ll")) },
+            { "west_fix_for_regular_ll", bound_fix_for_regular_ll(true, false) },
+            { "east_fix_for_regular_ll", bound_fix_for_regular_ll(true, true) },
+            { "south_fix_for_regular_ll", bound_fix_for_regular_ll(false, false) },
+            { "north_fix_for_regular_ll", bound_fix_for_regular_ll(false, true) },
             { "longitudeOfLastGridPointInDegrees_fix_for_global_reduced_grids",
               longitudeOfLastGridPointInDegrees_fix_for_global_reduced_grids() },
             { "iDirectionIncrementInDegrees_fix_for_periodic_regular_grids",

@@ -48,6 +48,11 @@ CASE("gridSpec to GRIB and back")
         { "reduced_ll_sfc_grib1", R"({"area":[10,-10,-10,10],"pl":[4,8,4],"type":"reduced_ll"})", "reduced_ll", grid(3, 10000, -10000, -10000, 10000, 16) },
         { "reduced_ll_sfc_grib2", R"({"area":[10,-10,-10,10],"pl":[4,8,4],"type":"reduced_ll"})", "reduced_ll", grid(3, 10000000, 350000000, -10000000, 10000000, 16), R"({"area":[10,350,-10,370],"pl":[4,8,4],"type":"reduced_ll"})" },
 
+        // latitudes offset by a fraction of a repeating fraction increment (1/2 of 5/6 degree), encoded to the angular
+        // precision (outwards), are of that offset (of either edition)
+        { "reduced_ll_sfc_grib1", R"({"area":[5.41666666666667,0,0.416666666666667,10],"pl":[4,8,8,8,8,8,4],"type":"reduced_ll"})", "reduced_ll", grid(7, 5417, 0, 416, 10000, 48) },
+        { "reduced_ll_sfc_grib2", R"({"area":[5.41666666666667,0,0.416666666666667,10],"pl":[4,8,8,8,8,8,4],"type":"reduced_ll"})", "reduced_ll", grid(7, 5416667, 0, 416666, 10000000, 48) },
+
         // set on a message of another grid
         { "GRIB1", R"({"pl":[0,10,0],"type":"reduced_ll"})", "reduced_ll", grid(3, 90000, 0, -90000, 324000, 10) },
         { "GRIB2", R"({"pl":[0,10,0],"type":"reduced_ll"})", "reduced_ll", grid(3, 90000000, 0, -90000000, 324000000, 10) },
