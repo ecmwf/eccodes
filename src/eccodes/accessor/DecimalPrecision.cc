@@ -42,12 +42,18 @@ int DecimalPrecision::unpack_long(long* val, size_t* len)
 int DecimalPrecision::pack_long(const long* val, size_t* /*len*/)
 {
     long bitsPerValue = 0;
+    long oldDecimalScaleFactor = 0, oldBitsPerValue = 0, oldChangingPrecision = 0;
     size_t size = 0;
     int ret = 0;
     grib_context* c = context_;
     grib_handle* h = get_enclosing_handle();
 
-    if (!values_) {
+    if (values_ && (ret = grib_get_size(h, values_, &size)) != GRIB_SUCCESS)
+        return ret;
+
+    /* Without values there is nothing to repack, only the keys change: grib_context_malloc(c, 0)
+       returns NULL, so a field with no coded values must not reach the allocation below */
+    if (!values_ || size == 0) {
         if ((ret = grib_set_long_internal(h, bits_per_value_, 0)) != GRIB_SUCCESS)
             return ret;
 
@@ -60,9 +66,6 @@ int DecimalPrecision::pack_long(const long* val, size_t* /*len*/)
         return GRIB_SUCCESS;
     }
 
-    if ((ret = grib_get_size(h, values_, &size)) != GRIB_SUCCESS)
-        return ret;
-
     double* values = (double*)grib_context_malloc(c, size * sizeof(double));
     if (!values) return GRIB_OUT_OF_MEMORY;
 
@@ -70,19 +73,21 @@ int DecimalPrecision::pack_long(const long* val, size_t* /*len*/)
         goto cleanup;
     }
 
-    if ((ret = grib_set_long_internal(h, decimal_scale_factor_, *val)) != GRIB_SUCCESS) {
+    // Keep the packing keys, to restore them if the values cannot be repacked
+    if ((ret = grib_get_long_internal(h, decimal_scale_factor_, &oldDecimalScaleFactor)) != GRIB_SUCCESS ||
+        (ret = grib_get_long_internal(h, bits_per_value_, &oldBitsPerValue)) != GRIB_SUCCESS ||
+        (ret = grib_get_long_internal(h, changing_precision_, &oldChangingPrecision)) != GRIB_SUCCESS) {
         goto cleanup;
     }
 
-    if ((ret = grib_set_long_internal(h, bits_per_value_, bitsPerValue)) != GRIB_SUCCESS) {
-        goto cleanup;
-    }
-
-    if ((ret = grib_set_long_internal(h, changing_precision_, 1)) != GRIB_SUCCESS) {
-        goto cleanup;
-    }
-
-    if ((ret = grib_set_double_array_internal(h, values_, values, size)) != GRIB_SUCCESS) {
+    if ((ret = grib_set_long_internal(h, decimal_scale_factor_, *val)) != GRIB_SUCCESS ||
+        (ret = grib_set_long_internal(h, bits_per_value_, bitsPerValue)) != GRIB_SUCCESS ||
+        (ret = grib_set_long_internal(h, changing_precision_, 1)) != GRIB_SUCCESS ||
+        (ret = grib_set_double_array_internal(h, values_, values, size)) != GRIB_SUCCESS) {
+        // A failed repack leaves the data unchanged: restore the keys that describe it
+        grib_set_long_internal(h, decimal_scale_factor_, oldDecimalScaleFactor);
+        grib_set_long_internal(h, bits_per_value_, oldBitsPerValue);
+        grib_set_long_internal(h, changing_precision_, oldChangingPrecision);
         goto cleanup;
     }
 

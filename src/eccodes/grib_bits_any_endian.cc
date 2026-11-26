@@ -247,23 +247,26 @@ unsigned long grib_decode_unsigned_long(const unsigned char* p, long* bitp, long
     pi = oc;
     /* number of useful bits in current byte */
     usefulBitsInByte = 8 - (*bitp & 7);
-    /* read at least enough bits (byte by byte) from input */
-    bitsToRead = nbits;
-    while (bitsToRead > 0) {
-        ret <<= 8;
-        /*   ret += p[pi];     */
-        DEBUG_ASSERT((ret & p[pi]) == 0);
-        ret = ret | p[pi];
+    /* Read exactly nbits bits: the useful bits of the current byte, then whole bytes, then the
+       leading bits of the last byte. Reading whole bytes and removing the surplus bits afterwards
+       needs up to nbits + 7 bits, which lost the high bits of values of 58 bits and more. */
+    ret = p[pi] & ((1u << usefulBitsInByte) - 1);
+    bitsToRead = nbits - usefulBitsInByte;
+    if (bitsToRead < 0) {
+        /* the value ends inside the current byte */
+        ret >>= -bitsToRead;
+    }
+    else {
         pi++;
-        bitsToRead -= usefulBitsInByte;
-        usefulBitsInByte = 8;
+        while (bitsToRead >= 8) {
+            ret = (ret << 8) | p[pi];
+            pi++;
+            bitsToRead -= 8;
+        }
+        if (bitsToRead > 0)
+            ret = (ret << bitsToRead) | (p[pi] >> (8 - bitsToRead));
     }
     *bitp += nbits;
-    /* printf("%d %d %d\n", pi, ret, offset); */
-    /* bitsToRead might now be negative (too many bits read) */
-    /* remove those which are too much */
-    ret >>= -1 * bitsToRead;
-    /* remove leading bits (from previous value) */
     ret &= mask;
     /* printf("%d %d\n", ret2, ret);*/
 

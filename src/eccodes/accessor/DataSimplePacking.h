@@ -32,6 +32,10 @@ public:
     int unpack_double_subarray(double* val, size_t start, size_t len) override;
 
 protected:
+    // true: use the simple_packing library (projects/simple_packing), false: the legacy code.
+    // The legacy code is the default; ECCODES_USE_SP=1 selects the library.
+    static bool use_new_simple_packing();
+
     int edition_ = 0;
     const char* units_factor_ = nullptr;
     const char* units_bias_ = nullptr;

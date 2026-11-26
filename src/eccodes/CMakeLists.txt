@@ -218,6 +218,8 @@ list( APPEND eccodes_src_files
     accessor/DataJpeg2000Packing.cc
     accessor/DataPngPacking.cc
     accessor/DataCcsdsPacking.cc
+    accessor/DataCcsdsPackingLegacy.cc
+    accessor/DataCcsdsPackingNew.cc
     accessor/DataRawPacking.cc
     accessor/DataComplexPacking.cc
     accessor/DataG1ComplexPacking.cc
@@ -412,7 +414,9 @@ set( eccodes_accessor_registrations "" )
 foreach( _src ${eccodes_src_files} )
     if( _src MATCHES "^accessor/([A-Z][A-Za-z0-9]*)\\.cc$" )
         set( _class ${CMAKE_MATCH_1} )
-        if( NOT _class STREQUAL "Accessor" ) # the base class
+        # Not the base class, nor implementation files of an accessor (no header of their own,
+        # e.g. DataCcsdsPackingLegacy.cc)
+        if( NOT _class STREQUAL "Accessor" AND EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/accessor/${_class}.h )
             string( APPEND eccodes_accessor_includes "#include \"accessor/${_class}.h\"\n" )
             string( APPEND eccodes_accessor_registrations "    add<accessor::${_class}>();\n" )
         endif()
@@ -483,3 +487,36 @@ ecbuild_add_library(
         $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/src>
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
 )
+
+# SpAec and simple_packing headers: only their include directories, not the usage requirements of
+# the targets (-ffp-contract=off would apply to the whole library); the accessors that use them get
+# the project flags below
+target_include_directories(eccodes PRIVATE
+    $<TARGET_PROPERTY:spaec,INTERFACE_INCLUDE_DIRECTORIES>
+    $<TARGET_PROPERTY:simple_packing_headers,INTERFACE_INCLUDE_DIRECTORIES>)
+
+# CCSDS: optimise the new implementation, which instantiates the header-only SpAec coder and
+# simple_packing optimisers
+set_source_files_properties(accessor/DataCcsdsPackingNew.cc PROPERTIES
+    COMPILE_OPTIONS "${SPAEC_OPT_FLAGS}"
+    COMPILE_DEFINITIONS "NDEBUG")
+
+# Simple packing: embed the compiled sources of projects/simple_packing (works for static and
+# shared libraries) and optimise the accessors that use its packing loops
+target_sources(eccodes PRIVATE $<TARGET_OBJECTS:simple_packing_objects>)
+set_source_files_properties(accessor/DataSimplePacking.cc accessor/DataG1SimplePacking.cc accessor/DataG2SimplePacking.cc
+    PROPERTIES COMPILE_OPTIONS "${SIMPLE_PACKING_OPT_FLAGS}")
+
+# The legacy CCSDS decoder must decode the same bits as the new one, but it does the scaling
+# arithmetic of the decoder itself. It gets the floating-point options that this compiler needs for
+# correct results (SPAEC_FP_SAFETY_FLAGS, projects/spaec/cmake/spaecFloatingPoint.cmake: e.g.
+# -fno-fast-math for icx/icpx, whose default floating-point model changes the decoded values), not
+# the optimisation flags of the new implementation
+if( SPAEC_FP_SAFETY_FLAGS )
+    get_source_file_property( ECCODES_LEGACY_CCSDS_OPTIONS accessor/DataCcsdsPackingLegacy.cc COMPILE_OPTIONS )
+    if( ECCODES_LEGACY_CCSDS_OPTIONS STREQUAL "NOTFOUND" )
+        set( ECCODES_LEGACY_CCSDS_OPTIONS "" )
+    endif()
+    set_source_files_properties(accessor/DataCcsdsPackingLegacy.cc PROPERTIES
+        COMPILE_OPTIONS "${ECCODES_LEGACY_CCSDS_OPTIONS};${SPAEC_FP_SAFETY_FLAGS}")
+endif()

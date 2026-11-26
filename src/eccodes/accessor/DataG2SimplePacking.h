@@ -23,10 +23,20 @@ public:
     const AccessorType& accessor_type() const override { return accessor_type_; }
     int pack_bytes(const unsigned char*, size_t* len) override;
     int pack_double(const double* val, size_t* len) override;
+    int pack_float(const float* val, size_t* len) override;
     int value_count(long*) override;
     void init(const long, grib_arguments*) override;
 
     static constexpr AccessorType accessor_type_{ "data_g2simple_packing" };
+
+private:
+    // Floats are packed as the converted doubles; with the new simple packing the values are not
+    // converted (sp::pack of floats gives the codes of the converted doubles)
+    template <typename T>
+    int pack(const T* val, size_t* len);
+    template <typename T>
+    int pack_new(const T* val, size_t n_vals, bool& packed);
+    int pack_legacy(const double* val, size_t* len);
 };
 
 }  // namespace eccodes::accessor

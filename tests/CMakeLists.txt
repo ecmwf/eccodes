@@ -16,6 +16,20 @@ list(APPEND test_c_bins
     wmo_read_any_from_stream
     grib_bpv_limit
     grib_double_cmp
+    grib_element_index_range
+    grib_jpeg_element_index
+    grib_element_index_codedvalues
+    grib_set_float_array
+    grib_subnormal_range
+    grib_number_too_large
+    grib_precision_too_large
+    grib_precision_no_values
+    grib_pack_extreme_values
+    grib_ccsds_truncated
+    grib_simple_element
+    grib_repack_failure
+    grib_simple_packing_multi_field
+    grib_bitmap_truncated
     read_any
     julian
     grib_update_sections_lengths
@@ -96,6 +110,12 @@ foreach( tool ${test_c_bins} )
                             SOURCES   ${tool}.cc
                             LIBS      eccodes )
 endforeach()
+
+# Benchmark of CCSDS and simple packing through the API (not a test: benchmarks/packing_api.py runs it)
+ecbuild_add_executable( TARGET    packing_api
+                        NOINSTALL
+                        SOURCES   benchmarks/packing_api.cc
+                        LIBS      eccodes )
 
 
 # Now add each test (shell scripts)
@@ -217,6 +237,10 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-2342
         grib_shape_of_the_earth
         grib_ecc-2359
+        grib_subnormal_range
+        grib_number_too_large
+        grib_precision_too_large
+        grib_precision_no_values
     )
 
     # These tests require data downloads
@@ -239,6 +263,16 @@ if( HAVE_BUILD_TOOLS )
         grib_bpv_limit
         grib_complex
         grib_double_cmp
+        grib_element_index_range
+        grib_pack_extreme_values
+        grib_ccsds_empty_data
+        grib_ccsds_truncated
+        grib_simple_element
+        grib_repack_failure
+        grib_simple_packing_multi_field
+        grib_reference_value_not_finite
+        grib_bitmap_truncated
+        grib2_section_length_corrupt
         grib_paramtypeConcept
         grib_element
         grib_change_packing
@@ -437,6 +471,7 @@ if( HAVE_BUILD_TOOLS )
         grib_level
         grib_indexing
         grib_bitmap
+        grib_bitmap_coded_values
         grib_secondary_bitmap
         grib_list
         grib_second_order
@@ -622,6 +657,23 @@ if( HAVE_BUILD_TOOLS )
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_jpeg.sh
                       TEST_DEPENDS eccodes_download_gribs )
 
+    ecbuild_add_test( TARGET eccodes_t_grib_element_index_codedvalues
+                      TYPE SCRIPT
+                      CONDITION ENABLE_EXTRA_TESTS
+                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_element_index_codedvalues.sh
+                      TEST_DEPENDS eccodes_download_gribs )
+
+    ecbuild_add_test( TARGET eccodes_t_grib_set_float_array
+                      TYPE SCRIPT
+                      CONDITION ENABLE_EXTRA_TESTS
+                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_set_float_array.sh
+                      TEST_DEPENDS eccodes_download_gribs )
+
+    ecbuild_add_test( TARGET eccodes_t_grib_jpeg_element_index
+                      TYPE SCRIPT
+                      CONDITION HAVE_JPEG AND ENABLE_EXTRA_TESTS
+                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_jpeg_element_index.sh )
+
     ecbuild_add_test( TARGET eccodes_t_grib_png
                       TYPE SCRIPT
                       CONDITION HAVE_PNG AND ENABLE_EXTRA_TESTS
@@ -633,6 +685,53 @@ if( HAVE_BUILD_TOOLS )
                       CONDITION HAVE_AEC AND ENABLE_EXTRA_TESTS
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_ccsds.sh
                       TEST_DEPENDS eccodes_download_gribs )
+
+    ecbuild_add_test( TARGET eccodes_t_grib_simple_packing_legacy
+                      TYPE SCRIPT
+                      CONDITION ENABLE_EXTRA_TESTS
+                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_simple_packing_legacy.sh
+                      TEST_DEPENDS eccodes_download_gribs )
+
+    ecbuild_add_test( TARGET eccodes_t_grib_simple_packing_data_size
+                      TYPE SCRIPT
+                      CONDITION ENABLE_EXTRA_TESTS
+                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_simple_packing_data_size.sh
+                      TEST_DEPENDS eccodes_download_gribs )
+
+    ecbuild_add_test( TARGET eccodes_t_grib_ccsds_flags
+                      TYPE SCRIPT
+                      CONDITION HAVE_AEC AND ENABLE_EXTRA_TESTS
+                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_ccsds_flags.sh
+                      TEST_DEPENDS eccodes_download_gribs )
+
+    ecbuild_add_test( TARGET eccodes_t_grib_ccsds_not_enforce
+                      TYPE SCRIPT
+                      CONDITION HAVE_AEC AND ENABLE_EXTRA_TESTS
+                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_ccsds_not_enforce.sh
+                      TEST_DEPENDS eccodes_download_gribs )
+
+    ecbuild_add_test( TARGET eccodes_t_grib_ccsds_restricted
+                      TYPE SCRIPT
+                      CONDITION ENABLE_EXTRA_TESTS
+                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_ccsds_restricted.sh
+                      TEST_DEPENDS eccodes_download_gribs )
+
+    ecbuild_add_test( TARGET eccodes_t_grib_ccsds_selector
+                      TYPE SCRIPT
+                      CONDITION ENABLE_EXTRA_TESTS
+                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_ccsds_selector.sh
+                      TEST_DEPENDS eccodes_download_gribs )
+
+    ecbuild_add_test( TARGET eccodes_t_grib_ccsds_preprocess
+                      TYPE SCRIPT
+                      CONDITION ENABLE_EXTRA_TESTS
+                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_ccsds_preprocess.sh
+                      TEST_DEPENDS eccodes_download_gribs )
+
+    ecbuild_add_test( TARGET eccodes_t_grib_ccsds_error_codes
+                      TYPE SCRIPT
+                      CONDITION ENABLE_EXTRA_TESTS
+                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_ccsds_error_codes.sh )
 
     ecbuild_add_test( TARGET eccodes_t_grib_check_param_concepts
                       TYPE SCRIPT

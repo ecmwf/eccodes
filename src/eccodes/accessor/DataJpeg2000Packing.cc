@@ -456,11 +456,20 @@ int DataJpeg2000Packing::unpack_double_element(size_t idx, double* val)
     int err = 0;
     double reference_value = 0;
     long bits_per_value = 0;
+    long n_vals = 0;
 
     if ((err = grib_get_long_internal(hand, bits_per_value_, &bits_per_value)) != GRIB_SUCCESS)
         return err;
     if ((err = grib_get_double_internal(hand, reference_value_, &reference_value)) != GRIB_SUCCESS)
         return err;
+
+    if ((err = value_count(&n_vals)) != GRIB_SUCCESS)
+        return err;
+    if (n_vals < 0 || idx >= static_cast<size_t>(n_vals)) {
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s: %s: Invalid index %zu (should be between 0 and %ld)",
+                         accessor_type().c_str(), __func__, idx, n_vals - 1);
+        return GRIB_INVALID_ARGUMENT;
+    }
 
     /* Special case of constant field */
     if (bits_per_value == 0) {
@@ -472,7 +481,7 @@ int DataJpeg2000Packing::unpack_double_element(size_t idx, double* val)
     err = grib_get_size(hand, "codedValues", &size);
     if (err)
         return err;
-    if (idx > size)
+    if (idx >= size)
         return GRIB_INVALID_ARGUMENT;
 
     values = (double*)grib_context_malloc_clear(context_, size * sizeof(double));
@@ -494,11 +503,22 @@ int DataJpeg2000Packing::unpack_double_element_set(const size_t* index_array, si
     int err = 0;
     double reference_value = 0;
     long bits_per_value = 0;
+    long n_vals = 0;
 
     if ((err = grib_get_long_internal(hand, bits_per_value_, &bits_per_value)) != GRIB_SUCCESS)
         return err;
     if ((err = grib_get_double_internal(hand, reference_value_, &reference_value)) != GRIB_SUCCESS)
         return err;
+
+    if ((err = value_count(&n_vals)) != GRIB_SUCCESS)
+        return err;
+    for (i = 0; i < len; i++) {
+        if (n_vals < 0 || index_array[i] >= static_cast<size_t>(n_vals)) {
+            grib_context_log(context_, GRIB_LOG_ERROR, "%s: %s: Invalid index %zu (should be between 0 and %ld)",
+                             accessor_type().c_str(), __func__, index_array[i], n_vals - 1);
+            return GRIB_INVALID_ARGUMENT;
+        }
+    }
 
     /* Special case of constant field */
     if (bits_per_value == 0) {
@@ -512,7 +532,7 @@ int DataJpeg2000Packing::unpack_double_element_set(const size_t* index_array, si
     if (err) return err;
 
     for (i = 0; i < len; i++) {
-        if (index_array[i] > size) return GRIB_INVALID_ARGUMENT;
+        if (index_array[i] >= size) return GRIB_INVALID_ARGUMENT;
     }
 
     values = (double*)grib_context_malloc_clear(context_, size * sizeof(double));

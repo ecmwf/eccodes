@@ -9,13 +9,28 @@
  */
 
 #include "DataSimplePacking.h"
+
+#include <cmath>
 #include "grib_optimize_decimal_factor.h"
 #include "grib_bits_any_endian_simple.h"
 #include <float.h>
+#include <cstring>
+#include <numeric>
 #include <type_traits>
+
+#include "simple_packing/simple_packing.h"
 
 namespace eccodes::accessor
 {
+
+bool DataSimplePacking::use_new_simple_packing()
+{
+    static const bool useNew = [] {
+        const char* env = getenv("ECCODES_USE_SP");
+        return env != nullptr && env[0] != '\0' && strcmp(env, "0") != 0;
+    }();
+    return useNew;
+}
 
 void DataSimplePacking::init(const long v, grib_arguments* args)
 {
@@ -83,6 +98,12 @@ int DataSimplePacking::unpack_double_element(size_t idx, double* val)
     if (err)
         return err;
 
+    if (n_vals < 0 || idx >= static_cast<size_t>(n_vals)) {
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s: %s: Invalid index %zu (should be between 0 and %ld)",
+                         accessor_type().c_str(), __func__, idx, n_vals - 1);
+        return GRIB_INVALID_ARGUMENT;
+    }
+
     if ((err = grib_get_long_internal(gh, bits_per_value_, &bits_per_value)) != GRIB_SUCCESS)
         return err;
 
@@ -90,6 +111,11 @@ int DataSimplePacking::unpack_double_element(size_t idx, double* val)
 
     if ((err = grib_get_double_internal(gh, reference_value_, &reference_value)) != GRIB_SUCCESS)
         return err;
+    if (!std::isfinite(reference_value)) {
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: referenceValue=%g is not finite (corrupt message)",
+                         accessor_type().c_str(), __func__, reference_value);
+        return GRIB_DECODING_ERROR;
+    }
 
     if ((err = grib_get_long_internal(gh, binary_scale_factor_, &binary_scale_factor)) != GRIB_SUCCESS)
         return err;
@@ -103,7 +129,6 @@ int DataSimplePacking::unpack_double_element(size_t idx, double* val)
         return GRIB_SUCCESS;
     }
 
-    ECCODES_ASSERT(idx < n_vals);
     s = codes_power<double>(binary_scale_factor, 2);
     d = codes_power<double>(-decimal_scale_factor, 10);
 
@@ -111,8 +136,57 @@ int DataSimplePacking::unpack_double_element(size_t idx, double* val)
                      "%s: %s: creating %s, %ld values (idx=%zu)",
                      accessor_type().c_str(), __func__, name_, n_vals, idx);
 
-    buf += byte_offset();
+    const long offsetBeforeData = byte_offset();
+    buf += offsetBeforeData;
     /*ECCODES_ASSERT(((bits_per_value*n_vals)/8) < (1<<29));*/ /* See GRIB-787 */
+
+    /* ECC-941, as in unpack(): an empty data section is a constant field, and the coded values
+       must fit in the data section (the coded value was read beyond the message) */
+    if (!context_->ieee_packing) {
+        long offsetAfterData = 0;
+        err = grib_get_long(gh, "offsetAfterData", &offsetAfterData);
+        if (!err && offsetAfterData == offsetBeforeData) {
+            *val = reference_value;
+            return GRIB_SUCCESS;
+        }
+        if (!err && offsetAfterData > offsetBeforeData) {
+            const long valuesSize = (bits_per_value * n_vals + 7) / 8; /* in bytes */
+            if (offsetBeforeData + valuesSize > offsetAfterData) {
+                grib_context_log(context_, GRIB_LOG_ERROR,
+                                 "%s: Data section size mismatch: "
+                                 "offset before data=%ld, offset after data=%ld (num values=%ld, bits per value=%ld)",
+                                 accessor_type().c_str(), offsetBeforeData, offsetAfterData, n_vals, bits_per_value);
+                return GRIB_DECODING_ERROR;
+            }
+        }
+        err = 0;
+    }
+
+    if (use_new_simple_packing() && bits_per_value >= 1 && bits_per_value <= 64) {
+        /* Like unpack(): decode with the new simple packing, from the last value before idx whose
+           bits start at a byte boundary (every 8 / gcd(bits_per_value, 8) values) up to idx */
+        const size_t period = 8 / std::gcd(static_cast<size_t>(bits_per_value), size_t{ 8 });
+        const size_t first = idx - idx % period;
+        const size_t count = idx - first + 1;
+        const unsigned char* start = buf + first * bits_per_value / 8;
+        try {
+            sp::Scaling scaling;
+            scaling.bitsPerValue = static_cast<int>(bits_per_value);
+            scaling.binaryScaleFactor = static_cast<int>(binary_scale_factor);
+            scaling.decimalScaleFactor = static_cast<int>(decimal_scale_factor);
+            scaling.referenceValue = reference_value;
+            double decoded[8];
+            const size_t available = (gh->buffer->data + gh->buffer->ulength) - start;
+            sp::unpack(start, available, scaling, decoded, count);
+            *val = decoded[count - 1];
+        }
+        catch (const std::exception& e) {
+            grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: SP decode error: %s",
+                             accessor_type().c_str(), __func__, e.what());
+            return GRIB_DECODING_ERROR;
+        }
+        return GRIB_SUCCESS;
+    }
 
     if (bits_per_value % 8) {
         grib_context_log(context_, GRIB_LOG_DEBUG,
@@ -218,6 +292,11 @@ int DataSimplePacking::unpack(T* val, size_t* len)
 
     if ((err = grib_get_double_internal(gh, reference_value_, &reference_value)) != GRIB_SUCCESS)
         return err;
+    if (!std::isfinite(reference_value)) {
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: referenceValue=%g is not finite (corrupt message)",
+                         accessor_type().c_str(), __func__, reference_value);
+        return GRIB_DECODING_ERROR;
+    }
 
     if ((err = grib_get_long_internal(gh, binary_scale_factor_, &binary_scale_factor)) != GRIB_SUCCESS)
         return err;
@@ -250,8 +329,16 @@ int DataSimplePacking::unpack(T* val, size_t* len)
         /* Must turn off this check when the environment variable ECCODES_GRIB_IEEE_PACKING is on */
         long offsetAfterData = 0;
         err = grib_get_long(gh, "offsetAfterData", &offsetAfterData);
+        if (!err && offsetAfterData == offsetBeforeData) {
+            // Empty data section with bitsPerValue > 0 (e.g. while the packing is being changed):
+            // there are no coded values, decode as a constant field
+            for (i = 0; i < n_vals; i++)
+                val[i] = reference_value;
+            *len = n_vals;
+            return GRIB_SUCCESS;
+        }
         if (!err && offsetAfterData > offsetBeforeData) {
-            const long valuesSize = (bits_per_value * n_vals) / 8; /*in bytes*/
+            const long valuesSize = (bits_per_value * n_vals + 7) / 8; /*in bytes*/
             if (offsetBeforeData + valuesSize > offsetAfterData) {
                 grib_context_log(context_, GRIB_LOG_ERROR,
                                  "%s: Data section size mismatch: "
@@ -272,7 +359,31 @@ int DataSimplePacking::unpack(T* val, size_t* len)
     grib_context_log(context_, GRIB_LOG_DEBUG,
                      "%s %s: calling outline function: bpv: %ld, rv: %g, bsf: %ld, dsf: %ld",
                      accessor_type().c_str(), __func__, bits_per_value, reference_value, binary_scale_factor, decimal_scale_factor);
-    grib_decode_array<T>(buf, &pos, bits_per_value, reference_value, s, d, n_vals, val);
+
+    if (use_new_simple_packing() && bits_per_value >= 1 && bits_per_value <= 64) {
+        grib_context_log(context_, GRIB_LOG_DEBUG,
+                         "%s %s: using new Simple Packing (SP) for decode, %zu values", accessor_type().c_str(), __func__, n_vals);
+        try {
+            sp::Scaling scaling;
+            scaling.bitsPerValue = static_cast<int>(bits_per_value);
+            scaling.binaryScaleFactor = static_cast<int>(binary_scale_factor);
+            scaling.decimalScaleFactor = static_cast<int>(decimal_scale_factor);
+            scaling.referenceValue = reference_value;  // in double, like the legacy code
+
+            // Decode straight into the caller's array: no intermediate copy
+            // of either the coded bytes or the decoded field.
+            const size_t available = (gh->buffer->data + gh->buffer->ulength) - buf;  // bytes from buf to the end of the message
+            sp::unpack(buf, available, scaling, val, n_vals);
+        }
+        catch (const std::exception& e) {
+            grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: SP decode error: %s",
+                             accessor_type().c_str(), __func__, e.what());
+            return GRIB_DECODING_ERROR;
+        }
+    }
+    else {
+        grib_decode_array<T>(buf, &pos, bits_per_value, reference_value, s, d, n_vals, val);
+    }
 
     *len = (long)n_vals;
 
@@ -359,6 +470,11 @@ int DataSimplePacking::_unpack_double(double* val, size_t* len, unsigned char* b
 
     if ((err = grib_get_double_internal(gh, self->reference_value_, &reference_value)) != GRIB_SUCCESS)
         return err;
+    if (!std::isfinite(reference_value)) {
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: referenceValue=%g is not finite (corrupt message)",
+                         accessor_type().c_str(), __func__, reference_value);
+        return GRIB_DECODING_ERROR;
+    }
 
     if ((err = grib_get_long_internal(gh, self->binary_scale_factor_, &binary_scale_factor)) != GRIB_SUCCESS)
         return err;
@@ -391,8 +507,16 @@ int DataSimplePacking::_unpack_double(double* val, size_t* len, unsigned char* b
         /* Must turn off this check when the environment variable ECCODES_GRIB_IEEE_PACKING is on */
         long offsetAfterData = 0;
         err = grib_get_long(gh, "offsetAfterData", &offsetAfterData);
+        if (!err && offsetAfterData == offsetBeforeData) {
+            // Empty data section with bitsPerValue > 0 (e.g. while the packing is being changed):
+            // there are no coded values, decode as a constant field
+            for (i = 0; i < n_vals; i++)
+                val[i] = reference_value;
+            *len = n_vals;
+            return GRIB_SUCCESS;
+        }
         if (!err && offsetAfterData > offsetBeforeData) {
-            const long valuesSize = (bits_per_value * n_vals) / 8; /*in bytes*/
+            const long valuesSize = (bits_per_value * n_vals + 7) / 8; /*in bytes*/
             if (offsetBeforeData + valuesSize > offsetAfterData) {
                 grib_context_log(context_, GRIB_LOG_ERROR,
                                  "Data section size mismatch: offset before data=%ld, offset after data=%ld (num values=%ld, bits per value=%ld)",
@@ -413,7 +537,29 @@ int DataSimplePacking::_unpack_double(double* val, size_t* len, unsigned char* b
     grib_context_log(context_, GRIB_LOG_DEBUG,
                      "unpack_double: calling outline function : bpv %d, rv : %g, sf : %d, dsf : %d ",
                      bits_per_value, reference_value, binary_scale_factor, decimal_scale_factor);
-    grib_decode_array<double>(buf, &pos, bits_per_value, reference_value, s, d, n_vals, val);
+
+    if (use_new_simple_packing() && bits_per_value >= 1 && bits_per_value <= 64) {
+        try {
+            sp::Scaling scaling;
+            scaling.bitsPerValue = static_cast<int>(bits_per_value);
+            scaling.binaryScaleFactor = static_cast<int>(binary_scale_factor);
+            scaling.decimalScaleFactor = static_cast<int>(decimal_scale_factor);
+            scaling.referenceValue = reference_value;
+
+            // Decode straight into the caller's array: no intermediate copy
+            // of either the coded bytes or the decoded field.
+            const size_t available = (gh->buffer->data + gh->buffer->ulength) - buf;  // bytes from buf to the end of the message
+            sp::unpack(buf, available, scaling, val, n_vals);
+        }
+        catch (const std::exception& e) {
+            grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: SP decode error: %s",
+                             accessor_type().c_str(), __func__, e.what());
+            return GRIB_DECODING_ERROR;
+        }
+    }
+    else {
+        grib_decode_array<double>(buf, &pos, bits_per_value, reference_value, s, d, n_vals, val);
+    }
 
     *len = (long)n_vals;
 
@@ -589,7 +735,11 @@ int DataSimplePacking::pack_double(const double* val, size_t* len)
 
         /* bits_per_value=(long)ceil(log((double)(imax-imin+1))/log(2.0)); */
         /* See GRIB-540 for why we use ceil */
-        err = number_of_bits((unsigned long)ceil(fabs(max - min)), &bits_per_value);
+        const double coded_range = ceil(fabs(max - min));
+        /* number_of_bits counts at most 32 bits. A larger range must be refused: casting it to an
+           unsigned long is undefined and gave 0, i.e. a message declaring a constant field */
+        err = coded_range < static_cast<double>(0x100000000ULL) ? number_of_bits(static_cast<unsigned long>(coded_range), &bits_per_value)
+                                                                : GRIB_ENCODING_ERROR;
         if (err) {
             grib_context_log(context_, GRIB_LOG_ERROR,
                              "%s %s: Range of values too large. Try a smaller value for decimal precision (less than %ld)",

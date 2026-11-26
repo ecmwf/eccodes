@@ -148,11 +148,10 @@ long IbmFloat::next_offset()
 
 int IbmFloat::nearest_smaller_value(double val, double* nearest)
 {
-    int ret = 0;
-    if (grib_nearest_smaller_ibm_float(val, nearest) == GRIB_INTERNAL_ERROR) {
+    int ret = grib_nearest_smaller_ibm_float(val, nearest);
+    if (ret != GRIB_SUCCESS) {
         grib_context_log(context_, GRIB_LOG_ERROR, "ibm_float:nearest_smaller_value overflow value=%g", val);
         grib_dump_content(get_enclosing_handle(), stderr, "wmo", GRIB_DUMP_FLAG_HEXADECIMAL, 0);
-        ret = GRIB_INTERNAL_ERROR;
     }
     return ret;
 }

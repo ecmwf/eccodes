@@ -134,6 +134,13 @@ double grib_long_to_ieee(unsigned long x)
     if (c == 0 && m == 0)
         return 0;
 
+    // Exponent 255: infinity or NaN (the exponent table has entries up to 254 only)
+    if (c == 255) {
+        if (m != 0)
+            return std::numeric_limits<double>::quiet_NaN();
+        return s ? -std::numeric_limits<double>::infinity() : std::numeric_limits<double>::infinity();
+    }
+
     if (c == 0) {
         m |= 0x800000;
         c = 1;
@@ -205,10 +212,11 @@ int grib_nearest_smaller_ieee_float(double a, double* ret)
 {
     unsigned long l = 0;
 
-    if (a > ieee_table.vmax) {
+    // Also negative numbers beyond -xmax (and NaN) cannot be encoded
+    if (!(fabs(a) <= ieee_table.vmax)) {
         const grib_context* c = grib_context_get_default();
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "Number is too large: x=%e > xmax=%e (IEEE float)", a, ieee_table.vmax);
+                         "Number is too large: |x|=%e > xmax=%e (IEEE float)", fabs(a), ieee_table.vmax);
         return GRIB_INTERNAL_ERROR;
     }
 

@@ -72,6 +72,11 @@ public:
     grib_accessor* make_clone(grib_section*, int*) override;
     grib_accessor* next_accessor() override;  // TODO: Implement
 
+protected:
+    // Packs the floats as the converted doubles (pack_double with (double)v[i]): the default
+    // pack_float, also for subclasses that must not use the float packing of a base class
+    int pack_float_as_double(const float* v, size_t* len);
+
 private:
     enum
     {

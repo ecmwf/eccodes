@@ -38,6 +38,7 @@ int BitsPerValue::unpack_long(long* val, size_t* len)
 int BitsPerValue::pack_long(const long* val, size_t* /*len*/)
 {
     double* values = NULL;
+    long oldBitsPerValue = 0;
     size_t size = 0;
     int ret = 0;
     grib_context* c = context_;
@@ -55,12 +56,16 @@ int BitsPerValue::pack_long(const long* val, size_t* /*len*/)
         return ret;
     }
 
-    if ((ret = grib_set_long_internal(h, bits_per_value_, *val)) != GRIB_SUCCESS) {
+    // Keep bitsPerValue, to restore it if the values cannot be repacked
+    if ((ret = grib_get_long_internal(h, bits_per_value_, &oldBitsPerValue)) != GRIB_SUCCESS) {
         grib_context_free(c, values);
         return ret;
     }
 
-    if ((ret = grib_set_double_array_internal(h, values_, values, size)) != GRIB_SUCCESS) {
+    if ((ret = grib_set_long_internal(h, bits_per_value_, *val)) != GRIB_SUCCESS ||
+        (ret = grib_set_double_array_internal(h, values_, values, size)) != GRIB_SUCCESS) {
+        // A failed repack leaves the data unchanged: restore the key that describes it
+        grib_set_long_internal(h, bits_per_value_, oldBitsPerValue);
         grib_context_free(c, values);
         return ret;
     }

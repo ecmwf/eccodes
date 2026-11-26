@@ -1,0 +1,164 @@
+# SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+# SPDX-License-Identifier: Apache-2.0
+
+# Regression tests: bugs found by robustness testing (invalid parameters and values, buffer
+# sizes, hangs, undefined behaviour, data races)
+
+sp_add_test(reference_value_range)
+add_test(NAME ${SP_TEST_PREFIX}reference_value_range COMMAND sp_reference_value_range)
+
+sp_add_test(no_output)
+add_test(NAME ${SP_TEST_PREFIX}no_output COMMAND sp_no_output)
+
+sp_add_test(bits_per_value_range)
+add_test(NAME ${SP_TEST_PREFIX}bits_per_value_range COMMAND sp_bits_per_value_range)
+
+sp_add_test(zero_values)
+add_test(NAME ${SP_TEST_PREFIX}zero_values COMMAND sp_zero_values)
+
+sp_add_test(unpack_buffer_size)
+add_test(NAME ${SP_TEST_PREFIX}unpack_buffer_size COMMAND sp_unpack_buffer_size)
+
+sp_add_test(field_range)
+target_link_libraries(sp_field_range PRIVATE Threads::Threads)  # time limit (tests/time_limit.h)
+add_test(NAME ${SP_TEST_PREFIX}field_range COMMAND sp_field_range)
+
+sp_add_test(optimizer_parameters)
+target_link_libraries(sp_optimizer_parameters PRIVATE Threads::Threads)  # time limit (tests/time_limit.h)
+add_test(NAME ${SP_TEST_PREFIX}optimizer_parameters COMMAND sp_optimizer_parameters)
+
+sp_add_test(scale_factor_range)
+add_test(NAME ${SP_TEST_PREFIX}scale_factor_range COMMAND sp_scale_factor_range)
+
+sp_add_test(pack_value_range)
+add_test(NAME ${SP_TEST_PREFIX}pack_value_range COMMAND sp_pack_value_range)
+
+sp_add_test(no_optimizer)
+add_test(NAME ${SP_TEST_PREFIX}no_optimizer COMMAND sp_no_optimizer)
+
+sp_add_test(optimizer_direct_range)
+target_link_libraries(sp_optimizer_direct_range PRIVATE Threads::Threads)  # time limit (tests/time_limit.h)
+add_test(NAME ${SP_TEST_PREFIX}optimizer_direct_range COMMAND sp_optimizer_direct_range)
+
+sp_add_test(optimizer_scaling_overflow)
+target_link_libraries(sp_optimizer_scaling_overflow PRIVATE Threads::Threads)  # time limit (tests/time_limit.h)
+add_test(NAME ${SP_TEST_PREFIX}optimizer_scaling_overflow COMMAND sp_optimizer_scaling_overflow)
+
+sp_add_test(binary_scale_tiny_range)
+target_link_libraries(sp_binary_scale_tiny_range PRIVATE Threads::Threads)  # time limit (tests/time_limit.h)
+add_test(NAME ${SP_TEST_PREFIX}binary_scale_tiny_range COMMAND sp_binary_scale_tiny_range)
+
+
+# The optimiser used to convert an out-of-range double to long (undefined behaviour). The
+# test needs an UBSan-instrumented copy of the library to observe it (float-cast-overflow
+# is a separate sanitizer group for GCC); without sanitizers it only checks that packing
+# the minimised input does not crash and stays consistent.
+# Probes: optimised, instrumented code and the flags of the tests (some toolchains, e.g. zig,
+# provide the sanitizer runtime only for unoptimised code or lack the non-recovering handlers)
+set(CMAKE_REQUIRED_FLAGS "-O2 -fsanitize=undefined,float-cast-overflow -fno-sanitize-recover=undefined,float-cast-overflow")
+set(CMAKE_REQUIRED_LINK_OPTIONS "-fsanitize=undefined,float-cast-overflow")
+check_cxx_source_compiles("int main(int argc, char** argv) { return *reinterpret_cast<const int*>(argv[0] + argc); }" SIMPLE_PACKING_HAVE_UBSAN)
+unset(CMAKE_REQUIRED_FLAGS)
+unset(CMAKE_REQUIRED_LINK_OPTIONS)
+if(SIMPLE_PACKING_HAVE_UBSAN)
+  add_library(simple_packing_ubsan STATIC EXCLUDE_FROM_ALL
+    ${PROJECT_SOURCE_DIR}/src/Utils.cc
+    ${PROJECT_SOURCE_DIR}/src/optimizer/BinDecOptimizer.cc)
+  target_link_libraries(simple_packing_ubsan PUBLIC simple_packing_headers)
+  target_compile_options(simple_packing_ubsan PRIVATE -fsanitize=undefined,float-cast-overflow -fno-sanitize-recover=undefined,float-cast-overflow)
+  add_executable(sp_optimizer_overflow ${CMAKE_CURRENT_SOURCE_DIR}/optimizer_overflow.cc)
+  target_link_libraries(sp_optimizer_overflow PRIVATE simple_packing_ubsan)
+  target_compile_options(sp_optimizer_overflow PRIVATE -fsanitize=undefined,float-cast-overflow -fno-sanitize-recover=undefined,float-cast-overflow)
+  target_link_options(sp_optimizer_overflow PRIVATE -fsanitize=undefined,float-cast-overflow -fno-sanitize-recover=undefined,float-cast-overflow)
+else()
+  sp_add_test(optimizer_overflow)
+endif()
+add_test(NAME ${SP_TEST_PREFIX}optimizer_overflow COMMAND sp_optimizer_overflow)
+
+# Misaligned memory accesses are detected by the alignment sanitizer
+set(CMAKE_REQUIRED_FLAGS "-O2 -fsanitize=alignment -fno-sanitize-recover=alignment")
+set(CMAKE_REQUIRED_LINK_OPTIONS "-fsanitize=alignment")
+check_cxx_source_compiles("int main(int argc, char** argv) { return *reinterpret_cast<const int*>(argv[0] + argc); }" SIMPLE_PACKING_HAVE_ALIGNMENT_SANITIZER)
+unset(CMAKE_REQUIRED_FLAGS)
+unset(CMAKE_REQUIRED_LINK_OPTIONS)
+if(SIMPLE_PACKING_HAVE_ALIGNMENT_SANITIZER)
+  sp_add_test(unaligned_access)
+  target_compile_options(sp_unaligned_access PRIVATE -fsanitize=alignment -fno-sanitize-recover=alignment)
+  target_link_options(sp_unaligned_access PRIVATE -fsanitize=alignment -fno-sanitize-recover=alignment)
+  add_test(NAME ${SP_TEST_PREFIX}unaligned_access COMMAND sp_unaligned_access)
+endif()
+
+sp_add_test(u128_shift)
+add_test(NAME ${SP_TEST_PREFIX}u128_shift COMMAND sp_u128_shift)
+
+# Calls from several threads at once. A data race is reported by a build of the whole project with
+# the thread sanitizer (-fsanitize=thread, e.g. the tsan preset of ecCodes)
+sp_add_test(table_init_race)
+target_link_libraries(sp_table_init_race PRIVATE Threads::Threads)
+add_test(NAME ${SP_TEST_PREFIX}table_init_race COMMAND sp_table_init_race)
+
+sp_add_test(unpack_float_precision)
+add_test(NAME ${SP_TEST_PREFIX}unpack_float_precision COMMAND sp_unpack_float_precision)
+
+sp_add_test(pack_fp_contraction)
+add_test(NAME ${SP_TEST_PREFIX}pack_fp_contraction COMMAND sp_pack_fp_contraction)
+# The same test as a user of simple_packing::simple_packing builds it: without the project flags
+# (but for the same CPU), so that only the usage requirements apply
+add_executable(sp_pack_fp_contraction_consumer ${CMAKE_CURRENT_SOURCE_DIR}/pack_fp_contraction.cc)
+target_link_libraries(sp_pack_fp_contraction_consumer PRIVATE simple_packing::simple_packing)
+target_compile_options(sp_pack_fp_contraction_consumer PRIVATE -O2 ${SIMPLE_PACKING_ARCH_FLAGS})
+sp_test_fp_flags(sp_pack_fp_contraction_consumer ${SIMPLE_PACKING_FP_SAFETY_FLAGS})
+add_test(NAME ${SP_TEST_PREFIX}pack_fp_contraction_consumer COMMAND sp_pack_fp_contraction_consumer)
+
+sp_add_test(binary_scale_large_range)
+add_test(NAME ${SP_TEST_PREFIX}binary_scale_large_range COMMAND sp_binary_scale_large_range)
+
+sp_add_test(bit_packing_reference)
+add_test(NAME ${SP_TEST_PREFIX}bit_packing_reference COMMAND sp_bit_packing_reference)
+
+# A user who compiles with -ffast-math must add -fno-fast-math after it (SIMPLE_PACKING_NO_FAST_MATH=ON;
+# README, "Floating-point compiler options"): copies of these tests that compile the library
+# sources so check that this suffices for the validation of the values and parameters. Not the tests of denormal values: linking with
+# -ffast-math makes the CPU flush them to zero, which a library cannot prevent.
+check_cxx_compiler_flag(-ffast-math SIMPLE_PACKING_HAVE_FAST_MATH)
+if(SIMPLE_PACKING_HAVE_FAST_MATH)
+  foreach(name field_range optimizer_direct_range reference_value_range optimizer_scaling_overflow pack_value_range)
+    add_executable(sp_${name}_fast_math ${CMAKE_CURRENT_SOURCE_DIR}/${name}.cc
+                   ${PROJECT_SOURCE_DIR}/src/Utils.cc ${PROJECT_SOURCE_DIR}/src/optimizer/BinDecOptimizer.cc)
+    target_link_libraries(sp_${name}_fast_math PRIVATE simple_packing::headers)
+    target_compile_options(sp_${name}_fast_math PRIVATE -ffast-math -fno-fast-math ${SIMPLE_PACKING_OPT_FLAGS})
+    sp_test_fp_flags(sp_${name}_fast_math -ffast-math -fno-fast-math ${SIMPLE_PACKING_FP_FLAGS})
+    target_compile_definitions(sp_${name}_fast_math PRIVATE NDEBUG)
+    target_link_options(sp_${name}_fast_math PRIVATE -ffast-math -fno-fast-math)
+    add_test(NAME ${SP_TEST_PREFIX}${name}_fast_math COMMAND sp_${name}_fast_math)
+    set_tests_properties(${SP_TEST_PREFIX}${name}_fast_math PROPERTIES TIMEOUT 120)
+  endforeach()
+endif()
+
+# A user who compiles and links with -ffast-math and only links simple_packing::simple_packing: the
+# usage requirements add -fno-fast-math after the user's flags (the default
+# SIMPLE_PACKING_NO_FAST_MATH=ON; AUTO only for the compilers that need it, OFF never). The header
+# functions check the values.
+if(SIMPLE_PACKING_HAVE_FAST_MATH AND "-fno-fast-math" IN_LIST SIMPLE_PACKING_FP_SAFETY_FLAGS)
+  foreach(name api errors utils_ranges)
+    add_executable(sp_${name}_user_fast_math ${PROJECT_SOURCE_DIR}/tests/unit/${name}.cc)
+    target_link_libraries(sp_${name}_user_fast_math PRIVATE simple_packing::simple_packing)
+    target_compile_options(sp_${name}_user_fast_math PRIVATE -ffast-math -O2 ${SIMPLE_PACKING_ARCH_FLAGS})
+    sp_test_fp_flags(sp_${name}_user_fast_math -ffast-math ${SIMPLE_PACKING_FP_SAFETY_FLAGS})
+    target_compile_definitions(sp_${name}_user_fast_math PRIVATE NDEBUG)
+    target_link_options(sp_${name}_user_fast_math PRIVATE -ffast-math)
+    add_test(NAME ${SP_TEST_PREFIX}${name}_user_fast_math COMMAND sp_${name}_user_fast_math)
+    set_tests_properties(${SP_TEST_PREFIX}${name}_user_fast_math PROPERTIES TIMEOUT 120)
+  endforeach()
+endif()
+
+# A user's code gets the floating-point options that this compiler needs (usage requirements):
+# compiled without the project flags, for the same CPU
+add_executable(sp_consumer_flags ${CMAKE_CURRENT_SOURCE_DIR}/consumer_flags.cc)
+target_link_libraries(sp_consumer_flags PRIVATE simple_packing::simple_packing)
+target_compile_options(sp_consumer_flags PRIVATE -O2 ${SIMPLE_PACKING_ARCH_FLAGS})
+sp_test_fp_flags(sp_consumer_flags ${SIMPLE_PACKING_FP_SAFETY_FLAGS})
+add_test(NAME ${SP_TEST_PREFIX}consumer_flags COMMAND sp_consumer_flags)
+set_tests_properties(${SP_TEST_PREFIX}consumer_flags PROPERTIES TIMEOUT 10)  # a hang is a failure
+
+sp_label_tests(regression)

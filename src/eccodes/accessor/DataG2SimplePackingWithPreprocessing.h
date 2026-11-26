@@ -22,6 +22,9 @@ public:
         DataG2SimplePacking() {}
     const AccessorType& accessor_type() const override { return accessor_type_; }
     int pack_double(const double* val, size_t* len) override;
+    // As the converted doubles (with the preprocessing of pack_double), not the faster float packing
+    // of DataG2SimplePacking
+    int pack_float(const float* val, size_t* len) override { return pack_float_as_double(val, len); }
     int unpack_double(double* val, size_t* len) override;
     int value_count(long*) override;
     void init(const long, grib_arguments*) override;

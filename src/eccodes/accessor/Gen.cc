@@ -11,6 +11,7 @@
 
 #include "Gen.h"
 #include <stdexcept>
+#include <vector>
 
 namespace eccodes::accessor
 {
@@ -608,9 +609,17 @@ int Gen::pack_missing()
 {
     throw std::runtime_error("Gen::pack_missing not implemented");
 }
-int Gen::pack_float(const float*, size_t* /*len*/)
+// Floats are packed as the converted doubles: the result of pack_double with (double)v[i] (accessors
+// with a faster way override pack_float and must give the same result)
+int Gen::pack_float(const float* v, size_t* len)
 {
-    throw std::runtime_error("Gen::pack_float not implemented");
+    return pack_float_as_double(v, len);
+}
+
+int Gen::pack_float_as_double(const float* v, size_t* len)
+{
+    const std::vector<double> d(v, v + *len);
+    return pack_double(d.data(), len);
 }
 void Gen::resize(size_t)
 {

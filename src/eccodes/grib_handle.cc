@@ -845,8 +845,18 @@ static grib_handle* grib_handle_new_multi(grib_context* c, unsigned char** data,
             }
         }
         // ECC-782
-        if (err == GRIB_INVALID_SECTION_NUMBER) {
+        if (err == GRIB_INVALID_SECTION_NUMBER || err == GRIB_WRONG_LENGTH) {
             grib_context_log(c, GRIB_LOG_ERROR, "%s: Failed to get section info (%s)", __func__, grib_get_error_message(err));
+            // Discard the message, the next call continues with the next one (it parsed the same
+            // message again and again)
+            if (gm->message)
+                grib_context_free(c, gm->message);
+            gm->message = NULL;
+            for (int j = 0; j < 8; j++)
+                gm->sections[j] = NULL;
+            gm->section_number = 0;
+            gm->message_length = 0;
+            *error = err;
             return NULL;
         }
     }
@@ -1004,8 +1014,18 @@ static grib_handle* grib_handle_new_from_file_multi(grib_context* c, FILE* f, in
             }
         }
         // ECC-782
-        if (err == GRIB_INVALID_SECTION_NUMBER) {
+        if (err == GRIB_INVALID_SECTION_NUMBER || err == GRIB_WRONG_LENGTH) {
             grib_context_log(c, GRIB_LOG_ERROR, "%s: Failed to get section info (%s)", __func__, grib_get_error_message(err));
+            // Discard the message, the next call continues with the next one (it parsed the same
+            // message again and again)
+            if (gm->message)
+                grib_context_free(c, gm->message);
+            gm->message = NULL;
+            for (int j = 0; j < 8; j++)
+                gm->sections[j] = NULL;
+            gm->section_number = 0;
+            gm->message_length = 0;
+            *error = err;
             return NULL;
         }
     }
@@ -1796,6 +1816,16 @@ static bool grib2_get_next_section(unsigned char* msgbegin, size_t msglen, unsig
 
     if (*secnum < 1 || *secnum > 7) {
         *err = GRIB_INVALID_SECTION_NUMBER;
+        return false;
+    }
+    // The section must lie within the message, before the end section "7777": a longer length
+    // made the message rebuilt from the sections (grib2_build_message) overflow its buffer
+    const size_t available = (msgbegin + msglen) - *secbegin;
+    if (*seclen < 5 || available < 4 || *seclen > available - 4) {
+        grib_context_log(grib_context_get_default(), GRIB_LOG_ERROR,
+                         "GRIB2 section %d: invalid section length %zu (%zu bytes left before the end section)",
+                         *secnum, *seclen, available < 4 ? 0 : available - 4);
+        *err = GRIB_WRONG_LENGTH;
         return false;
     }
     return true;

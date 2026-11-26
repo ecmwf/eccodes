@@ -1,0 +1,39 @@
+/*
+ * SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+#pragma once
+#include <cstdint>
+
+#include "simple_packing/detail/Parameters.h"
+#include "simple_packing/detail/Optimizer.h"
+#include "simple_packing/detail/Utils.h"
+
+namespace sp::detail
+{
+
+// Chooses the decimal and binary scale factors that use the bits per value best, like ecCodes'
+// grib_optimize_decimal_factor (optimizeScaleFactor=1), with one intended difference: legacy
+// stores the largest coded value in an int. From 32 bits per value on it always overflows, so
+// legacy never finds a best decimal scale factor and falls back to the parameters of
+// optimizeScaleFactor=0 (at 31 bits this happens when the value rounds up to 2^31). This class
+// uses long and optimises for every number of bits: the decoding error is never larger than with
+// legacy on general fields, but the coded messages differ from 31 bits on.
+class BinDecOptimizer : public Optimizer
+{
+public:
+    BinDecOptimizer(const int32_t compat_gribex, const int32_t compat_32bit, const int32_t knbit) : compat_gribex_(compat_gribex), compat_32bit_(compat_32bit), knbit_(knbit)
+    {
+        checkRange("bits per value", knbit, 1, maxEncodingBitsPerValue);
+    }
+    ~BinDecOptimizer() = default;
+    Parameters getParams(double min, double max);
+
+private:
+    int32_t compat_gribex_ = 0;
+    int32_t compat_32bit_ = 0;
+    int32_t knbit_ = 0;
+};
+
+}  // namespace sp::detail
