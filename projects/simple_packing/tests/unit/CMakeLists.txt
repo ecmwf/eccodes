@@ -28,6 +28,9 @@ add_test(NAME ${SP_TEST_PREFIX}bit_packing_element COMMAND sp_bit_packing_elemen
 sp_add_test(codec_binary)
 add_test(NAME ${SP_TEST_PREFIX}codec_binary COMMAND sp_codec_binary)
 
+sp_add_test(float_encoding)
+add_test(NAME ${SP_TEST_PREFIX}float_encoding COMMAND sp_float_encoding)
+
 sp_add_test(utils_ranges)
 add_test(NAME ${SP_TEST_PREFIX}utils_ranges COMMAND sp_utils_ranges)
 
