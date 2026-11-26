@@ -46,3 +46,19 @@ endfunction()
 # Unit tests of the components; regression tests for bugs that were found
 add_subdirectory(unit)
 add_subdirectory(regression)
+
+# Install test: install into a temporary prefix, then find_package(spaec <version>) from a user project
+# (only for native builds that install: the user program runs on the build machine)
+if(SPAEC_INSTALL AND NOT CMAKE_CROSSCOMPILING)
+  add_test(NAME ${SPAEC_TEST_PREFIX}install
+           COMMAND ${CMAKE_COMMAND}
+                   -DBUILD_DIR=${PROJECT_BINARY_DIR}
+                   -DWORK_DIR=${CMAKE_CURRENT_BINARY_DIR}/install_test
+                   -DCONSUMER_DIR=${CMAKE_CURRENT_SOURCE_DIR}/install/consumer
+                   -DGENERATOR=${CMAKE_GENERATOR}
+                   -DCXX_COMPILER=${CMAKE_CXX_COMPILER}
+                   -DVERSION=${PROJECT_VERSION}
+                   -DCONFIG=$<CONFIG>
+                   -P ${CMAKE_CURRENT_SOURCE_DIR}/install/install_test.cmake)
+  set_tests_properties(${SPAEC_TEST_PREFIX}install PROPERTIES LABELS "install;spaec" TIMEOUT 300)
+endif()
