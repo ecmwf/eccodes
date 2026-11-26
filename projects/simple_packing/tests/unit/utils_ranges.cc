@@ -60,7 +60,7 @@ static void minmax()
         // The minimum and the maximum at every position (in every lane of a vectorised loop)
         for (size_t pos = 0; pos < n; ++pos) {
             for (T extreme : { T(-1000), T(1000) }) {
-                std::vector<T> w = values;
+                std::vector<T> w(values.begin(), values.end());  // GCC 13 -Wnull-dereference: not a copy construction
                 w[pos] = extreme;
                 const auto [a, b] = sp_minmax(w.data(), n);
                 const T wmn = *std::min_element(w.begin(), w.end()), wmx = *std::max_element(w.begin(), w.end());
@@ -70,7 +70,7 @@ static void minmax()
         }
         for (size_t pos = 0; pos < n; ++pos) {
             for (T bad : { nan, inf, -inf }) {
-                std::vector<T> w = values;
+                std::vector<T> w(values.begin(), values.end());  // GCC 13 -Wnull-dereference: not a copy construction
                 w[pos] = bad;
                 const auto [a, b] = sp_minmax(w.data(), n);
                 check(std::isnan(a) && std::isnan(b), "sp_minmax with " + std::to_string(bad) + " at " + std::to_string(pos) + " of " + std::to_string(n) + ": " +
