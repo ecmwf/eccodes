@@ -129,7 +129,64 @@ ctest --test-dir build        # labels: unit, regression
 ```
 
 CMake target `spaec::spaec`. Options: `SPAEC_BUILD_TESTS`, `SPAEC_BUILD_FUZZERS` (Clang),
-`SPAEC_INSTALL`, `SPAEC_NATIVE_ARCH` (`-march=native`, default on).
+`SPAEC_INSTALL`, `SPAEC_NATIVE_ARCH` (`-march=native`, default on); `SPAEC_FP_CONTRACT_OFF`, `SPAEC_NO_FAST_MATH`,
+`SPAEC_NO_TRAPPING_MATH` (see below).
+
+## Floating-point compiler options
+
+SpAec maps floating-point values to integer samples (GRIB CCSDS packing): the rounding must be
+exactly as written (bit-identical results on every compiler and CPU), and the checks for NaN and
+infinite values must hold. The integer coder does no floating-point arithmetic: the options do not
+affect it. The three options below make the compiler keep that arithmetic exactly as written. None
+of them is enabled by default: each is a CMake cache variable with the values `AUTO` (the default:
+enabled only for the compilers that need it), `ON` and `OFF`. The configure step prints the options
+it enabled and why (`spaec: floating-point options: ...`).
+
+| Option | CMake variable | Needed for | `AUTO` enables it for | Measured impact |
+|---|---|---|---|---|
+| `-ffp-contract=off` | `SPAEC_FP_CONTRACT_OFF` | correct results | compilers that fuse multiply-adds with the project flags (probe at configure time) | none (±3 %) |
+| `-fno-fast-math` | `SPAEC_NO_FAST_MATH` | correct results | icx/icpx and icc | none (±3 %) |
+| `-fno-trapping-math` | `SPAEC_NO_TRAPPING_MATH` | speed only | GCC | GCC: +12 to +21 % encoding of doubles, else none |
+
+- **`-ffp-contract=off`**: compilers fuse a multiplication and an addition into one multiply-add
+  instruction, which rounds once instead of twice, wherever the CPU has one. The scaled values `(x ·
+  10^D − R) · 2^−E` then differ in the last bit, and with them the coded integers: the results would
+  depend on the compiler and the CPU. GCC (default `-ffp-contract=fast`), Clang ≥ 14 (default `on`)
+  and icx/icpx (models `fast` and `precise`) all fuse by default on CPUs with fused multiply-add:
+  x86-64 with `-march=native` (Haswell and later) or `-march=x86-64-v3`, and every AArch64, POWER
+  and s390x target. `AUTO` compiles a probe with the project flags and enables the option if it
+  fuses (when cross-compiling without an emulator: for GCC, Clang and IntelLLVM). Plain x86-64
+  (SSE2) has no fused multiply-add: no option is needed. Tests that fail without it:
+  `value_mapping`, `encode_fp_contraction`, `encode_fp_contraction_consumer`.
+- **`-fno-fast-math`**: `-ffast-math` lets the compiler assume that there are no NaN and infinite
+  values (the checks for them are removed: invalid values are coded) and reorder arithmetic. GCC and
+  Clang do not use it by default; icx/icpx and icc do (their default floating-point model `fast`:
+  1736 of 7103 cases of the compiler tests of these projects changed; of the spaec tests only
+  `fp_environment` notices it, simple packing has 6 failing tests). `AUTO` enables `-fno-fast-math`
+  for them. A `-ffast-math` in your own `CMAKE_CXX_FLAGS` is not undone: configure warns, and the
+  tests fail (`api`, `spaec_api`, `errors`, `parameter_validation`, `encode_value_range`,
+  `consumer_flags`). Set `SPAEC_NO_FAST_MATH=ON` (adds `-fno-fast-math` after your flags) or remove
+  `-ffast-math`. The option is also a link option: linking with `-ffast-math` (GCC and Clang link
+  `crtfastmath.o`) or with icx/icpx sets the CPU to flush subnormal numbers to zero at program
+  start, which `-fno-fast-math` at compile time does not undo.
+- **`-fno-trapping-math`**: tells the compiler that the code does not use floating-point exception
+  flags (it does not). GCC's default `-ftrapping-math` keeps it from vectorising the range checks of
+  the values; Clang and icx/icpx do not assume trapping math anyway. No effect on the results.
+
+Measured on an AMD Zen 3 (GCC 16, Clang 22, icx 2026.2; `-O3` with `-march=native` and with
+`-march=x86-64`; the seven benchmark fields, cold caches; each option alone against none). On these
+fields the results were bit-identical in all 30 configurations: the differences need values at a
+rounding boundary, which the tests construct.
+
+**When a test fails** because an option is missing, it says which one and how to enable it, e.g.
+"The compiler fuses multiplications and additions ... Configure with -DSPAEC_FP_CONTRACT_OFF=ON".
+The test `spaec_fp_environment` checks the options of the test build alone.
+
+**Your own code** that includes the headers gets the options needed for correct results through the
+usage requirements of the CMake targets (as resolved when the project was configured). If you
+compile it with other flags than the project, e.g. for a CPU with fused multiply-add when the
+project was configured without, or with `-ffast-math`, add `-ffp-contract=off` or `-fno-fast-math`
+yourself.
 
 ## In ecCodes
 
