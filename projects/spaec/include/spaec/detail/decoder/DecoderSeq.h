@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "spaec/detail/Isa.h"
+
 #include <algorithm>
 #include <cassert>
 #include <cstddef>
@@ -25,6 +27,8 @@
 #include "spaec/detail/Utils.h"
 
 namespace spaec::detail
+{
+inline namespace SPAEC_ISA
 {
 
 namespace detail
@@ -839,4 +843,5 @@ protected:
     const Preprocessing preprocessing_;
 };
 
+}  // namespace SPAEC_ISA
 }  // namespace spaec::detail

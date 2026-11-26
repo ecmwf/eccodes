@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "spaec/detail/Isa.h"
+
 #include <cassert>
 #include <cstddef>
 #include <cstdint>
@@ -29,6 +31,8 @@
 #endif
 
 namespace spaec::detail
+{
+inline namespace SPAEC_ISA
 {
 
 // Conversion between the native byte order and the byte order of the bit stream (big-endian, most
@@ -524,4 +528,5 @@ private:
     size_t limitBits_ = 0;
 };
 
+}  // namespace SPAEC_ISA
 }  // namespace spaec::detail

@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "spaec/detail/Isa.h"
+
 #include <algorithm>
 #include <cmath>
 #include <cstddef>
@@ -15,6 +17,8 @@
 #include "spaec/detail/Span.h"
 
 namespace spaec::detail
+{
+inline namespace SPAEC_ISA
 {
 
 template <typename MappedType>
@@ -216,4 +220,5 @@ private:
     using ValueTypePlus = typename PreprocessorBase::ValueTypePlus;
 };
 
+}  // namespace SPAEC_ISA
 }  // namespace spaec::detail

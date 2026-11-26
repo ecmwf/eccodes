@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "spaec/detail/Isa.h"
+
 #include <algorithm>
 #include <cmath>
 #include <cstdint>
@@ -24,6 +26,8 @@
 #include "spaec/detail/decoder/DecoderPar.h"
 
 namespace spaec::detail
+{
+inline namespace SPAEC_ISA
 {
 
 template <typename T>
@@ -345,4 +349,5 @@ private:
 
 }  // namespace encoder
 
+}  // namespace SPAEC_ISA
 }  // namespace spaec::detail

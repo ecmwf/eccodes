@@ -34,6 +34,7 @@
 #include <type_traits>
 #include <vector>
 
+#include "spaec/detail/Isa.h"
 #include "spaec/detail/SpAec.h"
 
 namespace spaec
@@ -94,6 +95,9 @@ public:
 };
 
 namespace detail
+{
+// Per instruction set (spaec/detail/Isa.h); the types above are shared
+inline namespace SPAEC_ISA
 {
 
 struct Config
@@ -219,7 +223,12 @@ void decodeChecked(Decode&& decode)
     }
 }
 
+}  // namespace SPAEC_ISA
 }  // namespace detail
+
+// The functions per instruction set (spaec/detail/Isa.h)
+inline namespace SPAEC_ISA
+{
 
 // Throws std::invalid_argument, with a message that names the valid values, if the options are invalid
 inline void validate(const Options& options)
@@ -351,5 +360,7 @@ std::vector<Value> decompress(const std::vector<uint8_t>& data, size_t count, co
     decompress(data.data(), data.size(), scaling, options, values.data(), count);
     return values;
 }
+
+}  // namespace SPAEC_ISA
 
 }  // namespace spaec

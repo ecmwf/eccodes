@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "spaec/detail/Isa.h"
+
 #include <cstddef>
 #include <cstdint>
 #include <type_traits>
@@ -13,7 +15,11 @@
     #include <immintrin.h>
 #endif
 
-namespace spaec::detail::encoder
+namespace spaec::detail
+{
+inline namespace SPAEC_ISA
+{
+namespace encoder
 {
 
 // blockShiftedSum<J>(v, k, bits): the sum of the J samples v[0..J) shifted right by k, the sums of
@@ -242,4 +248,6 @@ __attribute__((always_inline)) inline uint64_t blockShiftedSum(const T* v, unsig
     }
 }
 
-}  // namespace spaec::detail::encoder
+}  // namespace encoder
+}  // namespace SPAEC_ISA
+}  // namespace spaec::detail

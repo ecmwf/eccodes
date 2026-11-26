@@ -5,11 +5,15 @@
 
 #pragma once
 
+#include "spaec/detail/Isa.h"
+
 #include <cstddef>
 #include <stdexcept>
 #include <string>
 
 namespace spaec::detail
+{
+inline namespace SPAEC_ISA
 {
 
 enum class ReferenceType
@@ -76,4 +80,5 @@ inline void validateCcsdsParameters(size_t bpv, size_t blockSize, size_t rsiSize
     }
 }
 
+}  // namespace SPAEC_ISA
 }  // namespace spaec::detail

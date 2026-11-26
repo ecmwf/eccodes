@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "spaec/detail/Isa.h"
+
 // C++17 replacements for the C++20 features SpAec used: std::endian, std::countl_zero and the
 // [[likely]]/[[unlikely]] attributes (GCC, Clang and the Intel compilers, like the __builtin_bswap
 // functions in BitBuffer.h)
@@ -13,6 +15,8 @@
 #include <type_traits>
 
 namespace spaec::detail
+{
+inline namespace SPAEC_ISA
 {
 
 #if defined(__GNUC__) || defined(__clang__)
@@ -49,4 +53,5 @@ inline int countlZero(T x)
     }
 }
 
+}  // namespace SPAEC_ISA
 }  // namespace spaec::detail

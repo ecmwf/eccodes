@@ -5,11 +5,15 @@
 
 #pragma once
 
+#include "spaec/detail/Isa.h"
+
 #include <cstdint>
 #include <stdexcept>
 #include <cassert>
 
 namespace spaec::detail
+{
+inline namespace SPAEC_ISA
 {
 
 enum class CodeOptionSet
@@ -259,4 +263,5 @@ public:
     IdType valueShifted;
 };
 
+}  // namespace SPAEC_ISA
 }  // namespace spaec::detail

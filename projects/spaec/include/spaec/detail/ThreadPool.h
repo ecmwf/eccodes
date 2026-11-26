@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "spaec/detail/Isa.h"
+
 #include <functional>
 #include <future>
 #include <iostream>
@@ -19,6 +21,8 @@
 #include <vector>
 
 namespace spaec::detail
+{
+inline namespace SPAEC_ISA
 {
 
 class ThreadPool
@@ -104,4 +108,5 @@ auto ThreadPool::enqueue(F&& f, Args&&... args) -> std::future<std::invoke_resul
     return res;
 }
 
+}  // namespace SPAEC_ISA
 }  // namespace spaec::detail

@@ -5,11 +5,15 @@
 
 #pragma once
 
+#include "spaec/detail/Isa.h"
+
 #include <cstddef>
 #include <cassert>
 #include <vector>
 
 namespace spaec::detail
+{
+inline namespace SPAEC_ISA
 {
 
 template <typename ValueType>
@@ -96,4 +100,5 @@ private:
     const size_t nPartB_ = (data_.size() % splitSizeV_ == 0) ? 0 : 1;
 };
 
+}  // namespace SPAEC_ISA
 }  // namespace spaec::detail

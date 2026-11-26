@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "spaec/detail/Isa.h"
+
 #include <algorithm>
 #include <cstddef>
 #include <cstdint>
@@ -19,6 +21,8 @@
 #include "spaec/detail/decoder/DecoderSeq.h"
 
 namespace spaec::detail
+{
+inline namespace SPAEC_ISA
 {
 
 template <typename ValueType, typename DeltaType, typename DecodeFunc = Identity<DeltaType>>
@@ -133,4 +137,5 @@ private:
     using Base::rsiSizeV_;
 };
 
+}  // namespace SPAEC_ISA
 }  // namespace spaec::detail
