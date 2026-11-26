@@ -288,7 +288,7 @@ int DataG2SimplePacking::pack_float(const float* val, size_t* len)
     if (units_bias_)
         grib_get_double_internal(h, units_bias_, &units_bias);
     if (!use_new_simple_packing() || context_->ieee_packing || units_factor != 1.0 || units_bias != 0.0)
-        return Gen::pack_float(val, len);
+        return pack_float_as_double(val, len);
     return pack(val, len);
 }
 

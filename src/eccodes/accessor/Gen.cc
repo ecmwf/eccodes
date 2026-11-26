@@ -613,6 +613,11 @@ int Gen::pack_missing()
 // with a faster way override pack_float and must give the same result)
 int Gen::pack_float(const float* v, size_t* len)
 {
+    return pack_float_as_double(v, len);
+}
+
+int Gen::pack_float_as_double(const float* v, size_t* len)
+{
     const std::vector<double> d(v, v + *len);
     return pack_double(d.data(), len);
 }
