@@ -464,6 +464,7 @@ if( HAVE_BUILD_TOOLS )
 
     if( eccodes_HAVE_ECKIT_GEO AND eccodes_HAVE_GEOGRAPHY )
         list(APPEND tests_extra grib_geo_iterator)
+        list(APPEND tests_extra grib_filter_gridSpec)
     endif()
 
     if( HAVE_AEC AND ENABLE_EXTRA_TESTS )

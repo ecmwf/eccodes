@@ -78,8 +78,8 @@ const char* IsInDict::get_name() const
 int IsInDict::evaluate_long(grib_handle* h, long* result) const
 {
     int err = 0;
-    char mybuf[1024] = { 0 };
-    size_t size = 1024;
+    char mybuf[GRIB_STRING_LENGTH] = { 0 };
+    size_t size = GRIB_STRING_LENGTH;
 
     grib_trie* dict = load_dictionary(h->context, &err);
 

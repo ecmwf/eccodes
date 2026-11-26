@@ -97,7 +97,7 @@ grib_concept_value* Concept::get_concept_impl(grib_handle* h)
     char buf[4096] = { 0 };
     char master[1024] = { 0 };
     char local[1024] = { 0 };
-    char masterDir[1024] = { 0 };
+    char masterDir[GRIB_STRING_LENGTH] = { 0 };
     size_t lenMasterDir = sizeof(masterDir);
     char key[4096] = { 0 };
     char* full = 0;
@@ -115,7 +115,7 @@ grib_concept_value* Concept::get_concept_impl(grib_handle* h)
     // See ECC-1920: The basename could be a key or a string
     char* basename = basename_;  // default is a string
     ECCODES_ASSERT(basename);
-    char baseNameValue[1024] = { 0 };  // its value if a key
+    char baseNameValue[GRIB_STRING_LENGTH] = { 0 };  // its value if a key
     size_t lenBaseName = sizeof(baseNameValue);
     // All concept files have the .def extension so they are plain strings
     if (!string_ends_with(basename_, ".def")) {
@@ -128,8 +128,8 @@ grib_concept_value* Concept::get_concept_impl(grib_handle* h)
     grib_recompose_name(h, NULL, buf, master, 1);
 
     if (localDir_) {
-        char localDir[1024] = { 0 };
-        size_t lenLocalDir = 1024;
+        char localDir[GRIB_STRING_LENGTH] = { 0 };
+        size_t lenLocalDir = sizeof(localDir);
         grib_get_string(h, localDir_, localDir, &lenLocalDir);
         snprintf(buf, bufLen, "%s/%s", localDir, basename);
         grib_recompose_name(h, NULL, buf, local, 1);

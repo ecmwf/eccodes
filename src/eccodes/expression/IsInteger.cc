@@ -21,8 +21,8 @@ const char* IsInteger::get_name() const
 int IsInteger::evaluate_long(grib_handle* h, long* result) const
 {
     int err = 0;
-    char mybuf[1024] = { 0 };
-    size_t size = 1024;
+    char mybuf[GRIB_STRING_LENGTH] = { 0 };
+    size_t size = GRIB_STRING_LENGTH;
     char* p = 0;
     char* start = 0;
 

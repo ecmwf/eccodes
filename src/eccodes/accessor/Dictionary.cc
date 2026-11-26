@@ -33,12 +33,12 @@ grib_trie* Dictionary::load_dictionary(int* err)
     char* filename = NULL;
     char line[1024] = { 0 };
     char key[1024] = { 0 };
-    char masterDir[1024] = { 0 };
-    char localDir[1024] = { 0 };
+    char masterDir[GRIB_STRING_LENGTH] = { 0 };
+    char localDir[GRIB_STRING_LENGTH] = { 0 };
     char dictName[1024] = { 0 };
     const char* localFilename = 0;
     char* list = 0;
-    size_t len = 1024;
+    size_t len = GRIB_STRING_LENGTH;
     grib_trie* dictionary = NULL;
     FILE* f = NULL;
     int i = 0;
@@ -47,10 +47,10 @@ grib_trie* Dictionary::load_dictionary(int* err)
 
     *err = GRIB_SUCCESS;
 
-    len = 1024;
+    len = GRIB_STRING_LENGTH;
     if (masterDir_ != NULL)
         grib_get_string(h, masterDir_, masterDir, &len);
-    len = 1024;
+    len = GRIB_STRING_LENGTH;
     if (localDir_ != NULL)
         grib_get_string(h, localDir_, localDir, &len);
 
@@ -161,8 +161,8 @@ void Dictionary::dump(eccodes::Dumper* dumper)
 int Dictionary::unpack_string(char* buffer, size_t* len)
 {
     int err = GRIB_SUCCESS;
-    char key[1024] = { 0 };
-    size_t size = 1024;
+    char key[GRIB_STRING_LENGTH] = { 0 };
+    size_t size = GRIB_STRING_LENGTH;
     char* list = NULL;
     char* start = NULL;
     char* end = NULL;
@@ -231,8 +231,8 @@ long Dictionary::get_native_type()
 int Dictionary::unpack_long(long* val, size_t* len)
 {
     int err = 0;
-    char buffer[1024] = { 0 };
-    size_t size = 1024;
+    char buffer[GRIB_STRING_LENGTH] = { 0 };
+    size_t size = GRIB_STRING_LENGTH;
 
     err = unpack_string(buffer, &size);
     if (err)
@@ -247,8 +247,8 @@ int Dictionary::unpack_long(long* val, size_t* len)
 int Dictionary::unpack_double(double* val, size_t* len)
 {
     int err = 0;
-    char buffer[1024] = { 0 };
-    size_t size = 1024;
+    char buffer[GRIB_STRING_LENGTH] = { 0 };
+    size_t size = GRIB_STRING_LENGTH;
 
     err = unpack_string(buffer, &size);
     if (err)
