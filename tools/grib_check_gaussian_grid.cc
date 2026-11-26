@@ -128,6 +128,8 @@ static int process_file(const char* filename)
         GRIB_CHECK(grib_get_double(h, "latitudeOfLastGridPointInDegrees", &lat2), 0);
         GRIB_CHECK(grib_get_double(h, "longitudeOfLastGridPointInDegrees", &lon2), 0);
 
+        /* One unit of the encoded angles, so the precision is checked but not the rounding direction: GRIB1
+         * millidegrees in an edition 2 message fail, microdegrees rounded either way pass */
         GRIB_CHECK(grib_get_long(h, "angleSubdivisions", &angleSubdivisions), 0);
         ECCODES_ASSERT(angleSubdivisions > 0);
         angular_tolerance = 1.0 / angleSubdivisions;
