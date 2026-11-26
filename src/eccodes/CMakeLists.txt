@@ -506,3 +506,20 @@ set_source_files_properties(accessor/DataCcsdsPackingNew.cc PROPERTIES
 target_sources(eccodes PRIVATE $<TARGET_OBJECTS:simple_packing_objects>)
 set_source_files_properties(accessor/DataSimplePacking.cc accessor/DataG1SimplePacking.cc accessor/DataG2SimplePacking.cc
     PROPERTIES COMPILE_OPTIONS "${SIMPLE_PACKING_OPT_FLAGS}")
+
+# The legacy CCSDS decoder must decode the same bits as the new one, but it does the scaling
+# arithmetic of the decoder itself. Some compilers (IntelLLVM by default) optimise floating-point
+# expressions unsafely, which changes the decoded values. It gets the safety flags only: it is not
+# an optimised new implementation, so -O3 and -march=native do not belong here
+if( CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|AppleClang|IntelLLVM" )
+    set( ECCODES_FP_SAFE_FLAGS -fno-fast-math -ffp-contract=off )
+    if( CMAKE_CXX_COMPILER_ID STREQUAL "IntelLLVM" )
+        list( APPEND ECCODES_FP_SAFE_FLAGS -fp-model=precise )
+    endif()
+    get_source_file_property( ECCODES_LEGACY_CCSDS_OPTIONS accessor/DataCcsdsPackingLegacy.cc COMPILE_OPTIONS )
+    if( ECCODES_LEGACY_CCSDS_OPTIONS STREQUAL "NOTFOUND" )
+        set( ECCODES_LEGACY_CCSDS_OPTIONS "" )
+    endif()
+    set_source_files_properties(accessor/DataCcsdsPackingLegacy.cc PROPERTIES
+        COMPILE_OPTIONS "${ECCODES_LEGACY_CCSDS_OPTIONS};${ECCODES_FP_SAFE_FLAGS}")
+endif()
