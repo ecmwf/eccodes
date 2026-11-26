@@ -48,7 +48,12 @@ int DecimalPrecision::pack_long(const long* val, size_t* /*len*/)
     grib_context* c = context_;
     grib_handle* h = get_enclosing_handle();
 
-    if (!values_) {
+    if (values_ && (ret = grib_get_size(h, values_, &size)) != GRIB_SUCCESS)
+        return ret;
+
+    /* Without values there is nothing to repack, only the keys change: grib_context_malloc(c, 0)
+       returns NULL, so a field with no coded values must not reach the allocation below */
+    if (!values_ || size == 0) {
         if ((ret = grib_set_long_internal(h, bits_per_value_, 0)) != GRIB_SUCCESS)
             return ret;
 
@@ -60,9 +65,6 @@ int DecimalPrecision::pack_long(const long* val, size_t* /*len*/)
         }
         return GRIB_SUCCESS;
     }
-
-    if ((ret = grib_get_size(h, values_, &size)) != GRIB_SUCCESS)
-        return ret;
 
     double* values = (double*)grib_context_malloc(c, size * sizeof(double));
     if (!values) return GRIB_OUT_OF_MEMORY;
