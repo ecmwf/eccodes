@@ -149,4 +149,5 @@ if(SIMPLE_PACKING_INSTALL)
     ${PROJECT_BINARY_DIR}/simple_packingConfig.cmake
     ${PROJECT_BINARY_DIR}/simple_packingConfigVersion.cmake
     DESTINATION ${SIMPLE_PACKING_CMAKE_DIR})
+  install(FILES LICENSE CHANGELOG.md README.md DESTINATION ${CMAKE_INSTALL_DOCDIR})
 endif()
