@@ -43,6 +43,10 @@ add_test(NAME ${SP_TEST_PREFIX}optimizers COMMAND sp_optimizers)
 sp_add_test(float_formats)
 add_test(NAME ${SP_TEST_PREFIX}float_formats COMMAND sp_float_formats)
 
+# Every result of src/Utils.cc against a frozen copy of the earlier implementation
+sp_add_test(utils_reference)
+add_test(NAME ${SP_TEST_PREFIX}utils_reference COMMAND sp_utils_reference)
+
 sp_add_test(errors)
 add_test(NAME ${SP_TEST_PREFIX}errors COMMAND sp_errors)
 

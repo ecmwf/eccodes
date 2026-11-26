@@ -184,6 +184,12 @@ static void edges()
     expectValue(0x1.ffffffp+3, FloatType::IBM32, 0x1.ffffep+3, "IBM legacy rounding");
     expectValue(-0x1.ffffffp+3, FloatType::IBM32, -0x1p+7, "IBM legacy rounding");
     expectValue(-0x1.fffffffffffffp+3, FloatType::IBM32, -0x1p+4, "IBM legacy rounding");
+    // Just below -0x100000 * 16^k: rounded, the mantissa is the smallest normalised one with a
+    // negative sign; the result is the next value below, -0x100001 * 16^k
+    for (int32_t k : { -60, -10, 0, 5, 50 }) {
+        const double unit = std::ldexp(1.0, 4 * k);
+        expectValue(-std::nextafter(0x100000 * unit, inf), FloatType::IBM32, -0x100001 * unit, "IBM below -0x100000 * 16^k");
+    }
 }
 
 int main()

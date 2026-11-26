@@ -100,6 +100,9 @@ static void dataRange()
     check(rangeRejected(nan, 1) && rangeRejected(1, nan) && rangeRejected(nan, nan), "NaN must be rejected");
     check(rangeRejected(-inf, 1) && rangeRejected(1, inf), "infinity must be rejected");
     check(rangeRejected(-DBL_MAX, 0) && rangeRejected(0, DBL_MAX), "+-DBL_MAX must be rejected");
+    check(rangeRejected(-1, -DBL_MAX) && rangeRejected(-1, -std::numeric_limits<double>::infinity()) && rangeRejected(DBL_MAX, 1) &&
+              rangeRejected(std::numeric_limits<double>::infinity(), 1),
+          "a maximum of -DBL_MAX or -inf, or a minimum of DBL_MAX or inf must be rejected");
 }
 
 static void referenceValue()
