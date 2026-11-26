@@ -10,7 +10,15 @@
 
 #pragma once
 
+#include <memory>
+
 #include "Gen.h"
+#include "eccodes/Spec.h"
+
+namespace eckit::geo
+{
+class Grid;
+}
 
 namespace eccodes::accessor
 {
@@ -27,12 +35,22 @@ public:
     int pack_string(const char*, size_t* len) override;
     void init(const long, grib_arguments*) override;
 
+    // as a spec, not its string: got, the spec of the grid of the message (held until got again as a spec)
+    int pack_spec(const Spec&);
+    int unpack_spec(const Spec*&);
+
 
     static constexpr AccessorType accessor_type_{ "grid_spec" };
 
 private:
     void print_warning_feature_not_implemented();
     bool warned_ = false;
+
+    std::shared_ptr<const eckit::geo::Grid> grid_;
+
+    template <typename MakeGrid>
+    int pack_grid(MakeGrid&&);
+    int unpack_grid(std::shared_ptr<const eckit::geo::Grid>&);
 };
 
 }  // namespace eccodes::accessor

@@ -405,6 +405,9 @@ endif()
 configure_file( grib_api_version.cc.in grib_api_version.cc @ONLY )
 configure_file( eccodes_version.h.in eccodes_version.h @ONLY )
 
+# the C++ spec interface (as eccodes/Spec.h)
+install( FILES Spec.h DESTINATION ${INSTALL_INCLUDE_DIR}/eccodes )
+
 # Generate the explicit registration of all accessors with the accessor factory.
 # Without it, a static libeccodes loses most accessors at link time (ECC-2355)
 set( eccodes_accessor_includes "" )

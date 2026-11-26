@@ -9,6 +9,13 @@
  */
 
 #include "eccodes.h"
+#include "eccodes/Spec.h"
+
+#include <stdexcept>
+#include <string>
+
+#include "grib_api_internal.h"
+#include "accessor/GridSpec.h"
 
 /* Generic functions */
 /******************************************************************************/
@@ -412,6 +419,33 @@ int codes_set_double(grib_handle* h, const char* key, double val)
 int codes_set_string(grib_handle* h, const char* key, const char* mesg, size_t* length)
 {
     return grib_set_string(h, key, mesg, length);
+}
+int codes_set_spec(grib_handle* h, const char* key, const eccodes::Spec& spec)
+{
+    auto* a = grib_find_accessor(h, key);
+    if (a == nullptr) return GRIB_NOT_FOUND;
+    if (a->flags_ & GRIB_ACCESSOR_FLAG_READ_ONLY) return GRIB_READ_ONLY;
+
+    auto* g = dynamic_cast<eccodes::accessor::GridSpec*>(a);
+    if (g == nullptr) return GRIB_WRONG_TYPE;
+
+    auto err = g->pack_spec(spec);
+    return err == GRIB_SUCCESS ? grib_dependency_notify_change_h(h, a) : err;  // the accessor may not survive its own packing
+}
+const eccodes::Spec& codes_get_spec(const grib_handle* h, const char* key)
+{
+    auto* a = grib_find_accessor(h, key);
+    auto* g = dynamic_cast<eccodes::accessor::GridSpec*>(a);
+
+    const eccodes::Spec* spec = nullptr;
+    auto err = a == nullptr ? GRIB_NOT_FOUND : g == nullptr ? GRIB_WRONG_TYPE
+                                                            : g->unpack_spec(spec);
+    if (err != GRIB_SUCCESS) {
+        throw std::runtime_error(std::string("codes_get_spec: ") + key + ": " + grib_get_error_message(err));
+    }
+
+    ECCODES_ASSERT(spec != nullptr);
+    return *spec;
 }
 int codes_set_bytes(grib_handle* h, const char* key, const unsigned char* bytes, size_t* length)
 {
