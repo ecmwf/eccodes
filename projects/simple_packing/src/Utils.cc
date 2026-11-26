@@ -18,8 +18,6 @@ namespace sp::detail
 namespace
 {
 
-constexpr double dbl_max = std::numeric_limits<double>::max();
-
 // The biased exponent of a double (0 for zero and subnormal values): floor(log2(|x|)) + 1023 for
 // normal values
 inline int32_t biased_exponent(double x)
@@ -159,8 +157,7 @@ std::optional<double> nearest_smaller_value(double val, FloatType type)
 
 std::optional<int64_t> get_binary_scale_factor(double max, double min, int64_t bpval)
 {
-    constexpr int64_t last = 127;
-    constexpr double doubling_limit = dbl_max / 2;  // zs must not overflow to infinity
+    constexpr int64_t last = 127;  // the largest binary scale factor (and -last the smallest)
     const double range = max - min;
 
     // Check the arguments before using them (ECC-246, ECC-1927 in ecCodes)
@@ -178,47 +175,41 @@ std::optional<int64_t> get_binary_scale_factor(double max, double min, int64_t b
         return 0;
     }
 
-    // The searches below find the scale factor S of the first two loops in [ex + 1 - bpval,
-    // ex + 2 - bpval] (ex: the binary exponent of the range; maxint is 2^bpval - 1, as a double
-    // 2^bpval - 1 or 2^bpval) and end at most one above it: below -127 for ex + 3 - bpval < -127,
-    // and also for subnormal ranges. They start next to S instead of at 0 (the products are exact:
-    // powers of two times the range): the same results as the search from 0.
+    // The scale factor E with the largest factor 2^-E for which range * 2^-E fits bpval bits, as
+    // legacy ecCodes finds it (grib_get_binary_scale_fact): first E with range * 2^-E <= max_code
+    // (max_code as a double: 2^bpval - 1, or 2^bpval from 54 bits on), then E with
+    // round(range * 2^-E) <= max_code. The products are exact (powers of two times the range).
+    // Legacy ecCodes searches from E = 0 in steps of one; with ex the binary exponent of the range,
+    // the first E is ex + 1 - bpval or ex + 2 - bpval and the result at most one above it, so the
+    // search starts at ex + 1 - bpval and takes one or two steps per loop. A result below -last is
+    // no value: also for subnormal ranges, and for all ranges with ex + 3 - bpval < -last (factors
+    // up to 2^133 then remain: far from an overflow to infinity, which legacy ecCodes has to check).
     const int32_t biased = biased_exponent(range);
     const int64_t ex = static_cast<int64_t>(biased) - 1023;
     if (biased == 0 || ex + 3 - bpval < -last) {
         return std::nullopt;  // the range is too small even with the smallest binary scale factor
     }
-    const uint64_t maxint = (uint64_t{ 1 } << bpval) - 1;
-    const auto rounded = [range](double zs) { return static_cast<uint64_t>(range * zs + 0.5); };
+    const uint64_t max_code = (uint64_t{ 1 } << bpval) - 1;
     int64_t scale = ex + 1 - bpval;
-    double zs = power_of_two(-scale);  // exact (-1023 <= -scale <= 131)
+    double factor = power_of_two(-scale);  // 2^-scale, exact (-1023 <= -scale <= 131)
 
-    // Scaling up must not overflow zs to infinity, otherwise the search below could never
-    // halve it back (inf / 2 == inf): the range is too small for any binary scale factor
-    while (range * zs <= maxint) {
-        if (zs > doubling_limit) {
-            return std::nullopt;
-        }
+    while (range * factor <= max_code) {
         scale--;
-        zs *= 2;
+        factor *= 2;
     }
-    while (range * zs > maxint) {
+    while (range * factor > max_code) {
         scale++;
-        zs /= 2;
+        factor /= 2;
     }
-
-    // Rounding can allow one more doubling: it must not overflow zs either (inf cannot be
-    // converted to an integer, and the search below could never halve it back)
-    while (rounded(zs) <= maxint) {
-        if (zs > doubling_limit) {
-            return std::nullopt;
-        }
+    // Rounded, the scaled range can fit with one more doubling
+    const auto rounded = [range](double f) { return static_cast<uint64_t>(range * f + 0.5); };
+    while (rounded(factor) <= max_code) {
         scale--;
-        zs *= 2;
+        factor *= 2;
     }
-    while (rounded(zs) > maxint) {
+    while (rounded(factor) > max_code) {
         scale++;
-        zs /= 2;
+        factor /= 2;
     }
 
     if (scale < -last) {
@@ -233,6 +224,7 @@ std::optional<int64_t> get_binary_scale_factor(double max, double min, int64_t b
 
 void check_data_values_range(double min_val, double max_val)
 {
+    constexpr double dbl_max = std::numeric_limits<double>::max();
     const auto within = [](double v) { return v < dbl_max && v > -dbl_max; };  // finite, and not +-DBL_MAX
     if (!within(min_val) || !within(max_val) || min_val > max_val) {
         throw std::runtime_error("Values out of range (minimum " + std::to_string(min_val) + ", maximum " + std::to_string(max_val) +
