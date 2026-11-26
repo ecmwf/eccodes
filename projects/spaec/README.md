@@ -194,4 +194,6 @@ are in an inline namespace per instruction set (`spaec/detail/Isa.h`).
 ## In ecCodes
 
 GRIB CCSDS packing uses SpAec with `ECCODES_USE_SPAEC=1`, and always when ecCodes is built without
-libaec. Signed samples and RSI padding are left to libaec.
+libaec. Signed samples and RSI padding are left to libaec. `codes_set_float_array` packs the floats
+without converting them to doubles, with the result of `codes_set_double_array` with the converted
+values.

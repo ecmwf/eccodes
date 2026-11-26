@@ -9,6 +9,7 @@
  */
 
 #include "DataApplyBitmap.h"
+#include <vector>
 
 namespace eccodes::accessor
 {
@@ -205,16 +206,27 @@ int DataApplyBitmap::unpack_double_element_set(const size_t* index_array, size_t
     return GRIB_SUCCESS;
 }
 
-int DataApplyBitmap::pack_double(const double* val, size_t* len)
+// The values as doubles or floats: the coded values are set with the same type (floats give the
+// result of the converted doubles)
+static int set_array_internal(grib_handle* h, const char* name, const double* val, size_t length)
+{
+    return grib_set_double_array_internal(h, name, val, length);
+}
+
+static int set_array_internal(grib_handle* h, const char* name, const float* val, size_t length)
+{
+    return grib_set_float_array_internal(h, name, val, length);
+}
+
+template <typename T>
+int DataApplyBitmap::pack(const T* val, size_t* len)
 {
     int err = 0;
     size_t bmaplen = *len;
     long coded_n_vals = 0;
-    double* coded_vals = NULL;
     long j = 0;
     double missing_value = 0;
     grib_handle* hand = get_enclosing_handle();
-    grib_context* ctxt = context_;
 
     if (*len == 0)
         return GRIB_NO_VALUES;
@@ -224,26 +236,24 @@ int DataApplyBitmap::pack_double(const double* val, size_t* len)
         if (number_of_data_points_)
             grib_set_long_internal(hand, number_of_data_points_, *len);
 
-        err = grib_set_double_array_internal(hand, coded_values_, val, *len);
+        err = set_array_internal(hand, coded_values_, val, *len);
         return err;
     }
 
     if ((err = grib_get_double_internal(hand, missing_value_, &missing_value)) != GRIB_SUCCESS)
         return err;
 
-    if ((err = grib_set_double_array_internal(hand, bitmap_, val, bmaplen)) != GRIB_SUCCESS)
+    if ((err = set_array_internal(hand, bitmap_, val, bmaplen)) != GRIB_SUCCESS)
         return err;
 
     coded_n_vals = *len;
 
     if (coded_n_vals < 1) {
-        err = grib_set_double_array_internal(hand, coded_values_, NULL, 0);
+        err = set_array_internal(hand, coded_values_, static_cast<const T*>(nullptr), 0);
         return err;
     }
 
-    coded_vals = (double*)grib_context_malloc_clear(ctxt, coded_n_vals * sizeof(double));
-    if (!coded_vals)
-        return GRIB_OUT_OF_MEMORY;
+    std::vector<T> coded_vals(coded_n_vals);
 
     for (size_t i = 0; i < *len; i++) {
         if (val[i] != missing_value) {
@@ -251,8 +261,7 @@ int DataApplyBitmap::pack_double(const double* val, size_t* len)
         }
     }
 
-    err = grib_set_double_array_internal(hand, coded_values_, coded_vals, j);
-    grib_context_free(ctxt, coded_vals);
+    err = set_array_internal(hand, coded_values_, coded_vals.data(), j);
     if (j == 0) {
         if (number_of_values_)
             err = grib_set_long_internal(hand, number_of_values_, 0);
@@ -261,6 +270,16 @@ int DataApplyBitmap::pack_double(const double* val, size_t* len)
     }
 
     return err;
+}
+
+int DataApplyBitmap::pack_double(const double* val, size_t* len)
+{
+    return pack(val, len);
+}
+
+int DataApplyBitmap::pack_float(const float* val, size_t* len)
+{
+    return pack(val, len);
 }
 
 template <typename T>

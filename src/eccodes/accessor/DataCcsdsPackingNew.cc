@@ -62,7 +62,8 @@ void print_spaec_info(const char* func, long flags, long bits_per_value, long bl
 
 }  // namespace
 
-int DataCcsdsPacking::pack_double_new(const double* val, size_t* len)
+template <typename T>
+int DataCcsdsPacking::pack_new(const T* val, size_t* len)
 {
     grib_handle* hand = get_enclosing_handle();
     int err = GRIB_SUCCESS;
@@ -99,7 +100,7 @@ int DataCcsdsPacking::pack_double_new(const double* val, size_t* len)
         return GRIB_SUCCESS;
     }
 
-    const sp::Range<double> range = sp::range(val, n_vals);
+    const sp::Range<T> range = sp::range(val, n_vals);
     const double min = range.min, max = range.max;
     if ((err = grib_check_data_values_minmax(hand, min, max)) != GRIB_SUCCESS) {
         return err;
@@ -308,6 +309,8 @@ int DataCcsdsPacking::unpack_new(T* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
+template int DataCcsdsPacking::pack_new<double>(const double* val, size_t* len);
+template int DataCcsdsPacking::pack_new<float>(const float* val, size_t* len);
 template int DataCcsdsPacking::unpack_new<double>(double* val, size_t* len);
 template int DataCcsdsPacking::unpack_new<float>(float* val, size_t* len);
 

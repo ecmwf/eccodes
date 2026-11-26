@@ -540,6 +540,7 @@ int grib_is_missing(const grib_handle* h, const char* name, int* err);
 int grib_is_defined(const grib_handle* h, const char* name);
 int grib_set_flag(grib_handle* h, const char* name, unsigned long flag);
 int grib_set_double_array_internal(grib_handle* h, const char* name, const double* val, size_t length);
+int grib_set_float_array_internal(grib_handle* h, const char* name, const float* val, size_t length);
 int grib_set_force_double_array(grib_handle* h, const char* name, const double* val, size_t length);
 int grib_set_double_array(grib_handle* h, const char* name, const double* val, size_t length);
 int grib_set_force_float_array(grib_handle* h, const char* name, const float* val, size_t length);

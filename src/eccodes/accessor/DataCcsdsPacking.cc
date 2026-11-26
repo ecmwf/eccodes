@@ -22,6 +22,8 @@
 #include "DataCcsdsPacking.h"
 
 #include <cstring>
+#include <type_traits>
+#include <vector>
 
 namespace eccodes::accessor
 {
@@ -81,7 +83,10 @@ int DataCcsdsPacking::value_count(long* count)
     return grib_get_long_internal(get_enclosing_handle(), number_of_values_, count);
 }
 
-int DataCcsdsPacking::pack_double(const double* val, size_t* len)
+// Floats give the result of pack_double with the converted values: the legacy implementation packs
+// the converted values, the new one packs the floats (with the codes of the converted values)
+template <typename T>
+int DataCcsdsPacking::pack(const T* val, size_t* len)
 {
     long ccsds_flags = 0, ccsds_block_size = 0;
     int err = grib_get_long_internal(get_enclosing_handle(), ccsds_flags_, &ccsds_flags);
@@ -90,8 +95,24 @@ int DataCcsdsPacking::pack_double(const double* val, size_t* len)
     if ((err = grib_get_long_internal(get_enclosing_handle(), ccsds_block_size_, &ccsds_block_size)) != GRIB_SUCCESS)
         return err;
     if (use_new_implementation() && spaec_supports(ccsds_flags, ccsds_block_size))
-        return pack_double_new(val, len);
-    return pack_double_legacy(val, len);
+        return pack_new(val, len);
+    if constexpr (std::is_same<T, double>::value) {
+        return pack_double_legacy(val, len);
+    }
+    else {
+        const std::vector<double> d(val, val + *len);
+        return pack_double_legacy(d.data(), len);
+    }
+}
+
+int DataCcsdsPacking::pack_double(const double* val, size_t* len)
+{
+    return pack(val, len);
+}
+
+int DataCcsdsPacking::pack_float(const float* val, size_t* len)
+{
+    return pack(val, len);
 }
 
 template <typename T>

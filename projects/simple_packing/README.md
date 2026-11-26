@@ -128,4 +128,5 @@ flags, the header functions (`sp::range`, `sp::scaling`) no longer detect NaN an
 ## In ecCodes
 
 The simple packing accessors use it with `ECCODES_USE_SP=1`; CCSDS packing uses its optimisers with
-`ECCODES_USE_SPAEC=1`.
+`ECCODES_USE_SPAEC=1`. `codes_set_float_array` packs the floats without converting them to doubles
+(GRIB2 simple packing), with the result of `codes_set_double_array` with the converted values.

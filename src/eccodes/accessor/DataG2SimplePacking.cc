@@ -13,6 +13,9 @@
 
 #include "simple_packing/simple_packing.h"
 
+#include <type_traits>
+#include <vector>
+
 namespace eccodes::accessor
 {
 
@@ -29,25 +32,14 @@ int DataG2SimplePacking::value_count(long* n_vals)
     return grib_get_long_internal(get_enclosing_handle(), number_of_values_, n_vals);
 }
 
-int DataG2SimplePacking::pack_double(const double* cval, size_t* len)
+template <typename T>
+int DataG2SimplePacking::pack(const T* cval, size_t* len)
 {
-    // grib_accessor* super                = *(cclass_ ->super);
     size_t n_vals = *len;
-    double reference_value = 0;
-    long binary_scale_factor = 0;
-    long bits_per_value = 0;
-    long decimal_scale_factor = 0;
-    double decimal = 1;
-    size_t buflen = 0;
-    unsigned char* buf = NULL;
-    unsigned char* encoded = NULL;
-    double divisor = 1;
-    long off = 0;
     int ret = 0;
     double units_factor = 1.0;
     double units_bias = 0.0;
-    double* val = (double*)cval;
-    int i;
+    T* val = (T*)cval;
     grib_context* c = context_;
 
     if (*len == 0) {
@@ -71,21 +63,24 @@ int DataG2SimplePacking::pack_double(const double* cval, size_t* len)
         grib_set_double_internal(get_enclosing_handle(), units_bias_, 0.0);
     }
 
-    if (units_factor != 1.0) {
-        if (units_bias != 0.0) {
-            for (i = 0; i < n_vals; i++) {
-                val[i] = val[i] * units_factor + units_bias;
+    // Only doubles are converted in place (pack_float converts the values first when needed)
+    if constexpr (std::is_same<T, double>::value) {
+        if (units_factor != 1.0) {
+            if (units_bias != 0.0) {
+                for (size_t i = 0; i < n_vals; i++) {
+                    val[i] = val[i] * units_factor + units_bias;
+                }
+            }
+            else {
+                for (size_t i = 0; i < n_vals; i++) {
+                    val[i] *= units_factor;
+                }
             }
         }
-        else {
-            for (i = 0; i < n_vals; i++) {
-                val[i] *= units_factor;
+        else if (units_bias != 0.0) {
+            for (size_t i = 0; i < n_vals; i++) {
+                val[i] += units_bias;
             }
-        }
-    }
-    else if (units_bias != 0.0) {
-        for (i = 0; i < n_vals; i++) {
-            val[i] += units_bias;
         }
     }
 
@@ -102,92 +97,138 @@ int DataG2SimplePacking::pack_double(const double* cval, size_t* len)
         if ((ret = grib_set_long(h, "precision", precision)) != GRIB_SUCCESS)
             return ret;
 
-        return grib_set_double_array(h, "values", val, *len);
+        if constexpr (std::is_same<T, double>::value)
+            return grib_set_double_array(h, "values", val, *len);
+        else
+            return grib_set_float_array(h, "values", val, *len);
     }
 
     if (use_new_simple_packing() && n_vals > 0) {
-        const sp::Range<double> range = sp::range(val, n_vals);
-        const double min_val = range.min, max_val = range.max;
-
-        if (min_val != max_val) {
-            grib_context_log(context_, GRIB_LOG_DEBUG,
-                             "DataG2simplePacking : pack_double : packing %s, %zu values (SP optimizer)", name_, n_vals);
-            try {
-                grib_handle* gh = get_enclosing_handle();
-                long bpv_l = 0, dsf_get = 0, bsf_l = 0, osf_l = 0, changing_prec = 0;
-                if ((ret = grib_get_long_internal(gh, bits_per_value_, &bpv_l)) != GRIB_SUCCESS) return ret;
-                if ((ret = grib_get_long_internal(gh, decimal_scale_factor_, &dsf_get)) != GRIB_SUCCESS) return ret;
-                if ((ret = grib_get_long_internal(gh, binary_scale_factor_, &bsf_l)) != GRIB_SUCCESS) return ret;
-                if ((ret = grib_get_long_internal(gh, optimize_scaling_factor_, &osf_l)) != GRIB_SUCCESS) return ret;
-                if ((ret = grib_get_long_internal(gh, changing_precision_, &changing_prec)) != GRIB_SUCCESS) return ret;
-
-                if (bpv_l > (long)(sizeof(long) * 8 - 1)) {
-                    grib_context_log(context_, GRIB_LOG_ERROR, "Unable to compute packing parameters. Invalid bits per value");
-                    return GRIB_INVALID_BPV;
-                }
-
-                if ((ret = grib_check_data_values_minmax(gh, min_val, max_val)) != GRIB_SUCCESS) {
-                    grib_context_log(context_, GRIB_LOG_ERROR, "GRIB2 simple packing: unable to set values (%s)", grib_get_error_message(ret));
-                    return ret;
-                }
-
-                dirty_ = 1;
-
-                if (changing_prec == 0 && bpv_l == 0 && dsf_get == 0) {
-                    grib_context_log(context_, GRIB_LOG_WARNING,
-                                     "%s==0 and %s==0 (setting %s=24)",
-                                     bits_per_value_, decimal_scale_factor_, bits_per_value_);
-                    bpv_l = 24;
-                }
-
-                // What is given: the decimal scale factor, or the bits per value (optimizeScaleFactor:
-                // with the decimal scale factor that uses them best)
-                sp::Method method = (bpv_l == 0 || (bsf_l == 0 && dsf_get != 0)) ? sp::Method::decimals(static_cast<int>(dsf_get))
-                                  : osf_l                                        ? sp::Method::bestPrecision(static_cast<int>(bpv_l))
-                                                                                 : sp::Method::bits(static_cast<int>(bpv_l));
-                // The reference value is stored as IBM float in GRIB edition 1, as IEEE float in edition 2
-                method = method.referenceFormat(sp::ReferenceFormat::IEEE32).gribex(c->gribex_mode_on && edition_ == 1);
-
-                // min_val/max_val have already been computed above; do not rescan.
-                sp::Scaling scaling = sp::scaling(min_val, max_val, method);
-
-                if ((ret = grib_set_double_internal(gh, reference_value_, scaling.referenceValue)) != GRIB_SUCCESS) return ret;
-                // Pack against the reference value as it is coded in the message (like the legacy code)
-                double codedReference = 0;
-                if ((ret = grib_get_double_internal(gh, reference_value_, &codedReference)) != GRIB_SUCCESS) return ret;
-                scaling.referenceValue = codedReference;
-                if ((ret = grib_set_long_internal(gh, changing_precision_, 0)) != GRIB_SUCCESS) return ret;
-                if ((ret = grib_set_long_internal(gh, binary_scale_factor_, scaling.binaryScaleFactor)) != GRIB_SUCCESS) return ret;
-                if ((ret = grib_set_long_internal(gh, decimal_scale_factor_, scaling.decimalScaleFactor)) != GRIB_SUCCESS) return ret;
-                if ((ret = grib_set_long_internal(gh, bits_per_value_, scaling.bitsPerValue)) != GRIB_SUCCESS) return ret;
-
-                // Encode straight into the section buffer: no intermediate
-                // copy of the field nor of the coded bytes.
-                buflen = (((scaling.bitsPerValue * n_vals) + 7) / 8) * sizeof(unsigned char);
-                // Like the legacy code, the result of updating the message is not returned: it can
-                // fail for a field of a multi-field message although the data are replaced
-                if (buflen == 0) {
-                    grib_buffer_replace(this, NULL, 0, 1, 1);
-                    return GRIB_SUCCESS;
-                }
-                buf = (unsigned char*)grib_context_buffer_malloc_clear(context_, buflen);
-                if (!buf) return GRIB_OUT_OF_MEMORY;
-
-                sp::pack(val, n_vals, scaling, buf, buflen);
-
-                grib_buffer_replace(this, buf, buflen, 1, 1);
-                grib_context_buffer_free(context_, buf);
-                return GRIB_SUCCESS;
-            }
-            catch (const std::exception& e) {
-                grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: SP encode error: %s",
-                                 accessor_type().c_str(), __func__, e.what());
-                return GRIB_ENCODING_ERROR;
-            }
-        }
+        bool packed = false;
+        ret = pack_new(val, n_vals, packed);
+        if (packed || ret != GRIB_SUCCESS)
+            return ret;
     }
 
-    ret = DataSimplePacking::pack_double(cval, len);
+    if constexpr (std::is_same<T, double>::value) {
+        return pack_legacy(val, len);
+    }
+    else {
+        const std::vector<double> d(val, val + n_vals);
+        return pack_legacy(d.data(), len);
+    }
+}
+
+// The new simple packing (sp::scaling and sp::pack); packed = false for a constant field, which is
+// left to the legacy code
+template <typename T>
+int DataG2SimplePacking::pack_new(const T* val, size_t n_vals, bool& packed)
+{
+    int ret = GRIB_SUCCESS;
+    size_t buflen = 0;
+    unsigned char* buf = NULL;
+    grib_context* c = context_;
+    packed = false;
+    const sp::Range<T> range = sp::range(val, n_vals);
+    const double min_val = range.min, max_val = range.max;
+
+    if (min_val != max_val) {
+        packed = true;
+        grib_context_log(context_, GRIB_LOG_DEBUG,
+                         "DataG2simplePacking : pack_double : packing %s, %zu values (SP optimizer)", name_, n_vals);
+        try {
+            grib_handle* gh = get_enclosing_handle();
+            long bpv_l = 0, dsf_get = 0, bsf_l = 0, osf_l = 0, changing_prec = 0;
+            if ((ret = grib_get_long_internal(gh, bits_per_value_, &bpv_l)) != GRIB_SUCCESS) return ret;
+            if ((ret = grib_get_long_internal(gh, decimal_scale_factor_, &dsf_get)) != GRIB_SUCCESS) return ret;
+            if ((ret = grib_get_long_internal(gh, binary_scale_factor_, &bsf_l)) != GRIB_SUCCESS) return ret;
+            if ((ret = grib_get_long_internal(gh, optimize_scaling_factor_, &osf_l)) != GRIB_SUCCESS) return ret;
+            if ((ret = grib_get_long_internal(gh, changing_precision_, &changing_prec)) != GRIB_SUCCESS) return ret;
+
+            if (bpv_l > (long)(sizeof(long) * 8 - 1)) {
+                grib_context_log(context_, GRIB_LOG_ERROR, "Unable to compute packing parameters. Invalid bits per value");
+                return GRIB_INVALID_BPV;
+            }
+
+            if ((ret = grib_check_data_values_minmax(gh, min_val, max_val)) != GRIB_SUCCESS) {
+                grib_context_log(context_, GRIB_LOG_ERROR, "GRIB2 simple packing: unable to set values (%s)", grib_get_error_message(ret));
+                return ret;
+            }
+
+            dirty_ = 1;
+
+            if (changing_prec == 0 && bpv_l == 0 && dsf_get == 0) {
+                grib_context_log(context_, GRIB_LOG_WARNING,
+                                 "%s==0 and %s==0 (setting %s=24)",
+                                 bits_per_value_, decimal_scale_factor_, bits_per_value_);
+                bpv_l = 24;
+            }
+
+            // What is given: the decimal scale factor, or the bits per value (optimizeScaleFactor:
+            // with the decimal scale factor that uses them best)
+            sp::Method method = (bpv_l == 0 || (bsf_l == 0 && dsf_get != 0)) ? sp::Method::decimals(static_cast<int>(dsf_get))
+                              : osf_l                                        ? sp::Method::bestPrecision(static_cast<int>(bpv_l))
+                                                                             : sp::Method::bits(static_cast<int>(bpv_l));
+            // The reference value is stored as IBM float in GRIB edition 1, as IEEE float in edition 2
+            method = method.referenceFormat(sp::ReferenceFormat::IEEE32).gribex(c->gribex_mode_on && edition_ == 1);
+
+            // min_val/max_val have already been computed above; do not rescan.
+            sp::Scaling scaling = sp::scaling(min_val, max_val, method);
+
+            if ((ret = grib_set_double_internal(gh, reference_value_, scaling.referenceValue)) != GRIB_SUCCESS) return ret;
+            // Pack against the reference value as it is coded in the message (like the legacy code)
+            double codedReference = 0;
+            if ((ret = grib_get_double_internal(gh, reference_value_, &codedReference)) != GRIB_SUCCESS) return ret;
+            scaling.referenceValue = codedReference;
+            if ((ret = grib_set_long_internal(gh, changing_precision_, 0)) != GRIB_SUCCESS) return ret;
+            if ((ret = grib_set_long_internal(gh, binary_scale_factor_, scaling.binaryScaleFactor)) != GRIB_SUCCESS) return ret;
+            if ((ret = grib_set_long_internal(gh, decimal_scale_factor_, scaling.decimalScaleFactor)) != GRIB_SUCCESS) return ret;
+            if ((ret = grib_set_long_internal(gh, bits_per_value_, scaling.bitsPerValue)) != GRIB_SUCCESS) return ret;
+
+            // Encode straight into the section buffer: no intermediate
+            // copy of the field nor of the coded bytes.
+            buflen = (((scaling.bitsPerValue * n_vals) + 7) / 8) * sizeof(unsigned char);
+            // Like the legacy code, the result of updating the message is not returned: it can
+            // fail for a field of a multi-field message although the data are replaced
+            if (buflen == 0) {
+                grib_buffer_replace(this, NULL, 0, 1, 1);
+                return GRIB_SUCCESS;
+            }
+            buf = (unsigned char*)grib_context_buffer_malloc_clear(context_, buflen);
+            if (!buf) return GRIB_OUT_OF_MEMORY;
+
+            sp::pack(val, n_vals, scaling, buf, buflen);
+
+            grib_buffer_replace(this, buf, buflen, 1, 1);
+            grib_context_buffer_free(context_, buf);
+            return GRIB_SUCCESS;
+        }
+        catch (const std::exception& e) {
+            grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: SP encode error: %s",
+                             accessor_type().c_str(), __func__, e.what());
+            return GRIB_ENCODING_ERROR;
+        }
+    }
+    return GRIB_SUCCESS;
+}
+
+// The legacy simple packing (also with the new simple packing: constant fields)
+int DataG2SimplePacking::pack_legacy(const double* val, size_t* len)
+{
+    size_t n_vals = *len;
+    double reference_value = 0;
+    long binary_scale_factor = 0;
+    long bits_per_value = 0;
+    long decimal_scale_factor = 0;
+    double decimal = 1;
+    size_t buflen = 0;
+    unsigned char* buf = NULL;
+    unsigned char* encoded = NULL;
+    double divisor = 1;
+    long off = 0;
+    int ret = 0;
+
+    ret = DataSimplePacking::pack_double(val, len);
     switch (ret) {
         case GRIB_CONSTANT_FIELD:
             grib_buffer_replace(this, NULL, 0, 1, 1);
@@ -228,6 +269,27 @@ int DataG2SimplePacking::pack_double(const double* cval, size_t* len)
     grib_context_buffer_free(context_, buf);
 
     return ret;
+}
+
+int DataG2SimplePacking::pack_double(const double* val, size_t* len)
+{
+    return pack(val, len);
+}
+
+// Floats give the result of pack_double with the converted values. They are converted here when
+// pack_double changes the values in place (units factor or bias) or sets them again (IEEE packing)
+int DataG2SimplePacking::pack_float(const float* val, size_t* len)
+{
+    double units_factor = 1.0;
+    double units_bias = 0.0;
+    grib_handle* h = get_enclosing_handle();
+    if (units_factor_)
+        grib_get_double_internal(h, units_factor_, &units_factor);
+    if (units_bias_)
+        grib_get_double_internal(h, units_bias_, &units_bias);
+    if (!use_new_simple_packing() || context_->ieee_packing || units_factor != 1.0 || units_bias != 0.0)
+        return Gen::pack_float(val, len);
+    return pack(val, len);
 }
 
 int DataG2SimplePacking::pack_bytes(const unsigned char* val, size_t* len)
