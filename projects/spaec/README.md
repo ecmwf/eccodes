@@ -17,7 +17,7 @@ Coding), the coder of GRIB2 CCSDS packing.
 - Preprocessors: unit-delay predictor, bypass predictor or none
 - Single-threaded and multi-threaded with identical output
 - Two selectors of the split-sample parameter k: `Search` (the smallest data, as libaec; the default)
-  and `Estimate` (k from the sum of the block, Kiely 2004: encoding 12 to 25 % faster, data 0.05 %
+  and `Estimate` (k from the sum of the block, Kiely 2004: encoding 15 to 33 % faster, data 0.05 %
   larger)
 - Compressed data byte-identical to libaec for the options both support
 - Errors as exceptions: invalid options and samples or values that cannot be coded
@@ -99,9 +99,12 @@ selector.
   2^k ≤ µ + f*, f* = 2 − φ ≈ 49/128 (φ: golden ratio), in integers without divisions:
   n · 128 · 2^k ≤ 128 · S + 49 · n. Kiely proves that this k is at most one away from the k of
   minimum size and costs at most 1/2 bit per sample more (at most 4.2 % for geometrically
-  distributed samples). Two passes per block (the sum, then the size with this k; AVX2 for 16- and
-  32-bit samples), no state across blocks: blocks are independent, and the multi-threaded encoder
-  needs no fix-up of the k at chunk starts.
+  distributed samples). Two passes per block (the sum, then the size with this k), vectorised for
+  samples of 8, 16 and 32 bits with AVX2 and with SSE2 (`_mm_sad_epu8` for 8-bit samples, 16-bit
+  lanes and `_mm_madd_epi16` where they cannot overflow, 32-bit lanes for samples of up to about
+  29 bits). No state across blocks: blocks are independent (consecutive blocks are processed in
+  parallel by the CPU; a guess of k from the previous block was 3 times slower), and the
+  multi-threaded encoder needs no fix-up of the k at chunk starts.
 
 Also evaluated, from F. Solano Donado, *On the Optimal Calculation of the Rice Coding Parameter*,
 Algorithms 13 (2020) 181: the estimate ⌊log2(ln 2 · µ)⌋ (⌈…⌉) costs 1.3 % (1.0 %) more on the
@@ -117,8 +120,10 @@ std::vector<uint16_t> back = spaec::decompress<uint16_t>(data, samples.size(), o
 ```
 
 The implementation is in `spaec/detail/encoder/EncoderBase.h` (`selectSearched`,
-`selectEstimated`); the selector is a template parameter of the encoders, so `Search` has no extra
-check per block.
+`selectEstimated`) and `spaec/detail/encoder/BlockSums.h` (the sums of `Estimate`). The selector is a
+template parameter of `EncoderSeq` and `EncoderPar` (`selectBestMethod` chooses at compile time); the
+only run-time choice is made once per `compress` call. `Search` executes the same instructions as
+before the second selector (Clang, icx; GCC within 0.2 %).
 
 ## Build and test
 
