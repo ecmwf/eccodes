@@ -12,72 +12,55 @@
 #include <limits>
 #include <optional>
 #include <string>
-#include <sys/wait.h>
-#include <unistd.h>
 
 #include "simple_packing/detail/Utils.h"
 
 #include "../fp_diagnostics.h"
+#include "../time_limit.h"
 
 using namespace sp::detail;
 
 static int failures = 0;
 
-// Runs f in a child process: it must return nullopt within 5 seconds
+// Runs f with a time limit of 5 seconds: it must return nullopt
 template <typename F>
 static void expectTooSmall(const std::string& what, F&& f)
 {
-    const pid_t pid = fork();
-    if (pid == 0) {
-        alarm(5);
-        try {
-            const bool tooSmall = !f().has_value();
-            _exit(tooSmall ? 0 : 2);
-        }
-        catch (const std::exception&) {
-            _exit(3);
+    auto result = runWithTimeLimit(what, std::forward<F>(f));
+    const char* problem = nullptr;
+    try {
+        if (result.get().has_value()) {
+            problem = "no nullopt";
         }
     }
-    int status = 0;
-    waitpid(pid, &status, 0);
-    if (WIFEXITED(status) && WEXITSTATUS(status) == 0) {
-        return;
+    catch (const std::exception&) {
+        problem = "threw";
     }
-    std::cerr << "FAIL: " << what << ": "
-              << (WIFSIGNALED(status) && WTERMSIG(status) == SIGALRM ? "hangs" : WIFSIGNALED(status)    ? "crashes"
-                                                                             : WEXITSTATUS(status) == 2 ? "no nullopt"
-                                                                             : WEXITSTATUS(status) == 3 ? "threw"
-                                                                                                        : "unknown")
-              << '\n';
-    failures++;
+    if (problem) {
+        std::cerr << "FAIL: " << what << ": " << problem << '\n';
+        failures++;
+    }
 }
 
-// Runs f in a child process: it must return the given scale factor within 5 seconds
+// Runs f with a time limit of 5 seconds: it must return the given scale factor
 template <typename F>
 static void expectScale(const std::string& what, long expected, F&& f)
 {
-    const pid_t pid = fork();
-    if (pid == 0) {
-        alarm(5);
-        try {
-            const auto scale = f();
-            _exit(scale.has_value() && scale.value() == expected ? 0 : 2);
-        }
-        catch (const std::exception&) {
-            _exit(3);
+    auto result = runWithTimeLimit(what, std::forward<F>(f));
+    const char* problem = nullptr;
+    try {
+        const auto scale = result.get();
+        if (!scale.has_value() || scale.value() != expected) {
+            problem = "wrong scale factor";
         }
     }
-    int status = 0;
-    waitpid(pid, &status, 0);
-    if (WIFEXITED(status) && WEXITSTATUS(status) == 0) {
-        return;
+    catch (const std::exception&) {
+        problem = "threw";
     }
-    std::cerr << "FAIL: " << what << ": "
-              << (WIFSIGNALED(status) && WTERMSIG(status) == SIGALRM ? "hangs" : WIFSIGNALED(status)    ? "crashes"
-                                                                             : WEXITSTATUS(status) == 2 ? "wrong scale factor"
-                                                                                                        : "threw")
-              << '\n';
-    failures++;
+    if (problem) {
+        std::cerr << "FAIL: " << what << ": " << problem << '\n';
+        failures++;
+    }
 }
 
 int main()

@@ -20,9 +20,11 @@ sp_add_test(unpack_buffer_size)
 add_test(NAME ${SP_TEST_PREFIX}unpack_buffer_size COMMAND sp_unpack_buffer_size)
 
 sp_add_test(field_range)
+target_link_libraries(sp_field_range PRIVATE Threads::Threads)  # time limit (tests/time_limit.h)
 add_test(NAME ${SP_TEST_PREFIX}field_range COMMAND sp_field_range)
 
 sp_add_test(optimizer_parameters)
+target_link_libraries(sp_optimizer_parameters PRIVATE Threads::Threads)  # time limit (tests/time_limit.h)
 add_test(NAME ${SP_TEST_PREFIX}optimizer_parameters COMMAND sp_optimizer_parameters)
 
 sp_add_test(scale_factor_range)
@@ -35,12 +37,15 @@ sp_add_test(no_optimizer)
 add_test(NAME ${SP_TEST_PREFIX}no_optimizer COMMAND sp_no_optimizer)
 
 sp_add_test(optimizer_direct_range)
+target_link_libraries(sp_optimizer_direct_range PRIVATE Threads::Threads)  # time limit (tests/time_limit.h)
 add_test(NAME ${SP_TEST_PREFIX}optimizer_direct_range COMMAND sp_optimizer_direct_range)
 
 sp_add_test(optimizer_scaling_overflow)
+target_link_libraries(sp_optimizer_scaling_overflow PRIVATE Threads::Threads)  # time limit (tests/time_limit.h)
 add_test(NAME ${SP_TEST_PREFIX}optimizer_scaling_overflow COMMAND sp_optimizer_scaling_overflow)
 
 sp_add_test(binary_scale_tiny_range)
+target_link_libraries(sp_binary_scale_tiny_range PRIVATE Threads::Threads)  # time limit (tests/time_limit.h)
 add_test(NAME ${SP_TEST_PREFIX}binary_scale_tiny_range COMMAND sp_binary_scale_tiny_range)
 
 
@@ -163,5 +168,6 @@ target_link_libraries(sp_consumer_flags PRIVATE simple_packing::simple_packing)
 target_compile_options(sp_consumer_flags PRIVATE -O2 ${SIMPLE_PACKING_ARCH_FLAGS})
 sp_test_fp_flags(sp_consumer_flags ${SIMPLE_PACKING_FP_SAFETY_FLAGS})
 add_test(NAME ${SP_TEST_PREFIX}consumer_flags COMMAND sp_consumer_flags)
+set_tests_properties(${SP_TEST_PREFIX}consumer_flags PROPERTIES TIMEOUT 10)  # a hang is a failure
 
 sp_label_tests(regression)

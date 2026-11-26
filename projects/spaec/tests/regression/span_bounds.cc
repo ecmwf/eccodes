@@ -6,8 +6,8 @@
 
 #include <csignal>
 #include <cstdint>
+#include <cstdlib>
 #include <iostream>
-#include <unistd.h>
 #include <vector>
 
 #ifdef NDEBUG
@@ -20,7 +20,7 @@ using namespace spaec::detail;
 
 static void onAbort(int)
 {
-    _exit(0);  // the out of range access was detected
+    std::_Exit(0);  // the out of range access was detected
 }
 
 int main()

@@ -5,50 +5,38 @@
 // (values near +-DBL_MAX scaled by 10^D, or a decimal scale factor so large that value * 10^D
 // overflows) must be rejected with a clear error: the search overflowed to inf/NaN and then
 // converted the NaN to integers (undefined behaviour) or failed much later with a misleading
-// message. Each case runs in a child process with a time limit; the error must mention the
+// message. Each case runs with a time limit; the error must mention the
 // range that cannot be scaled.
 
 #include <exception>
 #include <iostream>
 #include <string>
-#include <sys/wait.h>
-#include <unistd.h>
 
 #include "simple_packing/detail/optimizer/BPVOptimizer.h"
 
 #include "../fp_diagnostics.h"
+#include "../time_limit.h"
 
 using namespace sp::detail;
 
 static int failures = 0;
 
-// Runs f in a child process: it must throw an error about the unscaled range within 5 seconds
+// Runs f with a time limit of 5 seconds: it must throw an error about the unscaled range
 template <typename F>
 static void expectScaleError(const std::string& what, F&& f)
 {
-    const pid_t pid = fork();
-    if (pid == 0) {
-        alarm(5);
-        try {
-            f();
-        }
-        catch (const std::exception& e) {
-            const std::string message = e.what();
-            _exit(message.find("cannot scale the range") != std::string::npos ? 0 : 2);
-        }
-        _exit(1);
+    auto result = runWithTimeLimit(what, std::forward<F>(f));
+    const char* problem = "no error";
+    try {
+        result.get();
     }
-    int status = 0;
-    waitpid(pid, &status, 0);
-    if (WIFEXITED(status) && WEXITSTATUS(status) == 0) {
-        return;
+    catch (const std::exception& e) {
+        problem = std::string(e.what()).find("cannot scale the range") != std::string::npos ? nullptr : "wrong error message";
     }
-    std::cerr << "FAIL: " << what << ": "
-              << (WIFSIGNALED(status) && WTERMSIG(status) == SIGALRM ? "hangs" : WIFSIGNALED(status)    ? "crashes"
-                                                                             : WEXITSTATUS(status) == 2 ? "wrong error message"
-                                                                                                        : "no error")
-              << '\n';
-    failures++;
+    if (problem) {
+        std::cerr << "FAIL: " << what << ": " << problem << '\n';
+        failures++;
+    }
 }
 
 int main()

@@ -3,17 +3,14 @@
 
 // Field ranges the optimisers cannot handle (minimum > maximum, non-finite or overflowing range,
 // NaN, values beyond the float range) must be rejected with an exception: several of them made
-// the parameter search loop forever. Each case runs in a child process with a time limit.
+// the parameter search loop forever. Each case runs with a time limit.
 
 #include <cmath>
-#include <csignal>
 #include <iostream>
 #include <limits>
 #include <memory>
 #include <stdexcept>
 #include <string>
-#include <sys/wait.h>
-#include <unistd.h>
 
 #include "simple_packing/detail/optimizer/BPVOptimizer.h"
 #include "simple_packing/detail/optimizer/BinDecOptimizer.h"
@@ -21,34 +18,24 @@
 #include "simple_packing/detail/simple/Binary.h"
 
 #include "../fp_diagnostics.h"
+#include "../time_limit.h"
 
 using namespace sp::detail;
 
 static int failures = 0;
 
-// Runs f in a child process: it must throw within 5 seconds
+// Runs f with a time limit of 5 seconds: it must throw
 template <typename F>
 static void expectError(const std::string& what, F&& f)
 {
-    const pid_t pid = fork();
-    if (pid == 0) {
-        alarm(5);
-        try {
-            f();
-        }
-        catch (const std::exception&) {
-            _exit(0);
-        }
-        _exit(1);
+    auto result = runWithTimeLimit(what, std::forward<F>(f));
+    try {
+        result.get();
     }
-    int status = 0;
-    waitpid(pid, &status, 0);
-    if (WIFEXITED(status) && WEXITSTATUS(status) == 0) {
+    catch (const std::exception&) {
         return;
     }
-    std::cerr << "FAIL: " << what << ": " << (WIFSIGNALED(status) && WTERMSIG(status) == SIGALRM ? "hangs" : WIFSIGNALED(status) ? "crashes"
-                                                                                                                                 : "no error")
-              << '\n';
+    std::cerr << "FAIL: " << what << ": no error\n";
     failures++;
 }
 

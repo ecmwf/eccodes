@@ -4,11 +4,10 @@
 // A user's code gets the floating-point options that this compiler needs from the usage
 // requirements of simple_packing (README.md, "Floating-point compiler options"): compiled without the project
 // flags (for the same CPU), the checks for NaN and infinity and the results stay those of the library.
-// A -ffast-math of the user is not undone: the user adds -fno-fast-math.
+// A hang is a failure (TIMEOUT of the test).
 
 #include <iostream>
 #include <stdexcept>
-#include <unistd.h>
 #include <vector>
 
 #include "simple_packing/simple_packing.h"
@@ -23,7 +22,6 @@ int main()
         fp_diagnostics::explain();
         return 1;
     }
-    alarm(10);  // a hang is a failure
     int failures = 0;
 #ifdef __FAST_MATH__
     std::cerr << "FAIL: -ffast-math is in effect for code that uses simple_packing\n";

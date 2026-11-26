@@ -5,51 +5,40 @@
 // optimiser is created: negative or huge bits per value and scale factors made the parameter
 // search loop forever or for a very long time.
 
-#include <csignal>
 #include <iostream>
 #include <memory>
 #include <stdexcept>
 #include <string>
-#include <sys/wait.h>
-#include <unistd.h>
 
 #include "simple_packing/detail/optimizer/BPVOptimizer.h"
 #include "simple_packing/detail/optimizer/BinDecOptimizer.h"
 #include "simple_packing/detail/optimizer/DecOptimizer.h"
 
+#include "../time_limit.h"
+
 using namespace sp::detail;
 
 static int failures = 0;
 
-// Runs f in a child process: it must throw std::invalid_argument within 5 seconds
+// Runs f with a time limit of 5 seconds: it must throw std::invalid_argument
 template <typename F>
 static void expectInvalid(const std::string& what, F&& f)
 {
-    const pid_t pid = fork();
-    if (pid == 0) {
-        alarm(5);
-        try {
-            f();
-        }
-        catch (const std::invalid_argument&) {
-            _exit(0);
-        }
-        catch (...) {
-            _exit(2);
-        }
-        _exit(1);
+    auto result = runWithTimeLimit(what, std::forward<F>(f));
+    const char* problem = "accepted";
+    try {
+        result.get();
     }
-    int status = 0;
-    waitpid(pid, &status, 0);
-    if (WIFEXITED(status) && WEXITSTATUS(status) == 0) {
-        return;
+    catch (const std::invalid_argument&) {
+        problem = nullptr;
     }
-    std::cerr << "FAIL: " << what << ": "
-              << (WIFSIGNALED(status) && WTERMSIG(status) == SIGALRM ? "hangs" : WIFSIGNALED(status)    ? "crashes"
-                                                                             : WEXITSTATUS(status) == 2 ? "other exception"
-                                                                                                        : "accepted")
-              << '\n';
-    failures++;
+    catch (...) {
+        problem = "other exception";
+    }
+    if (problem) {
+        std::cerr << "FAIL: " << what << ": " << problem << '\n';
+        failures++;
+    }
 }
 
 int main()
