@@ -710,6 +710,12 @@ if( HAVE_BUILD_TOOLS )
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_ccsds_restricted.sh
                       TEST_DEPENDS eccodes_download_gribs )
 
+    ecbuild_add_test( TARGET eccodes_t_grib_ccsds_selector
+                      TYPE SCRIPT
+                      CONDITION ENABLE_EXTRA_TESTS
+                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_ccsds_selector.sh
+                      TEST_DEPENDS eccodes_download_gribs )
+
     ecbuild_add_test( TARGET eccodes_t_grib_ccsds_preprocess
                       TYPE SCRIPT
                       CONDITION ENABLE_EXTRA_TESTS
