@@ -28,6 +28,8 @@
 #pragma once
 
 #include <cstddef>
+#include <limits>
+#include <cmath>
 #include <cstdint>
 #include <memory>
 #include <stdexcept>
@@ -192,6 +194,26 @@ inline size_t packedSize(size_t count, const Scaling& scaling)
 namespace detail
 {
 
+// Throws std::invalid_argument if the smallest or the largest code of the scaling does not decode to
+// a finite Value (as unpack decodes): pack would accept values whose codes unpack to infinity, e.g.
+// the code 512 of FLT_MAX with 10 bits and E = 119 (512 * 2^119 = 2^128)
+template <typename Value>
+void checkDecodable(const Scaling& s)
+{
+    const double bscale = sp_power<Value>(s.binaryScaleFactor, 2);
+    const double dscale = sp_power<Value>(-s.decimalScaleFactor, 10);
+    const double largestCode = s.bitsPerValue > 0 ? std::ldexp(1.0, s.bitsPerValue) - 1.0 : 0.0;
+    const double smallest = (0.0 * bscale + s.referenceValue) * dscale;  // NaN if 2^E overflows
+    const double largest = (largestCode * bscale + s.referenceValue) * dscale;
+    const double limit = static_cast<double>(std::numeric_limits<Value>::max());
+    if (!(std::fabs(smallest) <= limit && std::fabs(largest) <= limit)) {  // false for NaN
+        throw std::invalid_argument("Simple packing: the codes cannot be decoded to finite values with this scaling (" +
+                                    std::to_string(s.bitsPerValue) + " bits per value, reference value " + std::to_string(s.referenceValue) +
+                                    ", binary scale factor " + std::to_string(s.binaryScaleFactor) + ", decimal scale factor " +
+                                    std::to_string(s.decimalScaleFactor) + ")");
+    }
+}
+
 inline Parameters parametersOf(const Scaling& s)
 {
     return Parameters(s.bitsPerValue, s.decimalScaleFactor, s.binaryScaleFactor, s.referenceValue, s.bitsPerValue == 0);
@@ -209,6 +231,7 @@ void pack(const Value* values, size_t count, const Scaling& scaling, uint8_t* ou
         throw std::length_error("Simple packing: the output buffer is too small (" + std::to_string(capacity) + " bytes, " + std::to_string(size) +
                                 " bytes are needed)");
     }
+    detail::checkDecodable<Value>(scaling);
     detail::SimplePackingBinary<Value> packer(nullptr);
     packer.packTo(detail::parametersOf(scaling), values, count, output);
 }
