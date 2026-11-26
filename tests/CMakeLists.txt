@@ -18,6 +18,7 @@ list(APPEND test_c_bins
     grib_double_cmp
     grib_element_index_range
     grib_jpeg_element_index
+    grib_element_index_codedvalues
     grib_subnormal_range
     grib_number_too_large
     grib_precision_too_large
@@ -647,6 +648,12 @@ if( HAVE_BUILD_TOOLS )
                       TYPE SCRIPT
                       CONDITION HAVE_JPEG AND ENABLE_EXTRA_TESTS
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_jpeg.sh
+                      TEST_DEPENDS eccodes_download_gribs )
+
+    ecbuild_add_test( TARGET eccodes_t_grib_element_index_codedvalues
+                      TYPE SCRIPT
+                      CONDITION ENABLE_EXTRA_TESTS
+                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_element_index_codedvalues.sh
                       TEST_DEPENDS eccodes_download_gribs )
 
     ecbuild_add_test( TARGET eccodes_t_grib_jpeg_element_index
