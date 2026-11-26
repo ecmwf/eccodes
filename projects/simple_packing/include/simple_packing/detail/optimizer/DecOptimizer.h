@@ -6,6 +6,7 @@
 #pragma once
 
 #include <cmath>
+#include <cstdint>
 #include <stdexcept>
 #include <string>
 
@@ -21,7 +22,7 @@ class DecOptimizer : public Optimizer
     using ValueType = double;
 
 public:
-    DecOptimizer(const long bitsPerValue, long last) : last_(last), bitsPerValue_(bitsPerValue)
+    DecOptimizer(const int64_t bitsPerValue, int64_t last) : last_(last), bitsPerValue_(bitsPerValue)
     {
         checkRange("bits per value", bitsPerValue, 1, maxEncodingBitsPerValue);
         checkRange("exponent limit", last, 1, 1023);
@@ -60,7 +61,7 @@ public:
         ValueType f = 0;
         ValueType range = 0;
         ValueType minrange = 0, maxrange = 0;
-        long decimalScaleFactor = 0;
+        int64_t decimalScaleFactor = 0;
 
         range = (max - min);
         unscaled_min = min;
@@ -115,8 +116,8 @@ public:
     }
 
 private:
-    long last_;
-    long bitsPerValue_;
+    int64_t last_;
+    int64_t bitsPerValue_;
 };
 
 }  // namespace sp::detail

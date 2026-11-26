@@ -7,6 +7,7 @@
 // initialise all members.
 
 #include <chrono>
+#include <cstdint>
 #include <climits>
 #include <iostream>
 #include <stdexcept>
@@ -24,7 +25,7 @@ int main()
     std::vector<unsigned char> buffer(64, 0x11);
     std::vector<double> values(16, 1.0);
 
-    for (long sf : { long(INT_MIN), long(INT_MAX), 32768L, -32768L, (1L << 32) + 3 }) {
+    for (int64_t sf : { int64_t(INT_MIN), int64_t(INT_MAX), INT64_C(32768), -INT64_C(32768), (INT64_C(1) << 32) + 3 }) {
         for (bool binary : { true, false }) {
             Parameters params;
             params.bitsPerValue(8);

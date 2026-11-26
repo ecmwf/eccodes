@@ -332,7 +332,7 @@ public:
         const __m128i shiftK = _mm_cvtsi32_si128(static_cast<int>(k));
         const __m128i shift2K = _mm_cvtsi32_si128(static_cast<int>(2 * k));
         const __m256i one = _mm256_set1_epi16(1);
-        const __m256i top = _mm256_set1_epi64x(static_cast<long long>(uint64_t{ 1 } << 63));
+        const __m256i top = _mm256_set1_epi64x(static_cast<int64_t>(uint64_t{ 1 } << 63));
         const __m256i c64 = _mm256_set1_epi64x(64);
         const __m256i mask = _mm256_set1_epi16(static_cast<short>((1u << k) - 1));
         const __m256i mul = _mm256_set1_epi32(static_cast<int>((1u << 16) | (1u << k)));  // (2^k, 1) per pair

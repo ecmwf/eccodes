@@ -24,7 +24,7 @@ namespace sp::detail
 
 /* Return n to the power of s */
 template <typename T>
-constexpr T sp_power(long s, long n)
+constexpr T sp_power(int64_t s, int64_t n)
 {
     T divisor = 1.0;
     if (s == 0)
@@ -46,12 +46,12 @@ constexpr T sp_power(long s, long n)
 // --- Parameter limits ---
 
 // Bits per value supported for encoding (2^bitsPerValue - 1 must fit into an unsigned long)
-constexpr long maxEncodingBitsPerValue = 63;
+constexpr int64_t maxEncodingBitsPerValue = 63;
 // GRIB stores the scale factors with 16 bits (sign and magnitude)
-constexpr long maxScaleFactor = 32767;
+constexpr int64_t maxScaleFactor = 32767;
 
 // Throws std::invalid_argument if value is not in [lo, hi]
-inline void checkRange(const char* what, long value, long lo, long hi)
+inline void checkRange(const char* what, int64_t value, int64_t lo, int64_t hi)
 {
     if (value < lo || value > hi) {
         throw std::invalid_argument(std::string("Simple packing: ") + what + " " + std::to_string(value) + " is out of range (must be between " +
@@ -62,7 +62,7 @@ inline void checkRange(const char* what, long value, long lo, long hi)
 
 // --- IEEE float utilities ---
 
-std::optional<long> number_of_bits(unsigned long x);
+std::optional<int64_t> number_of_bits(uint64_t x);
 
 // Floating-point format in which the reference value is stored:
 // IEEE 754 single precision (GRIB edition 2) or IBM single precision (GRIB edition 1)
@@ -175,7 +175,7 @@ std::pair<T, T> sp_minmax(const T* values, size_t n)
 // bpval bits. std::nullopt if the range is too small for bpval bits even with E = -127
 // (underflow). Throws std::invalid_argument if bpval is not in [1, 63] and std::range_error
 // if the range is not finite or max is smaller than min.
-std::optional<long> get_binary_scale_factor(double max, double min, long bpval);
+std::optional<int64_t> get_binary_scale_factor(double max, double min, int64_t bpval);
 
 // Throws std::runtime_error unless both values are finite and the minimum is not larger
 // than the maximum

@@ -5,6 +5,7 @@
 // diagnostics to stdout/stderr, which corrupts the output of the tools that use it.
 
 #include <cstdio>
+#include <cstdint>
 #include <iostream>
 #include <limits>
 #include <memory>
@@ -53,7 +54,7 @@ int main()
     (void)std::fflush(stderr);
     dup2(savedOut, 1);
     dup2(savedErr, 2);
-    const long size = std::ftell(capture);
+    const int64_t size = std::ftell(capture);
 
     if (size != 0) {
         std::cerr << "FAIL: the library printed " << size << " bytes\n";

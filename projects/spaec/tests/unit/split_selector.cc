@@ -85,7 +85,7 @@ static void estimateRule()
 static void blockGuarantees()
 {
     std::mt19937_64 rng(7);
-    long blocks = 0;
+    int64_t blocks = 0;
     for (int shape = 0; shape < 6; ++shape) {
         for (double mean : { 0.1, 0.5, 1.0, 1.6, 3.0, 10.0, 100.0, 1e3, 1e5, 1e8 }) {
             for (size_t n : { 7, 8, 16, 31, 32, 64 }) {

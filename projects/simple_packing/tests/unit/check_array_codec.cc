@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 #include <iostream>
+#include <cstdint>
 #include <fstream>
 #include <cassert>
 #include <algorithm>
@@ -63,8 +64,8 @@ int main(int argc, char* argv[])
 
 
     std::string type = argv[1];
-    size_t nVals = std::stoul(argv[2]);
-    size_t bpv = std::stoul(argv[3]);
+    size_t nVals = std::stoull(argv[2]);
+    size_t bpv = std::stoull(argv[3]);
 
     if (type == "float")
         encode_decode<float>(nVals, bpv);

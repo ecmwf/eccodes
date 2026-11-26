@@ -11,6 +11,7 @@
 // - scale_factor_range: Parameters is fully initialised (the constructor with values ignored
 //   isConstantField)
 #include <algorithm>
+#include <cstdint>
 #include <cfloat>
 #include <cmath>
 #include <iostream>
@@ -129,14 +130,14 @@ static void emptyAndTinyRanges()
 {
     const auto [mn, mx] = sp_minmax(static_cast<const double*>(nullptr), 0);
     check(mn == 0 && mx == 0, "sp_minmax of 0 values");
-    for (long bpv : { 1L, 16L, 63L }) {
+    for (int64_t bpv : { INT64_C(1), INT64_C(16), INT64_C(63) }) {
         const auto zero = get_binary_scale_factor(5.0, 5.0, bpv);
         check(zero && *zero == 0, "get_binary_scale_factor of a zero range");
         check(!get_binary_scale_factor(1e-300, 0.0, bpv), "get_binary_scale_factor of a range of 1e-300 (scale below -127)");
         check(!get_binary_scale_factor(1e-320, 0.0, bpv), "get_binary_scale_factor of a denormal range");
     }
     // The smallest range of scale -127 is 2^-127 * (2^bpv - 1) (exact in double up to 52 bits)
-    for (long bpv : { 1L, 16L, 52L }) {
+    for (int64_t bpv : { INT64_C(1), INT64_C(16), INT64_C(52) }) {
         const double smallest = std::ldexp(1.0, -127) * static_cast<double>((uint64_t{ 1 } << bpv) - 1);
         const auto at = get_binary_scale_factor(smallest, 0.0, bpv);
         check(at && *at == -127, "get_binary_scale_factor of the smallest range of scale -127, " + std::to_string(bpv) + " bits");

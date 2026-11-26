@@ -6,6 +6,7 @@
 // search loop forever or for a very long time.
 
 #include <iostream>
+#include <cstdint>
 #include <memory>
 #include <stdexcept>
 #include <string>
@@ -43,12 +44,12 @@ static void expectInvalid(const std::string& what, F&& f)
 
 int main()
 {
-    for (long long bpv : { -1LL, 0LL, 64LL, 65LL, 100000000000LL }) {  // long long: 32-bit long on some platforms
+    for (int64_t bpv : { -1LL, 0LL, 64LL, 65LL, 100000000000LL }) {  // long long: 32-bit long on some platforms
         const std::string b = std::to_string(bpv);
         expectInvalid("DecOptimizer with " + b + " bits per value", [&] { DecOptimizer(bpv, 127).getParams(-1, 1); });
         expectInvalid("BinDecOptimizer with " + b + " bits per value", [&] { BinDecOptimizer(0, 1, static_cast<int>(bpv)).getParams(-1, 1); });
     }
-    for (long last : { -1L, 0L, 100000L }) {
+    for (int64_t last : { -INT64_C(1), INT64_C(0), INT64_C(100000) }) {
         expectInvalid("DecOptimizer with last " + std::to_string(last), [&] { DecOptimizer(16, last).getParams(-1, 1); });
     }
     for (int dsf : { -1000000, 1000000 }) {

@@ -19,7 +19,7 @@ using namespace sp::detail;
 static int failures = 0;
 
 template <typename F>
-static void expectInvalid(const char* what, long bpv, F&& f)
+static void expectInvalid(const char* what, int64_t bpv, F&& f)
 {
     try {
         f();
@@ -36,7 +36,7 @@ int main()
     std::vector<unsigned char> buffer(1024, 0x55);
     std::vector<double> values(16, 1.0);
 
-    for (long bpv : { -1L, 65L, 255L }) {
+    for (int64_t bpv : { -INT64_C(1), INT64_C(65), INT64_C(255) }) {
         Parameters params;
         params.bitsPerValue(bpv);
         SimplePackingBinary<double> sp(nullptr);

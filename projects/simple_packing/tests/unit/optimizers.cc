@@ -10,6 +10,7 @@
 // - |decoded - value| <= 2^E * 10^-D (one quantisation step)
 // and number_of_bits (the bits of a value) exhaustively for small values and at every power of 2
 #include <algorithm>
+#include <cstdint>
 #include <cmath>
 #include <iostream>
 #include <memory>
@@ -45,7 +46,7 @@ static std::vector<double> field(double mn, double mx)
 
 // maxScale: the largest binary scale factor (127 in GRIB edition 1 and for the decimal optimisers,
 // 32767 in GRIB edition 2); ibm: the reference value is an IBM float (not an IEEE float)
-static void checkOptimizer(const std::string& name, std::unique_ptr<Optimizer> optimizer, double mn, double mx, bool binaryScaleZero = false, long maxScale = 127, bool ibm = false)
+static void checkOptimizer(const std::string& name, std::unique_ptr<Optimizer> optimizer, double mn, double mx, bool binaryScaleZero = false, int64_t maxScale = 127, bool ibm = false)
 {
     if (ibm) {
         optimizer->referenceFloatType(FloatType::IBM32);
@@ -61,7 +62,7 @@ static void checkOptimizer(const std::string& name, std::unique_ptr<Optimizer> o
         }
         else {
             check(params.bitsPerValue() >= 1 && params.bitsPerValue() <= 64, what + ": bits per value " + std::to_string(params.bitsPerValue()));
-            check(binaryScaleZero ? params.binaryScaleFactor() == 0 : std::labs(params.binaryScaleFactor()) <= maxScale,
+            check(binaryScaleZero ? params.binaryScaleFactor() == 0 : std::abs(params.binaryScaleFactor()) <= maxScale,
                   what + ": binary scale factor " + std::to_string(params.binaryScaleFactor()));
         }
         check(params.referenceValue() <= mn * decimal || mn == mx, what + ": reference value above the scaled minimum");
@@ -85,14 +86,14 @@ static void optimizers()
 {
     const double ranges[][2] = { { 0, 1 }, { -1, 1 }, { 250.15, 320.7 }, { 0, 1e-4 }, { -1e10, 1e10 }, { 1e-30, 3e-30 }, { -5e3, 7e7 }, { 101325, 101325 }, { 0, 0 }, { -273.15, -273.15 }, { 0.001, 1000 }, { 1e20, 1.0001e20 } };
     for (const auto& r : ranges) {
-        for (long bpv : { 1L, 8L, 12L, 16L, 24L, 32L }) {
+        for (int64_t bpv : { INT64_C(1), INT64_C(8), INT64_C(12), INT64_C(16), INT64_C(24), INT64_C(32) }) {
             checkOptimizer("DecOptimizer(" + std::to_string(bpv) + ")", std::make_unique<DecOptimizer>(bpv, 127), r[0], r[1]);
             checkOptimizer("BinDecOptimizer(" + std::to_string(bpv) + ")", std::make_unique<BinDecOptimizer>(0, 1, static_cast<int>(bpv)), r[0], r[1]);
         }
         // BinOptimizer: decimal scale factor and bits per value given (the scaled range must fit
         // a binary scale factor within +-127 for these fields)
         for (int d : { -2, 0, 3 }) {
-            for (long bpv : { 1L, 12L, 24L }) {
+            for (int64_t bpv : { INT64_C(1), INT64_C(12), INT64_C(24) }) {
                 if (r[0] != r[1] && (r[1] - r[0]) * sp_power<double>(d, 10) < 1e-20) {
                     continue;  // too small for any binary scale factor
                 }
@@ -183,7 +184,7 @@ static void binDecModes()
 // a constant field
 static void arrayPacking()
 {
-    for (long bpv = 1; bpv <= 32; ++bpv) {
+    for (int64_t bpv = 1; bpv <= 32; ++bpv) {
         SimplePackingArray<double> sp(std::make_unique<DecOptimizer>(bpv, 127));
         const std::vector<double> values = field(-3.5, 1234.25);
         const std::string what = "SimplePackingArray " + std::to_string(bpv) + " bits";
@@ -211,7 +212,7 @@ static void binOptimizer()
     const double ranges[][2] = { { 0, 1 }, { -1, 1 }, { 250.15, 320.7 }, { -5e3, 7e7 }, { 101325, 101400 } };
     for (const auto& r : ranges) {
         for (int d : { -3, 0, 2, 5 }) {
-            for (long bpv : { 1L, 8L, 16L, 32L, 63L }) {
+            for (int64_t bpv : { INT64_C(1), INT64_C(8), INT64_C(16), INT64_C(32), INT64_C(63) }) {
                 const std::string what = "BinOptimizer(" + std::to_string(d) + ", " + std::to_string(bpv) + ") [" + std::to_string(r[0]) + ", " + std::to_string(r[1]) + "]";
                 try {
                     const Parameters p = BinOptimizer(d, bpv).getParams(r[0], r[1]);
@@ -232,13 +233,13 @@ static void binOptimizer()
 static void numberOfBits()
 {
     // The bits of x: 0 for 0, k for 2^(k-1) <= x < 2^k
-    for (unsigned long x = 0; x < (1ul << 16); ++x) {
-        const long expected = x == 0 ? 0 : static_cast<long>(std::floor(std::log2(static_cast<double>(x)))) + 1;
+    for (uint64_t x = 0; x < (UINT64_C(1) << 16); ++x) {
+        const int64_t expected = x == 0 ? 0 : static_cast<int64_t>(std::floor(std::log2(static_cast<double>(x)))) + 1;
         const auto bits = number_of_bits(x);
         check(bits && *bits == expected, "number_of_bits(" + std::to_string(x) + ")");
     }
     for (int k = 1; k <= 31; ++k) {
-        const unsigned long p = 1ul << k;
+        const uint64_t p = UINT64_C(1) << k;
         const auto below = number_of_bits(p - 1), at = number_of_bits(p);
         check(below && *below == k, "number_of_bits(2^" + std::to_string(k) + " - 1)");
         check(!at || *at == k + 1, "number_of_bits(2^" + std::to_string(k) + ")");

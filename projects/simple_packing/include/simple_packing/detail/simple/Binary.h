@@ -76,7 +76,7 @@ private:
     }
 
     // The codec for the given bits per value (1..64)
-    static BinaryInterface<ValueType>& codecFor(long bitsPerValue)
+    static BinaryInterface<ValueType>& codecFor(int64_t bitsPerValue)
     {
         if (bitsPerValue < 1 || bitsPerValue > maxNBits) {
             throw std::invalid_argument("Simple packing: unsupported number of bits per value " + std::to_string(bitsPerValue) +

@@ -16,7 +16,7 @@ using namespace sp::detail;
 
 static int failures = 0;
 
-static void expectInvalid(const char* what, long bpv, size_t bufferSize, size_t nVals)
+static void expectInvalid(const char* what, int64_t bpv, size_t bufferSize, size_t nVals)
 {
     Parameters params;
     params.bitsPerValue(bpv);
@@ -41,7 +41,7 @@ int main()
     expectInvalid("number of values overflowing the size", 64, 64, std::numeric_limits<size_t>::max() / 8);
 
     // Exactly sized buffers work, also through unpack()
-    for (long bpv : { 1L, 12L, 16L, 33L, 64L }) {
+    for (int64_t bpv : { INT64_C(1), INT64_C(12), INT64_C(16), INT64_C(33), INT64_C(64) }) {
         const size_t n = 61;
         Parameters params;
         params.bitsPerValue(bpv);

@@ -35,17 +35,17 @@ using namespace sp::detail;
 
 static int failures = 0;
 static int cases = 0;
-static std::atomic<long> finished{ 0 };
+static std::atomic<int64_t> finished{ 0 };
 static std::string current;
 
 // Ends the test if a case does not return
 static void startWatchdog()
 {
     std::thread([] {
-        long last = -1;
+        int64_t last = -1;
         for (;;) {
             std::this_thread::sleep_for(std::chrono::seconds(10));
-            const long now = finished.load();
+            const int64_t now = finished.load();
             if (now == last) {
                 std::fprintf(stderr, "FAIL: %s: no result after 10 s (infinite loop)\n", current.c_str());
                 fp_diagnostics::explain();
@@ -182,7 +182,7 @@ static void simplePacking()
     expect<RE>("SimplePacking field with NaN", "Values out of range", [&] { SimplePackingBinary<double>(std::make_unique<DecOptimizer>(16, 127)).pack(nan); });
 }
 
-static Parameters params(long bpv, long bsf = 0, long dsf = 0, double ref = 0)
+static Parameters params(int64_t bpv, int64_t bsf = 0, int64_t dsf = 0, double ref = 0)
 {
     Parameters p;
     p.bitsPerValue(bpv);

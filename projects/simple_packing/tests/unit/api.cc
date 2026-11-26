@@ -188,7 +188,7 @@ int main()
         for (int bits : { 54, 55, 60, 63 }) {
             check(packs(quarter, sp::scaling(quarter, sp::Method::bestPrecision(bits))), "bestPrecision(" + std::to_string(bits) + ") of 0.25 + i * 2^-53");
         }
-        long unusable = 0, cases = 0;
+        int64_t unusable = 0, cases = 0;
         std::vector<double> v(16);
         for (int expo = -60; expo <= 60; expo += 3) {
             for (int spread = -60; spread <= 20; spread += 7) {

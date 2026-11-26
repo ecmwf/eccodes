@@ -5,6 +5,7 @@
 // Powers of 2 are exact over the whole range (including denormals) and must equal std::ldexp,
 // powers of 10 are exact as far as they are representable (10^22 in double, 10^10 in float).
 #include <cmath>
+#include <cstdint>
 #include <iostream>
 #include <limits>
 #include <string>
@@ -26,10 +27,10 @@ static void check(bool ok, const std::string& what)
 }
 
 template <typename T>
-static void powersOfTwo(long minExponent, long maxExponent)
+static void powersOfTwo(int64_t minExponent, int64_t maxExponent)
 {
     const std::string type = sizeof(T) == 4 ? "float" : "double";
-    for (long e = minExponent; e <= maxExponent; ++e) {
+    for (int64_t e = minExponent; e <= maxExponent; ++e) {
         const T expected = std::ldexp(T(1), static_cast<int>(e));
         check(sp_power<T>(e, 2) == expected, type + " 2^" + std::to_string(e));
     }
@@ -39,11 +40,11 @@ static void powersOfTwo(long minExponent, long maxExponent)
 }
 
 template <typename T>
-static void powersOfTen(long maxExact)
+static void powersOfTen(int64_t maxExact)
 {
     const std::string type = sizeof(T) == 4 ? "float" : "double";
     T expected = 1;
-    for (long e = 0; e <= maxExact; ++e) {
+    for (int64_t e = 0; e <= maxExact; ++e) {
         check(sp_power<T>(e, 10) == expected, type + " 10^" + std::to_string(e));
         expected *= 10;
     }

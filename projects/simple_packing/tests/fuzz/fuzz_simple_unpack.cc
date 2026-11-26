@@ -52,10 +52,10 @@ long double ulpOf(double value)
     return std::fabs(static_cast<long double>(value)) - std::fabs(static_cast<long double>(next));
 }
 
-long signedFactor(const uint8_t* p)
+int64_t signedFactor(const uint8_t* p)
 {
     const uint16_t v = le16(p);
-    const long magnitude = v % 32768;
+    const int64_t magnitude = v % 32768;
     return (v / 32768) ? -magnitude : magnitude;
 }
 
@@ -71,7 +71,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
     // --- unpack with fuzzed parameters and buffer ---
     const bool exactSize = data[0] & 1;
     Parameters params;
-    params.bitsPerValue(static_cast<long>(data[1] % 65));  // 0..64 (0: constant field)
+    params.bitsPerValue(static_cast<int64_t>(data[1] % 65));  // 0..64 (0: constant field)
     params.decimalScaleFactor(signedFactor(data + 2));
     params.binaryScaleFactor(signedFactor(data + 4));
     params.referenceValue(bitCastDouble(data + 6));
@@ -110,9 +110,9 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
             (data[0] & 4) != 0, (data[0] & 8) != 0, static_cast<int>(data[1] % 64)));
         auto [packedParams, packed] = packer.pack(values);
         const std::vector<double> back = packer.unpack(packedParams, packed, n2);
-        const long bpv = packedParams.bitsPerValue();
-        const long e = packedParams.binaryScaleFactor();
-        const long d = packedParams.decimalScaleFactor();
+        const int64_t bpv = packedParams.bitsPerValue();
+        const int64_t e = packedParams.binaryScaleFactor();
+        const int64_t d = packedParams.decimalScaleFactor();
         if (packedParams.isConstantField() || bpv == 0) {
             for (size_t i = 0; i < n2; ++i) {
                 if (back[i] != packedParams.referenceValue()) {

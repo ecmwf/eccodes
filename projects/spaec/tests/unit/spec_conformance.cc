@@ -50,7 +50,7 @@
 using namespace spaec::detail;
 
 static int failures = 0;
-static long checks = 0;
+static int64_t checks = 0;
 
 static void fail(const std::string& what)
 {
@@ -619,7 +619,7 @@ static void idTables()
 // Streams
 
 // Checks a stream of SpAec's encoder against the standard; returns false if it cannot be decoded
-static bool verify(const std::vector<uint8_t>& stream, const std::vector<uint64_t>& x, const Params& p, const std::string& what, long& kTies)
+static bool verify(const std::vector<uint8_t>& stream, const std::vector<uint64_t>& x, const Params& p, const std::string& what, int64_t& kTies)
 {
     if (x.empty()) {
         ++checks;
@@ -690,7 +690,7 @@ static bool verify(const std::vector<uint8_t>& stream, const std::vector<uint64_
 }
 
 template <typename T>
-static void encodeAndDecode(const std::vector<uint64_t>& x, const Params& p, std::mt19937_64& rng, long& kTies, const std::string& name)
+static void encodeAndDecode(const std::vector<uint64_t>& x, const Params& p, std::mt19937_64& rng, int64_t& kTies, const std::string& name)
 {
     const auto cos = p.restricted ? CodeOptionSet::Restricted : CodeOptionSet::Basic;
     const auto n8 = static_cast<uint8_t>(p.n);
@@ -925,7 +925,7 @@ static std::vector<uint64_t> field(const Params& p, size_t N, int kind, std::mt1
 }
 
 template <typename T>
-static void streams(const Params& p, std::mt19937_64& rng, long& kTies, int nFields)
+static void streams(const Params& p, std::mt19937_64& rng, int64_t& kTies, int nFields)
 {
     const size_t rsiSamples = size_t{ p.r } * p.J;
     for (int f = 0; f < nFields; ++f) {
@@ -958,7 +958,7 @@ int main()
     outOfRangeSamples();
 
     std::mt19937_64 rng(121);
-    long kTies = 0;
+    int64_t kTies = 0;
     const unsigned blockSizes[] = { 8, 16, 32, 64 };
     // The preprocessing (4): the unit-delay predictor, the bypass predictor and no preprocessor,
     // for unsigned and signed samples (signed samples need a preprocessor, 6.3.3.5.2)

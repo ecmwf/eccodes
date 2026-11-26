@@ -6,6 +6,7 @@
 // first misaligned access.
 
 #include <cmath>
+#include <cstdint>
 #include <iostream>
 #include <vector>
 
@@ -15,10 +16,10 @@ using namespace sp::detail;
 
 int main()
 {
-    for (long bpv = 1; bpv <= 64; ++bpv) {
+    for (int64_t bpv = 1; bpv <= 64; ++bpv) {
         const size_t n = 37;
         std::vector<double> values(n);
-        const double maxCoded = std::ldexp(1.0, static_cast<int>(std::min(bpv, 52L))) - 1;
+        const double maxCoded = std::ldexp(1.0, static_cast<int>(std::min(bpv, INT64_C(52)))) - 1;
         for (size_t i = 0; i < n; ++i) {
             values[i] = std::fmod(i * 7919.0, maxCoded + 1);
         }

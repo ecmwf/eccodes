@@ -4,6 +4,7 @@
 #include "simple_packing/detail/Utils.h"
 
 #include <array>
+#include <cstdint>
 #include <cassert>
 #include <cmath>
 #include <limits>
@@ -19,7 +20,7 @@ namespace
 
 constexpr double dbl_max = std::numeric_limits<double>::max();
 
-const unsigned long nbits_table[32] = {
+const uint64_t nbits_table[32] = {
     0x1, 0x2, 0x4, 0x8, 0x10, 0x20,
     0x40, 0x80, 0x100, 0x200, 0x400, 0x800,
     0x1000, 0x2000, 0x4000, 0x8000, 0x10000, 0x20000,
@@ -42,10 +43,10 @@ const IeeeTable& ieee_table()
 {
     static const IeeeTable table = [] {
         IeeeTable t{};
-        const unsigned long mmin = 0x800000;
-        const unsigned long mmax = 0xffffff;
+        const uint64_t mmin = 0x800000;
+        const uint64_t mmax = 0xffffff;
         double e = 1;
-        for (unsigned long i = 1; i <= 104; i++) {
+        for (uint64_t i = 1; i <= 104; i++) {
             e *= 2;
             t.e[i + 150] = e;
             t.v[i + 150] = e * mmin;
@@ -53,7 +54,7 @@ const IeeeTable& ieee_table()
         t.e[150] = 1;
         t.v[150] = mmin;
         e = 1;
-        for (unsigned long i = 1; i < 150; i++) {
+        for (uint64_t i = 1; i < 150; i++) {
             e /= 2;
             t.e[150 - i] = e;
             t.v[150 - i] = e * mmin;
@@ -66,9 +67,9 @@ const IeeeTable& ieee_table()
 }
 
 
-void binary_search(const double xx[], const unsigned long n, double x, unsigned long* j)
+void binary_search(const double xx[], const uint64_t n, double x, uint64_t* j)
 {
-    unsigned long ju, jm, jl;
+    uint64_t ju, jm, jl;
     jl = 0;
     ju = n;
     while (ju - jl > 1) {
@@ -82,14 +83,14 @@ void binary_search(const double xx[], const unsigned long n, double x, unsigned 
 }
 
 
-unsigned long ieee_to_long(double x)
+uint64_t ieee_to_long(double x)
 {
     const IeeeTable& t = ieee_table();
-    unsigned long s = 0;
-    unsigned long mmax = 0xffffff;
-    unsigned long mmin = 0x800000;
-    unsigned long m = 0;
-    unsigned long e = 0;
+    uint64_t s = 0;
+    uint64_t mmax = 0xffffff;
+    uint64_t mmin = 0x800000;
+    uint64_t m = 0;
+    uint64_t e = 0;
     double rmmax = mmax + 0.5;
 
     if (x < 0) {
@@ -123,11 +124,11 @@ unsigned long ieee_to_long(double x)
 }
 
 
-double long_to_ieee(unsigned long x)
+double long_to_ieee(uint64_t x)
 {
-    unsigned long s = x & 0x80000000;
-    unsigned long c = (x & 0x7f800000) >> 23;
-    unsigned long m = (x & 0x007fffff);
+    uint64_t s = x & 0x80000000;
+    uint64_t c = (x & 0x7f800000) >> 23;
+    uint64_t m = (x & 0x007fffff);
 
     double val;
 
@@ -146,14 +147,14 @@ double long_to_ieee(unsigned long x)
 }
 
 
-unsigned long ieee_nearest_smaller_to_long(double x)
+uint64_t ieee_nearest_smaller_to_long(double x)
 {
     const IeeeTable& t = ieee_table();
-    unsigned long l;
-    unsigned long e;
-    unsigned long m;
-    unsigned long s;
-    unsigned long mmin = 0x800000;
+    uint64_t l;
+    uint64_t e;
+    uint64_t m;
+    uint64_t s;
+    uint64_t mmin = 0x800000;
 
     if (x == 0)
         return 0;
@@ -227,14 +228,14 @@ const IbmTable& ibm_table()
 }
 
 // |x| must not be larger than the largest IBM value (the callers check the range)
-unsigned long ibm_to_long(double x)
+uint64_t ibm_to_long(double x)
 {
     const IbmTable& t = ibm_table();
-    const unsigned long mmax = 0xffffff;
-    const unsigned long mmin = 0x800000;
+    const uint64_t mmax = 0xffffff;
+    const uint64_t mmin = 0x800000;
     const double rmmax = mmax + 0.5;
-    unsigned long s = 0;
-    unsigned long e = 0;
+    uint64_t s = 0;
+    uint64_t e = 0;
 
     if (x < 0) {
         s = 1;
@@ -255,7 +256,7 @@ unsigned long ibm_to_long(double x)
         x /= 16;
         e++;
     }
-    unsigned long m = static_cast<unsigned long>(x + 0.5);
+    uint64_t m = static_cast<uint64_t>(x + 0.5);
     if (m > mmax) {
         e++;
         m = 0x800000;
@@ -263,11 +264,11 @@ unsigned long ibm_to_long(double x)
     return (s << 31) | (e << 24) | m;
 }
 
-double long_to_ibm(unsigned long x)
+double long_to_ibm(uint64_t x)
 {
-    const unsigned long s = x & 0x80000000;
-    const unsigned long c = (x & 0x7f000000) >> 24;
-    const unsigned long m = (x & 0x00ffffff);
+    const uint64_t s = x & 0x80000000;
+    const uint64_t c = (x & 0x7f000000) >> 24;
+    const uint64_t m = (x & 0x00ffffff);
     if (c == 0 && m <= 1) {
         return 0;
     }
@@ -286,7 +287,7 @@ std::optional<double> nearest_smaller_ibm_float(double a)
         return 0.0;
     }
 
-    unsigned long l = ibm_to_long(a);
+    uint64_t l = ibm_to_long(a);
     const double y = long_to_ibm(l);
     double eps = 0;
     if (a < y) {
@@ -294,9 +295,9 @@ std::optional<double> nearest_smaller_ibm_float(double a)
             l = 0x80100000;
         }
         else {
-            unsigned long e = (l & 0x7f000000) >> 24;
-            const unsigned long m = (l & 0x00ffffff);
-            const unsigned long s = l & 0x80000000;
+            uint64_t e = (l & 0x7f000000) >> 24;
+            const uint64_t m = (l & 0x00ffffff);
+            const uint64_t s = l & 0x80000000;
             if (m == 0x100000 && !s) {
                 assert(e > 0);  // a >= vmin here
                 e = e - 1;
@@ -318,11 +319,11 @@ std::optional<double> nearest_smaller_ibm_float(double a)
 // --- Public API implementations ---
 
 
-std::optional<long> number_of_bits(unsigned long x)
+std::optional<int64_t> number_of_bits(uint64_t x)
 {
     const int count = sizeof(nbits_table) / sizeof(nbits_table[0]);
-    const unsigned long* n = nbits_table;
-    long result = 0;
+    const uint64_t* n = nbits_table;
+    int64_t result = 0;
     while (x >= *n) {
         n++;
         result++;
@@ -340,12 +341,12 @@ std::optional<double> nearest_smaller_value(double val, FloatType type)
 }
 
 
-std::optional<long> get_binary_scale_factor(double max, double min, long bpval)
+std::optional<int64_t> get_binary_scale_factor(double max, double min, int64_t bpval)
 {
     const double range = max - min;
     double zs = 1;
-    long scale = 0;
-    const long last = 127;
+    int64_t scale = 0;
+    const int64_t last = 127;
 
     // Check the arguments before using them (ECC-246, ECC-1927 in ecCodes)
     if (bpval < 1 || bpval >= 64) {

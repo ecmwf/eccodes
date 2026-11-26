@@ -23,7 +23,7 @@
 #include "spaec/spaec.h"
 
 static int failures = 0;
-static long cases = 0;
+static int64_t cases = 0;
 
 static void check(bool ok, const std::string& what)
 {

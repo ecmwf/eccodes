@@ -6,6 +6,7 @@
 #pragma once
 
 #include <cmath>
+#include <cstdint>
 #include <stdexcept>
 
 #include "simple_packing/detail/Parameters.h"
@@ -54,7 +55,7 @@ public:
         if (!(scaledRange <= 9.223372036854775808e18)) {
             throw std::runtime_error("Range of values too large. Try a smaller value for decimal precision");
         }
-        auto bpv = number_of_bits(static_cast<unsigned long>(scaledRange));
+        auto bpv = number_of_bits(static_cast<uint64_t>(scaledRange));
         if (bpv.has_value()) {
             params.bitsPerValue(bpv.value());
         }
@@ -77,7 +78,7 @@ public:
         if (!(maxCode <= 9.223372036854775808e18)) {
             throw std::runtime_error("Range of values too large. Try a smaller value for decimal precision");
         }
-        const auto codeBits = number_of_bits(static_cast<unsigned long>(maxCode));
+        const auto codeBits = number_of_bits(static_cast<uint64_t>(maxCode));
         if (!codeBits.has_value()) {
             throw std::runtime_error("Range of values too large. Try a smaller value for decimal precision");
         }

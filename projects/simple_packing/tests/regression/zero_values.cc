@@ -5,6 +5,7 @@
 // and the codecs ran off the end of their buffers.
 
 #include <iostream>
+#include <cstdint>
 #include <vector>
 
 #include "simple_packing/detail/simple/Binary.h"
@@ -13,7 +14,7 @@ using namespace sp::detail;
 
 int main()
 {
-    for (long bpv : { 1L, 7L, 12L, 16L, 24L, 64L }) {
+    for (int64_t bpv : { INT64_C(1), INT64_C(7), INT64_C(12), INT64_C(16), INT64_C(24), INT64_C(64) }) {
         Parameters params;
         params.bitsPerValue(bpv);
         params.referenceValue(1.0);

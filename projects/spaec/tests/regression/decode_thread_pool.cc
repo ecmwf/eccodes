@@ -35,7 +35,7 @@ static void watcherLoop(const std::atomic<bool>* stop)
             char line[256];
             while (fgets(line, sizeof(line), f)) {
                 if (strncmp(line, "Threads:", 8) == 0) {
-                    const size_t n = static_cast<size_t>(strtol(line + 8, nullptr, 10));
+                    const size_t n = static_cast<size_t>(std::strtoll(line + 8, nullptr, 10));
                     size_t seen = peakThreads.load();
                     while (seen < n && !peakThreads.compare_exchange_weak(seen, n)) {
                     }

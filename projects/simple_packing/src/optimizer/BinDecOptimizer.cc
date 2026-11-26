@@ -9,6 +9,7 @@
 #include "simple_packing/detail/Utils.h"
 
 #include <cassert>
+#include <cstdint>
 #include <cmath>
 #include <string>
 #include <limits>
@@ -25,14 +26,14 @@ constexpr double dbl_max = std::numeric_limits<double>::max();
 // static_cast<long> of a double beyond LONG_MAX is undefined behaviour (and aborted under
 // UBSan): clamp it, the callers only compare against the encoded-value bounds. The values are
 // encoded values, never negative.
-long toLongClamped(double value)
+int64_t toLongClamped(double value)
 {
     assert(value >= 0);
     // 2^63 (2^31 where long has 32 bits): the smallest double beyond LONG_MAX
-    static const double limit = std::ldexp(1.0, std::numeric_limits<long>::digits);
+    static const double limit = std::ldexp(1.0, std::numeric_limits<int64_t>::digits);
     if (value >= limit)
-        return std::numeric_limits<long>::max();
-    return static_cast<long>(value);
+        return std::numeric_limits<int64_t>::max();
+    return static_cast<int64_t>(value);
 }
 
 // The largest decimal exponent that fits in a double (~307)
@@ -45,17 +46,17 @@ int vrange()
 // 'knbit' bits per value and the decimal scale factor 'kdec'
 struct FactecResult
 {
-    long binaryScaleFactor;
-    long maxEncodedValue;
+    int64_t binaryScaleFactor;
+    int64_t maxEncodedValue;
 };
 
 // The caller ensures that pa > DBL_EPSILON and that encoding it does not overflow
-FactecResult factec(double pa, int knbit, long kdec)
+FactecResult factec(double pa, int knbit, int64_t kdec)
 {
     /* Binary scale factor associated to kdec */
-    long ke = floor(log2((pa * sp_power<double>(kdec, 10)) / (sp_power<double>(knbit, 2) - 0.5))) + 1;
+    int64_t ke = floor(log2((pa * sp_power<double>(kdec, 10)) / (sp_power<double>(knbit, 2) - 0.5))) + 1;
     /* Encoded value for pa = max - min       */
-    long knutil = toLongClamped(floor(0.5 + pa * sp_power<double>(kdec, 10) * sp_power<double>(-ke, 2)));
+    int64_t knutil = toLongClamped(floor(0.5 + pa * sp_power<double>(kdec, 10) * sp_power<double>(-ke, 2)));
     return FactecResult{ ke, knutil };
 }
 
@@ -74,10 +75,10 @@ Parameters BinDecOptimizer::getParams(const double pmin, const double pmax)
     // grib_handle* gh = grib_handle_of_accessor(a);
     int idecmin = -15;
     int idecmax = 5;
-    long inbint;
+    int64_t inbint;
     double xhuger4, xnbint;
-    long inumax = 0;
-    long jdec;
+    int64_t inumax = 0;
+    int64_t jdec;
     const int RANGE = vrange();
     constexpr double EPSILON = std::numeric_limits<double>::epsilon();
     double pa = pmax - pmin;
@@ -117,7 +118,7 @@ Parameters BinDecOptimizer::getParams(const double pmin, const double pmax)
     xnbint = sp_power<double>(knbit_, 2) - 1;
     // 2^knbit - 1 in integers: in double it is 2^knbit from 54 bits on, which accepted a largest
     // code of 2^knbit that does not fit
-    inbint = knbit_ >= std::numeric_limits<long>::digits ? std::numeric_limits<long>::max() : static_cast<long>((uint64_t{ 1 } << knbit_) - 1);
+    inbint = knbit_ >= std::numeric_limits<int64_t>::digits ? std::numeric_limits<int64_t>::max() : static_cast<int64_t>((uint64_t{ 1 } << knbit_) - 1);
 
     /* Test decimal scale factors; keep the most suitable */
     for (jdec = idecmin; jdec <= idecmax; jdec++) {
@@ -156,7 +157,7 @@ Parameters BinDecOptimizer::getParams(const double pmin, const double pmax)
         double decimal = sp_power<double>(+params.decimalScaleFactor(), 10);
         double divisor = sp_power<double>(-params.binaryScaleFactor(), 2);
         double min = pmin * decimal;
-        long vmin, vmax;
+        int64_t vmin, vmax;
         auto ref = nearest_smaller_value(min, referenceFloatType_);
         if (ref.has_value()) {
             params.referenceValue(ref.value());

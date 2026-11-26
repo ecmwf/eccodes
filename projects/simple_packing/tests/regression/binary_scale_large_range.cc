@@ -6,6 +6,7 @@
 // asserted the limit, so release builds (NDEBUG) returned factors such as 1014, whose powers of
 // 2 overflow. Like ecCodes (which aborts), it must fail: with std::range_error.
 #include <iostream>
+#include <cstdint>
 #include <stdexcept>
 
 #include "simple_packing/detail/Utils.h"
@@ -25,7 +26,7 @@ int main()
     int failures = 0;
     const double ranges[][2] = { { 1e300, 0 }, { 1e300, -1e300 }, { 8.9e307, -8.9e307 }, { 3e38, 0 } };
     for (const auto& r : ranges) {
-        for (long bpv : { 1L, 8L, 16L, 24L, 32L, 63L }) {
+        for (int64_t bpv : { INT64_C(1), INT64_C(8), INT64_C(16), INT64_C(24), INT64_C(32), INT64_C(63) }) {
             try {
                 const auto scale = get_binary_scale_factor(r[0], r[1], bpv);
                 if (scale && (*scale > 127 || *scale < -127)) {
