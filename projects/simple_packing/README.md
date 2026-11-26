@@ -91,8 +91,7 @@ floating-point options: ...`).
   x86-64 with `-march=native` (Haswell and later) or `-march=x86-64-v3`, and every AArch64, POWER
   and s390x target. `AUTO` compiles a probe with the project flags and enables the option if it
   fuses (when cross-compiling without an emulator: for GCC, Clang and IntelLLVM). Plain x86-64
-  (SSE2) has no fused multiply-add: no option is needed. Tests that fail without it: `codec_binary`,
-  `pack_fp_contraction`, `pack_fp_contraction_consumer`.
+  (SSE2) has no fused multiply-add: no option is needed. Tests that fail without it: `codec_binary`, `pack_fp_contraction`, `pack_fp_contraction_consumer` and `fp_environment`.
 - **`-fno-fast-math`**: `-ffast-math` lets the compiler assume that there are no NaN and infinite
   values (the checks for them are removed: invalid values are coded, scale searches loop forever)
   and reorder arithmetic. GCC and Clang do not use it by default; icx/icpx and icc do (their default
@@ -111,7 +110,7 @@ floating-point options: ...`).
 
 Measured on an AMD Zen 3 (GCC 16, Clang 22, icx 2026.2; `-O3` with `-march=native` and with
 `-march=x86-64`; the seven benchmark fields, cold caches; each option alone against none). On these
-fields the results were bit-identical in all 30 configurations: the differences need values at a
+fields the results were bit-identical in all 30 configurations (3 compilers, 2 architectures, 5 sets of options: none, each alone, all three): the differences need values at a
 rounding boundary, which the tests construct.
 
 **When a test fails** because an option is missing, it says which one and how to enable it, e.g.
@@ -122,8 +121,9 @@ the test build alone.
 **Your own code** that includes the headers gets the options needed for correct results through the
 usage requirements of the CMake targets (as resolved when the project was configured). If you
 compile it with other flags than the project, e.g. for a CPU with fused multiply-add when the
-project was configured without, or with `-ffast-math`, add `-ffp-contract=off` or `-fno-fast-math`
-yourself.
+project was configured without, add `-ffp-contract=off` yourself. With `-ffast-math` in your own
+flags, the header functions (`sp::range`, `sp::scaling`) no longer detect NaN and infinite values
+(`std::isfinite` is assumed true): add `-fno-fast-math` after it, also to the link flags.
 
 ## In ecCodes
 

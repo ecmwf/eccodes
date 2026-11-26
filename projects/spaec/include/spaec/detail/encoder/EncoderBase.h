@@ -201,9 +201,10 @@ public:
     // The k estimated from the sum S of the n samples of a block (Kiely, "Selecting the Golomb
     // Parameter in Rice Coding", IPN Progress Report 42-159, 2004, IV.A): the largest k with
     // 2^k <= mu + f, mu = S / n, and f = 49/128, an approximation of f* = 2 - golden ratio, which
-    // minimises the largest relative redundancy for geometrically distributed samples. The size of
-    // the block with this k is at most 1/2 bit per sample (and about 13 %) above the minimum, and
-    // k is at most one away from the k of minimum size. In integers, without divisions:
+    // gives geometrically distributed samples the same largest redundancy against the entropy (about
+    // 4.2 %, IV.B) as the best k. For any distribution, k is at most one away from the k of minimum
+    // size and the block at most 1/2 bit per sample (and about 13 %) larger (IV.C); for geometric
+    // samples at most 0.04 bit per sample (0.6 %). In integers, without divisions:
     // n * 128 * 2^k <= 128 * S + 49 * n. S < 2^38 (64 samples of 32 bits): no overflow.
     static unsigned estimateK(uint64_t sum, uint64_t n)
     {

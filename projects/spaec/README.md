@@ -50,7 +50,7 @@ number of samples.
 | `referenceInterval` | 128 | 1 to 4096 blocks |
 | `codeOptions` | `CodeOptions::Basic` | `Basic`, `Restricted` (1 to 4 bits per sample) |
 | `preprocessor` | `Preprocessor::UnitDelay` | `UnitDelay`, `Bypass`, `None` (`None` only for unsigned samples) |
-| `signedSamples` | `false` | `true`: samples are two's complement numbers of `bitsPerSample` bits (pass `int8_t`, `int16_t` or `int32_t`) |
+| `signedSamples` | `false` | `true`: samples are two's complement numbers of `bitsPerSample` bits (pass `int8_t`, `int16_t` or `int32_t`; an unsigned type is read as the two's complement bit pattern) |
 | `threads` | 1 | 1 to 255 |
 | `splitSelector` | `SplitSelector::Search` | `Search`, `Estimate` (see below; `compress` only) |
 
@@ -97,9 +97,7 @@ selector.
 - **`Estimate`**: k from the mean µ = S / n of the n samples of the block (A. Kiely, *Selecting the
   Golomb Parameter in Rice Coding*, IPN Progress Report 42-159, 2004, IV.A): the largest k with
   2^k ≤ µ + f*, f* = 2 − φ ≈ 49/128 (φ: golden ratio), in integers without divisions:
-  n · 128 · 2^k ≤ 128 · S + 49 · n. Kiely proves that this k is at most one away from the k of
-  minimum size and costs at most 1/2 bit per sample more (at most 4.2 % for geometrically
-  distributed samples). Two passes per block (the sum, then the size with this k), vectorised for
+  n · 128 · 2^k ≤ 128 · S + 49 · n. Kiely proves that this k is at most one away from the k of minimum size and that the block costs at most 1/2 bit per sample (and about 13 %) more than with the best k, for any distribution of the samples (IV.C); for geometrically distributed samples the exact worst case is 0.04 bit per sample (0.6 %), and f* gives the same largest redundancy against the entropy (about 4.2 %) as the best k (IV.B). Two passes per block (the sum, then the size with this k), vectorised for
   samples of 8, 16 and 32 bits with AVX2 and with SSE2 (`_mm_sad_epu8` for 8-bit samples, 16-bit
   lanes and `_mm_madd_epi16` where they cannot overflow, 32-bit lanes for samples of up to about
   29 bits). No state across blocks: blocks are independent (consecutive blocks are processed in
@@ -161,16 +159,14 @@ it enabled and why (`spaec: floating-point options: ...`).
   x86-64 with `-march=native` (Haswell and later) or `-march=x86-64-v3`, and every AArch64, POWER
   and s390x target. `AUTO` compiles a probe with the project flags and enables the option if it
   fuses (when cross-compiling without an emulator: for GCC, Clang and IntelLLVM). Plain x86-64
-  (SSE2) has no fused multiply-add: no option is needed. Tests that fail without it:
-  `value_mapping`, `encode_fp_contraction`, `encode_fp_contraction_consumer`.
+  (SSE2) has no fused multiply-add: no option is needed. Tests that fail without it: `value_mapping`, `encode_fp_contraction`, `encode_fp_contraction_consumer` and `fp_environment`.
 - **`-fno-fast-math`**: `-ffast-math` lets the compiler assume that there are no NaN and infinite
   values (the checks for them are removed: invalid values are coded) and reorder arithmetic. GCC and
   Clang do not use it by default; icx/icpx and icc do (their default floating-point model `fast`:
   1736 of 7103 cases of the compiler tests of these projects changed; of the spaec tests only
   `fp_environment` notices it, simple packing has 6 failing tests). `AUTO` enables `-fno-fast-math`
   for them. A `-ffast-math` in your own `CMAKE_CXX_FLAGS` is not undone: configure warns, and the
-  tests fail (`api`, `spaec_api`, `errors`, `parameter_validation`, `encode_value_range`,
-  `consumer_flags`). Set `SPAEC_NO_FAST_MATH=ON` (adds `-fno-fast-math` after your flags) or remove
+  tests fail (`api`, `spaec_api`, `errors`, `parameter_validation`, `encode_value_range`, `consumer_flags` and `fp_environment`). Set `SPAEC_NO_FAST_MATH=ON` (adds `-fno-fast-math` after your flags) or remove
   `-ffast-math`. The option is also a link option: linking with `-ffast-math` (GCC and Clang link
   `crtfastmath.o`) or with icx/icpx sets the CPU to flush subnormal numbers to zero at program
   start, which `-fno-fast-math` at compile time does not undo.
@@ -180,7 +176,7 @@ it enabled and why (`spaec: floating-point options: ...`).
 
 Measured on an AMD Zen 3 (GCC 16, Clang 22, icx 2026.2; `-O3` with `-march=native` and with
 `-march=x86-64`; the seven benchmark fields, cold caches; each option alone against none). On these
-fields the results were bit-identical in all 30 configurations: the differences need values at a
+fields the results were bit-identical in all 30 configurations (3 compilers, 2 architectures, 5 sets of options: none, each alone, all three): the differences need values at a
 rounding boundary, which the tests construct.
 
 **When a test fails** because an option is missing, it says which one and how to enable it, e.g.
@@ -190,8 +186,10 @@ The test `spaec_fp_environment` checks the options of the test build alone.
 **Your own code** that includes the headers gets the options needed for correct results through the
 usage requirements of the CMake targets (as resolved when the project was configured). If you
 compile it with other flags than the project, e.g. for a CPU with fused multiply-add when the
-project was configured without, or with `-ffast-math`, add `-ffp-contract=off` or `-fno-fast-math`
-yourself.
+project was configured without, add `-ffp-contract=off` yourself; with `-ffast-math`, add
+`-fno-fast-math` after it (also to the link flags). Translation units of one program compiled for
+different instruction sets (e.g. one with `-mavx2`) use separate instances of the functions: they
+are in an inline namespace per instruction set (`spaec/detail/Isa.h`).
 
 ## In ecCodes
 

@@ -182,7 +182,7 @@ inline size_t packedSize(size_t count, const Scaling& scaling)
 {
     if (scaling.bitsPerValue < 0 || scaling.bitsPerValue > 64) {
         throw std::invalid_argument("Simple packing: bits per value " + std::to_string(scaling.bitsPerValue) +
-                                    " is out of range (0 to 64; a Scaling must be filled in, e.g. by sp::scaling)");
+                                    " is out of range (0 to 64 for unpacking, 1 to 63 for packing, 0: a constant field; a Scaling must be filled in, e.g. by sp::scaling)");
     }
     const size_t bits = static_cast<size_t>(scaling.bitsPerValue);
     if (bits != 0 && count > (SIZE_MAX - 7) / bits) {
