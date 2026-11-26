@@ -27,7 +27,7 @@
 
 using namespace spaec::detail;
 
-static int failures = 0;
+static int32_t failures = 0;
 
 static void check(bool ok, const std::string& what)
 {
@@ -71,7 +71,7 @@ static void constructor()
 
 // Values (s * 2^E + R) * 10^-D with E = -2, D = 0, R = -100: exact in float and double up to 22 bits
 template <typename T>
-static std::vector<T> values(size_t n, unsigned bpv, std::mt19937_64& rng)
+static std::vector<T> values(size_t n, uint32_t bpv, std::mt19937_64& rng)
 {
     const uint64_t maxSample = (uint64_t{ 1 } << bpv) - 1;
     std::vector<T> v(n);
@@ -83,7 +83,7 @@ static std::vector<T> values(size_t n, unsigned bpv, std::mt19937_64& rng)
 }
 
 template <typename T>
-static void roundTrip(unsigned bpv, unsigned blockSize, unsigned rsi, size_t n, std::mt19937_64& rng, Prediction prediction = Prediction::UnitDelay,
+static void roundTrip(uint32_t bpv, uint32_t blockSize, uint32_t rsi, size_t n, std::mt19937_64& rng, Prediction prediction = Prediction::UnitDelay,
                       std::vector<uint8_t>* streamOut = nullptr)
 {
     const std::vector<T> input = values<T>(n, bpv, rng);
@@ -117,9 +117,9 @@ static void roundTrip(unsigned bpv, unsigned blockSize, unsigned rsi, size_t n, 
 static void roundTrips()
 {
     std::mt19937_64 rng(1);
-    for (unsigned bpv : { 1, 2, 7, 8, 9, 15, 16, 17, 22 }) {
-        for (unsigned blockSize : { 8, 16, 32, 64 }) {
-            for (unsigned rsi : { 1, 3, 64 }) {
+    for (uint32_t bpv : { 1, 2, 7, 8, 9, 15, 16, 17, 22 }) {
+        for (uint32_t blockSize : { 8, 16, 32, 64 }) {
+            for (uint32_t rsi : { 1, 3, 64 }) {
                 for (size_t n : { size_t{ 0 }, size_t{ 1 }, size_t{ 7 }, size_t{ 8 }, size_t{ 9 }, size_t{ 1000 } }) {
                     roundTrip<double>(bpv, blockSize, rsi, n, rng);
                     roundTrip<float>(bpv, blockSize, rsi, n, rng);
@@ -127,13 +127,13 @@ static void roundTrips()
             }
         }
     }
-    for (unsigned bpv : { 24, 25, 31, 32 }) {  // beyond the float mantissa: double only
+    for (uint32_t bpv : { 24, 25, 31, 32 }) {  // beyond the float mantissa: double only
         roundTrip<double>(bpv, 32, 128, 5000, rng);
     }
     // Without preprocessor and with the bypass predictor (the coded integers are unsigned: the
     // same stream, CCSDS 121.0-B-3, 4.2.3 and 4.4)
-    for (unsigned bpv : { 1, 8, 13, 16, 24, 32 }) {
-        for (unsigned rsi : { 1, 3, 64 }) {
+    for (uint32_t bpv : { 1, 8, 13, 16, 24, 32 }) {
+        for (uint32_t rsi : { 1, 3, 64 }) {
             for (size_t n : { size_t{ 0 }, size_t{ 7 }, size_t{ 1000 } }) {
                 std::mt19937_64 rngNone(bpv * 1000 + rsi), rngBypass(bpv * 1000 + rsi);
                 std::vector<uint8_t> none, bypass;
@@ -275,9 +275,9 @@ static void restrictedSet()
 {
     using S = encoder::SpAec<double>;
     std::mt19937_64 rng(5);
-    for (unsigned bpv : { 1u, 2u, 3u, 4u, 12u }) {
-        for (unsigned blockSize : { 8u, 64u }) {
-            const unsigned rsi = 3;
+    for (uint32_t bpv : { 1u, 2u, 3u, 4u, 12u }) {
+        for (uint32_t blockSize : { 8u, 64u }) {
+            const uint32_t rsi = 3;
             const size_t n = 5000;
             std::vector<uint16_t> samples(n);
             uint16_t v = 0;

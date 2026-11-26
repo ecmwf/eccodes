@@ -23,18 +23,18 @@ static uint64_t next(uint64_t& s)  // splitmix64
     return z ^ (z >> 31);
 }
 
-static uint64_t readBits(const std::vector<uint8_t>& buf, size_t bit, unsigned n)
+static uint64_t readBits(const std::vector<uint8_t>& buf, size_t bit, uint32_t n)
 {
     uint64_t v = 0;
-    for (unsigned i = 0; i < n; ++i, ++bit) {
+    for (uint32_t i = 0; i < n; ++i, ++bit) {
         v = (v << 1) | ((buf[bit / 8] >> (7 - bit % 8)) & 1u);
     }
     return v;
 }
 
-static int failures = 0;
+static int32_t failures = 0;
 
-static void fail(const char* what, unsigned bpv, unsigned offset, uint64_t expected, uint64_t actual)
+static void fail(const char* what, uint32_t bpv, uint32_t offset, uint64_t expected, uint64_t actual)
 {
     if (failures++ < 20) {
         std::cerr << what << " bpv=" << bpv << " offset=" << offset << ": expected " << expected << ", got " << actual << '\n';
@@ -48,12 +48,12 @@ static void check(uint64_t& rng)
     using V = typename Packing::ValueType;
     const uint64_t mask = BPV == 64 ? ~uint64_t{ 0 } : (uint64_t{ 1 } << BPV) - 1;
     Packing packing;
-    for (unsigned offset = 0; offset < 8; ++offset) {
+    for (uint32_t offset = 0; offset < 8; ++offset) {
         // Byte-aligned widths are only written at byte boundaries
         if ((BPV % 8 == 0) && offset != 0) {
             continue;
         }
-        for (int round = 0; round < 50; ++round) {
+        for (int32_t round = 0; round < 50; ++round) {
             const uint64_t value = round == 0 ? mask : round == 1 ? 0
                                                                   : next(rng) & mask;
 

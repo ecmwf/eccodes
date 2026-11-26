@@ -36,7 +36,7 @@ uint32_t le32(const uint8_t* p)
 double bitCastDouble(const uint8_t* p)
 {
     uint64_t bits = 0;
-    for (int i = 0; i < 8; ++i) {
+    for (int32_t i = 0; i < 8; ++i) {
         bits |= static_cast<uint64_t>(p[i]) << (8 * i);
     }
     double d;
@@ -107,7 +107,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
 
     try {
         SimplePackingBinary<double> packer(std::make_unique<BinDecOptimizer>(
-            (data[0] & 4) != 0, (data[0] & 8) != 0, static_cast<int>(data[1] % 64)));
+            (data[0] & 4) != 0, (data[0] & 8) != 0, static_cast<int32_t>(data[1] % 64)));
         auto [packedParams, packed] = packer.pack(values);
         const std::vector<double> back = packer.unpack(packedParams, packed, n2);
         const int64_t bpv = packedParams.bitsPerValue();
@@ -130,7 +130,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
         // Strict bit-exact re-pack when the double round trip cannot lose precision.
         // The target must start zeroed: the codec ORs its bits into the buffer (like pack()).
         if (bpv <= 47 && e >= -60 && e <= 60 && d >= -22 && d <= 22 && gridSpan <= 2.5e14L) {
-            std::vector<unsigned char> repacked(packed.size(), 0x00);
+            std::vector<uint8_t> repacked(packed.size(), 0x00);
             packer.packTo(packedParams, back.data(), n2, repacked.data());
             if (repacked != packed) {
                 __builtin_trap();  // unpack(pack(v)) does not pack to the same bits

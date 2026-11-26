@@ -88,7 +88,7 @@ inline uint64_t totalU32(__m128i a)  // the sum of 4 unsigned 32-bit lanes, in 6
 }  // namespace sums
 
 // log2(n) of a power of two
-constexpr unsigned log2Of(size_t n)
+constexpr uint32_t log2Of(size_t n)
 {
     return n <= 1 ? 0 : 1 + log2Of(n / 2);
 }
@@ -102,7 +102,7 @@ constexpr bool hasSse2Sum = true;
 
 #if defined(__AVX2__)
 template <size_t J, typename T>
-SPAEC_ALWAYS_INLINE uint64_t avx2Sum(const T* v, unsigned k, [[maybe_unused]] unsigned bits)
+SPAEC_ALWAYS_INLINE uint64_t avx2Sum(const T* v, uint32_t k, [[maybe_unused]] uint32_t bits)
 {
     if constexpr (sizeof(T) == 1 && J % 32 == 0) {
         const __m256i zero = _mm256_setzero_si256();
@@ -148,12 +148,12 @@ SPAEC_ALWAYS_INLINE uint64_t avx2Sum(const T* v, unsigned k, [[maybe_unused]] un
 }
 #else
 template <size_t J, typename T>
-uint64_t avx2Sum(const T* v, unsigned k, unsigned bits);
+uint64_t avx2Sum(const T* v, uint32_t k, uint32_t bits);
 #endif
 
 #if defined(SPAEC_HAVE_SSE2)
 template <size_t J, typename T>
-SPAEC_ALWAYS_INLINE uint64_t sse2Sum(const T* v, unsigned k, [[maybe_unused]] unsigned bits)
+SPAEC_ALWAYS_INLINE uint64_t sse2Sum(const T* v, uint32_t k, [[maybe_unused]] uint32_t bits)
 {
     if constexpr (sizeof(T) == 1 && J % 16 == 0) {
         const __m128i zero = _mm_setzero_si128();
@@ -215,12 +215,12 @@ SPAEC_ALWAYS_INLINE uint64_t sse2Sum(const T* v, unsigned k, [[maybe_unused]] un
 }
 #else
 template <size_t J, typename T>
-uint64_t sse2Sum(const T* v, unsigned k, unsigned bits);
+uint64_t sse2Sum(const T* v, uint32_t k, uint32_t bits);
 #endif
 
 // Always inlined: a few instructions per instance, called twice per block (GCC would call it)
 template <size_t J, typename T>
-SPAEC_ALWAYS_INLINE uint64_t blockShiftedSum(const T* v, unsigned k, [[maybe_unused]] unsigned bits)
+SPAEC_ALWAYS_INLINE uint64_t blockShiftedSum(const T* v, uint32_t k, [[maybe_unused]] uint32_t bits)
 {
     static_assert(std::is_unsigned<T>::value && sizeof(T) <= 4, "samples of 8, 16 or 32 bits");
     static_assert(J == 8 || J == 16 || J == 32 || J == 64, "block size 8, 16, 32 or 64");

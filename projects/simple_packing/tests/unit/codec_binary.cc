@@ -25,7 +25,7 @@
 
 using namespace sp::detail;
 
-static int failures = 0;
+static int32_t failures = 0;
 
 static void check(bool ok, const std::string& what)
 {
@@ -39,7 +39,7 @@ template <typename T, uint8_t BPV>
 static bool packThrows(const std::vector<T>& values, double reference)
 {
     Binary<T, BPV> codec;
-    std::vector<unsigned char> out((values.size() * BPV + 7) / 8 + 16, 0);
+    std::vector<uint8_t> out((values.size() * BPV + 7) / 8 + 16, 0);
     try {
         codec.packTo(values.data(), values.size(), 0, 0, static_cast<T>(reference), out.data());
     }
@@ -76,8 +76,8 @@ static void rounding()
     struct Case
     {
         double value;
-        int decimalScale;
-        int binaryScale;
+        int32_t decimalScale;
+        int32_t binaryScale;
         double reference;
         uint32_t coded;
     };
@@ -90,7 +90,7 @@ static void rounding()
     for (const auto& c : cases) {
         Binary<double, 24> codec;
         const std::vector<double> values(8, c.value);
-        std::vector<unsigned char> out(3 * 8 + 16, 0);
+        std::vector<uint8_t> out(3 * 8 + 16, 0);
         codec.packTo(values.data(), values.size(), c.decimalScale, c.binaryScale, c.reference, out.data());
         const uint32_t coded = (uint32_t{ out[0] } << 16) | (uint32_t{ out[1] } << 8) | out[2];
         check(coded == c.coded, "pack " + std::to_string(c.value) + ": " + std::to_string(coded) + " instead of " + std::to_string(c.coded));
@@ -103,7 +103,7 @@ static void zeroValues(std::index_sequence<B...>)
     // 0 values must not access the buffers (Binary: 1..64 bits). Real one-element buffers, not
     // nullptr: with nullptr the compiler may assume that the loops do not run
     std::vector<T> values(1, T(1));
-    std::vector<unsigned char> bytes(1, 0xAB);
+    std::vector<uint8_t> bytes(1, 0xAB);
     ((Binary<T, B + 1>().packTo(values.data(), 0, 0, 0, T(1), bytes.data()), Binary<T, B + 1>().unpackTo(bytes.data(), 0, 0, 1.0, 0, values.data())), ...);
     check(values[0] == T(1) && bytes[0] == 0xAB, "packing or unpacking 0 values changed the buffers");
 }
@@ -117,14 +117,14 @@ static void zeroValuesArray(std::index_sequence<B...>)
 }
 
 // Packs the values MSB first with bpv bits each
-static std::vector<unsigned char> packBits(const std::vector<uint64_t>& values, unsigned bpv)
+static std::vector<uint8_t> packBits(const std::vector<uint64_t>& values, uint32_t bpv)
 {
-    std::vector<unsigned char> out((values.size() * bpv + 7) / 8 + 16, 0);
+    std::vector<uint8_t> out((values.size() * bpv + 7) / 8 + 16, 0);
     size_t bit = 0;
     for (uint64_t v : values) {
-        for (int b = static_cast<int>(bpv) - 1; b >= 0; --b, ++bit) {
+        for (int32_t b = static_cast<int32_t>(bpv) - 1; b >= 0; --b, ++bit) {
             if ((v >> b) & 1u) {
-                out[bit / 8] |= static_cast<unsigned char>(0x80u >> (bit % 8));
+                out[bit / 8] |= static_cast<uint8_t>(0x80u >> (bit % 8));
             }
         }
     }
@@ -132,11 +132,11 @@ static std::vector<unsigned char> packBits(const std::vector<uint64_t>& values, 
 }
 
 template <uint8_t BPV>
-static void unpackFloat(double reference, int binaryScale, int decimalScale)
+static void unpackFloat(double reference, int32_t binaryScale, int32_t decimalScale)
 {
     const uint64_t mask = (uint64_t{ 1 } << BPV) - 1;
     std::vector<uint64_t> coded = { 0, 1, mask, ((uint64_t{ 1 } << (BPV - 1)) + 12345) & mask, 777777 & mask, 3, mask - 1, 42, 99 };
-    const std::vector<unsigned char> bytes = packBits(coded, BPV);
+    const std::vector<uint8_t> bytes = packBits(coded, BPV);
     // Like the legacy ecCodes code: powers in float, scaling in double, one rounding to float
     const double s = sp_power<float>(binaryScale, 2);
     const double d = sp_power<float>(-decimalScale, 10);

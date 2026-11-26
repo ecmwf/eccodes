@@ -24,7 +24,7 @@
 
 #include "../fp_diagnostics.h"
 
-static int failures = 0;
+static int32_t failures = 0;
 
 static void check(bool ok, const std::string& what)
 {
@@ -61,7 +61,7 @@ static bool packs(const std::vector<double>& values, const sp::Scaling& s)
 }
 
 template <typename Value>
-static std::vector<Value> field(size_t count, double base, double spread, unsigned seed)
+static std::vector<Value> field(size_t count, double base, double spread, uint32_t seed)
 {
     std::mt19937 rng(seed);
     std::uniform_real_distribution<double> u(0, 1);
@@ -114,7 +114,7 @@ int main()
               "bits(16): the scaling of DecOptimizer");
         check(packed == sp::pack(values, s), "bits(16): the packed data of SimplePackingBinary");
     }
-    for (int bits : { 1, 8, 12, 24, 32, 48 }) {
+    for (int32_t bits : { 1, 8, 12, 24, 32, 48 }) {
         const sp::Scaling s = sp::scaling(values, sp::Method::bits(bits));
         check(s.bitsPerValue == bits, "bits(" + std::to_string(bits) + "): bits per value");
         roundTrip(values, s, "bits(" + std::to_string(bits) + ")");
@@ -185,16 +185,16 @@ int main()
         std::vector<double> quarter(5);
         for (size_t i = 0; i < quarter.size(); ++i)
             quarter[i] = 0.25 + std::ldexp(static_cast<double>(i), -53);
-        for (int bits : { 54, 55, 60, 63 }) {
+        for (int32_t bits : { 54, 55, 60, 63 }) {
             check(packs(quarter, sp::scaling(quarter, sp::Method::bestPrecision(bits))), "bestPrecision(" + std::to_string(bits) + ") of 0.25 + i * 2^-53");
         }
         int64_t unusable = 0, cases = 0;
         std::vector<double> v(16);
-        for (int expo = -60; expo <= 60; expo += 3) {
-            for (int spread = -60; spread <= 20; spread += 7) {
+        for (int32_t expo = -60; expo <= 60; expo += 3) {
+            for (int32_t spread = -60; spread <= 20; spread += 7) {
                 for (size_t i = 0; i < v.size(); ++i)
                     v[i] = std::ldexp(1.0, expo) + std::ldexp(static_cast<double>(i), spread);
-                for (int bits = 1; bits <= 63; bits += 2) {
+                for (int32_t bits = 1; bits <= 63; bits += 2) {
                     for (const sp::Method& m : { sp::Method::bits(bits), sp::Method::bestPrecision(bits), sp::Method::bitsAndDecimals(bits, bits % 9 - 4),
                                                  sp::Method::decimals(bits % 9 - 4) }) {
                         sp::Scaling s;

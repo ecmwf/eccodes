@@ -5,6 +5,7 @@
 // negative values below -FLT_MAX used to be "rounded" to garbage and packed as a constant field.
 
 #include <cfloat>
+#include <cstdint>
 #include <cmath>
 #include <iostream>
 #include <limits>
@@ -20,7 +21,7 @@
 
 using namespace sp::detail;
 
-static int failures = 0;
+static int32_t failures = 0;
 
 static void expectNone(double value, FloatType type, const char* typeName)
 {

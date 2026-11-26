@@ -33,8 +33,8 @@
 
 using namespace sp::detail;
 
-static int failures = 0;
-static int cases = 0;
+static int32_t failures = 0;
+static int32_t cases = 0;
 static std::atomic<int64_t> finished{ 0 };
 static std::string current;
 
@@ -197,7 +197,7 @@ static void binary()
     using SP = SimplePackingBinary<double>;
     SP sp(nullptr);
     std::vector<double> values{ 1, 300, 2 };
-    std::vector<unsigned char> out(64);
+    std::vector<uint8_t> out(64);
     expect<IA>("packTo 65 bits", "unsupported number of bits per value 65", [&] { sp.packTo(params(65), values.data(), 3, out.data()); });
     expect<IA>("packTo -1 bits", "unsupported number of bits per value -1", [&] { sp.packTo(params(-1), values.data(), 3, out.data()); });
     expect<IA>("packTo binary scale factor 32768", "binary scale factor 32768", [&] { sp.packTo(params(16, 32768), values.data(), 3, out.data()); });
@@ -210,7 +210,7 @@ static void binary()
     expect<IA>("unpackTo short data", "too short (19 bytes for 10 values with 16 bits", [&] { sp.unpackTo(params(16), out.data(), 19, 10, decoded.data()); });
     expect<IA>("unpackTo overflowing size", "too short", [&] { sp.unpackTo(params(16), out.data(), 64, std::numeric_limits<size_t>::max() / 8, decoded.data()); });
     expect<IA>("unpackTo 65 bits", "unsupported number of bits per value 65", [&] { sp.unpackTo(params(65), out.data(), 64, 3, decoded.data()); });
-    expect<IA>("unpack binary scale factor -32768", "binary scale factor -32768", [&] { sp.unpack(params(8, -32768), std::vector<unsigned char>(8), 3); });
+    expect<IA>("unpack binary scale factor -32768", "binary scale factor -32768", [&] { sp.unpack(params(8, -32768), std::vector<uint8_t>(8), 3); });
 }
 
 static void array()

@@ -6,6 +6,7 @@
 // is compiled with -fsanitize=thread together with Utils.cc, and fails on a data race.
 
 #include <atomic>
+#include <cstdint>
 #include <iostream>
 #include <thread>
 #include <vector>
@@ -17,9 +18,9 @@ using namespace sp::detail;
 int main()
 {
     std::atomic<bool> start{ false };
-    std::atomic<int> wrong{ 0 };
+    std::atomic<int32_t> wrong{ 0 };
     std::vector<std::thread> threads;
-    for (int t = 0; t < 16; ++t) {
+    for (int32_t t = 0; t < 16; ++t) {
         threads.emplace_back([&, t] {
             while (!start) {
             }

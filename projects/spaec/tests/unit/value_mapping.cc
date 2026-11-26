@@ -19,7 +19,7 @@
 
 using namespace spaec::detail;
 
-static int failures = 0;
+static int32_t failures = 0;
 
 static void check(bool ok, const std::string& what)
 {
@@ -34,8 +34,8 @@ static void unmapperFloat()
     struct Case
     {
         float reference;
-        int binaryScale;
-        int decimalScale;
+        int32_t binaryScale;
+        int32_t decimalScale;
         uint32_t mapped;
     };
     const Case cases[] = {
@@ -59,7 +59,7 @@ static void unmapperFloat()
 }
 
 // The mapped value with every operation rounded separately (volatile prevents contraction)
-static uint32_t separate(double value, int decimalScale, int binaryScale, double reference)
+static uint32_t separate(double value, int32_t decimalScale, int32_t binaryScale, double reference)
 {
     volatile double product = value * grib_power<double>(decimalScale, 10);
     volatile double difference = product - reference;
@@ -73,8 +73,8 @@ static void mapperRounding()
     struct Case
     {
         double value;
-        int decimalScale;
-        int binaryScale;
+        int32_t decimalScale;
+        int32_t binaryScale;
         double reference;
         uint32_t mapped;
     };
@@ -91,10 +91,10 @@ static void mapperRounding()
     }
     // Values half-way between two mapped values (before rounding the division)
     std::mt19937_64 rng(42);
-    int wrong = 0;
-    for (int i = 0; i < 2000; ++i) {
-        const int decimalScale = 1 + static_cast<int>(rng() % 3);
-        const int binaryScale = -static_cast<int>(rng() % 12);
+    int32_t wrong = 0;
+    for (int32_t i = 0; i < 2000; ++i) {
+        const int32_t decimalScale = 1 + static_cast<int32_t>(rng() % 3);
+        const int32_t binaryScale = -static_cast<int32_t>(rng() % 12);
         const double reference = static_cast<double>(rng() % 100000);
         const double k = static_cast<double>(rng() % (1u << 23));
         const double value = (reference + std::ldexp(k + 0.5, binaryScale)) / grib_power<double>(decimalScale, 10);

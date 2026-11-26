@@ -17,9 +17,9 @@
 
 using namespace spaec::detail;
 
-static int testCount = 0;
-static int passCount = 0;
-static int failCount = 0;
+static int32_t testCount = 0;
+static int32_t passCount = 0;
+static int32_t failCount = 0;
 
 #define CHECK_EQ(a, b, msg)                                      \
     do {                                                         \
@@ -53,7 +53,7 @@ bool roundTrip(uint8_t bpv, uint8_t block_size, uint16_t rsi,
     // Verify
     for (size_t i = 0; i < data.size(); ++i) {
         // Cast to unsigned: uint8_t values would otherwise be printed as characters
-        CHECK_EQ(unsigned(data[i]), unsigned(decoded[i]),
+        CHECK_EQ(uint32_t(data[i]), uint32_t(decoded[i]),
                  label + " sample[" + std::to_string(i) + "]");
     }
     return true;
@@ -61,7 +61,7 @@ bool roundTrip(uint8_t bpv, uint8_t block_size, uint16_t rsi,
 
 // Generate a small deterministic dataset that exercises various code paths.
 template <typename ValueType>
-std::vector<ValueType> makeData(size_t n, uint8_t bpv, unsigned seed)
+std::vector<ValueType> makeData(size_t n, uint8_t bpv, uint32_t seed)
 {
     std::vector<ValueType> v(n);
     std::mt19937 gen(seed);

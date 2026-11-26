@@ -8,6 +8,7 @@
 // Each case runs with a five-second time limit.
 
 #include <cmath>
+#include <cstdint>
 #include <exception>
 #include <iostream>
 #include <limits>
@@ -21,7 +22,7 @@
 
 using namespace sp::detail;
 
-static int failures = 0;
+static int32_t failures = 0;
 
 // Runs f with a time limit of 5 seconds: it must throw
 template <typename F>

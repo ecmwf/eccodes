@@ -21,7 +21,7 @@ using namespace spaec::detail;
 int main()
 {
     try {
-        int failures = 0;
+        int32_t failures = 0;
         constexpr uint8_t bpv = 16, blockSize = 32;
         constexpr uint16_t rsi = 128;
         using SpAec = encoder::SpAec<double>;
@@ -43,7 +43,7 @@ int main()
                 try {
                     const size_t size = par.encode(Span<double>(data), Span<uint8_t>(encoded));
                     if (size != expectedSize || !std::equal(encoded.begin(), encoded.begin() + size, expected.begin())) {
-                        std::cerr << "FAIL: n=" << n << " threads=" << int(nThreads) << ": " << size << " bytes, expected " << expectedSize << '\n';
+                        std::cerr << "FAIL: n=" << n << " threads=" << int32_t(nThreads) << ": " << size << " bytes, expected " << expectedSize << '\n';
                         failures++;
                         continue;
                     }
@@ -51,14 +51,14 @@ int main()
                     seq.decode(Span<uint8_t>(encoded.data(), size), Span<double>(decoded));
                     for (size_t i = 0; i < n; ++i) {
                         if (std::fabs(decoded[i] - data[i]) > 1.0 / 65536) {
-                            std::cerr << "FAIL: n=" << n << " threads=" << int(nThreads) << ": value " << i << " decoded wrongly\n";
+                            std::cerr << "FAIL: n=" << n << " threads=" << int32_t(nThreads) << ": value " << i << " decoded wrongly\n";
                             failures++;
                             break;
                         }
                     }
                 }
                 catch (const std::exception& e) {
-                    std::cerr << "FAIL: n=" << n << " threads=" << int(nThreads) << ": " << e.what() << '\n';
+                    std::cerr << "FAIL: n=" << n << " threads=" << int32_t(nThreads) << ": " << e.what() << '\n';
                     failures++;
                 }
             }

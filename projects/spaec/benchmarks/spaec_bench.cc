@@ -33,11 +33,11 @@ namespace
 struct Field
 {
     std::string name;
-    unsigned bits;
+    uint32_t bits;
     std::vector<uint32_t> samples;
 };
 
-int errors = 0;
+int32_t errors = 0;
 
 void fail(const std::string& what)
 {
@@ -46,7 +46,7 @@ void fail(const std::string& what)
 }
 
 // A smooth field on a 1440 x 721 grid with some noise, quantised to the given bits
-Field syntheticField(unsigned bits)
+Field syntheticField(uint32_t bits)
 {
     const size_t nx = 1440, ny = 721;
     std::mt19937_64 rng(bits);
@@ -89,10 +89,10 @@ bool readField(const char* path, Field& f)
     return true;
 }
 
-double fastest(int runs, const std::function<void()>& job)
+double fastest(int32_t runs, const std::function<void()>& job)
 {
     double best = 1e30;
-    for (int r = 0; r < runs; ++r) {
+    for (int32_t r = 0; r < runs; ++r) {
         const auto t0 = std::chrono::steady_clock::now();
         job();
         best = std::min(best, std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count());
@@ -108,7 +108,7 @@ struct Totals
 
 // One field with samples of type T: the coders of the table, then the thread counts with Search
 template <typename T>
-void benchField(const Field& f, int runs, const std::vector<unsigned>& threads, std::vector<Totals>& totals, std::vector<Totals>& threadTotals)
+void benchField(const Field& f, int32_t runs, const std::vector<uint32_t>& threads, std::vector<Totals>& totals, std::vector<Totals>& threadTotals)
 {
     const std::vector<T> x(f.samples.begin(), f.samples.end());
     const size_t n = x.size();
@@ -142,7 +142,7 @@ void benchField(const Field& f, int runs, const std::vector<unsigned>& threads, 
         const double enc = fastest(runs, [&] {
             aec_stream s;
             stream(s);
-            s.next_in = reinterpret_cast<const unsigned char*>(x.data());
+            s.next_in = reinterpret_cast<const uint8_t*>(x.data());
             s.avail_in = n * sizeof(T);
             s.next_out = out.data();
             s.avail_out = out.size();
@@ -157,7 +157,7 @@ void benchField(const Field& f, int runs, const std::vector<unsigned>& threads, 
             stream(s);
             s.next_in = data.data();
             s.avail_in = data.size();
-            s.next_out = reinterpret_cast<unsigned char*>(back.data());
+            s.next_out = reinterpret_cast<uint8_t*>(back.data());
             s.avail_out = n * sizeof(T);
             if (aec_buffer_decode(&s) != AEC_OK) {
                 fail(f.name + ": libaec decode");
@@ -205,13 +205,13 @@ void benchField(const Field& f, int runs, const std::vector<unsigned>& threads, 
     }
 }
 
-std::vector<unsigned> parseList(const std::string& s)
+std::vector<uint32_t> parseList(const std::string& s)
 {
-    std::vector<unsigned> list;
+    std::vector<uint32_t> list;
     size_t pos = 0;
     while (pos < s.size()) {
         const size_t end = s.find(',', pos);
-        list.push_back(static_cast<unsigned>(std::stoul(s.substr(pos, end - pos))));
+        list.push_back(static_cast<uint32_t>(std::stoul(s.substr(pos, end - pos))));
         pos = end == std::string::npos ? s.size() : end + 1;
     }
     return list;
@@ -221,10 +221,10 @@ std::vector<unsigned> parseList(const std::string& s)
 
 int main(int argc, char** argv)
 {
-    int runs = 5;
-    std::vector<unsigned> threads{ 1, 2, 4, 8, 16 };
+    int32_t runs = 5;
+    std::vector<uint32_t> threads{ 1, 2, 4, 8, 16 };
     std::vector<Field> fields;
-    for (int a = 1; a < argc; ++a) {
+    for (int32_t a = 1; a < argc; ++a) {
         const std::string arg = argv[a];
         if (arg == "--runs" && a + 1 < argc) {
             runs = std::max(1, std::stoi(argv[++a]));
@@ -242,7 +242,7 @@ int main(int argc, char** argv)
         }
     }
     if (fields.empty()) {
-        for (unsigned bits : { 9u, 12u, 16u, 24u }) {
+        for (uint32_t bits : { 9u, 12u, 16u, 24u }) {
             fields.push_back(syntheticField(bits));
         }
     }

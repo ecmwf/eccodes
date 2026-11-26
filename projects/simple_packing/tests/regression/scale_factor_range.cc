@@ -18,14 +18,14 @@
 
 using namespace sp::detail;
 
-static int failures = 0;
+static int32_t failures = 0;
 
 int main()
 {
-    std::vector<unsigned char> buffer(64, 0x11);
+    std::vector<uint8_t> buffer(64, 0x11);
     std::vector<double> values(16, 1.0);
 
-    for (int64_t sf : { int64_t(INT_MIN), int64_t(INT_MAX), INT64_C(32768), -INT64_C(32768), (INT64_C(1) << 32) + 3 }) {
+    for (int64_t sf : { int64_t(INT32_MIN), int64_t(INT32_MAX), INT64_C(32768), -INT64_C(32768), (INT64_C(1) << 32) + 3 }) {
         for (bool binary : { true, false }) {
             Parameters params;
             params.bitsPerValue(8);

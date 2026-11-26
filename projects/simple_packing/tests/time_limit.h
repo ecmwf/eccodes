@@ -8,6 +8,7 @@
 #pragma once
 
 #include <chrono>
+#include <cstdint>
 #include <cstdlib>
 #include <future>
 #include <iostream>
@@ -16,7 +17,7 @@
 #include <utility>
 
 template <typename F>
-auto runWithTimeLimit(const std::string& what, F&& f, int seconds = 5)
+auto runWithTimeLimit(const std::string& what, F&& f, int32_t seconds = 5)
 {
     using Result = decltype(f());
     std::packaged_task<Result()> task(std::forward<F>(f));

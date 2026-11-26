@@ -19,7 +19,7 @@ Compress compressAvx2();
 
 int main()
 {
-    int failures = 0;
+    int32_t failures = 0;
     const Compress own = &spaec::compress<uint16_t>;
     const Compress avx2 = compressAvx2();
     if (own == avx2) {
@@ -29,9 +29,9 @@ int main()
     if (__builtin_cpu_supports("avx2")) {
         std::mt19937 rng(1);
         std::vector<uint16_t> samples(10000);
-        int v = 2000;
+        int32_t v = 2000;
         for (auto& s : samples) {
-            v = std::max(0, std::min(4095, v + static_cast<int>(rng() % 31) - 15));
+            v = std::max(0, std::min(4095, v + static_cast<int32_t>(rng() % 31) - 15));
             s = static_cast<uint16_t>(v);
         }
         for (auto selector : { spaec::SplitSelector::Search, spaec::SplitSelector::Estimate }) {

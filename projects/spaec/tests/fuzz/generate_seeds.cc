@@ -109,10 +109,10 @@ int main(int argc, char** argv)
     // Zero-block runs of 5..10 blocks inside a segment (explicit run codewords)
     {
         std::vector<uint32_t> values;
-        for (int rep = 0; rep < 8; ++rep) {
-            for (int i = 0; i < 7 * 8; ++i)
+        for (int32_t rep = 0; rep < 8; ++rep) {
+            for (int32_t i = 0; i < 7 * 8; ++i)
                 values.push_back(0);
-            for (int i = 0; i < 8; ++i)
+            for (int32_t i = 0; i < 8; ++i)
                 values.push_back(200 + static_cast<uint32_t>(rep));
         }
         writeSeed(dir, "zero_runs", 8, 8, 4096, static_cast<uint16_t>(values.size()), 4, values);

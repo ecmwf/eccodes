@@ -26,8 +26,8 @@
 
 using namespace spaec::detail;
 
-static int failures = 0;
-static int cases = 0;
+static int32_t failures = 0;
+static int32_t cases = 0;
 
 // f() must throw an E whose message contains `message`
 template <typename E, typename F>
@@ -62,7 +62,7 @@ static void threadPool()
 static void codeOptions()
 {
     // Bits per value outside 1..32 (no check before: the classes are the first to see them)
-    for (unsigned bpv : { 0u, 33u }) {
+    for (uint32_t bpv : { 0u, 33u }) {
         const auto b = static_cast<uint8_t>(bpv);
         const std::string n = " bpv " + std::to_string(bpv);
         expect<IA>("CodeOptionBase restricted" + n, "Unsupported", [&] { CodeOptionBase(b, CodeOptionSet::Restricted); });

@@ -24,7 +24,7 @@
 
 #include "spaec/spaec.h"
 
-static int failures = 0;
+static int32_t failures = 0;
 
 static void check(bool ok, const std::string& what)
 {
@@ -37,11 +37,11 @@ static void check(bool ok, const std::string& what)
 using Base = spaec::detail::encoder::EncoderBase<uint32_t, uint32_t>;
 
 // The rule by its definition: the largest k with n * 128 * 2^k <= 128 * S + 49 * n
-static unsigned kielyK(uint64_t sum, uint64_t n)
+static uint32_t kielyK(uint64_t sum, uint64_t n)
 {
     // 128 * sum + 49 * n < 2^46 and (128 * n) << 41 <= 2^54: no overflow
     const uint64_t limit = 128 * sum + 49 * n;
-    unsigned k = 0;
+    uint32_t k = 0;
     while (k < 40 && ((128 * n) << (k + 1)) <= limit) {
         ++k;
     }
@@ -49,7 +49,7 @@ static unsigned kielyK(uint64_t sum, uint64_t n)
 }
 
 // The size in bits of the split-sample data of a block with parameter k (without the ID)
-static uint64_t splitBits(const std::vector<uint64_t>& block, unsigned k)
+static uint64_t splitBits(const std::vector<uint64_t>& block, uint32_t k)
 {
     uint64_t bits = block.size() * (k + 1);
     for (uint64_t x : block)
@@ -67,7 +67,7 @@ static void estimateRule()
             }
         }
         // The thresholds: k is reached exactly when mu + 49/128 >= 2^k
-        for (unsigned k = 1; k < 31; ++k) {
+        for (uint32_t k = 1; k < 31; ++k) {
             // smallest S with 128 * S + 49 * n >= n * 128 * 2^k
             const uint64_t s = (n * 128 * (uint64_t{ 1 } << k) - 49 * n + 127) / 128;
             check(Base::estimateK(s, n) == k && Base::estimateK(s - 1, n) == k - 1, "estimateK at the threshold of k = " + std::to_string(k) + ", n = " + std::to_string(n));
@@ -86,10 +86,10 @@ static void blockGuarantees()
 {
     std::mt19937_64 rng(7);
     int64_t blocks = 0;
-    for (int shape = 0; shape < 6; ++shape) {
+    for (int32_t shape = 0; shape < 6; ++shape) {
         for (double mean : { 0.1, 0.5, 1.0, 1.6, 3.0, 10.0, 100.0, 1e3, 1e5, 1e8 }) {
             for (size_t n : { 7, 8, 16, 31, 32, 64 }) {
-                for (int rep = 0; rep < 40; ++rep) {
+                for (int32_t rep = 0; rep < 40; ++rep) {
                     std::vector<uint64_t> block(n);
                     std::geometric_distribution<uint64_t> geo(1.0 / (mean + 1.0));
                     for (size_t i = 0; i < n; ++i) {
@@ -118,13 +118,13 @@ static void blockGuarantees()
                     uint64_t sum = 0;
                     for (uint64_t x : block)
                         sum += x;
-                    const unsigned k = Base::estimateK(sum, n);
+                    const uint32_t k = Base::estimateK(sum, n);
                     uint64_t best = UINT64_MAX;
-                    for (unsigned kk = 0; kk <= 40; ++kk)
+                    for (uint32_t kk = 0; kk <= 40; ++kk)
                         best = std::min(best, splitBits(block, kk));
                     // the nearest k of minimum size
-                    unsigned distance = 99;
-                    for (unsigned kk = 0; kk <= 40; ++kk) {
+                    uint32_t distance = 99;
+                    for (uint32_t kk = 0; kk <= 40; ++kk) {
                         if (splitBits(block, kk) == best) distance = std::min(distance, kk > k ? kk - k : k - kk);
                     }
                     ++blocks;
@@ -141,7 +141,7 @@ static void blockGuarantees()
 }
 
 template <typename Sample>
-static std::vector<Sample> samples(size_t count, unsigned bits, bool isSigned, int shape, unsigned seed)
+static std::vector<Sample> samples(size_t count, uint32_t bits, bool isSigned, int32_t shape, uint32_t seed)
 {
     std::mt19937_64 rng(seed);
     const int64_t lo = isSigned ? -(int64_t{ 1 } << (bits - 1)) : 0;
@@ -174,14 +174,14 @@ static std::vector<Sample> samples(size_t count, unsigned bits, bool isSigned, i
 
 // Compresses with both selectors: round trips, sizes, threads
 template <typename Sample>
-static void roundTrips(unsigned bits, bool isSigned)
+static void roundTrips(uint32_t bits, bool isSigned)
 {
-    for (unsigned blockSize : { 8u, 16u, 32u, 64u }) {
+    for (uint32_t blockSize : { 8u, 16u, 32u, 64u }) {
         for (auto pre : { spaec::Preprocessor::UnitDelay, spaec::Preprocessor::Bypass, spaec::Preprocessor::None }) {
             if (isSigned && pre == spaec::Preprocessor::None) continue;
             for (auto codes : { spaec::CodeOptions::Basic, spaec::CodeOptions::Restricted }) {
                 if (codes == spaec::CodeOptions::Restricted && bits >= 5 && bits <= 8) continue;  // does not exist
-                for (int shape = 0; shape < 5; ++shape) {
+                for (int32_t shape = 0; shape < 5; ++shape) {
                     spaec::Options options;
                     options.bitsPerSample = bits;
                     options.blockSize = blockSize;
@@ -272,17 +272,17 @@ int main()
 {
     estimateRule();
     blockGuarantees();
-    for (unsigned bits : { 1u, 2u, 3u, 4u, 5u, 7u, 8u }) {
+    for (uint32_t bits : { 1u, 2u, 3u, 4u, 5u, 7u, 8u }) {
         roundTrips<uint8_t>(bits, false);
     }
-    for (unsigned bits : { 2u, 4u, 8u }) {
+    for (uint32_t bits : { 2u, 4u, 8u }) {
         roundTrips<int8_t>(bits, true);
     }
-    for (unsigned bits : { 9u, 12u, 15u, 16u }) {
+    for (uint32_t bits : { 9u, 12u, 15u, 16u }) {
         roundTrips<uint16_t>(bits, false);
     }
     roundTrips<int16_t>(16, true);
-    for (unsigned bits : { 17u, 24u, 31u, 32u }) {
+    for (uint32_t bits : { 17u, 24u, 31u, 32u }) {
         roundTrips<uint32_t>(bits, false);
     }
     roundTrips<int32_t>(32, true);

@@ -20,7 +20,7 @@
 
 using namespace spaec::detail;
 
-static int failures = 0;
+static int32_t failures = 0;
 
 // Decodes n values of the stream and expects success with the given values
 static void expectValues(const char* what, Span<uint8_t> stream, size_t n, uint8_t bpv, uint8_t blockSize, uint16_t rsi,

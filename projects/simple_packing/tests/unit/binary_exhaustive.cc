@@ -21,7 +21,7 @@
 
 using namespace sp::detail;
 
-static int failures = 0;
+static int32_t failures = 0;
 
 static void check(bool ok, const std::string& what)
 {
@@ -30,13 +30,13 @@ static void check(bool ok, const std::string& what)
     }
 }
 
-static std::vector<unsigned char> referencePack(const std::vector<uint64_t>& coded, unsigned bpv)
+static std::vector<uint8_t> referencePack(const std::vector<uint64_t>& coded, uint32_t bpv)
 {
-    std::vector<unsigned char> out((coded.size() * bpv + 7) / 8, 0);
+    std::vector<uint8_t> out((coded.size() * bpv + 7) / 8, 0);
     size_t bit = 0;
     for (uint64_t c : coded) {
-        for (int b = static_cast<int>(bpv) - 1; b >= 0; --b, ++bit) {
-            if ((c >> b) & 1u) out[bit / 8] |= static_cast<unsigned char>(0x80u >> (bit % 8));
+        for (int32_t b = static_cast<int32_t>(bpv) - 1; b >= 0; --b, ++bit) {
+            if ((c >> b) & 1u) out[bit / 8] |= static_cast<uint8_t>(0x80u >> (bit % 8));
         }
     }
     return out;
@@ -45,11 +45,11 @@ static std::vector<unsigned char> referencePack(const std::vector<uint64_t>& cod
 static const size_t lengths[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 63, 64, 65, 255, 256, 257,
                                   511, 512, 513, 519, 520, 521, 1023, 1024, 1025, 1535, 1536, 1537 };
 
-template <typename T, unsigned BPV>
+template <typename T, uint32_t BPV>
 static void codec(std::mt19937_64& rng)
 {
-    const unsigned exactBits = BPV < 52 ? BPV : 52;
-    const unsigned shift = BPV - exactBits;
+    const uint32_t exactBits = BPV < 52 ? BPV : 52;
+    const uint32_t shift = BPV - exactBits;
     const uint64_t maxExact = ((uint64_t{ 1 } << exactBits) - 1) << shift;
     const std::string name = std::string(sizeof(T) == 4 ? "float" : "double") + " BPV " + std::to_string(BPV);
     Binary<T, BPV> binary;
@@ -75,8 +75,8 @@ static void codec(std::mt19937_64& rng)
         for (size_t i = 0; i < n; ++i)
             values[i] = static_cast<T>(coded[i]);  // reference 0, no scaling
 
-        const std::vector<unsigned char> expected = referencePack(coded, BPV);
-        std::vector<unsigned char> out(expected.size() + 16, 0xAB);
+        const std::vector<uint8_t> expected = referencePack(coded, BPV);
+        std::vector<uint8_t> out(expected.size() + 16, 0xAB);
         binary.packTo(values.data(), n, 0, 0, T(0), out.data());
         bool same = std::equal(expected.begin(), expected.end(), out.begin());
         bool after = true;
@@ -85,7 +85,7 @@ static void codec(std::mt19937_64& rng)
         check(same, name + ", " + std::to_string(n) + " values: packed bytes differ from the reference");
         check(after, name + ", " + std::to_string(n) + " values: bytes after the packed data were written");
 
-        std::vector<unsigned char> in = expected;
+        std::vector<uint8_t> in = expected;
         in.resize(expected.size() + 16, 0);  // the block decoder may read whole words
         std::vector<T> decoded(n + 1, T(-7));
         binary.unpackTo(in.data(), 0, 0, 0.0, n, decoded.data());

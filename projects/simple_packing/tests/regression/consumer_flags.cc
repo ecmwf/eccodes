@@ -7,6 +7,7 @@
 // A hang is a failure (TIMEOUT of the test).
 
 #include <iostream>
+#include <cstdint>
 #include <stdexcept>
 #include <vector>
 
@@ -22,7 +23,7 @@ int main()
         fp_diagnostics::explain();
         return 1;
     }
-    int failures = 0;
+    int32_t failures = 0;
 #ifdef __FAST_MATH__
     std::cerr << "FAIL: -ffast-math is in effect for code that uses simple_packing\n";
     ++failures;

@@ -15,9 +15,9 @@
 
 using namespace spaec::detail;
 
-static int testCount = 0;
-static int passCount = 0;
-static int failCount = 0;
+static int32_t testCount = 0;
+static int32_t passCount = 0;
+static int32_t failCount = 0;
 
 #define TEST(name)                           \
     do {                                     \
@@ -389,7 +389,7 @@ void testRandomRoundtrip()
     std::vector<Entry> entries;
 
     size_t pos = 0;
-    for (int i = 0; i < 500; ++i) {
+    for (int32_t i = 0; i < 500; ++i) {
         size_t nBits = (gen() % maxBits) + 1;
         T mask = (nBits == maxBits) ? static_cast<T>(~T(0))
                                     : static_cast<T>((T(1) << nBits) - 1);

@@ -23,13 +23,13 @@ void encode_decode(size_t nVals, size_t bpv)
     std::cerr << "Encoding and decoding " << nVals << " values with bpv = " << bpv << std::endl;
 
 
-    int last = 127; /* 'last' should be a parameter coming from a definitions file */
+    int32_t last = 127; /* 'last' should be a parameter coming from a definitions file */
     std::unique_ptr<Optimizer> optimizer = std::make_unique<DecOptimizer>(bpv, last);
 
     SP sp{ std::move(optimizer) };
     typename SP::Values original;
 
-    for (unsigned int i = 0; i < nVals; ++i) {
+    for (uint32_t i = 0; i < nVals; ++i) {
         original.push_back((i + 3) % 5);
     }
 
@@ -39,7 +39,7 @@ void encode_decode(size_t nVals, size_t bpv)
 
     assert(decoded.size() == original.size());
     auto failed = false;
-    for (unsigned int i = 0; i < original.size(); ++i) {
+    for (uint32_t i = 0; i < original.size(); ++i) {
         if (original[i] != decoded[i]) {
             failed = true;
             break;

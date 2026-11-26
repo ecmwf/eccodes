@@ -20,7 +20,7 @@
 
 using namespace spaec::detail;
 
-static int failures = 0;
+static int32_t failures = 0;
 
 static void expectError(const char* what, Span<uint8_t> stream, size_t nValues, uint8_t bpv, uint8_t blockSize, uint16_t rsi)
 {

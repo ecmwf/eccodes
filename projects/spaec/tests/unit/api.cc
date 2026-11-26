@@ -21,7 +21,7 @@
 
 #include "../fp_diagnostics.h"
 
-static int failures = 0;
+static int32_t failures = 0;
 
 static void check(bool ok, const std::string& what)
 {
@@ -48,7 +48,7 @@ static void expect(const std::string& what, const std::string& message, F&& f)
 
 // A smooth field with noise in the range of the samples
 template <typename Sample>
-static std::vector<Sample> field(size_t count, unsigned bits, bool isSigned, unsigned seed)
+static std::vector<Sample> field(size_t count, uint32_t bits, bool isSigned, uint32_t seed)
 {
     std::mt19937 rng(seed);
     const int64_t lo = isSigned ? -(int64_t{ 1 } << (bits - 1)) : 0;
@@ -65,12 +65,12 @@ static std::vector<Sample> field(size_t count, unsigned bits, bool isSigned, uns
 }
 
 template <typename Sample>
-static void roundTrip(unsigned bits, const spaec::Options& base, const std::string& what)
+static void roundTrip(uint32_t bits, const spaec::Options& base, const std::string& what)
 {
     spaec::Options options = base;
     options.bitsPerSample = bits;
     for (size_t count : { size_t{ 0 }, size_t{ 1 }, size_t{ 100 }, size_t{ 5000 } }) {
-        const auto samples = field<Sample>(count, bits, options.signedSamples, bits + static_cast<unsigned>(count));
+        const auto samples = field<Sample>(count, bits, options.signedSamples, bits + static_cast<uint32_t>(count));
         const std::vector<uint8_t> data = spaec::compress(samples, options);
         check(data.size() <= spaec::maxCompressedSize(count, options), what + ": larger than maxCompressedSize");
         check(spaec::decompress<Sample>(data, count, options) == samples, what + " count=" + std::to_string(count));

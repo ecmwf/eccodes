@@ -5,6 +5,7 @@
 // modulo 128, so x << 128 returned x.
 
 #include <iostream>
+#include <cstdint>
 
 #include "simple_packing/detail/U128.h"
 
@@ -12,8 +13,8 @@ using namespace sp::detail;
 
 int main()
 {
-    int failures = 0;
-    for (unsigned s : { 128u, 129u, 200u, 256u }) {
+    int32_t failures = 0;
+    for (uint32_t s : { 128u, 129u, 200u, 256u }) {
         if ((UInt128(1) << s) != UInt128(0, 0) || (UInt128(~0ULL, ~0ULL) >> s) != UInt128(0, 0)) {
             std::cerr << "FAIL: shift by " << s << " is not 0\n";
             failures++;

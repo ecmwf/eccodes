@@ -49,7 +49,7 @@
 
 using namespace spaec::detail;
 
-static int failures = 0;
+static int32_t failures = 0;
 static int64_t checks = 0;
 
 static void fail(const std::string& what)
@@ -64,9 +64,9 @@ static void fail(const std::string& what)
 
 struct Params
 {
-    unsigned n;       // bits per sample
-    unsigned J;       // block size
-    unsigned r;       // reference sample interval in blocks
+    uint32_t n;       // bits per sample
+    uint32_t J;       // block size
+    uint32_t r;       // reference sample interval in blocks
     bool restricted;  // restricted set of code options
     // 4: preprocessor with the unit-delay predictor (4.2.5), with the bypass predictor (4.2.3), or
     // none (4.1.1); samples are unsigned or n-bit two's complement (4.4)
@@ -96,8 +96,8 @@ struct Params
 // extension IDs are that many zeros and one more bit), and the largest k (-1: no FS, no split)
 struct IdTable
 {
-    unsigned len;
-    int kmax;
+    uint32_t len;
+    int32_t kmax;
 };
 
 static IdTable idTable(const Params& p)
@@ -113,10 +113,10 @@ static IdTable idTable(const Params& p)
     return { 5, 29 };
 }
 
-static std::string bitString(uint64_t v, unsigned len)
+static std::string bitString(uint64_t v, uint32_t len)
 {
     std::string s;
-    for (unsigned i = len; i-- > 0;)
+    for (uint32_t i = len; i-- > 0;)
         s += ((v >> i) & 1) ? '1' : '0';
     return s;
 }
@@ -124,7 +124,7 @@ static std::string bitString(uint64_t v, unsigned len)
 class BitWriter
 {
 public:
-    void bit(unsigned b)
+    void bit(uint32_t b)
     {
         if (nBits_ % 8 == 0)
             bytes_.push_back(0);
@@ -132,9 +132,9 @@ public:
             bytes_.back() |= static_cast<uint8_t>(0x80u >> (nBits_ % 8));
         ++nBits_;
     }
-    void bits(uint64_t v, unsigned len)
+    void bits(uint64_t v, uint32_t len)
     {
-        for (unsigned i = len; i-- > 0;)
+        for (uint32_t i = len; i-- > 0;)
             bit((v >> i) & 1);
     }
     void fs(uint64_t m)  // Table 3-1: m zeros and a one
@@ -154,18 +154,18 @@ class BitReader
 {
 public:
     explicit BitReader(const std::vector<uint8_t>& b) : b_(b) {}
-    unsigned bit()
+    uint32_t bit()
     {
         if (pos_ >= b_.size() * 8)
             throw std::runtime_error("reference decoder: end of the stream");
-        const unsigned v = (b_[pos_ / 8] >> (7 - pos_ % 8)) & 1;
+        const uint32_t v = (b_[pos_ / 8] >> (7 - pos_ % 8)) & 1;
         ++pos_;
         return v;
     }
-    uint64_t bits(unsigned len)
+    uint64_t bits(uint32_t len)
     {
         uint64_t v = 0;
-        for (unsigned i = 0; i < len; ++i)
+        for (uint32_t i = 0; i < len; ++i)
             v = (v << 1) | bit();
         return v;
     }
@@ -251,7 +251,7 @@ static uint64_t postprocess(const Params& p, uint64_t delta, uint64_t previous)
 struct Cds
 {
     char kind;                     // 'Z' zero block, 'E' second extension, 'S' split sample (k), 'N' no compression
-    int k = 0;                     // split sample: k (0 is FS)
+    int32_t k = 0;                     // split sample: k (0 is FS)
     uint64_t blocks = 1;           // zero block: number of blocks
     bool ros = false;              // zero block: remainder-of-segment codeword
     bool ref = false;              // with reference sample
@@ -310,7 +310,7 @@ static OptionLengths optionLengths(const Params& p, const std::vector<uint64_t>&
     l.se = t.len + 1 + refBits;
     for (size_t i = 0; i < p.J; i += 2)
         l.se = satAdd(l.se, satAdd(gammaOf(i == 0 && ref ? 0 : d[i], d[i + 1]), 1));  // 3.4.1: delta1 = 0 with reference
-    for (int k = 0; k <= t.kmax; ++k) {
+    for (int32_t k = 0; k <= t.kmax; ++k) {
         uint64_t len = t.len + refBits;
         for (size_t i = first; i < p.J; ++i)
             len += (d[i] >> k) + 1 + k;
@@ -319,7 +319,7 @@ static OptionLengths optionLengths(const Params& p, const std::vector<uint64_t>&
     return l;
 }
 
-static void writeBlock(BitWriter& w, const Params& p, const std::vector<uint64_t>& d, bool ref, uint64_t reference, char kind, int k)
+static void writeBlock(BitWriter& w, const Params& p, const std::vector<uint64_t>& d, bool ref, uint64_t reference, char kind, int32_t k)
 {
     const IdTable t = idTable(p);
     const size_t first = ref ? 1 : 0;
@@ -345,7 +345,7 @@ static void writeBlock(BitWriter& w, const Params& p, const std::vector<uint64_t
         for (size_t i = first; i < p.J; ++i)
             w.fs(d[i] >> k);
         for (size_t i = first; i < p.J; ++i)
-            w.bits(d[i] & ((uint64_t{ 1 } << k) - 1), static_cast<unsigned>(k));
+            w.bits(d[i] & ((uint64_t{ 1 } << k) - 1), static_cast<uint32_t>(k));
     }
 }
 
@@ -391,19 +391,19 @@ static std::vector<uint8_t> refEncode(const std::vector<uint64_t>& x, const Para
                 const std::vector<uint64_t> bd = blockDeltas(b);
                 const OptionLengths l = optionLengths(p, bd, ref);
                 char kind = 'N';
-                int k = 0;
+                int32_t k = 0;
                 if (policy == Policy::SecondExtension) {
                     kind = 'E';
                 }
                 else if (policy == Policy::Random) {
                     // Any option of reasonable length (FS codewords of up to a few times the
                     // no-compression length)
-                    std::vector<std::pair<char, int>> options{ { 'N', 0 } };
+                    std::vector<std::pair<char, int32_t>> options{ { 'N', 0 } };
                     if (l.se <= 4 * l.nc + 64)
                         options.push_back({ 'E', 0 });
                     for (size_t kk = 0; kk < l.ss.size(); ++kk)
                         if (l.ss[kk] <= 4 * l.nc + 64)
-                            options.push_back({ 'S', static_cast<int>(kk) });
+                            options.push_back({ 'S', static_cast<int32_t>(kk) });
                     const auto o = options[rng() % options.size()];
                     kind = o.first;
                     k = o.second;
@@ -418,7 +418,7 @@ static std::vector<uint8_t> refEncode(const std::vector<uint64_t>& x, const Para
                         if (l.ss[kk] < best) {
                             best = l.ss[kk];
                             kind = 'S';
-                            k = static_cast<int>(kk);
+                            k = static_cast<int32_t>(kk);
                         }
                 }
                 writeBlock(w, p, bd, ref, reference, kind, k);
@@ -452,7 +452,7 @@ static std::vector<uint64_t> refDecode(const std::vector<uint8_t>& stream, size_
                 c.segLen = segLen;
                 const uint64_t id = in.bits(t.len);
                 if (id == 0) {
-                    const unsigned extra = in.bit();
+                    const uint32_t extra = in.bit();
                     if (ref)
                         reference = in.bits(p.n);
                     if (extra == 0) {
@@ -492,7 +492,7 @@ static std::vector<uint64_t> refDecode(const std::vector<uint8_t>& stream, size_
                 }
                 else {
                     c.kind = 'S';
-                    c.k = static_cast<int>(id) - 1;
+                    c.k = static_cast<int32_t>(id) - 1;
                     if (c.k > t.kmax)
                         throw std::runtime_error("reference decoder: invalid option ID");
                     if (ref)
@@ -500,7 +500,7 @@ static std::vector<uint64_t> refDecode(const std::vector<uint8_t>& stream, size_
                     for (size_t i = ref ? 1 : 0; i < p.J; ++i)
                         d[b * p.J + i] = in.fs() << c.k;
                     for (size_t i = ref ? 1 : 0; i < p.J; ++i)
-                        d[b * p.J + i] |= in.bits(static_cast<unsigned>(c.k));
+                        d[b * p.J + i] |= in.bits(static_cast<uint32_t>(c.k));
                 }
                 if (c.kind != 'Z') {
                     c.deltas.assign(d.begin() + b * p.J, d.begin() + (b + 1) * p.J);
@@ -575,13 +575,13 @@ static void idTables()
                                                                         : p.n <= 8                     ? 2
                                                                         : p.n <= 16                    ? 3
                                                                                                        : 4; };
-    for (unsigned n = 1; n <= 32; ++n) {
+    for (uint32_t n = 1; n <= 32; ++n) {
         for (bool restricted : { false, true }) {
             if (restricted && n > 8)
                 continue;
             const Params p{ n, 16, 1, restricted };
             const IdTable t = idTable(p);
-            const int col = column(p);
+            const int32_t col = column(p);
             for (const Row& row : rows) {
                 const std::string option = row.option;
                 std::string ref;  // the ID of the reference implementation
@@ -592,7 +592,7 @@ static void idTables()
                 else if (option == "NC")
                     ref = bitString((uint64_t{ 1 } << t.len) - 1, t.len);
                 else {
-                    const int k = std::stoi(option.substr(1));
+                    const int32_t k = std::stoi(option.substr(1));
                     ref = k <= t.kmax ? bitString(static_cast<uint64_t>(k) + 1, t.len) : "";
                 }
                 ++checks;
@@ -602,7 +602,7 @@ static void idTables()
             // SpAec's code options
             const auto cos = restricted ? CodeOptionSet::Restricted : CodeOptionSet::Basic;
             const auto n8 = static_cast<uint8_t>(n);
-            auto id = [](uint64_t value, unsigned len) { return bitString(value, len); };
+            auto id = [](uint64_t value, uint32_t len) { return bitString(value, len); };
             try {
                 ZeroBlockCodeOption zb(n8, cos);
                 SecondExtensionCodeOption se(n8, cos);
@@ -614,7 +614,7 @@ static void idTables()
                     fail("second-extension ID " + p.str());
                 if (id(nc.value, nc.length) != bitString((uint64_t{ 1 } << t.len) - 1, t.len))
                     fail("no-compression ID " + p.str());
-                for (int k = 0; k <= t.kmax; ++k) {
+                for (int32_t k = 0; k <= t.kmax; ++k) {
                     SplitSampleCodeOption ss(n8, static_cast<uint8_t>(k), cos);
                     ++checks;
                     if (id(ss.value, ss.length) != bitString(static_cast<uint64_t>(k) + 1, t.len))
@@ -681,11 +681,11 @@ static bool verify(const std::vector<uint8_t>& stream, const std::vector<uint64_
         // the smallest k
         const OptionLengths l = optionLengths(p, c.deltas, c.ref);
         uint64_t best = std::min<uint64_t>(l.nc, l.se);
-        int bestK = -1;
+        int32_t bestK = -1;
         for (size_t k = 0; k < l.ss.size(); ++k)
             if (l.ss[k] < best) {
                 best = l.ss[k];
-                bestK = static_cast<int>(k);
+                bestK = static_cast<int32_t>(k);
             }
         if (c.bits != best) {
             fail(what + ": CDS " + std::to_string(i) + " (" + c.kind + ") has " + std::to_string(c.bits) + " bits, the shortest option " +
@@ -792,13 +792,13 @@ static void encodeAndDecode(const std::vector<uint64_t>& x, const Params& p, std
 // to wrapped values. A second-extension symbol of 2^n or more is valid if its pair is in range.
 static void outOfRangeSamples()
 {
-    const unsigned n = 8, J = 8;
+    const uint32_t n = 8, J = 8;
     const Params p{ n, J, 2, false };  // two blocks: a reference block (no compression), the test block
     struct Case
     {
         const char* what;
         char kind;
-        int k;
+        int32_t k;
         std::vector<uint64_t> deltas;
         bool valid;
     };
@@ -844,7 +844,7 @@ static void outOfRangeSamples()
 static void largeGamma()
 {
     std::mt19937_64 rng(3);
-    for (unsigned n : { 16u, 32u }) {
+    for (uint32_t n : { 16u, 32u }) {
         for (uint64_t sum : { 2046u, 2047u, 2048u, 2049u, 4000u, 5791u }) {
             for (uint64_t b : { uint64_t{ 0 }, uint64_t{ 1 }, sum / 2, sum }) {
                 // Samples whose deltas are (ref, 0 | a, b | 0, 0 | 0, 1) with a + b = sum
@@ -892,12 +892,12 @@ static void largeGamma()
 // Test fields: noise of a given number of bits, runs of constant values (zero blocks, also across
 // segment and RSI boundaries), extreme values (the mapper's theta branch), small differences
 // (ties between options)
-static std::vector<uint64_t> field(const Params& p, size_t N, int kind, std::mt19937_64& rng)
+static std::vector<uint64_t> field(const Params& p, size_t N, int32_t kind, std::mt19937_64& rng)
 {
     const uint64_t xmax = p.xmax();
     std::vector<uint64_t> x(N);
     uint64_t v = rng() & xmax;
-    const unsigned noiseBits = static_cast<unsigned>(rng() % (p.n + 1));
+    const uint32_t noiseBits = static_cast<uint32_t>(rng() % (p.n + 1));
     for (size_t i = 0; i < N; ++i) {
         switch (kind) {
             case 0:  // random walk with noise of noiseBits bits
@@ -919,7 +919,7 @@ static std::vector<uint64_t> field(const Params& p, size_t N, int kind, std::mt1
             {
                 const uint64_t e = std::min<uint64_t>(rng() & 3, xmax);
                 const uint64_t half = (xmax >> 1) + 1;  // pattern of -2^(n-1)
-                const unsigned c = static_cast<unsigned>(rng() % (p.signedSamples ? 4 : 2));
+                const uint32_t c = static_cast<uint32_t>(rng() % (p.signedSamples ? 4 : 2));
                 v = c == 0 ? e : c == 1 ? xmax - e
                            : c == 2     ? std::min(xmax, half + e)
                                         : half - 1 - std::min(e, half - 1);
@@ -938,10 +938,10 @@ static std::vector<uint64_t> field(const Params& p, size_t N, int kind, std::mt1
 }
 
 template <typename T>
-static void streams(const Params& p, std::mt19937_64& rng, int64_t& kTies, int nFields)
+static void streams(const Params& p, std::mt19937_64& rng, int64_t& kTies, int32_t nFields)
 {
     const size_t rsiSamples = size_t{ p.r } * p.J;
-    for (int f = 0; f < nFields; ++f) {
+    for (int32_t f = 0; f < nFields; ++f) {
         // Lengths: empty, one sample, partial blocks, partial RSIs, several segments and RSIs
         size_t N;
         switch (f % 6) {
@@ -958,7 +958,7 @@ static void streams(const Params& p, std::mt19937_64& rng, int64_t& kTies, int n
                 N = 1 + rng() % std::min<size_t>(3 * rsiSamples + 2 * p.J, 6000);
                 break;
         }
-        const int kind = static_cast<int>(rng() % 5);
+        const int32_t kind = static_cast<int32_t>(rng() % 5);
         encodeAndDecode<T>(field(p, N, kind, rng), p, rng, kTies, "field " + std::to_string(kind));
     }
 }
@@ -972,19 +972,19 @@ int main()
 
     std::mt19937_64 rng(121);
     int64_t kTies = 0;
-    const unsigned blockSizes[] = { 8, 16, 32, 64 };
+    const uint32_t blockSizes[] = { 8, 16, 32, 64 };
     // The preprocessing (4): the unit-delay predictor, the bypass predictor and no preprocessor,
     // for unsigned and signed samples (signed samples need a preprocessor, 6.3.3.5.2)
     const std::pair<Prediction, bool> preprocessings[] = { { Prediction::UnitDelay, false }, { Prediction::UnitDelay, true }, { Prediction::Bypass, false }, { Prediction::Bypass, true }, { Prediction::None, false } };
     for (const auto& pre : preprocessings) {
-        for (unsigned n = 1; n <= 32; ++n) {
-            for (unsigned J : blockSizes) {
-                for (unsigned r : { 1u, 2u, 3u, 7u, 64u, 65u, 100u, 128u }) {
+        for (uint32_t n = 1; n <= 32; ++n) {
+            for (uint32_t J : blockSizes) {
+                for (uint32_t r : { 1u, 2u, 3u, 7u, 64u, 65u, 100u, 128u }) {
                     for (bool restricted : { false, true }) {
                         if (restricted && n > 8)
                             continue;
                         // Fewer fields for the long RSIs and the large block sizes
-                        const int nFields = (r >= 64 ? 2 : 6) + (J <= 16 ? 2 : 0);
+                        const int32_t nFields = (r >= 64 ? 2 : 6) + (J <= 16 ? 2 : 0);
                         const Params p{ n, J, r, restricted, pre.first, pre.second };
                         if (n <= 8)
                             streams<uint8_t>(p, rng, kTies, nFields);
@@ -997,7 +997,7 @@ int main()
             }
         }
         // The largest reference sample interval (4.3)
-        for (unsigned J : blockSizes) {
+        for (uint32_t J : blockSizes) {
             const Params p{ 12, J, 4096, false, pre.first, pre.second };
             encodeAndDecode<uint16_t>(field(p, size_t{ 4096 } * J + 5, 2, rng), p, rng, kTies, "r=4096");
         }

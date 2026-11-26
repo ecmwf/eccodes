@@ -88,9 +88,9 @@ public:
             return Result{ 0, UINT64_MAX, sum };
         }
 
-        const unsigned k0 = splitK_;
-        const unsigned kUp = k0 < kMax ? k0 + 1 : k0;
-        const unsigned kDown = k0 > 0 ? k0 - 1 : k0;
+        const uint32_t k0 = splitK_;
+        const uint32_t kUp = k0 < kMax ? k0 + 1 : k0;
+        const uint32_t kDown = k0 > 0 ? k0 - 1 : k0;
         uint64_t sum = 0, fsAt = 0, fsUp = 0, fsDown = 0;
         bool summed = false;
 #if defined(__AVX2__)
@@ -134,7 +134,7 @@ public:
             }
         }
 
-        auto fsLength = [&](unsigned k) {
+        auto fsLength = [&](uint32_t k) {
             if (k == k0) return fsAt;
             if (k == kUp) return fsUp;
             if (k == kDown) return fsDown;
@@ -146,8 +146,8 @@ public:
         };
 
         uint64_t lenMin = UINT64_MAX;
-        unsigned k = k0;
-        unsigned kBest = k;
+        uint32_t k = k0;
+        uint32_t kBest = k;
         bool noTurn = (k == 0);  // do not reverse the direction
         bool up = true;
         for (;;) {
@@ -206,14 +206,14 @@ public:
     // size and the block at most 1/2 bit per sample (and about 13 %) larger (IV.C); for geometric
     // samples at most 0.04 bit per sample (0.6 %). In integers, without divisions:
     // n * 128 * 2^k <= 128 * S + 49 * n. S < 2^38 (64 samples of 32 bits): no overflow.
-    static unsigned estimateK(uint64_t sum, uint64_t n)
+    static uint32_t estimateK(uint64_t sum, uint64_t n)
     {
         const uint64_t limit = (sum << 7) + 49 * n;
         const uint64_t unit = n << 7;
         if (limit < unit) {
             return 0;
         }
-        unsigned k = static_cast<unsigned>(countlZero(unit) - countlZero(limit));
+        uint32_t k = static_cast<uint32_t>(countlZero(unit) - countlZero(limit));
         if ((unit << k) > limit) {
             --k;
         }
@@ -252,7 +252,7 @@ public:
         if (!limits_.available_) {
             return Selection{ 0, UINT64_MAX, sum };
         }
-        const unsigned k = std::min<unsigned>(estimateK(sum, n), static_cast<unsigned>(kMax));
+        const uint32_t k = std::min<uint32_t>(estimateK(sum, n), static_cast<uint32_t>(kMax));
         const uint64_t fs = k == 0 ? sum : blockShiftedSum<J>(block, k, bpv_) - (startIndex ? static_cast<uint64_t>(block[0] >> k) : 0);
         uint64_t fixedOverhead = ssId_.length;
         if constexpr (RType == ReferenceType::Ref) {

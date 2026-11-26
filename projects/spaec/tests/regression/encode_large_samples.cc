@@ -16,7 +16,7 @@
 using namespace spaec::detail;
 
 template <typename T>
-static int check(unsigned bpv, unsigned blockSize, unsigned rsi, size_t n)
+static int32_t check(uint32_t bpv, uint32_t blockSize, uint32_t rsi, size_t n)
 {
     const uint64_t maxValue = (uint64_t{ 1 } << bpv) - 1;
     std::vector<T> values(n);
@@ -54,10 +54,10 @@ static int check(unsigned bpv, unsigned blockSize, unsigned rsi, size_t n)
 
 int main()
 {
-    int failures = 0;
-    for (unsigned bpv : { 24u, 25u, 28u, 31u, 32u }) {
-        for (unsigned blockSize : { 8u, 16u, 32u, 64u }) {
-            for (unsigned rsi : { 1u, 64u, 255u }) {
+    int32_t failures = 0;
+    for (uint32_t bpv : { 24u, 25u, 28u, 31u, 32u }) {
+        for (uint32_t blockSize : { 8u, 16u, 32u, 64u }) {
+            for (uint32_t rsi : { 1u, 64u, 255u }) {
                 failures += check<uint32_t>(bpv, blockSize, rsi, 5435);
             }
         }

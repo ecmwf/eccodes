@@ -31,7 +31,7 @@ class SimplePackingBinary : public SimplePacking<T>
 public:
     using ValueType = T;
     using Values = std::vector<ValueType>;
-    using Buffer = std::vector<unsigned char>;
+    using Buffer = std::vector<uint8_t>;
 
     SimplePackingBinary(std::unique_ptr<Optimizer> optimizer) : SimplePacking<T>(std::move(optimizer)) {}
     ~SimplePackingBinary() = default;
@@ -44,9 +44,9 @@ public:
     //
     // packTo()   writes ceil(bitsPerValue * nVals / 8) bytes into 'out'
     // unpackTo() writes nVals elements into 'out'
-    void packTo(const Parameters& params, const ValueType* values, size_t nVals, unsigned char* out);
+    void packTo(const Parameters& params, const ValueType* values, size_t nVals, uint8_t* out);
     // 'buffer' holds 'bufferSize' bytes; std::invalid_argument is thrown if that is too short for nVals values
-    void unpackTo(const Parameters& params, const unsigned char* buffer, size_t bufferSize, size_t nVals, ValueType* out);
+    void unpackTo(const Parameters& params, const uint8_t* buffer, size_t bufferSize, size_t nVals, ValueType* out);
 
 
 private:
@@ -113,7 +113,7 @@ typename SimplePackingBinary<ValueType>::Values SimplePackingBinary<ValueType>::
 
 
 template <typename ValueType>
-void SimplePackingBinary<ValueType>::packTo(const Parameters& params, const ValueType* values, size_t nVals, unsigned char* out)
+void SimplePackingBinary<ValueType>::packTo(const Parameters& params, const ValueType* values, size_t nVals, uint8_t* out)
 {
     if (params.isConstantField() || params.bitsPerValue() == 0) {
         return;
@@ -123,7 +123,7 @@ void SimplePackingBinary<ValueType>::packTo(const Parameters& params, const Valu
 
 
 template <typename ValueType>
-void SimplePackingBinary<ValueType>::unpackTo(const Parameters& params, const unsigned char* buf, size_t bufferSize, size_t nVals, ValueType* out)
+void SimplePackingBinary<ValueType>::unpackTo(const Parameters& params, const uint8_t* buf, size_t bufferSize, size_t nVals, ValueType* out)
 {
     // Constant field: no packed data
     if (params.isConstantField() || params.bitsPerValue() == 0) {

@@ -20,7 +20,7 @@ using namespace spaec::detail;
 int main()
 {
     try {
-        int failures = 0;
+        int32_t failures = 0;
 
         const size_t n = 1024;
         std::vector<double> data(n);

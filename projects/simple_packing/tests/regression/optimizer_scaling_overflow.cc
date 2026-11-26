@@ -9,6 +9,7 @@
 // range that cannot be scaled.
 
 #include <exception>
+#include <cstdint>
 #include <iostream>
 #include <string>
 
@@ -19,7 +20,7 @@
 
 using namespace sp::detail;
 
-static int failures = 0;
+static int32_t failures = 0;
 
 // Runs f with a time limit of 5 seconds: it must throw an error about the unscaled range
 template <typename F>

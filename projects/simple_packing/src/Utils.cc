@@ -216,7 +216,7 @@ const IbmTable& ibm_table()
 {
     static const IbmTable table = [] {
         IbmTable t{};
-        for (int i = 0; i < 128; ++i) {
+        for (int32_t i = 0; i < 128; ++i) {
             t.e[i] = std::ldexp(1.0, 4 * (i - 70));
             t.v[i] = t.e[i] * 0x100000;
         }
@@ -321,7 +321,7 @@ std::optional<double> nearest_smaller_ibm_float(double a)
 
 std::optional<int64_t> number_of_bits(uint64_t x)
 {
-    const int count = sizeof(nbits_table) / sizeof(nbits_table[0]);
+    const int64_t count = sizeof(nbits_table) / sizeof(nbits_table[0]);
     const uint64_t* n = nbits_table;
     int64_t result = 0;
     while (x >= *n) {

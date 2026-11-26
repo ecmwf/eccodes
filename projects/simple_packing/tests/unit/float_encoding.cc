@@ -18,7 +18,7 @@
 
 #include "simple_packing/simple_packing.h"
 
-static int failures = 0;
+static int32_t failures = 0;
 static int64_t cases = 0;
 
 static void check(bool ok, const std::string& what)
@@ -62,9 +62,9 @@ static void sameCodes(const std::vector<float>& values, const sp::Scaling& s, co
 // A scaling with all the fields set
 struct Conf
 {
-    int decimalScaleFactor;
-    int binaryScaleFactor;
-    int bitsPerValue;
+    int32_t decimalScaleFactor;
+    int32_t binaryScaleFactor;
+    int32_t bitsPerValue;
     double referenceValue;
 };
 
@@ -143,9 +143,9 @@ int main()
     // The scalings of the brief: decimal scale factors != 0 (D = -2, 1, 3), binary scale factors
     // below and above zero, and 1 to 32 (and 63) bits per value
     std::vector<Conf> confs;
-    for (int D : { -2, 0, 1, 3 }) {
-        for (int E : { -17, -8, 0, 5, 12 }) {
-            for (int bpv : { 1, 4, 8, 16, 24, 31, 32, 48, 63 }) {
+    for (int32_t D : { -2, 0, 1, 3 }) {
+        for (int32_t E : { -17, -8, 0, 5, 12 }) {
+            for (int32_t bpv : { 1, 4, 8, 16, 24, 31, 32, 48, 63 }) {
                 confs.push_back(Conf{ D, E, bpv, 100000.0 });
             }
         }
@@ -169,7 +169,7 @@ int main()
         for (size_t i = 0; i < field.size(); ++i) {
             field[i] = static_cast<float>(280.0 - static_cast<double>(rng() % 60000) / 100.0);
         }
-        for (int bits : { 8, 16, 24 }) {
+        for (int32_t bits : { 8, 16, 24 }) {
             const sp::Scaling s = sp::scaling(field, sp::Method::bits(bits));
             sameCodes(field, s, "sp::scaling, " + std::to_string(bits) + " bits");
             const sp::Scaling sd = sp::scaling(field, sp::Method::bestPrecision(bits));

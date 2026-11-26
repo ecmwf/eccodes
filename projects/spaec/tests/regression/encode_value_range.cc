@@ -25,7 +25,7 @@ using namespace spaec::detail;
 int main()
 {
     try {
-        int failures = 0;
+        int32_t failures = 0;
 
         // 8 bits, reference 0, no scaling: values must be in [0, 255]
         encoder::SpAec<double> spaec{ 8, 32, 64, CodeOptionSet::Basic, 0.0 };

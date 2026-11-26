@@ -29,8 +29,8 @@ int main()
 
         // Buffers at every offset from an aligned address
         for (size_t offset = 0; offset < 8; ++offset) {
-            std::vector<unsigned char> storage(offset + (bpv * n + 7) / 8 + 16);
-            unsigned char* buffer = storage.data() + offset;
+            std::vector<uint8_t> storage(offset + (bpv * n + 7) / 8 + 16);
+            uint8_t* buffer = storage.data() + offset;
             sp.packTo(params, values.data(), n, buffer);
             std::vector<double> decoded(n);
             sp.unpackTo(params, buffer, storage.size() - offset, n, decoded.data());

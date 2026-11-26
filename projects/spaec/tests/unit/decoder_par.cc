@@ -19,7 +19,7 @@
 
 using namespace spaec::detail;
 
-static int failures = 0;
+static int32_t failures = 0;
 
 static void check(bool ok, const std::string& what)
 {
@@ -63,7 +63,7 @@ static void threadPool()
 {
     ThreadPool pool(2);
     auto ok = pool.enqueue([] { return 42; });
-    auto bad = pool.enqueue([]() -> int { throw std::runtime_error("task failed"); });
+    auto bad = pool.enqueue([]() -> int32_t { throw std::runtime_error("task failed"); });
     check(ok.get() == 42, "ThreadPool: result of a task");
     bool thrown = false;
     try {

@@ -27,12 +27,12 @@ int main()
         {
             uint8_t bpv;
             float reference;
-            int binaryScale;
-            int decimalScale;
+            int32_t binaryScale;
+            int32_t decimalScale;
         };
         // From ecCodes messages whose float values were wrong, plus wider ranges
         const Case cases[] = { { 30, -1040.0f, -19, -1 }, { 28, -35589.6f, -12, 0 }, { 32, -9.99999f, -27, -2 }, { 32, -3.0e6f, -8, 3 }, { 25, 12.5f, -20, 1 }, { 16, -100.0f, -4, 2 } };
-        const unsigned seed = std::random_device{}();
+        const uint32_t seed = std::random_device{}();
         std::mt19937 rng(seed);
         size_t failures = 0;
         for (const Case& c : cases) {
@@ -58,7 +58,7 @@ int main()
                     const float expected = static_cast<float>(exact);
                     if (decoded[i] != expected) {
                         if (++failures <= 5) {
-                            std::cerr << std::setprecision(9) << "FAIL bpv=" << int(c.bpv) << " threads=" << int(threads) << " index " << i << ": decoded "
+                            std::cerr << std::setprecision(9) << "FAIL bpv=" << int32_t(c.bpv) << " threads=" << int32_t(threads) << " index " << i << ": decoded "
                                       << decoded[i] << ", expected " << expected << " (exact " << exact << ")\n";
                         }
                     }

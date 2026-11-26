@@ -30,7 +30,7 @@ int main()
     std::FILE* capture = std::tmpfile();
     (void)std::fflush(stdout);
     (void)std::fflush(stderr);
-    const int savedOut = dup(1), savedErr = dup(2);
+    const int32_t savedOut = dup(1), savedErr = dup(2);
     dup2(fileno(capture), 1);
     dup2(fileno(capture), 2);
 

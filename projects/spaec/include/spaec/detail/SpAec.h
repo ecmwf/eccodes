@@ -31,7 +31,7 @@ inline namespace SPAEC_ISA
 {
 
 template <typename T>
-T grib_power(int s, int n)
+T grib_power(int32_t s, int32_t n)
 {
     T divisor = 1.0;
     if (s == 0) return static_cast<T>(1.0);
@@ -63,7 +63,7 @@ public:
     class SimpleMapper
     {
     public:
-        SimpleMapper(double referenceValue, int binaryScaleFactor, int decimalScaleFactor) :
+        SimpleMapper(double referenceValue, int32_t binaryScaleFactor, int32_t decimalScaleFactor) :
             referenceValue_(referenceValue),
             decimal_{ grib_power<double>(decimalScaleFactor, 10) },
             binary_{ grib_power<double>(-binaryScaleFactor, 2) }
@@ -100,7 +100,7 @@ public:
         // Like legacy ecCodes: the powers are computed in ValueType, the scaling in double, and
         // the result is rounded to ValueType once. Scaling in float would lose the low bits of
         // samples with more than 24 bits and cancel catastrophically near zero.
-        SimpleUnmapper(double referenceValue, int binaryScaleFactor, int decimalScaleFactor) :
+        SimpleUnmapper(double referenceValue, int32_t binaryScaleFactor, int32_t decimalScaleFactor) :
             referenceValue_(referenceValue),
             bscale_{ grib_power<ValueType>(binaryScaleFactor, 2) },
             dscale_{ grib_power<ValueType>(-decimalScaleFactor, 10) }
@@ -121,7 +121,7 @@ public:
 
 public:
     // prediction: the preprocessing of the coded integers (CCSDS 121.0-B-3, 4); they are unsigned
-    SpAec(uint8_t bpv, uint8_t blockSize, uint16_t rsiSize, CodeOptionSet codeOptionSet, double referenceValue, int binaryScaleFactor = 0, int decimalScaleFactor = 0, uint8_t nThreads = 1,
+    SpAec(uint8_t bpv, uint8_t blockSize, uint16_t rsiSize, CodeOptionSet codeOptionSet, double referenceValue, int32_t binaryScaleFactor = 0, int32_t decimalScaleFactor = 0, uint8_t nThreads = 1,
           Prediction prediction = Prediction::UnitDelay, SplitSelector selector = SplitSelector::Search) :
         bpv_(bpv),
         blockSize_(blockSize),
@@ -337,15 +337,15 @@ private:
     }
 
 private:
-    static constexpr int maxScaleFactor = 32767;
+    static constexpr int32_t maxScaleFactor = 32767;
 
     uint8_t bpv_;
     uint8_t blockSize_;
     uint16_t rsiSize_;
     uint8_t nThreads_ = 1;
     double referenceValue_;  // a double for every value type (not rounded for float values)
-    int binaryScaleFactor_;
-    int decimalScaleFactor_;
+    int32_t binaryScaleFactor_;
+    int32_t decimalScaleFactor_;
     CodeOptionSet codeOptionSet_;
     Preprocessing preprocessing_;
     SplitSelector selector_;

@@ -29,20 +29,20 @@ class BinaryInterface
 
 public:
     using Values = std::vector<ValueType>;
-    using Buffer = std::vector<unsigned char>;
+    using Buffer = std::vector<uint8_t>;
 
     virtual ~BinaryInterface() = default;
 
     // The reference value is a double for every value type: the encoding computes in double
     // (like the decoding), so pack<float>(v) gives the codes of pack<double>((double)v)
-    virtual Buffer pack(const Values& values, int decimalScaleFactor, int binaryScaleFactor, double referenceValue, ValueType min, ValueType max) = 0;
-    virtual Values unpack(const Buffer& codedBuf, int decimalScaleFactor, int binaryScaleFactor, double referenceValue, size_t nVals) = 0;
+    virtual Buffer pack(const Values& values, int32_t decimalScaleFactor, int32_t binaryScaleFactor, double referenceValue, ValueType min, ValueType max) = 0;
+    virtual Values unpack(const Buffer& codedBuf, int32_t decimalScaleFactor, int32_t binaryScaleFactor, double referenceValue, size_t nVals) = 0;
 
     // Zero-copy variants: read from / write into caller-owned memory.
     // 'out' must hold at least (BPV * nVals + 7) / 8 bytes (packTo) or
     // nVals elements (unpackTo).
-    virtual void packTo(const ValueType* values, size_t nVals, int decimalScaleFactor, int binaryScaleFactor, double referenceValue, unsigned char* out) = 0;
-    virtual void unpackTo(const unsigned char* codedBuf, int decimalScaleFactor, int binaryScaleFactor, double referenceValue, size_t nVals, ValueType* out) = 0;
+    virtual void packTo(const ValueType* values, size_t nVals, int32_t decimalScaleFactor, int32_t binaryScaleFactor, double referenceValue, uint8_t* out) = 0;
+    virtual void unpackTo(const uint8_t* codedBuf, int32_t decimalScaleFactor, int32_t binaryScaleFactor, double referenceValue, size_t nVals, ValueType* out) = 0;
 };
 
 template <typename ValueType, uint8_t BPV>
@@ -53,12 +53,12 @@ class Binary : public BinaryInterface<ValueType>
 
 public:
     using Values = std::vector<ValueType>;
-    using Buffer = std::vector<unsigned char>;
+    using Buffer = std::vector<uint8_t>;
 
-    Buffer pack(const Values& values, int decimalScaleFactor, int binaryScaleFactor, double referenceValue, ValueType min, ValueType max) override;
-    Values unpack(const Buffer& codedBuf, int decimalScaleFactor, int binaryScaleFactor, double referenceValue, size_t nVals) override;
-    void packTo(const ValueType* values, size_t nVals, int decimalScaleFactor, int binaryScaleFactor, double referenceValue, unsigned char* out) override;
-    void unpackTo(const unsigned char* codedBuf, int decimalScaleFactor, int binaryScaleFactor, double referenceValue, size_t nVals, ValueType* out) override;
+    Buffer pack(const Values& values, int32_t decimalScaleFactor, int32_t binaryScaleFactor, double referenceValue, ValueType min, ValueType max) override;
+    Values unpack(const Buffer& codedBuf, int32_t decimalScaleFactor, int32_t binaryScaleFactor, double referenceValue, size_t nVals) override;
+    void packTo(const ValueType* values, size_t nVals, int32_t decimalScaleFactor, int32_t binaryScaleFactor, double referenceValue, uint8_t* out) override;
+    void unpackTo(const uint8_t* codedBuf, int32_t decimalScaleFactor, int32_t binaryScaleFactor, double referenceValue, size_t nVals, ValueType* out) override;
 };
 
 
@@ -69,11 +69,11 @@ public:
 // of up to 32 bits (independent of each other), which shortens the dependency chain through the
 // register. Writes exactly (BPV * count + 7) / 8 bytes; the unused bits of the last byte are 0.
 template <uint8_t BPV, typename Coded>
-inline void sp_pack_bits(const Coded* coded, size_t count, unsigned char* out)
+inline void sp_pack_bits(const Coded* coded, size_t count, uint8_t* out)
 {
     uint64_t acc = 0;
-    unsigned nb = 0;                              // number of pending bits: the low nb bits of acc
-    auto push = [&](uint64_t bits, unsigned n) {  // n <= 32 and bits < 2^n
+    uint32_t nb = 0;                              // number of pending bits: the low nb bits of acc
+    auto push = [&](uint64_t bits, uint32_t n) {  // n <= 32 and bits < 2^n
         acc = (acc << n) | bits;
         nb += n;
         if (nb >= 32) {
@@ -91,7 +91,7 @@ inline void sp_pack_bits(const Coded* coded, size_t count, unsigned char* out)
             for (size_t g = 0; g < group; ++g) {
                 bits |= static_cast<uint64_t>(coded[j + g]) << ((group - 1 - g) * BPV);
             }
-            push(bits, static_cast<unsigned>(group * BPV));
+            push(bits, static_cast<uint32_t>(group * BPV));
         }
     }
     for (; j < count; ++j) {
@@ -105,10 +105,10 @@ inline void sp_pack_bits(const Coded* coded, size_t count, unsigned char* out)
     }
     while (nb >= 8) {
         nb -= 8;
-        *out++ = static_cast<unsigned char>(acc >> nb);
+        *out++ = static_cast<uint8_t>(acc >> nb);
     }
     if (nb > 0) {
-        *out = static_cast<unsigned char>(acc << (8 - nb));
+        *out = static_cast<uint8_t>(acc << (8 - nb));
     }
 }
 
@@ -116,11 +116,11 @@ inline void sp_pack_bits(const Coded* coded, size_t count, unsigned char* out)
 // 32-bit (BPV <= 25) or 64-bit load at its first byte, at offsets known at compile time (reads
 // up to byte (7 * BPV) / 8 + 3 or + 7 of the group)
 template <uint8_t BPV, typename Coded, size_t... G>
-inline void sp_unpack_group(const unsigned char* p, Coded* out, std::index_sequence<G...>)
+inline void sp_unpack_group(const uint8_t* p, Coded* out, std::index_sequence<G...>)
 {
     // A value of up to 25 bits fits in the 32 bits from its first byte
     using Word = std::conditional_t<(BPV <= 25), uint32_t, uint64_t>;
-    constexpr unsigned wordBits = 8 * sizeof(Word);
+    constexpr uint32_t wordBits = 8 * sizeof(Word);
     ((out[G] = static_cast<Coded>(static_cast<Word>(swap_bytes<Word>(load_word<Word>(p + G * BPV / 8)) << (G * BPV % 8)) >> (wordBits - BPV))), ...);
 }
 
@@ -150,7 +150,7 @@ inline uint32_t sp_to_uint32(double v)
 }
 
 template <typename ValueType, uint8_t BPV>
-void Binary<ValueType, BPV>::packTo(const ValueType* values, size_t nVals, int decimalScaleFactor, int binaryScaleFactor, double referenceValue, unsigned char* out)
+void Binary<ValueType, BPV>::packTo(const ValueType* values, size_t nVals, int32_t decimalScaleFactor, int32_t binaryScaleFactor, double referenceValue, uint8_t* out)
 {
     // The encoding computes in double for every value type (like the decoding): the factors and
     // the reference value are doubles and every value is converted before it is scaled, so
@@ -173,12 +173,12 @@ void Binary<ValueType, BPV>::packTo(const ValueType* values, size_t nVals, int d
         for (size_t start = 0; start < nVals; start += chunk) {
             const size_t count = std::min(chunk, nVals - start);
             const ValueType* v = values + start;
-            int ok = 1;
+            int32_t ok = 1;
             for (size_t j = 0; j < count; ++j) {
                 const double c = ((static_cast<double>(v[j]) * decimal) - referenceValue) * divisor + 0.5;
                 // Quiet comparisons (false for NaN) and a selection through the bit pattern: no
                 // floating-point selection, which GCC does not vectorize (trapping math)
-                const int o = static_cast<int>(std::isgreaterequal(c, 0.0)) & static_cast<int>(std::isless(c, limit));
+                const int32_t o = static_cast<int32_t>(std::isgreaterequal(c, 0.0)) & static_cast<int32_t>(std::isless(c, limit));
                 ok &= o;
                 const double valid = sp_double(sp_bits(c) & (uint64_t{ 0 } - static_cast<uint64_t>(o)));
                 if constexpr (BPV <= 31) {
@@ -200,7 +200,7 @@ void Binary<ValueType, BPV>::packTo(const ValueType* values, size_t nVals, int d
         }
         auto encode = [&](auto val) {
             const double coded = ((static_cast<double>(val) * decimal) - referenceValue) * divisor + 0.5;
-            const bool ok = static_cast<bool>(static_cast<int>(coded >= 0.0) & static_cast<int>(coded < limit));
+            const bool ok = static_cast<bool>(static_cast<int32_t>(coded >= 0.0) & static_cast<int32_t>(coded < limit));
             inRange &= ok;
             return ok ? coded : 0.0;
         };
@@ -238,7 +238,7 @@ void Binary<ValueType, BPV>::packTo(const ValueType* values, size_t nVals, int d
 
 
 template <typename ValueType, uint8_t BPV>
-void Binary<ValueType, BPV>::unpackTo(const unsigned char* codedBuf, int decimalScaleFactor, int binaryScaleFactor, double referenceValue, size_t nVals, ValueType* out)
+void Binary<ValueType, BPV>::unpackTo(const uint8_t* codedBuf, int32_t decimalScaleFactor, int32_t binaryScaleFactor, double referenceValue, size_t nVals, ValueType* out)
 {
     // Like the legacy ecCodes code: the powers are computed in ValueType, the scaling in double,
     // and the result is rounded to ValueType once (scaling in float loses the low bits of values
@@ -305,9 +305,9 @@ void Binary<ValueType, BPV>::unpackTo(const unsigned char* codedBuf, int decimal
 
 
 template <typename ValueType, uint8_t BPV>
-typename Binary<ValueType, BPV>::Buffer Binary<ValueType, BPV>::pack(const Values& values, int decimalScaleFactor, int binaryScaleFactor, double referenceValue, ValueType /*min*/, ValueType /*max*/)
+typename Binary<ValueType, BPV>::Buffer Binary<ValueType, BPV>::pack(const Values& values, int32_t decimalScaleFactor, int32_t binaryScaleFactor, double referenceValue, ValueType /*min*/, ValueType /*max*/)
 {
-    const size_t buflen = (((BPV * values.size()) + 7) / 8) * sizeof(unsigned char);
+    const size_t buflen = (((BPV * values.size()) + 7) / 8) * sizeof(uint8_t);
     Buffer codedBuf(buflen);
     packTo(values.data(), values.size(), decimalScaleFactor, binaryScaleFactor, referenceValue, codedBuf.data());
     return codedBuf;
@@ -315,7 +315,7 @@ typename Binary<ValueType, BPV>::Buffer Binary<ValueType, BPV>::pack(const Value
 
 
 template <typename ValueType, uint8_t BPV>
-typename Binary<ValueType, BPV>::Values Binary<ValueType, BPV>::unpack(const Buffer& codedBuf, int decimalScaleFactor, int binaryScaleFactor, double referenceValue, size_t nVals)
+typename Binary<ValueType, BPV>::Values Binary<ValueType, BPV>::unpack(const Buffer& codedBuf, int32_t decimalScaleFactor, int32_t binaryScaleFactor, double referenceValue, size_t nVals)
 {
     Values values(nVals);
     unpackTo(codedBuf.data(), decimalScaleFactor, binaryScaleFactor, referenceValue, nVals, values.data());

@@ -4,6 +4,7 @@
 #include "simple_packing/detail/U128.h"
 
 #include <cassert>
+#include <cstdint>
 
 using namespace sp::detail;
 

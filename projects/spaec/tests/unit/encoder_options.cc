@@ -22,7 +22,7 @@
 
 using namespace spaec::detail;
 
-static int failures = 0;
+static int32_t failures = 0;
 
 static void check(bool ok, const std::string& what)
 {
@@ -34,7 +34,7 @@ static void check(bool ok, const std::string& what)
 
 // Encodes one block (no reference sample) and returns the bits written; id gets the first idBits bits
 template <typename T>
-static size_t encodeBlock(unsigned bpv, std::vector<T> block, unsigned idBits, unsigned& id)
+static size_t encodeBlock(uint32_t bpv, std::vector<T> block, uint32_t idBits, uint32_t& id)
 {
     encoder::EncoderSeq<T, T> encoder(static_cast<uint8_t>(bpv), static_cast<uint8_t>(block.size()), 1, CodeOptionSet::Basic);
     std::vector<uint8_t> out(block.size() * 8 + 64, 0);
@@ -48,7 +48,7 @@ static size_t encodeBlock(unsigned bpv, std::vector<T> block, unsigned idBits, u
 
 static void tieBreaking()
 {
-    unsigned id = 0;
+    uint32_t id = 0;
     // bpv 8: ID length 3 (second extension: 4), no compression 3 + 16 * 8 = 131 bits.
     // Values in [64, 95]: split sample with k = 5 or 6 also needs 131 bits: no compression
     std::vector<uint8_t> tieSsNc(16);
@@ -90,7 +90,7 @@ static void largeSamples()
     for (size_t i = 0; i < 16; ++i) {
         extremes[i] = (i % 2) ? 0x7FFFFFFFu : 0u;
     }
-    unsigned id = 0;
+    uint32_t id = 0;
     const size_t bits = encodeBlock<uint32_t>(31, extremes, 5, id);
     check(id == 31 && bits == 5 + 16 * 31, "alternating 0 and 2^31 - 1: no compression (ID " + std::to_string(id) + ", " + std::to_string(bits) + " bits)");
 }
@@ -116,7 +116,7 @@ static void referenceStreams()
     struct Case
     {
         const char* what;
-        unsigned bpv, blockSize, rsi;
+        uint32_t bpv, blockSize, rsi;
         std::vector<uint8_t> values;
         std::vector<uint8_t> expected;
     };

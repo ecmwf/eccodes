@@ -112,7 +112,8 @@ ctest --test-dir build
 
 Tested on Linux (GCC, Clang and Intel icx; x86-64, AArch64 and s390x) and on Windows with MinGW-w64
 GCC (tests run under wine). The code also supports MSVC, but MSVC has not been tested yet. All
-integer types have the same width on every platform (`int64_t`, not `long`).
+integers have fixed widths (`int32_t`, `uint32_t`, `int64_t`, ...), so they are the same on every
+platform.
 
 CMake target: `spaec::spaec`. Options: `SPAEC_BUILD_TESTS`, `SPAEC_BUILD_FUZZERS` (Clang),
 `SPAEC_INSTALL`, `SPAEC_NATIVE_ARCH` (`-march=native`, default on), and the floating-point options

@@ -53,9 +53,9 @@ struct FsTables
 constexpr FsTables makeFsTables()
 {
     FsTables t{};
-    for (unsigned b = 0; b < 256; ++b) {
-        unsigned ones = 0, zeros = 0;
-        for (unsigned bit = 0; bit < 8; ++bit) {
+    for (uint32_t b = 0; b < 256; ++b) {
+        uint32_t ones = 0, zeros = 0;
+        for (uint32_t bit = 0; bit < 8; ++bit) {
             if ((b >> (7 - bit)) & 1u) {
                 t.bytes[b].zeros[ones] = static_cast<uint8_t>(zeros);
                 t.end[b][ones] = static_cast<uint8_t>(bit + 1);
@@ -148,10 +148,10 @@ private:
         const uint8_t* data = buffer.getBuffer().data();
         const size_t pos = buffer.bitPos();
         size_t p = pos >> 3;
-        const unsigned bitOffset = static_cast<unsigned>(pos & 7);
+        const uint32_t bitOffset = static_cast<uint32_t>(pos & 7);
         // The bits before the position are cleared and their number is taken from the first codeword
-        int carry = -static_cast<int>(bitOffset);
-        unsigned byte = data[p] & (0xFFu >> bitOffset);
+        int32_t carry = -static_cast<int32_t>(bitOffset);
+        uint32_t byte = data[p] & (0xFFu >> bitOffset);
         size_t n = 0;
         for (;;) {
             const detail::FsByte& e = detail::fsTables.bytes[byte];
@@ -175,7 +175,7 @@ private:
     // (G * k <= 57: the valid bits after a bit offset of up to 7). The trip counts are constant:
     // up to G - 1 samples more than count are written (lows has room for count + 8).
     template <size_t G>
-    static void readLowBits(const uint8_t* data, size_t pos, unsigned k, ValueType* lows, size_t count)
+    static void readLowBits(const uint8_t* data, size_t pos, uint32_t k, ValueType* lows, size_t count)
     {
         const uint64_t mask = (uint64_t{ 1 } << k) - 1;
         for (size_t i = 0; i < count; i += G) {
@@ -221,7 +221,7 @@ public:
         size_t bitpos = pos & 7;
         uint64_t acc = bigEndian64(loadU64(&data[bytepos]));
         acc <<= bitpos;
-        int bitsAvail = 64 - static_cast<int>(bitpos);
+        int32_t bitsAvail = 64 - static_cast<int32_t>(bitpos);
 
         for (size_t i = startIndex; i < blockSizeV_; ++i) {
             if (SPAEC_UNLIKELY(bitsAvail < nBits)) {
@@ -229,7 +229,7 @@ public:
                 bitpos = pos & 7;
                 acc = bigEndian64(loadU64(&data[bytepos]));
                 acc <<= bitpos;
-                bitsAvail = 64 - static_cast<int>(bitpos);
+                bitsAvail = 64 - static_cast<int32_t>(bitpos);
             }
             values[i] = static_cast<ValueType>(acc >> (64 - nBits));
             acc <<= nBits;
@@ -335,7 +335,7 @@ public:
         }
 
         if (SPAEC_LIKELY(fast)) {
-            unsigned all = 0;
+            uint32_t all = 0;
             for (size_t i = 0; i < count; ++i) {
                 all |= zeros[i];
                 out[i] = static_cast<ValueType>((static_cast<uint64_t>(zeros[i]) << k) | lows[i]);

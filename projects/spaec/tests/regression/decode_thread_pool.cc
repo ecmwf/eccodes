@@ -22,7 +22,7 @@
 
 using namespace spaec::detail;
 
-static int failures = 0;
+static int32_t failures = 0;
 
 // Peak number of threads of this process while the watcher runs
 static std::atomic<size_t> peakThreads{ 0 };

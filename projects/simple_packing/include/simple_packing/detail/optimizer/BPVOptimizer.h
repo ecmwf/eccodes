@@ -19,7 +19,7 @@ namespace sp::detail
 class BPVOptimizer : public Optimizer
 {
 public:
-    BPVOptimizer(int decimalScaleFactor) : decimalScaleFactor_(decimalScaleFactor)
+    BPVOptimizer(int32_t decimalScaleFactor) : decimalScaleFactor_(decimalScaleFactor)
     {
         checkRange("decimal scale factor", decimalScaleFactor, -maxScaleFactor, maxScaleFactor);
     }
@@ -92,7 +92,7 @@ public:
     }
 
 private:
-    int decimalScaleFactor_ = 0;
+    int32_t decimalScaleFactor_ = 0;
 };
 
 }  // namespace sp::detail

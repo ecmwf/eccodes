@@ -49,7 +49,7 @@ struct UInt128
     }
 
     // Shifts
-    friend constexpr UInt128 operator<<(const UInt128& x, unsigned s)
+    friend constexpr UInt128 operator<<(const UInt128& x, uint32_t s)
     {
         if (s == 0) return x;
         if (s >= 128) return UInt128(0, 0);
@@ -62,7 +62,7 @@ struct UInt128
             return UInt128(new_hi, new_lo);
         }
     }
-    friend constexpr UInt128 operator>>(const UInt128& x, unsigned s)
+    friend constexpr UInt128 operator>>(const UInt128& x, uint32_t s)
     {
         if (s == 0) return x;
         if (s >= 128) return UInt128(0, 0);
@@ -92,7 +92,7 @@ struct UInt128
         return r;
     }
 
-    UInt128& operator<<=(unsigned s)
+    UInt128& operator<<=(uint32_t s)
     {
         *this = *this << s;
         return *this;

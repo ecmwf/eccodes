@@ -68,13 +68,13 @@ enum class SplitSelector
 
 struct Options
 {
-    unsigned bitsPerSample = 16;       // n: 1 to 32, at most the bits of the sample type
-    unsigned blockSize = 32;           // J: 8, 16, 32 or 64 samples
-    unsigned referenceInterval = 128;  // r: blocks between two reference samples, 1 to 4096
+    uint32_t bitsPerSample = 16;       // n: 1 to 32, at most the bits of the sample type
+    uint32_t blockSize = 32;           // J: 8, 16, 32 or 64 samples
+    uint32_t referenceInterval = 128;  // r: blocks between two reference samples, 1 to 4096
     CodeOptions codeOptions = CodeOptions::Basic;
     Preprocessor preprocessor = Preprocessor::UnitDelay;
     bool signedSamples = false;                           // samples are two's complement numbers of bitsPerSample bits (needs a preprocessor)
-    unsigned threads = 1;                                 // 1 to 255; the compressed data do not depend on it
+    uint32_t threads = 1;                                 // 1 to 255; the compressed data do not depend on it
     SplitSelector splitSelector = SplitSelector::Search;  // compress only
 };
 
@@ -84,8 +84,8 @@ struct Options
 struct Scaling
 {
     double referenceValue = 0;
-    int binaryScaleFactor = 0;
-    int decimalScaleFactor = 0;
+    int32_t binaryScaleFactor = 0;
+    int32_t decimalScaleFactor = 0;
 };
 
 // Compressed data that are corrupt or too short
@@ -143,7 +143,7 @@ template <typename T>
 constexpr bool isSample = std::is_integral<T>::value && !std::is_same<T, bool>::value && sizeof(T) <= 4;
 
 template <typename Sample>
-[[noreturn]] void throwSampleDoesNotFit(const Sample* samples, size_t count, unsigned bits, bool isSigned, bool (*fits)(Sample, unsigned))
+[[noreturn]] void throwSampleDoesNotFit(const Sample* samples, size_t count, uint32_t bits, bool isSigned, bool (*fits)(Sample, uint32_t))
 {
     size_t i = 0;
     while (i < count && fits(samples[i], bits)) {
@@ -157,7 +157,7 @@ template <typename Sample>
 // 2^bits, signed samples (the bit pattern of Sample read as two's complement) between -2^(bits-1)
 // and 2^(bits-1) - 1. One pass that the compiler vectorises; the index is searched only on error.
 template <typename Sample>
-void checkSamples(const Sample* samples, size_t count, unsigned bits, bool isSigned)
+void checkSamples(const Sample* samples, size_t count, uint32_t bits, bool isSigned)
 {
     using U = std::make_unsigned_t<Sample>;
     using S = std::make_signed_t<Sample>;
@@ -170,7 +170,7 @@ void checkSamples(const Sample* samples, size_t count, unsigned bits, bool isSig
             any |= static_cast<U>(samples[i]);
         }
         if ((any >> bits) != 0) {
-            throwSampleDoesNotFit<Sample>(samples, count, bits, false, [](Sample v, unsigned b) { return (static_cast<U>(v) >> b) == 0; });
+            throwSampleDoesNotFit<Sample>(samples, count, bits, false, [](Sample v, uint32_t b) { return (static_cast<U>(v) >> b) == 0; });
         }
         return;
     }
@@ -183,7 +183,7 @@ void checkSamples(const Sample* samples, size_t count, unsigned bits, bool isSig
         mx = v > mx ? v : mx;
     }
     if (mn < low || mx > high) {
-        throwSampleDoesNotFit<Sample>(samples, count, bits, true, [](Sample v, unsigned b) {
+        throwSampleDoesNotFit<Sample>(samples, count, bits, true, [](Sample v, uint32_t b) {
             const S h = static_cast<S>((S(1) << (b - 1)) - 1);
             const S s = static_cast<S>(v);
             return s >= static_cast<S>(-h - 1) && s <= h;

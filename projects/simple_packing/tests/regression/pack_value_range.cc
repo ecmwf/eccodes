@@ -7,6 +7,7 @@
 // minimum and maximum ignored it).
 
 #include <cmath>
+#include <cstdint>
 #include <iostream>
 #include <limits>
 #include <memory>
@@ -20,7 +21,7 @@
 
 using namespace sp::detail;
 
-static int failures = 0;
+static int32_t failures = 0;
 
 int main()
 {
@@ -32,7 +33,7 @@ int main()
     params.bitsPerValue(8);
     params.referenceValue(10.0);
     SimplePackingBinary<double> sp(nullptr);
-    std::vector<unsigned char> buffer(16);
+    std::vector<uint8_t> buffer(16);
     for (double bad : { -1.0, 9.0, 266.0, 1e300, nan, inf, -inf }) {
         std::vector<double> values(10, 100.0);
         values[3] = bad;

@@ -26,7 +26,7 @@
 
 using namespace sp::detail;
 
-static int failures = 0;
+static int32_t failures = 0;
 
 static void check(bool ok, const std::string& what)
 {
@@ -38,7 +38,7 @@ static void check(bool ok, const std::string& what)
 static std::vector<double> field(double mn, double mx)
 {
     std::vector<double> v = { mn, mx };
-    for (int i = 1; i < 99; ++i) {
+    for (int32_t i = 1; i < 99; ++i) {
         v.push_back(mn + (mx - mn) * (i * 0.37 - std::floor(i * 0.37)));  // spread over the range
     }
     return v;
@@ -88,11 +88,11 @@ static void optimizers()
     for (const auto& r : ranges) {
         for (int64_t bpv : { INT64_C(1), INT64_C(8), INT64_C(12), INT64_C(16), INT64_C(24), INT64_C(32) }) {
             checkOptimizer("DecOptimizer(" + std::to_string(bpv) + ")", std::make_unique<DecOptimizer>(bpv, 127), r[0], r[1]);
-            checkOptimizer("BinDecOptimizer(" + std::to_string(bpv) + ")", std::make_unique<BinDecOptimizer>(0, 1, static_cast<int>(bpv)), r[0], r[1]);
+            checkOptimizer("BinDecOptimizer(" + std::to_string(bpv) + ")", std::make_unique<BinDecOptimizer>(0, 1, static_cast<int32_t>(bpv)), r[0], r[1]);
         }
         // BinOptimizer: decimal scale factor and bits per value given (the scaled range must fit
         // a binary scale factor within +-127 for these fields)
-        for (int d : { -2, 0, 3 }) {
+        for (int32_t d : { -2, 0, 3 }) {
             for (int64_t bpv : { INT64_C(1), INT64_C(12), INT64_C(24) }) {
                 if (r[0] != r[1] && (r[1] - r[0]) * sp_power<double>(d, 10) < 1e-20) {
                     continue;  // too small for any binary scale factor
@@ -101,7 +101,7 @@ static void optimizers()
             }
         }
         // Decimal precision: the scaled range must be below 2^31 (like ecCodes, larger ones are rejected)
-        for (int d : { 0, 2 }) {
+        for (int32_t d : { 0, 2 }) {
             if ((r[1] - r[0]) * sp_power<double>(d, 10) < 2147483647.0 && r[1] - r[0] >= 1e-3) {
                 checkOptimizer("BPVOptimizer(" + std::to_string(d) + ")", std::make_unique<BPVOptimizer>(d), r[0], r[1], true);
             }
@@ -146,9 +146,9 @@ static void constantFieldPackTo()
     SimplePackingBinary<double> sp(nullptr);
     const Parameters params(0, 0, 0, 273.25, true);
     const std::vector<double> values(10, 273.25);
-    std::vector<unsigned char> out(16, 0xA5);
+    std::vector<uint8_t> out(16, 0xA5);
     sp.packTo(params, values.data(), values.size(), out.data());
-    check(std::all_of(out.begin(), out.end(), [](unsigned char c) { return c == 0xA5; }), "packTo of a constant field must not write");
+    check(std::all_of(out.begin(), out.end(), [](uint8_t c) { return c == 0xA5; }), "packTo of a constant field must not write");
     std::vector<double> decoded(values.size(), -1);
     sp.unpackTo(params, out.data(), 0, decoded.size(), decoded.data());
     check(decoded == values, "unpackTo of a constant field");
@@ -163,10 +163,10 @@ static void binDecModes()
 {
     const double ranges[][2] = { { 0, 1 }, { -1, 1 }, { 250.15, 320.7 }, { -5e3, 7e7 }, { 1e38, 3e38 }, { 3e38, 3.3e38 }, { 0, 1e300 }, { 0, 1e303 },
                                  { 0, 1e-300 }, { 1, 1 + 1e-15 }, { 1e-20, 1 }, { -1e-20, 1 }, { 0, 1e-4 } };
-    for (int gribex : { 0, 1 }) {
-        for (int c32 : { 0, 1 }) {
+    for (int32_t gribex : { 0, 1 }) {
+        for (int32_t c32 : { 0, 1 }) {
             for (bool ibm : { false, true }) {
-                for (int bpv : { 1, 16, 32 }) {
+                for (int32_t bpv : { 1, 16, 32 }) {
                     for (const auto& r : ranges) {
                         if (ibm && r[1] - r[0] > 1e75) {
                             continue;  // beyond the IBM range: no reference value
@@ -211,7 +211,7 @@ static void binOptimizer()
 {
     const double ranges[][2] = { { 0, 1 }, { -1, 1 }, { 250.15, 320.7 }, { -5e3, 7e7 }, { 101325, 101400 } };
     for (const auto& r : ranges) {
-        for (int d : { -3, 0, 2, 5 }) {
+        for (int32_t d : { -3, 0, 2, 5 }) {
             for (int64_t bpv : { INT64_C(1), INT64_C(8), INT64_C(16), INT64_C(32), INT64_C(63) }) {
                 const std::string what = "BinOptimizer(" + std::to_string(d) + ", " + std::to_string(bpv) + ") [" + std::to_string(r[0]) + ", " + std::to_string(r[1]) + "]";
                 try {
@@ -238,7 +238,7 @@ static void numberOfBits()
         const auto bits = number_of_bits(x);
         check(bits && *bits == expected, "number_of_bits(" + std::to_string(x) + ")");
     }
-    for (int k = 1; k <= 31; ++k) {
+    for (int32_t k = 1; k <= 31; ++k) {
         const uint64_t p = UINT64_C(1) << k;
         const auto below = number_of_bits(p - 1), at = number_of_bits(p);
         check(below && *below == k, "number_of_bits(2^" + std::to_string(k) + " - 1)");

@@ -22,7 +22,7 @@
 
 using namespace spaec::detail;
 
-static int failures = 0;
+static int32_t failures = 0;
 
 template <typename F>
 static void expectInvalid(const std::string& what, F&& f)
@@ -55,13 +55,13 @@ int main()
 {
     const auto basic = CodeOptionSet::Basic;
 
-    for (int bpv : { 0, 33, 64, 255 }) {
+    for (int32_t bpv : { 0, 33, 64, 255 }) {
         expectInvalid("bpv " + std::to_string(bpv), [&] { SpAec(bpv, 32, 64, basic, 0.0); });
     }
-    for (int blockSize : { 0, 1, 2, 7, 9, 12, 63, 65, 128, 255 }) {
+    for (int32_t blockSize : { 0, 1, 2, 7, 9, 12, 63, 65, 128, 255 }) {
         expectInvalid("block size " + std::to_string(blockSize), [&] { SpAec(16, blockSize, 64, basic, 0.0); });
     }
-    for (int rsi : { 0, 4097, 65535 }) {
+    for (int32_t rsi : { 0, 4097, 65535 }) {
         expectInvalid("rsi " + std::to_string(rsi), [&] { SpAec(16, 32, rsi, basic, 0.0); });
     }
     expectInvalid("0 threads", [&] { SpAec(16, 32, 64, basic, 0.0, 0, 0, 0); });
@@ -79,9 +79,9 @@ int main()
     expectInvalid("decoder with rsi 0", [&] { DecoderSeq<uint16_t, uint16_t>(16, 8, 0, basic); });
 
     // Supported parameters
-    for (int bpv : { 1, 8, 16, 24, 32 }) {
-        for (int blockSize : { 8, 16, 32, 64 }) {
-            for (int rsi : { 1, 128, 4096 }) {
+    for (int32_t bpv : { 1, 8, 16, 24, 32 }) {
+        for (int32_t blockSize : { 8, 16, 32, 64 }) {
+            for (int32_t rsi : { 1, 128, 4096 }) {
                 expectValid("bpv " + std::to_string(bpv) + " block size " + std::to_string(blockSize) + " rsi " + std::to_string(rsi),
                             [&] { SpAec(bpv, blockSize, rsi, basic, 0.0, -32767, 32767, 4); });
             }

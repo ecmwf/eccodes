@@ -4,6 +4,7 @@
 // Unit test: the version of the header (SIMPLE_PACKING_VERSION_*, sp::version()) is the version of the
 // CMake project (PROJECT_VERSION), and the main header provides it.
 #include <cstring>
+#include <cstdint>
 #include <iostream>
 #include <string>
 
@@ -14,7 +15,7 @@ static_assert(sp::version()[0] != '\0', "version() is a constant expression");
 
 int main()
 {
-    int failures = 0;
+    int32_t failures = 0;
     const std::string fromNumbers = std::to_string(SIMPLE_PACKING_VERSION_MAJOR) + "." + std::to_string(SIMPLE_PACKING_VERSION_MINOR) + "." +
                                     std::to_string(SIMPLE_PACKING_VERSION_PATCH);
     if (fromNumbers != SIMPLE_PACKING_VERSION) {

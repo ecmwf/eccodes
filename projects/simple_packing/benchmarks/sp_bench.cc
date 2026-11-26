@@ -29,11 +29,11 @@ namespace
 struct Field
 {
     std::string name;
-    int bits;
+    int32_t bits;
     std::vector<double> values;
 };
 
-int errors = 0;
+int32_t errors = 0;
 
 void fail(const std::string& what)
 {
@@ -42,7 +42,7 @@ void fail(const std::string& what)
 }
 
 // A smooth field on a 1440 x 721 grid with some noise (temperatures around 250 to 300 K)
-Field syntheticField(int bits)
+Field syntheticField(int32_t bits)
 {
     const size_t nx = 1440, ny = 721;
     const double pi = 3.14159265358979323846;
@@ -75,17 +75,17 @@ bool readField(const char* path, Field& f)
     }
     std::string name(path);
     name = name.substr(name.find_last_of("/\\") + 1);
-    f = Field{ name.substr(0, name.find('.')), static_cast<int>(words[0]), std::vector<double>(words.size() - 1) };
+    f = Field{ name.substr(0, name.find('.')), static_cast<int32_t>(words[0]), std::vector<double>(words.size() - 1) };
     for (size_t i = 1; i < words.size(); ++i) {
         f.values[i - 1] = words[i] * 0.01 + 250.0;
     }
     return true;
 }
 
-double fastest(int runs, const std::function<void()>& job)
+double fastest(int32_t runs, const std::function<void()>& job)
 {
     double best = 1e30;
-    for (int r = 0; r < runs; ++r) {
+    for (int32_t r = 0; r < runs; ++r) {
         const auto t0 = std::chrono::steady_clock::now();
         job();
         best = std::min(best, std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count());
@@ -95,11 +95,11 @@ double fastest(int runs, const std::function<void()>& job)
 
 // Runs job(part, start, count) for the parts of n values: a multiple of 8 values each
 template <typename F>
-void inParts(unsigned threads, size_t n, F&& job)
+void inParts(uint32_t threads, size_t n, F&& job)
 {
     const size_t part = ((n + threads - 1) / threads + 7) / 8 * 8;
     std::vector<std::thread> pool;
-    for (unsigned t = 0; t < threads && t * part < n; ++t) {
+    for (uint32_t t = 0; t < threads && t * part < n; ++t) {
         const size_t start = t * part, count = std::min(part, n - start);
         if (threads == 1) {
             job(t, start, count);
@@ -120,7 +120,7 @@ struct Totals
 
 // Packs and unpacks the values as T with the given number of threads; checks the result
 template <typename T>
-void bench(const Field& f, unsigned threads, int runs, std::vector<uint8_t>& reference, Totals& totals)
+void bench(const Field& f, uint32_t threads, int32_t runs, std::vector<uint8_t>& reference, Totals& totals)
 {
     const std::vector<T> values(f.values.begin(), f.values.end());
     const size_t n = values.size();
@@ -129,7 +129,7 @@ void bench(const Field& f, unsigned threads, int runs, std::vector<uint8_t>& ref
     sp::Scaling scaling;
     const double pack = fastest(runs, [&] {
         std::vector<sp::Range<T>> ranges(threads, sp::Range<T>{ values[0], values[0] });
-        inParts(threads, n, [&](unsigned t, size_t start, size_t count) { ranges[t] = sp::range(values.data() + start, count); });
+        inParts(threads, n, [&](uint32_t t, size_t start, size_t count) { ranges[t] = sp::range(values.data() + start, count); });
         T mn = ranges[0].min, mx = ranges[0].max;
         for (const sp::Range<T>& r : ranges) {
             mn = std::min(mn, r.min);
@@ -137,13 +137,13 @@ void bench(const Field& f, unsigned threads, int runs, std::vector<uint8_t>& ref
         }
         scaling = sp::scaling(mn, mx, sp::Method::bits(f.bits));
         packed.resize(sp::packedSize(n, scaling));
-        inParts(threads, n, [&](unsigned, size_t start, size_t count) {
+        inParts(threads, n, [&](uint32_t, size_t start, size_t count) {
             const size_t offset = start * static_cast<size_t>(scaling.bitsPerValue) / 8;
             sp::pack(values.data() + start, count, scaling, packed.data() + offset, packed.size() - offset);
         });
     });
     const double unpack = fastest(runs, [&] {
-        inParts(threads, n, [&](unsigned, size_t start, size_t count) {
+        inParts(threads, n, [&](uint32_t, size_t start, size_t count) {
             const size_t offset = start * static_cast<size_t>(scaling.bitsPerValue) / 8;
             sp::unpack(packed.data() + offset, packed.size() - offset, scaling, back.data() + start, count);
         });
@@ -168,13 +168,13 @@ void bench(const Field& f, unsigned threads, int runs, std::vector<uint8_t>& ref
     std::printf(" | %6.0f %6.0f", mib / pack, mib / unpack);
 }
 
-std::vector<unsigned> parseList(const std::string& s)
+std::vector<uint32_t> parseList(const std::string& s)
 {
-    std::vector<unsigned> list;
+    std::vector<uint32_t> list;
     size_t pos = 0;
     while (pos < s.size()) {
         const size_t end = s.find(',', pos);
-        list.push_back(static_cast<unsigned>(std::stoul(s.substr(pos, end - pos))));
+        list.push_back(static_cast<uint32_t>(std::stoul(s.substr(pos, end - pos))));
         pos = end == std::string::npos ? s.size() : end + 1;
     }
     return list;
@@ -184,10 +184,10 @@ std::vector<unsigned> parseList(const std::string& s)
 
 int main(int argc, char** argv)
 {
-    int runs = 5;
-    std::vector<unsigned> threads{ 1, 2, 4, 8, 16 };
+    int32_t runs = 5;
+    std::vector<uint32_t> threads{ 1, 2, 4, 8, 16 };
     std::vector<Field> fields;
-    for (int a = 1; a < argc; ++a) {
+    for (int32_t a = 1; a < argc; ++a) {
         const std::string arg = argv[a];
         if (arg == "--runs" && a + 1 < argc) {
             runs = std::max(1, std::stoi(argv[++a]));
@@ -205,7 +205,7 @@ int main(int argc, char** argv)
         }
     }
     if (fields.empty()) {
-        for (int bits : { 9, 12, 16, 24 }) {
+        for (int32_t bits : { 9, 12, 16, 24 }) {
             fields.push_back(syntheticField(bits));
         }
     }

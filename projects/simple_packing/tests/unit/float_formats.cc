@@ -22,7 +22,7 @@
 
 using namespace sp::detail;
 
-static int failures = 0;
+static int32_t failures = 0;
 
 static void check(bool ok, const std::string& what)
 {
@@ -48,7 +48,7 @@ static double ibmReference(double x)
         return 0;
     }
     const double a = std::fabs(x);
-    int e = static_cast<int>(std::floor(std::log(a) / std::log(16.0)));
+    int32_t e = static_cast<int32_t>(std::floor(std::log(a) / std::log(16.0)));
     while (std::ldexp(1.0, 4 * e) > a)
         --e;  // 16^e <= a < 16^(e + 1)
     while (std::ldexp(1.0, 4 * (e + 1)) <= a)
@@ -64,8 +64,8 @@ static double ibmReference(double x)
 static void ieee()
 {
     std::mt19937_64 rng(13);
-    for (int exponent = -126; exponent <= 127; ++exponent) {
-        for (int i = 0; i < 200; ++i) {
+    for (int32_t exponent = -126; exponent <= 127; ++exponent) {
+        for (int32_t i = 0; i < 200; ++i) {
             const uint32_t mantissa = i < 2 ? (i == 0 ? 0u : 0x7FFFFFu) : static_cast<uint32_t>(rng() & 0x7FFFFF);
             const uint32_t bits = (static_cast<uint32_t>(exponent + 127) << 23) | mantissa;
             float f;
@@ -93,8 +93,8 @@ static void ibm()
 {
     std::mt19937_64 rng(17);
     std::uniform_real_distribution<double> mant(1.0, 16.0);
-    for (int e = -60; e <= 60; ++e) {
-        for (int i = 0; i < 300; ++i) {
+    for (int32_t e = -60; e <= 60; ++e) {
+        for (int32_t i = 0; i < 300; ++i) {
             const double a = (i == 0 ? 1.0 : i == 1 ? 16.0 - 0x1p-40
                                                     : mant(rng)) *
                              std::ldexp(1.0, 4 * e);
@@ -135,7 +135,7 @@ static void edges()
     for (double x : { std::nextafter(static_cast<double>(FLT_MAX), inf), -std::nextafter(static_cast<double>(FLT_MAX), inf), 1e300, -1e300, inf, -inf, nan })
         expectNone(x, FloatType::IEEE32, "IEEE beyond the range");
     std::mt19937_64 rng(19);
-    for (int exponent = -126; exponent <= 126; ++exponent) {
+    for (int32_t exponent = -126; exponent <= 126; ++exponent) {
         // The largest float of the binade and the next power of two: halfway between them and just
         // below or above that point (ieee_to_long rounds them up into the next binade)
         const double top = std::ldexp(0xFFFFFF, exponent - 23), next = std::ldexp(1.0, exponent + 1);
@@ -145,7 +145,7 @@ static void edges()
                 expectValue(s * x, FloatType::IEEE32, ieeeReference(s * x), "IEEE halfway (2^" + std::to_string(exponent) + ")");
         }
         // Random values between two floats
-        for (int i = 0; i < 20; ++i) {
+        for (int32_t i = 0; i < 20; ++i) {
             const double x = std::ldexp(1.0 + static_cast<double>(rng() >> 11) * 0x1p-53, exponent);
             for (double s : { 1.0, -1.0 })
                 expectValue(s * x, FloatType::IEEE32, ieeeReference(s * x), "IEEE between floats");
@@ -170,7 +170,7 @@ static void edges()
     // 16^(e + 1), and above): like legacy ecCodes (grib_nearest_smaller_ibm_float, which sets the
     // mantissa to 0x800000 instead of 0x100000 when rounding overflows) the result is an IBM value
     // not larger than x, but not the nearest one: the same reference value as legacy ecCodes
-    for (int e = -64; e <= 56; ++e) {
+    for (int32_t e = -64; e <= 56; ++e) {
         const double top = std::ldexp(0xFFFFFF, 4 * (e - 6) + 4), next = std::ldexp(1.0, 4 * (e + 1));
         const double half = (top + next) / 2;
         for (double x : { half, std::nextafter(half, 0.0), std::nextafter(half, inf), std::nextafter(next, 0.0) }) {

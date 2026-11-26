@@ -4,6 +4,7 @@
 #include "simple_packing/detail/U128.h"
 
 #include <bitset>
+#include <cstdint>
 #include <iostream>
 #include <stdexcept>
 #include <vector>
@@ -146,7 +147,7 @@ void test_left_shifts()
 
     UInt128 a{ 0b10101010'11110000'11110000'11110000'00001111'00001111'11001100'00001111, 0b11100000'11110000'11110000'11110000'00001111'00001111'00001111'00001111 };
 
-    for (int i = 0; i < 128; ++i) {
+    for (int32_t i = 0; i < 128; ++i) {
         auto equal = (a << i) == left_shifts_reference[i];
         if (!equal) {
             throw(std::runtime_error("Left shift test failed at shift " + std::to_string(i)));
@@ -289,7 +290,7 @@ void test_right_shifts()
 
     UInt128 a{ 0b10101010'11110000'11110000'11110000'00001111'00001111'11001100'00001111, 0b11100000'11110000'11110000'11110000'00001111'00001111'00001111'00001111 };
 
-    for (int i = 0; i < 128; ++i) {
+    for (int32_t i = 0; i < 128; ++i) {
         bool equal = (right_shifts_reference[i] == (a >> i));
         if (!equal) {
             std::cout << "Right shift test failed for shift " << i << std::endl;

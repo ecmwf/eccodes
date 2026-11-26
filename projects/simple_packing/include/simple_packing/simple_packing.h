@@ -54,9 +54,9 @@ namespace sp
 struct Scaling
 {
     double referenceValue = 0;
-    int binaryScaleFactor = 0;
-    int decimalScaleFactor = 0;
-    int bitsPerValue = -1;
+    int32_t binaryScaleFactor = 0;
+    int32_t decimalScaleFactor = 0;
+    int32_t bitsPerValue = -1;
 };
 
 // The format in which the reference value is stored: it is chosen exactly representable
@@ -70,10 +70,10 @@ enum class ReferenceFormat
 class Method
 {
 public:
-    static Method bits(int bitsPerValue) { return Method(Kind::Bits, bitsPerValue, 0); }
-    static Method bestPrecision(int bitsPerValue) { return Method(Kind::BestPrecision, bitsPerValue, 0); }
-    static Method decimals(int decimalScaleFactor) { return Method(Kind::Decimals, 0, decimalScaleFactor); }
-    static Method bitsAndDecimals(int bitsPerValue, int decimalScaleFactor) { return Method(Kind::BitsAndDecimals, bitsPerValue, decimalScaleFactor); }
+    static Method bits(int32_t bitsPerValue) { return Method(Kind::Bits, bitsPerValue, 0); }
+    static Method bestPrecision(int32_t bitsPerValue) { return Method(Kind::BestPrecision, bitsPerValue, 0); }
+    static Method decimals(int32_t decimalScaleFactor) { return Method(Kind::Decimals, 0, decimalScaleFactor); }
+    static Method bitsAndDecimals(int32_t bitsPerValue, int32_t decimalScaleFactor) { return Method(Kind::BitsAndDecimals, bitsPerValue, decimalScaleFactor); }
 
     // The format of the reference value (default: IEEE32). Returns a modified copy.
     Method referenceFormat(ReferenceFormat format) const
@@ -102,11 +102,11 @@ private:
         BitsAndDecimals
     };
 
-    Method(Kind kind, int bitsPerValue, int decimalScaleFactor) : kind_(kind), bitsPerValue_(bitsPerValue), decimalScaleFactor_(decimalScaleFactor) {}
+    Method(Kind kind, int32_t bitsPerValue, int32_t decimalScaleFactor) : kind_(kind), bitsPerValue_(bitsPerValue), decimalScaleFactor_(decimalScaleFactor) {}
 
     Kind kind_;
-    int bitsPerValue_;
-    int decimalScaleFactor_;
+    int32_t bitsPerValue_;
+    int32_t decimalScaleFactor_;
     ReferenceFormat referenceFormat_ = ReferenceFormat::IEEE32;
     bool gribex_ = false;
 
@@ -158,9 +158,9 @@ inline Scaling scaling(double min, double max, const Method& method)
     const detail::Parameters p = std::get<0>(packer.getParameters(min, max));
     Scaling s;
     s.referenceValue = p.referenceValue();
-    s.binaryScaleFactor = static_cast<int>(p.binaryScaleFactor());
-    s.decimalScaleFactor = static_cast<int>(p.decimalScaleFactor());
-    s.bitsPerValue = p.isConstantField() ? 0 : static_cast<int>(p.bitsPerValue());
+    s.binaryScaleFactor = static_cast<int32_t>(p.binaryScaleFactor());
+    s.decimalScaleFactor = static_cast<int32_t>(p.decimalScaleFactor());
+    s.bitsPerValue = p.isConstantField() ? 0 : static_cast<int32_t>(p.bitsPerValue());
     return s;
 }
 

@@ -19,7 +19,7 @@
 
 using namespace spaec::detail;
 
-static int failures = 0;
+static int32_t failures = 0;
 
 int main()
 {
@@ -47,12 +47,12 @@ int main()
                 try {
                     par.decode(stream, Span<double>(decoded));
                     if (decoded != expected) {
-                        std::cerr << "FAIL: n=" << n << " threads=" << int(nThreads) << ": values differ from the sequential decoder\n";
+                        std::cerr << "FAIL: n=" << n << " threads=" << int32_t(nThreads) << ": values differ from the sequential decoder\n";
                         failures++;
                     }
                 }
                 catch (const std::exception& e) {
-                    std::cerr << "FAIL: n=" << n << " threads=" << int(nThreads) << ": " << e.what() << '\n';
+                    std::cerr << "FAIL: n=" << n << " threads=" << int32_t(nThreads) << ": " << e.what() << '\n';
                     failures++;
                 }
 
@@ -60,7 +60,7 @@ int main()
                 if (size > 16) {
                     try {
                         par.decode(Span<uint8_t>(encoded.data(), size / 2), Span<double>(decoded));
-                        std::cerr << "FAIL: n=" << n << " threads=" << int(nThreads) << ": truncated stream not reported\n";
+                        std::cerr << "FAIL: n=" << n << " threads=" << int32_t(nThreads) << ": truncated stream not reported\n";
                         failures++;
                     }
                     catch (const std::runtime_error&) {

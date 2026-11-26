@@ -37,9 +37,9 @@ int64_t toLongClamped(double value)
 }
 
 // The largest decimal exponent that fits in a double (~307)
-int vrange()
+int32_t vrange()
 {
-    return (int)(log(dbl_max) / log(10)) - 1;
+    return static_cast<int32_t>(log(dbl_max) / log(10)) - 1;
 }
 
 // The binary scale factor and the largest encoded value for the range 'pa',
@@ -51,7 +51,7 @@ struct FactecResult
 };
 
 // The caller ensures that pa > DBL_EPSILON and that encoding it does not overflow
-FactecResult factec(double pa, int knbit, int64_t kdec)
+FactecResult factec(double pa, int32_t knbit, int64_t kdec)
 {
     /* Binary scale factor associated to kdec */
     int64_t ke = floor(log2((pa * sp_power<double>(kdec, 10)) / (sp_power<double>(knbit, 2) - 0.5))) + 1;
@@ -73,13 +73,13 @@ Parameters BinDecOptimizer::getParams(const double pmin, const double pmax)
     constexpr double flt_max = std::numeric_limits<float>::max();
 
     // grib_handle* gh = grib_handle_of_accessor(a);
-    int idecmin = -15;
-    int idecmax = 5;
+    int32_t idecmin = -15;
+    int32_t idecmax = 5;
     int64_t inbint;
     double xhuger4, xnbint;
     int64_t inumax = 0;
     int64_t jdec;
-    const int RANGE = vrange();
+    const int32_t RANGE = vrange();
     constexpr double EPSILON = std::numeric_limits<double>::epsilon();
     double pa = pmax - pmin;
 
@@ -180,7 +180,7 @@ Parameters BinDecOptimizer::getParams(const double pmin, const double pmax)
 
     /* If seeking for an optimal decimal scale factor fails, fall back to a basic method */
     if (inumax == 0) {
-        int last = compat_gribex_ ? 99 : 127;
+        int32_t last = compat_gribex_ ? 99 : 127;
         double min = pmin, max = pmax;
         double range = max - min;
         double f = sp_power<double>(knbit_, 2) - 1;

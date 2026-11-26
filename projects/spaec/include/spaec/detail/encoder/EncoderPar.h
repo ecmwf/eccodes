@@ -192,7 +192,7 @@ public:
                 if (8 * j + 8 <= dst[p + 1]) {
                     // All bits of the byte are in piece p
                     const size_t s = piece.srcBit + (8 * j - dst[p]);
-                    const unsigned sh = s % 8;
+                    const uint32_t sh = s % 8;
                     const size_t i = s / 8;
                     uint8_t b = static_cast<uint8_t>(piece.src[i] << sh);
                     if (sh != 0) {
@@ -266,7 +266,7 @@ private:
                 break;  // beyond the end of the stream: zero bits
             }
             const size_t s = pieces[p].srcBit + (bit - dst[p]);
-            const unsigned v = (pieces[p].src[s / 8] >> (7 - s % 8)) & 1u;
+            const uint32_t v = (pieces[p].src[s / 8] >> (7 - s % 8)) & 1u;
             b = static_cast<uint8_t>(b | (v << (7 - k)));
         }
         return b;

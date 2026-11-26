@@ -19,7 +19,7 @@
 
 using namespace sp::detail;
 
-static int failures = 0;
+static int32_t failures = 0;
 
 // Runs f with a time limit of 5 seconds: it must throw std::invalid_argument
 template <typename F>
@@ -47,12 +47,12 @@ int main()
     for (int64_t bpv : { -1LL, 0LL, 64LL, 65LL, 100000000000LL }) {  // long long: 32-bit long on some platforms
         const std::string b = std::to_string(bpv);
         expectInvalid("DecOptimizer with " + b + " bits per value", [&] { DecOptimizer(bpv, 127).getParams(-1, 1); });
-        expectInvalid("BinDecOptimizer with " + b + " bits per value", [&] { BinDecOptimizer(0, 1, static_cast<int>(bpv)).getParams(-1, 1); });
+        expectInvalid("BinDecOptimizer with " + b + " bits per value", [&] { BinDecOptimizer(0, 1, static_cast<int32_t>(bpv)).getParams(-1, 1); });
     }
     for (int64_t last : { -INT64_C(1), INT64_C(0), INT64_C(100000) }) {
         expectInvalid("DecOptimizer with last " + std::to_string(last), [&] { DecOptimizer(16, last).getParams(-1, 1); });
     }
-    for (int dsf : { -1000000, 1000000 }) {
+    for (int32_t dsf : { -1000000, 1000000 }) {
         expectInvalid("BPVOptimizer with decimal scale factor " + std::to_string(dsf), [&] { BPVOptimizer(dsf).getParams(-1, 1); });
     }
 

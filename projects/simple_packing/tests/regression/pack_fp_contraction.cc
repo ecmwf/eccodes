@@ -21,7 +21,7 @@
 using namespace sp::detail;
 
 // The coded value with every operation rounded separately (volatile prevents contraction)
-static uint64_t expectedCoded(double value, int decimalScale, int binaryScale, double reference)
+static uint64_t expectedCoded(double value, int32_t decimalScale, int32_t binaryScale, double reference)
 {
     volatile double product = value * sp_power<double>(decimalScale, 10);
     volatile double difference = product - reference;
@@ -30,25 +30,25 @@ static uint64_t expectedCoded(double value, int decimalScale, int binaryScale, d
     return static_cast<uint64_t>(rounded);
 }
 
-static uint64_t packedCoded(double value, int decimalScale, int binaryScale, double reference)
+static uint64_t packedCoded(double value, int32_t decimalScale, int32_t binaryScale, double reference)
 {
     SimplePackingBinary<double> sp(std::make_unique<BinDecOptimizer>(0, 1, 16));
     const std::vector<double> values(8, value);
-    std::vector<unsigned char> out(3 * 8 + 8, 0);
+    std::vector<uint8_t> out(3 * 8 + 8, 0);
     sp.packTo(Parameters(24, decimalScale, binaryScale, reference, false), values.data(), values.size(), out.data());
     return (static_cast<uint64_t>(out[0]) << 16) | (static_cast<uint64_t>(out[1]) << 8) | out[2];
 }
 
 int main()
 {
-    int failures = 0;
+    int32_t failures = 0;
 
     // Values found to be packed differently with a fused multiply-add, and their correct coded values
     struct Case
     {
         double value;
-        int decimalScale;
-        int binaryScale;
+        int32_t decimalScale;
+        int32_t binaryScale;
         double reference;
         uint64_t coded;
     };
@@ -68,9 +68,9 @@ int main()
     // Values half-way between two coded values (before rounding the division): the cases most
     // sensitive to the rounding of the intermediate results
     std::mt19937_64 rng(42);
-    for (int i = 0; i < 20000; ++i) {
-        const int decimalScale = 1 + static_cast<int>(rng() % 3);
-        const int binaryScale = -static_cast<int>(rng() % 12);
+    for (int32_t i = 0; i < 20000; ++i) {
+        const int32_t decimalScale = 1 + static_cast<int32_t>(rng() % 3);
+        const int32_t binaryScale = -static_cast<int32_t>(rng() % 12);
         const double reference = static_cast<double>(rng() % 100000);
         const double k = static_cast<double>(rng() % (1u << 23));
         const double value = (reference + std::ldexp(k + 0.5, binaryScale)) / sp_power<double>(decimalScale, 10);

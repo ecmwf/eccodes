@@ -141,10 +141,10 @@ public:
 private:
     // A word that holds a value at any bit offset
     using Word = typename UInt<BPV + 8>::ValueType;
-    static constexpr unsigned wordBits = 8 * sizeof(Word);
+    static constexpr uint32_t wordBits = 8 * sizeof(Word);
 
     static Word mask() noexcept { return static_cast<Word>((Word(1) << BPV) - Word(1)); }
-    static unsigned shift(uint8_t bitOffset) noexcept { return wordBits - BPV - bitOffset; }
+    static uint32_t shift(uint8_t bitOffset) noexcept { return wordBits - BPV - bitOffset; }
     static size_t nBytes(uint8_t bitOffset) noexcept { return (bitOffset + BPV + 7) / 8; }
 
 public:

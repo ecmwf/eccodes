@@ -189,7 +189,7 @@ public:
             bytepos++;
             checkPos(bytepos * 8);
         }
-        zeros += countlZero(static_cast<unsigned>(buffer_[bytepos])) - 24;
+        zeros += countlZero(static_cast<uint32_t>(buffer_[bytepos])) - 24;
         return zeros + 1;
     }
 
@@ -214,7 +214,7 @@ public:
     // codeword (and no reload of the position, which byte stores may alias). Like writeCodeword,
     // it only sets the terminating one bits: the buffer must be zero after the current position.
     template <typename T>
-    void writeCodewords(const T* data, size_t count, unsigned k = 0)
+    void writeCodewords(const T* data, size_t count, uint32_t k = 0)
     {
         static_assert(std::is_integral<T>::value, "integral type required");
         uint8_t* out = buffer_.data();
@@ -252,7 +252,7 @@ public:
     // Instance: a separate instance per caller (the split-sample selector of the encoder), so that
     // each has one caller, as before the second selector: GCC inlines functions called once
     template <typename T, int Instance = 0>
-    SPAEC_SCALAR_INLINE void writeSplitSample(const T* data, size_t count, unsigned k, uint64_t fsBits)
+    SPAEC_SCALAR_INLINE void writeSplitSample(const T* data, size_t count, uint32_t k, uint64_t fsBits)
     {
         static_assert(std::is_integral<T>::value, "integral type required");
         if (k == 0) {
@@ -324,7 +324,7 @@ public:
     // - split bits: a multiply-add joins two k-bit fields, a shift two such pairs: 4 samples per
     //   64-bit word, appended to the stream through a carry register with plain stores
     template <int Instance>
-    void writeSplitSampleAvx2(const uint16_t* data, size_t count, unsigned k, size_t fsBits)
+    void writeSplitSampleAvx2(const uint16_t* data, size_t count, uint32_t k, size_t fsBits)
     {
         uint8_t* out = buffer_.data();
         const size_t pos = currentBitPos_;
@@ -339,7 +339,7 @@ public:
         const __m256i low32 = _mm256_set1_epi64x(0xFFFFFFFFll);
         __m256i w0 = _mm256_setzero_si256();
         __m256i w1 = _mm256_setzero_si256();
-        unsigned next = static_cast<unsigned>(pos & 7);  // position of the next codeword in the two words
+        uint32_t next = static_cast<uint32_t>(pos & 7);  // position of the next codeword in the two words
         alignas(32) uint64_t lows[16];                   // count <= 64: 4 samples each
         for (size_t i = 0; i < count; i += 16) {
             const __m256i x = _mm256_loadu_si256(reinterpret_cast<const __m256i*>(data + i));
@@ -355,7 +355,7 @@ public:
             __m256i lower = _mm256_permute2x128_si256(p, p, 0x08);
             lower = _mm256_shuffle_epi32(_mm256_shufflehi_epi16(lower, 0xFF), 0xFF);  // the sum of the lower half
             p = _mm256_add_epi16(_mm256_add_epi16(p, lower), _mm256_set1_epi16(static_cast<short>(next - 1)));
-            next = static_cast<unsigned>(_mm256_extract_epi16(p, 15)) + 1;
+            next = static_cast<uint32_t>(_mm256_extract_epi16(p, 15)) + 1;
 
             const __m128i pl = _mm256_castsi256_si128(p);
             const __m128i ph = _mm256_extracti128_si256(p, 1);
@@ -381,13 +381,13 @@ public:
 
         const size_t splitPos = pos + fsBits;
         uint8_t* q = out + splitPos / 8;
-        unsigned fill = static_cast<unsigned>(splitPos & 7);
+        uint32_t fill = static_cast<uint32_t>(splitPos & 7);
         uint64_t acc = static_cast<uint64_t>(*q) << 56;  // the last bits of the codewords
-        const unsigned bits = 4 * k;
+        const uint32_t bits = 4 * k;
         for (size_t i = 0; i < count / 4; ++i) {
             acc |= lows[i] << (64 - bits - fill);
             storeBigEndian64(q, acc);
-            const unsigned bytes = (fill + bits) >> 3;
+            const uint32_t bytes = (fill + bits) >> 3;
             q += bytes;
             acc = (acc << (bytes * 4)) << (bytes * 4);  // by up to 64 bits
             fill = (fill + bits) & 7;

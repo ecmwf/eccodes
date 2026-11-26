@@ -29,7 +29,7 @@
 
 using namespace sp::detail;
 
-static int failures = 0;
+static int32_t failures = 0;
 
 static void check(bool ok, const std::string& what)
 {
@@ -148,7 +148,7 @@ static void emptyAndTinyRanges()
 static void parameters()
 {
     // Constructed in memory that is not zero: members without an initialiser keep the 0xAB bytes
-    alignas(Parameters) unsigned char memory[sizeof(Parameters)];
+    alignas(Parameters) uint8_t memory[sizeof(Parameters)];
     std::memset(memory, 0xAB, sizeof(memory));
     const Parameters& p = *new (memory) Parameters;
     check(p.bitsPerValue() == 0 && p.decimalScaleFactor() == 0 && p.binaryScaleFactor() == 0 && p.referenceValue() == 0.0 && !p.isConstantField(),

@@ -20,7 +20,7 @@
 
 using namespace spaec::detail;
 
-static int failures = 0;
+static int32_t failures = 0;
 
 static void check(bool ok, const std::string& what)
 {
@@ -29,7 +29,7 @@ static void check(bool ok, const std::string& what)
     }
 }
 
-static std::vector<uint8_t> encode(const std::vector<uint8_t>& samples, unsigned bpv, unsigned blockSize, unsigned rsi)
+static std::vector<uint8_t> encode(const std::vector<uint8_t>& samples, uint32_t bpv, uint32_t blockSize, uint32_t rsi)
 {
     encoder::EncoderSeq<uint8_t, uint8_t> encoder(static_cast<uint8_t>(bpv), static_cast<uint8_t>(blockSize), static_cast<uint16_t>(rsi), CodeOptionSet::Basic);
     std::vector<uint8_t> input = samples, stream(samples.size() * 2 + 64, 0);
@@ -37,7 +37,7 @@ static std::vector<uint8_t> encode(const std::vector<uint8_t>& samples, unsigned
     return stream;
 }
 
-static bool roundTrip(const std::vector<uint8_t>& samples, unsigned bpv, unsigned blockSize, unsigned rsi)
+static bool roundTrip(const std::vector<uint8_t>& samples, uint32_t bpv, uint32_t blockSize, uint32_t rsi)
 {
     std::vector<uint8_t> stream = encode(samples, bpv, blockSize, rsi);
     DecoderSeq<uint8_t, uint8_t> decoder(static_cast<uint8_t>(bpv), static_cast<uint8_t>(blockSize), static_cast<uint16_t>(rsi), CodeOptionSet::Basic);
@@ -51,15 +51,15 @@ static bool roundTrip(const std::vector<uint8_t>& samples, unsigned bpv, unsigne
     return decoded == samples;
 }
 
-static void allBlocks(unsigned bpv)
+static void allBlocks(uint32_t bpv)
 {
-    const unsigned nBlocks = 1u << (8 * bpv);
+    const uint32_t nBlocks = 1u << (8 * bpv);
     const uint8_t maxv = static_cast<uint8_t>((1u << bpv) - 1);
     // First blocks: constant (zero block after preprocessing), small steps, limits
     const std::vector<std::vector<uint8_t>> firsts = { std::vector<uint8_t>(8, 0), std::vector<uint8_t>(8, maxv), { 0, 1, 0, 1, 0, 1, 0, 1 }, { 0, maxv, 0, maxv, 0, maxv, 0, maxv } };
-    for (unsigned b = 0; b < nBlocks; ++b) {
+    for (uint32_t b = 0; b < nBlocks; ++b) {
         std::vector<uint8_t> block(8);
-        for (unsigned i = 0; i < 8; ++i) {
+        for (uint32_t i = 0; i < 8; ++i) {
             block[i] = static_cast<uint8_t>((b >> (bpv * i)) & maxv);
         }
         check(roundTrip(block, bpv, 8, 1), "bpv " + std::to_string(bpv) + ": block " + std::to_string(b) + " as first block");
@@ -76,14 +76,14 @@ static void allBlocks(unsigned bpv)
 static void zeroBlockRuns()
 {
     std::mt19937_64 rng(5);
-    const unsigned rsi = 128;
-    for (unsigned start = 0; start < rsi; ++start) {
-        for (unsigned length = 1; start + length <= rsi; ++length) {
+    const uint32_t rsi = 128;
+    for (uint32_t start = 0; start < rsi; ++start) {
+        for (uint32_t length = 1; start + length <= rsi; ++length) {
             std::vector<uint8_t> samples(rsi * 8);
             for (auto& s : samples)
                 s = static_cast<uint8_t>(rng());
             const uint8_t constant = start == 0 ? 0 : samples[start * 8 - 1];
-            for (unsigned i = start * 8; i < (start + length) * 8; ++i)
+            for (uint32_t i = start * 8; i < (start + length) * 8; ++i)
                 samples[i] = constant;
             if (!roundTrip(samples, 8, 8, rsi)) {
                 check(false, "zero blocks " + std::to_string(start) + " .. " + std::to_string(start + length - 1));
@@ -100,9 +100,9 @@ static void zeroBlockRuns()
 static void parallelEncoder()
 {
     std::mt19937_64 rng(6);
-    for (unsigned bpv : { 1, 8, 13, 16 }) {
-        for (unsigned blockSize : { 8, 32, 64 }) {
-            for (unsigned rsi : { 1, 7, 64 }) {
+    for (uint32_t bpv : { 1, 8, 13, 16 }) {
+        for (uint32_t blockSize : { 8, 32, 64 }) {
+            for (uint32_t rsi : { 1, 7, 64 }) {
                 for (size_t n : { size_t{ 0 }, size_t{ 1 }, size_t{ 9 }, size_t{ 1000 }, size_t{ 30000 } }) {
                     std::vector<uint16_t> samples(n);
                     for (size_t i = 0; i < n; ++i)

@@ -21,7 +21,7 @@ int main()
         SimplePackingBinary<double> sp(nullptr);
 
         std::vector<double> values(8, -1.0);
-        std::vector<unsigned char> buffer(8, 0);
+        std::vector<uint8_t> buffer(8, 0);
         sp.unpackTo(params, buffer.data(), buffer.size(), 0, values.data());
         sp.packTo(params, values.data(), 0, buffer.data());
         for (double v : values) {
@@ -30,7 +30,7 @@ int main()
                 return 1;
             }
         }
-        for (unsigned char b : buffer) {
+        for (uint8_t b : buffer) {
             if (b != 0) {
                 std::cerr << "FAIL: packing 0 values with " << bpv << " bits per value wrote data\n";
                 return 1;

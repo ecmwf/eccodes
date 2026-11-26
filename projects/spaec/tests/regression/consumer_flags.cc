@@ -7,6 +7,7 @@
 // A -ffast-math of the user is not undone: the user adds -fno-fast-math.
 
 #include <cmath>
+#include <cstdint>
 #include <iostream>
 #include <limits>
 #include <stdexcept>
@@ -18,7 +19,7 @@
 
 int main()
 {
-    int failures = 0;
+    int32_t failures = 0;
 #ifdef __FAST_MATH__
     std::cerr << "FAIL: -ffast-math is in effect for code that uses spaec\n";
     ++failures;

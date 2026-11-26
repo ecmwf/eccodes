@@ -20,7 +20,7 @@
 
 using namespace spaec::detail;
 
-static int failures = 0;
+static int32_t failures = 0;
 
 static void check(bool ok, const std::string& what)
 {
@@ -44,7 +44,7 @@ static uint64_t referenceMap(int64_t x, int64_t p, int64_t xMax)
 }
 
 template <typename T>
-static void exhaustivePairs(unsigned bpv)
+static void exhaustivePairs(uint32_t bpv)
 {
     const int64_t xMax = (int64_t{ 1 } << bpv) - 1;
     PredictivePreprocessingEncodeFast<T, T> encoder(static_cast<uint8_t>(bpv));
@@ -64,7 +64,7 @@ static void exhaustivePairs(unsigned bpv)
 }
 
 template <typename T>
-static void roundTrip(const std::vector<T>& data, unsigned bpv, const std::string& what)
+static void roundTrip(const std::vector<T>& data, uint32_t bpv, const std::string& what)
 {
     PredictivePreprocessingEncodeFast<T, T> encoder(static_cast<uint8_t>(bpv));
     PredictivePreprocessingDecodeFast<T, T> decoder(static_cast<uint8_t>(bpv));
@@ -78,7 +78,7 @@ static void roundTrip(const std::vector<T>& data, unsigned bpv, const std::strin
 // uncommon ones (a jump to a limit and back) at every position of the first 4 chunks, runs of
 // uncommon values of different lengths, and a field ending in each state
 template <typename T>
-static void chunks(unsigned bpv)
+static void chunks(uint32_t bpv)
 {
     const uint64_t xMax = bpv == 64 ? ~uint64_t{ 0 } : (uint64_t{ 1 } << bpv) - 1;
     std::mt19937_64 rng(bpv);
@@ -121,7 +121,7 @@ static void chunks(unsigned bpv)
 
 int main()
 {
-    for (unsigned bpv = 1; bpv <= 8; ++bpv) {
+    for (uint32_t bpv = 1; bpv <= 8; ++bpv) {
         exhaustivePairs<uint8_t>(bpv);
     }
     exhaustivePairs<uint16_t>(9);

@@ -20,7 +20,7 @@ using namespace spaec::detail;
 int main()
 {
     try {
-        int failures = 0;
+        int32_t failures = 0;
 
         // bpv=8, block size 32, RSI 1: the stream holds a zero block (ID 0000), the reference sample
         // and a codeword of 59 zero bits, i.e. a run of ~60 zero blocks in a segment of 1 block.

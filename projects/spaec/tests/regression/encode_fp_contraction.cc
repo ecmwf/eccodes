@@ -18,7 +18,7 @@
 using namespace spaec::detail;
 
 // The mapped value with every operation rounded separately (volatile prevents contraction)
-static uint32_t expectedMapped(double value, int decimalScale, int binaryScale, double reference)
+static uint32_t expectedMapped(double value, int32_t decimalScale, int32_t binaryScale, double reference)
 {
     volatile double product = value * grib_power<double>(decimalScale, 10);
     volatile double difference = product - reference;
@@ -33,8 +33,8 @@ int main()
     struct Case
     {
         double value;
-        int decimalScale;
-        int binaryScale;
+        int32_t decimalScale;
+        int32_t binaryScale;
         double reference;
         uint32_t mapped;
     };
@@ -46,7 +46,7 @@ int main()
 
     std::vector<double> values;
     std::vector<uint32_t> expected;
-    std::vector<int> decimalScales, binaryScales;
+    std::vector<int32_t> decimalScales, binaryScales;
     std::vector<double> references;
     for (const auto& c : cases) {
         values.push_back(c.value);
@@ -57,9 +57,9 @@ int main()
     }
     // Values half-way between two mapped values (before rounding the division)
     std::mt19937_64 rng(42);
-    for (int i = 0; i < 5000; ++i) {
-        const int decimalScale = 1 + static_cast<int>(rng() % 3);
-        const int binaryScale = -static_cast<int>(rng() % 12);
+    for (int32_t i = 0; i < 5000; ++i) {
+        const int32_t decimalScale = 1 + static_cast<int32_t>(rng() % 3);
+        const int32_t binaryScale = -static_cast<int32_t>(rng() % 12);
         const double reference = static_cast<double>(rng() % 100000);
         const double k = static_cast<double>(rng() % (1u << 23));
         const double value = (reference + std::ldexp(k + 0.5, binaryScale)) / grib_power<double>(decimalScale, 10);
@@ -71,7 +71,7 @@ int main()
     }
 
     // Encode each value (repeated to a block) with its parameters; decode the mapped value
-    int failures = 0;
+    int32_t failures = 0;
     for (size_t i = 0; i < values.size(); ++i) {
         constexpr uint8_t bpv = 24, blockSize = 8;
         std::vector<double> data(blockSize, values[i]);

@@ -23,7 +23,7 @@ int main()
         fp_diagnostics::explain();
         return 1;
     }
-    int failures = 0;
+    int32_t failures = 0;
     const double ranges[][2] = { { 1e300, 0 }, { 1e300, -1e300 }, { 8.9e307, -8.9e307 }, { 3e38, 0 } };
     for (const auto& r : ranges) {
         for (int64_t bpv : { INT64_C(1), INT64_C(8), INT64_C(16), INT64_C(24), INT64_C(32), INT64_C(63) }) {

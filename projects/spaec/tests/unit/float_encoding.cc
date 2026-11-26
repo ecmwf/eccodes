@@ -22,7 +22,7 @@
 #include "spaec/detail/SpAec.h"
 #include "spaec/spaec.h"
 
-static int failures = 0;
+static int32_t failures = 0;
 static int64_t cases = 0;
 
 static void check(bool ok, const std::string& what)
@@ -35,7 +35,7 @@ static void check(bool ok, const std::string& what)
 
 // The SimpleMapper of the float coder must map like the SimpleMapper of the double coder applied
 // to the converted values (the value mapping, independent of the CCSDS encoder)
-static void mapperCase(float referenceValue, int binaryScaleFactor, int decimalScaleFactor, const std::vector<float>& values,
+static void mapperCase(float referenceValue, int32_t binaryScaleFactor, int32_t decimalScaleFactor, const std::vector<float>& values,
                        const std::string& what)
 {
     const spaec::detail::encoder::SpAec<float>::SimpleMapper<uint32_t> mapperF(referenceValue, binaryScaleFactor, decimalScaleFactor);
@@ -87,9 +87,9 @@ static void sameCodes(const std::vector<float>& values, const spaec::Scaling& s,
 // A scaling with all the fields set
 struct Conf
 {
-    int decimalScaleFactor;
-    int binaryScaleFactor;
-    unsigned bitsPerSample;
+    int32_t decimalScaleFactor;
+    int32_t binaryScaleFactor;
+    uint32_t bitsPerSample;
     float referenceValue;
 };
 
@@ -123,7 +123,7 @@ static std::vector<float> halfwayValues(const Conf& c, size_t n, std::mt19937_64
     const double divisor = std::pow(2.0, c.binaryScaleFactor);
     std::vector<float> values(n);
     for (size_t i = 0; i < n; ++i) {
-        const double k = static_cast<double>(rng() % (uint64_t{ 1 } << std::min<unsigned>(c.bitsPerSample, 62)));
+        const double k = static_cast<double>(rng() % (uint64_t{ 1 } << std::min<uint32_t>(c.bitsPerSample, 62)));
         // (v * 10^D - R) * 2^-E = k + 0.5 in double
         values[i] = static_cast<float>((static_cast<double>(c.referenceValue) + (k + 0.5) * divisor) / decimal);
     }
@@ -137,7 +137,7 @@ static std::vector<float> fullRangeValues(const Conf& c, size_t n, std::mt19937_
     const double divisor = std::pow(2.0, c.binaryScaleFactor);
     std::vector<float> values(n);
     for (size_t i = 0; i < n; ++i) {
-        const double k = static_cast<double>(rng() % (uint64_t{ 1 } << std::min<unsigned>(c.bitsPerSample, 62)));
+        const double k = static_cast<double>(rng() % (uint64_t{ 1 } << std::min<uint32_t>(c.bitsPerSample, 62)));
         values[i] = static_cast<float>((static_cast<double>(c.referenceValue) + k * divisor) / decimal);
     }
     return values;
@@ -171,9 +171,9 @@ int main()
     // The scalings of the brief: decimal scale factors != 0 (D = -2, 1, 3), binary scale factors
     // below and above zero, and 1 to 32 bits per value
     std::vector<Conf> confs;
-    for (int D : { -2, 0, 1, 3 }) {
-        for (int E : { -17, -8, 0, 5, 12 }) {
-            for (unsigned bpv : { 1u, 4u, 8u, 16u, 24u, 32u }) {
+    for (int32_t D : { -2, 0, 1, 3 }) {
+        for (int32_t E : { -17, -8, 0, 5, 12 }) {
+            for (uint32_t bpv : { 1u, 4u, 8u, 16u, 24u, 32u }) {
                 confs.push_back(Conf{ D, E, bpv, 100000.0f });
             }
         }
@@ -191,12 +191,12 @@ int main()
     {
         const Conf c{ 1, -8, 16, 100000.0f };
         const std::vector<float> values = valuesNearReference(c, 5000, rng);
-        for (unsigned blockSize : { 8u, 16u, 64u }) {
+        for (uint32_t blockSize : { 8u, 16u, 64u }) {
             spaec::Options o;
             o.blockSize = blockSize;
             confCase(c, values, o, "block size " + std::to_string(blockSize));
         }
-        for (unsigned rsi : { 1u, 512u }) {
+        for (uint32_t rsi : { 1u, 512u }) {
             spaec::Options o;
             o.referenceInterval = rsi;
             confCase(c, values, o, "rsi " + std::to_string(rsi));

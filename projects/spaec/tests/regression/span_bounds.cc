@@ -18,7 +18,7 @@
 
 using namespace spaec::detail;
 
-static void onAbort(int)
+static void onAbort(int32_t)
 {
     std::_Exit(0);  // the out of range access was detected
 }

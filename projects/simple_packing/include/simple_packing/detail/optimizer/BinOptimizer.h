@@ -24,7 +24,7 @@ namespace sp::detail
 class BinOptimizer : public Optimizer
 {
 public:
-    BinOptimizer(int decimalScaleFactor, int64_t bitsPerValue) : decimalScaleFactor_(decimalScaleFactor), bitsPerValue_(bitsPerValue)
+    BinOptimizer(int32_t decimalScaleFactor, int64_t bitsPerValue) : decimalScaleFactor_(decimalScaleFactor), bitsPerValue_(bitsPerValue)
     {
         checkRange("decimal scale factor", decimalScaleFactor, -maxScaleFactor, maxScaleFactor);
         checkRange("bits per value", bitsPerValue, 1, maxEncodingBitsPerValue);
@@ -75,7 +75,7 @@ public:
     }
 
 private:
-    int decimalScaleFactor_;
+    int32_t decimalScaleFactor_;
     int64_t bitsPerValue_;
 };
 

@@ -23,8 +23,8 @@
 
 using namespace spaec::detail;
 
-static int testCount = 0;
-static int passCount = 0;
+static int32_t testCount = 0;
+static int32_t passCount = 0;
 
 #define TEST(name)                           \
     do {                                     \
@@ -191,14 +191,14 @@ void testPreprocessorMapperSpecFormula()
         std::mt19937 gen(42);  // NOLINT(bugprone-random-generator-seed,cert-msc32-c,cert-msc51-cpp)
         std::vector<ValueType> data(64);
         if constexpr (std::is_signed_v<ValueType>) {
-            std::uniform_int_distribution<int> dist(
+            std::uniform_int_distribution<int32_t> dist(
                 std::numeric_limits<ValueType>::min(),
                 std::numeric_limits<ValueType>::max());
             for (auto& v : data)
                 v = static_cast<ValueType>(dist(gen));
         }
         else {
-            std::uniform_int_distribution<unsigned> dist(0, std::numeric_limits<ValueType>::max());
+            std::uniform_int_distribution<uint32_t> dist(0, std::numeric_limits<ValueType>::max());
             for (auto& v : data)
                 v = static_cast<ValueType>(dist(gen));
         }
@@ -218,14 +218,14 @@ void testPreprocessorMapperSpecFormula()
         std::mt19937 gen(123);  // NOLINT(bugprone-random-generator-seed,cert-msc32-c,cert-msc51-cpp)
         std::vector<ValueType> data(128);
         if constexpr (std::is_signed_v<ValueType>) {
-            std::uniform_int_distribution<int> dist(
+            std::uniform_int_distribution<int32_t> dist(
                 std::numeric_limits<ValueType>::min(),
                 std::numeric_limits<ValueType>::max());
             for (auto& v : data)
                 v = static_cast<ValueType>(dist(gen));
         }
         else {
-            std::uniform_int_distribution<unsigned> dist(0, std::numeric_limits<ValueType>::max());
+            std::uniform_int_distribution<uint32_t> dist(0, std::numeric_limits<ValueType>::max());
             for (auto& v : data)
                 v = static_cast<ValueType>(dist(gen));
         }
@@ -577,7 +577,7 @@ template <typename ValueType>
 void test_block_sizes()
 {
     constexpr uint8_t BPV = sizeof(ValueType) * 8;
-    std::cout << "§3.1.6 Block Sizes (J=8,16,32,64) for " << static_cast<unsigned int>(BPV) << "-bit "
+    std::cout << "§3.1.6 Block Sizes (J=8,16,32,64) for " << static_cast<uint32_t>(BPV) << "-bit "
               << (std::is_signed_v<ValueType> ? "signed" : "unsigned") << ":" << '\n';
 
     constexpr size_t blockSizes[] = { 8, 16, 32, 64 };
@@ -593,14 +593,14 @@ void test_block_sizes()
         std::mt19937 gen(42 + bs);  // NOLINT(bugprone-random-generator-seed,cert-msc32-c,cert-msc51-cpp)
         std::vector<ValueType> vec(dataSize);
         if constexpr (std::is_signed_v<ValueType>) {
-            std::uniform_int_distribution<int> dist(
+            std::uniform_int_distribution<int32_t> dist(
                 std::numeric_limits<ValueType>::min(),
                 std::numeric_limits<ValueType>::max());
             for (auto& v : vec)
                 v = static_cast<ValueType>(dist(gen));
         }
         else {
-            std::uniform_int_distribution<unsigned> dist(0, std::numeric_limits<ValueType>::max());
+            std::uniform_int_distribution<uint32_t> dist(0, std::numeric_limits<ValueType>::max());
             for (auto& v : vec)
                 v = static_cast<ValueType>(dist(gen));
         }
@@ -635,7 +635,7 @@ void testDataPatterns()
     constexpr size_t blockSize = 8;
     constexpr uint16_t rsiSize = 128;
 
-    std::cout << "End-to-end data patterns (" << (int)BPV << "-bit "
+    std::cout << "End-to-end data patterns (" << (int32_t)BPV << "-bit "
               << (std::is_signed_v<ValueType> ? "signed" : "unsigned") << "):" << '\n';
 
     auto roundtrip = [](const std::vector<ValueType>& vec) {
@@ -649,8 +649,8 @@ void testDataPatterns()
 
         for (size_t i = 0; i < vec.size(); ++i) {
             if (vec[i] != decoded[i]) {
-                std::cerr << "FAIL at index " << i << ": original=" << (int)vec[i]
-                          << " decoded=" << (int)decoded[i] << '\n';
+                std::cerr << "FAIL at index " << i << ": original=" << (int32_t)vec[i]
+                          << " decoded=" << (int32_t)decoded[i] << '\n';
                 std::exit(1);
             }
         }
@@ -695,14 +695,14 @@ void testDataPatterns()
         std::mt19937 gen(999);  // NOLINT(bugprone-random-generator-seed,cert-msc32-c,cert-msc51-cpp)
         std::vector<ValueType> vec(N);
         if constexpr (std::is_signed_v<ValueType>) {
-            std::uniform_int_distribution<int> dist(
+            std::uniform_int_distribution<int32_t> dist(
                 std::numeric_limits<ValueType>::min(),
                 std::numeric_limits<ValueType>::max());
             for (auto& v : vec)
                 v = static_cast<ValueType>(dist(gen));
         }
         else {
-            std::uniform_int_distribution<unsigned> dist(0, std::numeric_limits<ValueType>::max());
+            std::uniform_int_distribution<uint32_t> dist(0, std::numeric_limits<ValueType>::max());
             for (auto& v : vec)
                 v = static_cast<ValueType>(dist(gen));
         }
@@ -1022,7 +1022,7 @@ struct BitWriter
     }
 };
 
-static unsigned bitAt(const std::vector<uint8_t>& bytes, size_t i)
+static uint32_t bitAt(const std::vector<uint8_t>& bytes, size_t i)
 {
     return (bytes[i / 8] >> (7 - i % 8)) & 1;
 }
@@ -1134,7 +1134,7 @@ void testGreenBookZeroBlock()
         expected.put(0, 4);   // zero-block ID
         expected.put(77, 8);  // reference
         expected.fs(4);       // ROS
-        for (int s = 0; s < 3; ++s) {
+        for (int32_t s = 0; s < 3; ++s) {
             expected.put(0, 4);
             expected.fs(4);  // ROS, also for the last 8 blocks
         }
@@ -1254,10 +1254,10 @@ void testGreenBookSecondExtensionBeta()
             }
         }
         // random low-entropy blocks: mostly 0, some 1, rare larger values
-        for (int t = 0; t < 200000; ++t) {
+        for (int32_t t = 0; t < 200000; ++t) {
             std::vector<uint8_t> block(J);
             for (auto& v : block) {
-                const unsigned r = rng() % 64;
+                const uint32_t r = rng() % 64;
                 v = static_cast<uint8_t>(r < 48 ? 0 : r < 60 ? 1
                                                   : r < 63   ? 2
                                                              : rng() % 12);
@@ -1285,9 +1285,9 @@ void testGreenBookOptionSelection(uint8_t n)
         const SecondExtensionCodeOption seId(n, CodeOptionSet::Basic);
         const SplitSampleLimits limits(n, CodeOptionSet::Basic);
         const uint64_t ncLength = ncId.length + uint64_t{ J } * n;
-        for (int t = 0; t < 20000; ++t) {
+        for (int32_t t = 0; t < 20000; ++t) {
             // geometric-like samples of a random scale, sometimes the full range
-            const unsigned scale = static_cast<unsigned>(rng() % (n + 1));
+            const uint32_t scale = static_cast<uint32_t>(rng() % (n + 1));
             std::vector<T> block(J);
             for (auto& v : block) {
                 const uint64_t r = rng();
@@ -1376,8 +1376,8 @@ void testPreprocessingModes()
         TEST("§4.2.3 bypass predictor, signed n = 4: x = 0 -1 1 -2 ... -8 → δ = 0 1 2 ... 15 (no reference sample)");
         // Predicted value 0 (θ = min(0 + 8, 7 - 0) = 7): δ = 2x for x ≥ 0, 2|x| - 1 for x < 0; x = -8: θ + 8 = 15
         std::vector<uint8_t> x;
-        for (int i = 0; i < 16; ++i) {
-            const int v = i % 2 == 0 ? i / 2 : -(i + 1) / 2;
+        for (int32_t i = 0; i < 16; ++i) {
+            const int32_t v = i % 2 == 0 ? i / 2 : -(i + 1) / 2;
             x.push_back(static_cast<uint8_t>(v));  // two's complement, sign-extended to 8 bits
         }
         const Preprocessing bypassSigned{ Prediction::Bypass, true };
@@ -1385,7 +1385,7 @@ void testPreprocessingModes()
         const auto stream = encodeWith(x, 4, 16, 1, bypassSigned, bits);
         greenbook::BitWriter expected;
         expected.put(7, 3);  // no compression: the 16 preprocessed samples 0..15
-        for (unsigned d = 0; d < 16; ++d)
+        for (uint32_t d = 0; d < 16; ++d)
             expected.put(d, 4);
         ASSERT_EQ(bits, expected.pos);
         ASSERT_TRUE(stream == expected.bytes);

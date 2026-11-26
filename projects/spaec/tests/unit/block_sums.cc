@@ -17,10 +17,10 @@
 
 using spaec::detail::encoder::blockShiftedSum;
 
-static int failures = 0;
+static int32_t failures = 0;
 
 template <size_t J, typename T>
-static void check(const std::vector<T>& v, unsigned k, unsigned bits, const std::string& what)
+static void check(const std::vector<T>& v, uint32_t k, uint32_t bits, const std::string& what)
 {
     uint64_t expected = 0;
     for (size_t j = 0; j < J; ++j) {
@@ -36,14 +36,14 @@ static void check(const std::vector<T>& v, unsigned k, unsigned bits, const std:
 template <size_t J, typename T>
 static void blockSize(std::mt19937_64& rng)
 {
-    for (unsigned bits = 1; bits <= 8 * sizeof(T); ++bits) {
+    for (uint32_t bits = 1; bits <= 8 * sizeof(T); ++bits) {
         const uint64_t max = bits == 64 ? ~uint64_t{ 0 } : (uint64_t{ 1 } << bits) - 1;
-        for (unsigned k = 0; k < bits; ++k) {
+        for (uint32_t k = 0; k < bits; ++k) {
             std::vector<T> v(J);
             for (auto& x : v)
                 x = static_cast<T>(max);
             check<J>(v, k, bits, "all samples at the maximum");
-            for (int rep = 0; rep < 20; ++rep) {
+            for (int32_t rep = 0; rep < 20; ++rep) {
                 for (auto& x : v)
                     x = static_cast<T>(rng() & max);
                 check<J>(v, k, bits, "random samples");

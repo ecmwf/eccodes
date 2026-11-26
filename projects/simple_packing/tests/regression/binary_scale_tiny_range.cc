@@ -21,7 +21,7 @@
 
 using namespace sp::detail;
 
-static int failures = 0;
+static int32_t failures = 0;
 
 // Runs f with a time limit of 5 seconds: it must return nullopt
 template <typename F>
@@ -91,7 +91,7 @@ int main()
     expectTooSmall("ranges 2^-1074 to 2^-1000, 1 to 63 bits", [] {
         std::optional<int64_t> any;
         for (int64_t bpv = 1; bpv < 64; ++bpv) {
-            for (int e = -1074; e <= -1000; ++e) {
+            for (int32_t e = -1074; e <= -1000; ++e) {
                 for (double m : { 1.0, 1.25, 1.5, 1.625, 1.75 }) {
                     const auto scale = get_binary_scale_factor(std::ldexp(m, e), 0.0, bpv);
                     any = scale ? scale : any;

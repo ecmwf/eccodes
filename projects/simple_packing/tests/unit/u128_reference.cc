@@ -18,7 +18,7 @@ using namespace sp::detail;
 #if defined(__SIZEOF_INT128__)
 __extension__ using Ref = unsigned __int128;
 
-static int failures = 0;
+static int32_t failures = 0;
 
 static UInt128 make(Ref r)
 {
@@ -54,7 +54,7 @@ static void pair(Ref x, Ref y)
 
 static void shifts(Ref x)
 {
-    for (unsigned s = 0; s <= 200; ++s) {
+    for (uint32_t s = 0; s <= 200; ++s) {
         const Ref left = s >= 128 ? Ref(0) : x << s;
         const Ref right = s >= 128 ? Ref(0) : x >> s;
         check(same(make(x) << s, left), "shift left by " + std::to_string(s));
@@ -70,7 +70,7 @@ int main()
     const Ref max = ~Ref(0);
     std::vector<Ref> values = { 0, 1, 2, (Ref(1) << 63) - 1, Ref(1) << 63, (Ref(1) << 64) - 1, Ref(1) << 64, (Ref(1) << 64) + 1, Ref(1) << 127, max - 1, max };
     std::mt19937_64 rng(19);
-    for (int i = 0; i < 40; ++i) {
+    for (int32_t i = 0; i < 40; ++i) {
         values.push_back((Ref(rng()) << 64) | rng());
     }
     for (Ref x : values) {

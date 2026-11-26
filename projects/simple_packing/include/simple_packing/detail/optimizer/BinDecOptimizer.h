@@ -4,6 +4,7 @@
  */
 
 #pragma once
+#include <cstdint>
 
 #include "simple_packing/detail/Parameters.h"
 #include "simple_packing/detail/Optimizer.h"
@@ -22,7 +23,7 @@ namespace sp::detail
 class BinDecOptimizer : public Optimizer
 {
 public:
-    BinDecOptimizer(const int compat_gribex, const int compat_32bit, const int knbit) : compat_gribex_(compat_gribex), compat_32bit_(compat_32bit), knbit_(knbit)
+    BinDecOptimizer(const int32_t compat_gribex, const int32_t compat_32bit, const int32_t knbit) : compat_gribex_(compat_gribex), compat_32bit_(compat_32bit), knbit_(knbit)
     {
         checkRange("bits per value", knbit, 1, maxEncodingBitsPerValue);
     }
@@ -30,9 +31,9 @@ public:
     Parameters getParams(double min, double max);
 
 private:
-    int compat_gribex_ = 0;
-    int compat_32bit_ = 0;
-    int knbit_ = 0;
+    int32_t compat_gribex_ = 0;
+    int32_t compat_32bit_ = 0;
+    int32_t knbit_ = 0;
 };
 
 }  // namespace sp::detail

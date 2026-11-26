@@ -20,7 +20,7 @@
 
 using namespace spaec::detail;
 
-static int failures = 0;
+static int32_t failures = 0;
 
 static void check(bool ok, const std::string& what)
 {
@@ -35,7 +35,7 @@ struct Bits
     std::vector<uint8_t> bytes;
     size_t pos = 0;
 
-    void put(uint64_t value, unsigned n)
+    void put(uint64_t value, uint32_t n)
     {
         while (n--) {
             if (bytes.size() <= pos / 8) bytes.push_back(0);
@@ -55,9 +55,9 @@ struct Bits
 // Codes the samples as split-sample blocks with the given k (CCSDS 121.0-B-3, 5.2.3: ID k + 1,
 // the FS codewords of the high bits, then the k low bits) and decodes them
 template <typename T>
-static void run(unsigned n, unsigned J, unsigned k, const std::vector<T>& samples, const std::string& what)
+static void run(uint32_t n, uint32_t J, uint32_t k, const std::vector<T>& samples, const std::string& what)
 {
-    const unsigned idLength = n > 16 ? 5 : n > 8 ? 4
+    const uint32_t idLength = n > 16 ? 5 : n > 8 ? 4
                                                  : 3;
     Bits b;
     for (size_t first = 0; first < samples.size(); first += J) {
@@ -79,11 +79,11 @@ static void run(unsigned n, unsigned J, unsigned k, const std::vector<T>& sample
 }
 
 template <typename T>
-static void test(unsigned n, unsigned kMax)
+static void test(uint32_t n, uint32_t kMax)
 {
     const uint64_t maxSample = (uint64_t{ 1 } << n) - 1;
     std::mt19937_64 rng(n);
-    for (unsigned k = 0; k <= kMax; ++k) {
+    for (uint32_t k = 0; k <= kMax; ++k) {
         const uint64_t maxZeros = std::min<uint64_t>(maxSample >> k, 300);
         const uint64_t lowMask = (uint64_t{ 1 } << k) - 1;
         const std::string name = "n=" + std::to_string(n) + " k=" + std::to_string(k);
@@ -91,7 +91,7 @@ static void test(unsigned n, unsigned kMax)
         // Each length, preceded by 0 to 7 codewords of one bit (every bit offset) and followed by
         // codewords that must still be read at the right position
         for (uint64_t zeros = 0; zeros <= maxZeros; zeros += (zeros < 230 || zeros > 260 ? 7 : 1)) {
-            for (unsigned offset = 0; offset < 8; ++offset) {
+            for (uint32_t offset = 0; offset < 8; ++offset) {
                 std::vector<T> samples(16, 0);
                 for (size_t i = 0; i < samples.size(); ++i) {
                     const uint64_t high = i == offset ? zeros : (i > offset ? (i % 3) & (maxSample >> k) : 0);
@@ -102,7 +102,7 @@ static void test(unsigned n, unsigned kMax)
         }
 
         // Random mixes: mostly short codewords, some long ones
-        for (unsigned J : { 8u, 16u, 32u, 64u }) {
+        for (uint32_t J : { 8u, 16u, 32u, 64u }) {
             std::vector<T> samples(J * 40);
             for (auto& s : samples) {
                 const uint64_t r = rng() % 100;

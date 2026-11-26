@@ -25,7 +25,7 @@
 
 using namespace spaec::detail;
 
-static int failures = 0;
+static int32_t failures = 0;
 
 static void check(bool ok, const std::string& what)
 {
@@ -49,7 +49,7 @@ static std::vector<uint8_t> roundTrip(const std::vector<uint32_t>& values, uint8
 }
 
 // Encodes the pattern for every block and RSI size and checks the ID that starts the stream
-static void checkOption(const std::vector<uint32_t>& pattern, uint8_t bpv, size_t bytesPerSample, unsigned id, int idLength, const std::string& option)
+static void checkOption(const std::vector<uint32_t>& pattern, uint8_t bpv, size_t bytesPerSample, uint32_t id, int32_t idLength, const std::string& option)
 {
     const size_t bufferBytes = 1024 * 3;
     std::vector<uint32_t> values(bufferBytes / bytesPerSample);
@@ -61,7 +61,7 @@ static void checkOption(const std::vector<uint32_t>& pattern, uint8_t bpv, size_
         for (size_t rsi = 1; rsi <= maxRsi; ++rsi) {
             const std::string what = option + " bpv=" + std::to_string(bpv) + " bs=" + std::to_string(blockSize) + " rsi=" + std::to_string(rsi);
             const auto stream = roundTrip(values, bpv, blockSize, static_cast<uint16_t>(rsi), what);
-            const unsigned got = stream[0] >> (8 - idLength);
+            const uint32_t got = stream[0] >> (8 - idLength);
             check(got == id, what + ": ID " + std::to_string(got) + ", expected " + std::to_string(id));
         }
     }
@@ -72,7 +72,7 @@ int main()
     for (uint8_t bpv = 8; bpv <= 32; bpv += 8) {
         // libaec: 1 byte up to 8 bits, 2 up to 16, 3 for 24 bits (AEC_DATA_3BYTE), else 4
         const size_t bytesPerSample = bpv == 32 ? 4 : bpv / 8;
-        const int idLength = bpv > 16 ? 5 : bpv > 8 ? 4
+        const int32_t idLength = bpv > 16 ? 5 : bpv > 8 ? 4
                                                     : 3;
         const uint32_t xmax = static_cast<uint32_t>((uint64_t{ 1 } << bpv) - 1);
 
@@ -80,7 +80,7 @@ int main()
         checkOption({ xmax - 1, xmax - 1, xmax - 1, xmax - 1, xmax, xmax, xmax, xmax }, bpv, bytesPerSample, 1, idLength + 1, "second extension");
         checkOption({ xmax, 0 }, bpv, bytesPerSample, (1u << idLength) - 1, idLength, "no compression");
         checkOption({ 2, 0, 0, 0 }, bpv, bytesPerSample, 1, idLength, "fundamental sequence");
-        for (unsigned k = 1; k < bpv - 2u; ++k) {
+        for (uint32_t k = 1; k < bpv - 2u; ++k) {
             const uint32_t low = static_cast<uint32_t>((uint64_t{ 1 } << (k - 1)) - 1), high = static_cast<uint32_t>((uint64_t{ 1 } << (k + 1)) - 1);
             checkOption({ low, 0, high, 0 }, bpv, bytesPerSample, k + 1, idLength, "split sample k=" + std::to_string(k));
         }

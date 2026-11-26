@@ -6,6 +6,7 @@
 // the parameter search loop forever. Each case runs with a time limit.
 
 #include <cmath>
+#include <cstdint>
 #include <iostream>
 #include <limits>
 #include <memory>
@@ -22,7 +23,7 @@
 
 using namespace sp::detail;
 
-static int failures = 0;
+static int32_t failures = 0;
 
 // Runs f with a time limit of 5 seconds: it must throw
 template <typename F>

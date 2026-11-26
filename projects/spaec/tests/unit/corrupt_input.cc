@@ -23,7 +23,7 @@
 
 using namespace spaec::detail;
 
-static int failures = 0;
+static int32_t failures = 0;
 
 static void check(bool ok, const std::string& what)
 {
@@ -38,7 +38,7 @@ struct Bits
     std::vector<uint8_t> bytes;
     size_t pos = 0;
 
-    void put(uint64_t value, int n)
+    void put(uint64_t value, int32_t n)
     {
         while (n--) {
             if (bytes.size() <= pos / 8) bytes.push_back(0);
@@ -100,7 +100,7 @@ int main()
         b.put(1, 4);
         b.put(0, 8);
         b.fs(45150);
-        for (int i = 0; i < 4; ++i)
+        for (int32_t i = 0; i < 4; ++i)
             b.fs(0);
         expectCorrupt(decoder, b.bytes, "second extension with a sample above 2^8 - 1");
     }
@@ -111,7 +111,7 @@ int main()
         b.put(1, 4);
         b.put(0, 8);
         b.fs(size_t{ 1 } << 20);
-        for (int i = 0; i < 4; ++i)
+        for (int32_t i = 0; i < 4; ++i)
             b.fs(0);
         expectCorrupt(decoder, b.bytes, "second extension with a fundamental sequence of 2^20 zeros");
     }
@@ -122,7 +122,7 @@ int main()
         b.put(1, 4);
         b.put(0, 8);
         b.fs(91);
-        for (int i = 0; i < 4; ++i)
+        for (int32_t i = 0; i < 4; ++i)
             b.fs(0);
         b.put(0, 7);
         std::vector<uint32_t> values(8);

@@ -26,7 +26,7 @@
 
 using namespace spaec::detail;
 
-static int failures = 0;
+static int32_t failures = 0;
 
 static void check(bool ok, const std::string& what)
 {
@@ -74,7 +74,7 @@ static std::vector<uint32_t> decodeAt(Decoder& decoder, Padded& p, size_t bitOff
     return out;
 }
 
-static void run(size_t n, uint16_t rsi, uint8_t blockSize, uint8_t bpv, int generator, size_t shift)
+static void run(size_t n, uint16_t rsi, uint8_t blockSize, uint8_t bpv, int32_t generator, size_t shift)
 {
     const std::string what = "n=" + std::to_string(n) + " rsi=" + std::to_string(rsi) + " bs=" + std::to_string(blockSize) + " bpv=" + std::to_string(bpv) + " generator=" + std::to_string(generator);
 
@@ -172,7 +172,7 @@ int main()
         for (uint16_t rsi : rsis)
             for (uint8_t blockSize : blockSizes)
                 for (uint8_t bpv : bpvs)
-                    for (int generator = 0; generator < 3; ++generator)
+                    for (int32_t generator = 0; generator < 3; ++generator)
                         run(n, rsi, blockSize, bpv, generator, 1 + runs++ % 15);
 
     // libaec check_decode_range_truncated: a no-compression ID (8 bits per value: 111) without

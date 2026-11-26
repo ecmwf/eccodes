@@ -20,4 +20,5 @@ First version.
 - Floating-point compiler options `ON` by default (`SIMPLE_PACKING_FP_CONTRACT_OFF`,
   `SIMPLE_PACKING_NO_FAST_MATH`, `SIMPLE_PACKING_NO_TRAPPING_MATH`).
 - Benchmark `benchmarks/sp_bench` (`SIMPLE_PACKING_BUILD_BENCHMARKS`), install test.
+- Fixed-width integer types: `int32_t` scale factors and bits per value, `uint8_t` packed data.
 - Tested on Linux (GCC, Clang, Intel icx; x86-64, AArch64, s390x) and on Windows with MinGW-w64.

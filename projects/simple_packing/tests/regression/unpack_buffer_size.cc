@@ -14,14 +14,14 @@
 
 using namespace sp::detail;
 
-static int failures = 0;
+static int32_t failures = 0;
 
 static void expectInvalid(const char* what, int64_t bpv, size_t bufferSize, size_t nVals)
 {
     Parameters params;
     params.bitsPerValue(bpv);
     SimplePackingBinary<double> sp(nullptr);
-    std::vector<unsigned char> buffer(bufferSize, 0x5a);
+    std::vector<uint8_t> buffer(bufferSize, 0x5a);
     std::vector<double> out(std::min<size_t>(nVals, 100000));
     try {
         sp.unpackTo(params, buffer.data(), buffer.size(), nVals, out.data());
@@ -46,7 +46,7 @@ int main()
         Parameters params;
         params.bitsPerValue(bpv);
         SimplePackingBinary<double> sp(nullptr);
-        std::vector<unsigned char> buffer((bpv * n + 7) / 8, 0);
+        std::vector<uint8_t> buffer((bpv * n + 7) / 8, 0);
         std::vector<double> out(n);
         try {
             sp.unpackTo(params, buffer.data(), buffer.size(), n, out.data());
