@@ -53,6 +53,11 @@ check_cxx_compiler_flag("-fno-fast-math" SIMPLE_PACKING_HAVE_NO_FAST_MATH)
 if(SIMPLE_PACKING_HAVE_NO_FAST_MATH)
   list(PREPEND SIMPLE_PACKING_OPT_FLAGS -fno-fast-math)
 endif()
+# icx/icpx: no unsafe optimisations by default. First: -fp-model=precise allows contractions again,
+# -ffp-contract=off (below) must come after it
+if(CMAKE_CXX_COMPILER_ID STREQUAL "IntelLLVM")
+  list(PREPEND SIMPLE_PACKING_OPT_FLAGS -fp-model=precise)
+endif()
 # Every floating-point operation rounded separately: with fused multiply-adds (available with
 # -march=native) the packed values would depend on the build machine
 check_cxx_compiler_flag("-ffp-contract=off" SIMPLE_PACKING_HAVE_FP_CONTRACT_OFF)
@@ -82,10 +87,11 @@ target_compile_features(simple_packing_headers INTERFACE cxx_std_17)
 # instantiate (they round differently, so the encoded data would depend on the CPU)
 # Nor the unsafe floating-point optimisations of -ffast-math (they remove the checks for NaN and
 # infinity) or of the default floating-point model of icx/icpx
+# (-fp-model=precise first: it allows contractions again, -ffp-contract=off must come after it)
 target_compile_options(simple_packing_headers INTERFACE
+  $<$<COMPILE_LANG_AND_ID:CXX,IntelLLVM>:-fp-model=precise>
   $<$<COMPILE_LANG_AND_ID:CXX,GNU,Clang,AppleClang,IntelLLVM>:-fno-fast-math>
-  $<$<COMPILE_LANG_AND_ID:CXX,GNU,Clang,AppleClang,IntelLLVM>:-ffp-contract=off>
-  $<$<COMPILE_LANG_AND_ID:CXX,IntelLLVM>:-fp-model=precise>)
+  $<$<COMPILE_LANG_AND_ID:CXX,GNU,Clang,AppleClang,IntelLLVM>:-ffp-contract=off>)
 
 # --- Compiled sources: an object library, so that ecCodes can embed them ---
 

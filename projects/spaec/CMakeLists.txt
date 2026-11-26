@@ -53,6 +53,11 @@ check_cxx_compiler_flag("-fno-fast-math" SPAEC_HAVE_NO_FAST_MATH)
 if(SPAEC_HAVE_NO_FAST_MATH)
   list(PREPEND SPAEC_OPT_FLAGS -fno-fast-math)
 endif()
+# icx/icpx: no unsafe optimisations by default. First: -fp-model=precise allows contractions again,
+# -ffp-contract=off (below) must come after it
+if(CMAKE_CXX_COMPILER_ID STREQUAL "IntelLLVM")
+  list(PREPEND SPAEC_OPT_FLAGS -fp-model=precise)
+endif()
 # Lets GCC vectorize loops with floating-point comparisons (e.g. the range check of the values
 # to encode); SpAec does not rely on floating-point exception flags
 check_cxx_compiler_flag("-fno-trapping-math" SPAEC_HAVE_NO_TRAPPING_MATH)
@@ -88,10 +93,11 @@ target_compile_features(spaec INTERFACE cxx_std_17)
 # instantiate (they round differently, so the encoded data would depend on the CPU)
 # Nor the unsafe floating-point optimisations of -ffast-math (they remove the checks for NaN and
 # infinity) or of the default floating-point model of icx/icpx
+# (-fp-model=precise first: it allows contractions again, -ffp-contract=off must come after it)
 target_compile_options(spaec INTERFACE
+  $<$<COMPILE_LANG_AND_ID:CXX,IntelLLVM>:-fp-model=precise>
   $<$<COMPILE_LANG_AND_ID:CXX,GNU,Clang,AppleClang,IntelLLVM>:-fno-fast-math>
-  $<$<COMPILE_LANG_AND_ID:CXX,GNU,Clang,AppleClang,IntelLLVM>:-ffp-contract=off>
-  $<$<COMPILE_LANG_AND_ID:CXX,IntelLLVM>:-fp-model=precise>)
+  $<$<COMPILE_LANG_AND_ID:CXX,GNU,Clang,AppleClang,IntelLLVM>:-ffp-contract=off>)
 
 if(SPAEC_BUILD_TESTS)
   if(SPAEC_TOP_LEVEL)

@@ -514,7 +514,8 @@ set_source_files_properties(accessor/DataSimplePacking.cc accessor/DataG1SimpleP
 if( CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|AppleClang|IntelLLVM" )
     set( ECCODES_FP_SAFE_FLAGS -fno-fast-math -ffp-contract=off )
     if( CMAKE_CXX_COMPILER_ID STREQUAL "IntelLLVM" )
-        list( APPEND ECCODES_FP_SAFE_FLAGS -fp-model=precise )
+        # First: -fp-model=precise allows contractions again, -ffp-contract=off must come after it
+        list( PREPEND ECCODES_FP_SAFE_FLAGS -fp-model=precise )
     endif()
     get_source_file_property( ECCODES_LEGACY_CCSDS_OPTIONS accessor/DataCcsdsPackingLegacy.cc COMPILE_OPTIONS )
     if( ECCODES_LEGACY_CCSDS_OPTIONS STREQUAL "NOTFOUND" )
