@@ -735,7 +735,11 @@ int DataSimplePacking::pack_double(const double* val, size_t* len)
 
         /* bits_per_value=(long)ceil(log((double)(imax-imin+1))/log(2.0)); */
         /* See GRIB-540 for why we use ceil */
-        err = number_of_bits((unsigned long)ceil(fabs(max - min)), &bits_per_value);
+        const double coded_range = ceil(fabs(max - min));
+        /* number_of_bits counts at most 32 bits. A larger range must be refused: casting it to an
+           unsigned long is undefined and gave 0, i.e. a message declaring a constant field */
+        err = coded_range < static_cast<double>(0x100000000ULL) ? number_of_bits(static_cast<unsigned long>(coded_range), &bits_per_value)
+                                                                : GRIB_ENCODING_ERROR;
         if (err) {
             grib_context_log(context_, GRIB_LOG_ERROR,
                              "%s %s: Range of values too large. Try a smaller value for decimal precision (less than %ld)",
