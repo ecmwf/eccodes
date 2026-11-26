@@ -58,4 +58,19 @@ target_compile_options(consumer_flags PRIVATE -O2 ${SPAEC_ARCH_FLAGS})
 spaec_test_fp_flags(consumer_flags ${SPAEC_FP_SAFETY_FLAGS})
 add_test(NAME ${SPAEC_TEST_PREFIX}consumer_flags COMMAND consumer_flags)
 
+
+# Translation units compiled for different instruction sets in one program (x86-64: -mavx2 and the
+# baseline): each must use its own instances of the functions (One Definition Rule)
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "^(x86_64|AMD64|amd64)$" AND NOT CMAKE_CROSSCOMPILING)
+  check_cxx_compiler_flag(-mavx2 SPAEC_HAVE_MAVX2)
+  if(SPAEC_HAVE_MAVX2)
+    add_executable(isa_odr ${CMAKE_CURRENT_SOURCE_DIR}/isa_odr.cc ${CMAKE_CURRENT_SOURCE_DIR}/isa_odr_avx2.cc)
+    target_link_libraries(isa_odr PRIVATE spaec::spaec)
+    target_compile_options(isa_odr PRIVATE -O2 ${SPAEC_FP_FLAGS})
+    set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/isa_odr.cc PROPERTIES COMPILE_OPTIONS "-march=x86-64")
+    set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/isa_odr_avx2.cc PROPERTIES COMPILE_OPTIONS "-march=x86-64;-mavx2")
+    add_test(NAME ${SPAEC_TEST_PREFIX}isa_odr COMMAND isa_odr)
+  endif()
+endif()
+
 spaec_label_tests(regression)
