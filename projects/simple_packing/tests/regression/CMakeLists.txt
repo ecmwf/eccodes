@@ -139,6 +139,21 @@ if(SIMPLE_PACKING_HAVE_FAST_MATH)
   endforeach()
 endif()
 
+# A user who compiles and links with -ffast-math and only links simple_packing::simple_packing: the
+# usage requirements add -fno-fast-math after the user's flags (the default
+# SIMPLE_PACKING_NO_FAST_MATH=ON; not with OFF). The header functions check the values.
+if(SIMPLE_PACKING_HAVE_FAST_MATH AND NOT SIMPLE_PACKING_NO_FAST_MATH STREQUAL "OFF")
+  foreach(name api errors utils_ranges)
+    add_executable(sp_${name}_user_fast_math ${PROJECT_SOURCE_DIR}/tests/unit/${name}.cc)
+    target_link_libraries(sp_${name}_user_fast_math PRIVATE simple_packing::simple_packing)
+    target_compile_options(sp_${name}_user_fast_math PRIVATE -ffast-math -O2 ${SIMPLE_PACKING_ARCH_FLAGS})
+    sp_test_fp_flags(sp_${name}_user_fast_math -ffast-math ${SIMPLE_PACKING_FP_SAFETY_FLAGS})
+    target_compile_definitions(sp_${name}_user_fast_math PRIVATE NDEBUG)
+    target_link_options(sp_${name}_user_fast_math PRIVATE -ffast-math)
+    add_test(NAME ${SP_TEST_PREFIX}${name}_user_fast_math COMMAND sp_${name}_user_fast_math)
+    set_tests_properties(${SP_TEST_PREFIX}${name}_user_fast_math PROPERTIES TIMEOUT 120)
+  endforeach()
+endif()
 
 # A user's code gets the floating-point options that this compiler needs (usage requirements):
 # compiled without the project flags, for the same CPU
