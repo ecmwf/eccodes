@@ -17,12 +17,17 @@
 // parameters of optimizeScaleFactor=0; BinDecOptimizer uses long and optimises (see
 // BinDecOptimizer.h).
 // The selection: ECCODES_USE_SPAEC=1 (see DataCcsdsPacking.cc); ECCODES_USE_SP is not needed.
+// ECCODES_SPAEC_SELECTOR: the split-sample selector of the encoder. search (the default, also when
+// unset or empty): the k of minimum size, the data of libaec; estimate: k from the sum of the block
+// (faster, a few bytes more; spaec::SplitSelector). Another value: encoding fails
+// (GRIB_INVALID_ARGUMENT), decoding is not affected. Read once per process.
 
 #include "DataCcsdsPacking.h"
 
 #include <cmath>
 #include <cstring>
 #include <stdexcept>
+#include <string>
 
 #include "simple_packing/simple_packing.h"
 #include "spaec/spaec.h"
@@ -52,6 +57,28 @@ spaec::Options spaec_options(long flags, long bits_per_value, long block_size, l
     return options;
 }
 
+// ECCODES_SPAEC_SELECTOR (see above): valid = false for an unknown value
+struct SelectorSetting
+{
+    bool valid;
+    spaec::SplitSelector selector;
+    std::string value;
+};
+
+const SelectorSetting& selector_setting()
+{
+    static const SelectorSetting setting = [] {
+        const char* env = getenv("ECCODES_SPAEC_SELECTOR");
+        const std::string value = env ? env : "";
+        if (value.empty() || value == "search")
+            return SelectorSetting{ true, spaec::SplitSelector::Search, value };
+        if (value == "estimate")
+            return SelectorSetting{ true, spaec::SplitSelector::Estimate, value };
+        return SelectorSetting{ false, spaec::SplitSelector::Search, value };
+    }();
+    return setting;
+}
+
 void print_spaec_info(const char* func, long flags, long bits_per_value, long block_size, long rsi)
 {
     fprintf(stderr, "ECCODES DEBUG CCSDS %s aec_stream.flags=%ld\n", func, flags);
@@ -76,6 +103,13 @@ int DataCcsdsPacking::pack_new(const T* val, size_t* len)
     long ccsds_flags = 0;
     long ccsds_block_size = 0;
     long ccsds_rsi = 0;
+
+    const SelectorSetting& selector = selector_setting();
+    if (!selector.valid) {
+        grib_context_log(context_, GRIB_LOG_ERROR, "%s %s: invalid value '%s' of ECCODES_SPAEC_SELECTOR (search or estimate)",
+                         accessor_type().c_str(), __func__, selector.value.c_str());
+        return GRIB_INVALID_ARGUMENT;
+    }
 
     dirty_ = 1;
 
@@ -194,7 +228,8 @@ int DataCcsdsPacking::pack_new(const T* val, size_t* len)
     unsigned char* buf = nullptr;
     size_t buflen = 0;
     try {
-        const spaec::Options options = spaec_options(ccsds_flags, bits_per_value, ccsds_block_size, ccsds_rsi);
+        spaec::Options options = spaec_options(ccsds_flags, bits_per_value, ccsds_block_size, ccsds_rsi);
+        options.splitSelector = selector.selector;
         const spaec::Scaling sampleScaling{ reference_value, static_cast<int>(binary_scale_factor), static_cast<int>(decimal_scale_factor) };
 
         // Worst-case output buffer

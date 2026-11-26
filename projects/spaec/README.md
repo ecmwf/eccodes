@@ -196,4 +196,5 @@ are in an inline namespace per instruction set (`spaec/detail/Isa.h`).
 GRIB CCSDS packing uses SpAec with `ECCODES_USE_SPAEC=1`, and always when ecCodes is built without
 libaec. Signed samples and RSI padding are left to libaec. `codes_set_float_array` packs the floats
 without converting them to doubles, with the result of `codes_set_double_array` with the converted
-values.
+values. `ECCODES_SPAEC_SELECTOR` selects the split-sample selector: `search` (the default; the data
+of libaec) or `estimate`.
