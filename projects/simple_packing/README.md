@@ -70,6 +70,10 @@ cmake --build build
 ctest --test-dir build
 ```
 
+Tested on Linux (GCC, Clang and Intel icx; x86-64, AArch64 and s390x) and on Windows with MinGW-w64
+GCC (tests run under wine). The code also supports MSVC, but MSVC has not been tested yet. All
+integer types have the same width on every platform (`int64_t`, not `long`).
+
 CMake targets: `simple_packing::simple_packing` and `simple_packing::headers`. Options:
 `SIMPLE_PACKING_BUILD_TESTS`, `SIMPLE_PACKING_BUILD_FUZZERS` (Clang), `SIMPLE_PACKING_INSTALL`,
 `SIMPLE_PACKING_NATIVE_ARCH` (`-march=native`, default on), and the floating-point options below.
