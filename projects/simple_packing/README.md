@@ -82,7 +82,7 @@ CMake targets: `simple_packing::simple_packing` and `simple_packing::headers`. O
 `-DSIMPLE_PACKING_BUILD_BENCHMARKS=ON` builds `benchmarks/sp_bench`, an overview of the speed of
 packing and unpacking (doubles, floats, several threads). It uses synthetic fields, or your own
 values (see `sp_bench.cc`). `benchmarks/utils_bench` measures the functions that choose the scaling
-(nanoseconds per call).
+(nanoseconds per call; results in `benchmarks/utils_results.md`).
 
 ## Floating-point compiler options
 
