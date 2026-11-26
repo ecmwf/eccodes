@@ -1,9 +1,11 @@
 // SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
 // SPDX-License-Identifier: Apache-2.0
 
-// The lookup table for IEEE floats must be initialised safely when the first calls come from
-// several threads at once (a global flag was checked and set without synchronisation). This test
-// is compiled with -fsanitize=thread together with Utils.cc, and fails on a data race.
+// The first calls may come from several threads at once: the lookup table for IEEE floats was
+// initialised on the first call, with a global flag checked and set without synchronisation. The
+// library has no such state any more (its tables are compile-time constants). This test checks the
+// results of concurrent first calls; in a build with the thread sanitizer (-fsanitize=thread for
+// the whole project) it also fails on a data race.
 
 #include <atomic>
 #include <cstdint>
