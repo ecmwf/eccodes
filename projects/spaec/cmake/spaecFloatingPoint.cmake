@@ -92,7 +92,7 @@ function(spaec_floating_point_flags)
   elseif(SPAEC_NO_FAST_MATH STREQUAL "AUTO" AND CMAKE_CXX_COMPILER_ID MATCHES "^(IntelLLVM|Intel)$")
     set(enable ON)
     set(reason "-fno-fast-math (the default floating-point model of ${CMAKE_CXX_COMPILER_ID} is fast)")
-  elseif(CMAKE_CXX_COMPILER_ID MATCHES "^(IntelLLVM|Intel)$")
+  elseif(CMAKE_CXX_COMPILER_ID MATCHES "^(IntelLLVM|Intel)$" AND NOT CMAKE_CXX_FLAGS MATCHES "-fp-model|-fno-fast-math")
     message(WARNING "spaec: SPAEC_NO_FAST_MATH=OFF with ${CMAKE_CXX_COMPILER_ID}, whose default floating-point "
                     "model is fast (it defines no macro to check): the results may differ and the tests fail. "
                     "Configure with -DSPAEC_NO_FAST_MATH=AUTO or ON.")

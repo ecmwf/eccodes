@@ -7,9 +7,12 @@ set(SP_TEST_PREFIX "simple_packing_")
 # sp_add_test(<name> [SOURCES <sources...>])
 # Builds <name>.cc into the executable sp_<name>, compiled like the library (optimised).
 # sp_test_fp_flags(<target> <flags>...): tells the test (tests/fp_diagnostics.h) the floating-point
-# options it is compiled with
+# options it is compiled with (CMAKE_CXX_FLAGS and the given options)
 function(sp_test_fp_flags target)
-  string(JOIN " " flags ${ARGN})
+  # with the flags of the user (e.g. -fp-model=precise of icx, -ffast-math)
+  string(JOIN " " flags ${CMAKE_CXX_FLAGS} ${ARGN})
+  string(STRIP "${flags}" flags)
+  string(REPLACE "\"" "\\\"" flags "${flags}")
   if(flags STREQUAL "")
     set(flags "(none)")
   endif()

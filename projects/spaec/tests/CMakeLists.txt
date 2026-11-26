@@ -8,9 +8,12 @@ set(SPAEC_TEST_PREFIX "spaec_")
 # Builds <name>.cc into an executable and registers it as test spaec_<name>.
 # Always compiled with ${SPAEC_OPT_FLAGS} (release mode).
 # spaec_test_fp_flags(<target> <flags>...): tells the test (tests/fp_diagnostics.h) the
-# floating-point options it is compiled with
+# floating-point options it is compiled with (CMAKE_CXX_FLAGS and the given options)
 function(spaec_test_fp_flags target)
-  string(JOIN " " flags ${ARGN})
+  # with the flags of the user (e.g. -fp-model=precise of icx, -ffast-math)
+  string(JOIN " " flags ${CMAKE_CXX_FLAGS} ${ARGN})
+  string(STRIP "${flags}" flags)
+  string(REPLACE "\"" "\\\"" flags "${flags}")
   if(flags STREQUAL "")
     set(flags "(none)")
   endif()
