@@ -56,6 +56,23 @@ foreach(sp_option SIMPLE_PACKING_NO_FAST_MATH SIMPLE_PACKING_FP_CONTRACT_OFF SIM
   endif()
 endforeach()
 
+# The compiler flags of each configuration (CMAKE_CXX_FLAGS_<CONFIG>: all configurations of a
+# multi-configuration generator, else CMAKE_BUILD_TYPE), followed by the flags the project adds: the
+# probes below compile with what the build compiles with (CMAKE_CXX_FLAGS are added by the checks)
+function(simple_packing_configuration_flags out)
+  if(CMAKE_CONFIGURATION_TYPES)
+    set(configs ${CMAKE_CONFIGURATION_TYPES})
+  else()
+    set(configs "${CMAKE_BUILD_TYPE}")
+  endif()
+  set(result "")
+  foreach(config IN LISTS configs)
+    string(TOUPPER "${config}" upper)
+    list(APPEND result "${CMAKE_CXX_FLAGS_${upper}}")
+  endforeach()
+  set(${out} "${result}" PARENT_SCOPE)
+endfunction()
+
 # simple_packing_floating_point_flags(<arch flags>): sets SIMPLE_PACKING_FP_FLAGS and SIMPLE_PACKING_FP_SAFETY_FLAGS in the
 # caller's scope; <arch flags> (e.g. -march=native) are used by the contraction probe
 function(simple_packing_floating_point_flags)
@@ -66,18 +83,26 @@ function(simple_packing_floating_point_flags)
   set(reasons "")
 
   # -fno-fast-math
+  unset(reason)
   set(enable OFF)
   if(SIMPLE_PACKING_NO_FAST_MATH STREQUAL "ON")
     set(enable ON)
   elseif(SIMPLE_PACKING_NO_FAST_MATH STREQUAL "AUTO" AND CMAKE_CXX_COMPILER_ID MATCHES "^(IntelLLVM|Intel)$")
     set(enable ON)
-    list(APPEND reasons "-fno-fast-math (the default floating-point model of ${CMAKE_CXX_COMPILER_ID} is fast)")
+    set(reason "-fno-fast-math (the default floating-point model of ${CMAKE_CXX_COMPILER_ID} is fast)")
+  elseif(CMAKE_CXX_COMPILER_ID MATCHES "^(IntelLLVM|Intel)$")
+    message(WARNING "simple_packing: SIMPLE_PACKING_NO_FAST_MATH=OFF with ${CMAKE_CXX_COMPILER_ID}, whose default floating-point "
+                    "model is fast (it defines no macro to check): the results may differ and the tests fail. "
+                    "Configure with -DSIMPLE_PACKING_NO_FAST_MATH=AUTO or ON.")
   endif()
   if(enable)
     check_cxx_compiler_flag(-fno-fast-math SIMPLE_PACKING_HAVE_NO_FAST_MATH)
     if(SIMPLE_PACKING_HAVE_NO_FAST_MATH)
       list(APPEND flags -fno-fast-math)
       list(APPEND safety -fno-fast-math)
+      if(DEFINED reason)
+        list(APPEND reasons "${reason}")
+      endif()
     endif()
     check_linker_flag(CXX -fno-fast-math SIMPLE_PACKING_LINKER_HAS_NO_FAST_MATH)
     if(SIMPLE_PACKING_LINKER_HAS_NO_FAST_MATH)
@@ -86,44 +111,62 @@ function(simple_packing_floating_point_flags)
   endif()
 
   # -fno-trapping-math
+  unset(reason)
   set(enable OFF)
   if(SIMPLE_PACKING_NO_TRAPPING_MATH STREQUAL "ON")
     set(enable ON)
   elseif(SIMPLE_PACKING_NO_TRAPPING_MATH STREQUAL "AUTO" AND CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     set(enable ON)
-    list(APPEND reasons "-fno-trapping-math (GCC vectorises the range checks only with it)")
+    set(reason "-fno-trapping-math (GCC vectorises the range checks only with it)")
   endif()
   if(enable)
     check_cxx_compiler_flag(-fno-trapping-math SIMPLE_PACKING_HAVE_NO_TRAPPING_MATH)
     if(SIMPLE_PACKING_HAVE_NO_TRAPPING_MATH)
       list(APPEND flags -fno-trapping-math)
+      if(DEFINED reason)
+        list(APPEND reasons "${reason}")
+      endif()
     endif()
   endif()
 
-  # -ffp-contract=off: AUTO probes whether the compiler fuses a * b - c with the project flags
+  # -ffp-contract=off: AUTO probes whether the compiler fuses a * b - c with the flags of the build
+  unset(reason)
   set(enable OFF)
+  simple_packing_configuration_flags(config_flags)
   if(SIMPLE_PACKING_FP_CONTRACT_OFF STREQUAL "ON")
     set(enable ON)
   elseif(SIMPLE_PACKING_FP_CONTRACT_OFF STREQUAL "AUTO")
     if(CMAKE_CROSSCOMPILING AND NOT CMAKE_CROSSCOMPILING_EMULATOR)
       if(CMAKE_CXX_COMPILER_ID MATCHES "^(GNU|Clang|AppleClang|IntelLLVM)$")
         set(enable ON)
-        list(APPEND reasons "-ffp-contract=off (cross-compiling: ${CMAKE_CXX_COMPILER_ID} contracts by default where the target has fused multiply-add)")
+        set(reason "-ffp-contract=off (cross-compiling: ${CMAKE_CXX_COMPILER_ID} contracts by default where the target has fused multiply-add)")
       endif()
     else()
-      # a * b rounds to 1 (2^-54 is lost); fused, a * b - c is -2^-54
-      string(MD5 key "${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS} ${arch_flags} ${flags}")
-      set(CMAKE_REQUIRED_FLAGS "-O2 ${arch_flags} ${flags}")
-      string(REPLACE ";" " " CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS}")
-      set(CMAKE_REQUIRED_QUIET ON)
-      check_cxx_source_runs("
-        volatile double a = 1.0 + 0x1p-27, b = 1.0 - 0x1p-27, c = 1.0;
-        int main() { const double x = a, y = b, z = c; return x * y - z == 0.0 ? 0 : 1; }"
-        SIMPLE_PACKING_NOT_CONTRACTING_${key})
-      if(NOT SIMPLE_PACKING_NOT_CONTRACTING_${key})
-        set(enable ON)
-        list(APPEND reasons "-ffp-contract=off (the compiler fuses multiply-adds with these flags)")
-      endif()
+      # a * b rounds to 1 (2^-54 is lost); fused, a * b - c is -2^-54. The result is compared as a
+      # bit pattern: with -ffast-math a floating-point comparison could be folded away.
+      foreach(config_flag_set IN LISTS config_flags)
+        string(MD5 key "${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS} ${config_flag_set} ${arch_flags} ${flags}")
+        set(CMAKE_REQUIRED_FLAGS "${config_flag_set} -O3 ${flags} ${arch_flags}")
+        string(REPLACE ";" " " CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS}")
+        set(CMAKE_REQUIRED_QUIET ON)
+        check_cxx_source_runs("
+          #include <cstdint>
+          #include <cstring>
+          volatile double a = 1.0 + 0x1p-27, b = 1.0 - 0x1p-27, c = 1.0;
+          int main()
+          {
+              const double x = a, y = b, z = c;
+              const double r = x * y - z;
+              std::uint64_t bits = 0;
+              std::memcpy(&bits, &r, sizeof(bits));
+              return bits == 0 ? 0 : 1;
+          }"
+          SIMPLE_PACKING_NOT_CONTRACTING_${key})
+        if(NOT SIMPLE_PACKING_NOT_CONTRACTING_${key})
+          set(enable ON)
+          set(reason "-ffp-contract=off (the compiler fuses multiply-adds with these flags)")
+        endif()
+      endforeach()
     endif()
   endif()
   if(enable)
@@ -131,25 +174,32 @@ function(simple_packing_floating_point_flags)
     if(SIMPLE_PACKING_HAVE_FP_CONTRACT_OFF)
       list(APPEND flags -ffp-contract=off)
       list(APPEND safety -ffp-contract=off)
+      if(DEFINED reason)
+        list(APPEND reasons "${reason}")
+      endif()
     endif()
   endif()
 
-  # A -ffast-math (or -ffinite-math-only) of the user that the flags above do not undo
-  string(MD5 key "${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS} ${flags}")
-  set(CMAKE_REQUIRED_FLAGS "${flags}")
-  string(REPLACE ";" " " CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS}")
-  set(CMAKE_REQUIRED_QUIET ON)
-  check_cxx_source_compiles("
-    #if defined(__FAST_MATH__) || (defined(__FINITE_MATH_ONLY__) && __FINITE_MATH_ONLY__)
-    #error fast math
-    #endif
-    int main() { return 0; }" SIMPLE_PACKING_NO_FAST_MATH_IN_EFFECT_${key})
-  if(NOT SIMPLE_PACKING_NO_FAST_MATH_IN_EFFECT_${key})
-    message(WARNING "simple_packing: the compiler flags (CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}) enable -ffast-math or "
-                    "-ffinite-math-only. Simple packing then cannot detect NaN and infinite values and may round "
-                    "differently: the tests fail. Configure with -DSIMPLE_PACKING_NO_FAST_MATH=ON (adds -fno-fast-math) "
-                    "or remove the option.")
-  endif()
+  # A -ffast-math (or -ffinite-math-only) of the user that the flags above do not undo, with the flags
+  # of the build (a later -O level undoes -Ofast, but not -ffast-math)
+  foreach(config_flag_set IN LISTS config_flags)
+    string(MD5 key "${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS} ${config_flag_set} ${flags}")
+    set(CMAKE_REQUIRED_FLAGS "${config_flag_set} -O3 ${flags}")
+    string(REPLACE ";" " " CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS}")
+    set(CMAKE_REQUIRED_QUIET ON)
+    check_cxx_source_compiles("
+      #if defined(__FAST_MATH__) || (defined(__FINITE_MATH_ONLY__) && __FINITE_MATH_ONLY__)
+      #error fast math
+      #endif
+      int main() { return 0; }" SIMPLE_PACKING_NO_FAST_MATH_IN_EFFECT_${key})
+    if(NOT SIMPLE_PACKING_NO_FAST_MATH_IN_EFFECT_${key})
+      message(WARNING "simple_packing: the compiler flags (CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}; of the configuration: "
+                      "${config_flag_set}) enable -ffast-math or -ffinite-math-only. Simple packing then cannot detect NaN "
+                      "and infinite values and may round differently: the tests fail. Configure with "
+                      "-DSIMPLE_PACKING_NO_FAST_MATH=ON (adds -fno-fast-math) or remove the option.")
+      break()
+    endif()
+  endforeach()
 
   if(reasons)
     string(REPLACE ";" ", " text "${reasons}")
