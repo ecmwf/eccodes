@@ -5,9 +5,11 @@
 
 #pragma once
 
+#include <algorithm>
 #include <cassert>
 #include <cstddef>
 #include <cstdint>
+#include <type_traits>
 #include <vector>
 
 #if defined(__AVX2__)
@@ -16,6 +18,7 @@
 
 #include "spaec/detail/Utils.h"
 #include "spaec/detail/CodeOption.h"
+#include "spaec/detail/Compat.h"
 #include "spaec/detail/Span.h"
 
 namespace spaec::detail
@@ -25,11 +28,35 @@ namespace spaec::detail
 namespace encoder
 {
 
-template <typename ValueType, typename DeltaType>
+// Selector: the selection of the split-sample parameter k (SplitSelector), a template parameter so
+// that the default, SplitSelector::Search, has no run-time check per block
+template <typename ValueType, typename DeltaType, SplitSelector Selector = SplitSelector::Search>
 class EncoderBase
 {
 public:
-    // Selects the split-sample parameter k. The size of a split-sample block as a function of k has a
+    // The split-sample option of a block: k, the block size (ID, reference and data bits) and the
+    // sum of the samples
+    struct Selection
+    {
+        uint8_t k;
+        uint64_t size;
+        uint64_t blockSum;
+    };
+
+    // Selects the split-sample parameter k with the selector of the encoder: selectEstimated or
+    // selectSearched
+    template <ReferenceType RType>
+    Selection selectBestMethod(Span<DeltaType> values)
+    {
+        if constexpr (Selector == SplitSelector::Estimate) {
+            return selectEstimated<RType>(values);
+        }
+        else {
+            return selectSearched<RType>(values);
+        }
+    }
+
+    // SplitSelector::Search: the size of a split-sample block as a function of k has a
     // single minimum (Kiely, "Selecting the Golomb Parameter in Rice Coding", 2004). The search
     // starts at the k of the previous split-sample assessment (splitK_, carried across blocks and
     // RSIs, 0 at the start of a stream) and moves up, then down, while the size strictly decreases.
@@ -39,18 +66,13 @@ public:
     // identify the minimum); further passes are needed only when the minimum is farther away.
     // Returns k, the total block size (ID, reference and data bits) and the sum of the values.
     template <ReferenceType RType>
-    auto selectBestMethod(Span<DeltaType> values)
+    Selection selectSearched(Span<DeltaType> values)
     {
         constexpr size_t startIndex = (RType == ReferenceType::Ref) ? 1 : 0;
         const uint64_t thisBs = blockSizeV_ - startIndex;
         const DeltaType* v = values.data() + startIndex;
 
-        struct Result
-        {
-            uint8_t k;
-            uint64_t size;
-            uint64_t blockSum;
-        };
+        using Result = Selection;
 
         // The restricted set for 1 and 2 bits has no split-sample options: only the sum
         if (!limits_.available_) {
@@ -169,6 +191,106 @@ public:
         }
 
         return Result{ static_cast<uint8_t>(kBest), fixedOverhead + lenMin, sum };
+    }
+
+    // The k estimated from the sum S of the n samples of a block (Kiely, "Selecting the Golomb
+    // Parameter in Rice Coding", IPN Progress Report 42-159, 2004, IV.A): the largest k with
+    // 2^k <= mu + f, mu = S / n, and f = 49/128, an approximation of f* = 2 - golden ratio, which
+    // minimises the largest relative redundancy for geometrically distributed samples. The size of
+    // the block with this k is at most 1/2 bit per sample (and about 13 %) above the minimum, and
+    // k is at most one away from the k of minimum size. In integers, without divisions:
+    // n * 128 * 2^k <= 128 * S + 49 * n. S < 2^38 (64 samples of 32 bits): no overflow.
+    static unsigned estimateK(uint64_t sum, uint64_t n)
+    {
+        const uint64_t limit = (sum << 7) + 49 * n;
+        const uint64_t unit = n << 7;
+        if (limit < unit) {
+            return 0;
+        }
+        unsigned k = static_cast<unsigned>(countlZero(unit) - countlZero(limit));
+        if ((unit << k) > limit) {
+            --k;
+        }
+        return k;
+    }
+
+    // The sum of the J samples of a block shifted right by k (k = 0: the sum). With AVX2 16 samples
+    // of 16 bits are summed per step in 32-bit lanes (at most 64 * (2^16 - 1)), and 8 samples of
+    // 32 bits in 64-bit lanes; otherwise a loop that the compilers vectorise (J is a constant).
+    template <size_t J>
+    static uint64_t shiftedSum(const DeltaType* v, unsigned k)
+    {
+#if defined(__AVX2__)
+        if constexpr (sizeof(DeltaType) == 2 && J % 16 == 0) {
+            const __m256i zero = _mm256_setzero_si256();
+            const __m128i shift = _mm_cvtsi32_si128(static_cast<int>(k));
+            __m256i acc = zero;
+            for (size_t j = 0; j < J; j += 16) {
+                const __m256i x = _mm256_srl_epi16(_mm256_loadu_si256(reinterpret_cast<const __m256i*>(v + j)), shift);
+                acc = _mm256_add_epi32(acc, _mm256_add_epi32(_mm256_unpacklo_epi16(x, zero), _mm256_unpackhi_epi16(x, zero)));
+            }
+            __m128i t = _mm_add_epi32(_mm256_castsi256_si128(acc), _mm256_extracti128_si256(acc, 1));
+            t = _mm_add_epi32(t, _mm_shuffle_epi32(t, 0x4E));
+            t = _mm_add_epi32(t, _mm_shuffle_epi32(t, 0xB1));
+            return static_cast<uint32_t>(_mm_cvtsi128_si32(t));
+        }
+        if constexpr (sizeof(DeltaType) == 4 && J % 8 == 0) {
+            const __m256i zero = _mm256_setzero_si256();
+            const __m128i shift = _mm_cvtsi32_si128(static_cast<int>(k));
+            __m256i acc = zero;
+            for (size_t j = 0; j < J; j += 8) {
+                const __m256i x = _mm256_srl_epi32(_mm256_loadu_si256(reinterpret_cast<const __m256i*>(v + j)), shift);
+                acc = _mm256_add_epi64(acc, _mm256_add_epi64(_mm256_unpacklo_epi32(x, zero), _mm256_unpackhi_epi32(x, zero)));
+            }
+            const __m128i t = _mm_add_epi64(_mm256_castsi256_si128(acc), _mm256_extracti128_si256(acc, 1));
+            return static_cast<uint64_t>(_mm_cvtsi128_si64(t)) + static_cast<uint64_t>(_mm_extract_epi64(t, 1));
+        }
+#endif
+        using Sum = std::conditional_t<(sizeof(DeltaType) <= 2), uint32_t, uint64_t>;
+        Sum s = 0;
+        for (size_t j = 0; j < J; ++j) {
+            s += static_cast<Sum>(v[j] >> k);
+        }
+        return s;
+    }
+
+    // SplitSelector::Estimate: k from the sum of the block, then the exact size with this k (the
+    // choice between split sample, second extension and no compression stays exact, and so does
+    // the bound maxEncodedSize). Two passes over the block, no state across blocks.
+    template <ReferenceType RType>
+    Selection selectEstimated(Span<DeltaType> values) const
+    {
+        switch (blockSizeV_) {
+            case 8:
+                return selectEstimated<RType, 8>(values.data());
+            case 16:
+                return selectEstimated<RType, 16>(values.data());
+            case 32:
+                return selectEstimated<RType, 32>(values.data());
+            default:
+                return selectEstimated<RType, 64>(values.data());  // validated: 8, 16, 32 or 64
+        }
+    }
+
+    // The sums run over the whole block; the reference sample, which is not coded with the
+    // split-sample option, is subtracted
+    template <ReferenceType RType, size_t J>
+    Selection selectEstimated(const DeltaType* block) const
+    {
+        constexpr size_t startIndex = (RType == ReferenceType::Ref) ? 1 : 0;
+        constexpr uint64_t n = J - startIndex;
+        const uint64_t sum = shiftedSum<J>(block, 0) - (startIndex ? static_cast<uint64_t>(block[0]) : 0);
+        // The restricted set for 1 and 2 bits has no split-sample options: only the sum
+        if (!limits_.available_) {
+            return Selection{ 0, UINT64_MAX, sum };
+        }
+        const unsigned k = std::min<unsigned>(estimateK(sum, n), static_cast<unsigned>(kMax));
+        const uint64_t fs = k == 0 ? sum : shiftedSum<J>(block, k) - (startIndex ? static_cast<uint64_t>(block[0] >> k) : 0);
+        uint64_t fixedOverhead = ssId_.length;
+        if constexpr (RType == ReferenceType::Ref) {
+            fixedOverhead += bpv_;
+        }
+        return Selection{ static_cast<uint8_t>(k), fixedOverhead + fs + n * (k + 1), sum };
     }
 
     // Split-sample k state (see selectBestMethod). The parallel encoder sets it at chunk starts.

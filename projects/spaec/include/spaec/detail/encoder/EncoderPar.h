@@ -30,7 +30,8 @@ namespace encoder
 // RSIs are packed back to back without padding, the preprocessor restarts at the
 // first sample of each RSI, and zero-block runs end at the end of a segment or RSI. The only state
 // carried from one RSI to the next is the split-sample k at which the search of the next block
-// starts (see EncoderBase::selectBestMethod).
+// starts (see EncoderBase::selectBestMethod; none with SplitSelector::Estimate: the k recorded below
+// stays 0 and the fix-up has nothing to do).
 //
 // Phase 1 (parallel): the input is split into contiguous chunks of whole RSIs (only the last chunk
 // holds the trailing partial RSI). Each chunk is encoded by its own EncoderSeq into a zeroed scratch
@@ -46,7 +47,7 @@ namespace encoder
 // two threads. All bits of an owned byte come from piece p, except in its last owned byte, which
 // may also contain bits of the following pieces (a piece may be shorter than a byte) and is
 // assembled bit by bit.
-template <typename ValueType, typename DeltaType, typename EncoderFunc = Identity<DeltaType>>
+template <typename ValueType, typename DeltaType, typename EncoderFunc = Identity<DeltaType>, SplitSelector Selector = SplitSelector::Search>
 class EncoderPar
 {
 public:
@@ -213,7 +214,7 @@ public:
     }
 
 private:
-    using Encoder = EncoderSeq<ValueType, DeltaType, EncoderFunc>;
+    using Encoder = EncoderSeq<ValueType, DeltaType, EncoderFunc, Selector>;
 
     // A part of the output: nBits bits of src starting at bit srcBit. src is followed by at least
     // one readable byte (scratch buffers have slack), and its bits after the piece are not used.

@@ -35,8 +35,8 @@ struct SETmpState
 };
 
 
-template <typename ValueType, typename DeltaType, typename EncoderFunc = Identity<DeltaType>>
-class EncoderSeq : EncoderBase<ValueType, DeltaType>
+template <typename ValueType, typename DeltaType, typename EncoderFunc = Identity<DeltaType>, SplitSelector Selector = SplitSelector::Search>
+class EncoderSeq : EncoderBase<ValueType, DeltaType, Selector>
 {
 public:
     // No Compression
@@ -511,7 +511,7 @@ public:
     }
 
     EncoderSeq(uint8_t bpv, uint8_t block_size, uint16_t rsiSize, CodeOptionSet codeOptionSet, Preprocessing preprocessing = {}) :
-        EncoderBase<ValueType, DeltaType>(bpv, block_size, rsiSize, codeOptionSet),
+        EncoderBase<ValueType, DeltaType, Selector>(bpv, block_size, rsiSize, codeOptionSet),
         preprocessor_(bpv),
         preprocessBuffer_(rsiSize * block_size),
         preprocessing_((validatePreprocessing(preprocessing), preprocessing))
@@ -527,7 +527,7 @@ public:
 private:
     SETmpState<DeltaType> seState_;
 
-    using Base = EncoderBase<ValueType, DeltaType>;
+    using Base = EncoderBase<ValueType, DeltaType, Selector>;
 
 public:
     using Base::splitK;

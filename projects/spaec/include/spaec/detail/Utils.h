@@ -32,6 +32,14 @@ enum class Prediction
     None        // no preprocessor (4.1.1): the samples are coded as they are; no reference samples
 };
 
+// The selection of the parameter k of the split-sample options (CCSDS 121.0-B-3, 3.3), see
+// encoder::EncoderBase
+enum class SplitSelector
+{
+    Search,   // the k of minimum block size, searched from the k of the previous block (as libaec)
+    Estimate  // k estimated from the sum of the block (Kiely 2004)
+};
+
 struct Preprocessing
 {
     Prediction prediction = Prediction::UnitDelay;

@@ -55,6 +55,15 @@ enum class Preprocessor
     None        // the samples are coded as they are (unsigned samples only)
 };
 
+// The selection of the parameter k of the split-sample options for each block (the compressed
+// data are standard CCSDS 121.0-B-3 with both; decompress does not depend on it)
+enum class SplitSelector
+{
+    Search,   // the k of minimum size: the smallest data, byte-identical to libaec (the default)
+    Estimate  // k estimated from the sum of the block (Kiely 2004): faster, at most one k away from
+              // the minimum, and the data at most 1/2 bit per sample larger (about 0.05 % on GRIB fields)
+};
+
 struct Options
 {
     unsigned bitsPerSample = 16;       // n: 1 to 32, at most the bits of the sample type
@@ -62,8 +71,9 @@ struct Options
     unsigned referenceInterval = 128;  // r: blocks between two reference samples, 1 to 4096
     CodeOptions codeOptions = CodeOptions::Basic;
     Preprocessor preprocessor = Preprocessor::UnitDelay;
-    bool signedSamples = false;  // samples are two's complement numbers of bitsPerSample bits (needs a preprocessor)
-    unsigned threads = 1;        // 1 to 255; the compressed data do not depend on it
+    bool signedSamples = false;                           // samples are two's complement numbers of bitsPerSample bits (needs a preprocessor)
+    unsigned threads = 1;                                 // 1 to 255; the compressed data do not depend on it
+    SplitSelector splitSelector = SplitSelector::Search;  // compress only
 };
 
 // The scaling of floating-point values to samples, as in GRIB:
@@ -94,6 +104,7 @@ struct Config
     CodeOptionSet codeOptionSet;
     Preprocessing preprocessing;
     uint8_t threads;
+    SplitSelector splitSelector;
 };
 
 inline Config configOf(const Options& o)
@@ -115,6 +126,11 @@ inline Config configOf(const Options& o)
     c.preprocessing.signedSamples = o.signedSamples;
     validatePreprocessing(c.preprocessing);
     c.threads = static_cast<uint8_t>(o.threads);
+    // spaec::SplitSelector: detail has its own enumeration of that name
+    if (o.splitSelector != spaec::SplitSelector::Search && o.splitSelector != spaec::SplitSelector::Estimate) {
+        throw std::invalid_argument("CCSDS: unknown split selector (must be Search or Estimate)");
+    }
+    c.splitSelector = o.splitSelector == spaec::SplitSelector::Estimate ? SplitSelector::Estimate : SplitSelector::Search;
     return c;
 }
 
@@ -234,13 +250,22 @@ size_t compress(const Sample* samples, size_t count, const Options& options, uin
     detail::checkSamples(samples, count, c.bitsPerSample, c.preprocessing.signedSamples);
     const detail::Span<U> input(const_cast<U*>(reinterpret_cast<const U*>(samples)), count);
     const size_t worstCase = detail::encoder::SpAec<double>::maxEncodedSize(count, c.bitsPerSample, c.blockSize);
-    return detail::encodeInto(output, capacity, worstCase, true, [&](detail::Span<uint8_t> target) {
+    // The selector is a template parameter of the encoders (no run-time check per block)
+    const auto encode = [&](auto selector, detail::Span<uint8_t> target) {
+        constexpr detail::SplitSelector S = decltype(selector)::value;
         if (c.threads > 1) {
-            detail::encoder::EncoderPar<U, U> encoder(c.bitsPerSample, c.blockSize, c.referenceInterval, c.codeOptionSet, c.threads, c.preprocessing);
+            detail::encoder::EncoderPar<U, U, detail::Identity<U>, S> encoder(c.bitsPerSample, c.blockSize, c.referenceInterval, c.codeOptionSet, c.threads,
+                                                                              c.preprocessing);
             return encoder.encode(input, target);
         }
-        detail::encoder::EncoderSeq<U, U> encoder(c.bitsPerSample, c.blockSize, c.referenceInterval, c.codeOptionSet, c.preprocessing);
+        detail::encoder::EncoderSeq<U, U, detail::Identity<U>, S> encoder(c.bitsPerSample, c.blockSize, c.referenceInterval, c.codeOptionSet, c.preprocessing);
         return encoder.encode(input, target);
+    };
+    return detail::encodeInto(output, capacity, worstCase, true, [&](detail::Span<uint8_t> target) {
+        if (c.splitSelector == detail::SplitSelector::Estimate) {
+            return encode(std::integral_constant<detail::SplitSelector, detail::SplitSelector::Estimate>{}, target);
+        }
+        return encode(std::integral_constant<detail::SplitSelector, detail::SplitSelector::Search>{}, target);
     });
 }
 
@@ -293,7 +318,7 @@ size_t compress(const Value* values, size_t count, const Scaling& scaling, const
         throw std::invalid_argument("CCSDS: scaled floating-point values are unsigned samples (signedSamples must be false)");
     }
     detail::encoder::SpAec<Value> coder(c.bitsPerSample, c.blockSize, c.referenceInterval, c.codeOptionSet, static_cast<Value>(scaling.referenceValue),
-                                        scaling.binaryScaleFactor, scaling.decimalScaleFactor, c.threads, c.preprocessing.prediction);
+                                        scaling.binaryScaleFactor, scaling.decimalScaleFactor, c.threads, c.preprocessing.prediction, c.splitSelector);
     const detail::Span<Value> input(const_cast<Value*>(values), count);
     // SpAec::encode zeroes its target itself
     return detail::encodeInto(output, capacity, coder.maxEncodedSize(count), false, [&](detail::Span<uint8_t> target) { return coder.encode(input, target); });

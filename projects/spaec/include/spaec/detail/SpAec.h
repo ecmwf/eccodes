@@ -114,7 +114,7 @@ public:
 public:
     // prediction: the preprocessing of the coded integers (CCSDS 121.0-B-3, 4); they are unsigned
     SpAec(uint8_t bpv, uint8_t blockSize, uint16_t rsiSize, CodeOptionSet codeOptionSet, ValueType referenceValue, int binaryScaleFactor = 0, int decimalScaleFactor = 0, uint8_t nThreads = 1,
-          Prediction prediction = Prediction::UnitDelay) :
+          Prediction prediction = Prediction::UnitDelay, SplitSelector selector = SplitSelector::Search) :
         bpv_(bpv),
         blockSize_(blockSize),
         rsiSize_(rsiSize),
@@ -123,7 +123,8 @@ public:
         binaryScaleFactor_(binaryScaleFactor),
         decimalScaleFactor_(decimalScaleFactor),
         codeOptionSet_(effectiveCodeOptionSet(codeOptionSet, bpv)),
-        preprocessing_{ prediction, false }
+        preprocessing_{ prediction, false },
+        selector_(selector)
     {
         validatePreprocessing(preprocessing_);
         validateCcsdsParameters(bpv_, blockSize_, rsiSize_);
@@ -220,18 +221,28 @@ private:
         // The encoder ORs bits into the output: it must start zeroed
         std::memset(target.data(), 0, needed);
 
+        if (selector_ == SplitSelector::Estimate) {
+            return encodeWith<DeltaType, SplitSelector::Estimate>(data, target);
+        }
+        return encodeWith<DeltaType, SplitSelector::Search>(data, target);
+    }
+
+    // encodeImpl with the split-sample selector Selector (a template parameter of the encoders)
+    template <typename DeltaType, SplitSelector Selector>
+    size_t encodeWith(const Span<ValueType> data, Span<uint8_t> target)
+    {
         // The parallel encoder produces the same bytes as the sequential one (see EncoderPar)
         if (nThreads_ > 1) {
             std::unique_ptr<DeltaType[]> mapped(new DeltaType[data.size()]);  // not value-initialised
             mapValues(data.data(), data.size(), mapped.get(), 0);
-            EncoderPar<DeltaType, DeltaType> encoder{ bpv_, blockSize_, rsiSize_, codeOptionSet_, nThreads_, preprocessing_ };
+            EncoderPar<DeltaType, DeltaType, Identity<DeltaType>, Selector> encoder{ bpv_, blockSize_, rsiSize_, codeOptionSet_, nThreads_, preprocessing_ };
             return encoder.encode(Span<DeltaType>(mapped.get(), data.size()), target);
         }
 
         // Sequential: the values are mapped RSI by RSI into a buffer of one RSI, which stays in the
         // cache, instead of into an array of the whole field. Same stream as EncoderSeq::encode:
         // the split-sample state starts at 0 and the RSIs are encoded in order.
-        EncoderSeq<DeltaType, DeltaType> encoder{ bpv_, blockSize_, rsiSize_, codeOptionSet_, preprocessing_ };
+        EncoderSeq<DeltaType, DeltaType, Identity<DeltaType>, Selector> encoder{ bpv_, blockSize_, rsiSize_, codeOptionSet_, preprocessing_ };
         const size_t rsiValues = static_cast<size_t>(rsiSize_) * blockSize_;
         std::unique_ptr<DeltaType[]> mapped(new DeltaType[std::min(rsiValues, data.size())]);
         BitBuffer buffer(target);
@@ -329,6 +340,7 @@ private:
     int decimalScaleFactor_;
     CodeOptionSet codeOptionSet_;
     Preprocessing preprocessing_;
+    SplitSelector selector_;
 };
 
 }  // namespace encoder
