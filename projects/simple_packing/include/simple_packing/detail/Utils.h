@@ -62,7 +62,15 @@ inline void checkRange(const char* what, int64_t value, int64_t lo, int64_t hi)
 
 // --- IEEE float utilities ---
 
-std::optional<int64_t> number_of_bits(uint64_t x);
+// The number of bits of x (0 for 0); std::nullopt for x >= 2^31, as legacy ecCodes, whose table
+// ends at 2^31. Inline: GCC passes a returned std::optional<int64_t> through memory, slowly.
+inline std::optional<int64_t> number_of_bits(uint64_t x)
+{
+    if (x >= (uint64_t{ 1 } << 31)) {
+        return std::nullopt;
+    }
+    return bit_width64(x);
+}
 
 // Floating-point format in which the reference value is stored:
 // IEEE 754 single precision (GRIB edition 2) or IBM single precision (GRIB edition 1)
@@ -189,7 +197,7 @@ void check_data_values_range(double min_val, double max_val);
 // shifts. Functions in sp::detail, not macros, so they cannot clash with the names of a platform.
 
 #if defined(_MSC_VER) && !defined(__clang__)
-#include <stdlib.h>
+    #include <stdlib.h>
 #endif
 
 namespace sp::detail

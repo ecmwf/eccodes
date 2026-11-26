@@ -4,11 +4,13 @@
 #include "simple_packing/detail/Utils.h"
 
 #include <array>
-#include <cassert>
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
+#include <cstring>
 #include <limits>
+
+#include "simple_packing/detail/Compat.h"
 
 namespace sp::detail
 {
@@ -18,139 +20,56 @@ namespace
 
 constexpr double dbl_max = std::numeric_limits<double>::max();
 
-// The index of the largest of the first n (sorted) values that is not larger than x; 0 if there is none
-// (bisection)
-template <size_t N>
-size_t index_not_above(const std::array<double, N>& values, size_t n, double x)
+// The biased exponent of a double (0 for zero and subnormal values): floor(log2(|x|)) + 1023 for
+// normal values
+inline int32_t biased_exponent(double x)
 {
-    size_t low = 0, high = n;
-    while (high - low > 1) {
-        const size_t mid = (low + high) / 2;
-        (x >= values[mid] ? low : high) = mid;
-    }
-    return low;
+    uint64_t bits = 0;
+    std::memcpy(&bits, &x, sizeof bits);
+    return static_cast<int32_t>((bits >> 52) & 0x7ff);
 }
 
+// 2^n for -1074 <= n <= 1023: the bits of a normal double directly (std::ldexp is a library call)
+inline double power_of_two(int64_t n)
+{
+    if (n < -1022) {
+        return std::ldexp(1.0, static_cast<int32_t>(n));  // subnormal
+    }
+    const uint64_t bits = static_cast<uint64_t>(n + 1023) << 52;
+    double d = 0;
+    std::memcpy(&d, &bits, sizeof d);
+    return d;
+}
 
 // --- IEEE 754 single precision floats (GRIB edition 2), as in ecCodes grib_ieeefloat.cc ---
-// The bits of a float: sign (1), biased exponent (8), mantissa (23, without the leading one).
-// Only zero and normal values are produced (no denormals).
 
-constexpr uint32_t ieee_mantissa_min = 0x800000;  // 2^23: the mantissa with its leading one
-constexpr uint32_t ieee_mantissa_max = 0xffffff;
+// The internal functions return NaN for no value (a result is never NaN): GCC passes a returned
+// std::optional<double> through memory, slowly; nearest_smaller_value makes the optional once
+constexpr double none = std::numeric_limits<double>::quiet_NaN();
 
-struct IeeeTable
+// Largest IEEE 32 bit float <= a; NaN if there is none. Only zero and normal floats (no
+// denormals): +0 for 0 <= a < FLT_MIN, -FLT_MIN for -FLT_MIN < a < 0
+double nearest_smaller_ieee_float(double a)
 {
-    std::array<double, 255> e;  // e[i] = 2^(i - 150)
-    std::array<double, 255> v;  // v[i] = smallest value with exponent i
-    double vmin;
-    double vmax;
-};
-
-constexpr IeeeTable make_ieee_table()
-{
-    IeeeTable t{};
-    double e = 1;
-    for (size_t i = 1; i <= 104; ++i) {
-        e *= 2;
-        t.e[150 + i] = e;
-        t.v[150 + i] = e * ieee_mantissa_min;
+    constexpr double flt_max = std::numeric_limits<float>::max();
+    constexpr double flt_min = std::numeric_limits<float>::min();
+    const double magnitude = std::fabs(a);
+    if (!(magnitude <= flt_max)) {  // beyond the float range on either side, or NaN
+        return none;
     }
-    t.e[150] = 1;
-    t.v[150] = ieee_mantissa_min;
-    e = 1;
-    for (size_t i = 1; i < 150; ++i) {
-        e /= 2;
-        t.e[150 - i] = e;
-        t.v[150 - i] = e * ieee_mantissa_min;
+    if (magnitude < flt_min) {
+        return a < 0 ? -flt_min : 0.0;  // also +0 for -0
     }
-    t.vmin = t.v[1];                        // FLT_MIN
-    t.vmax = t.e[254] * ieee_mantissa_max;  // FLT_MAX
-    return t;
-}
-
-constexpr IeeeTable ieee_table = make_ieee_table();
-
-// The bits of the float nearest to x (the callers check that |x| <= FLT_MAX); 0 or the sign for
-// |x| < FLT_MIN
-uint32_t ieee_bits(double x)
-{
-    constexpr double rounding_limit = ieee_mantissa_max + 0.5;
-    uint32_t sign = 0;
-    if (x < 0) {
-        sign = 1;
-        x = -x;
+    // The nearest float (in any rounding mode within one step), one step down if it is above a;
+    // |a| >= FLT_MIN, so the result is a normal float
+    float f = static_cast<float>(a);
+    if (static_cast<double>(f) > a) {
+        uint32_t bits = 0;
+        std::memcpy(&bits, &f, sizeof bits);
+        bits = f > 0 ? bits - 1 : bits + 1;  // sign and magnitude: one step towards -infinity
+        std::memcpy(&f, &bits, sizeof f);
     }
-    if (x < ieee_table.vmin) {
-        return sign << 31;
-    }
-    assert(x <= ieee_table.vmax);  // the callers check the range
-
-    uint32_t e = static_cast<uint32_t>(index_not_above(ieee_table.v, 254, x));
-    x /= ieee_table.e[e];
-    assert(x >= ieee_mantissa_min);  // v[e] = mantissa_min * e[e] <= x
-
-    while (x > rounding_limit) {
-        x /= 2;
-        e++;
-    }
-    uint32_t m = static_cast<uint32_t>(x + 0.5);
-    if (m > ieee_mantissa_max) {
-        e++;
-        m = ieee_mantissa_min;
-    }
-    return (sign << 31) | (e << 23) | (m & 0x7fffff);
-}
-
-double ieee_value(uint32_t bits)
-{
-    const uint32_t sign = bits & 0x80000000;
-    const uint32_t e = (bits & 0x7f800000) >> 23;
-    const uint32_t m = bits & 0x007fffff;
-
-    assert(e != 0 || m == 0);  // only the bits of zero and of normal values are produced (no denormals)
-    if (e == 0) {
-        return 0;
-    }
-    const double value = (m | ieee_mantissa_min) * ieee_table.e[e];
-    return sign ? -value : value;
-}
-
-// The bits of the largest float <= x (the callers check that |x| <= FLT_MAX)
-uint32_t ieee_nearest_smaller_bits(double x)
-{
-    if (x == 0) {
-        return 0;
-    }
-    uint32_t bits = ieee_bits(x);
-    const double y = ieee_value(bits);
-    if (!(x < y)) {
-        return bits;
-    }
-    if (x < 0 && -x < ieee_table.vmin) {
-        bits = 0x80800000;  // -FLT_MIN
-    }
-    else {
-        uint32_t e = (bits & 0x7f800000) >> 23;
-        const uint32_t m = (bits & 0x007fffff) | ieee_mantissa_min;
-        const bool negative = (bits & 0x80000000) != 0;
-        if (m == ieee_mantissa_min && !negative) {
-            assert(e > 1);  // x >= FLT_MIN here
-            e--;
-        }
-        bits = ieee_bits(y - ieee_table.e[e]);
-    }
-    assert(x >= ieee_value(bits));
-    return bits;
-}
-
-// Largest IEEE 32 bit float <= a; std::nullopt if there is none
-std::optional<double> nearest_smaller_ieee_float(double a)
-{
-    if (!(std::fabs(a) <= ieee_table.vmax)) {  // beyond the float range on either side, or NaN
-        return std::nullopt;
-    }
-    return ieee_value(ieee_nearest_smaller_bits(a));
+    return f;
 }
 
 
@@ -162,8 +81,8 @@ constexpr uint32_t ibm_mantissa_max = 0xffffff;
 
 struct IbmTable
 {
-    std::array<double, 128> e;  // 16^(i - 70)
-    std::array<double, 128> v;  // smallest normalised value with exponent i
+    std::array<double, 128> e;        // 16^(i - 70)
+    std::array<double, 128> inverse;  // 16^(70 - i): exact, x * inverse[i] == x / e[i]
     double vmin;
     double vmax;
 };
@@ -183,7 +102,7 @@ constexpr IbmTable make_ibm_table()
         t.e[i] = e;
     }
     for (size_t i = 0; i < 128; ++i) {
-        t.v[i] = t.e[i] * ibm_mantissa_min;
+        t.inverse[i] = 1 / t.e[i];
     }
     t.vmin = t.e[0] * ibm_mantissa_min;
     t.vmax = t.e[127] * ibm_mantissa_max;
@@ -192,118 +111,50 @@ constexpr IbmTable make_ibm_table()
 
 constexpr IbmTable ibm_table = make_ibm_table();
 
-// The bits of the IBM value nearest to x (|x| must not be larger than the largest IBM value: the
-// callers check the range); 0 or the sign below the smallest normalised value
-uint32_t ibm_bits(double x)
+// Largest IBM float <= a; NaN if there is none. +0 for 0 <= a < vmin, -vmin for
+// -vmin < a < 0. The same results as legacy ecCodes (grib_nearest_smaller_ibm_float): the largest
+// normalised value <= a, except for a mantissa of exactly 0xffffff.5 (halfway to the next power of
+// 16), where the legacy rounding overflows (the mantissa becomes 0x800000 of the next exponent)
+double nearest_smaller_ibm_float(double a)
 {
-    constexpr double rounding_limit = ibm_mantissa_max + 0.5;
-    constexpr uint32_t legacy_mantissa_min = 0x800000;  // as legacy ecCodes, not ibm_mantissa_min
-    uint32_t sign = 0;
-    if (x < 0) {
-        sign = 1;
-        x = -x;
-    }
-    if (x < ibm_table.vmin) {
-        return sign << 31;
-    }
-    assert(x <= ibm_table.vmax);
-
-    uint32_t e = static_cast<uint32_t>(index_not_above(ibm_table.v, 127, x));
-    x /= ibm_table.e[e];
-    while (x < legacy_mantissa_min) {
-        x *= 16;
-        e--;
-    }
-    while (x > rounding_limit) {
-        x /= 16;
-        e++;
-    }
-    uint32_t m = static_cast<uint32_t>(x + 0.5);
-    if (m > ibm_mantissa_max) {
-        e++;
-        m = legacy_mantissa_min;
-    }
-    return (sign << 31) | (e << 24) | m;
-}
-
-double ibm_value(uint32_t bits)
-{
-    const uint32_t sign = bits & 0x80000000;
-    const uint32_t e = (bits & 0x7f000000) >> 24;
-    const uint32_t m = bits & 0x00ffffff;
-    if (e == 0 && m <= 1) {
-        return 0;
-    }
-    const double value = m * ibm_table.e[e];
-    return sign ? -value : value;
-}
-
-// Largest IBM float <= a; std::nullopt if there is none
-std::optional<double> nearest_smaller_ibm_float(double a)
-{
-    if (!(std::fabs(a) <= ibm_table.vmax)) {  // also NaN
-        return std::nullopt;
+    const double x = std::fabs(a);
+    if (!(x <= ibm_table.vmax)) {  // also NaN
+        return none;
     }
     if (a == 0) {
         return 0.0;
     }
-
-    uint32_t bits = ibm_bits(a);
-    const double y = ibm_value(bits);
-    double eps = 0;
-    if (a < y) {
-        if (a < 0 && -a < ibm_table.vmin) {
-            bits = 0x80100000;  // -(smallest normalised value)
-        }
-        else {
-            uint32_t e = (bits & 0x7f000000) >> 24;
-            const uint32_t m = bits & 0x00ffffff;
-            const bool negative = (bits & 0x80000000) != 0;
-            if (m == ibm_mantissa_min && !negative) {
-                assert(e > 0);  // a >= vmin here
-                e--;
-            }
-            eps = ibm_table.e[e];
-            bits = ibm_bits(y - eps);
-        }
+    if (x < ibm_table.vmin) {
+        return a < 0 ? -ibm_table.vmin : 0.0;
     }
-    if (a < ibm_value(bits)) {
-        bits = ibm_bits(a - eps);
+    // The exponent e whose smallest normalised value 2^(4e - 260) is <= x < 2^(4e - 256), and the
+    // mantissa x / 16^(e - 70) in [0x100000, 0x1000000) (x >= vmin = 2^-260 is a normal double)
+    const int32_t e = (biased_exponent(x) - 1023 + 260) / 4;
+    const double unit = ibm_table.e[e];
+    const double mantissa = x * ibm_table.inverse[e];  // exact
+    if (mantissa == ibm_mantissa_max + 0.5) {
+        return a > 0 ? 0xfffff0 * unit : -0x8000000 * unit;  // legacy rounding overflow
     }
-    assert(a >= ibm_value(bits));
-    return ibm_value(bits);
+    // floor for a > 0, ceil for a < 0 (|a| rounded up); exact through the integer conversion (< 2^24)
+    const double truncated = static_cast<double>(static_cast<int64_t>(mantissa));
+    if (a > 0) {
+        return truncated * unit;
+    }
+    return -(truncated < mantissa ? truncated + 1 : truncated) * unit;
 }
-
-// 2^0 to 2^31: number_of_bits counts the entries that are not larger than x
-constexpr std::array<uint64_t, 32> powers_of_two = [] {
-    std::array<uint64_t, 32> p{};
-    for (size_t i = 0; i < p.size(); ++i) {
-        p[i] = uint64_t{ 1 } << i;
-    }
-    return p;
-}();
 
 }  // anonymous namespace
 
 
 // --- Public API implementations ---
 
-std::optional<int64_t> number_of_bits(uint64_t x)
-{
-    // Linear: the values are mostly small
-    int64_t count = 0;
-    for (const uint64_t p : powers_of_two) {
-        if (x < p) {
-            return count;
-        }
-        ++count;
-    }
-    return std::nullopt;  // x >= 2^31
-}
-
 std::optional<double> nearest_smaller_value(double val, FloatType type)
 {
-    return type == FloatType::IBM32 ? nearest_smaller_ibm_float(val) : nearest_smaller_ieee_float(val);
+    const double r = type == FloatType::IBM32 ? nearest_smaller_ibm_float(val) : nearest_smaller_ieee_float(val);
+    if (std::isnan(r)) {
+        return std::nullopt;
+    }
+    return r;
 }
 
 std::optional<int64_t> get_binary_scale_factor(double max, double min, int64_t bpval)
@@ -327,11 +178,20 @@ std::optional<int64_t> get_binary_scale_factor(double max, double min, int64_t b
         return 0;
     }
 
-    // 64-bit integers: up to 63 bits per value also where long has 32 bits
-    const uint64_t maxint = static_cast<uint64_t>(sp_power<double>(bpval, 2)) - 1;
+    // The searches below find the scale factor S of the first two loops in [ex + 1 - bpval,
+    // ex + 2 - bpval] (ex: the binary exponent of the range; maxint is 2^bpval - 1, as a double
+    // 2^bpval - 1 or 2^bpval) and end at most one above it: below -127 for ex + 3 - bpval < -127,
+    // and also for subnormal ranges. They start next to S instead of at 0 (the products are exact:
+    // powers of two times the range): the same results as the search from 0.
+    const int32_t biased = biased_exponent(range);
+    const int64_t ex = static_cast<int64_t>(biased) - 1023;
+    if (biased == 0 || ex + 3 - bpval < -last) {
+        return std::nullopt;  // the range is too small even with the smallest binary scale factor
+    }
+    const uint64_t maxint = (uint64_t{ 1 } << bpval) - 1;
     const auto rounded = [range](double zs) { return static_cast<uint64_t>(range * zs + 0.5); };
-    double zs = 1;
-    int64_t scale = 0;
+    int64_t scale = ex + 1 - bpval;
+    double zs = power_of_two(-scale);  // exact (-1023 <= -scale <= 131)
 
     // Scaling up must not overflow zs to infinity, otherwise the search below could never
     // halve it back (inf / 2 == inf): the range is too small for any binary scale factor
