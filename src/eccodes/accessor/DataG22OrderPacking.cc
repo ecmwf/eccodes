@@ -1763,7 +1763,7 @@ int DataG22OrderPacking::unpack_double_element(size_t idx, double* val)
     int err = grib_get_size(get_enclosing_handle(), "codedValues", &size);
     if (err)
         return err;
-    if (idx > size)
+    if (idx >= size)
         return GRIB_INVALID_ARGUMENT;
 
     values = reinterpret_cast<double*>(grib_context_malloc_clear(context_, size * sizeof(double)));
@@ -1789,7 +1789,7 @@ int DataG22OrderPacking::unpack_double_element_set(const size_t* index_array, si
         return err;
 
     for (i = 0; i < len; i++) {
-        if (index_array[i] > size) return GRIB_INVALID_ARGUMENT;
+        if (index_array[i] >= size) return GRIB_INVALID_ARGUMENT;
     }
 
     values = reinterpret_cast<double*>(grib_context_malloc_clear(context_, size * sizeof(double)));
