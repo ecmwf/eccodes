@@ -34,6 +34,7 @@
 #include <type_traits>
 #include <vector>
 
+#include "spaec/version.h"
 #include "spaec/detail/Isa.h"
 #include "spaec/detail/SpAec.h"
 

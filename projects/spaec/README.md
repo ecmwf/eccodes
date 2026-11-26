@@ -9,6 +9,9 @@ SpAec is a header-only C++17 library for lossless data compression with the CCSD
 algorithm [1]. GRIB2 uses this algorithm for CCSDS packing. SpAec writes the same data as
 libaec [5].
 
+Version 0.0.1 (`spaec::version()`, `SPAEC_VERSION` in `spaec/version.h`). Before version 1.0.0 the
+interface may still change.
+
 ## Features
 
 - One header, `spaec/spaec.h`, with `spaec::compress`, `spaec::decompress` and `spaec::Options`.

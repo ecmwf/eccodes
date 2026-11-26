@@ -10,6 +10,9 @@ and packs floating-point values Y into integers X of `bitsPerValue` bits:
 `Y * 10^D = R + X * 2^E`, with the reference value R, the binary scale factor E and the decimal
 scale factor D.
 
+Version 0.0.1 (`sp::version()`, `SIMPLE_PACKING_VERSION` in `simple_packing/version.h`). Before
+version 1.0.0 the interface may still change.
+
 ## Features
 
 - One header, `simple_packing/simple_packing.h`, with `sp::scaling`, `sp::pack`, `sp::unpack` and

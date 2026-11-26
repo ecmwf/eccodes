@@ -13,7 +13,14 @@
 
 cmake_minimum_required(VERSION 3.19)
 
-project(spaec VERSION 1.0.0 LANGUAGES CXX)
+# The version is defined in include/spaec/version.h
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/include/spaec/version.h" spaec_version_line
+     REGEX "^#define SPAEC_VERSION \"[0-9]+\\.[0-9]+\\.[0-9]+\"")
+string(REGEX MATCH "[0-9]+\\.[0-9]+\\.[0-9]+" spaec_version "${spaec_version_line}")
+if(NOT spaec_version)
+  message(FATAL_ERROR "spaec: no version in include/spaec/version.h")
+endif()
+project(spaec VERSION ${spaec_version} LANGUAGES CXX)
 
 if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
   set(SPAEC_TOP_LEVEL ON)
@@ -108,7 +115,7 @@ if(SPAEC_INSTALL)
     ${PROJECT_BINARY_DIR}/spaecConfig.cmake
     INSTALL_DESTINATION ${SPAEC_CMAKE_DIR})
   write_basic_package_version_file(${PROJECT_BINARY_DIR}/spaecConfigVersion.cmake
-    COMPATIBILITY SameMajorVersion
+    COMPATIBILITY SameMinorVersion  # before 1.0.0 a new minor version may change the interface
     ARCH_INDEPENDENT)
   install(FILES
     ${PROJECT_BINARY_DIR}/spaecConfig.cmake

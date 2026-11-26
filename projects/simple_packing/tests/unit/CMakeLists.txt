@@ -49,6 +49,10 @@ add_test(NAME ${SP_TEST_PREFIX}errors COMMAND sp_errors)
 sp_add_test(api)
 add_test(NAME ${SP_TEST_PREFIX}api COMMAND sp_api)
 
+sp_add_test(version)
+target_compile_definitions(sp_version PRIVATE "SIMPLE_PACKING_PROJECT_VERSION=\"${PROJECT_VERSION}\"")
+add_test(NAME ${SP_TEST_PREFIX}version COMMAND sp_version)
+
 sp_add_test(fp_environment)
 add_test(NAME ${SP_TEST_PREFIX}fp_environment COMMAND sp_fp_environment)
 

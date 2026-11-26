@@ -38,6 +38,7 @@
 #include <type_traits>
 #include <vector>
 
+#include "simple_packing/version.h"
 #include "simple_packing/detail/optimizer/BPVOptimizer.h"
 #include "simple_packing/detail/optimizer/BinDecOptimizer.h"
 #include "simple_packing/detail/optimizer/BinOptimizer.h"

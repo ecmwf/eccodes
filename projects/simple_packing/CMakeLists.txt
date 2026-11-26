@@ -14,7 +14,14 @@
 
 cmake_minimum_required(VERSION 3.19)
 
-project(simple_packing VERSION 1.0.0 LANGUAGES CXX)
+# The version is defined in include/simple_packing/version.h
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/include/simple_packing/version.h" simple_packing_version_line
+     REGEX "^#define SIMPLE_PACKING_VERSION \"[0-9]+\\.[0-9]+\\.[0-9]+\"")
+string(REGEX MATCH "[0-9]+\\.[0-9]+\\.[0-9]+" simple_packing_version "${simple_packing_version_line}")
+if(NOT simple_packing_version)
+  message(FATAL_ERROR "simple_packing: no version in include/simple_packing/version.h")
+endif()
+project(simple_packing VERSION ${simple_packing_version} LANGUAGES CXX)
 
 if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
   set(SIMPLE_PACKING_TOP_LEVEL ON)
@@ -131,7 +138,7 @@ if(SIMPLE_PACKING_INSTALL)
     ${PROJECT_BINARY_DIR}/simple_packingConfig.cmake
     INSTALL_DESTINATION ${SIMPLE_PACKING_CMAKE_DIR})
   write_basic_package_version_file(${PROJECT_BINARY_DIR}/simple_packingConfigVersion.cmake
-    COMPATIBILITY SameMajorVersion)
+    COMPATIBILITY SameMinorVersion)  # before 1.0.0 a new minor version may change the interface
   install(FILES
     ${PROJECT_BINARY_DIR}/simple_packingConfig.cmake
     ${PROJECT_BINARY_DIR}/simple_packingConfigVersion.cmake
