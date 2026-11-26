@@ -11,6 +11,8 @@
 
 #include "simple_packing/detail/Utils.h"
 
+#include "../fp_diagnostics.h"
+
 using namespace sp::detail;
 
 static int failures = 0;
@@ -58,6 +60,7 @@ int main()
     // Special cases of the loop: s = 0 and s = 1
     check(sp_power<double>(0, 7) == 1 && sp_power<double>(1, 7) == 7 && sp_power<double>(2, 7) == 49 && sp_power<double>(-2, 2) == 0.25, "small exponents");
     if (failures != 0) {
+        fp_diagnostics::explain();
         std::cerr << failures << " checks failed\n";
         return 1;
     }

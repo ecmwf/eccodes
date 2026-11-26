@@ -20,6 +20,8 @@
 #include "simple_packing/detail/optimizer/DecOptimizer.h"
 #include "simple_packing/detail/simple/Binary.h"
 
+#include "../fp_diagnostics.h"
+
 using namespace sp::detail;
 
 static int failures = 0;
@@ -87,6 +89,9 @@ int main()
 
     if (failures == 0) {
         std::cout << "OK\n";
+    }
+    if (failures != 0) {
+        fp_diagnostics::explain();
     }
     return failures == 0 ? 0 : 1;
 }

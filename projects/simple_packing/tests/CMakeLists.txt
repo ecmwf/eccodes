@@ -6,11 +6,23 @@ set(SP_TEST_PREFIX "simple_packing_")
 
 # sp_add_test(<name> [SOURCES <sources...>])
 # Builds <name>.cc into the executable sp_<name>, compiled like the library (optimised).
+# sp_test_fp_flags(<target> <flags>...): tells the test (tests/fp_diagnostics.h) the floating-point
+# options it is compiled with
+function(sp_test_fp_flags target)
+  string(JOIN " " flags ${ARGN})
+  if(flags STREQUAL "")
+    set(flags "(none)")
+  endif()
+  target_compile_definitions(${target} PRIVATE "SIMPLE_PACKING_TEST_FP_FLAGS=\"${flags}\"")
+endfunction()
+
 function(sp_add_test name)
   cmake_parse_arguments(ARG "" "" "SOURCES" ${ARGN})
   add_executable(sp_${name} ${CMAKE_CURRENT_SOURCE_DIR}/${name}.cc ${ARG_SOURCES})
   target_link_libraries(sp_${name} PRIVATE simple_packing::simple_packing)
   target_compile_options(sp_${name} PRIVATE ${SIMPLE_PACKING_OPT_FLAGS})
+  sp_test_fp_flags(sp_${name} ${SIMPLE_PACKING_FP_FLAGS})
+  target_link_options(sp_${name} PRIVATE ${SIMPLE_PACKING_FP_LINK_FLAGS})
   target_compile_definitions(sp_${name} PRIVATE NDEBUG)
 endfunction()
 

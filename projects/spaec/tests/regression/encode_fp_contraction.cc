@@ -13,6 +13,8 @@
 
 #include "spaec/detail/SpAec.h"
 
+#include "../fp_diagnostics.h"
+
 using namespace spaec::detail;
 
 // The mapped value with every operation rounded separately (volatile prevents contraction)
@@ -90,6 +92,7 @@ int main()
     }
 
     if (failures != 0) {
+        fp_diagnostics::explain();
         std::cerr << failures << " of " << values.size() << " values mapped with a different rounding\n";
         return 1;
     }

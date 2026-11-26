@@ -10,10 +10,18 @@
 
 #include "simple_packing/detail/Utils.h"
 
+#include "../fp_diagnostics.h"
+
 using namespace sp::detail;
 
 int main()
 {
+    // With -ffast-math (no checks for infinity) or subnormal numbers flushed to zero the test hangs:
+    // check that first
+    if (fp_diagnostics::fastMath() || fp_diagnostics::flushesSubnormals() || fp_diagnostics::intelFastModel()) {
+        fp_diagnostics::explain();
+        return 1;
+    }
     int failures = 0;
     const double ranges[][2] = { { 1e300, 0 }, { 1e300, -1e300 }, { 8.9e307, -8.9e307 }, { 3e38, 0 } };
     for (const auto& r : ranges) {
@@ -43,6 +51,7 @@ int main()
         ++failures;
     }
     if (failures != 0) {
+        fp_diagnostics::explain();
         std::cerr << failures << " cases failed\n";
         return 1;
     }

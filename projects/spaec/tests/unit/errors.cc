@@ -22,6 +22,8 @@
 #include "spaec/detail/encoder/EncoderPar.h"
 #include "spaec/detail/encoder/EncoderSeq.h"
 
+#include "../fp_diagnostics.h"
+
 using namespace spaec::detail;
 
 static int failures = 0;
@@ -170,6 +172,7 @@ int main()
     bitBuffer();
     decoder();
     if (failures != 0) {
+        fp_diagnostics::explain();
         std::cerr << failures << " of " << cases << " error cases failed\n";
         return 1;
     }

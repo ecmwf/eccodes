@@ -16,6 +16,8 @@
 #include "simple_packing/detail/simple/Binary.h"
 #include "simple_packing/detail/optimizer/BinDecOptimizer.h"
 
+#include "../fp_diagnostics.h"
+
 using namespace sp::detail;
 
 // The coded value with every operation rounded separately (volatile prevents contraction)
@@ -82,6 +84,7 @@ int main()
     }
 
     if (failures != 0) {
+        fp_diagnostics::explain();
         std::cerr << failures << " values packed with a different rounding\n";
         return 1;
     }

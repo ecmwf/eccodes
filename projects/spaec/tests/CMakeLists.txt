@@ -7,11 +7,23 @@ set(SPAEC_TEST_PREFIX "spaec_")
 # spaec_add_test(<name> [LIBS <libs...>])
 # Builds <name>.cc into an executable and registers it as test spaec_<name>.
 # Always compiled with ${SPAEC_OPT_FLAGS} (release mode).
+# spaec_test_fp_flags(<target> <flags>...): tells the test (tests/fp_diagnostics.h) the
+# floating-point options it is compiled with
+function(spaec_test_fp_flags target)
+  string(JOIN " " flags ${ARGN})
+  if(flags STREQUAL "")
+    set(flags "(none)")
+  endif()
+  target_compile_definitions(${target} PRIVATE "SPAEC_TEST_FP_FLAGS=\"${flags}\"")
+endfunction()
+
 function(spaec_add_test name)
   cmake_parse_arguments(ARG "" "" "SOURCES;LIBS" ${ARGN})
   add_executable(${name} ${CMAKE_CURRENT_SOURCE_DIR}/${name}.cc ${ARG_SOURCES})
   target_link_libraries(${name} PRIVATE spaec::spaec ${ARG_LIBS})
   target_compile_options(${name} PRIVATE ${SPAEC_OPT_FLAGS})
+  spaec_test_fp_flags(${name} ${SPAEC_FP_FLAGS})
+  target_link_options(${name} PRIVATE ${SPAEC_FP_LINK_FLAGS})
   target_compile_definitions(${name} PRIVATE NDEBUG)
   add_test(NAME ${SPAEC_TEST_PREFIX}${name} COMMAND ${name})
 endfunction()

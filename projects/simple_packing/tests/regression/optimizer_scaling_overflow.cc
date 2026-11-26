@@ -16,6 +16,8 @@
 
 #include "simple_packing/detail/optimizer/BPVOptimizer.h"
 
+#include "../fp_diagnostics.h"
+
 using namespace sp::detail;
 
 static int failures = 0;
@@ -42,10 +44,9 @@ static void expectScaleError(const std::string& what, F&& f)
         return;
     }
     std::cerr << "FAIL: " << what << ": "
-              << (WIFSIGNALED(status) && WTERMSIG(status) == SIGALRM ?
-                      "hangs" :
-                      WIFSIGNALED(status) ? "crashes" :
-                      WEXITSTATUS(status) == 2 ? "wrong error message" : "no error")
+              << (WIFSIGNALED(status) && WTERMSIG(status) == SIGALRM ? "hangs" : WIFSIGNALED(status)    ? "crashes"
+                                                                             : WEXITSTATUS(status) == 2 ? "wrong error message"
+                                                                                                        : "no error")
               << '\n';
     failures++;
 }
@@ -64,6 +65,9 @@ int main()
 
     if (failures == 0) {
         std::cout << "OK\n";
+    }
+    if (failures != 0) {
+        fp_diagnostics::explain();
     }
     return failures == 0 ? 0 : 1;
 }

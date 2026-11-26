@@ -21,6 +21,8 @@
 #include "simple_packing/detail/codec/Array.h"
 #include "simple_packing/detail/codec/Binary.h"
 
+#include "../fp_diagnostics.h"
+
 using namespace sp::detail;
 
 static int failures = 0;
@@ -171,6 +173,7 @@ int main()
     unpackFloat<25>(12.5, -20, 1);
     unpackFloat<16>(-100.0, -4, 2);
     if (failures != 0) {
+        fp_diagnostics::explain();
         std::cerr << failures << " checks failed\n";
         return 1;
     }

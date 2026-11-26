@@ -15,6 +15,8 @@
 
 #include "spaec/detail/SpAec.h"
 
+#include "../fp_diagnostics.h"
+
 using namespace spaec::detail;
 
 static int failures = 0;
@@ -107,6 +109,7 @@ int main()
     unmapperFloat();
     mapperRounding();
     if (failures != 0) {
+        fp_diagnostics::explain();
         std::cerr << failures << " checks failed\n";
         return 1;
     }

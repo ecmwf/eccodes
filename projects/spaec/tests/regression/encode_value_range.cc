@@ -18,6 +18,8 @@
 #include "spaec/detail/Span.h"
 #include "spaec/detail/SpAec.h"
 
+#include "../fp_diagnostics.h"
+
 using namespace spaec::detail;
 
 int main()
@@ -58,6 +60,10 @@ int main()
         catch (const std::exception& e) {
             std::cerr << "FAIL: valid values were rejected: " << e.what() << '\n';
             failures++;
+        }
+
+        if (failures != 0) {
+            fp_diagnostics::explain();
         }
 
         return failures == 0 ? 0 : 1;

@@ -19,6 +19,8 @@
 
 #include "spaec/spaec.h"
 
+#include "../fp_diagnostics.h"
+
 static int failures = 0;
 
 static void check(bool ok, const std::string& what)
@@ -241,6 +243,7 @@ int main()
     }
 
     if (failures) {
+        fp_diagnostics::explain();
         std::cerr << failures << " failure(s)\n";
         return 1;
     }

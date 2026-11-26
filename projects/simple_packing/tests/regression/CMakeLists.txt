@@ -106,12 +106,12 @@ add_test(NAME ${SP_TEST_PREFIX}unpack_float_precision COMMAND sp_unpack_float_pr
 
 sp_add_test(pack_fp_contraction)
 add_test(NAME ${SP_TEST_PREFIX}pack_fp_contraction COMMAND sp_pack_fp_contraction)
-# The same test as a user of simple_packing::simple_packing builds it: without the project flags,
-# for the host CPU (fused multiply-add available), so that only the usage requirements apply
-check_cxx_compiler_flag(-march=native SIMPLE_PACKING_HAVE_MARCH_NATIVE)
+# The same test as a user of simple_packing::simple_packing builds it: without the project flags
+# (but for the same CPU), so that only the usage requirements apply
 add_executable(sp_pack_fp_contraction_consumer ${CMAKE_CURRENT_SOURCE_DIR}/pack_fp_contraction.cc)
 target_link_libraries(sp_pack_fp_contraction_consumer PRIVATE simple_packing::simple_packing)
-target_compile_options(sp_pack_fp_contraction_consumer PRIVATE -O2 $<$<AND:$<BOOL:${SIMPLE_PACKING_HAVE_MARCH_NATIVE}>,$<NOT:$<BOOL:${CMAKE_CROSSCOMPILING}>>>:-march=native>)
+target_compile_options(sp_pack_fp_contraction_consumer PRIVATE -O2 ${SIMPLE_PACKING_ARCH_FLAGS})
+sp_test_fp_flags(sp_pack_fp_contraction_consumer ${SIMPLE_PACKING_FP_SAFETY_FLAGS})
 add_test(NAME ${SP_TEST_PREFIX}pack_fp_contraction_consumer COMMAND sp_pack_fp_contraction_consumer)
 
 sp_add_test(binary_scale_large_range)
@@ -120,9 +120,9 @@ add_test(NAME ${SP_TEST_PREFIX}binary_scale_large_range COMMAND sp_binary_scale_
 sp_add_test(bit_packing_reference)
 add_test(NAME ${SP_TEST_PREFIX}bit_packing_reference COMMAND sp_bit_packing_reference)
 
-# The validation of the values and parameters must also hold when the user compiles with
-# -ffast-math (CMAKE_CXX_FLAGS come before the project flags): copies of these tests that compile
-# the library sources with -ffast-math first. Not the tests of denormal values: linking with
+# A user who compiles with -ffast-math must add -fno-fast-math after it (SIMPLE_PACKING_NO_FAST_MATH=ON;
+# README, "Floating-point compiler options"): copies of these tests that compile the library
+# sources so check that this suffices for the validation of the values and parameters. Not the tests of denormal values: linking with
 # -ffast-math makes the CPU flush them to zero, which a library cannot prevent.
 check_cxx_compiler_flag(-ffast-math SIMPLE_PACKING_HAVE_FAST_MATH)
 if(SIMPLE_PACKING_HAVE_FAST_MATH)
@@ -130,19 +130,22 @@ if(SIMPLE_PACKING_HAVE_FAST_MATH)
     add_executable(sp_${name}_fast_math ${CMAKE_CURRENT_SOURCE_DIR}/${name}.cc
                    ${PROJECT_SOURCE_DIR}/src/Utils.cc ${PROJECT_SOURCE_DIR}/src/optimizer/BinDecOptimizer.cc)
     target_link_libraries(sp_${name}_fast_math PRIVATE simple_packing::headers)
-    target_compile_options(sp_${name}_fast_math PRIVATE -ffast-math ${SIMPLE_PACKING_OPT_FLAGS})
+    target_compile_options(sp_${name}_fast_math PRIVATE -ffast-math -fno-fast-math ${SIMPLE_PACKING_OPT_FLAGS})
+    sp_test_fp_flags(sp_${name}_fast_math -ffast-math -fno-fast-math ${SIMPLE_PACKING_FP_FLAGS})
     target_compile_definitions(sp_${name}_fast_math PRIVATE NDEBUG)
-    target_link_options(sp_${name}_fast_math PRIVATE -ffast-math)
+    target_link_options(sp_${name}_fast_math PRIVATE -ffast-math -fno-fast-math)
     add_test(NAME ${SP_TEST_PREFIX}${name}_fast_math COMMAND sp_${name}_fast_math)
     set_tests_properties(${SP_TEST_PREFIX}${name}_fast_math PROPERTIES TIMEOUT 120)
   endforeach()
 endif()
 
 
-# A user's code compiled with -ffast-math keeps the checks of the library (usage requirements)
+# A user's code gets the floating-point options that this compiler needs (usage requirements):
+# compiled without the project flags, for the same CPU
 add_executable(sp_consumer_flags ${CMAKE_CURRENT_SOURCE_DIR}/consumer_flags.cc)
 target_link_libraries(sp_consumer_flags PRIVATE simple_packing::simple_packing)
-target_compile_options(sp_consumer_flags PRIVATE $<$<COMPILE_LANG_AND_ID:CXX,GNU,Clang,AppleClang>:-ffast-math>)
+target_compile_options(sp_consumer_flags PRIVATE -O2 ${SIMPLE_PACKING_ARCH_FLAGS})
+sp_test_fp_flags(sp_consumer_flags ${SIMPLE_PACKING_FP_SAFETY_FLAGS})
 add_test(NAME ${SP_TEST_PREFIX}consumer_flags COMMAND sp_consumer_flags)
 
 sp_label_tests(regression)

@@ -1,11 +1,10 @@
 // SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
 // SPDX-License-Identifier: Apache-2.0
 
-// A user who compiles with -ffast-math (or icx/icpx with its default floating-point model) gets
-// the results and the checks of the library: the usage requirements of simple_packing turn the
-// unsafe optimisations off for the header code the user instantiates. With -ffast-math the
-// checks for infinity were removed and the search for the binary scale factor hung on an
-// infinite range. This test is compiled with -ffast-math (GCC, Clang).
+// A user's code gets the floating-point options that this compiler needs from the usage
+// requirements of simple_packing (README.md, "Floating-point compiler options"): compiled without the project
+// flags (for the same CPU), the checks for NaN and infinity and the results stay those of the library.
+// A -ffast-math of the user is not undone: the user adds -fno-fast-math.
 
 #include <iostream>
 #include <stdexcept>
@@ -14,8 +13,16 @@
 
 #include "simple_packing/simple_packing.h"
 
+#include "../fp_diagnostics.h"
+
 int main()
 {
+    // With -ffast-math (no checks for infinity) or subnormal numbers flushed to zero the test hangs:
+    // check that first
+    if (fp_diagnostics::fastMath() || fp_diagnostics::flushesSubnormals() || fp_diagnostics::intelFastModel()) {
+        fp_diagnostics::explain();
+        return 1;
+    }
     alarm(10);  // a hang is a failure
     int failures = 0;
 #ifdef __FAST_MATH__
@@ -33,6 +40,9 @@ int main()
     }
     if (failures == 0) {
         std::cout << "OK\n";
+    }
+    if (failures != 0) {
+        fp_diagnostics::explain();
     }
     return failures == 0 ? 0 : 1;
 }

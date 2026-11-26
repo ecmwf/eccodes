@@ -1,11 +1,10 @@
 // SPDX-FileCopyrightText: 2026 European Centre for Medium-Range Weather Forecasts (ECMWF)
 // SPDX-License-Identifier: Apache-2.0
 
-// A user who compiles with -ffast-math (or icx/icpx with its default floating-point model) gets
-// the results and the checks of the library: the usage requirements of spaec::spaec turn the
-// unsafe optimisations off for the header code the user instantiates. With -ffast-math the
-// checks for NaN and infinity were removed (-ffinite-math-only). This test is compiled with
-// -ffast-math (GCC, Clang).
+// A user's code gets the floating-point options that this compiler needs from the usage
+// requirements of spaec::spaec (README.md, "Floating-point compiler options"): compiled without the project
+// flags (for the same CPU), the checks for NaN and infinity and the results stay those of the library.
+// A -ffast-math of the user is not undone: the user adds -fno-fast-math.
 
 #include <cmath>
 #include <iostream>
@@ -14,6 +13,8 @@
 #include <vector>
 
 #include "spaec/spaec.h"
+
+#include "../fp_diagnostics.h"
 
 int main()
 {
@@ -33,6 +34,9 @@ int main()
     }
     if (failures == 0) {
         std::cout << "OK\n";
+    }
+    if (failures != 0) {
+        fp_diagnostics::explain();
     }
     return failures == 0 ? 0 : 1;
 }

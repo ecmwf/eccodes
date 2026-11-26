@@ -18,6 +18,8 @@
 
 #include "simple_packing/detail/Utils.h"
 
+#include "../fp_diagnostics.h"
+
 using namespace sp::detail;
 
 static int failures = 0;
@@ -190,6 +192,7 @@ int main()
     ibm();
     edges();
     if (failures != 0) {
+        fp_diagnostics::explain();
         std::cerr << failures << " checks failed\n";
         return 1;
     }

@@ -44,40 +44,24 @@ endif()
 
 include(GNUInstallDirs)
 
-# Optimisation flags for the coder (tests; ecCodes uses them for its CCSDS accessor)
+# Optimisation flags for the coder (tests; ecCodes uses them for its CCSDS accessor): -O3, the
+# floating-point options that this compiler needs (cmake/spaecFloatingPoint.cmake: AUTO, ON or OFF
+# per option, with their measured performance impact) and -march=native (SPAEC_NATIVE_ARCH)
 include(CheckCXXCompilerFlag)
-set(SPAEC_OPT_FLAGS -O3)
-# Undo a -ffast-math of the user (CMAKE_CXX_FLAGS come first): it removes the checks for NaN and
-# infinite values (std::isfinite is assumed true), which then pass invalid data or loop forever
-check_cxx_compiler_flag("-fno-fast-math" SPAEC_HAVE_NO_FAST_MATH)
-if(SPAEC_HAVE_NO_FAST_MATH)
-  list(PREPEND SPAEC_OPT_FLAGS -fno-fast-math)
-endif()
-# icx/icpx: no unsafe optimisations by default. First: -fp-model=precise allows contractions again,
-# -ffp-contract=off (below) must come after it
-if(CMAKE_CXX_COMPILER_ID STREQUAL "IntelLLVM")
-  list(PREPEND SPAEC_OPT_FLAGS -fp-model=precise)
-endif()
-# Lets GCC vectorize loops with floating-point comparisons (e.g. the range check of the values
-# to encode); SpAec does not rely on floating-point exception flags
-check_cxx_compiler_flag("-fno-trapping-math" SPAEC_HAVE_NO_TRAPPING_MATH)
-if(SPAEC_HAVE_NO_TRAPPING_MATH)
-  list(APPEND SPAEC_OPT_FLAGS -fno-trapping-math)
-endif()
-# Every floating-point operation rounded separately: with fused multiply-adds (available with
-# -march=native) the encoded values would depend on the build machine
-check_cxx_compiler_flag("-ffp-contract=off" SPAEC_HAVE_FP_CONTRACT_OFF)
-if(SPAEC_HAVE_FP_CONTRACT_OFF)
-  list(APPEND SPAEC_OPT_FLAGS -ffp-contract=off)
-endif()
+set(SPAEC_ARCH_FLAGS "")
 if(SPAEC_NATIVE_ARCH AND NOT CMAKE_CROSSCOMPILING)
   check_cxx_compiler_flag("-march=native" SPAEC_HAVE_MARCH_NATIVE)
   if(SPAEC_HAVE_MARCH_NATIVE)
-    list(APPEND SPAEC_OPT_FLAGS -march=native -mtune=native)
+    set(SPAEC_ARCH_FLAGS -march=native -mtune=native)
   endif()
 endif()
+include(${PROJECT_SOURCE_DIR}/cmake/spaecFloatingPoint.cmake)
+spaec_floating_point_flags(${SPAEC_ARCH_FLAGS})
+set(SPAEC_OPT_FLAGS -O3 ${SPAEC_FP_FLAGS} ${SPAEC_ARCH_FLAGS})
 if(NOT SPAEC_TOP_LEVEL)
   set(SPAEC_OPT_FLAGS ${SPAEC_OPT_FLAGS} PARENT_SCOPE)
+  set(SPAEC_FP_SAFETY_FLAGS ${SPAEC_FP_SAFETY_FLAGS} PARENT_SCOPE)
+  set(SPAEC_FP_LINK_FLAGS ${SPAEC_FP_LINK_FLAGS} PARENT_SCOPE)
 endif()
 
 # --- spaec::spaec: the header-only SpAec library ---
@@ -89,15 +73,13 @@ target_include_directories(spaec INTERFACE
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 target_compile_features(spaec INTERFACE cxx_std_17)
-# Users get the results of the project's own builds: no fused multiply-adds in the header code they
-# instantiate (they round differently, so the encoded data would depend on the CPU)
-# Nor the unsafe floating-point optimisations of -ffast-math (they remove the checks for NaN and
-# infinity) or of the default floating-point model of icx/icpx
-# (-fp-model=precise first: it allows contractions again, -ffp-contract=off must come after it)
-target_compile_options(spaec INTERFACE
-  $<$<COMPILE_LANG_AND_ID:CXX,IntelLLVM>:-fp-model=precise>
-  $<$<COMPILE_LANG_AND_ID:CXX,GNU,Clang,AppleClang,IntelLLVM>:-fno-fast-math>
-  $<$<COMPILE_LANG_AND_ID:CXX,GNU,Clang,AppleClang,IntelLLVM>:-ffp-contract=off>)
+# Users get the results of the project's own builds: the floating-point options that this compiler
+# needs for correct results (SPAEC_FP_SAFETY_FLAGS; the header code is compiled with the user's
+# flags). Not -fno-trapping-math, which only affects the speed.
+foreach(spaec_flag IN LISTS SPAEC_FP_SAFETY_FLAGS)
+  target_compile_options(spaec INTERFACE $<$<COMPILE_LANGUAGE:CXX>:${spaec_flag}>)
+endforeach()
+target_link_options(spaec INTERFACE ${SPAEC_FP_LINK_FLAGS})
 
 if(SPAEC_BUILD_TESTS)
   if(SPAEC_TOP_LEVEL)

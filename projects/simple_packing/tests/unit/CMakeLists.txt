@@ -46,6 +46,9 @@ add_test(NAME ${SP_TEST_PREFIX}errors COMMAND sp_errors)
 sp_add_test(api)
 add_test(NAME ${SP_TEST_PREFIX}api COMMAND sp_api)
 
+sp_add_test(fp_environment)
+add_test(NAME ${SP_TEST_PREFIX}fp_environment COMMAND sp_fp_environment)
+
 sp_add_test(u128_reference)
 add_test(NAME ${SP_TEST_PREFIX}u128_reference COMMAND sp_u128_reference)
 

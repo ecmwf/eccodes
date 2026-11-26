@@ -29,6 +29,8 @@
 #include "simple_packing/detail/simple/Array.h"
 #include "simple_packing/detail/simple/Binary.h"
 
+#include "../fp_diagnostics.h"
+
 using namespace sp::detail;
 
 static int failures = 0;
@@ -46,6 +48,7 @@ static void startWatchdog()
             const long now = finished.load();
             if (now == last) {
                 std::fprintf(stderr, "FAIL: %s: no result after 10 s (infinite loop)\n", current.c_str());
+                fp_diagnostics::explain();
                 (void)std::fflush(stderr);
                 std::_Exit(1);
             }
@@ -273,6 +276,7 @@ int main()
     array();
     noErrors();
     if (failures != 0) {
+        fp_diagnostics::explain();
         std::cerr << failures << " of " << cases << " error cases failed\n";
         return 1;
     }

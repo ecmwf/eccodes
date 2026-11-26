@@ -16,6 +16,8 @@
 #include "simple_packing/detail/optimizer/DecOptimizer.h"
 #include "simple_packing/detail/simple/Binary.h"
 
+#include "../fp_diagnostics.h"
+
 using namespace sp::detail;
 
 static int failures = 0;
@@ -60,6 +62,10 @@ int main()
         }
         catch (const std::runtime_error&) {
         }
+    }
+
+    if (failures != 0) {
+        fp_diagnostics::explain();
     }
 
     return failures == 0 ? 0 : 1;
