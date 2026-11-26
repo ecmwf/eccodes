@@ -318,6 +318,9 @@ std::vector<Sample> decompress(const std::vector<uint8_t>& data, size_t count, c
 // Floating-point values (float, double): scaled to unsigned samples of bitsPerSample bits (rounded:
 // a value is restored within half a step 2^E * 10^-D) and compressed in one pass. A value outside the range of the samples is an error (std::invalid_argument),
 // and so is a scaling whose smallest or largest sample does not decode to a finite Value.
+// Floats are scaled in double with the reference value as a double (like doubles): compress of
+// floats gives the data of compress of the converted doubles, and decompress of floats gives the
+// decoded doubles rounded once to float.
 
 template <typename Value, std::enable_if_t<std::is_floating_point<Value>::value, int> = 0>
 size_t compress(const Value* values, size_t count, const Scaling& scaling, const Options& options, uint8_t* output, size_t capacity)
@@ -326,7 +329,7 @@ size_t compress(const Value* values, size_t count, const Scaling& scaling, const
     if (c.preprocessing.signedSamples) {
         throw std::invalid_argument("CCSDS: scaled floating-point values are unsigned samples (signedSamples must be false)");
     }
-    detail::encoder::SpAec<Value> coder(c.bitsPerSample, c.blockSize, c.referenceInterval, c.codeOptionSet, static_cast<Value>(scaling.referenceValue),
+    detail::encoder::SpAec<Value> coder(c.bitsPerSample, c.blockSize, c.referenceInterval, c.codeOptionSet, scaling.referenceValue,
                                         scaling.binaryScaleFactor, scaling.decimalScaleFactor, c.threads, c.preprocessing.prediction, c.splitSelector);
     const detail::Span<Value> input(const_cast<Value*>(values), count);
     // SpAec::encode zeroes its target itself
@@ -348,7 +351,7 @@ void decompress(const uint8_t* data, size_t size, const Scaling& scaling, const 
     if (c.preprocessing.signedSamples) {
         throw std::invalid_argument("CCSDS: scaled floating-point values are unsigned samples (signedSamples must be false)");
     }
-    detail::encoder::SpAec<Value> coder(c.bitsPerSample, c.blockSize, c.referenceInterval, c.codeOptionSet, static_cast<Value>(scaling.referenceValue),
+    detail::encoder::SpAec<Value> coder(c.bitsPerSample, c.blockSize, c.referenceInterval, c.codeOptionSet, scaling.referenceValue,
                                         scaling.binaryScaleFactor, scaling.decimalScaleFactor, c.threads, c.preprocessing.prediction);
     detail::decodeChecked([&] { coder.decode(detail::Span<uint8_t>(const_cast<uint8_t*>(data), size), detail::Span<Value>(values, count)); });
 }

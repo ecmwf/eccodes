@@ -221,7 +221,8 @@ inline Parameters parametersOf(const Scaling& s)
 
 }  // namespace detail
 
-// Packs count values into packedSize(count, scaling) bytes of output
+// Packs count values into packedSize(count, scaling) bytes of output. Floats are scaled in double
+// (like doubles): pack of floats gives the codes of pack of the converted doubles
 template <typename Value>
 void pack(const Value* values, size_t count, const Scaling& scaling, uint8_t* output, size_t capacity)
 {

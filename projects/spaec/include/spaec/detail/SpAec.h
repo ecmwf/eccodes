@@ -63,29 +63,33 @@ public:
     class SimpleMapper
     {
     public:
-        SimpleMapper(ValueType referenceValue, int binaryScaleFactor, int decimalScaleFactor) :
+        SimpleMapper(double referenceValue, int binaryScaleFactor, int decimalScaleFactor) :
             referenceValue_(referenceValue),
-            decimal_{ grib_power<ValueType>(decimalScaleFactor, 10) },
-            binary_{ grib_power<ValueType>(-binaryScaleFactor, 2) }
+            decimal_{ grib_power<double>(decimalScaleFactor, 10) },
+            binary_{ grib_power<double>(-binaryScaleFactor, 2) }
         {
         }
 
         MappedType operator()(ValueType value) const
         {
-            ValueType mapped = ((value * decimal_) - referenceValue_) * binary_ + 0.5;
-            return static_cast<MappedType>(mapped);
+            return static_cast<MappedType>(mapped(value));
         }
 
         // The value before the conversion to MappedType (to check its range)
         double mapped(ValueType value) const
         {
-            return static_cast<double>(((value * decimal_) - referenceValue_) * binary_ + 0.5);
+            return (static_cast<double>(value) * decimal_ - referenceValue_) * binary_ + 0.5;
         }
 
     private:
-        const ValueType referenceValue_;
-        const ValueType decimal_;
-        const ValueType binary_;
+        const double referenceValue_;
+        // The mapping computes in double for every value type (like the unmapper of the decoder):
+        // the reference value and the factors are doubles and the value is converted before it is scaled, so the coder of
+        // float values gives the samples of the coder of the converted doubles. Mapping in float
+        // rounds the intermediates (the difference of two floats near a large reference value
+        // needs more than 24 bits) and gives other samples than a double compression.
+        const double decimal_;
+        const double binary_;
     };
 
 
@@ -96,7 +100,7 @@ public:
         // Like legacy ecCodes: the powers are computed in ValueType, the scaling in double, and
         // the result is rounded to ValueType once. Scaling in float would lose the low bits of
         // samples with more than 24 bits and cancel catastrophically near zero.
-        SimpleUnmapper(ValueType referenceValue, int binaryScaleFactor, int decimalScaleFactor) :
+        SimpleUnmapper(double referenceValue, int binaryScaleFactor, int decimalScaleFactor) :
             referenceValue_(referenceValue),
             bscale_{ grib_power<ValueType>(binaryScaleFactor, 2) },
             dscale_{ grib_power<ValueType>(-decimalScaleFactor, 10) }
@@ -117,7 +121,7 @@ public:
 
 public:
     // prediction: the preprocessing of the coded integers (CCSDS 121.0-B-3, 4); they are unsigned
-    SpAec(uint8_t bpv, uint8_t blockSize, uint16_t rsiSize, CodeOptionSet codeOptionSet, ValueType referenceValue, int binaryScaleFactor = 0, int decimalScaleFactor = 0, uint8_t nThreads = 1,
+    SpAec(uint8_t bpv, uint8_t blockSize, uint16_t rsiSize, CodeOptionSet codeOptionSet, double referenceValue, int binaryScaleFactor = 0, int decimalScaleFactor = 0, uint8_t nThreads = 1,
           Prediction prediction = Prediction::UnitDelay, SplitSelector selector = SplitSelector::Search) :
         bpv_(bpv),
         blockSize_(blockSize),
@@ -339,7 +343,7 @@ private:
     uint8_t blockSize_;
     uint16_t rsiSize_;
     uint8_t nThreads_ = 1;
-    ValueType referenceValue_;
+    double referenceValue_;  // a double for every value type (not rounded for float values)
     int binaryScaleFactor_;
     int decimalScaleFactor_;
     CodeOptionSet codeOptionSet_;

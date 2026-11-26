@@ -33,13 +33,15 @@ public:
 
     virtual ~BinaryInterface() = default;
 
-    virtual Buffer pack(const Values& values, int decimalScaleFactor, int binaryScaleFactor, ValueType referenceValue, ValueType min, ValueType max) = 0;
+    // The reference value is a double for every value type: the encoding computes in double
+    // (like the decoding), so pack<float>(v) gives the codes of pack<double>((double)v)
+    virtual Buffer pack(const Values& values, int decimalScaleFactor, int binaryScaleFactor, double referenceValue, ValueType min, ValueType max) = 0;
     virtual Values unpack(const Buffer& codedBuf, int decimalScaleFactor, int binaryScaleFactor, double referenceValue, size_t nVals) = 0;
 
     // Zero-copy variants: read from / write into caller-owned memory.
     // 'out' must hold at least (BPV * nVals + 7) / 8 bytes (packTo) or
     // nVals elements (unpackTo).
-    virtual void packTo(const ValueType* values, size_t nVals, int decimalScaleFactor, int binaryScaleFactor, ValueType referenceValue, unsigned char* out) = 0;
+    virtual void packTo(const ValueType* values, size_t nVals, int decimalScaleFactor, int binaryScaleFactor, double referenceValue, unsigned char* out) = 0;
     virtual void unpackTo(const unsigned char* codedBuf, int decimalScaleFactor, int binaryScaleFactor, double referenceValue, size_t nVals, ValueType* out) = 0;
 };
 
@@ -53,9 +55,9 @@ public:
     using Values = std::vector<ValueType>;
     using Buffer = std::vector<unsigned char>;
 
-    Buffer pack(const Values& values, int decimalScaleFactor, int binaryScaleFactor, ValueType referenceValue, ValueType min, ValueType max) override;
+    Buffer pack(const Values& values, int decimalScaleFactor, int binaryScaleFactor, double referenceValue, ValueType min, ValueType max) override;
     Values unpack(const Buffer& codedBuf, int decimalScaleFactor, int binaryScaleFactor, double referenceValue, size_t nVals) override;
-    void packTo(const ValueType* values, size_t nVals, int decimalScaleFactor, int binaryScaleFactor, ValueType referenceValue, unsigned char* out) override;
+    void packTo(const ValueType* values, size_t nVals, int decimalScaleFactor, int binaryScaleFactor, double referenceValue, unsigned char* out) override;
     void unpackTo(const unsigned char* codedBuf, int decimalScaleFactor, int binaryScaleFactor, double referenceValue, size_t nVals, ValueType* out) override;
 };
 
@@ -148,10 +150,15 @@ inline uint32_t sp_to_uint32(double v)
 }
 
 template <typename ValueType, uint8_t BPV>
-void Binary<ValueType, BPV>::packTo(const ValueType* values, size_t nVals, int decimalScaleFactor, int binaryScaleFactor, ValueType referenceValue, unsigned char* out)
+void Binary<ValueType, BPV>::packTo(const ValueType* values, size_t nVals, int decimalScaleFactor, int binaryScaleFactor, double referenceValue, unsigned char* out)
 {
-    const ValueType decimal = sp_power<ValueType>(decimalScaleFactor, 10);
-    const ValueType divisor = sp_power<ValueType>(-binaryScaleFactor, 2);
+    // The encoding computes in double for every value type (like the decoding): the factors and
+    // the reference value are doubles and every value is converted before it is scaled, so
+    // pack<float>(v) gives the codes of pack<double>((double)v). Scaling in float rounds the
+    // intermediates (the difference of two floats near a large reference value needs more than
+    // 24 bits) and gives other codes than a double set.
+    const double decimal = sp_power<double>(decimalScaleFactor, 10);
+    const double divisor = sp_power<double>(-binaryScaleFactor, 2);
 
     // Coded values must be in [0, 2^BPV): others (NaN, values below the reference value or beyond the
     // range of BPV bits) are replaced by 0, and reported after the loop
@@ -168,7 +175,7 @@ void Binary<ValueType, BPV>::packTo(const ValueType* values, size_t nVals, int d
             const ValueType* v = values + start;
             int ok = 1;
             for (size_t j = 0; j < count; ++j) {
-                const double c = static_cast<double>(((v[j] * decimal) - referenceValue) * divisor + 0.5);
+                const double c = ((static_cast<double>(v[j]) * decimal) - referenceValue) * divisor + 0.5;
                 // Quiet comparisons (false for NaN) and a selection through the bit pattern: no
                 // floating-point selection, which GCC does not vectorize (trapping math)
                 const int o = static_cast<int>(std::isgreaterequal(c, 0.0)) & static_cast<int>(std::isless(c, limit));
@@ -192,7 +199,7 @@ void Binary<ValueType, BPV>::packTo(const ValueType* values, size_t nVals, int d
             std::memset(out, 0, (BPV * nVals + 7) / 8);
         }
         auto encode = [&](auto val) {
-            const double coded = static_cast<double>(((val * decimal) - referenceValue) * divisor + 0.5);
+            const double coded = ((static_cast<double>(val) * decimal) - referenceValue) * divisor + 0.5;
             const bool ok = static_cast<bool>(static_cast<int>(coded >= 0.0) & static_cast<int>(coded < limit));
             inRange &= ok;
             return ok ? coded : 0.0;
@@ -216,7 +223,7 @@ void Binary<ValueType, BPV>::packTo(const ValueType* values, size_t nVals, int d
 
     if (!inRange) {
         for (size_t i = 0; i < nVals; ++i) {
-            const double coded = static_cast<double>(((values[i] * decimal) - referenceValue) * divisor + 0.5);
+            const double coded = ((static_cast<double>(values[i]) * decimal) - referenceValue) * divisor + 0.5;
             if (!(coded >= 0.0 && coded < limit)) {
                 char message[256];
                 std::snprintf(message, sizeof(message),
@@ -298,7 +305,7 @@ void Binary<ValueType, BPV>::unpackTo(const unsigned char* codedBuf, int decimal
 
 
 template <typename ValueType, uint8_t BPV>
-typename Binary<ValueType, BPV>::Buffer Binary<ValueType, BPV>::pack(const Values& values, int decimalScaleFactor, int binaryScaleFactor, ValueType referenceValue, ValueType /*min*/, ValueType /*max*/)
+typename Binary<ValueType, BPV>::Buffer Binary<ValueType, BPV>::pack(const Values& values, int decimalScaleFactor, int binaryScaleFactor, double referenceValue, ValueType /*min*/, ValueType /*max*/)
 {
     const size_t buflen = (((BPV * values.size()) + 7) / 8) * sizeof(unsigned char);
     Buffer codedBuf(buflen);
