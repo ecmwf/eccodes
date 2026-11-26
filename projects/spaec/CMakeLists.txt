@@ -15,7 +15,7 @@ cmake_minimum_required(VERSION 3.19)
 
 # The version is defined in include/spaec/version.h
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/include/spaec/version.h" spaec_version_line
-     REGEX "^#define SPAEC_VERSION \"[0-9]+\\.[0-9]+\\.[0-9]+\"")
+     REGEX "^#define SPAEC_VERSION[ \t]+\"[0-9]+\\.[0-9]+\\.[0-9]+\"")  # any spaces: clang-format aligns the defines
 string(REGEX MATCH "[0-9]+\\.[0-9]+\\.[0-9]+" spaec_version "${spaec_version_line}")
 if(NOT spaec_version)
   message(FATAL_ERROR "spaec: no version in include/spaec/version.h")

@@ -16,7 +16,7 @@ cmake_minimum_required(VERSION 3.19)
 
 # The version is defined in include/simple_packing/version.h
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/include/simple_packing/version.h" simple_packing_version_line
-     REGEX "^#define SIMPLE_PACKING_VERSION \"[0-9]+\\.[0-9]+\\.[0-9]+\"")
+     REGEX "^#define SIMPLE_PACKING_VERSION[ \t]+\"[0-9]+\\.[0-9]+\\.[0-9]+\"")  # any spaces: clang-format aligns the defines
 string(REGEX MATCH "[0-9]+\\.[0-9]+\\.[0-9]+" simple_packing_version "${simple_packing_version_line}")
 if(NOT simple_packing_version)
   message(FATAL_ERROR "simple_packing: no version in include/simple_packing/version.h")
