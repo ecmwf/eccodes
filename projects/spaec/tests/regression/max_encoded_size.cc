@@ -14,13 +14,25 @@
 
 using namespace spaec::detail;
 
-// Wide enough for the exact size of any size_t count
-#if defined(__SIZEOF_INT128__)
-__extension__ using Wide = unsigned __int128;  // __extension__: no -Wpedantic warning
-#else
-using Wide = uint64_t;  // 32-bit size_t
-static_assert(sizeof(size_t) <= 4, "no integer type wide enough for the test");
-#endif
+// The exact size (nBlocks * bitsPerBlock + 7) / 8 + 8, computed without overflow in 64 bits
+// (portable, no 128-bit integers): with nBlocks = 8q + r it is q * bitsPerBlock + (r * bitsPerBlock + 7) / 8 + 8.
+// fits = false if the size needs more than 64 bits.
+struct ExactSize
+{
+    bool fits;
+    uint64_t value;
+};
+
+static ExactSize exactSize(uint64_t n, unsigned blockSize, unsigned bitsPerBlock)
+{
+    const uint64_t nBlocks = n / blockSize + (n % blockSize != 0 ? 1 : 0);
+    const uint64_t q = nBlocks / 8, r = nBlocks % 8;
+    const uint64_t tail = (r * bitsPerBlock + 7) / 8 + 8;
+    if (q != 0 && bitsPerBlock > (UINT64_MAX - tail) / q) {
+        return { false, 0 };
+    }
+    return { true, q * bitsPerBlock + tail };
+}
 
 int main()
 {
@@ -32,18 +44,18 @@ int main()
             for (size_t n : counts) {
                 // Exact size: (nBlocks * (idLength + blockSize * bpv) + 7) / 8 + 8
                 const unsigned idLength = CodeOptionBase{ static_cast<uint8_t>(bpv), CodeOptionSet::Basic }.maxIdLength - 1u;
-                const Wide nBlocks = (static_cast<Wide>(n) + blockSize - 1) / blockSize;
-                const Wide exact = (nBlocks * (idLength + blockSize * bpv) + 7) / 8 + 8;
+                const ExactSize exact = exactSize(n, blockSize, idLength + blockSize * bpv);
+                const bool exactFits = exact.fits && exact.value <= maxSize;
                 const std::string name = "n=" + std::to_string(n) + " bpv=" + std::to_string(bpv) + " blockSize=" + std::to_string(blockSize);
                 try {
                     const size_t size = encoder::SpAec<double>::maxEncodedSize(n, static_cast<uint8_t>(bpv), static_cast<uint8_t>(blockSize));
-                    if (size != exact) {
-                        std::cerr << name << ": " << size << " bytes, but " << (exact > maxSize ? "the size does not fit in size_t" : "a different size is needed") << '\n';
+                    if (!exactFits || size != exact.value) {
+                        std::cerr << name << ": " << size << " bytes, but " << (!exactFits ? "the size does not fit in size_t" : "a different size is needed") << '\n';
                         ++failures;
                     }
                 }
                 catch (const std::length_error&) {
-                    if (exact <= maxSize) {
+                    if (exactFits) {
                         std::cerr << name << ": unexpected exception\n";
                         ++failures;
                     }

@@ -269,22 +269,35 @@ enum class Policy
     SecondExtension,  // the second extension for every block that is not a zero block
 };
 
-// 128-bit lengths (a second-extension symbol of two n = 32 bit samples has up to 65 bits);
-// __extension__: no -Wpedantic warning
-__extension__ using u128 = unsigned __int128;
+// Lengths in 64 bits, saturated at the maximum (portable, no 128-bit integers): a second-extension
+// symbol of two n = 32 bit samples has up to 65 bits. Such a length is only compared with the other
+// options, which are always shorter, so the saturation does not change any decision.
+static uint64_t satAdd(uint64_t a, uint64_t b)
+{
+    return a > UINT64_MAX - b ? UINT64_MAX : a + b;
+}
+
+static uint64_t satMul(uint64_t a, uint64_t b)
+{
+    return a != 0 && b > UINT64_MAX / a ? UINT64_MAX : a * b;
+}
 
 // Lengths of the single-block options of a block (deltas[0] unused if ref)
 struct OptionLengths
 {
     uint64_t nc;
-    u128 se;
+    uint64_t se;
     std::vector<uint64_t> ss;  // index k
 };
 
-static u128 gammaOf(uint64_t a, uint64_t b)
+static uint64_t gammaOf(uint64_t a, uint64_t b)
 {
-    const u128 s = static_cast<u128>(a) + b;
-    return s * (s + 1) / 2 + b;
+    const uint64_t s = satAdd(a, b);
+    if (s == UINT64_MAX) {
+        return UINT64_MAX;
+    }
+    const uint64_t triangle = s % 2 == 0 ? satMul(s / 2, s + 1) : satMul(s, (s + 1) / 2);  // s * (s + 1) / 2
+    return satAdd(triangle, b);
 }
 
 static OptionLengths optionLengths(const Params& p, const std::vector<uint64_t>& d, bool ref)
@@ -296,7 +309,7 @@ static OptionLengths optionLengths(const Params& p, const std::vector<uint64_t>&
     l.nc = t.len + refBits + (p.J - first) * uint64_t{ p.n };
     l.se = t.len + 1 + refBits;
     for (size_t i = 0; i < p.J; i += 2)
-        l.se += gammaOf(i == 0 && ref ? 0 : d[i], d[i + 1]) + 1;  // 3.4.1: delta1 = 0 with reference
+        l.se = satAdd(l.se, satAdd(gammaOf(i == 0 && ref ? 0 : d[i], d[i + 1]), 1));  // 3.4.1: delta1 = 0 with reference
     for (int k = 0; k <= t.kmax; ++k) {
         uint64_t len = t.len + refBits;
         for (size_t i = first; i < p.J; ++i)
@@ -396,7 +409,7 @@ static std::vector<uint8_t> refEncode(const std::vector<uint64_t>& x, const Para
                     k = o.second;
                 }
                 else {
-                    u128 best = l.nc;
+                    uint64_t best = l.nc;
                     if (l.se < best) {
                         best = l.se;
                         kind = 'E';
@@ -667,7 +680,7 @@ static bool verify(const std::vector<uint8_t>& stream, const std::vector<uint64_
         // 3.7.1, 3.7.3, 3.7.4: the shortest option; ties: no compression, second extension,
         // the smallest k
         const OptionLengths l = optionLengths(p, c.deltas, c.ref);
-        u128 best = std::min<u128>(l.nc, l.se);
+        uint64_t best = std::min<uint64_t>(l.nc, l.se);
         int bestK = -1;
         for (size_t k = 0; k < l.ss.size(); ++k)
             if (l.ss[k] < best) {
