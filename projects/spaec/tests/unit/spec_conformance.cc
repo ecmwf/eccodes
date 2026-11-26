@@ -251,7 +251,7 @@ static uint64_t postprocess(const Params& p, uint64_t delta, uint64_t previous)
 struct Cds
 {
     char kind;                     // 'Z' zero block, 'E' second extension, 'S' split sample (k), 'N' no compression
-    int32_t k = 0;                     // split sample: k (0 is FS)
+    int32_t k = 0;                 // split sample: k (0 is FS)
     uint64_t blocks = 1;           // zero block: number of blocks
     bool ros = false;              // zero block: remainder-of-segment codeword
     bool ref = false;              // with reference sample

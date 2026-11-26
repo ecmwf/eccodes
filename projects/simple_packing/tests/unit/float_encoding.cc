@@ -55,7 +55,7 @@ static void sameCodes(const std::vector<float>& values, const sp::Scaling& s, co
     check(floatThrew == doubleThrew, what + ": the float and the double pack must both throw or both succeed");
     if (!floatThrew) {
         check(packedF == packedD, what + ": " + std::to_string(values.size()) + " values packed differently (" +
-                                                      std::to_string(packedF.size()) + " bytes)");
+                                      std::to_string(packedF.size()) + " bytes)");
     }
 }
 
@@ -121,9 +121,7 @@ static std::vector<float> fullRangeValues(const Conf& c, size_t n, std::mt19937_
 
 static void confCase(const Conf& c, const std::vector<float>& values, const std::string& what)
 {
-    sameCodes(values, scalingOf(c), what + " (D=" + std::to_string(c.decimalScaleFactor) +
-                                        ", E=" + std::to_string(c.binaryScaleFactor) +
-                                        ", bpv=" + std::to_string(c.bitsPerValue) + ")");
+    sameCodes(values, scalingOf(c), what + " (D=" + std::to_string(c.decimalScaleFactor) + ", E=" + std::to_string(c.binaryScaleFactor) + ", bpv=" + std::to_string(c.bitsPerValue) + ")");
 }
 
 static void confCases(const std::vector<Conf>& confs, size_t n, std::mt19937_64& rng)

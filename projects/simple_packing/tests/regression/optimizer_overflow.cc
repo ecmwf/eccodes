@@ -26,7 +26,7 @@ int main()
     // the encoded maximum (residue + range) * 2^-E overflows the long range many times over
     const double pmin = 10000000102.4;
     const double pmax = pmin + 1e-5;
-    const std::vector<double> values{pmin, pmax};
+    const std::vector<double> values{ pmin, pmax };
 
     try {
         SimplePackingBinary<double> packer(std::make_unique<BinDecOptimizer>(false, true, 62));

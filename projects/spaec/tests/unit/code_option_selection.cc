@@ -73,7 +73,7 @@ int main()
         // libaec: 1 byte up to 8 bits, 2 up to 16, 3 for 24 bits (AEC_DATA_3BYTE), else 4
         const size_t bytesPerSample = bpv == 32 ? 4 : bpv / 8;
         const int32_t idLength = bpv > 16 ? 5 : bpv > 8 ? 4
-                                                    : 3;
+                                                        : 3;
         const uint32_t xmax = static_cast<uint32_t>((uint64_t{ 1 } << bpv) - 1);
 
         checkOption({ static_cast<uint32_t>(0x5555555555555555ull & xmax) }, bpv, bytesPerSample, 0, idLength + 1, "zero block");

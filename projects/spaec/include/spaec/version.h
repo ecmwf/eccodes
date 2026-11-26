@@ -8,7 +8,7 @@
 #define SPAEC_VERSION_MAJOR 0
 #define SPAEC_VERSION_MINOR 0
 #define SPAEC_VERSION_PATCH 1
-#define SPAEC_VERSION "0.0.1"
+#define SPAEC_VERSION       "0.0.1"
 
 namespace spaec
 {

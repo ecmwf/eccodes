@@ -38,7 +38,8 @@ static void alarm_handler(int sig)
 static int failures = 0;
 
 /* ldexp(1, exp) is subnormal for exp < -1022 and normal (but tiny) for -1022 <= exp < -53 */
-typedef struct {
+typedef struct
+{
     int err;
     size_t n;
     double* values;

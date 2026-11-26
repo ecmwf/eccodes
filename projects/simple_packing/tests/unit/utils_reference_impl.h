@@ -43,7 +43,6 @@ constexpr T sp_power(int64_t s, int64_t n)
 }
 
 
-
 // --- Internal helpers ---
 
 namespace

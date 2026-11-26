@@ -161,8 +161,7 @@ static void constantFieldPackTo()
 // below DBL_EPSILON, a minimum below DBL_EPSILON (the fallback without decimal search)
 static void binDecModes()
 {
-    const double ranges[][2] = { { 0, 1 }, { -1, 1 }, { 250.15, 320.7 }, { -5e3, 7e7 }, { 1e38, 3e38 }, { 3e38, 3.3e38 }, { 0, 1e300 }, { 0, 1e303 },
-                                 { 0, 1e-300 }, { 1, 1 + 1e-15 }, { 1e-20, 1 }, { -1e-20, 1 }, { 0, 1e-4 } };
+    const double ranges[][2] = { { 0, 1 }, { -1, 1 }, { 250.15, 320.7 }, { -5e3, 7e7 }, { 1e38, 3e38 }, { 3e38, 3.3e38 }, { 0, 1e300 }, { 0, 1e303 }, { 0, 1e-300 }, { 1, 1 + 1e-15 }, { 1e-20, 1 }, { -1e-20, 1 }, { 0, 1e-4 } };
     for (int32_t gribex : { 0, 1 }) {
         for (int32_t c32 : { 0, 1 }) {
             for (bool ibm : { false, true }) {
@@ -191,7 +190,9 @@ static void arrayPacking()
         try {
             auto [params, coded] = sp.pack(values);
             check(params.bitsPerValue() == bpv, what + ": bits per value " + std::to_string(params.bitsPerValue()));
-            check(coded.index() == (bpv <= 8 ? 0u : bpv <= 16 ? 1u : 2u), what + ": array of another width");
+            check(coded.index() == (bpv <= 8 ? 0u : bpv <= 16 ? 1u
+                                                              : 2u),
+                  what + ": array of another width");
             const std::vector<double> decoded = sp.unpack(params, coded, values.size());
             const double step = sp_power<double>(params.binaryScaleFactor(), 2) / sp_power<double>(params.decimalScaleFactor(), 10);
             for (size_t i = 0; i < values.size(); ++i) {

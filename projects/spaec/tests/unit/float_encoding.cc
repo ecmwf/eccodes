@@ -80,7 +80,7 @@ static void sameCodes(const std::vector<float>& values, const spaec::Scaling& s,
     check(floatThrew == doubleThrew, what + ": the float and the double compression must both throw or both succeed");
     if (!floatThrew) {
         check(packedF == packedD, what + ": " + std::to_string(values.size()) + " values compressed differently (" +
-                                                      std::to_string(packedF.size()) + " bytes)");
+                                      std::to_string(packedF.size()) + " bytes)");
     }
 }
 
@@ -145,9 +145,7 @@ static std::vector<float> fullRangeValues(const Conf& c, size_t n, std::mt19937_
 
 static void confCase(const Conf& c, const std::vector<float>& values, const spaec::Options& o, const std::string& what)
 {
-    sameCodes(values, scalingOf(c), o, what + " (D=" + std::to_string(c.decimalScaleFactor) +
-                                            ", E=" + std::to_string(c.binaryScaleFactor) +
-                                            ", bpv=" + std::to_string(c.bitsPerSample) + ")");
+    sameCodes(values, scalingOf(c), o, what + " (D=" + std::to_string(c.decimalScaleFactor) + ", E=" + std::to_string(c.binaryScaleFactor) + ", bpv=" + std::to_string(c.bitsPerSample) + ")");
     if (values.size() <= 8) {
         mapperCase(c.referenceValue, c.binaryScaleFactor, c.decimalScaleFactor, values, what + ", mapper");
     }

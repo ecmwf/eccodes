@@ -10,12 +10,12 @@
 #include <limits>
 #include <memory>
 #if defined(_WIN32)
-#include <io.h>  // _dup, _dup2, _fileno
-#define dup _dup
-#define dup2 _dup2
-#define fileno _fileno
+    #include <io.h>  // _dup, _dup2, _fileno
+    #define dup    _dup
+    #define dup2   _dup2
+    #define fileno _fileno
 #else
-#include <unistd.h>
+    #include <unistd.h>
 #endif
 #include <vector>
 

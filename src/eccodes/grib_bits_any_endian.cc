@@ -250,7 +250,7 @@ unsigned long grib_decode_unsigned_long(const unsigned char* p, long* bitp, long
     /* Read exactly nbits bits: the useful bits of the current byte, then whole bytes, then the
        leading bits of the last byte. Reading whole bytes and removing the surplus bits afterwards
        needs up to nbits + 7 bits, which lost the high bits of values of 58 bits and more. */
-    ret        = p[pi] & ((1u << usefulBitsInByte) - 1);
+    ret = p[pi] & ((1u << usefulBitsInByte) - 1);
     bitsToRead = nbits - usefulBitsInByte;
     if (bitsToRead < 0) {
         /* the value ends inside the current byte */
