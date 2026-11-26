@@ -111,6 +111,12 @@ foreach( tool ${test_c_bins} )
                             LIBS      eccodes )
 endforeach()
 
+# Benchmark of CCSDS and simple packing through the API (not a test: benchmarks/packing_api.py runs it)
+ecbuild_add_executable( TARGET    packing_api
+                        NOINSTALL
+                        SOURCES   benchmarks/packing_api.cc
+                        LIBS      eccodes )
+
 
 # Now add each test (shell scripts)
 #################################################
