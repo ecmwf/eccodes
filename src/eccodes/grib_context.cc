@@ -9,6 +9,7 @@
  */
 
 #include "grib_api_internal.h"
+#include "ConceptLookupIndex.h"
 #include "ExceptionHandler.h"
 #include "sync/Mutex.h"
 #include <errno.h>
@@ -315,42 +316,43 @@ static grib_context default_grib_context = {
     &default_seek,  /* lfile seek procedure       */
     &default_feof,  /* file feof procedure        */
 
-    &default_log,                      /* output_log                 */
-    &default_print,                    /* print                      */
-    0,                                 /* codetable                  */
-    0,                                 /* smart_table                */
-    0,                                 /* outfilename                */
-    0,                                 /* multi_support_on           */
-    0,                                 /* multi_support              */
-    0,                                 /* grib_definition_files_dir  */
-    0,                                 /* handle_file_count          */
-    0,                                 /* handle_total_count         */
-    0,                                 /* message_file_offset        */
-    0,                                 /* no_fail_on_wrong_length    */
-    0,                                 /* gts_header_on              */
-    0,                                 /* gribex_mode_on             */
-    0,                                 /* large_constant_fields      */
-    0,                                 /* concepts_index             */
-    0,                                 /* concepts_count             */
-    { 0 },                             /* concepts                   */
-    0,                                 /* hash_array_index           */
-    0,                                 /* hash_array_count           */
-    { 0 },                             /* hash_array                 */
-    0,                                 /* def_files                  */
-    0,                                 /* blocklist                  */
-    0,                                 /* ieee_packing               */
-    0,                                 /* bufrdc_mode                */
-    0,                                 /* bufr_set_to_missing_if_out_of_range */
-    0,                                 /* bufr_multi_element_constant_arrays */
-    0,                                 /* grib_data_quality_checks   */
-    0,                                 /* single_precision           */
-    0,                                 /* enable_warnings            */
-    0,                                 /* eckit_geo                  */
-    0,                                 /* log_stream                 */
-    0,                                 /* classes                    */
-    0,                                 /* lists                      */
-    0,                                 /* expanded_descriptors       */
-    DEFAULT_FILE_POOL_MAX_OPENED_FILES /* file_pool_max_opened_files */
+    &default_log,                       /* output_log                 */
+    &default_print,                     /* print                      */
+    0,                                  /* codetable                  */
+    0,                                  /* smart_table                */
+    0,                                  /* outfilename                */
+    0,                                  /* multi_support_on           */
+    0,                                  /* multi_support              */
+    0,                                  /* grib_definition_files_dir  */
+    0,                                  /* handle_file_count          */
+    0,                                  /* handle_total_count         */
+    0,                                  /* message_file_offset        */
+    0,                                  /* no_fail_on_wrong_length    */
+    0,                                  /* gts_header_on              */
+    0,                                  /* gribex_mode_on             */
+    0,                                  /* large_constant_fields      */
+    0,                                  /* concepts_index             */
+    0,                                  /* concepts_count             */
+    { 0 },                              /* concepts                   */
+    0,                                  /* hash_array_index           */
+    0,                                  /* hash_array_count           */
+    { 0 },                              /* hash_array                 */
+    0,                                  /* def_files                  */
+    0,                                  /* blocklist                  */
+    0,                                  /* ieee_packing               */
+    0,                                  /* bufrdc_mode                */
+    0,                                  /* bufr_set_to_missing_if_out_of_range */
+    0,                                  /* bufr_multi_element_constant_arrays */
+    0,                                  /* grib_data_quality_checks   */
+    0,                                  /* single_precision           */
+    0,                                  /* enable_warnings            */
+    0,                                  /* eckit_geo                  */
+    0,                                  /* log_stream                 */
+    0,                                  /* classes                    */
+    0,                                  /* lists                      */
+    0,                                  /* expanded_descriptors       */
+    DEFAULT_FILE_POOL_MAX_OPENED_FILES, /* file_pool_max_opened_files */
+    nullptr                             /* concept_lookup_cache       */
 };
 
 /* Hopefully big enough. Note: Definitions and samples path environment variables can contain SEVERAL colon-separated directories */
@@ -801,6 +803,9 @@ void grib_context_reset(grib_context* c)
 
     if (c->multi_support_on)
         grib_multi_support_reset(c);
+
+    delete c->concept_lookup_cache;
+    c->concept_lookup_cache = nullptr;
 
     for (i = 0; i < MAX_NUM_CONCEPTS; ++i) {
         grib_concept_value* cv = c->concepts[i];

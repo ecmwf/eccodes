@@ -10,12 +10,18 @@
 
 #include "Concept.h"
 #include "sync/Mutex.h"
+#include "ConceptLookupIndex.h"
 
 static eccodes::sync::Mutex mutex;
 
 grib_concept_value* action_concept_get_concept(grib_accessor* a)
 {
     return static_cast<eccodes::action::Concept*>(a->creator_)->get_concept(a->get_enclosing_handle());
+}
+
+grib_concept_value* action_concept_get_concept(grib_accessor* a, const eccodes::ConceptLookupIndex** lookup)
+{
+    return static_cast<eccodes::action::Concept*>(a->creator_)->get_concept(a->get_enclosing_handle(), lookup);
 }
 
 int action_concept_get_nofail(grib_accessor* a)
@@ -189,8 +195,23 @@ grib_concept_value* Concept::get_concept_impl(grib_handle* h)
 
 grib_concept_value* Concept::get_concept(grib_handle* h)
 {
+    return get_concept(h, nullptr);
+}
+
+grib_concept_value* Concept::get_concept(grib_handle* h, const ConceptLookupIndex** lookup)
+{
     eccodes::sync::LockGuard<eccodes::sync::Mutex> lock(mutex);
-    return get_concept_impl(h);
+    auto* rules = get_concept_impl(h);
+    if (lookup) {
+        *lookup = nullptr;
+        // Inline definitions belong to the action, not the context's file cache.
+        if (rules && !concept_value_) {
+            auto*& cache = h->context->concept_lookup_cache;
+            if (!cache) cache = new ConceptLookupCache();
+            *lookup = cache->get(rules);
+        }
+    }
+    return rules;
 }
 
 }  // namespace eccodes::action

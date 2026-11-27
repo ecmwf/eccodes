@@ -12,6 +12,11 @@
 
 #include "Gen.h"
 
+namespace eccodes
+{
+class ConceptLookupIndex;
+}
+
 namespace eccodes::action
 {
 
@@ -29,6 +34,7 @@ public:
 
     grib_concept_value* get_concept_impl(grib_handle* h);
     grib_concept_value* get_concept(grib_handle* h);
+    grib_concept_value* get_concept(grib_handle* h, const ConceptLookupIndex** lookup);
 
     grib_concept_value* concept_value_ = nullptr;
     char* basename_ = nullptr;
@@ -40,6 +46,7 @@ public:
 }  // namespace eccodes::action
 
 grib_concept_value* action_concept_get_concept(grib_accessor* a);
+grib_concept_value* action_concept_get_concept(grib_accessor* a, const eccodes::ConceptLookupIndex** lookup);
 int action_concept_get_nofail(grib_accessor* a);
 grib_action* grib_action_create_concept(grib_context* context, const char* name, grib_concept_value* concept_value, const char* basename, const char* name_space, const char* defaultkey, const char* masterDir, const char* localDir, const char* ecmfDir, int flags, int nofail);
 int get_concept_condition_string(grib_handle* h, const char* key, const char* value, char* result);
