@@ -182,6 +182,11 @@ CASE("GRIB keys to gridSpec")
 {
     const std::string OFFSET_BY_A_FRACTION = R"({"area":[60.1666666666667,0.166666666666667,0.166666666666667,60.1666666666667],"grid":[0.333333333333333,0.333333333333333],"reference":[0.166666666666667,0.166666666666667]})";
 
+    // the keys of the MIR-351 messages, of the last longitude (microdegrees)
+    auto mir_351 = [](long lon2) {
+        return gridspec::keys_t{ { "Ni", 1024 }, { "Nj", 684 }, { "numberOfDataPoints", 1024 * 684 }, { "jScansPositively", 1 }, { "latitudeOfFirstGridPoint", -80039062 }, { "longitudeOfFirstGridPoint", 175781 }, { "latitudeOfLastGridPoint", 80039062 }, { "longitudeOfLastGridPoint", lon2 }, { "iDirectionIncrement", 351562 }, { "jDirectionIncrement", 234375 } };
+    };
+
     // the sample GRIB2 is regular_ll, area [60,0,0,30], increments 2/2 degrees
     EXPECT(gridspec::check_all<decode_t>({
         { "GRIB2", {}, R"({"area":[60,0,0,30],"grid":[2,2]})" },
@@ -220,6 +225,16 @@ CASE("GRIB keys to gridSpec")
 
         // longitudes around the globe are periodic (to 3/2 the angular precision), of the exact increment
         { "GRIB2", { { "Ni", 1024 }, { "Nj", 31 }, { "numberOfDataPoints", 1024 * 31 }, { "longitudeOfLastGridPointInDegrees", 359.648438 }, { "iDirectionIncrementInDegrees", 0.351562 } }, R"({"area":[60,0,0,360],"grid":[0.3515625,2]})" },
+
+        // MIR-351 (wave grids, as mir/tests/unit/MIR-351.corrected.grib2): of 45/128 x 30/128 degree, offset by half
+        // the increments, bounds truncated to the microdegree (+-80.0390625 as +-80.039062), global and periodic
+        { "GRIB2", mir_351(359824219), R"({"area":[80.0390625,0,-80.0390625,360],"grid":[0.3515625,0.234375],"order":"i+j+","reference":[0.17578125,0.1171875]})" },
+
+        // FIXME: ... as archived (MIR-351.wrong.grib2, md5GridSection=14b06303f3f4e1d6aa48ecaa4dd7c992), of the last longitude
+        // 359.82373 (not 359.824219), by 489 angular precisions: not periodic (mir treats it as periodic, by its own increment
+        // check of the representation); as a known wrongly encoded message, to fix by md5GridSection (as O2560) to the gridSpec
+        // of the row above, before the mir check is removed
+        { "GRIB2", mir_351(359823730), R"({"area":[80.0390625,0.175781,-80.0390625,359.823707],"grid":[0.351562,0.234375],"order":"i+j+","reference":[0.175781,0.1171875]})" },
 
         // the scanning mode
         { "GRIB2", { { "jScansPositively", 1 }, { "latitudeOfFirstGridPointInDegrees", 0. }, { "latitudeOfLastGridPointInDegrees", 60. } }, R"({"area":[60,0,0,30],"grid":[2,2],"order":"i+j+"})" },
