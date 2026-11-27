@@ -218,6 +218,7 @@ if( HAVE_BUILD_TOOLS )
         grib_shape_of_the_earth
         grib_ecc-2359
         grib_ecc-2374
+        grib_ecc-2382
     )
 
     # These tests require data downloads
