@@ -91,6 +91,7 @@ list( APPEND eccodes_src_files
     accessor/BudgDate.cc
     accessor/ValidityDate.cc
     accessor/ValidityTime.cc
+    accessor/IsoDateTime.cc
     accessor/Bytes.cc
     accessor/CfVarName.cc
     accessor/ChangeAlternativeRowScanning.cc
