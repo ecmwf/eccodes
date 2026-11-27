@@ -13,8 +13,14 @@
 // gridSpec of gridType=reduced_gg and reduced_rotated_gg
 
 
+#include <algorithm>
+#include <iostream>
+#include <memory>
 #include <string>
+#include <variant>
 #include <vector>
+
+#include "eckit/geo/PointLonLat.h"
 
 #include "gridspec.h"
 
@@ -66,7 +72,59 @@ CASE("area")
         { "reduced_gg_pl_32_grib1", R"({"area":[90,0,0,360],"grid":"O32"})", "reduced_gg", grid(32, 32, 87864, 0, 1395, 357500, 2624), R"({"area":[90,0,1.39530691081949,360],"grid":"O32"})" },
         { "reduced_gg_pl_32_grib2", R"({"area":[90,0,0,360],"grid":"O32"})", "reduced_gg", grid(32, 32, 87863799, 0, 1395306, 357500000, 2624), R"({"area":[90,0,1.39530691081949,360],"grid":"O32"})" },
         { "reduced_gg_pl_32_grib2", R"({"area":[-20,0,-90,360],"grid":"N32"})", "reduced_gg", grid(32, 25, -20929574, 0, -87863799, 357187500, 2161), R"({"area":[-20.9295742544895,0,-90,360],"grid":"N32"})" },
+
+        // the westmost/eastmost points not of whole units of the angles (257.333... and 302.222..., of the rows of 1080
+        // points), rounded outwards as by MIR (MARS crop issue)
+        { "reduced_gg_pl_32_grib1", R"({"area":[40.78,-102.7,10.78,-57.7],"grid":"N320"})", "reduced_gg", grid(320, 107, 40609, -102667, 10819, -57777, 15813), R"({"area":[40.6088843294502,-102.667,10.81966879465,-57.777],"grid":"N320"})" },
+        { "reduced_gg_pl_32_grib2", R"({"area":[40.78,-102.7,10.78,-57.7],"grid":"N320"})", "reduced_gg", grid(320, 107, 40608885, 257333333, 10819668, 302222223, 15813), R"({"area":[40.6088843294502,257.333333,10.81966879465,302.222223],"grid":"N320"})" },
     }));
+}
+
+
+CASE("area, of the points of the global grid (MARS crop issue)")
+{
+    // N320 cropped to 40.78/-102.7/10.78/-57.7 (as MARS area=, by MIR): the westmost point 257.333... (rows of 1080 points,
+    // of 1/3 degree) is encoded rounded outwards (257333333 microdegrees), so the rows keep their first point; the points
+    // of the gridSpec are the points of the global grid within the area, in order
+    const double north = 40.78;
+    const double west = -102.7;
+    const double south = 10.78;
+    const double east = -57.7;
+
+    std::unique_ptr<const eckit::geo::Grid> global(eckit::geo::GridFactory::make_from_string(R"({"grid":"N320"})"));
+
+    std::vector<eckit::geo::PointLonLat> expected;
+    for (const auto& point : global->to_points()) {
+        const auto& p = std::get<eckit::geo::PointLonLat>(point);
+        if (south <= p.lat() && p.lat() <= north && eckit::geo::PointLonLat::normalise_angle_to_minimum(p.lon(), west) <= east) {
+            expected.emplace_back(p);
+        }
+    }
+    EXPECT_EQUAL(expected.size(), 15813);
+
+    for (const auto* name : { "reduced_gg_pl_32_grib1", "reduced_gg_pl_32_grib2" }) {
+        auto h = gridspec::sample(name);
+        EXPECT(gridspec::set_gridspec(h.get(), R"({"area":[40.78,-102.7,10.78,-57.7],"grid":"N320"})") == CODES_SUCCESS);
+        EXPECT_EQUAL(gridspec::get_long(h.get(), "numberOfDataPoints"), 15813);
+
+        std::unique_ptr<const eckit::geo::Grid> grid(eckit::geo::GridFactory::make_from_string(gridspec::get_gridspec(h.get())));
+        const auto points = grid->to_points();
+        EXPECT_EQUAL(points.size(), expected.size());
+
+        size_t different = 0;
+        for (size_t i = 0; i < std::min(points.size(), expected.size()); ++i) {
+            const auto& p = std::get<eckit::geo::PointLonLat>(points[i]);
+            const auto& q = expected[i];
+            if (!eckit::types::is_approximately_equal(p.lat(), q.lat(), 1e-9) ||
+                !eckit::types::is_approximately_equal(eckit::geo::PointLonLat::normalise_angle_to_minimum(p.lon(), west),
+                                                      eckit::geo::PointLonLat::normalise_angle_to_minimum(q.lon(), west), 1e-9)) {
+                if (different++ == 0) {
+                    std::cout << name << ": first different point #" << i << ": " << p << " (expected " << q << ")" << std::endl;
+                }
+            }
+        }
+        EXPECT_EQUAL(different, 0);
+    }
 }
 
 
