@@ -200,6 +200,7 @@ if( HAVE_BUILD_TOOLS )
         grib_grid_healpix
         grib_g1day_of_the_year_date
         grib_paramid_chemid_split
+        grib_parameter_concept_lookup
         grib_cmp_paramtype
         grib_cmp_timeSpan
         grib_stattype
