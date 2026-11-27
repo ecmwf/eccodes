@@ -33,4 +33,3 @@ grib_check_key_equals $tempGrib paramId,shortName "3025 t_a"
 
 # Clean up
 rm -f $tempGrib
-
