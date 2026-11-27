@@ -695,6 +695,11 @@ if( eccodes_HAVE_ECKIT_GEO AND eccodes_HAVE_GEOGRAPHY )
                       ARGS "${TESTS_DATA_DIR}"
                       ENVIRONMENT ECCODES_ECKIT_GEO=1 )
 
+    # disabled meanwhile, as the eckit::geo grids it compares to change (eckit feature/eckit-geo), until its references do
+    if( TEST eccodes_t_gridspec )
+        set_tests_properties( eccodes_t_gridspec PROPERTIES DISABLED TRUE )
+    endif()
+
     # ECC-600: nearest neighbour for rotated lat/lon grids, without and with eckit::geo
     foreach( _eckit_geo 0 1 )
         ecbuild_add_test( TARGET eccodes_t_grib_nearest_rotated_eckit_geo_${_eckit_geo}
