@@ -10,4 +10,8 @@
 200 200 Potential evaporation rate (m s-1)
 201 201 Convective snowfall rate (m of water equivalent s-1)
 202 202 Large-scale snowfall rate (m of water equivalent s-1)
+203 203 Evaporation rate from the top of canopy (m of water equivalent s-1)
+204 204 Evaporation rate from bare soil (m of water equivalent s-1)
+205 205 Evaporation rate from open water surfaces excluding oceans(m of water equivalent s-1)
+206 206 Evaporation rate from vegetation transpiration (m of water equivalent s-1)
 254 254 Snow depth (m of water equivalent)

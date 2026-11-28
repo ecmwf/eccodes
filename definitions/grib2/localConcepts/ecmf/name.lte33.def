@@ -12940,27 +12940,35 @@
 	}
 #Evaporation from the top of canopy
 'Evaporation from the top of canopy' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 100 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 203 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Evaporation from bare soil
 'Evaporation from bare soil' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 101 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 204 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Evaporation from open water surfaces excluding oceans
 'Evaporation from open water surfaces excluding oceans' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 102 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 205 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Evaporation from vegetation transpiration
 'Evaporation from vegetation transpiration' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 103 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 206 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Solar induced Chlorophyll fluorescence at 740nm
 'Solar induced Chlorophyll fluorescence at 740nm' = {
