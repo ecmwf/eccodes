@@ -10,6 +10,9 @@
 
 #include "Concept.h"
 #include "action/Concept.h"
+#include "ConceptLookupIndex.h"
+#include <algorithm>
+#include <cstring>
 #include <unordered_map>
 #include <utility>
 #include <map>
@@ -174,7 +177,10 @@ static const char* concept_evaluate(grib_accessor* a)
     int match = 0;
     const char* best = 0;
     // const char* prev = 0;
-    grib_concept_value* c = action_concept_get_concept(a);
+    const ConceptLookupIndex* lookup = nullptr;
+    const bool parameter = std::strcmp(a->name_, "paramId") == 0 ||
+                           std::strcmp(a->name_, "shortName") == 0;
+    grib_concept_value* c = parameter ? action_concept_get_concept(a, &lookup) : action_concept_get_concept(a);
     grib_handle* h = a->get_enclosing_handle();
 
     // Maps for fast lookup. See ECC-1905
@@ -183,8 +189,7 @@ static const char* concept_evaluate(grib_accessor* a)
     // Map for keys that fail to decode (e.g., not found): key -> error code
     std::unordered_map<std::string_view, int> absent_keys_map;
 
-    while (c) {
-        // printf("DEBUG: %s concept=%s while loop c->name=%s\n", __func__, a->name_, c->name);
+    auto evaluate = [&](grib_concept_value* c) {
         grib_concept_condition* e = c->conditions;
         int cnt = 0;
         while (e) {
@@ -204,8 +209,49 @@ static const char* concept_evaluate(grib_accessor* a)
                 // printf("DEBUG: %s concept=%s current best=%s\n", __func__, a->name_, best);
             }
         }
+    };
 
-        c = c->next;
+    // Do not read keys early: the original matcher determines the evaluation
+    // order, including the first observation of each memoized integer key.
+    size_t ordinal = 0;
+    size_t previous_size = 0;
+    ConceptLookupIndex::Key key{};
+    for (; c; c = c->next, ++ordinal) {
+        evaluate(c);
+        if (!lookup || present_keys_map.size() == previous_size)
+            continue;
+        previous_size = present_keys_map.size();
+        bool ready = true;
+        for (size_t i = 0; i < key.size(); ++i) {
+            auto it = present_keys_map.find(ConceptLookupIndex::keys[i]);
+            if (it == present_keys_map.end()) {
+                ready = false;
+                break;
+            }
+            key[i] = it->second;
+        }
+        if (!ready)
+            continue;
+
+        // A rule with a different literal prefix would already fail against
+        // the original memoized values. Keep fallback rules and tie order.
+        const auto& hits = lookup->candidates(key);
+        const auto& fallback = lookup->fallback();
+        auto after = [ordinal](const ConceptLookupIndex::Entries& entries) {
+            return std::upper_bound(entries.begin(), entries.end(), ordinal,
+                                    [](size_t value, const ConceptLookupIndex::Entry& entry) {
+                                        return value < entry.ordinal;
+                                    });
+        };
+        auto i = after(hits);
+        auto j = after(fallback);
+        while (i != hits.end() || j != fallback.end()) {
+            if (j == fallback.end() || (i != hits.end() && i->ordinal < j->ordinal))
+                evaluate((i++)->rule);
+            else
+                evaluate((j++)->rule);
+        }
+        break;
     }
 
     // printf("DEBUG: %s concept=%s final best=%s\n", __func__, a->name_, best);

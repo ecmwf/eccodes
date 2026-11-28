@@ -633,6 +633,11 @@ struct grib_concept_value
     grib_trie* index;
 };
 
+namespace eccodes
+{
+class ConceptLookupCache;
+}
+
 /* ----------*/
 struct grib_context
 {
@@ -707,6 +712,7 @@ struct grib_context
     grib_trie* lists;
     grib_trie* expanded_descriptors;
     int file_pool_max_opened_files;
+    eccodes::ConceptLookupCache* concept_lookup_cache;
 };
 
 /* expression*/
