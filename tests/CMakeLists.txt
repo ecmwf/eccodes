@@ -693,23 +693,24 @@ if( eccodes_HAVE_ECKIT_GEO AND eccodes_HAVE_GEOGRAPHY )
     target_link_libraries(grib_eckit_geo_proj_string eckit_geo)
     target_link_libraries(grib_geo_iterator eckit_geo)
 
-    ecbuild_add_test( TARGET eccodes_t_gridspec
-                      SOURCES gridspec.cc
-                      CONDITION ENABLE_EXTRA_TESTS
-                      LIBS eccodes eckit_geo
-                      TEST_DEPENDS eccodes_download_gridspec_gribs
-                      ARGS "${TESTS_DATA_DIR}"
-                      ENVIRONMENT ECCODES_ECKIT_GEO=1 )
+    # the gridSpec scripts are run with eckit::geo (they are disabled otherwise)
+    foreach( _test grib_gridSpec grib_ecc-2317 grib_ecc-2319 )
+        if( TEST eccodes_t_${_test} )
+            set_property( TEST eccodes_t_${_test} APPEND PROPERTY ENVIRONMENT ECCODES_ECKIT_GEO=1 )
+        endif()
+    endforeach()
 
-    # disabled meanwhile, as the eckit::geo grids it compares to change (eckit feature/eckit-geo), until its references do
-    if( TEST eccodes_t_gridspec )
-        set_tests_properties( eccodes_t_gridspec PROPERTIES DISABLED TRUE )
-    endif()
-
-    ecbuild_add_test( TARGET eccodes_t_grib_from_gridspec
-                      SOURCES grib_from_gridspec.cc
-                      LIBS eccodes eckit_geo
-                      ENVIRONMENT ECCODES_ECKIT_GEO=1 )
+    # gridSpec (set/get) by gridType, see gridspec.h (sections of the test data skipped if not downloaded)
+    foreach( _type regular_ll regular_gg reduced_gg reduced_ll healpix unstructured_grid sh lambert lambert_azimuthal_equal_area polar_stereographic mercator transverse_mercator albers space_view figure key )
+        ecbuild_add_test( TARGET eccodes_t_gridspec_${_type}
+                          SOURCES gridspec_${_type}.cc gridspec.h
+                          LIBS eccodes eckit_geo
+                          ARGS "${TESTS_DATA_DIR}"
+                          ENVIRONMENT ECCODES_ECKIT_GEO=1 )
+        if( ENABLE_EXTRA_TESTS )
+            set_tests_properties( eccodes_t_gridspec_${_type} PROPERTIES DEPENDS eccodes_download_gridspec_gribs )
+        endif()
+    endforeach()
 
     # ECC-600: nearest neighbour for rotated lat/lon grids, without and with eckit::geo
     foreach( _eckit_geo 0 1 )

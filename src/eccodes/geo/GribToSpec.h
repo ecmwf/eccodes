@@ -57,6 +57,8 @@ public:
     const Spec& spec(const std::string& name) const override;
 
 private:
+    // the keys of known wrongly encoded messages, fixed (by md5GridSection), read before the message's own
+    cache_type fixes_;
     mutable cache_type cache_;
     std::unique_ptr<const eckit::spec::Custom> spec_;
     codes_handle* handle_;

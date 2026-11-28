@@ -53,6 +53,44 @@ namespace
 {
 
 
+// A message, of its keys of known wrongly encoded messages fixed (by md5GridSection, see GribToSpec::fixes_), so that
+// the processing of keys (e.g. snapping to a grid, or the scanning of projected grids) starts from the fixed values
+class Message
+{
+public:
+    Message(codes_handle* h, const GribToSpec::cache_type* fixes = nullptr) :
+        h_(h), fixes_(fixes) {}
+
+    operator codes_handle*() const { return h_; }
+
+    int get_double(const char* key, double* value) const
+    {
+        if (fixes_ != nullptr) {
+            if (auto it = fixes_->find(key); it != fixes_->end() && std::holds_alternative<double>(it->second)) {
+                *value = std::get<double>(it->second);
+                return CODES_SUCCESS;
+            }
+        }
+        return codes_get_double(h_, key, value);
+    }
+
+    int get_long(const char* key, long* value) const
+    {
+        if (fixes_ != nullptr) {
+            if (auto it = fixes_->find(key); it != fixes_->end() && std::holds_alternative<long>(it->second)) {
+                *value = std::get<long>(it->second);
+                return CODES_SUCCESS;
+            }
+        }
+        return codes_get_long(h_, key, value);
+    }
+
+private:
+    codes_handle* h_;
+    const GribToSpec::cache_type* fixes_;
+};
+
+
 struct Condition
 {
     Condition() = default;
@@ -304,6 +342,13 @@ const char* get_key(const std::string& name, codes_handle* h)
         { "west_east_increment", "iDirectionIncrementInDegrees" },
         { "south_north_increment", "jDirectionIncrementInDegrees" },
 
+        { "west", "west_fix_for_regular_ll", _or(is("gridType", "regular_ll"), is("gridType", "rotated_ll")) },
+        { "east", "east_fix_for_regular_ll", _or(is("gridType", "regular_ll"), is("gridType", "rotated_ll")) },
+        { "south", "south_fix_for_regular_ll", _or(is("gridType", "regular_ll"), is("gridType", "rotated_ll")) },
+        { "north", "north_fix_for_regular_ll", _or(is("gridType", "regular_ll"), is("gridType", "rotated_ll")) },
+        { "south", "south_fix_for_regular_ll", is("gridType", "reduced_ll") },
+        { "north", "north_fix_for_regular_ll", is("gridType", "reduced_ll") },
+
         { "west", "longitudeOfLastGridPointInDegrees_fix_for_regular_gaussian_grids",
           _and(is("iScansNegatively", 1L), is_regular_gaussian()) },
         { "east", "longitudeOfFirstGridPointInDegrees_fix_for_regular_gaussian_grids",
@@ -429,18 +474,18 @@ const char* get_key(const std::string& name, codes_handle* h)
 }
 
 
-double get_double(codes_handle* h, const char* key)
+double get_double(const Message& h, const char* key)
 {
     double value = 0;
-    CHECK_CALL(codes_get_double(h, key, &value));
+    CHECK_CALL(h.get_double(key, &value));
     return value;
 }
 
 
-long get_long(codes_handle* h, const char* key)
+long get_long(const Message& h, const char* key)
 {
     long value = 0;
-    CHECK_CALL(codes_get_long(h, key, &value));
+    CHECK_CALL(h.get_long(key, &value));
     return value;
 }
 
@@ -465,10 +510,10 @@ std::string get_string(codes_handle* h, const char* key)
 }
 
 
-bool get_bool(codes_handle* h, const char* key)
+bool get_bool(const Message& h, const char* key)
 {
     long l = 0;
-    CHECK_CALL(codes_get_long(h, key, &l));
+    CHECK_CALL(h.get_long(key, &l));
 
     return l != 0;
 }
@@ -477,7 +522,7 @@ bool get_bool(codes_handle* h, const char* key)
 template <typename T>
 struct ProcessingT
 {
-    using fun_t = std::function<bool(codes_handle*, T&)>;
+    using fun_t = std::function<bool(const Message&, T&)>;
     fun_t fun_;
     explicit ProcessingT(fun_t&& fun) :
         fun_(fun) {}
@@ -486,7 +531,7 @@ struct ProcessingT
     ProcessingT(ProcessingT&&) = delete;
     void operator=(const ProcessingT&) = delete;
     void operator=(ProcessingT&&) = delete;
-    bool eval(codes_handle* h, T& v) const { return fun_(h, v); }
+    bool eval(const Message& h, T& v) const { return fun_(h, v); }
 };
 
 
@@ -500,18 +545,33 @@ bool codes_is_well_defined(codes_handle* h, const char* key)
 ProcessingT<double>* angular_precision()
 {
     return new ProcessingT<double>([](codes_handle* h, double& value) {
-        // angles of a basic angle and its subdivisions are exact (0 stands for the default units, of the edition)
-        long basic = 0;
-        long subdivisions = 0;
-        if (codes_is_well_defined(h, "basicAngleOfTheInitialProductionDomain") &&
-            codes_is_well_defined(h, "subdivisionsOfBasicAngle") &&
-            codes_get_long(h, "basicAngleOfTheInitialProductionDomain", &basic) == CODES_SUCCESS &&
-            codes_get_long(h, "subdivisionsOfBasicAngle", &subdivisions) == CODES_SUCCESS && basic > 0 &&
-            subdivisions > 0) {
-            value = 0.;
-            return true;
+        // the unit of the angles, of a basic angle and its subdivisions (as the g2grid accessor: a basic angle 0 is 1, and
+        // subdivisions missing or 0 are of the edition, so basicAngle=1/subdivisions=1000000 is the GRIB2 default); angles
+        // are rounded to it (exact if it divides them)
+        if (codes_is_defined(h, "basicAngleOfTheInitialProductionDomain") != 0 &&
+            codes_is_defined(h, "subdivisionsOfBasicAngle") != 0) {
+            long basic = 0;
+            CHECK_CALL(codes_get_long(h, "basicAngleOfTheInitialProductionDomain", &basic));
+
+            long subdivisions = 0;
+            if (int err = 0; codes_is_missing(h, "subdivisionsOfBasicAngle", &err) == 0 && err == CODES_SUCCESS) {
+                CHECK_CALL(codes_get_long(h, "subdivisionsOfBasicAngle", &subdivisions));
+            }
+
+            if (subdivisions > 0) {
+                value = static_cast<double>(basic > 0 ? basic : 1) / static_cast<double>(subdivisions);
+                return true;
+            }
+
+            if (basic > 1) {
+                long angleSubdivisions = 0;
+                CHECK_CALL(codes_get_long(h, "angleSubdivisions", &angleSubdivisions));
+                value = angleSubdivisions > 0 ? static_cast<double>(basic) / static_cast<double>(angleSubdivisions) : 0.;
+                return true;
+            }
         }
 
+        // the unit of the edition (0 if unknown)
         long angleSubdivisions = 0;
         CHECK_CALL(codes_get_long(h, "angleSubdivisions", &angleSubdivisions));
 
@@ -533,13 +593,13 @@ double gaussian_precision(codes_handle* h)
 
 ProcessingT<double>* longitudeOfLastGridPointInDegrees_fix_for_global_reduced_grids()
 {
-    return new ProcessingT<double>([](codes_handle* h, double& Lon2) {
+    return new ProcessingT<double>([](const Message& h, double& Lon2) {
         Lon2 = 0;
-        CHECK_CALL(codes_get_double(h, "longitudeOfLastGridPointInDegrees", &Lon2));
+        CHECK_CALL(h.get_double("longitudeOfLastGridPointInDegrees", &Lon2));
 
         if (codes_is_defined(h, "pl") != 0) {
             double Lon1 = 0;
-            CHECK_CALL(codes_get_double(h, "longitudeOfFirstGridPointInDegrees", &Lon1));
+            CHECK_CALL(h.get_double("longitudeOfFirstGridPointInDegrees", &Lon1));
 
             if (eckit::types::is_approximately_equal<double>(Lon1, 0)) {
                 // get pl array maximum and sum
@@ -624,7 +684,7 @@ double gaussian_latitude_snapped(long N, double lat, double eps)
 // Regular Gaussian grids of other than 4N longitudes (globally), by the increment (to the angular precision)
 ProcessingT<long>* ni_fix_for_regular_gaussian_grids()
 {
-    return new ProcessingT<long>([](codes_handle* h, long& ni) {
+    return new ProcessingT<long>([](const Message& h, long& ni) {
         double eps = 0.;
         ASSERT(std::unique_ptr<ProcessingT<double>>(angular_precision())->eval(h, eps));
 
@@ -633,7 +693,7 @@ ProcessingT<long>* ni_fix_for_regular_gaussian_grids()
         double inc = 0.;
         if (codes_get_long(h, "N", &N) != CODES_SUCCESS || N <= 0 ||
             codes_get_long(h, "iDirectionIncrementGiven", &given) != CODES_SUCCESS || given == 0 ||
-            codes_get_double(h, "iDirectionIncrementInDegrees", &inc) != CODES_SUCCESS || !(inc > 0.)) {
+            h.get_double("iDirectionIncrementInDegrees", &inc) != CODES_SUCCESS || !(inc > 0.)) {
             return false;
         }
 
@@ -652,14 +712,14 @@ ProcessingT<long>* ni_fix_for_regular_gaussian_grids()
 
 ProcessingT<double>* latitudeOfFirstGridPointInDegrees_fix_for_gaussian_grids()
 {
-    return new ProcessingT<double>([](codes_handle* h, double& lat) {
+    return new ProcessingT<double>([](const Message& h, double& lat) {
         const auto eps = gaussian_precision(h);
 
         long N = 0L;
         CHECK_CALL(codes_get_long(h, "N", &N));
         ASSERT(N > 0);
 
-        CHECK_CALL(codes_get_double(h, "latitudeOfFirstGridPointInDegrees", &lat));
+        CHECK_CALL(h.get_double("latitudeOfFirstGridPointInDegrees", &lat));
 
         lat = gaussian_latitude_snapped(N, lat, eps);
         return true;
@@ -669,14 +729,14 @@ ProcessingT<double>* latitudeOfFirstGridPointInDegrees_fix_for_gaussian_grids()
 
 ProcessingT<double>* latitudeOfLastGridPointInDegrees_fix_for_gaussian_grids()
 {
-    return new ProcessingT<double>([](codes_handle* h, double& lat) {
+    return new ProcessingT<double>([](const Message& h, double& lat) {
         const auto eps = gaussian_precision(h);
 
         long N = 0L;
         CHECK_CALL(codes_get_long(h, "N", &N));
         ASSERT(N > 0);
 
-        CHECK_CALL(codes_get_double(h, "latitudeOfLastGridPointInDegrees", &lat));
+        CHECK_CALL(h.get_double("latitudeOfLastGridPointInDegrees", &lat));
 
         lat = gaussian_latitude_snapped(N, lat, eps);
         return true;
@@ -688,7 +748,7 @@ ProcessingT<double>* latitudeOfLastGridPointInDegrees_fix_for_gaussian_grids()
 // a regular Gaussian grid (of ni longitudes, 4N or as encoded) is that longitude (so its column is kept)
 ProcessingT<double>* longitude_fix_for_regular_gaussian_grids(const char* key)
 {
-    return new ProcessingT<double>([key](codes_handle* h, double& lon) {
+    return new ProcessingT<double>([key](const Message& h, double& lon) {
         const auto eps = gaussian_precision(h);
 
         long N = 0;
@@ -698,7 +758,7 @@ ProcessingT<double>* longitude_fix_for_regular_gaussian_grids(const char* key)
         long ni = 4 * N;
         std::unique_ptr<ProcessingT<long>>(ni_fix_for_regular_gaussian_grids())->eval(h, ni);
 
-        CHECK_CALL(codes_get_double(h, key, &lon));
+        CHECK_CALL(h.get_double(key, &lon));
 
         const auto inc = 360. / static_cast<double>(ni);
         if (const auto snapped = std::round(lon / inc) * inc; eckit::types::is_approximately_equal(lon, snapped, eps)) {
@@ -711,19 +771,19 @@ ProcessingT<double>* longitude_fix_for_regular_gaussian_grids(const char* key)
 
 ProcessingT<double>* iDirectionIncrementInDegrees_fix_for_periodic_regular_grids()
 {
-    return new ProcessingT<double>([](codes_handle* h, double& we) {
+    return new ProcessingT<double>([](const Message& h, double& we) {
         long iScansPositively = 0L;
         CHECK_CALL(codes_get_long(h, "iScansPositively", &iScansPositively));
         ASSERT(iScansPositively == 1L);
 
-        CHECK_CALL(codes_get_double(h, "iDirectionIncrementInDegrees", &we));
+        CHECK_CALL(h.get_double("iDirectionIncrementInDegrees", &we));
         ASSERT(we > 0.);
 
         double Lon1 = 0.;
         double Lon2 = 0.;
         long Ni = 0;
-        CHECK_CALL(codes_get_double(h, "longitudeOfFirstGridPointInDegrees", &Lon1));
-        CHECK_CALL(codes_get_double(h, "longitudeOfLastGridPointInDegrees", &Lon2));
+        CHECK_CALL(h.get_double("longitudeOfFirstGridPointInDegrees", &Lon1));
+        CHECK_CALL(h.get_double("longitudeOfLastGridPointInDegrees", &Lon2));
         CHECK_CALL(codes_get_long(h, "Ni", &Ni));
         ASSERT(Ni > 0);
 
@@ -770,19 +830,19 @@ ProcessingT<double>* iDirectionIncrementInDegrees_fix_for_periodic_regular_grids
 ProcessingT<double>* grid_increment(const char* inc_key, const char* incgiven_key,
                                     const char* x0_key, const char* x1_key, const char* n_key, const char* sign_key)
 {
-    return new ProcessingT<double>([=](codes_handle* h, double& value) {
+    return new ProcessingT<double>([=](const Message& h, double& value) {
         bool given = false;
         if (long incgiven = 0; codes_is_well_defined(h, inc_key) && (codes_get_long(h, incgiven_key, &incgiven) == CODES_SUCCESS) && (incgiven != 0)) {
-            CHECK_CALL(codes_get_double(h, inc_key, &value));
+            CHECK_CALL(h.get_double(inc_key, &value));
             given = value != CODES_MISSING_DOUBLE;
         }
 
         if (codes_is_well_defined(h, x0_key) && codes_is_well_defined(h, x1_key) && codes_is_well_defined(h, n_key) && codes_is_well_defined(h, sign_key)) {
             double x0 = 0.;
-            CHECK_CALL(codes_get_double(h, x0_key, &x0));
+            CHECK_CALL(h.get_double(x0_key, &x0));
 
             double x1 = 0.;
-            CHECK_CALL(codes_get_double(h, x1_key, &x1));
+            CHECK_CALL(h.get_double(x1_key, &x1));
 
             long n = 0;
             CHECK_CALL(codes_get_long(h, n_key, &n));
@@ -821,20 +881,24 @@ ProcessingT<double>* grid_increment(const char* inc_key, const char* incgiven_ke
             }
 
             // an increment of a division of the globe (360/m degrees) is exact (e.g. 1/3 degree, given as 0.333333): the
-            // division nearest the increment calculated, if given to the angular precision, and its points are within the
-            // first/last points (each rounded outwards) by twice the precision at most, so the grid is of these points
-            if (given && value_calculated != 0.) {
+            // division nearest the increment calculated, if given (or calculated) to the angular precision, and its points
+            // are within the first/last points (each rounded outwards) by twice the precision at most, so the grid is of
+            // these points
+            if (value_calculated != 0.) {
                 const auto exact = 360. / std::round(360. / std::abs(value_calculated));
                 const auto shortfall = (std::abs(value_calculated) - exact) * static_cast<double>(n - 1);
-                if (eckit::types::is_approximately_equal(exact, std::abs(value), std::max(eps, 1e-6)) &&
+                if (eckit::types::is_approximately_equal(exact, std::abs(given ? value : value_calculated), std::max(eps, 1e-6)) &&
                     -1e-9 <= shortfall && shortfall <= 2. * std::max(eps, 1e-6)) {
                     value = std::copysign(exact, value_calculated);
                     return true;
                 }
             }
 
+            // an increment given is consistent with the first/last points (each rounded to the precision, either way) if
+            // their span is within twice the precision
             if (given) {
-                if (!eckit::types::is_approximately_equal(value, value_calculated, 1e-6)) {
+                if (const auto tolerance = std::max(1e-6, 2. * eps / static_cast<double>(n - 1));
+                    !eckit::types::is_approximately_equal(value, value_calculated, tolerance)) {
                     wrongly_encoded_grib(
                         "GribToSpec: inconsistent increment: '" + std::string{ inc_key } +
                         "'=" + std::to_string(value) + " ~= " + std::to_string(value_calculated) +
@@ -857,10 +921,89 @@ ProcessingT<double>* grid_increment(const char* inc_key, const char* incgiven_ke
 }
 
 
+// Bounds (first/last points) of regular lat/lon grids (and latitudes of reduced lat/lon grids), as of the grid: angles are
+// rounded to the angular precision, so a grid offset by a fraction of a repeating fraction increment isn't encoded
+// exactly (e.g. by half of 1/120 degree, 0.0041666... as 0.004166); the lower (west/south) bound is offset by the nearest
+// fraction k/m of the increment (of the first m, of the divisors of 120, the powers of 2 to 64, and 240; fractions closer
+// together than the precision aren't told apart, so aren't snapped to), and the upper (east/north) bound is the point
+// nearest it, if within twice the precision (angles rounded either way, e.g. outwards); only of the increment as encoded,
+// or of a division of the globe (e.g. 1/3 degree, given as 0.333333), as one calculated from the bounds is as imprecise as
+// they are
+ProcessingT<double>* bound_fix_for_regular_ll(bool longitude, bool upper)
+{
+    return new ProcessingT<double>([=](const Message& h, double& value) {
+        static const std::unique_ptr<ProcessingT<double>> dlon(grid_increment("iDirectionIncrementInDegrees", "iDirectionIncrementGiven", "longitudeOfFirstGridPointInDegrees", "longitudeOfLastGridPointInDegrees", "Ni", "iScansPositively"));
+        static const std::unique_ptr<ProcessingT<double>> dlat(grid_increment("jDirectionIncrementInDegrees", "jDirectionIncrementGiven", "latitudeOfFirstGridPointInDegrees", "latitudeOfLastGridPointInDegrees", "Nj", "jScansPositively"));
+        static constexpr long DENOMINATORS[]{ 1, 2, 3, 4, 5, 6, 8, 10, 12, 15, 16, 20, 24, 30, 32, 40, 60, 64, 120, 240 };
+
+        double first = 0.;
+        double last = 0.;
+        long scan = 0;
+        CHECK_CALL(h.get_double(longitude ? "longitudeOfFirstGridPointInDegrees" : "latitudeOfFirstGridPointInDegrees", &first));
+        CHECK_CALL(h.get_double(longitude ? "longitudeOfLastGridPointInDegrees" : "latitudeOfLastGridPointInDegrees", &last));
+        CHECK_CALL(h.get_long(longitude ? "iScansNegatively" : "jScansPositively", &scan));
+
+        const auto first_is_lower = longitude ? scan == 0 : scan != 0;
+        const auto lo = first_is_lower ? first : last;
+        const auto hi = first_is_lower ? last : first;
+        value = upper ? hi : lo;
+
+        double eps = 0.;
+        ASSERT(std::unique_ptr<ProcessingT<double>>(angular_precision())->eval(h, eps));
+
+        double inc = 0.;
+        if (!(eps > 0.) || !(longitude ? dlon : dlat)->eval(h, inc) || inc == 0.) {
+            return true;
+        }
+
+        inc = std::abs(inc);
+        if (!eckit::types::is_approximately_equal(std::round(360. / inc) * inc, 360., 1e-9)) {
+            const auto* inc_key = longitude ? "iDirectionIncrementInDegrees" : "jDirectionIncrementInDegrees";
+            long given = 0;
+            double encoded = 0.;
+            if (codes_get_long(h, longitude ? "iDirectionIncrementGiven" : "jDirectionIncrementGiven", &given) != CODES_SUCCESS ||
+                given == 0 || !codes_is_well_defined(h, inc_key) || h.get_double(inc_key, &encoded) != CODES_SUCCESS ||
+                inc != std::abs(encoded)) {
+                return true;
+            }
+        }
+
+        const auto tolerance = 2. * eps;
+
+        auto lower = lo;
+        const auto shift = lo - inc * std::floor(lo / inc);
+        for (const auto m : DENOMINATORS) {
+            if (inc / static_cast<double>(m) <= 2. * tolerance) {
+                break;
+            }
+            if (const auto offset = std::round(shift / inc * static_cast<double>(m)) * inc / static_cast<double>(m);
+                std::abs(offset - shift) <= tolerance) {
+                lower = lo - shift + offset;
+                break;
+            }
+        }
+
+        auto bound = lower;
+        if (upper) {
+            const auto span = hi - lower + (longitude && hi < lower ? 360. : 0.);
+            const auto diff = std::round(span / inc) * inc - span;
+            bound = std::abs(diff) <= tolerance ? hi + diff : hi;
+        }
+
+        // as encoded if the same (to a small tolerance), latitudes within the poles
+        if (!eckit::types::is_approximately_equal(bound, value, 1e-9)) {
+            value = longitude ? bound : std::clamp(bound, -90., 90.);
+        }
+
+        return true;
+    });
+}
+
+
 ProcessingT<std::vector<double>>* vector_double(std::initializer_list<std::string> keys)
 {
     const std::vector<std::string> keys_(keys);
-    return new ProcessingT<std::vector<double>>([=](codes_handle* h, std::vector<double>& values) {
+    return new ProcessingT<std::vector<double>>([=](const Message& h, std::vector<double>& values) {
         ASSERT(keys_.size());
 
         values.assign(keys_.size(), 0);
@@ -869,7 +1012,7 @@ ProcessingT<std::vector<double>>* vector_double(std::initializer_list<std::strin
             if (codes_is_defined(h, key.c_str()) == 0) {
                 return false;
             }
-            CHECK_CALL(codes_get_double(h, key.c_str(), &values[i++]));
+            CHECK_CALL(h.get_double(key.c_str(), &values[i++]));
         }
         return true;
     });
@@ -933,7 +1076,7 @@ using ProcessingList = std::initializer_list<ConditionedProcessingT<ProcessingT<
 
 
 template <typename T>
-bool get_value(const std::string& name, codes_handle* h, T& value, const ProcessingList<T>& process)
+bool get_value(const std::string& name, const Message& h, T& value, const ProcessingList<T>& process)
 {
     for (auto& p : process) {
         if (name == p.name) {
@@ -1059,7 +1202,7 @@ void set_figure(codes_handle* h, Custom& projection)
 
 /// Scanning order (eckit::geo::order::Scan) of the grid lengths dx, dy (directions) and the scanning mode, empty if as
 /// the directions (i then j, not alternating)
-std::string scanning_order(codes_handle* h, double dx, double dy)
+std::string scanning_order(const Message& h, double dx, double dy)
 {
     const auto alternating = get_long(h, "alternativeRowScanning") != 0;
     const auto j_first = get_long(h, "jPointsAreConsecutive") != 0;
@@ -1075,7 +1218,7 @@ std::string scanning_order(codes_handle* h, double dx, double dy)
 
 
 /// The grid on the projection plane; the false easting/northing places the first grid point at (0, 0), to millimetres
-Custom* make_projected_spec(codes_handle* h, const Projected& p)
+Custom* make_projected_spec(const Message& h, const Projected& p)
 {
     std::unique_ptr<Custom> projection(p.projection(h));
     set_figure(h, *projection);
@@ -1224,7 +1367,7 @@ GribToSpec::GribToSpec(codes_handle* h, bool rotated) :
             { "51ea7dcd62e71c9707157a2d15247593", { { "longitudeOfLastGridPointInDegrees", 359.859375 } } },
 
             // gridName=O2560, edition=1, experimentVersionNumber=h5xa/h5zi
-            { "8a6f6c4cc9ad3f64546773b87566bc72", { { "latitudeOfFirstGridPointInDegrees", 89.973 }, { "latitudeOfLastGridPointInDegrees", -89.973 } } },
+            { "8a6f6c4cc9ad3f64546773b87566bc72", { { "latitudeOfFirstGridPointInDegrees", 89.973091 }, { "latitudeOfLastGridPointInDegrees", -89.973091 } } },
 
             // gridName=O640, edition=1, experimentVersionNumber=h5wk/h6en/hc9k
             { "f5dc74ec36353f4c83f7de3bf46e1aef", { { "latitudeOfFirstGridPointInDegrees", 89.892396 }, { "latitudeOfLastGridPointInDegrees", -89.892396 } } },
@@ -1238,6 +1381,14 @@ GribToSpec::GribToSpec(codes_handle* h, bool rotated) :
             { "379bbee20b78c58b9e86e1377c14a3da", { { "longitudeOfLastGridPointInDegrees", 358.125 } } },                                                    // N96, U
             { "2e0f685a14d8ad3615dbc7252d5ebbb9", { { "longitudeOfLastGridPointInDegrees", 359.0625 } } },                                                   // N96, V
             { "fd45c3ec374370a77222de303aa00a23", { { "latitudeOfFirstGridPointInDegrees", -89.8125 }, { "latitudeOfLastGridPointInDegrees", 89.8125 } } },  // N320, T
+
+            // gridType=lambert, centre=lfpw (AROME, MIR-474): the first grid point encoded is the bottom-left, the values are
+            // from the top-left (jScansPositively=0, as encoded), so the first grid point is the top-left
+            { "6ae0076681a2541abe053ab52fa60f30", { { "latitudeOfFirstGridPointInDegrees", 53.032778126846 }, { "longitudeOfFirstGridPointInDegrees", -11.748097150445 } } },  // edition=1, t, with vertical coordinates (pv)
+            { "0b00a3731ad8fc6c1e56117856f30290", { { "latitudeOfFirstGridPointInDegrees", 53.032778126846 }, { "longitudeOfFirstGridPointInDegrees", -11.748097150445 } } },  // edition=1, t, without
+            { "bd6c2a9aaf0a867a8bb518bac54e492d", { { "latitudeOfFirstGridPointInDegrees", 53.006934365860 }, { "longitudeOfFirstGridPointInDegrees", -11.778095604516 } } },  // edition=1, orography, with vertical coordinates (pv)
+            { "7fd5f86fd008da485ab5c678f224513f", { { "latitudeOfFirstGridPointInDegrees", 53.006934365860 }, { "longitudeOfFirstGridPointInDegrees", -11.778095604516 } } },  // edition=1, orography, without
+            { "5597b074a13affb1dbd02b1462272dd6", { { "latitudeOfFirstGridPointInDegrees", 51.556562629092 }, { "longitudeOfFirstGridPointInDegrees", -8.398972389112 } } },   // edition=2, skt
         };
 
         char buffer[34];
@@ -1249,13 +1400,14 @@ GribToSpec::GribToSpec(codes_handle* h, bool rotated) :
 
         if (const auto& fix = FIXES.find(md5GridSection); fix != FIXES.end()) {
             grib_context_log(nullptr, GRIB_LOG_WARNING, "GribToSpec: applying fix for md5GridSection=%s", md5GridSection.c_str());
-            cache_ = fix->second;
+            fixes_ = fix->second;
+            cache_ = fixes_;
         }
     };
 
     if (std::string type; get("gridType", type)) {
         if (const auto& p = projected().find(type); p != projected().end()) {
-            spec_.reset(make_projected_spec(h, p->second));
+            spec_.reset(make_projected_spec(Message(h, &fixes_), p->second));
             return;
         }
 
@@ -1380,7 +1532,7 @@ bool GribToSpec::get(const std::string& name, std::string& value) const
             { "packing", packing() },
         };
 
-        return get_value(key, handle_, value, process);
+        return get_value(key, Message(handle_, &fixes_), value, process);
     }
 
     CHECK_ERROR(err, key);
@@ -1467,7 +1619,7 @@ bool GribToSpec::get(const std::string& name, long& value) const
             { "ni_fix_for_regular_gaussian_grids", ni_fix_for_regular_gaussian_grids() },
         };
 
-        if (get_value(key, handle_, value, process)) {
+        if (get_value(key, Message(handle_, &fixes_), value, process)) {
             cache_set(cache_, name, value);
             return true;
         }
@@ -1547,6 +1699,10 @@ bool GribToSpec::get(const std::string& name, double& value) const
             { "angular_precision", angular_precision() },
             { "dlon", grid_increment("iDirectionIncrementInDegrees", "iDirectionIncrementGiven", "longitudeOfFirstGridPointInDegrees", "longitudeOfLastGridPointInDegrees", "Ni", "iScansPositively"), _or(is("gridType", "regular_ll"), is("gridType", "rotated_ll")) },
             { "dlat", grid_increment("jDirectionIncrementInDegrees", "jDirectionIncrementGiven", "latitudeOfFirstGridPointInDegrees", "latitudeOfLastGridPointInDegrees", "Nj", "jScansPositively"), _or(is("gridType", "regular_ll"), is("gridType", "rotated_ll")) },
+            { "west_fix_for_regular_ll", bound_fix_for_regular_ll(true, false) },
+            { "east_fix_for_regular_ll", bound_fix_for_regular_ll(true, true) },
+            { "south_fix_for_regular_ll", bound_fix_for_regular_ll(false, false) },
+            { "north_fix_for_regular_ll", bound_fix_for_regular_ll(false, true) },
             { "longitudeOfLastGridPointInDegrees_fix_for_global_reduced_grids",
               longitudeOfLastGridPointInDegrees_fix_for_global_reduced_grids() },
             { "iDirectionIncrementInDegrees_fix_for_periodic_regular_grids",
@@ -1561,7 +1717,7 @@ bool GribToSpec::get(const std::string& name, double& value) const
               longitude_fix_for_regular_gaussian_grids("longitudeOfLastGridPointInDegrees") },
         };
 
-        if (get_value(key, handle_, value, process)) {
+        if (get_value(key, Message(handle_, &fixes_), value, process)) {
             cache_set(cache_, name, value);
             return true;
         }
@@ -1689,7 +1845,7 @@ bool GribToSpec::get(const std::string& name, std::vector<double>& value) const
               is("gridType", "reduced_rotated_gg")) },
     };
 
-    if (get_value(key, handle_, value, process)) {
+    if (get_value(key, Message(handle_, &fixes_), value, process)) {
         cache_set(cache_, name, value);
         return true;
     }

@@ -74,7 +74,9 @@ cat >$tempFilt<<EOF
     write;
 EOF
 ${tools_dir}/grib_filter -o $tempGrib $tempFilt $infile
-${tools_dir}/grib_compare -b shapeOfTheEarth $infile $tempGrib  # the missing.grib2 has shapeOfTheEarth=0, the new one has shapeOfTheEarth=6
+# the same geometry, the values a constant field (for the caller to replace)
+${tools_dir}/grib_compare -c geography:n -b shapeOfTheEarth $infile $tempGrib  # the missing.grib2 has shapeOfTheEarth=0, the new one has shapeOfTheEarth=6
+grib_check_key_equals $tempGrib min,max,bitmapPresent,numberOfValues '0 0 0 496'
 rm -f $tempGrib
 
 # Can encode and decode in one step!
@@ -84,32 +86,32 @@ cat >$tempFilt<<EOF
     write;
 EOF
 ECCODES_DEBUG=-1 ${tools_dir}/grib_filter -o $tempGrib $tempFilt $infile > $tempText 2>&1
-${tools_dir}/grib_compare -b shapeOfTheEarth $infile $tempGrib
+${tools_dir}/grib_compare -c geography:n -b shapeOfTheEarth $infile $tempGrib
 grep -q "ECCODES DEBUG grib_set_from_grid_spec: grib_set_values, setting 17 key/value pairs" $tempText
 
 
 # Error conditions
 # ----------------
-infile=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
+infile=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 set +e
-${tools_dir}/grib_set -s gridSpec='{grid:H36}' $infile $tempGrib 2>$tempText
+${tools_dir}/grib_set -s gridSpec='{grid:X99}' $infile $tempGrib 2>$tempText
 status=$?
 set -e
 [ $status -ne 0 ]
-grep -q "'healpix' specified but input is GRIB edition 1" $tempText
 
 
 # ECC-2318: a degenerate grid (a single point in a direction)
 # -----------------------------------------------------------------------
-# Such a grid has no increment in that direction: 'grid' holds a 0 (decoding and encoding).
+# Such a grid keeps the increment given in that direction, if any (0 otherwise), decoding and encoding.
 # The sample is a regular_ll grid, area = [60,0,0,30], increments = 2/2 degrees
 sample=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
-# Decoding: a single row (Nj=1), a single column (Ni=1) and a single point (Ni=Nj=1)
+# Decoding: a single row (Nj=1), a single column (Ni=1) and a single point (Ni=Nj=1), and increments not given
 for setKeysResult in \
-    'Ni=16,Nj=1,numberOfDataPoints=16,latitudeOfLastGridPointInDegrees=60|{"area":[60,0,60,30],"grid":[2,0]}' \
-    'Ni=1,Nj=31,numberOfDataPoints=31,longitudeOfLastGridPointInDegrees=0|{"area":[60,0,0,0],"grid":[0,2]}' \
-    'Ni=1,Nj=1,numberOfDataPoints=1,latitudeOfLastGridPointInDegrees=60,longitudeOfLastGridPointInDegrees=0|{"area":[60,0,60,0],"grid":[0,0]}'
+    'Ni=16,Nj=1,numberOfDataPoints=16,latitudeOfLastGridPointInDegrees=60|{"area":[60,0,60,30],"grid":[2,2]}' \
+    'Ni=1,Nj=31,numberOfDataPoints=31,longitudeOfLastGridPointInDegrees=0|{"area":[60,0,0,0],"grid":[2,2]}' \
+    'Ni=1,Nj=1,numberOfDataPoints=1,latitudeOfLastGridPointInDegrees=60,longitudeOfLastGridPointInDegrees=0|{"area":[60,0,60,0],"grid":[2,2]}' \
+    'ijDirectionIncrementGiven=0,Ni=16,Nj=1,numberOfDataPoints=16,latitudeOfLastGridPointInDegrees=60|{"area":[60,0,60,30],"grid":[2,0]}'
 do
     setKeys=$(echo $setKeysResult | cut -d'|' -f1)
     expectedSpec=$(echo $setKeysResult | cut -d'|' -f2)
@@ -127,9 +129,9 @@ rm -f $tempGrib
 # Encoding: an explicitly degenerate spec, and an area with no extent
 for spec in \
     '{"area":[0,0,0,0],"grid":[0,0]}|{"area":[0,0,0,0],"grid":[0,0]}' \
-    '{"area":[0,0,0,0],"grid":[1,1]}|{"area":[0,0,0,0],"grid":[0,0]}' \
-    '{"area":[60,0,60,30],"grid":[2,2]}|{"area":[60,0,60,30],"grid":[2,0]}' \
-    '{"area":[60,0,0,0],"grid":[2,2]}|{"area":[60,0,0,0],"grid":[0,2]}'
+    '{"area":[0,0,0,0],"grid":[1,1]}|{"area":[0,0,0,0],"grid":[1,1]}' \
+    '{"area":[60,0,60,30],"grid":[2,2]}|{"area":[60,0,60,30],"grid":[2,2]}' \
+    '{"area":[60,0,0,0],"grid":[2,2]}|{"area":[60,0,0,0],"grid":[2,2]}'
 do
     setKeys=$(echo $spec | cut -d'|' -f1)
     expectedSpec=$(echo $spec | cut -d'|' -f2)
