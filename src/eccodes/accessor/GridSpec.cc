@@ -46,24 +46,19 @@ size_t GridSpec::string_length()
 }
 
 
-int GridSpec::pack_string([[maybe_unused]] const char* v, [[maybe_unused]] size_t* len)
-{
 #if defined(HAVE_GEOGRAPHY) && defined(HAVE_ECKIT_GEO)
 
+template <typename MakeGrid>
+int GridSpec::pack_grid(MakeGrid&& make_grid)
+{
     // the message can be restructured (e.g. converting its edition), so this accessor isn't used after setting it
     auto* h = get_enclosing_handle();
     ECCODES_ASSERT(h);
 
-    ECCODES_ASSERT(len != nullptr && 0 < *len);
-    ECCODES_ASSERT(v && v[*len] == '\0');
-
-    std::string spec_str(v);
-    ECCODES_ASSERT(spec_str.length() == *len);
-
     try {
         eccodes::geo::eckit_main_init();
 
-        std::unique_ptr<const eckit::geo::Grid> grid(eckit::geo::GridFactory::make_from_string(spec_str));
+        std::unique_ptr<const eckit::geo::Grid> grid(make_grid());
         ASSERT(grid);
 
         auto* result = eccodes::geo::GribFromSpec::set(h, grid->spec());
@@ -79,23 +74,12 @@ int GridSpec::pack_string([[maybe_unused]] const char* v, [[maybe_unused]] size_
     }
 
     return GRIB_SUCCESS;
-#else
-    // print_warning_feature_not_implemented();
-    return GRIB_NOT_IMPLEMENTED;
-#endif
 }
 
-int GridSpec::unpack_string([[maybe_unused]] char* v, [[maybe_unused]] size_t* len)
+int GridSpec::unpack_grid(std::shared_ptr<const eckit::geo::Grid>& result)
 {
-#if defined(HAVE_GEOGRAPHY) && defined(HAVE_ECKIT_GEO)
-
     auto* h = get_enclosing_handle();
     ECCODES_ASSERT(h);
-
-    ECCODES_ASSERT(0 < *len);
-    ECCODES_ASSERT(v);
-
-    std::string spec_str;
 
     try {
         eccodes::geo::eckit_main_init();
@@ -103,7 +87,7 @@ int GridSpec::unpack_string([[maybe_unused]] char* v, [[maybe_unused]] size_t* l
         std::unique_ptr<const Spec> spec(new eccodes::geo::GribToSpec(h));
         ASSERT(spec);
 
-        std::unique_ptr<const eckit::geo::Grid> grid(eckit::geo::GridFactory::build(*spec));
+        std::shared_ptr<const eckit::geo::Grid> grid(eckit::geo::GridFactory::build(*spec));
         ASSERT(grid);
 
         if (long n = 0; grib_get_long(h, "numberOfDataPoints", &n) == GRIB_SUCCESS && static_cast<size_t>(n) != grid->size()) {
@@ -112,7 +96,7 @@ int GridSpec::unpack_string([[maybe_unused]] char* v, [[maybe_unused]] size_t* l
             return GRIB_WRONG_GRID;
         }
 
-        spec_str = grid->spec_str();
+        result = grid;
     }
     catch (eckit::geo::Exception& e) {
         grib_context_log(context_, GRIB_LOG_ERROR, "GridSpec: geo::Exception thrown (%s)", e.what());
@@ -122,6 +106,49 @@ int GridSpec::unpack_string([[maybe_unused]] char* v, [[maybe_unused]] size_t* l
         grib_context_log(context_, GRIB_LOG_ERROR, "GridSpec: Exception thrown (%s)", e.what());
         return GRIB_GEOCALCULUS_PROBLEM;
     }
+
+    return GRIB_SUCCESS;
+}
+
+#endif
+
+int GridSpec::pack_string([[maybe_unused]] const char* v, [[maybe_unused]] size_t* len)
+{
+#if defined(HAVE_GEOGRAPHY) && defined(HAVE_ECKIT_GEO)
+    ECCODES_ASSERT(len != nullptr && 0 < *len);
+    ECCODES_ASSERT(v && v[*len] == '\0');
+
+    std::string spec_str(v);
+    ECCODES_ASSERT(spec_str.length() == *len);
+
+    return pack_grid([&spec_str]() { return eckit::geo::GridFactory::make_from_string(spec_str); });
+#else
+    // print_warning_feature_not_implemented();
+    return GRIB_NOT_IMPLEMENTED;
+#endif
+}
+
+int GridSpec::pack_spec([[maybe_unused]] const Spec& spec)
+{
+#if defined(HAVE_GEOGRAPHY) && defined(HAVE_ECKIT_GEO)
+    return pack_grid([&spec]() { return eckit::geo::GridFactory::build(spec); });
+#else
+    return GRIB_NOT_IMPLEMENTED;
+#endif
+}
+
+int GridSpec::unpack_string([[maybe_unused]] char* v, [[maybe_unused]] size_t* len)
+{
+#if defined(HAVE_GEOGRAPHY) && defined(HAVE_ECKIT_GEO)
+    ECCODES_ASSERT(0 < *len);
+    ECCODES_ASSERT(v);
+
+    std::shared_ptr<const eckit::geo::Grid> grid;
+    if (auto err = unpack_grid(grid); err != GRIB_SUCCESS) {
+        return err;
+    }
+
+    const auto spec_str = grid->spec_str();
 
     // guarantee null-termination
     auto length = spec_str.length();
@@ -140,6 +167,22 @@ int GridSpec::unpack_string([[maybe_unused]] char* v, [[maybe_unused]] size_t* l
     return GRIB_SUCCESS;
 #else
     // print_warning_feature_not_implemented();
+    return GRIB_NOT_IMPLEMENTED;
+#endif
+}
+
+int GridSpec::unpack_spec([[maybe_unused]] const Spec*& spec)
+{
+#if defined(HAVE_GEOGRAPHY) && defined(HAVE_ECKIT_GEO)
+    std::shared_ptr<const eckit::geo::Grid> grid;
+    if (auto err = unpack_grid(grid); err != GRIB_SUCCESS) {
+        return err;
+    }
+
+    grid_ = grid;
+    spec = &grid_->spec();
+    return GRIB_SUCCESS;
+#else
     return GRIB_NOT_IMPLEMENTED;
 #endif
 }

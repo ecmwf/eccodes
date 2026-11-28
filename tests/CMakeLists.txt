@@ -701,7 +701,7 @@ if( eccodes_HAVE_ECKIT_GEO AND eccodes_HAVE_GEOGRAPHY )
     endforeach()
 
     # gridSpec (set/get) by gridType, see gridspec.h (sections of the test data skipped if not downloaded)
-    foreach( _type regular_ll regular_gg reduced_gg reduced_ll healpix unstructured_grid sh lambert lambert_azimuthal_equal_area polar_stereographic mercator transverse_mercator albers space_view figure key )
+    foreach( _type regular_ll regular_gg reduced_gg reduced_ll healpix unstructured_grid sh lambert lambert_azimuthal_equal_area polar_stereographic mercator transverse_mercator albers space_view figure key spec )
         ecbuild_add_test( TARGET eccodes_t_gridspec_${_type}
                           SOURCES gridspec_${_type}.cc gridspec.h
                           LIBS eccodes eckit_geo

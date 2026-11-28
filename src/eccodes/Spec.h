@@ -12,7 +12,9 @@
 
 #pragma once
 
+#include "eccodes.h"
 
+// complete by including eckit/spec/Spec.h (of eckit, as ecCodes is built with eckit::geo)
 namespace eckit::spec
 {
 class Spec;
@@ -27,3 +29,11 @@ using Spec = ::eckit::spec::Spec;
 
 
 }  // namespace eccodes
+
+
+// C++ only: a key of a spec (e.g. gridSpec, as eckit::geo::Grid::spec) set or got as a spec, not as its string
+int codes_set_spec(codes_handle* h, const char* key, const eccodes::Spec& spec);
+
+// The spec is of the handle, valid until the key is got again (as a spec), the message is changed or the handle deleted;
+// throws on error (e.g. the key is not of a spec, or ecCodes isn't built with eckit::geo)
+const eccodes::Spec& codes_get_spec(const codes_handle* h, const char* key);
