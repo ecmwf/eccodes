@@ -56,7 +56,7 @@ flagbit bitmapPresent(section1Flags,6) :dump;
 alias bitmapSectionPresent=bitmapPresent;
 # alias geography.bitmapPresent=bitmapPresent;
 alias missingValuesPresent=bitmapPresent : read_only;
-transient angleSubdivisions=1000;  # milli degrees
+transient angleSubdivisions=1000 : no_copy;  # milli degrees, of the edition (not copied converting)
 
 if(gridDescriptionSectionPresent){
   template section_2 "grib1/section.2.def";

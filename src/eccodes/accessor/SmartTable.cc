@@ -85,21 +85,21 @@ grib_smart_table* SmartTable::load_table()
     char* localFilename = 0;
     char extraRecomposed[1024] = { 0 };
     char* extraFilename = 0;
-    char masterDir[1024] = { 0 };
-    char localDir[1024] = { 0 };
-    char extraDir[1024] = { 0 };
-    size_t len = 1024;
+    char masterDir[GRIB_STRING_LENGTH] = { 0 };
+    char localDir[GRIB_STRING_LENGTH] = { 0 };
+    char extraDir[GRIB_STRING_LENGTH] = { 0 };
+    size_t len = GRIB_STRING_LENGTH;
 
     if (masterDir_ != NULL) {
         grib_get_string(h, masterDir_, masterDir, &len);
     }
 
-    len = 1024;
+    len = GRIB_STRING_LENGTH;
     if (localDir_ != NULL) {
         grib_get_string(h, localDir_, localDir, &len);
     }
 
-    len = 1024;
+    len = GRIB_STRING_LENGTH;
     if (extraDir_ != NULL && extraTable_ != NULL) {
         grib_get_string(h, extraDir_, extraDir, &len);
     }

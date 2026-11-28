@@ -35,7 +35,7 @@ void Gen::init(const long len, grib_arguments* /*param*/)
             long l;
             int ret = 0;
             double d;
-            char tmp[1024];
+            char tmp[GRIB_STRING_LENGTH];
             grib_expression* expression = act->default_value_->get_expression(0);
             int type = expression->native_type(get_enclosing_handle());
             switch (type) {
@@ -100,7 +100,7 @@ int Gen::value_count(long* count)
 
 size_t Gen::string_length()
 {
-    return 1024;
+    return GRIB_STRING_LENGTH;
 }
 
 long Gen::byte_count()
@@ -181,7 +181,7 @@ int Gen::unpack_long(long* v, size_t* /*len*/)
     }
 
     if (is_overridden_[UNPACK_STRING] == 1) {
-        char val[1024];
+        char val[GRIB_STRING_LENGTH];
         size_t l = sizeof(val);
         char* last = NULL;
         unpack_string(val, &l);
@@ -309,7 +309,7 @@ int Gen::pack_expression(grib_expression* e)
         }
 
         case GRIB_TYPE_STRING: {
-            char tmp[1024];
+            char tmp[GRIB_STRING_LENGTH_MAX];
             len = sizeof(tmp);
             cval = e->evaluate_string(hand, tmp, &len, &ret);
             if (ret != GRIB_SUCCESS) {
