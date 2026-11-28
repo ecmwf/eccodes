@@ -18,7 +18,8 @@
 typedef enum
 {
     eROUND_ANGLE_UP,
-    eROUND_ANGLE_DOWN
+    eROUND_ANGLE_DOWN,
+    eROUND_ANGLE_NEAREST
 } RoundingPolicy;
 
 #define SET_LONG_VALUE(n, v)                 \
@@ -637,8 +638,10 @@ static double adjust_angle(const double angle, const RoundingPolicy policy, cons
     result = angle * angle_subdivisions;
     if (policy == eROUND_ANGLE_UP)
         result = round(result + 0.5);
-    else
+    else if (policy == eROUND_ANGLE_DOWN)
         result = round(result - 0.5);
+    else
+        result = round(result);
     result = result / angle_subdivisions;
     return result;
 }
@@ -659,22 +662,48 @@ static int expand_bounding_box(const grib_handle* h, grib_values* values, const 
     if ((ret = grib_get_long(h, "angleSubdivisions", &angle_subdivisions)) != 0)
         return ret;
 
+    // outwards: the first/last grid points are west/east and north/south, unless scanning in the other direction; a
+    // first grid point alone (of projected grids) is not of a bounding box, so it is the nearest
+    bool iScansNegatively = false;
+    bool jScansPositively = false;
+    bool lastGridPoint = false;
+    for (i = 0; i < count; i++) {
+        if (values[i].type == GRIB_TYPE_LONG && strcmp(values[i].name, "iScansNegatively") == 0) {
+            iScansNegatively = values[i].long_value != 0;
+        }
+        else if (values[i].type == GRIB_TYPE_LONG && strcmp(values[i].name, "jScansPositively") == 0) {
+            jScansPositively = values[i].long_value != 0;
+        }
+        else if (strcmp(values[i].name, "latitudeOfLastGridPointInDegrees") == 0) {
+            lastGridPoint = true;
+        }
+    }
+
+    const RoundingPolicy lon1 = !lastGridPoint ? eROUND_ANGLE_NEAREST : iScansNegatively ? eROUND_ANGLE_UP
+                                                                                         : eROUND_ANGLE_DOWN;
+    const RoundingPolicy lon2 = !lastGridPoint ? eROUND_ANGLE_NEAREST : iScansNegatively ? eROUND_ANGLE_DOWN
+                                                                                         : eROUND_ANGLE_UP;
+    const RoundingPolicy lat1 = !lastGridPoint ? eROUND_ANGLE_NEAREST : jScansPositively ? eROUND_ANGLE_DOWN
+                                                                                         : eROUND_ANGLE_UP;
+    const RoundingPolicy lat2 = !lastGridPoint ? eROUND_ANGLE_NEAREST : jScansPositively ? eROUND_ANGLE_UP
+                                                                                         : eROUND_ANGLE_DOWN;
+
     for (i = 0; i < count; i++) {
         int is_angle = 0;
         if (strcmp(values[i].name, "longitudeOfFirstGridPointInDegrees") == 0) {
-            roundingPolicy = eROUND_ANGLE_DOWN;
+            roundingPolicy = lon1;
             is_angle = 1;
         }
         else if (strcmp(values[i].name, "longitudeOfLastGridPointInDegrees") == 0) {
-            roundingPolicy = eROUND_ANGLE_UP;
+            roundingPolicy = lon2;
             is_angle = 1;
         }
         else if (strcmp(values[i].name, "latitudeOfFirstGridPointInDegrees") == 0) {
-            roundingPolicy = eROUND_ANGLE_UP;
+            roundingPolicy = lat1;
             is_angle = 1;
         }
         else if (strcmp(values[i].name, "latitudeOfLastGridPointInDegrees") == 0) {
-            roundingPolicy = eROUND_ANGLE_DOWN;
+            roundingPolicy = lat2;
             is_angle = 1;
         }
 
@@ -1106,6 +1135,9 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
             SET_LONG_VALUE("ijDirectionIncrementGiven", 1);
+
+            COPY_SPEC_LONG(iScansNegatively);
+            COPY_SPEC_LONG(jScansPositively);
 
             COPY_SPEC_LONG(Ni);
             COPY_SPEC_DOUBLE(iDirectionIncrementInDegrees);

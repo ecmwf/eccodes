@@ -220,6 +220,12 @@ Condition* _or(const Condition* left, const Condition* right)
 */
 
 
+Condition* is_regular_gaussian()
+{
+    return _or(is("gridType", "regular_gg"), is("gridType", "rotated_gg"));
+}
+
+
 Condition* is_gaussian()
 {
     const auto* key = "gridType";
@@ -298,10 +304,17 @@ const char* get_key(const std::string& name, codes_handle* h)
         { "west_east_increment", "iDirectionIncrementInDegrees" },
         { "south_north_increment", "jDirectionIncrementInDegrees" },
 
+        { "west", "longitudeOfLastGridPointInDegrees_fix_for_regular_gaussian_grids",
+          _and(is("iScansNegatively", 1L), is_regular_gaussian()) },
+        { "east", "longitudeOfFirstGridPointInDegrees_fix_for_regular_gaussian_grids",
+          _and(is("iScansNegatively", 1L), is_regular_gaussian()) },
         { "west", "longitudeOfLastGridPointInDegrees", is("iScansNegatively", 1L) },
         { "east", "longitudeOfFirstGridPointInDegrees", is("iScansNegatively", 1L) },
+        { "west", "longitudeOfFirstGridPointInDegrees_fix_for_regular_gaussian_grids", is_regular_gaussian() },
+        { "east", "longitudeOfLastGridPointInDegrees_fix_for_regular_gaussian_grids", is_regular_gaussian() },
         { "west", "longitudeOfFirstGridPointInDegrees" },
-        { "east", "longitudeOfLastGridPointInDegrees_fix_for_global_reduced_grids", is("gridType", "reduced_gg") },
+        { "east", "longitudeOfLastGridPointInDegrees_fix_for_global_reduced_grids",
+          _or(is("gridType", "reduced_gg"), is("gridType", "reduced_rotated_gg")) },
         { "east", "longitudeOfLastGridPointInDegrees" },
 
         { "north", "latitudeOfFirstGridPointInDegrees_fix_for_gaussian_grids",
@@ -487,7 +500,14 @@ bool codes_is_well_defined(codes_handle* h, const char* key)
 ProcessingT<double>* angular_precision()
 {
     return new ProcessingT<double>([](codes_handle* h, double& value) {
-        if (codes_is_well_defined(h, "basicAngleOfTheInitialProductionDomain") && codes_is_well_defined(h, "subdivisionsOfBasicAngle")) {
+        // angles of a basic angle and its subdivisions are exact (0 stands for the default units, of the edition)
+        long basic = 0;
+        long subdivisions = 0;
+        if (codes_is_well_defined(h, "basicAngleOfTheInitialProductionDomain") &&
+            codes_is_well_defined(h, "subdivisionsOfBasicAngle") &&
+            codes_get_long(h, "basicAngleOfTheInitialProductionDomain", &basic) == CODES_SUCCESS &&
+            codes_get_long(h, "subdivisionsOfBasicAngle", &subdivisions) == CODES_SUCCESS && basic > 0 &&
+            subdivisions > 0) {
             value = 0.;
             return true;
         }
@@ -498,6 +518,16 @@ ProcessingT<double>* angular_precision()
         value = angleSubdivisions > 0 ? 1. / static_cast<double>(angleSubdivisions) : 0.;
         return true;
     });
+}
+
+
+// Gaussian latitudes (and longitudes) are matched to the angular precision, but at least to a millidegree, as by the
+// ecCodes Gaussian iterators (GRIB2 messages converted from GRIB1 keep the millidegrees)
+double gaussian_precision(codes_handle* h)
+{
+    double eps = 0.;
+    ASSERT(std::unique_ptr<ProcessingT<double>>(angular_precision())->eval(h, eps));
+    return std::max(eps, 1e-3);
 }
 
 
@@ -623,8 +653,7 @@ ProcessingT<long>* ni_fix_for_regular_gaussian_grids()
 ProcessingT<double>* latitudeOfFirstGridPointInDegrees_fix_for_gaussian_grids()
 {
     return new ProcessingT<double>([](codes_handle* h, double& lat) {
-        double eps = 0.;
-        ASSERT(std::unique_ptr<ProcessingT<double>>(angular_precision())->eval(h, eps));
+        const auto eps = gaussian_precision(h);
 
         long N = 0L;
         CHECK_CALL(codes_get_long(h, "N", &N));
@@ -641,8 +670,7 @@ ProcessingT<double>* latitudeOfFirstGridPointInDegrees_fix_for_gaussian_grids()
 ProcessingT<double>* latitudeOfLastGridPointInDegrees_fix_for_gaussian_grids()
 {
     return new ProcessingT<double>([](codes_handle* h, double& lat) {
-        double eps = 0.;
-        ASSERT(std::unique_ptr<ProcessingT<double>>(angular_precision())->eval(h, eps));
+        const auto eps = gaussian_precision(h);
 
         long N = 0L;
         CHECK_CALL(codes_get_long(h, "N", &N));
@@ -651,6 +679,31 @@ ProcessingT<double>* latitudeOfLastGridPointInDegrees_fix_for_gaussian_grids()
         CHECK_CALL(codes_get_double(h, "latitudeOfLastGridPointInDegrees", &lat));
 
         lat = gaussian_latitude_snapped(N, lat, eps);
+        return true;
+    });
+}
+
+
+// GRIB longitudes are encoded to the angular precision, and grids are cropped exactly: a longitude that close to one of
+// a regular Gaussian grid (of ni longitudes, 4N or as encoded) is that longitude (so its column is kept)
+ProcessingT<double>* longitude_fix_for_regular_gaussian_grids(const char* key)
+{
+    return new ProcessingT<double>([key](codes_handle* h, double& lon) {
+        const auto eps = gaussian_precision(h);
+
+        long N = 0;
+        CHECK_CALL(codes_get_long(h, "N", &N));
+        ASSERT(N > 0);
+
+        long ni = 4 * N;
+        std::unique_ptr<ProcessingT<long>>(ni_fix_for_regular_gaussian_grids())->eval(h, ni);
+
+        CHECK_CALL(codes_get_double(h, key, &lon));
+
+        const auto inc = 360. / static_cast<double>(ni);
+        if (const auto snapped = std::round(lon / inc) * inc; eckit::types::is_approximately_equal(lon, snapped, eps)) {
+            lon = snapped;
+        }
         return true;
     });
 }
@@ -754,15 +807,28 @@ ProcessingT<double>* grid_increment(const char* inc_key, const char* incgiven_ke
 
             auto value_calculated = (x1 - x0) / static_cast<double>(sign != 0 ? (n - 1) : (1 - n));
 
+            double eps = 0.;
+            ASSERT(std::unique_ptr<ProcessingT<double>>(angular_precision())->eval(h, eps));
+
             // longitudes around the globe (to 3/2 the angular precision, of the first/last longitudes and the increment)
             // are periodic, so of the exact increment
             if (STR_EQUAL(n_key, "Ni")) {
-                double eps = 0.;
-                ASSERT(std::unique_ptr<ProcessingT<double>>(angular_precision())->eval(h, eps));
-
                 const auto inc = given ? value : value_calculated;
                 if (eckit::types::is_approximately_equal(std::abs(x1 - x0 + inc), 360., 1.5 * eps)) {
                     value = 360. / static_cast<double>(n) * (inc < 0. ? -1. : 1.);
+                    return true;
+                }
+            }
+
+            // an increment of a division of the globe (360/m degrees) is exact (e.g. 1/3 degree, given as 0.333333): the
+            // division nearest the increment calculated, if given to the angular precision, and its points are within the
+            // first/last points (each rounded outwards) by twice the precision at most, so the grid is of these points
+            if (given && value_calculated != 0.) {
+                const auto exact = 360. / std::round(360. / std::abs(value_calculated));
+                const auto shortfall = (std::abs(value_calculated) - exact) * static_cast<double>(n - 1);
+                if (eckit::types::is_approximately_equal(exact, std::abs(value), std::max(eps, 1e-6)) &&
+                    -1e-9 <= shortfall && shortfall <= 2. * std::max(eps, 1e-6)) {
+                    value = std::copysign(exact, value_calculated);
                     return true;
                 }
             }
@@ -1271,7 +1337,13 @@ bool GribToSpec::has(const std::string& name) const
         return false;
     }
 
-    return cache_.find(key) != cache_.end() || codes_is_defined(handle_, key) != 0;
+    if (cache_.find(key) != cache_.end() || codes_is_defined(handle_, key) != 0) {
+        return true;
+    }
+
+    // a key computed from the message's (a fix, not a key of the message), if it computes
+    double value = 0.;
+    return std::strstr(key, "_fix_for_") != nullptr && get(name, value);
 }
 
 
@@ -1483,6 +1555,10 @@ bool GribToSpec::get(const std::string& name, double& value) const
               latitudeOfFirstGridPointInDegrees_fix_for_gaussian_grids() },
             { "latitudeOfLastGridPointInDegrees_fix_for_gaussian_grids",
               latitudeOfLastGridPointInDegrees_fix_for_gaussian_grids() },
+            { "longitudeOfFirstGridPointInDegrees_fix_for_regular_gaussian_grids",
+              longitude_fix_for_regular_gaussian_grids("longitudeOfFirstGridPointInDegrees") },
+            { "longitudeOfLastGridPointInDegrees_fix_for_regular_gaussian_grids",
+              longitude_fix_for_regular_gaussian_grids("longitudeOfLastGridPointInDegrees") },
         };
 
         if (get_value(key, handle_, value, process)) {
@@ -1660,7 +1736,7 @@ void GribToSpec::pl_expand_to_global(std::vector<long>& pl) const
 
     const auto increasing = lat1 < lat2;
     const auto& lats(eckit::geo::util::gaussian_latitudes(N, increasing));
-    const auto eps = std::max(eckit::geo::PointLonLat::EPS, get_double("angular_precision"));
+    const auto eps = gaussian_precision(handle_);
 
     auto approx = [=](double a, double b) { return increasing ? a + eps < b : a - eps > b; };
     const auto j = std::distance(lats.begin(), std::lower_bound(lats.begin(), lats.end(), lat1, approx));
