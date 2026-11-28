@@ -1412,8 +1412,40 @@ int grib_set_from_grid_spec(grib_handle* h, const grib_util_grid_spec* spec, con
         }
     }
 
+    // In place (unlike from a sample of the grid type), the grid keys of gridded data aren't defined for spectral data
+    // and vice versa, so changing between them changes the data representation first
+    if (const bool spectralInput = strncmp(input_packing_type, "spectral_", 9) == 0,
+        spectralOutput = spec->grid_type == GRIB_UTIL_GRID_SPEC_SH;
+        spectralInput != spectralOutput) {
+        const char* packingType = spectralOutput ? "spectral_complex" : "grid_simple";
+        size_t packingTypeLen = strlen(packingType);
+        if ((err = grib_set_string(h, "packingType", packingType, &packingTypeLen)) != 0) {
+            grib_context_log(c, GRIB_LOG_ERROR, "%s: Cannot set packingType=%s: %s", __func__, packingType,
+                             grib_get_error_message(err));
+            return err;
+        }
+    }
+
     if ((err = grib_set_values(h, values, count)) != 0) {
         grib_context_log(c, GRIB_LOG_ERROR, "%s: Cannot set key values: %s", __func__, grib_get_error_message(err));
+        return err;
+    }
+
+    // In place, the flags of the input's grid stay, so they are set as by a sample of the grid type: vector components
+    // relative to the grid of the spec (the input's grid isn't), and the increments given for grids with increments
+    if (grib_is_defined(h, "uvRelativeToGrid") &&
+        (err = grib_set_long(h, "uvRelativeToGrid", spec->uvRelativeToGrid)) != 0) {
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Cannot set uvRelativeToGrid: %s", __func__, grib_get_error_message(err));
+        return err;
+    }
+
+    if ((spec->grid_type == GRIB_UTIL_GRID_SPEC_HEALPIX || spec->grid_type == GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL ||
+         spec->grid_type == GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA ||
+         spec->grid_type == GRIB_UTIL_GRID_SPEC_POLAR_STEREOGRAPHIC) &&
+        grib_is_defined(h, "ijDirectionIncrementGiven") &&
+        (err = grib_set_long(h, "ijDirectionIncrementGiven", 1)) != 0) {
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Cannot set ijDirectionIncrementGiven: %s", __func__,
+                         grib_get_error_message(err));
         return err;
     }
 

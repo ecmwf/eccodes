@@ -738,8 +738,9 @@ ProcessingT<double>* grid_increment(const char* inc_key, const char* incgiven_ke
                 throw eckit::geo::exception::GridError("GribToSpec: number of points is zero, invalid increment", Here());
             }
 
+            // a single point, of the increment given (if any)
             if (n == 1) {
-                value = 0.;
+                value = given ? value : 0.;
                 return true;
             }
 
@@ -751,7 +752,22 @@ ProcessingT<double>* grid_increment(const char* inc_key, const char* incgiven_ke
                 x1 += sign == 0 ? -360. : 360.;
             }
 
-            if (auto value_calculated = (x1 - x0) / static_cast<double>(sign != 0 ? (n - 1) : (1 - n)); given) {
+            auto value_calculated = (x1 - x0) / static_cast<double>(sign != 0 ? (n - 1) : (1 - n));
+
+            // longitudes around the globe (to 3/2 the angular precision, of the first/last longitudes and the increment)
+            // are periodic, so of the exact increment
+            if (STR_EQUAL(n_key, "Ni")) {
+                double eps = 0.;
+                ASSERT(std::unique_ptr<ProcessingT<double>>(angular_precision())->eval(h, eps));
+
+                const auto inc = given ? value : value_calculated;
+                if (eckit::types::is_approximately_equal(std::abs(x1 - x0 + inc), 360., 1.5 * eps)) {
+                    value = 360. / static_cast<double>(n) * (inc < 0. ? -1. : 1.);
+                    return true;
+                }
+            }
+
+            if (given) {
                 if (!eckit::types::is_approximately_equal(value, value_calculated, 1e-6)) {
                     wrongly_encoded_grib(
                         "GribToSpec: inconsistent increment: '" + std::string{ inc_key } +
